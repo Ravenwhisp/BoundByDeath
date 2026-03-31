@@ -1,0 +1,53 @@
+#pragma once
+
+#include "ScriptAPI.h"
+
+class SpikeTrap : public Script
+{
+    DECLARE_SCRIPT(SpikeTrap)
+
+public:
+    explicit SpikeTrap(GameObject* owner);
+
+    void Start() override;
+    void Update() override;
+
+    enum TrapState
+    {
+        WAIT,
+        F_ACTIVE,
+        PREPARING,
+		S_ACTIVE
+    };
+    
+    ScriptFieldList getExposedFields() const override;
+
+    float a_duration = 2.0;
+	float p_duration = 1.0;
+	float w_duration = 3.0;
+
+	float currentTime = 0.0f;
+
+	int startingMode = 0;
+
+    ScriptComponentRef<Transform> m_firstTarget;
+    ScriptComponentRef<Transform> m_secondTarget;
+
+    ScriptComponentRef<Transform> m_normalSpike;
+    ScriptComponentRef<Transform> m_spectralSpike;
+
+	Vector3 normalSpikePosition = Vector3(0.0f, -1.0f, 0.0f);
+	Vector3 spectralSpikePosition = Vector3(0.0f, -1.0f, 0.0f);
+
+    float dt = Time::getDeltaTime();
+
+    float m_xWidth = 2.0f;
+    float m_zWidth = 2.0f;
+
+private:
+    
+    bool containsPoint(const Vector3& triggerCenter, const Vector3& point) const;
+    void TrapLoop();
+
+	TrapState state = WAIT;
+};
