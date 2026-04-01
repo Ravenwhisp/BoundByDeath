@@ -20,8 +20,8 @@ public:
 	float m_loseAggroDelay = 2.0f;
 	bool m_debugEnabled = true;
 
-	Component* m_player1Transform = nullptr;
-	Component* m_player2Transform = nullptr;
+	ScriptComponentRef<Transform> m_player1Transform;
+	ScriptComponentRef<Transform> m_player2Transform;
 
 private:
 	GameObject* m_target = nullptr; // current target
@@ -38,4 +38,13 @@ private:
 	void enterAggro();
 	void exitAggro();
 	void updateAggroState();
+
+private:
+	Transform* getOwnerTransform() const;
+	Transform* getPlayer1Transform() const;
+	Transform* getPlayer2Transform() const;
+
+	Vector3 getOwnerPosition() const;
+	Vector3 getPlayer1Position() const;
+	Vector3 getPlayer2Position() const;
 };
