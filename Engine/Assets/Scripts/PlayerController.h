@@ -2,6 +2,8 @@
 
 #include "ScriptAPI.h"
 
+class CameraComponent;
+
 class PlayerController : public Script
 {
     DECLARE_SCRIPT(PlayerController)
@@ -26,6 +28,8 @@ public:
     bool m_constrainToNavMesh = true;
     Vector3 m_navExtents = Vector3(2.0f, 4.0f, 2.0f);
 
+    ScriptComponentRef<Component> m_cameraFollow;
+
 private:
     Vector3 m_initialRotationOffset = Vector3(0.0f, 0.0f, 0.0f);
 
@@ -33,7 +37,7 @@ private:
     bool m_yawInitialized = false;
 
 private:
-    Vector3 readMoveDirection() const;
+    Vector3 readMoveDirection(Transform* cameraTransform) const;
     void applyFacingFromDirection(GameObject* owner, const Vector3& direction, float dt);
     void applyTranslation(GameObject* owner, const Vector3& direction, float dt, bool shiftHeld) const;
 

@@ -12,7 +12,8 @@ static const ScriptFieldInfo playerWalkFields[] =
     { "Turn Speed (deg/s)", ScriptFieldType::Float, offsetof(PlayerController, m_turnSpeedDegPerSec), { 0.0f, 2000.0f, 1.0f } },
     { "Player Index", ScriptFieldType::Int, offsetof(PlayerController, m_playerIndex) },
     { "Constrain To NavMesh", ScriptFieldType::Bool, offsetof(PlayerController, m_constrainToNavMesh) },
-    { "Nav Extents", ScriptFieldType::Vec3, offsetof(PlayerController, m_navExtents) }
+    { "Nav Extents", ScriptFieldType::Vec3, offsetof(PlayerController, m_navExtents) },
+    { "Camera", ScriptFieldType::ComponentRef, offsetof(PlayerController, m_cameraFollow), {}, {},{ ComponentType::CAMERA }  }
 };
 
 IMPLEMENT_SCRIPT_FIELDS(PlayerController, playerWalkFields)
@@ -36,7 +37,11 @@ void PlayerController::Update()
         return;
     }
 
-    Vector3 direction = readMoveDirection();
+	Component* cameraFollowComp = m_cameraFollow.getReferencedComponent();
+	GameObject* cameraOwner = cameraFollowComp ? ComponentAPI::getOwner(cameraFollowComp) : nullptr;
+    Transform* cameraTransform = cameraOwner ? GameObjectAPI::getTransform(cameraOwner) : nullptr;
+
+    Vector3 direction = readMoveDirection(cameraTransform);
 
     if (direction.x == 0.0f && direction.y == 0.0f && direction.z == 0.0f)
     {
@@ -63,11 +68,24 @@ void PlayerController::onAfterDeserialize()
     m_currentYawDeg = 0.0f;
 }
 
-Vector3 PlayerController::readMoveDirection() const
+Vector3 PlayerController::readMoveDirection(Transform* cameraTransform) const
 {
     const Vector2 moveAxis = Input::getMoveAxis(m_playerIndex);
 
-    return Vector3(moveAxis.x, 0.0f, moveAxis.y);
+    Vector3 cameraForward = cameraTransform ? TransformAPI::getForward(cameraTransform) : Vector3(0.0f, 0.0f, 1.0f);
+    Vector3 cameraRight = cameraTransform ? TransformAPI::getRight(cameraTransform) : Vector3(1.0f, 0.0f, 0.0f);
+
+    Vector3 up = Vector3(0.0f, 1.0f, 0.0f);
+
+    cameraForward = cameraForward - up * cameraForward.Dot(up);
+    cameraRight = cameraRight - up * cameraRight.Dot(up);
+
+    cameraForward.Normalize(); cameraRight.Normalize();
+
+    Vector3 move = Vector3(-moveAxis.x, 0.0f, -moveAxis.y);
+
+    //return Vector3(moveAxis.x, 0.0f, moveAxis.y);
+	return cameraForward * move.z + cameraRight * move.x;
 }
 
 void PlayerController::applyFacingFromDirection(GameObject* owner, const Vector3& direction, float dt)
