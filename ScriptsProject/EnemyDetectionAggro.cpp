@@ -24,9 +24,8 @@ void EnemyDetectionAggro::Update()
 {
 
 	// ----- Temporary testing -----//
-	Vector3 enemyPos = getOwnerPosition();
-	Vector3 player1Pos = getPlayer1Position();
-	Vector3 player2Pos = getPlayer2Position();
+
+	Transform* selectedTarget = selectTargetInRange();
 	// -----		END		   -----//
 
 	updateAggroState();
@@ -51,6 +50,32 @@ void EnemyDetectionAggro::exitAggro()
 void EnemyDetectionAggro::updateAggroState()
 {
 
+}
+
+Transform* EnemyDetectionAggro::selectTargetInRange() const
+{
+	const bool player1InRange = isPlayer1InDetectionRange();
+	const bool player2InRange = isPlayer2InDetectionRange();
+
+	if (!player1InRange && !player2InRange)
+	{
+		return nullptr;
+	}
+
+	if (player1InRange && !player2InRange)
+	{
+		return getPlayer1Transform();
+	}
+
+	if (!player1InRange && player2InRange)
+	{
+		return getPlayer2Transform();
+	}
+
+	const float distanceToPlayer1 = getDistanceToPlayer1();
+	const float distanceToPlayer2 = getDistanceToPlayer2();
+
+	return (distanceToPlayer1 <= distanceToPlayer2) ? getPlayer1Transform() : getPlayer2Transform();
 }
 
 // Getters
@@ -100,6 +125,38 @@ Vector3 EnemyDetectionAggro::getPlayer2Position() const
 	}
 
 	return TransformAPI::getPosition(player2Transform);
+}
+
+float EnemyDetectionAggro::getDistanceToPlayer1() const
+{
+	Vector3 difference = getPlayer1Position() - getOwnerPosition();
+	return difference.Length();
+}
+
+float EnemyDetectionAggro::getDistanceToPlayer2() const
+{
+	Vector3 difference = getPlayer2Position() - getOwnerPosition();
+	return difference.Length();
+}
+
+bool EnemyDetectionAggro::isPlayer1InDetectionRange() const
+{
+	if (!getPlayer1Transform())
+	{
+		return false;
+	}
+
+	return getDistanceToPlayer1() <= m_detectionRadius;
+}
+
+bool EnemyDetectionAggro::isPlayer2InDetectionRange() const
+{
+	if (!getPlayer2Transform())
+	{
+		return false;
+	}
+
+	return getDistanceToPlayer2() <= m_detectionRadius;
 }
 
 IMPLEMENT_SCRIPT(EnemyDetectionAggro)

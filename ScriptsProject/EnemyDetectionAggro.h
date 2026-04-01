@@ -15,7 +15,7 @@ public:
 	ScriptFieldList getExposedFields() const override;
 
 public:
-	// Exposed
+	// Exposed members
 	float m_detectionRadius = 10.0f;
 	float m_loseAggroDelay = 2.0f;
 	bool m_debugEnabled = true;
@@ -24,7 +24,7 @@ public:
 	ScriptComponentRef<Transform> m_player2Transform;
 
 private:
-	GameObject* m_target = nullptr; // current target
+	Transform* m_currentTargetTransform = nullptr; // current target
 	bool m_isAggro = false; // is enemy in aggro state
 	bool m_canSeeTarget = false; // is target detected
 	float m_timeSinceLastSeen = 0.0f; // how much time has passed since detected target
@@ -39,6 +39,8 @@ private:
 	void exitAggro();
 	void updateAggroState();
 
+	Transform* selectTargetInRange() const;
+
 private:
 	Transform* getOwnerTransform() const;
 	Transform* getPlayer1Transform() const;
@@ -47,4 +49,10 @@ private:
 	Vector3 getOwnerPosition() const;
 	Vector3 getPlayer1Position() const;
 	Vector3 getPlayer2Position() const;
+
+	float getDistanceToPlayer1() const;
+	float getDistanceToPlayer2() const;
+
+	bool isPlayer1InDetectionRange() const;
+	bool isPlayer2InDetectionRange() const;
 };
