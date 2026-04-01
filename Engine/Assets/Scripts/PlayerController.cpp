@@ -90,7 +90,7 @@ Vector3 PlayerController::readMoveDirection(Transform* cameraTransform) const
 
 void PlayerController::applyFacingFromDirection(GameObject* owner, const Vector3& direction, float dt)
 {
-    const float yawRad = std::atan2(-direction.x, -direction.z);
+    const float yawRad = std::atan2(direction.x, direction.z);
     const float targetYawDeg = yawRad * (180.0f / PI);
 
     if (!m_yawInitialized)
