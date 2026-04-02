@@ -28,30 +28,28 @@ public:
 	ScriptFieldList getExposedFields() const override;
 
 public:
-	// Exposed members
 	float m_detectionRadius = 10.0f;
-	float m_loseAggroDelay = 2.0f; // timer for exiting combat
-	float m_targetLockDuration = 1.5f; // how long the enemy stays locked on the current target
+	float m_loseAggroDelay = 2.0f;
+	float m_targetLockDuration = 1.5f;
 	bool m_debugEnabled = true;
 
 	ScriptComponentRef<Transform> m_player1Transform;
 	ScriptComponentRef<Transform> m_player2Transform;
 
 public:
-	// Can be called outside the script -> if player attacked and if player dealt damage
 	void notifyPlayerAttackedEnemy(Transform* playerTransform);
-	void notifyPlayerDealtDamage(Transform* playerTransform); // can add float damageAmount
+	void notifyPlayerDealtDamage(Transform* playerTransform);
 
 private:
 	AggroEntry m_player1Aggro;
 	AggroEntry m_player2Aggro;
-	Transform* m_currentTargetTransform = nullptr; // current target
-	bool m_isAggro = false; // is enemy in aggro state
-	bool m_canSeeTarget = false; // is target detected
-	float m_timeSinceLastSeen = 0.0f; // how much time has passed since detected target
-	Vector3 m_lastKnownTargetPosition = Vector3(0.0f, 0.0f, 0.0f); // last known position of the target
+	Transform* m_currentTargetTransform = nullptr;
+	bool m_isAggro = false;
+	bool m_canSeeTarget = false;
+	float m_timeSinceLastSeen = 0.0f;
+	Vector3 m_lastKnownTargetPosition = Vector3(0.0f, 0.0f, 0.0f);
 
-	float m_currentTargetLockTimer = 0.0f; // track current value of the lock timer
+	float m_currentTargetLockTimer = 0.0f;
 	float m_currentTime = 0.0f;
 	
 	float m_distanceWeight = 1.0f;
@@ -64,9 +62,6 @@ private:
 	float m_targetSwitchThreshold = 10.0f;
 
 private:
-	bool isTargetValid() const;
-	bool isTargetInDetectionRange() const;
-	bool canDetectTarget() const;
 
 	void enterAggro(Transform* target);
 	void exitAggro();
@@ -79,9 +74,6 @@ private:
 	void startTargetLock();
 	void updateTargetLockTimer();
 
-	// old
-	Transform* selectTargetInRange() const;
-	//
 	Transform* selectBestAggroTarget() const;
 
 private:

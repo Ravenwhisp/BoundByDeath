@@ -25,30 +25,6 @@ void EnemyDetectionAggro::Update()
 {
 	m_currentTime += Time::getDeltaTime();
 
-	//if (m_debugEnabled)
-	//{
-	//	// Player 1 deals damage
-	//	if (Input::isKeyDown(KeyCode::Num1))
-	//	{
-	//		notifyPlayerDealtDamage(getPlayer1Transform());
-	//	}
-
-	//	if (Input::isKeyDown(KeyCode::Num2))
-	//	{
-	//		notifyPlayerAttackedEnemy(getPlayer1Transform());
-	//	}
-
-	//	// Player 2 deals damage
-	//	if (Input::isKeyDown(KeyCode::Num3))
-	//	{
-	//		notifyPlayerDealtDamage(getPlayer2Transform());
-	//	}
-	//	if (Input::isKeyDown(KeyCode::Num4))
-	//	{
-	//		notifyPlayerAttackedEnemy(getPlayer2Transform());
-	//	}
-	//}
-
 	updateTargetLockTimer();
 	updateAggroState();
 }
@@ -66,27 +42,19 @@ void EnemyDetectionAggro::drawGizmo()
 
 	Vector3 debugPosition = getOwnerPosition() + Vector3(0.0f, 0.2f, 0.0f);
 
-	// Detection radius
 	DebugDrawAPI::drawCircle(debugPosition, Vector3(0.0f, 1.0f, 0.0f), white, m_detectionRadius, 24.0f, 0, true);
 
-	// Target line
 	if (m_currentTargetTransform)
 	{
 		Vector3 targetPosition = TransformAPI::getPosition(m_currentTargetTransform);
 		DebugDrawAPI::drawLine(debugPosition, targetPosition, red, 0, true);
 	}
 
-	// Last known position
 	if (m_isAggro)
 	{
 		DebugDrawAPI::drawCross(m_lastKnownTargetPosition, 0.35f, 0, true);
 		DebugDrawAPI::drawPoint(m_lastKnownTargetPosition, cyan, 4.0f, 0, true);
 	}
-}
-
-bool EnemyDetectionAggro::canDetectTarget() const
-{
-	return false;
 }
 
 void EnemyDetectionAggro::enterAggro(Transform* target)
@@ -154,7 +122,6 @@ void EnemyDetectionAggro::updateAggroState()
 			return;
 		}
 
-		// Keep current target
 		m_isAggro = true;
 		m_canSeeTarget = true;
 		m_timeSinceLastSeen = 0.0f;
@@ -200,22 +167,19 @@ float EnemyDetectionAggro::calculateAggroScore(const AggroEntry& entry) const
 {
 	if (!entry.targetTransform || !entry.isInDetectionRange)
 	{
-		return -9999.0f;
+		return -9999.9f;
 	}
 
 	float score = 0.0f;
 
-	// Distance
 	score += (1.0f / (entry.distanceToEnemy + 0.1f)) * m_distanceWeight * 10.0f;
 
-	// Recent attack
 	float timeSinceAttack = m_currentTime - entry.lastAttackTime;
 	if (timeSinceAttack <= m_recentAttackMemory)
 	{
 		score += m_recentAttackBonus;
 	}
 
-	// Recent damage
 	float timeSinceDamage = m_currentTime - entry.lastDamageTime;
 	if (timeSinceDamage <= m_recentDamageMemory)
 	{
@@ -248,32 +212,6 @@ void EnemyDetectionAggro::updateTargetLockTimer()
 	}
 }
 
-Transform* EnemyDetectionAggro::selectTargetInRange() const
-{
-	const bool player1InRange = isPlayer1InDetectionRange();
-	const bool player2InRange = isPlayer2InDetectionRange();
-
-	if (!player1InRange && !player2InRange)
-	{
-		return nullptr;
-	}
-
-	if (player1InRange && !player2InRange)
-	{
-		return getPlayer1Transform();
-	}
-
-	if (!player1InRange && player2InRange)
-	{
-		return getPlayer2Transform();
-	}
-
-	const float distanceToPlayer1 = getDistanceToPlayer1();
-	const float distanceToPlayer2 = getDistanceToPlayer2();
-
-	return (distanceToPlayer1 <= distanceToPlayer2) ? getPlayer1Transform() : getPlayer2Transform();
-}
-
 Transform* EnemyDetectionAggro::selectBestAggroTarget() const
 {
 	const AggroEntry* bestEntry = nullptr;
@@ -281,12 +219,12 @@ Transform* EnemyDetectionAggro::selectBestAggroTarget() const
 	Transform* player1 = m_player1Aggro.targetTransform;
 	Transform* player2 = m_player2Aggro.targetTransform;
 
-	if (player1 && getAggroScore(player1) > -9999.0f)
+	if (player1 && getAggroScore(player1) > -9999.9f)
 	{
 		bestEntry = &m_player1Aggro;
 	}
 
-	if (player2 && getAggroScore(player2) > -9999.0f)
+	if (player2 && getAggroScore(player2) > -9999.9f)
 	{
 		if (!bestEntry || getAggroScore(player2) > bestEntry->aggroScore)
 		{
@@ -313,7 +251,6 @@ void EnemyDetectionAggro::notifyPlayerAttackedEnemy(Transform* playerTransform)
 
 	entry->lastAttackTime = m_currentTime;
 
-	// If enemy was not in combat -> this can start it
 	if (!m_isAggro)
 	{
 		enterAggro(playerTransform);
@@ -339,7 +276,6 @@ void EnemyDetectionAggro::notifyPlayerDealtDamage(Transform* playerTransform)
 	}
 }
 
-// Getters
 Transform* EnemyDetectionAggro::getOwnerTransform() const
 {
 	return GameObjectAPI::getTransform(getOwner());
@@ -452,7 +388,7 @@ float EnemyDetectionAggro::getAggroScore(Transform* target) const
 
 	if (!entry)
 	{
-		return -9999.0f;
+		return -9999.9f;
 	}
 
 	return entry->aggroScore;
