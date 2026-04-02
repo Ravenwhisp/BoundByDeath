@@ -25,6 +25,37 @@ void EnemyDetectionAggro::Update()
 	updateAggroState();
 }
 
+void EnemyDetectionAggro::drawGizmo()
+{
+	if (!m_debugEnabled)
+	{
+		return;
+	}
+
+	const Vector3 white = { 1.0f, 1.0f, 1.0f };
+	const Vector3 red = { 1.0f, 0.0f, 0.0f };
+	const Vector3 cyan = { 0.0f, 1.0f, 1.0f };
+
+	Vector3 debugPosition = getOwnerPosition() + Vector3(0.0f, 0.2f, 0.0f);
+
+	// Detection radius
+	DebugDrawAPI::drawCircle(debugPosition, Vector3(0.0f, 1.0f, 0.0f), white, m_detectionRadius, 24.0f, 0, true);
+
+	// Target line
+	if (m_currentTargetTransform)
+	{
+		Vector3 targetPosition = TransformAPI::getPosition(m_currentTargetTransform);
+		DebugDrawAPI::drawLine(debugPosition, targetPosition, red, 0, true);
+	}
+
+	// Last known position
+	if (m_isAggro)
+	{
+		DebugDrawAPI::drawCross(m_lastKnownTargetPosition, 0.35f, 0, true);
+		DebugDrawAPI::drawPoint(m_lastKnownTargetPosition, cyan, 4.0f, 0, true);
+	}
+}
+
 bool EnemyDetectionAggro::canDetectTarget() const
 {
 	return false;

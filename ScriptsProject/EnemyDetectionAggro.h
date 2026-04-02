@@ -11,6 +11,7 @@ public:
 
 	void Start() override;
 	void Update() override;
+	void drawGizmo() override;
 
 	ScriptFieldList getExposedFields() const override;
 
