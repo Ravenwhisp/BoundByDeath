@@ -8,9 +8,7 @@ static const ScriptFieldInfo myScriptFields[] =
 	{ "Starting Mode", ScriptFieldType::Int, offsetof(SpikeTrap, startingMode) },
     { "Active Duration" , ScriptFieldType::Float, offsetof(SpikeTrap, a_duration), {0.0f, 50.0f, 0.1f } },
     { "Wait Duration" , ScriptFieldType::Float, offsetof(SpikeTrap, w_duration), {0.0f, 50.0f, 0.1f } },
-	{ "Preparing Duration" , ScriptFieldType::Float, offsetof(SpikeTrap, p_duration), {0.0f, 50.0f, 0.1f } },
-    { "First Target", ScriptFieldType::ComponentRef, offsetof(SpikeTrap, m_firstTarget), {}, {}, { ComponentType::TRANSFORM } },
-    { "Second Target", ScriptFieldType::ComponentRef, offsetof(SpikeTrap, m_secondTarget), {}, {}, { ComponentType::TRANSFORM } }
+	{ "Preparing Duration" , ScriptFieldType::Float, offsetof(SpikeTrap, p_duration), {0.0f, 50.0f, 0.1f } }
 };
 
 IMPLEMENT_SCRIPT_FIELDS(SpikeTrap, myScriptFields)
@@ -114,7 +112,7 @@ void SpikeTrap::Update()
             break;
     }
 
-     /*   const Vector3 triggerCenter = TransformAPI::getPosition(transform);
+        /*const Vector3 triggerCenter = TransformAPI::getPosition(ownerTransform);
 
         Transform* firstTarget = m_firstTarget.getReferencedComponent();
         if (firstTarget && containsPoint(triggerCenter, TransformAPI::getPosition(firstTarget)))

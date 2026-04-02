@@ -44,6 +44,9 @@ public:
     float m_xWidth = 2.0f;
     float m_zWidth = 2.0f;
 
+	GameObject* owner = getOwner();
+	Transform* ownerTransform = GameObjectAPI::getTransform(owner);
+
 private:
     
     bool containsPoint(const Vector3& triggerCenter, const Vector3& point) const;
