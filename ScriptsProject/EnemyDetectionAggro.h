@@ -35,7 +35,7 @@ private:
 	bool isTargetInDetectionRange() const;
 	bool canDetectTarget() const;
 
-	void enterAggro();
+	void enterAggro(Transform* target);
 	void exitAggro();
 	void updateAggroState();
 

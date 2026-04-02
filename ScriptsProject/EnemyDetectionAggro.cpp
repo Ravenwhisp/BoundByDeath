@@ -22,14 +22,7 @@ void EnemyDetectionAggro::Start()
 
 void EnemyDetectionAggro::Update()
 {
-
-	// ----- Temporary testing -----//
-
-	Transform* selectedTarget = selectTargetInRange();
-	// -----		END		   -----//
-
 	updateAggroState();
-
 }
 
 bool EnemyDetectionAggro::canDetectTarget() const
@@ -37,19 +30,49 @@ bool EnemyDetectionAggro::canDetectTarget() const
 	return false;
 }
 
-void EnemyDetectionAggro::enterAggro()
+void EnemyDetectionAggro::enterAggro(Transform* target)
 {
+	if (!target)
+	{
+		return;
+	}
 
+	m_isAggro = true;
+	m_canSeeTarget = true;
+	m_currentTargetTransform = target;
+	m_timeSinceLastSeen = 0.0f;
+	m_lastKnownTargetPosition = TransformAPI::getPosition(target);
 }
 
 void EnemyDetectionAggro::exitAggro()
 {
-
+	m_isAggro = false;
+	m_canSeeTarget = false;
+	m_currentTargetTransform = nullptr;
+	m_timeSinceLastSeen = 0.0f;
 }
 
 void EnemyDetectionAggro::updateAggroState()
 {
+	Transform* detectedTarget = selectTargetInRange();
 
+	if (detectedTarget)
+	{
+		enterAggro(detectedTarget);
+		return;
+	}
+
+	m_canSeeTarget = false;
+
+	if (m_isAggro)
+	{
+		m_timeSinceLastSeen += Time::getDeltaTime();
+
+		if (m_timeSinceLastSeen >= m_loseAggroDelay)
+		{
+			exitAggro();
+		}
+	}
 }
 
 Transform* EnemyDetectionAggro::selectTargetInRange() const
