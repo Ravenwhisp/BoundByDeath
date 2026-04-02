@@ -19,6 +19,7 @@ public:
 	// Exposed members
 	float m_detectionRadius = 10.0f;
 	float m_loseAggroDelay = 2.0f;
+	float m_targetLockDuration = 1.5f; // how long the enemy stays lock on the current target
 	bool m_debugEnabled = true;
 
 	ScriptComponentRef<Transform> m_player1Transform;
@@ -31,6 +32,8 @@ private:
 	float m_timeSinceLastSeen = 0.0f; // how much time has passed since detected target
 	Vector3 m_lastKnownTargetPosition = Vector3(0.0f, 0.0f, 0.0f); // last known position of the target
 
+	float m_currentTargetLockTimer = 0.0f; // track current value of the lock timer
+
 private:
 	bool isTargetValid() const;
 	bool isTargetInDetectionRange() const;
@@ -39,6 +42,10 @@ private:
 	void enterAggro(Transform* target);
 	void exitAggro();
 	void updateAggroState();
+
+	bool isTargetLockActive() const;
+	void startTargetLock();
+	void updateTargetLockTimer();
 
 	Transform* selectTargetInRange() const;
 

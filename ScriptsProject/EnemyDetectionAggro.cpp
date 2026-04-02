@@ -5,6 +5,7 @@ static const ScriptFieldInfo enemyDetectionAggroFields[] =
 {
 	{ "Detection Radius", ScriptFieldType::Float, offsetof(EnemyDetectionAggro, m_detectionRadius), { 0.0f, 50.0f, 0.1f } },
 	{ "Lose Aggro Delay", ScriptFieldType::Float, offsetof(EnemyDetectionAggro, m_loseAggroDelay), { 0.0f, 10.0f, 0.1f } },
+	{ "Target Lock Duration", ScriptFieldType::Float, offsetof(EnemyDetectionAggro, m_targetLockDuration), { 0.0f, 10.0f, 0.1f } },
 	{ "Debug Enabled", ScriptFieldType::Bool, offsetof(EnemyDetectionAggro, m_debugEnabled) },
 
 	{ "Player 1 Transform", ScriptFieldType::ComponentRef, offsetof(EnemyDetectionAggro, m_player1Transform), {}, {}, { ComponentType::TRANSFORM } },
@@ -22,6 +23,7 @@ void EnemyDetectionAggro::Start()
 
 void EnemyDetectionAggro::Update()
 {
+	updateTargetLockTimer();
 	updateAggroState();
 }
 
@@ -73,6 +75,8 @@ void EnemyDetectionAggro::enterAggro(Transform* target)
 	m_currentTargetTransform = target;
 	m_timeSinceLastSeen = 0.0f;
 	m_lastKnownTargetPosition = TransformAPI::getPosition(target);
+
+	startTargetLock();
 }
 
 void EnemyDetectionAggro::exitAggro()
@@ -81,6 +85,7 @@ void EnemyDetectionAggro::exitAggro()
 	m_canSeeTarget = false;
 	m_currentTargetTransform = nullptr;
 	m_timeSinceLastSeen = 0.0f;
+	m_currentTargetLockTimer = 0.0f;
 }
 
 void EnemyDetectionAggro::updateAggroState()
@@ -89,6 +94,21 @@ void EnemyDetectionAggro::updateAggroState()
 
 	if (detectedTarget)
 	{
+		if (m_currentTargetTransform && isTargetLockActive())
+		{
+			const bool currentTargetStillDetected =
+				(m_currentTargetTransform == getPlayer1Transform() && isPlayer1InDetectionRange()) ||
+				(m_currentTargetTransform == getPlayer2Transform() && isPlayer2InDetectionRange());
+
+			if (currentTargetStillDetected)
+			{
+				m_isAggro = true;
+				m_canSeeTarget = true;
+				m_timeSinceLastSeen = 0.0f;
+				m_lastKnownTargetPosition = TransformAPI::getPosition(m_currentTargetTransform);
+				return;
+			}
+		}
 		enterAggro(detectedTarget);
 		return;
 	}
@@ -102,6 +122,29 @@ void EnemyDetectionAggro::updateAggroState()
 		if (m_timeSinceLastSeen >= m_loseAggroDelay)
 		{
 			exitAggro();
+		}
+	}
+}
+
+bool EnemyDetectionAggro::isTargetLockActive() const
+{
+	return m_currentTargetLockTimer > 0.0f;
+}
+
+void EnemyDetectionAggro::startTargetLock()
+{
+	m_currentTargetLockTimer = m_targetLockDuration;
+}
+
+void EnemyDetectionAggro::updateTargetLockTimer()
+{
+	if (isTargetLockActive())
+	{
+		m_currentTargetLockTimer -= Time::getDeltaTime();
+
+		if (m_currentTargetLockTimer < 0.0f)
+		{
+			m_currentTargetLockTimer = 0.0f;
 		}
 	}
 }
