@@ -18,6 +18,8 @@ public:
 
     void onAfterDeserialize() override;
 
+	bool getGodMode() const { return m_godMode; }
+
 public:
     float m_moveSpeed = 3.5f;
     float m_shiftMultiplier = 2.0f;
@@ -29,6 +31,8 @@ public:
     Vector3 m_navExtents = Vector3(2.0f, 4.0f, 2.0f);
 
     ScriptComponentRef<Component> m_cameraFollow;
+
+    bool m_godMode = false;
 
 private:
     Vector3 m_initialRotationOffset = Vector3(0.0f, 0.0f, 0.0f);

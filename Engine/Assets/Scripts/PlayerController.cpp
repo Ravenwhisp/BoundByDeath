@@ -13,7 +13,8 @@ static const ScriptFieldInfo playerWalkFields[] =
     { "Player Index", ScriptFieldType::Int, offsetof(PlayerController, m_playerIndex) },
     { "Constrain To NavMesh", ScriptFieldType::Bool, offsetof(PlayerController, m_constrainToNavMesh) },
     { "Nav Extents", ScriptFieldType::Vec3, offsetof(PlayerController, m_navExtents) },
-    { "Camera", ScriptFieldType::ComponentRef, offsetof(PlayerController, m_cameraFollow), {}, {},{ ComponentType::CAMERA }  }
+    { "Camera", ScriptFieldType::ComponentRef, offsetof(PlayerController, m_cameraFollow), {}, {},{ ComponentType::CAMERA }  },
+    { "God Mode", ScriptFieldType::Bool, offsetof(PlayerController, m_godMode) }
 };
 
 IMPLEMENT_SCRIPT_FIELDS(PlayerController, playerWalkFields)
@@ -36,6 +37,7 @@ void PlayerController::Update()
     {
         return;
     }
+
 
 	Component* cameraFollowComp = m_cameraFollow.getReferencedComponent();
 	GameObject* cameraOwner = cameraFollowComp ? ComponentAPI::getOwner(cameraFollowComp) : nullptr;
