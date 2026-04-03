@@ -5,7 +5,8 @@
 static const ScriptFieldInfo debugDamageTriggerFields[] =
 {
     { "Damage Amount", ScriptFieldType::Float, offsetof(DebugDamageTrigger, m_damageAmount), { 0.0f, 999999.0f, 1.0f } },
-    { "Heal Amount", ScriptFieldType::Float, offsetof(DebugDamageTrigger, m_healAmount), { 0.0f, 999999.0f, 1.0f } }
+    { "Heal Amount", ScriptFieldType::Float, offsetof(DebugDamageTrigger, m_healAmount), { 0.0f, 999999.0f, 1.0f } },
+    { "Player Index", ScriptFieldType::Int, offsetof(DebugDamageTrigger, m_playerIndex) }
 };
 
 IMPLEMENT_SCRIPT_FIELDS(DebugDamageTrigger, debugDamageTriggerFields)
@@ -21,7 +22,7 @@ void DebugDamageTrigger::Start()
 
     if (!m_damageable)
     {
-        Debug::warn("DebugDamageTrigger on '%s' could not find a Damageable or PlayerDamageable on the same GameObject.",  GameObjectAPI::getName(m_owner));
+        Debug::warn("DebugDamageTrigger on '%s' could not find a Damageable or PlayerDamageable on the same GameObject.", GameObjectAPI::getName(m_owner));
     }
 }
 
@@ -32,31 +33,23 @@ void DebugDamageTrigger::Update()
         return;
     }
 
-    if (Input::isKeyDown(KeyCode::J))
+    if (Input::isFaceButtonBottomJustPressed(m_playerIndex))
     {
-        Debug::log("DebugDamageTrigger: damaging '%s' by %.2f", GameObjectAPI::getName(m_owner), m_damageAmount);
-
         m_damageable->takeDamage(m_damageAmount);
     }
 
-    if (Input::isKeyDown(KeyCode::K))
+    if (Input::isFaceButtonRightJustPressed(m_playerIndex))
     {
-        Debug::log("DebugDamageTrigger: healing '%s' by %.2f", GameObjectAPI::getName(m_owner), m_healAmount);
-
         m_damageable->heal(m_healAmount);
     }
 
-    if (Input::isKeyDown(KeyCode::L))
+    if (Input::isFaceButtonLeftJustPressed(m_playerIndex))
     {
-        Debug::log("DebugDamageTrigger: killing '%s'", GameObjectAPI::getName(m_owner));
-
         m_damageable->kill();
     }
 
-    if (Input::isKeyDown(KeyCode::R))
+    if (Input::isFaceButtonTopJustPressed(m_playerIndex))
     {
-        Debug::log("DebugDamageTrigger: reviving '%s'", GameObjectAPI::getName(m_owner));
-
         m_damageable->revive();
     }
 }

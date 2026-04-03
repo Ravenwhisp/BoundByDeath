@@ -22,6 +22,7 @@ public:
     float m_damageAmount = 25.0f;
     float m_healAmount = 25.0f;
 
+    float m_playerIndex = 0;
 private:
     Damageable* m_damageable = nullptr;
 };
