@@ -158,9 +158,12 @@
     <ClInclude Include="..\Engine\Assets\Scripts\TestingButton.h" />
     <ClInclude Include="..\Engine\Assets\Scripts\TriggerArea.h" />
     <ClInclude Include="Damageable.h" />
+    <ClInclude Include="DebugDamageTrigger.h" />
     <ClInclude Include="DebugDrawTest.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="PlayerDamageable.h" />
+    <ClInclude Include="PlayerDownState.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Engine\Assets\Scripts\CameraFollow.cpp" />
@@ -170,6 +173,7 @@
     <ClCompile Include="..\Engine\Assets\Scripts\TestingButton.cpp" />
     <ClCompile Include="..\Engine\Assets\Scripts\TriggerArea.cpp" />
     <ClCompile Include="Damageable.cpp" />
+    <ClCompile Include="DebugDamageTrigger.cpp" />
     <ClCompile Include="DebugDrawTest.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="pch.cpp">
@@ -178,6 +182,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="PlayerDamageable.cpp" />
+    <ClCompile Include="PlayerDownState.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
