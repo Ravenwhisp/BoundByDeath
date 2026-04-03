@@ -15,20 +15,17 @@ public:
     enum TrapState
     {
         WAIT,
-        F_ACTIVE,
-        PREPARING,
-		S_ACTIVE
+        ACTIVE
     };
     
     ScriptFieldList getExposedFields() const override;
 
     float a_duration = 2.0;
 	float p_duration = 1.0;
-	float w_duration = 3.0;
 
 	float currentTime = 0.0f;
 
-	int startingMode = 0;
+	bool alternativeMode = false;
 
     ScriptComponentRef<Transform> m_firstTarget;
     ScriptComponentRef<Transform> m_secondTarget;
@@ -51,6 +48,8 @@ private:
     
     bool containsPoint(const Vector3& triggerCenter, const Vector3& point) const;
     void TrapLoop();
+
+	int spikeType = 0; // 0 for normal, 1 for spectral
 
 	TrapState state = WAIT;
 };
