@@ -1,5 +1,7 @@
 #include "pch.h"
 #include "PlayerDamageable.h"
+#include "PlayerDownState.h"
+
 
 PlayerDamageable::PlayerDamageable(GameObject* owner)
     : Damageable(owner)
@@ -8,7 +10,17 @@ PlayerDamageable::PlayerDamageable(GameObject* owner)
 
 void PlayerDamageable::onHpDepleted()
 {
-    Debug::log("%s HP depleted. Enter down state.", GameObjectAPI::getName(m_owner));
+    Script* script = GameObjectAPI::getScript(m_owner, "PlayerDownState");
+    PlayerDownState* downState = dynamic_cast<PlayerDownState*>(script);
+
+    if (downState)
+    {
+        downState->enterDownState();
+        return;
+    }
+
+    Debug::warn("%s has PlayerDamageable but no PlayerDownState. Falling back to kill.", GameObjectAPI::getName(m_owner));
+    Damageable::onHpDepleted();
 }
 
 IMPLEMENT_SCRIPT(PlayerDamageable)
