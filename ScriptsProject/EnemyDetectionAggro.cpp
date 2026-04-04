@@ -7,7 +7,6 @@ static const ScriptFieldInfo enemyDetectionAggroFields[] =
 	{ "Lose Aggro Delay", ScriptFieldType::Float, offsetof(EnemyDetectionAggro, m_loseAggroDelay), { 0.0f, 10.0f, 0.1f } },
 	{ "Target Lock Duration", ScriptFieldType::Float, offsetof(EnemyDetectionAggro, m_targetLockDuration), { 0.0f, 10.0f, 0.1f } },
 	{ "Debug Enabled", ScriptFieldType::Bool, offsetof(EnemyDetectionAggro, m_debugEnabled) },
-
 	{ "Player 1 Transform", ScriptFieldType::ComponentRef, offsetof(EnemyDetectionAggro, m_player1Transform), {}, {}, { ComponentType::TRANSFORM } },
 	{ "Player 2 Transform", ScriptFieldType::ComponentRef, offsetof(EnemyDetectionAggro, m_player2Transform), {}, {}, { ComponentType::TRANSFORM } }
 };
@@ -184,6 +183,7 @@ float EnemyDetectionAggro::calculateAggroScore(const AggroEntry& entry) const
 	if (timeSinceDamage <= m_recentDamageMemory)
 	{
 		score += m_recentDamageBonus;
+		score += entry.lastDamageAmount * m_damageWeight;
 	}
 
 	return score;
@@ -258,7 +258,7 @@ void EnemyDetectionAggro::notifyPlayerAttackedEnemy(Transform* playerTransform)
 	}
 }
 
-void EnemyDetectionAggro::notifyPlayerDealtDamage(Transform* playerTransform)
+void EnemyDetectionAggro::notifyPlayerDealtDamage(Transform* playerTransform, float damageAmount)
 {
 	AggroEntry* entry = getAggroEntry(playerTransform);
 	
@@ -268,6 +268,7 @@ void EnemyDetectionAggro::notifyPlayerDealtDamage(Transform* playerTransform)
 	}
 
 	entry->lastDamageTime = m_currentTime;
+	entry->lastDamageAmount = damageAmount;
 
 	if (!m_isAggro)
 	{

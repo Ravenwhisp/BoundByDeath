@@ -15,6 +15,7 @@ private:
 		float distanceToEnemy = 0.0f;
 		float lastAttackTime = -9999.9f;
 		float lastDamageTime = -9999.9f;
+		float lastDamageAmount = 0.0f;
 		float aggroScore = 0.0f;
 	};
 
@@ -38,7 +39,7 @@ public:
 
 public:
 	void notifyPlayerAttackedEnemy(Transform* playerTransform);
-	void notifyPlayerDealtDamage(Transform* playerTransform);
+	void notifyPlayerDealtDamage(Transform* playerTransform, float damageAmount);
 
 private:
 	AggroEntry m_player1Aggro;
@@ -55,6 +56,7 @@ private:
 	float m_distanceWeight = 1.0f;
 	float m_recentAttackBonus = 50.0f;
 	float m_recentDamageBonus = 60.0f;
+	float m_damageWeight = 0.5f;
 
 	float m_recentAttackMemory = 3.0f;
 	float m_recentDamageMemory = 3.0f;
@@ -62,7 +64,6 @@ private:
 	float m_targetSwitchThreshold = 10.0f;
 
 private:
-
 	void enterAggro(Transform* target);
 	void exitAggro();
 	void updateAggroState();
