@@ -5,6 +5,7 @@
 
 class Damageable;
 class Transform;
+class PlayerState;
 
 class PlayerDownState : public Script
 {
@@ -21,16 +22,14 @@ public:
 
     void enterDownState();
 
-    bool isDowned() const { return m_isDowned; }
+    bool isDowned() const;
     float getReviveProgress() const;
 
 private:
     Damageable* findDamageable() const;
+
     bool isTeammateInAssistRange() const;
     void completeRevive();
-
-    void disableGameplay();
-    void enableGameplay();
 
 public:
     float m_selfReviveTime = 10.0f;
@@ -41,8 +40,8 @@ public:
     ScriptComponentRef<Transform> m_teammateTransform;
 
 private:
+    PlayerState* m_playerState = nullptr;
     Damageable* m_damageable = nullptr;
 
-    bool m_isDowned = false;
     float m_reviveProgress = 0.0f;
 };

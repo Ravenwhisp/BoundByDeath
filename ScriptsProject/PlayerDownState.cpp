@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "PlayerDownState.h"
 #include "Damageable.h"
+#include "PlayerState.h"
 
 static const ScriptFieldInfo playerDownStateFields[] =
 {
@@ -26,11 +27,19 @@ void PlayerDownState::Start()
     {
         Debug::warn("PlayerDownState on '%s' could not find a Damageable on the same GameObject.", GameObjectAPI::getName(m_owner));
     }
+
+    Script* stateScript = GameObjectAPI::getScript(m_owner, "PlayerState");
+    m_playerState = dynamic_cast<PlayerState*>(stateScript);
+
+    if (!m_playerState)
+    {
+        Debug::warn("PlayerDownState on '%s' could not find PlayerState on the same GameObject.", GameObjectAPI::getName(m_owner));
+    }
 }
 
 void PlayerDownState::Update()
 {
-    if (!m_isDowned)
+    if (!isDowned())
     {
         return;
     }
@@ -60,7 +69,7 @@ void PlayerDownState::drawGizmo()
     Vector3 position = TransformAPI::getPosition(transform);
 
     Vector3 circleColor = Vector3(0.0f, 1.0f, 0.0f);
-    if (m_isDowned)
+    if (isDowned())
     {
         circleColor = Vector3(1.0f, 1.0f, 0.0f);
     }
@@ -70,12 +79,16 @@ void PlayerDownState::drawGizmo()
 
 void PlayerDownState::enterDownState()
 {
-    if (m_isDowned)
+    if (isDowned())
     {
         return;
     }
 
-    m_isDowned = true;
+    if (m_playerState)
+    {
+        m_playerState->setState(PlayerLifeState::Downed);
+    }
+
     m_reviveProgress = 0.0f;
 
     if (m_damageable)
@@ -83,9 +96,12 @@ void PlayerDownState::enterDownState()
         m_damageable->setInvulnerable(true);
     }
 
-    disableGameplay();
-
     Debug::log("%s entered down state.", GameObjectAPI::getName(m_owner));
+}
+
+bool PlayerDownState::isDowned() const
+{
+    return m_playerState && m_playerState->isDowned();
 }
 
 float PlayerDownState::getReviveProgress() const
@@ -146,8 +162,12 @@ bool PlayerDownState::isTeammateInAssistRange() const
 
 void PlayerDownState::completeRevive()
 {
-    m_isDowned = false;
     m_reviveProgress = 0.0f;
+
+    if (m_playerState)
+    {
+        m_playerState->setState(PlayerLifeState::Normal);
+    }
 
     if (m_damageable)
     {
@@ -155,19 +175,7 @@ void PlayerDownState::completeRevive()
         m_damageable->revive(m_reviveHp);
     }
 
-    enableGameplay();
-
     Debug::log("%s completed revive from down state.", GameObjectAPI::getName(m_owner));
-}
-
-void PlayerDownState::disableGameplay()
-{
-    Debug::log("%s gameplay disabled due to down state. Need implementation!", GameObjectAPI::getName(m_owner));
-}
-
-void PlayerDownState::enableGameplay()
-{
-    Debug::log("%s gameplay re-enabled after revive. Need implementation!", GameObjectAPI::getName(m_owner));
 }
 
 IMPLEMENT_SCRIPT(PlayerDownState)

@@ -2,6 +2,8 @@
 
 #include "ScriptAPI.h"
 
+class PlayerState;
+
 class PlayerController : public Script
 {
     DECLARE_SCRIPT(PlayerController)
@@ -27,6 +29,8 @@ public:
     Vector3 m_navExtents = Vector3(2.0f, 4.0f, 2.0f);
 
 private:
+    PlayerState* m_playerState = nullptr;
+
     Vector3 m_initialRotationOffset = Vector3(0.0f, 0.0f, 0.0f);
 
     float m_currentYawDeg = 0.0f;
