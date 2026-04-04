@@ -161,6 +161,7 @@
     <ClInclude Include="framework.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="PlayerTargetController.h" />
+    <ClInclude Include="TargetIndicatorUI.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Engine\Assets\Scripts\CameraFollow.cpp" />
@@ -178,6 +179,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="PlayerTargetController.cpp" />
+    <ClCompile Include="TargetIndicatorUI.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
