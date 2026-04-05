@@ -26,7 +26,6 @@ public:
 
 public:
 	float m_detectionRadius = 10.0f;
-	float m_loseAggroDelay = 3.0f;
 	float m_targetLockDuration = 5.0f;
 	bool m_debugEnabled = true;
 
@@ -48,7 +47,6 @@ private:
 	Transform* m_currentTargetTransform = nullptr;
 	bool m_isAggro = false;
 	bool m_canSeeTarget = false;
-	float m_timeSinceLastSeen = 0.0f;
 	Vector3 m_lastKnownTargetPosition = Vector3(0.0f, 0.0f, 0.0f);
 
 	float m_currentTargetLockTimer = 0.0f;
@@ -57,7 +55,6 @@ private:
 
 private:
 	void enterAggro(Transform* target);
-	void exitAggro();
 	void updateAggroState();
 	void updateAggroEntries();
 
