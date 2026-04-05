@@ -20,7 +20,7 @@ PlayerRotation::PlayerRotation(GameObject* owner)
 void PlayerRotation::Start()
 {
 	GameObject* owner = getOwner();
-	m_initialRotationOffset = TransformAPI::getEulerDegrees(GameObjectAPI::getTransform(owner));
+	//m_initialRotationOffset = TransformAPI::getEulerDegrees(GameObjectAPI::getTransform(owner));
 }
 
 void PlayerRotation::Update()
