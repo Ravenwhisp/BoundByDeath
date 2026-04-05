@@ -1,23 +1,16 @@
 #include "pch.h"
 #include "PlayerController.h"
 
-#include <cmath>
+#include "PlayerMovement.h"
+#include "PlayerRotation.h"
 
-static const float PI = 3.1415926535897931f;
-
-static const ScriptFieldInfo playerWalkFields[] =
+static const ScriptFieldInfo playerControllerFields[] =
 {
-    { "Move Speed", ScriptFieldType::Float, offsetof(PlayerController, m_moveSpeed), { 0.0f, 50.0f, 0.05f } },
-    { "Shift Multiplier", ScriptFieldType::Float, offsetof(PlayerController, m_shiftMultiplier), { 1.0f, 10.0f, 0.05f } },
-    { "Turn Speed (deg/s)", ScriptFieldType::Float, offsetof(PlayerController, m_turnSpeedDegPerSec), { 0.0f, 2000.0f, 1.0f } },
-    { "Player Index", ScriptFieldType::Int, offsetof(PlayerController, m_playerIndex) },
-    { "Constrain To NavMesh", ScriptFieldType::Bool, offsetof(PlayerController, m_constrainToNavMesh) },
-    { "Nav Extents", ScriptFieldType::Vec3, offsetof(PlayerController, m_navExtents) },
-    { "Camera", ScriptFieldType::ComponentRef, offsetof(PlayerController, m_cameraFollow), {}, {},{ ComponentType::CAMERA }  },
+    { "Player Index", ScriptFieldType::Int, offsetof(PlayerController, m_playerIndex) }, // 0 keyboard, 1 gamepad
     { "God Mode", ScriptFieldType::Bool, offsetof(PlayerController, m_godMode) }
 };
 
-IMPLEMENT_SCRIPT_FIELDS(PlayerController, playerWalkFields)
+IMPLEMENT_SCRIPT_FIELDS(PlayerController, playerControllerFields)
 
 PlayerController::PlayerController(GameObject* owner)
     : Script(owner)
@@ -27,7 +20,34 @@ PlayerController::PlayerController(GameObject* owner)
 void PlayerController::Start()
 {
     GameObject* owner = getOwner();
-    m_initialRotationOffset = TransformAPI::getEulerDegrees(GameObjectAPI::getTransform(owner));
+
+    const char* ownerName = GameObjectAPI::getName(m_owner);
+
+    Script* movementScript = owner ? GameObjectAPI::getScript(owner, "PlayerMovement") : nullptr;
+    if (movementScript)
+    {
+        m_movement = static_cast<PlayerMovement*>(movementScript);
+    }
+    else
+    {
+        Debug::warn("PlayerController on '%s' could not find PlayerMovement on the same GameObject.", 
+            ownerName);
+    }
+
+    Script* rotationScript = owner ? GameObjectAPI::getScript(owner, "PlayerRotation") : nullptr;
+    if (rotationScript)
+    {
+        m_rotation = static_cast<PlayerRotation*>(rotationScript);
+    }
+    else
+    {
+        Debug::warn("PlayerController on '%s' could not find PlayerRotation on the same GameObject.",
+            ownerName);
+    }
+
+    m_cameraTransform = SceneAPI::getDefaultCameraGameObject() ?
+        GameObjectAPI::getTransform(SceneAPI::getDefaultCameraGameObject()) :
+        nullptr;
 }
 
 void PlayerController::Update()
@@ -38,135 +58,48 @@ void PlayerController::Update()
         return;
     }
 
-
-	Component* cameraFollowComp = m_cameraFollow.getReferencedComponent();
-	GameObject* cameraOwner = cameraFollowComp ? ComponentAPI::getOwner(cameraFollowComp) : nullptr;
-    Transform* cameraTransform = cameraOwner ? GameObjectAPI::getTransform(cameraOwner) : nullptr;
-
-    Vector3 direction = readMoveDirection(cameraTransform);
-
-    if (direction.x == 0.0f && direction.y == 0.0f && direction.z == 0.0f)
+    if (m_movement) //no pongo early return porque en teoria habran mas cosas que tener en cuenta
     {
-        return;
+        Vector3 direction = readMoveDirection();
+
+        if (direction.x != 0.0f || direction.y != 0.0f || direction.z != 0.0f)
+        {
+            const float dt = Time::getDeltaTime();
+            bool shiftHeld = Input::isKeyDown(KeyCode::LeftShift) || Input::isKeyDown(KeyCode::RightShift);
+
+            if (m_rotation)
+            {
+                Vector3 horizontalDir(direction.x, 0.0f, direction.z);
+                if (horizontalDir.x != 0.0f || horizontalDir.z != 0.0f)
+                {
+                    horizontalDir.Normalize();
+                    m_rotation->applyFacingFromDirection(owner, horizontalDir, dt);
+                }
+            }
+
+            direction.Normalize();
+            m_movement->applyTranslation(owner, direction, dt, shiftHeld);
+        }
     }
-
-    const float dt = Time::getDeltaTime();
-    bool shiftHeld = Input::isKeyDown(KeyCode::LeftShift) || Input::isKeyDown(KeyCode::RightShift);
-
-    Vector3 horizontalDir(direction.x, 0.0f, direction.z);
-    if (horizontalDir.x != 0.0f || horizontalDir.z != 0.0f)
-    {
-        horizontalDir.Normalize();
-        applyFacingFromDirection(owner, horizontalDir, dt);
-    }
-
-    direction.Normalize();
-    applyTranslation(owner, direction, dt, shiftHeld);
 }
 
-void PlayerController::onAfterDeserialize()
-{
-    m_yawInitialized = false;
-    m_currentYawDeg = 0.0f;
-}
-
-Vector3 PlayerController::readMoveDirection(Transform* cameraTransform) const
+Vector3 PlayerController::readMoveDirection() const
 {
     const Vector2 moveAxis = Input::getMoveAxis(m_playerIndex);
 
-    Vector3 cameraForward = cameraTransform ? TransformAPI::getForward(cameraTransform) : Vector3(0.0f, 0.0f, 1.0f);
-    Vector3 cameraRight = cameraTransform ? TransformAPI::getRight(cameraTransform) : Vector3(1.0f, 0.0f, 0.0f);
-
+    Vector3 cameraForward = m_cameraTransform ? TransformAPI::getForward(m_cameraTransform) : Vector3(0.0f, 0.0f, 1.0f);
+    Vector3 cameraRight = m_cameraTransform ? TransformAPI::getRight(m_cameraTransform) : Vector3(1.0f, 0.0f, 0.0f);
     Vector3 up = Vector3(0.0f, 1.0f, 0.0f);
 
     cameraForward = cameraForward - up * cameraForward.Dot(up);
     cameraRight = cameraRight - up * cameraRight.Dot(up);
 
-    cameraForward.Normalize(); cameraRight.Normalize();
+    cameraForward.Normalize();
+    cameraRight.Normalize();
 
     Vector3 move = Vector3(-moveAxis.x, 0.0f, -moveAxis.y);
 
-    //return Vector3(moveAxis.x, 0.0f, moveAxis.y);
 	return cameraForward * move.z + cameraRight * move.x;
-}
-
-void PlayerController::applyFacingFromDirection(GameObject* owner, const Vector3& direction, float dt)
-{
-    const float yawRad = std::atan2(direction.x, direction.z);
-    const float targetYawDeg = yawRad * (180.0f / PI);
-
-    if (!m_yawInitialized)
-    {
-        m_currentYawDeg = 0.0f;
-        m_yawInitialized = true;
-    }
-
-    const float maxStep = m_turnSpeedDegPerSec * dt;
-    m_currentYawDeg = moveTowardsAngleDegrees(m_currentYawDeg, targetYawDeg, maxStep);
-
-    const float finalYaw = wrapAngleDegrees(m_initialRotationOffset.y + m_currentYawDeg);
-
-    TransformAPI::setRotationEuler(GameObjectAPI::getTransform(owner), Vector3(m_initialRotationOffset.x, finalYaw, m_initialRotationOffset.z));
-}
-
-void PlayerController::applyTranslation(GameObject* owner, const Vector3& direction, float dt, bool shiftHeld) const
-{
-    Transform* transform = GameObjectAPI::getTransform(owner);
-    if (!transform)
-    {
-        return;
-    }
-
-    float speed = m_moveSpeed;
-    if (shiftHeld)
-    {
-        speed *= m_shiftMultiplier;
-    }
-
-    const Vector3 currentPos = TransformAPI::getPosition(transform);
-    const Vector3 desiredPos = currentPos + direction * speed * dt;
-
-    if (!m_constrainToNavMesh)
-    {
-        TransformAPI::setPosition(transform, desiredPos);
-        return;
-    }
-
-    Vector3 constrainedPos;
-    if (NavigationAPI::moveAlongSurface(currentPos, desiredPos, constrainedPos, m_navExtents))
-    {
-        TransformAPI::setPosition(transform, constrainedPos);
-    }
-}
-
-float PlayerController::wrapAngleDegrees(float angle)
-{
-    while (angle > 180.0f)
-    {
-        angle -= 360.0f;
-    }
-    while (angle < -180.0f)
-    {
-        angle += 360.0f;
-    }
-    return angle;
-}
-
-float PlayerController::moveTowardsAngleDegrees(float currentYawAngle, float targetYawAngle, float maxDelta)
-{
-    float delta = wrapAngleDegrees(targetYawAngle - currentYawAngle);
-
-    if (delta > maxDelta)
-    {
-        delta = maxDelta;
-    }
-
-    if (delta < -maxDelta)
-    {
-        delta = -maxDelta;
-    }
-
-    return currentYawAngle + delta;
 }
 
 IMPLEMENT_SCRIPT(PlayerController)
