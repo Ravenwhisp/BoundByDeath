@@ -7,16 +7,12 @@ class EnemyDetectionAggro : public Script
 	DECLARE_SCRIPT(EnemyDetectionAggro)
 
 private:
-
 	struct AggroEntry
 	{
 		Transform* targetTransform = nullptr;
 		bool isInDetectionRange = false;
 		float distanceToEnemy = 0.0f;
 		float lastAttackTime = -9999.9f;
-		float lastDamageTime = -9999.9f;
-		float lastDamageAmount = 0.0f;
-		float aggroScore = 0.0f;
 	};
 
 public:
@@ -30,8 +26,8 @@ public:
 
 public:
 	float m_detectionRadius = 10.0f;
-	float m_loseAggroDelay = 2.0f;
-	float m_targetLockDuration = 1.5f;
+	float m_loseAggroDelay = 3.0f;
+	float m_targetLockDuration = 5.0f;
 	bool m_debugEnabled = true;
 
 	ScriptComponentRef<Transform> m_player1Transform;
@@ -39,11 +35,16 @@ public:
 
 public:
 	void notifyPlayerAttackedEnemy(Transform* playerTransform);
-	void notifyPlayerDealtDamage(Transform* playerTransform, float damageAmount);
+
+	bool isAggro() const { return m_isAggro; }
+	bool canSeeTarget() const { return m_canSeeTarget; }
+	Transform* getCurrentTarget() const { return m_currentTargetTransform; }
+	Vector3 getLastKnownTargetPosition() const { return m_lastKnownTargetPosition; }
 
 private:
 	AggroEntry m_player1Aggro;
 	AggroEntry m_player2Aggro;
+
 	Transform* m_currentTargetTransform = nullptr;
 	bool m_isAggro = false;
 	bool m_canSeeTarget = false;
@@ -52,30 +53,20 @@ private:
 
 	float m_currentTargetLockTimer = 0.0f;
 	float m_currentTime = 0.0f;
-	
-	float m_distanceWeight = 1.0f;
-	float m_recentAttackBonus = 50.0f;
-	float m_recentDamageBonus = 60.0f;
-	float m_damageWeight = 0.5f;
-
 	float m_recentAttackMemory = 3.0f;
-	float m_recentDamageMemory = 3.0f;
-
-	float m_targetSwitchThreshold = 10.0f;
 
 private:
 	void enterAggro(Transform* target);
 	void exitAggro();
 	void updateAggroState();
 	void updateAggroEntries();
-	void updateAggroScores();
-	float calculateAggroScore(const AggroEntry& entry) const;
 
 	bool isTargetLockActive() const;
 	void startTargetLock();
 	void updateTargetLockTimer();
 
-	Transform* selectBestAggroTarget() const;
+	Transform* selectClosestDetectedPlayer() const;
+	Transform* selectReevaluatedTarget() const;
 
 private:
 	Transform* getOwnerTransform() const;
@@ -92,8 +83,9 @@ private:
 	bool isPlayer1InDetectionRange() const;
 	bool isPlayer2InDetectionRange() const;
 
+	bool isPlayer1Aggroing() const;
+	bool isPlayer2Aggroing() const;
+
 	AggroEntry* getAggroEntry(Transform* target);
 	const AggroEntry* getAggroEntry(Transform* target) const;
-
-	float getAggroScore(Transform* target) const;
 };

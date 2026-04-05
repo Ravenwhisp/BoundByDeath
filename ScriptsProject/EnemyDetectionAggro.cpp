@@ -37,6 +37,7 @@ void EnemyDetectionAggro::drawGizmo()
 
 	const Vector3 white = { 1.0f, 1.0f, 1.0f };
 	const Vector3 red = { 1.0f, 0.0f, 0.0f };
+	const Vector3 yellow = { 1.0f, 1.0f, 0.0f };
 	const Vector3 cyan = { 0.0f, 1.0f, 1.0f };
 
 	Vector3 debugPosition = getOwnerPosition() + Vector3(0.0f, 0.2f, 0.0f);
@@ -46,10 +47,17 @@ void EnemyDetectionAggro::drawGizmo()
 	if (m_currentTargetTransform)
 	{
 		Vector3 targetPosition = TransformAPI::getPosition(m_currentTargetTransform);
-		DebugDrawAPI::drawLine(debugPosition, targetPosition, red, 0, true);
+		if (m_canSeeTarget)
+		{
+			DebugDrawAPI::drawLine(debugPosition, targetPosition, red, 0, true);
+		}
+		else
+		{
+			DebugDrawAPI::drawLine(debugPosition, targetPosition, yellow, 0, true);
+		}
 	}
 
-	if (m_isAggro)
+	if (m_isAggro && !m_canSeeTarget)
 	{
 		DebugDrawAPI::drawCross(m_lastKnownTargetPosition, 0.35f, 0, true);
 		DebugDrawAPI::drawPoint(m_lastKnownTargetPosition, cyan, 4.0f, 0, true);
@@ -68,8 +76,6 @@ void EnemyDetectionAggro::enterAggro(Transform* target)
 	m_currentTargetTransform = target;
 	m_timeSinceLastSeen = 0.0f;
 	m_lastKnownTargetPosition = TransformAPI::getPosition(target);
-
-	startTargetLock();
 }
 
 void EnemyDetectionAggro::exitAggro()
@@ -84,67 +90,64 @@ void EnemyDetectionAggro::exitAggro()
 void EnemyDetectionAggro::updateAggroState()
 {
 	updateAggroEntries();
-	updateAggroScores();
 
-	Transform* detectedTarget = selectBestAggroTarget();
-
-	if (detectedTarget)
+	if (!m_isAggro)
 	{
-		if (m_currentTargetTransform && isTargetLockActive())
-		{
-			const bool currentTargetStillDetected =
-				(m_currentTargetTransform == getPlayer1Transform() && isPlayer1InDetectionRange()) ||
-				(m_currentTargetTransform == getPlayer2Transform() && isPlayer2InDetectionRange());
+		Transform* initialTarget = selectClosestDetectedPlayer();
 
-			if (currentTargetStillDetected)
-			{
-				m_isAggro = true;
-				m_canSeeTarget = true;
-				m_timeSinceLastSeen = 0.0f;
-				m_lastKnownTargetPosition = TransformAPI::getPosition(m_currentTargetTransform);
-				return;
-			}
-		}
-		
-		if (!m_currentTargetTransform)
+		if (initialTarget)
 		{
-			enterAggro(detectedTarget);
-			return;
+			enterAggro(initialTarget);
+			m_currentTargetLockTimer = 0.0f;
 		}
 
-		float currentScore = getAggroScore(m_currentTargetTransform);
-		float newScore = getAggroScore(detectedTarget);
-
-		if (detectedTarget != m_currentTargetTransform && newScore > currentScore + m_targetSwitchThreshold)
-		{
-			enterAggro(detectedTarget);
-			return;
-		}
-
-		m_isAggro = true;
-		m_canSeeTarget = true;
-		m_timeSinceLastSeen = 0.0f;
-		m_lastKnownTargetPosition = TransformAPI::getPosition(m_currentTargetTransform);
 		return;
 	}
 
-	m_canSeeTarget = false;
+	const bool currentTargetStillDetected =
+		(m_currentTargetTransform == m_player1Aggro.targetTransform && m_player1Aggro.isInDetectionRange) ||
+		(m_currentTargetTransform == m_player2Aggro.targetTransform && m_player2Aggro.isInDetectionRange);
 
-	if (m_isAggro)
+	if (currentTargetStillDetected)
 	{
+		m_canSeeTarget = true;
+		m_timeSinceLastSeen = 0.0f;
+		m_lastKnownTargetPosition = TransformAPI::getPosition(m_currentTargetTransform);
+	}
+	else
+	{
+		m_canSeeTarget = false;
 		m_timeSinceLastSeen += Time::getDeltaTime();
 
 		if (m_timeSinceLastSeen >= m_loseAggroDelay)
 		{
 			exitAggro();
+			return;
 		}
 	}
-}
 
-void EnemyDetectionAggro::updateAggroScores()
-{
-	m_player1Aggro.aggroScore = calculateAggroScore(m_player1Aggro);
-	m_player2Aggro.aggroScore = calculateAggroScore(m_player2Aggro);
+	if (!isTargetLockActive())
+	{
+		Transform* reevaluatedTarget = selectReevaluatedTarget();
+
+		if (reevaluatedTarget && reevaluatedTarget != m_currentTargetTransform)
+		{
+			m_currentTargetTransform = reevaluatedTarget;
+			m_lastKnownTargetPosition = TransformAPI::getPosition(m_currentTargetTransform);
+		}
+
+		const bool player1Aggroing = isPlayer1Aggroing();
+		const bool player2Aggroing = isPlayer2Aggroing();
+
+		if (player1Aggroing || player2Aggroing)
+		{
+			startTargetLock();
+		}
+		else
+		{
+			m_currentTargetLockTimer = 0.0f;
+		}
+	}
 }
 
 void EnemyDetectionAggro::updateAggroEntries()
@@ -160,33 +163,6 @@ void EnemyDetectionAggro::updateAggroEntries()
 
 	m_player1Aggro.distanceToEnemy = getDistanceToPlayer1();
 	m_player2Aggro.distanceToEnemy = getDistanceToPlayer2();
-}
-
-float EnemyDetectionAggro::calculateAggroScore(const AggroEntry& entry) const
-{
-	if (!entry.targetTransform || !entry.isInDetectionRange)
-	{
-		return -9999.9f;
-	}
-
-	float score = 0.0f;
-
-	score += (1.0f / (entry.distanceToEnemy + 0.1f)) * m_distanceWeight * 10.0f;
-
-	float timeSinceAttack = m_currentTime - entry.lastAttackTime;
-	if (timeSinceAttack <= m_recentAttackMemory)
-	{
-		score += m_recentAttackBonus;
-	}
-
-	float timeSinceDamage = m_currentTime - entry.lastDamageTime;
-	if (timeSinceDamage <= m_recentDamageMemory)
-	{
-		score += m_recentDamageBonus;
-		score += entry.lastDamageAmount * m_damageWeight;
-	}
-
-	return score;
 }
 
 bool EnemyDetectionAggro::isTargetLockActive() const
@@ -212,32 +188,64 @@ void EnemyDetectionAggro::updateTargetLockTimer()
 	}
 }
 
-Transform* EnemyDetectionAggro::selectBestAggroTarget() const
+Transform* EnemyDetectionAggro::selectClosestDetectedPlayer() const
 {
-	const AggroEntry* bestEntry = nullptr;
+	const bool player1InRange = m_player1Aggro.isInDetectionRange;
+	const bool player2InRange = m_player2Aggro.isInDetectionRange;
 
-	Transform* player1 = m_player1Aggro.targetTransform;
-	Transform* player2 = m_player2Aggro.targetTransform;
-
-	if (player1 && getAggroScore(player1) > -9999.9f)
+	if (player1InRange && !player2InRange)
 	{
-		bestEntry = &m_player1Aggro;
+		return m_player1Aggro.targetTransform;
 	}
 
-	if (player2 && getAggroScore(player2) > -9999.9f)
+	if (!player1InRange && player2InRange)
 	{
-		if (!bestEntry || getAggroScore(player2) > bestEntry->aggroScore)
+		return m_player2Aggro.targetTransform;
+	}
+
+	if (player1InRange && player2InRange)
+	{
+		if (m_player1Aggro.distanceToEnemy < m_player2Aggro.distanceToEnemy)
 		{
-			bestEntry = &m_player2Aggro;
+			return m_player1Aggro.targetTransform;
+		}
+		else
+		{
+			return m_player2Aggro.targetTransform;
 		}
 	}
 
-	if (!bestEntry)
+	return nullptr;
+}
+
+Transform* EnemyDetectionAggro::selectReevaluatedTarget() const
+{
+	const bool player1Aggroing = isPlayer1Aggroing();
+	const bool player2Aggroing = isPlayer2Aggroing();
+
+	if (player1Aggroing && !player2Aggroing)
 	{
-		return nullptr;
+		return m_player1Aggro.targetTransform;
 	}
 
-	return bestEntry->targetTransform;
+	if (!player1Aggroing && player2Aggroing)
+	{
+		return m_player2Aggro.targetTransform;
+	}
+
+	if (player1Aggroing && player2Aggroing)
+	{
+		if (m_player1Aggro.distanceToEnemy < m_player2Aggro.distanceToEnemy)
+		{
+			return m_player1Aggro.targetTransform;
+		}
+		else
+		{
+			return m_player2Aggro.targetTransform;
+		}
+	}
+
+	return m_currentTargetTransform;
 }
 
 void EnemyDetectionAggro::notifyPlayerAttackedEnemy(Transform* playerTransform)
@@ -254,26 +262,7 @@ void EnemyDetectionAggro::notifyPlayerAttackedEnemy(Transform* playerTransform)
 	if (!m_isAggro)
 	{
 		enterAggro(playerTransform);
-		return;
-	}
-}
-
-void EnemyDetectionAggro::notifyPlayerDealtDamage(Transform* playerTransform, float damageAmount)
-{
-	AggroEntry* entry = getAggroEntry(playerTransform);
-	
-	if (!entry)
-	{
-		return;
-	}
-
-	entry->lastDamageTime = m_currentTime;
-	entry->lastDamageAmount = damageAmount;
-
-	if (!m_isAggro)
-	{
-		enterAggro(playerTransform);
-		return;
+		startTargetLock();
 	}
 }
 
@@ -357,6 +346,26 @@ bool EnemyDetectionAggro::isPlayer2InDetectionRange() const
 	return getDistanceToPlayer2() <= m_detectionRadius;
 }
 
+bool EnemyDetectionAggro::isPlayer1Aggroing() const
+{
+	if (!m_player1Aggro.targetTransform)
+	{
+		return false;
+	}
+
+	return (m_currentTime - m_player1Aggro.lastAttackTime) <= m_recentAttackMemory;
+}
+
+bool EnemyDetectionAggro::isPlayer2Aggroing() const
+{
+	if (!m_player2Aggro.targetTransform)
+	{
+		return false;
+	}
+
+	return (m_currentTime - m_player2Aggro.lastAttackTime) <= m_recentAttackMemory;
+}
+
 EnemyDetectionAggro::AggroEntry* EnemyDetectionAggro::getAggroEntry(Transform* target)
 {
 	if (target == getPlayer1Transform())
@@ -381,18 +390,6 @@ const EnemyDetectionAggro::AggroEntry* EnemyDetectionAggro::getAggroEntry(Transf
 		return &m_player2Aggro;
 	}
 	return nullptr;
-}
-
-float EnemyDetectionAggro::getAggroScore(Transform* target) const
-{
-	const AggroEntry* entry = getAggroEntry(target);
-
-	if (!entry)
-	{
-		return -9999.9f;
-	}
-
-	return entry->aggroScore;
 }
 
 IMPLEMENT_SCRIPT(EnemyDetectionAggro)
