@@ -20,7 +20,6 @@ PlayerRotation::PlayerRotation(GameObject* owner)
 void PlayerRotation::Start()
 {
 	GameObject* owner = getOwner();
-	//m_initialRotationOffset = TransformAPI::getEulerDegrees(GameObjectAPI::getTransform(owner));
 }
 
 void PlayerRotation::Update()
@@ -38,18 +37,14 @@ void PlayerRotation::applyFacingFromDirection(GameObject* owner, const Vector3& 
 	const float yawRad = std::atan2(direction.x, direction.z);
 	const float targetYawDeg = yawRad * (180.0f / PI);
 
-	if (!m_yawInitialized)
-	{
-		m_currentYawDeg = 0.0f;
-		m_yawInitialized = true;
-	}
+	Transform* transform = GameObjectAPI::getTransform(owner);
+	Vector3 currentEuler = TransformAPI::getEulerDegrees(transform);
+	const float currentWorldYaw = currentEuler.y;
 
 	const float maxStep = m_turnSpeedDegPerSec * dt;
-	m_currentYawDeg = moveTowardsAngleDegrees(m_currentYawDeg, targetYawDeg, maxStep);
+	const float newYaw = moveTowardsAngleDegrees(currentWorldYaw, targetYawDeg, maxStep);
 
-	const float finalYaw = wrapAngleDegrees(m_initialRotationOffset.y + m_currentYawDeg);
-
-	TransformAPI::setRotationEuler(GameObjectAPI::getTransform(owner), Vector3(m_initialRotationOffset.x, finalYaw, m_initialRotationOffset.z));
+	TransformAPI::setRotationEuler(transform, Vector3(currentEuler.x, newYaw, currentEuler.z));
 }
 
 float PlayerRotation::wrapAngleDegrees(float angle)
