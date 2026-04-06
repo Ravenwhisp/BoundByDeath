@@ -50,6 +50,10 @@
     <ClInclude Include="..\Engine\Assets\Scripts\LocalMultiplayerSetup.h">
       <Filter>Systems</Filter>
     </ClInclude>
+    <ClInclude Include="Damageable.h" />
+    <ClInclude Include="TargetAttackController.h">
+      <Filter>Player\Targeting</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
@@ -80,6 +84,10 @@
     </ClCompile>
     <ClCompile Include="..\Engine\Assets\Scripts\LocalMultiplayerSetup.cpp">
       <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="Damageable.cpp" />
+    <ClCompile Include="TargetAttackController.cpp">
+      <Filter>Player\Targeting</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
