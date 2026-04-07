@@ -28,6 +28,7 @@ public:
 protected:
     virtual void onDamaged(float amount);
     virtual void onHealed(float amount);
+    virtual void onHpDepleted();
     virtual void onDeath();
     virtual void onRevive();
 
