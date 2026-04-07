@@ -4,7 +4,7 @@
 static const ScriptFieldInfo shooterFields[] =
 {
     { "Charge Time", ScriptFieldType::Float, offsetof(Shooter, m_chargeTime), { 0.0f, 150.f, 0.1f } },
-    { "Target", ScriptFieldType::ComponentRef, offsetof(Shooter, m_target), {}, {}, { ComponentType::TRANSFORM } },
+    { "Target", ScriptFieldType::ComponentRef, offsetof(Shooter, m_targetTransform), {}, {}, { ComponentType::TRANSFORM } },
     {"Prefab to instantiate", ScriptFieldType::String, offsetof(Shooter, m_projectileToInstantiate)  },
     { "Spawning relative point", ScriptFieldType::Vec3, offsetof(Shooter, m_spawnRelativePoint) }
 };
@@ -31,6 +31,9 @@ void Shooter::Update()
         if (m_toReleaseCharge) 
         {
             // release code
+            Vector3 targetDirection = TransformAPI::getPosition(m_targetTransform.getReferencedComponent()) - TransformAPI::getPosition(m_objectTransform);
+            targetDirection.Normalize();
+
 
 
             m_isCharging = m_toReleaseCharge = false;
