@@ -1,4 +1,5 @@
 #pragma once
+
 #include "ScriptAPI.h"
 
 class PlayerTargetController;
@@ -12,6 +13,7 @@ public:
 
     void Start() override;
     void Update() override;
+
     ScriptFieldList getExposedFields() const override;
 
 public:

@@ -3,12 +3,12 @@
 #include "PlayerTargetController.h"
 #include "Damageable.h"
 
-static const ScriptFieldInfo targetAttackControllerFields[] =
+static const ScriptFieldInfo TargetAttackControllerFields[] =
 {
     { "Attack Damage", ScriptFieldType::Float, offsetof(TargetAttackController, m_attackDamage), { 0.0f, 999.0f, 1.0f } }
 };
 
-IMPLEMENT_SCRIPT_FIELDS(TargetAttackController, targetAttackControllerFields)
+IMPLEMENT_SCRIPT_FIELDS(TargetAttackController, TargetAttackControllerFields)
 
 TargetAttackController::TargetAttackController(GameObject* owner)
     : Script(owner)
@@ -57,45 +57,25 @@ bool TargetAttackController::isAttackJustPressed()
     const bool keyboardJustPressed = keyboardDown && !m_attackWasDown;
     m_attackWasDown = keyboardDown;
 
-    int playerIndex = 0;
-    if (m_targetController != nullptr)
-    {
-        playerIndex = m_targetController->m_playerIndex;
-    }
-
-    const bool gamepadJustPressed = Input::isFaceButtonBottomJustPressed(playerIndex);
-
-    return keyboardJustPressed || gamepadJustPressed;
+    return keyboardJustPressed;
 }
 
 void TargetAttackController::attackCurrentTarget()
 {
-    if (m_targetController == nullptr)
-    {
-        return;
-    }
-
     GameObject* currentTarget = m_targetController->getCurrentTarget();
     if (currentTarget == nullptr)
     {
-        Debug::log("Attack pressed, but there is no current target.");
         return;
     }
 
     Script* script = GameObjectAPI::getScript(currentTarget, "Damageable");
     if (script == nullptr)
     {
-        Debug::warn("TargetAttackController: target %s has no Damageable script.",
-            GameObjectAPI::getName(currentTarget));
         return;
     }
 
     Damageable* damageable = static_cast<Damageable*>(script);
     damageable->takeDamage(m_attackDamage);
-
-    Debug::log("Attacked %s for %.2f damage.",
-        GameObjectAPI::getName(currentTarget),
-        m_attackDamage);
 }
 
 IMPLEMENT_SCRIPT(TargetAttackController)
