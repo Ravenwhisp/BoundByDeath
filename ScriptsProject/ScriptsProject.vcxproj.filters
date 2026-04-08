@@ -25,6 +25,9 @@
     <Filter Include="Player\States">
       <UniqueIdentifier>{efb0d3d4-8d69-407b-8da8-4ffc1137e7a4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Enemy">
+      <UniqueIdentifier>{94d20e25-42e3-418f-89d0-792f7030a0dd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -75,7 +78,10 @@
       <Filter>Player\States</Filter>
     </ClInclude>
     <ClInclude Include="EnemyDetectionAggro.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyNavigation.h">
+      <Filter>Enemy</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -127,7 +133,10 @@
       <Filter>Player\States</Filter>
     </ClCompile>
     <ClCompile Include="EnemyDetectionAggro.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyNavigation.cpp">
+      <Filter>Enemy</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
