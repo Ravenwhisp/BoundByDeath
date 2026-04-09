@@ -20,7 +20,7 @@ public:
 
     void Start() override;
     void Update() override;
-    //void drawGizmo() override;
+    void drawGizmo() override;
 
     ScriptFieldList getExposedFields() const override;
 
@@ -37,7 +37,17 @@ private:
     Transform* m_currentTarget = nullptr;
     float m_repathTimer = 0.0f;
 
+    std::vector<Vector3> m_path;
+    bool m_hasPath = false;
+    size_t m_currentIndex = 0;
+    size_t m_maxPathPoints = 32;
+    Vector3 m_searchExtents = Vector3(5.0f, 5.0f, 5.0f);
+
+
 private:
     bool hasValidTarget() const;
     bool isTargetInCombatRange() const;
+
+    void clearPath();
+    bool buildPathToTarget();
 };

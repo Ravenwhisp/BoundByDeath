@@ -20,14 +20,13 @@ EnemyNavigation::EnemyNavigation(GameObject* owner)
 
 void EnemyNavigation::Start()
 {
-	Script* script = GameObjectAPI::getScript(getOwner(), "EnemyDetectionAggro");
+	Script* script = GameObjectAPI::getScript(m_owner, "EnemyDetectionAggro");
 	m_enemyDetectionAggro = dynamic_cast<EnemyDetectionAggro*>(script);
 
 	if (!m_enemyDetectionAggro)
 	{
 		Debug::error("EnemyDetectionAggro script not found!");
 	}
-
 }
 
 void EnemyNavigation::Update()
@@ -38,7 +37,11 @@ void EnemyNavigation::Update()
 		if (m_currentState == NavigationState::Idle)
 			Debug::log("Idle");
 		else if (m_currentState == NavigationState::Chase)
+		{
 			Debug::log("Chase");
+			if (buildPathToTarget())
+				Debug::log("Path built");
+		}
 		else
 			Debug::log("Error");
 	}
@@ -71,6 +74,25 @@ void EnemyNavigation::Update()
 	}
 }
 
+void EnemyNavigation::drawGizmo()
+{
+	if (!m_debugEnabled)
+	{
+		return;
+	}
+
+	if (m_path.size() < 2)
+	{
+		return;
+	}
+
+	const Vector3 cyan = { 0.0f, 1.0f, 1.0f };
+	for (int i = 0; i < m_path.size() - 1; ++i)
+	{
+		DebugDrawAPI::drawLine(m_path[i], m_path[i + 1], cyan, 0, true);
+	}
+}
+
 bool EnemyNavigation::hasValidTarget() const
 {
 	if (m_enemyDetectionAggro->getCurrentTarget())
@@ -88,12 +110,54 @@ bool EnemyNavigation::isTargetInCombatRange() const
 		return false;
 	}
 
-	Vector3 distance = getOwner()->GetTransform()->getPosition() - m_currentTarget->getPosition();
+	Vector3 distance = m_owner->GetTransform()->getPosition() - m_currentTarget->getPosition();
 
 	if (distance.Length() <= m_combatRange)
 	{
 		return true;
 	}
+
+	return false;
+}
+
+void EnemyNavigation::clearPath()
+{
+	m_path.clear();
+	m_hasPath = false;
+	m_currentIndex = 0;
+}
+
+bool EnemyNavigation::buildPathToTarget()
+{
+	if (!m_currentTarget)
+	{
+		return false;
+	}
+
+	Vector3 start = m_owner->GetTransform()->getPosition();
+	Vector3 end = m_currentTarget->getPosition();
+
+	std::vector<Vector3> tempPath;
+	tempPath.resize(m_maxPathPoints);
+
+	int pointCount = NavigationAPI::findStraightPath(start, end, tempPath.data(), m_maxPathPoints, m_searchExtents);
+
+	if (pointCount > 0)
+	{
+		clearPath();
+
+		for (int i = 0; i < pointCount; ++i)
+		{
+			m_path.push_back(tempPath[i]);
+		}
+
+		// need to check if first point is current position or not
+		m_currentIndex = 0;
+		m_hasPath = true;
+		return true;
+	}
+	
+	clearPath();
 
 	return false;
 }
