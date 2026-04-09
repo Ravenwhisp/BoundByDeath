@@ -32,27 +32,11 @@ void EnemyNavigation::Start()
 void EnemyNavigation::Update()
 {
 
-	if (Input::isKeyDown(KeyCode::Num1))
-	{
-		if (m_currentState == NavigationState::Idle)
-			Debug::log("Idle");
-		else if (m_currentState == NavigationState::Chase)
-		{
-			Debug::log("Chase");
-			if (!m_hasPath)
-			{
-				if (buildPathToTarget())
-					Debug::log("Path built");
-			}			
-		}
-		else
-			Debug::log("Error");
-	}
-
 	if (!m_enemyDetectionAggro)
 	{
 		m_currentState = NavigationState::Idle;
 		m_currentTarget = nullptr;
+		updateIdle();
 		return;
 	}
 
@@ -63,18 +47,19 @@ void EnemyNavigation::Update()
 		if (isTargetInCombatRange())
 		{
 			m_currentState = NavigationState::Idle;
+			updateIdle();
 		}
 		else
 		{
 			m_currentState = NavigationState::Chase;
-			if (m_hasPath)
-				followPath();
+			updateChase();
 		}
 	}
 	else
 	{
 		m_currentTarget = nullptr;
 		m_currentState = NavigationState::Idle;
+		updateIdle();
 		return;
 	}
 }
@@ -228,6 +213,43 @@ Vector3 EnemyNavigation::getChasePosition() const
 	Vector3 chasePosition = targetPos - direction * m_combatRange;
 
 	return chasePosition;
+}
+
+void EnemyNavigation::updateIdle()
+{
+	m_repathTimer = 0.0f;
+	if (m_hasPath)
+	{
+		clearPath();
+	}
+}
+
+void EnemyNavigation::updateChase()
+{
+	if (!m_hasPath)
+	{
+		if (!buildPathToTarget())
+		{
+			return;
+		}
+		m_repathTimer = 0.0f;
+	}
+
+	m_repathTimer += Time::getDeltaTime();
+
+	if (m_repathTimer >= m_intervalRepath)
+	{
+		if (!buildPathToTarget())
+		{
+			return;
+		}
+		m_repathTimer = 0.0f;
+	}
+
+	if (m_hasPath)
+	{
+		followPath();
+	}
 }
 
 IMPLEMENT_SCRIPT(EnemyNavigation)

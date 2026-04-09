@@ -52,4 +52,7 @@ private:
     bool buildPathToTarget();
     void followPath();
     Vector3 getChasePosition() const;
+
+    void updateIdle();
+    void updateChase();
 };
