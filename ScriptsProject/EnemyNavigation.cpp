@@ -27,10 +27,46 @@ void EnemyNavigation::Start()
 	{
 		Debug::error("EnemyDetectionAggro script not found!");
 	}
+
 }
 
 void EnemyNavigation::Update()
 {
+
+	if (Input::isKeyDown(KeyCode::Num1))
+	{
+		if (m_currentState == NavigationState::Idle)
+			Debug::log("Idle");
+		else if (m_currentState == NavigationState::Chase)
+			Debug::log("Chase");
+		else
+			Debug::log("Error");
+	}
+
+	if (!m_enemyDetectionAggro)
+	{
+		m_currentState = NavigationState::Idle;
+		return;
+	}
+
+	m_currentTarget = m_enemyDetectionAggro->getCurrentTarget();
+	if (!m_currentTarget)
+	{
+		m_currentState = NavigationState::Idle;
+		return;
+	}
+
+	Vector3 distance = getOwner()->GetTransform()->getPosition() - m_currentTarget->getPosition();
+
+	if (distance.Length() <= m_combatRange)
+	{
+		m_currentState = NavigationState::Idle;
+	}
+	else
+	{
+		m_currentState = NavigationState::Chase;
+	}
+
 
 }
 
