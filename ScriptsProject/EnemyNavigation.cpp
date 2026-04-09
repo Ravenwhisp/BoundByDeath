@@ -39,8 +39,11 @@ void EnemyNavigation::Update()
 		else if (m_currentState == NavigationState::Chase)
 		{
 			Debug::log("Chase");
-			if (buildPathToTarget())
-				Debug::log("Path built");
+			if (!m_hasPath)
+			{
+				if (buildPathToTarget())
+					Debug::log("Path built");
+			}			
 		}
 		else
 			Debug::log("Error");
@@ -64,6 +67,8 @@ void EnemyNavigation::Update()
 		else
 		{
 			m_currentState = NavigationState::Chase;
+			if (m_hasPath)
+				followPath();
 		}
 	}
 	else
@@ -135,7 +140,7 @@ bool EnemyNavigation::buildPathToTarget()
 	}
 
 	Vector3 start = m_owner->GetTransform()->getPosition();
-	Vector3 end = m_currentTarget->getPosition();
+	Vector3 end = getChasePosition();
 
 	std::vector<Vector3> tempPath;
 	tempPath.resize(m_maxPathPoints);
@@ -160,6 +165,69 @@ bool EnemyNavigation::buildPathToTarget()
 	clearPath();
 
 	return false;
+}
+
+void EnemyNavigation::followPath()
+{
+	if (!m_hasPath)
+	{
+		return;
+	}
+
+	if (m_currentIndex >= m_path.size())
+	{
+		clearPath();
+		return;
+	}
+
+	Vector3 currentPosition = m_owner->GetTransform()->getPosition();
+	Vector3 targetPoint = m_path[m_currentIndex];
+	Vector3 direction = targetPoint - currentPosition;
+
+	float distance = direction.Length();
+
+	if (distance < 0.1f)
+	{
+		m_currentIndex++;
+		if (m_currentIndex >= m_path.size())
+		{
+			clearPath();
+			return;
+		}
+		return;
+	}
+
+	direction.Normalize();
+	float dt = Time::getDeltaTime();
+
+	currentPosition += direction * m_moveSpeed * dt;
+
+	TransformAPI::setPosition(m_owner->GetTransform(), currentPosition);	
+}
+
+Vector3 EnemyNavigation::getChasePosition() const
+{
+	if (!m_currentTarget)
+	{
+		return m_owner->GetTransform()->getPosition();
+	}
+
+	Vector3 ownerPos = m_owner->GetTransform()->getPosition();
+	Vector3 targetPos = m_currentTarget->getPosition();
+	Vector3 direction = targetPos - ownerPos;
+
+	float distance = direction.Length();
+
+	if (distance < 0.001f)
+	{
+		return targetPos;
+	}
+
+	direction.Normalize();
+
+	Vector3 chasePosition = targetPos - direction * m_combatRange;
+
+	return chasePosition;
 }
 
 IMPLEMENT_SCRIPT(EnemyNavigation)

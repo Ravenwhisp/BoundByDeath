@@ -50,4 +50,6 @@ private:
 
     void clearPath();
     bool buildPathToTarget();
+    void followPath();
+    Vector3 getChasePosition() const;
 };
