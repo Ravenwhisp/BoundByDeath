@@ -36,4 +36,8 @@ private:
     NavigationState m_currentState = NavigationState::Idle;
     Transform* m_currentTarget = nullptr;
     float m_repathTimer = 0.0f;
+
+private:
+    bool hasValidTarget() const;
+    bool isTargetInCombatRange() const;
 };

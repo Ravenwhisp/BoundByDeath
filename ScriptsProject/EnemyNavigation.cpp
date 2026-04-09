@@ -46,28 +46,56 @@ void EnemyNavigation::Update()
 	if (!m_enemyDetectionAggro)
 	{
 		m_currentState = NavigationState::Idle;
+		m_currentTarget = nullptr;
 		return;
 	}
 
-	m_currentTarget = m_enemyDetectionAggro->getCurrentTarget();
-	if (!m_currentTarget)
+	if (hasValidTarget())
 	{
+		m_currentTarget = m_enemyDetectionAggro->getCurrentTarget();
+
+		if (isTargetInCombatRange())
+		{
+			m_currentState = NavigationState::Idle;
+		}
+		else
+		{
+			m_currentState = NavigationState::Chase;
+		}
+	}
+	else
+	{
+		m_currentTarget = nullptr;
 		m_currentState = NavigationState::Idle;
 		return;
+	}
+}
+
+bool EnemyNavigation::hasValidTarget() const
+{
+	if (m_enemyDetectionAggro->getCurrentTarget())
+	{
+		return true;
+	}
+
+	return false;
+}
+
+bool EnemyNavigation::isTargetInCombatRange() const
+{
+	if (!m_currentTarget)
+	{
+		return false;
 	}
 
 	Vector3 distance = getOwner()->GetTransform()->getPosition() - m_currentTarget->getPosition();
 
 	if (distance.Length() <= m_combatRange)
 	{
-		m_currentState = NavigationState::Idle;
-	}
-	else
-	{
-		m_currentState = NavigationState::Chase;
+		return true;
 	}
 
-
+	return false;
 }
 
 IMPLEMENT_SCRIPT(EnemyNavigation)
