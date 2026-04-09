@@ -30,6 +30,8 @@ public:
     float m_turnSpeed = 2.0f;
     float m_intervalRepath = 0.4f;
     bool m_debugEnabled = true;
+    std::string m_idleAnimationTrigger = "";
+    std::string m_chaseAnimationTrigger = "";
 
 private:
     EnemyDetectionAggro* m_enemyDetectionAggro = nullptr;
@@ -44,10 +46,14 @@ private:
     Vector3 m_searchExtents = Vector3(5.0f, 5.0f, 5.0f);
     const float RADIANS_TO_DEGREES = 180.0f / 3.14159265f;
 
+    AnimationComponent* m_animation = nullptr;
 
 private:
     bool hasValidTarget() const;
     bool isTargetInCombatRange() const;
+
+    void enterIdleState();
+    void enterChaseState();
 
     void clearPath();
     bool buildPathToTarget();

@@ -9,7 +9,9 @@ static const ScriptFieldInfo EnemyNavigationFields[] =
 	{ "Move Speed", ScriptFieldType::Float, offsetof(EnemyNavigation, m_moveSpeed), { 0.0f, 50.0f, 0.1f } },
 	{ "Turn Speed", ScriptFieldType::Float, offsetof(EnemyNavigation, m_turnSpeed), { 0.0f, 5.0f, 0.1f } },
 	{ "Interval", ScriptFieldType::Float, offsetof(EnemyNavigation, m_intervalRepath), { 0.0f, 50.0f, 0.1f } },
-	{ "Debug Enabled", ScriptFieldType::Bool, offsetof(EnemyNavigation, m_debugEnabled) }
+	{ "Debug Enabled", ScriptFieldType::Bool, offsetof(EnemyNavigation, m_debugEnabled) },
+	{ "Idle Animation Trigger", ScriptFieldType::String, offsetof(EnemyNavigation, m_idleAnimationTrigger) },
+	{ "Chase Animation Trigger", ScriptFieldType::String, offsetof(EnemyNavigation, m_chaseAnimationTrigger) }
 };
 
 IMPLEMENT_SCRIPT_FIELDS(EnemyNavigation, EnemyNavigationFields)
@@ -25,6 +27,12 @@ void EnemyNavigation::Start()
 	Script* script = GameObjectAPI::getScript(m_owner, "EnemyDetectionAggro");
 	m_enemyDetectionAggro = dynamic_cast<EnemyDetectionAggro*>(script);
 
+	m_animation = AnimationAPI::getAnimationComponent(m_owner);
+	if (!m_animation)
+	{
+		Debug::error("Animation component not found!");
+	}
+
 	if (!m_enemyDetectionAggro)
 	{
 		Debug::error("EnemyDetectionAggro script not found!");
@@ -36,7 +44,7 @@ void EnemyNavigation::Update()
 
 	if (!m_enemyDetectionAggro)
 	{
-		m_currentState = NavigationState::Idle;
+		enterIdleState();
 		m_currentTarget = nullptr;
 		updateIdle();
 		return;
@@ -48,19 +56,19 @@ void EnemyNavigation::Update()
 
 		if (isTargetInCombatRange())
 		{
-			m_currentState = NavigationState::Idle;
+			enterIdleState();
 			updateIdle();
 		}
 		else
 		{
-			m_currentState = NavigationState::Chase;
+			enterChaseState();
 			updateChase();
 		}
 	}
 	else
 	{
 		m_currentTarget = nullptr;
-		m_currentState = NavigationState::Idle;
+		enterIdleState();
 		updateIdle();
 		return;
 	}
@@ -110,6 +118,40 @@ bool EnemyNavigation::isTargetInCombatRange() const
 	}
 
 	return false;
+}
+
+void EnemyNavigation::enterIdleState()
+{
+	if (m_currentState == NavigationState::Idle)
+	{
+		return;
+	}
+
+	m_currentState = NavigationState::Idle;
+
+	if (!m_animation)
+	{
+		return;
+	}
+
+	AnimationAPI::sendTrigger(m_animation, m_idleAnimationTrigger.c_str());
+}
+
+void EnemyNavigation::enterChaseState()
+{
+	if (m_currentState == NavigationState::Chase)
+	{
+		return;
+	}
+
+	m_currentState = NavigationState::Chase;
+
+	if (!m_animation)
+	{
+		return;
+	}
+
+	AnimationAPI::sendTrigger(m_animation, m_chaseAnimationTrigger.c_str());
 }
 
 void EnemyNavigation::clearPath()
@@ -213,7 +255,7 @@ Vector3 EnemyNavigation::getChasePosition() const
 
 	direction.Normalize();
 
-	Vector3 chasePosition = targetPos - direction * m_combatRange;
+	Vector3 chasePosition = targetPos - direction * (m_combatRange - 0.1f);
 
 	return chasePosition;
 }
