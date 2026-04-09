@@ -1,12 +1,13 @@
 #include "pch.h"
 #include "EnemyNavigation.h"
 #include "EnemyDetectionAggro.h"
+#include <cmath>
 
 static const ScriptFieldInfo EnemyNavigationFields[] =
 {
 	{ "Combat Range", ScriptFieldType::Float, offsetof(EnemyNavigation, m_combatRange), { 0.0f, 50.0f, 0.1f } },
 	{ "Move Speed", ScriptFieldType::Float, offsetof(EnemyNavigation, m_moveSpeed), { 0.0f, 50.0f, 0.1f } },
-	{ "Turn Speed", ScriptFieldType::Float, offsetof(EnemyNavigation, m_turnSpeed), { 0.0f, 50.0f, 0.1f } },
+	{ "Turn Speed", ScriptFieldType::Float, offsetof(EnemyNavigation, m_turnSpeed), { 0.0f, 5.0f, 0.1f } },
 	{ "Interval", ScriptFieldType::Float, offsetof(EnemyNavigation, m_intervalRepath), { 0.0f, 50.0f, 0.1f } },
 	{ "Debug Enabled", ScriptFieldType::Bool, offsetof(EnemyNavigation, m_debugEnabled) }
 };
@@ -20,6 +21,7 @@ EnemyNavigation::EnemyNavigation(GameObject* owner)
 
 void EnemyNavigation::Start()
 {
+
 	Script* script = GameObjectAPI::getScript(m_owner, "EnemyDetectionAggro");
 	m_enemyDetectionAggro = dynamic_cast<EnemyDetectionAggro*>(script);
 
@@ -183,6 +185,7 @@ void EnemyNavigation::followPath()
 	}
 
 	direction.Normalize();
+	rotateTowardsDirection(direction);
 	float dt = Time::getDeltaTime();
 
 	currentPosition += direction * m_moveSpeed * dt;
@@ -250,6 +253,56 @@ void EnemyNavigation::updateChase()
 	{
 		followPath();
 	}
+}
+
+void EnemyNavigation::rotateTowardsDirection(const Vector3& direction)
+{
+	Vector3 desiredDirection = direction;
+	desiredDirection.y = 0.0f;
+
+	if (desiredDirection.LengthSquared() < 0.0001f)
+	{
+		return;
+	}
+
+	Vector3 currentForward = TransformAPI::getForward(m_owner->GetTransform());
+	currentForward.y = 0.0f;
+
+	if (currentForward.LengthSquared() < 0.0001f)
+	{
+		return;
+	}
+
+	desiredDirection.Normalize();
+	currentForward.Normalize();
+
+	float dot = currentForward.Dot(desiredDirection);
+
+	if (dot > 1.0f) dot = 1.0f;
+	if (dot < -1.0f) dot = -1.0f;
+
+	float angle = std::acos(dot);
+
+	Vector3 cross = currentForward.Cross(desiredDirection);
+
+	float sign = (cross.y > 0) ? 1.0f : -1.0f;
+
+	Vector3 currentEulerRotation = TransformAPI::getEulerDegrees(m_owner->GetTransform());
+	float maxStep = (m_turnSpeed * 100) * Time::getDeltaTime();
+
+	float step = 0.0f;
+	float angleDeg = angle * RADIANS_TO_DEGREES;
+	if (angleDeg > maxStep)
+	{
+		step = maxStep * sign;
+	}
+	else
+	{
+		step = angleDeg * sign;
+	}
+
+	currentEulerRotation.y += step;
+	TransformAPI::setRotationEuler(m_owner->GetTransform(), currentEulerRotation);
 }
 
 IMPLEMENT_SCRIPT(EnemyNavigation)

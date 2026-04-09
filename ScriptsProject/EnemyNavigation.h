@@ -27,7 +27,7 @@ public:
 public:
     float m_combatRange = 2.0f;
     float m_moveSpeed = 1.0f;
-    float m_turnSpeed = 1.0f;
+    float m_turnSpeed = 2.0f;
     float m_intervalRepath = 0.4f;
     bool m_debugEnabled = true;
 
@@ -42,6 +42,7 @@ private:
     size_t m_currentIndex = 0;
     size_t m_maxPathPoints = 32;
     Vector3 m_searchExtents = Vector3(5.0f, 5.0f, 5.0f);
+    const float RADIANS_TO_DEGREES = 180.0f / 3.14159265f;
 
 
 private:
@@ -55,4 +56,5 @@ private:
 
     void updateIdle();
     void updateChase();
+    void rotateTowardsDirection(const Vector3& direction);
 };
