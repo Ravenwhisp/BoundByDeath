@@ -4,6 +4,8 @@
 
 static const ScriptFieldInfo boundFields[] =
 {
+     { "Player 1 Transform", ScriptFieldType::ComponentRef, offsetof(Bound, m_firstTarget), {}, {}, { ComponentType::TRANSFORM } },
+    { "Player 2 Transform", ScriptFieldType::ComponentRef, offsetof(Bound, m_secondTarget), {}, {}, { ComponentType::TRANSFORM } },
     { "Min Distance",       ScriptFieldType::Float,        offsetof(Bound, m_minDistance),       {}, {}, {} },
     { "Damage Distance",    ScriptFieldType::Float,        offsetof(Bound, m_distanceDamage),    {}, {}, {} },
     { "InstaKill Distance", ScriptFieldType::Float,        offsetof(Bound, m_distanceInstaKill), {}, {}, {} },
@@ -39,33 +41,34 @@ Damageable* findDamageable(GameObject* gameObject)
 
 Bound::Bound(GameObject* owner) : Script(owner)
 {
-    const std::vector<GameObject*> players = SceneAPI::findAllGameObjectsByTag(Tag::PLAYER, true);
-    if (players.size() == 2) 
-    {
-        m_firstTarget = GameObjectAPI::getTransform(players[0]);
-		m_secondTarget = GameObjectAPI::getTransform(players[1]);
 
-        m_firstDamageable = findDamageable(players[0]);
-		m_secondDamageable = findDamageable(players[1]);
-	}
-    else 
-    {
-        Debug::warn("Bound script requires exactly 2 players in the scene. Found %d.", players.size());
-    }
 }
 
 void Bound::Start()
 {
+
+    if (!m_firstTarget.getReferencedComponent() || !m_secondTarget.getReferencedComponent())
+    {
+        return;
+    }
+
+    GameObject* player1 = ComponentAPI::getOwner(m_firstTarget.component);
+    GameObject* player2 = ComponentAPI::getOwner(m_secondTarget.component);
+
+
+    m_firstDamageable = findDamageable(player1);
+    m_secondDamageable = findDamageable(player2);
+
 }
 
 void Bound::Update()
 {
-    if (!m_firstTarget || !m_secondTarget ||
+    if (!m_firstTarget.getReferencedComponent() || !m_secondTarget.getReferencedComponent() ||
         !m_firstDamageable || !m_secondDamageable)
         return;
 
-    const Vector3 p1 = TransformAPI::getPosition(m_firstTarget);
-    const Vector3 p2 = TransformAPI::getPosition(m_secondTarget);
+    const Vector3 p1 = TransformAPI::getPosition(m_firstTarget.getReferencedComponent());
+    const Vector3 p2 = TransformAPI::getPosition(m_secondTarget.getReferencedComponent());
 
     // Midpoint
     m_center = (p1 + p2) * 0.5f;
@@ -108,47 +111,40 @@ void Bound::Update()
 
 void Bound::drawGizmo()
 {
-    if (!m_firstTarget || !m_secondTarget)
-    {
+    if (!m_firstTarget.getReferencedComponent() || !m_secondTarget.getReferencedComponent())
         return;
-    }
 
-    const Vector3 p1 = TransformAPI::getPosition(m_firstTarget);
-    const Vector3 p2 = TransformAPI::getPosition(m_secondTarget);
+    const Vector3 p1 = TransformAPI::getPosition(m_firstTarget.getReferencedComponent());
+    const Vector3 p2 = TransformAPI::getPosition(m_secondTarget.getReferencedComponent());
 
+    const Vector3 center = (p1 + p2) * 0.5f;
     const float distance = Vector3::Distance(p1, p2);
-    const Vector3 up = Vector3(0.0f, 1.0f, 0.0f);   // XZ plane circle
+    const Vector3 up = Vector3(0.0f, 1.0f, 0.0f);
+
+    // Recompute radius locally
+    const float maxRadius = m_distanceInstaKill * 0.5f;
+    const float currentRadius = min(distance * 0.5f + m_radiusThreshold, maxRadius);
 
     DebugDrawAPI::drawLine(p1, p2, Vector3(1.0f, 1.0f, 1.0f));
-
-    DebugDrawAPI::drawPoint(m_center, Vector3(1.0f, 1.0f, 0.0f), 4.0f);
+    DebugDrawAPI::drawPoint(center, Vector3(1.0f, 1.0f, 0.0f), 4.0f);
 
     Vector3 circleColor;
     if (distance <= m_minDistance)
-    {
         circleColor = Vector3(0.0f, 1.0f, 0.0f);
-    }
     else if (distance < m_distanceDamage)
-    {
         circleColor = Vector3(1.0f, 1.0f, 0.0f);
-    }
     else if (distance < m_distanceInstaKill)
-    {
         circleColor = Vector3(1.0f, 0.3f, 0.0f);
-    }
     else
-    {
         circleColor = Vector3(1.0f, 1.0f, 1.0f);
-    }
 
-    DebugDrawAPI::drawCircle(m_center, up, circleColor, m_currentRadius, 32.0f);
-
+    DebugDrawAPI::drawCircle(center, up, circleColor, currentRadius, 32.0f);
 
     const float damageRadius = min(m_distanceDamage * 0.5f, m_distanceInstaKill * 0.5f);
     const float instaKillRadius = m_distanceInstaKill * 0.5f;
 
-    DebugDrawAPI::drawCircle(m_center, up, Vector3(1.0f, 1.0f, 0.0f), damageRadius, 32.0f);
-    DebugDrawAPI::drawCircle(m_center, up, Vector3(1.0f, 0.0f, 0.0f), instaKillRadius, 32.0f);
+    DebugDrawAPI::drawCircle(center, up, Vector3(1.0f, 1.0f, 0.0f), damageRadius, 32.0f);
+    DebugDrawAPI::drawCircle(center, up, Vector3(1.0f, 0.0f, 0.0f), instaKillRadius, 32.0f);
 }
 
 

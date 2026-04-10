@@ -20,8 +20,8 @@ public:
     ScriptFieldList getExposedFields() const override;
 
 public:
-    Transform* m_firstTarget = nullptr;
-    Transform* m_secondTarget = nullptr;
+    ScriptComponentRef<Transform> m_firstTarget;
+    ScriptComponentRef<Transform> m_secondTarget;
 
     Damageable* m_firstDamageable = nullptr;
     Damageable* m_secondDamageable = nullptr;
