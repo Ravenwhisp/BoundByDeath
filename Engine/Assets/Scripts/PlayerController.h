@@ -4,6 +4,7 @@
 
 class PlayerMovement;
 class PlayerRotation; 
+class AbilityBase;
 
 class PlayerController : public Script
 {
@@ -28,9 +29,22 @@ private:
     PlayerMovement* m_movement = nullptr;
     PlayerRotation* m_rotation = nullptr;
 
+	AbilityBase* m_dash = nullptr;
+	AbilityBase* m_basicAttack = nullptr;
+	AbilityBase* m_chargedAttack = nullptr;
+	AbilityBase* m_specialAbility = nullptr; //Taunt or Arrow Volley
+
     Transform* m_cameraTransform = nullptr;
 
 private:
-    Vector3 readMoveDirection() const;
+    PlayerMovement* findMovementScript(GameObject* owner);
+	PlayerRotation* findRotationScript(GameObject* owner);
+
+	AbilityBase* findDashScript(GameObject* owner);
+	AbilityBase* findBasicAttackScript(GameObject* owner);
+	AbilityBase* findChargedAttackScript(GameObject* owner);
+	AbilityBase* findSpecialAbilityScript(GameObject* owner); //Taunt or Arrow Volley
+
+    Vector3 readMoveDirection(const Vector2& moveAxis) const;
 
 };

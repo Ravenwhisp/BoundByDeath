@@ -25,23 +25,19 @@ void PlayerMovement::Update()
 {
 }
 
-void PlayerMovement::applyTranslation(GameObject* owner, const Vector3& direction, float dt, bool shiftHeld) const
+void PlayerMovement::moveInternal(GameObject* owner, const Vector3& displacement) const
 {
     Transform* transform = GameObjectAPI::getTransform(owner);
-    if (!transform)
-    {
-        return;
-    }
-
-    float speed = m_moveSpeed;
-    if (shiftHeld)
-    {
-        speed *= m_shiftMultiplier;
-    }
+    if (!transform) return;
 
     const Vector3 currentPos = TransformAPI::getPosition(transform);
-    const Vector3 desiredPos = currentPos + direction * speed * dt;
+    const Vector3 desiredPos = currentPos + displacement;
 
+    applyTranslation(transform, currentPos, desiredPos);
+}
+
+void PlayerMovement::applyTranslation(Transform* transform, const Vector3& currentPos, const Vector3& desiredPos) const
+{
     if (!m_constrainToNavMesh)
     {
         TransformAPI::setPosition(transform, desiredPos);
