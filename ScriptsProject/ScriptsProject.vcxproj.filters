@@ -19,6 +19,18 @@
     <Filter Include="Player\Targeting">
       <UniqueIdentifier>{3061405a-a204-4131-a028-1ff12d239d69}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Player\Characters">
+      <UniqueIdentifier>{4e32a2c6-18c7-401f-b758-0f4ffa1119b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Player\Abilities">
+      <UniqueIdentifier>{49bc0cdc-0cc7-4598-a116-597b36303fa8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Player\Abilities\Death">
+      <UniqueIdentifier>{af9be762-c089-4e1e-a1ad-b0a5776c1f33}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Player\Abilities\Lyriel">
+      <UniqueIdentifier>{640bef78-242e-4966-b317-5e9632e1f92b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -50,6 +62,43 @@
     <ClInclude Include="..\Engine\Assets\Scripts\LocalMultiplayerSetup.h">
       <Filter>Systems</Filter>
     </ClInclude>
+    <ClInclude Include="Damageable.h" />
+    <ClInclude Include="CharacterBase.h">
+      <Filter>Player\Characters</Filter>
+    </ClInclude>
+    <ClInclude Include="DeathCharacter.h">
+      <Filter>Player\Characters</Filter>
+    </ClInclude>
+    <ClInclude Include="LyrielCharacter.h">
+      <Filter>Player\Characters</Filter>
+    </ClInclude>
+    <ClInclude Include="AbilityBase.h">
+      <Filter>Player\Abilities</Filter>
+    </ClInclude>
+    <ClInclude Include="DeathChargedAttack.h">
+      <Filter>Player\Abilities\Death</Filter>
+    </ClInclude>
+    <ClInclude Include="DeathBasicAttack.h">
+      <Filter>Player\Abilities\Death</Filter>
+    </ClInclude>
+    <ClInclude Include="DeathDash.h">
+      <Filter>Player\Abilities\Death</Filter>
+    </ClInclude>
+    <ClInclude Include="DeathTaunt.h">
+      <Filter>Player\Abilities\Death</Filter>
+    </ClInclude>
+    <ClInclude Include="LyrielBasicAttack.h">
+      <Filter>Player\Abilities\Lyriel</Filter>
+    </ClInclude>
+    <ClInclude Include="LyrielChargedAttack.h">
+      <Filter>Player\Abilities\Lyriel</Filter>
+    </ClInclude>
+    <ClInclude Include="LyrielDash.h">
+      <Filter>Player\Abilities\Lyriel</Filter>
+    </ClInclude>
+    <ClInclude Include="LyrielArrowVolley.h">
+      <Filter>Player\Abilities\Lyriel</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
@@ -80,6 +129,43 @@
     </ClCompile>
     <ClCompile Include="..\Engine\Assets\Scripts\LocalMultiplayerSetup.cpp">
       <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="Damageable.cpp" />
+    <ClCompile Include="CharacterBase.cpp">
+      <Filter>Player\Characters</Filter>
+    </ClCompile>
+    <ClCompile Include="DeathCharacter.cpp">
+      <Filter>Player\Characters</Filter>
+    </ClCompile>
+    <ClCompile Include="LyrielCharacter.cpp">
+      <Filter>Player\Characters</Filter>
+    </ClCompile>
+    <ClCompile Include="AbilityBase.cpp">
+      <Filter>Player\Abilities</Filter>
+    </ClCompile>
+    <ClCompile Include="DeathChargedAttack.cpp">
+      <Filter>Player\Abilities\Death</Filter>
+    </ClCompile>
+    <ClCompile Include="DeathBasicAttack.cpp">
+      <Filter>Player\Abilities\Death</Filter>
+    </ClCompile>
+    <ClCompile Include="DeathDash.cpp">
+      <Filter>Player\Abilities\Death</Filter>
+    </ClCompile>
+    <ClCompile Include="DeathTaunt.cpp">
+      <Filter>Player\Abilities\Death</Filter>
+    </ClCompile>
+    <ClCompile Include="LyrielBasicAttack.cpp">
+      <Filter>Player\Abilities\Lyriel</Filter>
+    </ClCompile>
+    <ClCompile Include="LyrielChargedAttack.cpp">
+      <Filter>Player\Abilities\Lyriel</Filter>
+    </ClCompile>
+    <ClCompile Include="LyrielDash.cpp">
+      <Filter>Player\Abilities\Lyriel</Filter>
+    </ClCompile>
+    <ClCompile Include="LyrielArrowVolley.cpp">
+      <Filter>Player\Abilities\Lyriel</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
