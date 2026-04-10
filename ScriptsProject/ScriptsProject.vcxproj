@@ -157,10 +157,19 @@
     <ClInclude Include="..\Engine\Assets\Scripts\PlayerController.h" />
     <ClInclude Include="..\Engine\Assets\Scripts\TestingButton.h" />
     <ClInclude Include="..\Engine\Assets\Scripts\TriggerArea.h" />
+    <ClInclude Include="Damageable.h" />
+    <ClInclude Include="DebugDamageTrigger.h" />
     <ClInclude Include="DebugDrawTest.h" />
+    <ClInclude Include="EnemyDetectionAggro.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="DefeatConditionManager.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="SpikeTrap.h" />
+    <ClInclude Include="PlayerDamageable.h" />
+    <ClInclude Include="PlayerDownState.h" />
+    <ClInclude Include="PlayerState.h" />
+    <ClInclude Include="PlayerTargetController.h" />
+    <ClInclude Include="TargetIndicatorUI.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Engine\Assets\Scripts\CameraFollow.cpp" />
@@ -169,8 +178,12 @@
     <ClCompile Include="..\Engine\Assets\Scripts\PlayerController.cpp" />
     <ClCompile Include="..\Engine\Assets\Scripts\TestingButton.cpp" />
     <ClCompile Include="..\Engine\Assets\Scripts\TriggerArea.cpp" />
+    <ClCompile Include="Damageable.cpp" />
+    <ClCompile Include="DebugDamageTrigger.cpp" />
     <ClCompile Include="DebugDrawTest.cpp" />
     <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="EnemyDetectionAggro.cpp" />
+    <ClCompile Include="DefeatConditionManager.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -178,6 +191,11 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="SpikeTrap.cpp" />
+    <ClCompile Include="PlayerDamageable.cpp" />
+    <ClCompile Include="PlayerDownState.cpp" />
+    <ClCompile Include="PlayerState.cpp" />
+    <ClCompile Include="PlayerTargetController.cpp" />
+    <ClCompile Include="TargetIndicatorUI.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
