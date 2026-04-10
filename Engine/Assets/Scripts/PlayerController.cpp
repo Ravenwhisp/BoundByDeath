@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "PlayerController.h"
+#include "PlayerState.h"
 
 #include <cmath>
 
@@ -26,12 +27,25 @@ void PlayerController::Start()
 {
     GameObject* owner = getOwner();
     m_initialRotationOffset = TransformAPI::getEulerDegrees(GameObjectAPI::getTransform(owner));
+
+    Script* stateScript = GameObjectAPI::getScript(m_owner, "PlayerState");
+    m_playerState = dynamic_cast<PlayerState*>(stateScript);
+
+    if (!m_playerState)
+    {
+        Debug::warn("PlayerDownState on '%s' could not find PlayerState on the same GameObject.", GameObjectAPI::getName(m_owner));
+    }
 }
 
 void PlayerController::Update()
 {
     GameObject* owner = getOwner();
     if (!owner)
+    {
+        return;
+    }
+
+    if (m_playerState && !m_playerState->canMove())
     {
         return;
     }
