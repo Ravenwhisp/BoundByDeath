@@ -27,6 +27,17 @@ void ProjectileController::Start()
 
 void ProjectileController::Update()
 {
+    if (Transform* targetTransform = m_target.getReferencedComponent()) 
+    {
+        Vector3 targetDirection = TransformAPI::getPosition(targetTransform) - TransformAPI::getPosition(m_objectTransform);
+        targetDirection.Normalize();
+        
+        Vector3 up = Vector3(0.f, 1.f, 0.f); // we assume projectiles not upside-down
+        Quaternion lookToTargetRotation = Quaternion::LookRotation(targetDirection, up);
+
+        TransformAPI::setRotationEuler(m_objectTransform, lookToTargetRotation.ToEuler()); // I think we should be able to assing Quaternions...
+    }
+
     Vector3 translation = m_speed*Time::getDeltaTime() * TransformAPI::getForward(m_objectTransform);
     TransformAPI::translate(m_objectTransform, translation);
 

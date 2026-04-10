@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Shooter.h"
+#include "ProjectileController.h"
 
 static const ScriptFieldInfo shooterFields[] =
 {
@@ -30,17 +31,32 @@ void Shooter::Update()
 
         if (m_toReleaseCharge) 
         {
-            // release code
-            Vector3 targetDirection = TransformAPI::getPosition(m_targetTransform.getReferencedComponent()) - TransformAPI::getPosition(m_objectTransform);
+            Vector3 objectPosition = TransformAPI::getPosition(m_objectTransform);
+
+            Vector3 targetDirection = TransformAPI::getPosition(m_targetTransform.getReferencedComponent()) - objectPosition;
             targetDirection.Normalize();
 
+            // We calculate the new axis respect the targetDirection, assuming that it represents the x axis (this is so that m_spawnRelativePoint is relative to it)
+            Vector3 zDirection = targetDirection.Cross(Vector3(0.f, 1.f, 0.f)); // assuming up = (0.f, 1.f, 0.f)
+            zDirection.Normalize();
+            Vector3 yDirection = zDirection.Cross(targetDirection);
+            yDirection.Normalize();
+
+            Vector3 spawningPosition = objectPosition + 
+                m_spawnRelativePoint.x * targetDirection + m_spawnRelativePoint.y * yDirection + m_spawnRelativePoint.z * zDirection;
+
+
+            GameObject* projectile = GameObjectAPI::instantiatePrefab(m_projectileToInstantiate.c_str(), spawningPosition, TransformAPI::getEulerDegrees(m_objectTransform));
+            ProjectileController* projectileScript = static_cast<ProjectileController*>(GameObjectAPI::getScript(projectile, "ProjectileController"));
+            projectileScript->m_target.component = m_targetTransform.getReferencedComponent();
+            projectileScript->m_scale = m_currentChargeTime / m_chargeTime;
 
 
             m_isCharging = m_toReleaseCharge = false;
         }
-        else 
+
+        else if (m_currentChargeTime != m_chargeTime)
         {
-            if (m_currentChargeTime == m_chargeTime) return;
 
             m_currentChargeTime += Time::getDeltaTime();
             if (m_currentChargeTime > m_chargeTime) m_currentChargeTime = m_chargeTime;
