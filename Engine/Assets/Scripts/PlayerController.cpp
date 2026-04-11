@@ -51,6 +51,7 @@ void PlayerController::Update()
 
         Vector3 moveDirection = readMoveDirection(moveAxis);
         const bool isMoving = moveDirection.x != 0.0f || moveDirection.y != 0.0f || moveDirection.z != 0.0f;
+		m_playerMovement->m_isMoving = isMoving;
 
         if (isMoving)
         {

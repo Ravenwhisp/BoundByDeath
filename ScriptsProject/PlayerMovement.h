@@ -27,6 +27,8 @@ public:
     float m_moveSpeed = 3.5f;
 
     bool m_constrainToNavMesh = true;
+	bool m_isMoving = false;
+
     Vector3 m_navExtents = Vector3(2.0f, 4.0f, 2.0f);
 
 private:
