@@ -10,7 +10,8 @@ static const ScriptFieldInfo boundFields[] =
     { "Damage Distance",    ScriptFieldType::Float,        offsetof(Bound, m_distanceDamage),    {}, {}, {} },
     { "InstaKill Distance", ScriptFieldType::Float,        offsetof(Bound, m_distanceInstaKill), {}, {}, {} },
     { "Radius Threshold",   ScriptFieldType::Float,        offsetof(Bound, m_radiusThreshold),   {}, {}, {} },
-
+    { "Base Damage",   ScriptFieldType::Float,        offsetof(Bound, baseDamage),   {}, {}, {} },
+    { "Max Damage",   ScriptFieldType::Float,        offsetof(Bound, maxDamage),   {}, {}, {} },
 };
 
 
@@ -86,7 +87,7 @@ void Bound::Update()
     }
 
 
-    if (distance > m_minDistance && distance < m_distanceInstaKill)
+    if (distance > m_distanceDamage && distance < m_distanceInstaKill)
     {
         const float range = m_distanceInstaKill - m_minDistance;
 
