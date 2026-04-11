@@ -25,6 +25,9 @@
     <Filter Include="Player\States">
       <UniqueIdentifier>{efb0d3d4-8d69-407b-8da8-4ffc1137e7a4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Player\Lyriel">
+      <UniqueIdentifier>{9077b456-2558-4edb-afe7-14e10e481dfb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -75,6 +78,12 @@
       <Filter>Player\States</Filter>
     </ClInclude>
     <ClInclude Include="EnemyDetectionAggro.h" />
+    <ClInclude Include="ArrowPool.h">
+      <Filter>Player\Lyriel</Filter>
+    </ClInclude>
+    <ClInclude Include="LyrielArrowProjectile.h">
+      <Filter>Player\Lyriel</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
@@ -126,5 +135,11 @@
     </ClCompile>
     <ClCompile Include="EnemyDetectionAggro.cpp" />
     <ClCompile Include="EngineDependencies\SimpleMath.cpp" />
+    <ClCompile Include="ArrowPool.cpp">
+      <Filter>Player\Lyriel</Filter>
+    </ClCompile>
+    <ClCompile Include="LyrielArrowProjectile.cpp">
+      <Filter>Player\Lyriel</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
