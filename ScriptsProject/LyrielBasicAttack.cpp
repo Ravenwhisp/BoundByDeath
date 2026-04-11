@@ -117,6 +117,9 @@ void LyrielBasicAttack::spawnArrowToTarget(GameObject* target)
     const Vector3 targetPosition = TransformAPI::getPosition(targetTransform);
 
     Vector3 direction = targetPosition - startPosition;
+    Debug::log("[LyrielBasicAttack] Start Pos: (%.2f, %.2f, %.2f) | Target Pos: (%.2f, %.2f, %.2f)",
+        startPosition.x, startPosition.y, startPosition.z,
+        targetPosition.x, targetPosition.y, targetPosition.z);
     const float distance = direction.Length();
 
     if (distance <= 0.0001f)

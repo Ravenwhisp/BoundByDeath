@@ -5,7 +5,7 @@
 static const ScriptFieldInfo ArrowPoolFields[] =
 {
     { "Max Arrows", ScriptFieldType::Int, offsetof(ArrowPool, m_maxArrows), { 1.0f, 20.0f, 1.0f } },
-    { "Arrow Prefab", ScriptFieldType::String, offsetof(ArrowPool, m_arrowPrefab) }
+    { "Arrow Prefab path", ScriptFieldType::String, offsetof(ArrowPool, m_arrowPrefabPath) }
 };
 
 IMPLEMENT_SCRIPT_FIELDS(ArrowPool, ArrowPoolFields)
@@ -31,12 +31,12 @@ void ArrowPool::Start()
 
 bool ArrowPool::createArrow()
 {
-    if (m_arrowPrefab.empty())
+    if (m_arrowPrefabPath.empty())
     {
         return false;
     }
 
-    GameObject* arrowObject = GameObjectAPI::instantiatePrefab(m_arrowPrefab.c_str(), Vector3::Zero, Vector3::Zero, getOwner());   
+    GameObject* arrowObject = GameObjectAPI::instantiatePrefab(m_arrowPrefabPath.c_str(), Vector3::Zero, Vector3::Zero, getOwner());   
     if (arrowObject == nullptr)
     {
         return false;

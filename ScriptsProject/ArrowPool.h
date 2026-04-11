@@ -25,7 +25,7 @@ private:
 public:
     int m_maxArrows = 5;
 
-    std::string m_arrowPrefab = "";
+    std::string m_arrowPrefabPath = "";
 
 private:
     std::vector<LyrielArrowProjectile*> m_arrows;
