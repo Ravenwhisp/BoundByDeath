@@ -1,7 +1,13 @@
 #include "pch.h"
 #include "LyrielDash.h"
+
 #include "CharacterBase.h"
 #include "LyrielCharacter.h"
+#include "PlayerController.h"
+//#include "PlayerMovement.h"
+
+#define PI 3.1415926535897931f
+#define CHARGE_RECHARGE_TIME 3.0f
 
 // ============================================================
 // PROPOSAL — This script shows how a timed-movement ability
@@ -11,7 +17,9 @@
 
 static const ScriptFieldInfo LyrielDashFields[] =
 {
-    { "Dash Duration", ScriptFieldType::Float, offsetof(LyrielDash, m_dashDuration), { 0.05f, 1.0f, 0.01f } },
+    {"Dash duration",   ScriptFieldType::Float,   offsetof(LyrielDash, m_dashDuration), {0.0f, 1.0f, 0.01f} },
+    {"Dash distance",   ScriptFieldType::Float,   offsetof(LyrielDash, m_dashDistance), {0.0f, 10.0f, 0.1f} },
+    {"Enable debug",    ScriptFieldType::Bool,    offsetof(LyrielDash, m_debugEnabled)                      }
 };
 
 IMPLEMENT_SCRIPT_FIELDS(LyrielDash, LyrielDashFields)
@@ -24,6 +32,9 @@ LyrielDash::LyrielDash(GameObject* owner)
 
 void LyrielDash::Start()
 {
+	m_playerController = findControllerScript(m_owner);
+	//m_movement = findMovementScript(m_owner);
+
     m_character = static_cast<CharacterBase*>(
         GameObjectAPI::getScript(m_owner, "LyrielCharacter"));
 
@@ -43,35 +54,108 @@ void LyrielDash::Update()
         return;
     }
 
+	const float dt = Time::getDeltaTime();
+
+    if (m_charges < MAX_CHARGES)
+    {
+        m_cooldownTimer += dt;
+        if (m_cooldownTimer >= CHARGE_RECHARGE_TIME)
+        {
+            addCharge();
+            if (m_charges < MAX_CHARGES)
+            {
+                m_cooldownTimer -= CHARGE_RECHARGE_TIME;
+            }
+        }
+    }
+
     // --- Activate dash ---
     if (!isActive() && canActivate() && Input::isLeftShoulderJustPressed(getPlayerIndex()))
     {
-        m_dashTimer = 0.0f;
-
-        // TODO: compute m_dashDirection from left stick input (evasive — away from danger).
-        //       If stick is neutral, fall back to the character's backward direction.
-        //       Use: Input::getMoveAxis(getPlayerIndex()) and TransformAPI::getForward().
-
-        onActivate();  // sets isActive = true, blocks other abilities via canAct
-        // TODO: play dodge animation / start evasion VFX
-        return;
+		onActivate();
     }
 
     // --- Tick dash movement ---
     if (isActive())
     {
-        m_dashTimer += Time::getDeltaTime();
-
-        // TODO: move the character along m_dashDirection each frame.
-        //       Use: dashDistance = static_cast<LyrielCharacter*>(m_character)->m_dashDistance
-        //       And: TransformAPI::translate(GameObjectAPI::getTransform(m_owner), ...)
+        m_dashTimer += dt;
+		calculateDashMovement(dt);
 
         if (m_dashTimer >= m_dashDuration)
         {
-            onDeactivate();  // sets isActive = false, starts cooldown, unblocks canAct
+            onDeactivate();
             // TODO: stop evasion VFX
         }
     }
+}
+
+void LyrielDash::recoverCharge()
+{
+    if (m_charges < MAX_CHARGES)
+    {
+        addCharge();
+    }
+}
+
+bool LyrielDash::canActivate() const
+{
+    return m_charges > 0
+        && !m_isDashing
+        && m_character->isDead();
+}
+
+void LyrielDash::onActivate()
+{
+    m_dashTimer = 0.0f;
+    m_isDashing = true;
+
+    --m_charges;
+
+    Vector3 moveDirection = m_playerController->readMoveDirection();
+
+    if (moveDirection.x == 0.0f && moveDirection.y == 0.0f && moveDirection.z == 0.0f)
+    {
+        m_dashDirection = -TransformAPI::getForward(GameObjectAPI::getTransform(m_owner));
+    }
+    else
+    {
+        m_dashDirection = moveDirection;
+	}
+}
+
+void LyrielDash::onDeactivate()
+{
+    m_isDashing = false;
+}
+
+void LyrielDash::calculateDashMovement(const float dt)
+{
+    float t = m_dashTimer / m_dashDuration;
+
+    t = (t < 0.0f) ? 0.0f : (t > 1.0f ? 1.0f : t); //clamp
+
+    float curveSpeed = 0.5f * PI * cos(t * PI * 0.5f);
+
+    float currentSpeed = (m_dashDistance / m_dashDuration) * curveSpeed;
+
+
+    const Vector3 velocity = m_dashDirection * currentSpeed;
+
+    if (m_movement)
+    {
+        m_movement->dashMovement(getOwner(), velocity * dt);
+    }
+}
+
+PlayerController* LyrielDash::findControllerScript(GameObject* owner) const
+{
+    Script* script = GameObjectAPI::getScript(owner, "PlayerController");
+    if (script == nullptr)
+    {
+        Debug::warn("LyrielDash: PlayerController not found on this GameObject.");
+        return nullptr;
+    }
+	return static_cast<PlayerController*>(script);
 }
 
 IMPLEMENT_SCRIPT(LyrielDash)

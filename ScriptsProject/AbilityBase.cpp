@@ -56,7 +56,7 @@ bool AbilityBase::canActivate() const
 {
     if (!m_isEnabled)           return false;
     if (m_isActive)             return false;
-    if (m_character == nullptr) return false;
+    if (m_character == nullptr) return false; //esto no tiene que estar aqui, comprobacion en el start. ya haremos en el refactor
     if (m_character->isDead())  return false;
     if (!m_character->canAct()) return false;
     if (m_cooldownTimer > 0.0f) return false;
