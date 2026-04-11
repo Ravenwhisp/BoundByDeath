@@ -25,6 +25,9 @@
     <Filter Include="Player\States">
       <UniqueIdentifier>{efb0d3d4-8d69-407b-8da8-4ffc1137e7a4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Player\Transform">
+      <UniqueIdentifier>{fb6b58e2-7f9f-44b4-9755-36d7239c1bd0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -74,8 +77,12 @@
     <ClInclude Include="PlayerDownState.h">
       <Filter>Player\States</Filter>
     </ClInclude>
-    <ClInclude Include="EnemyDetectionAggro.h">
-      <Filter>Archivos de encabezado</Filter>
+    <ClInclude Include="EnemyDetectionAggro.h" />
+    <ClInclude Include="PlayerRotation.h">
+      <Filter>Player\Transform</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerMovement.h">
+      <Filter>Player\Transform</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -126,8 +133,12 @@
     <ClCompile Include="PlayerDownState.cpp">
       <Filter>Player\States</Filter>
     </ClCompile>
-    <ClCompile Include="EnemyDetectionAggro.cpp">
-      <Filter>Archivos de origen</Filter>
+    <ClCompile Include="EnemyDetectionAggro.cpp" />
+    <ClCompile Include="PlayerRotation.cpp">
+      <Filter>Player\Transform</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerMovement.cpp">
+      <Filter>Player\Transform</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
