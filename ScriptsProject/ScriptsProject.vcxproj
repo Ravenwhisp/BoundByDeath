@@ -185,6 +185,9 @@
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="EnemyDetectionAggro.cpp" />
     <ClCompile Include="DefeatConditionManager.cpp" />
+    <ClCompile Include="EngineDependencies\SimpleMath.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
