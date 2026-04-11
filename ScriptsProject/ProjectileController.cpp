@@ -6,7 +6,6 @@ static const ScriptFieldInfo projectileControllerFields[] =
     { "Min Speed", ScriptFieldType::Float, offsetof(ProjectileController, m_minSpeed), { 0.0f, 150.f, 0.1f } },
     { "Max Speed", ScriptFieldType::Float, offsetof(ProjectileController, m_maxSpeed), { 0.0f, 150.f, 0.1f } },
     { "Scale", ScriptFieldType::Float, offsetof(ProjectileController, m_scale), { 0.0f, 1.f, 0.1f } },
-    { "Target", ScriptFieldType::ComponentRef, offsetof(ProjectileController, m_target), {}, {}, { ComponentType::TRANSFORM } }
 };
 
 IMPLEMENT_SCRIPT_FIELDS(ProjectileController, projectileControllerFields)
@@ -27,6 +26,7 @@ void ProjectileController::Start()
 
 void ProjectileController::Update()
 {
+    /*
     if (Transform* targetTransform = m_target.getReferencedComponent()) 
     {
         Vector3 targetDirection = TransformAPI::getPosition(targetTransform) - TransformAPI::getPosition(m_objectTransform);
@@ -37,6 +37,7 @@ void ProjectileController::Update()
 
         TransformAPI::setRotationEuler(m_objectTransform, lookToTargetRotation.ToEuler()); // I think we should be able to assing Quaternions...
     }
+    */
 
     Vector3 translation = m_speed*Time::getDeltaTime() * TransformAPI::getForward(m_objectTransform);
     TransformAPI::translate(m_objectTransform, translation);
@@ -44,7 +45,7 @@ void ProjectileController::Update()
     if (hit()) 
     {
         if (m_canPierce) m_canPierce = false;
-        //else GameObjectAPI::delete();
+        else GameObjectAPI::removeGameObject(m_objectTransform->getOwner());
     }
 }
 

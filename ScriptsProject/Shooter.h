@@ -23,8 +23,6 @@ public:
 
     float m_chargeTime = 2; // in seconds!
 
-    ScriptComponentRef<Transform> m_targetTransform; // the object to hit
-
     std::string m_projectileToInstantiate = "";
     Vector3 m_spawnRelativePoint = Vector3(0.f, 0.f, 0.f); // respect to target direction
 
