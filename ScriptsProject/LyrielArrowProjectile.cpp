@@ -2,13 +2,6 @@
 #include "LyrielArrowProjectile.h"
 #include "ArrowPool.h"
 
-static const ScriptFieldInfo LyrielArrowProjectileFields[] =
-{
-    { "Max Lifetime", ScriptFieldType::Float, offsetof(LyrielArrowProjectile, m_maxLifetime), { 0.1f, 10.0f, 0.1f } }
-};
-
-IMPLEMENT_SCRIPT_FIELDS(LyrielArrowProjectile, LyrielArrowProjectileFields)
-
 LyrielArrowProjectile::LyrielArrowProjectile(GameObject* owner)
     : Script(owner)
 {
@@ -24,13 +17,14 @@ bool LyrielArrowProjectile::isInUse() const
     return m_inUse;
 }
 
-void LyrielArrowProjectile::launch(const Vector3& start_position, const Vector3& direction, float speed)
+void LyrielArrowProjectile::launch(const Vector3& start_position, const Vector3& direction, float speed, float lifetime)
 {
     m_inUse = true;
     m_direction = direction;
     m_direction.Normalize();
     m_speed = speed;
     m_lifeTimer = 0.0f;
+    m_currentLifetime = lifetime;
 
     Transform* transform = GameObjectAPI::getTransform(getOwner());
     if (transform != nullptr)
@@ -56,7 +50,7 @@ void LyrielArrowProjectile::Update()
         TransformAPI::translate(transform, m_direction * m_speed * Time::getDeltaTime());
     }
 
-    if (m_lifeTimer >= m_maxLifetime)
+    if (m_lifeTimer >= m_currentLifetime)
     {
         returnToPool();
     }
@@ -68,6 +62,7 @@ void LyrielArrowProjectile::resetProjectile()
     m_direction = Vector3::Zero;
     m_speed = 0.0f;
     m_lifeTimer = 0.0f;
+    m_currentLifetime = 0.0f;
 
     GameObjectAPI::setActive(getOwner(), false);
 }

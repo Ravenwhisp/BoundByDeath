@@ -21,13 +21,11 @@ public:
 
 private:
     bool createArrow();
-    bool registerExistingArrow(GameObject* arrowObject);
 
 public:
     int m_maxArrows = 5;
 
     std::string m_arrowPrefab = "";
-    std::string m_arrowChildPrefix = "Arrow_";
 
 private:
     std::vector<LyrielArrowProjectile*> m_arrows;

@@ -5,8 +5,7 @@
 static const ScriptFieldInfo ArrowPoolFields[] =
 {
     { "Max Arrows", ScriptFieldType::Int, offsetof(ArrowPool, m_maxArrows), { 1.0f, 20.0f, 1.0f } },
-    { "Arrow Prefab", ScriptFieldType::String, offsetof(ArrowPool, m_arrowPrefab) },
-    { "Arrow Child Prefix", ScriptFieldType::String, offsetof(ArrowPool, m_arrowChildPrefix) }
+    { "Arrow Prefab", ScriptFieldType::String, offsetof(ArrowPool, m_arrowPrefab) }
 };
 
 IMPLEMENT_SCRIPT_FIELDS(ArrowPool, ArrowPoolFields)
@@ -20,41 +19,14 @@ void ArrowPool::Start()
 {
     m_arrows.clear();
 
-    Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
-
-    int foundArrows = 0;
-
     for (int i = 0; i < m_maxArrows; ++i)
-    {
-        std::string childName = m_arrowChildPrefix + std::to_string(i);
-
-        Transform* childTransform = TransformAPI::findChildByName(ownerTransform, childName.c_str());
-        if (childTransform == nullptr)
-        {
-            continue;
-        }
-
-        GameObject* arrowObject = ComponentAPI::getOwner(childTransform);
-        if (arrowObject == nullptr)
-        {
-            continue;
-        }
-
-        if (registerExistingArrow(arrowObject))
-        {
-            ++foundArrows;
-        }
-    }
-
-    //This is the correct behaviour, but we cannot save a prefab yet, so we cannot add a script to a prefab.
-    /*for (int i = 0; i < m_maxArrows; ++i)
     {
         if (!createArrow())
         {
             Debug::log("[ArrowPool] Failed to create arrow %d", i);
             break;
         }
-    }*/
+    }
 }
 
 bool ArrowPool::createArrow()
@@ -77,27 +49,6 @@ bool ArrowPool::createArrow()
         return false;
     }
     LyrielArrowProjectile* arrow = static_cast<LyrielArrowProjectile*>(script);
-
-    arrow->setPool(this);
-    arrow->resetProjectile();
-
-    m_arrows.push_back(arrow);
-    return true;
-}
-
-bool ArrowPool::registerExistingArrow(GameObject* arrowObject)
-{
-    Script* script = GameObjectAPI::getScript(arrowObject, "LyrielArrowProjectile");
-    if (script == nullptr)
-    {
-        return false;
-    }
-
-    LyrielArrowProjectile* arrow = dynamic_cast<LyrielArrowProjectile*>(script);
-    if (arrow == nullptr)
-    {
-        return false;
-    }
 
     arrow->setPool(this);
     arrow->resetProjectile();
