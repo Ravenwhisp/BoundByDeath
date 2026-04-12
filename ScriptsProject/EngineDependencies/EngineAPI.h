@@ -132,7 +132,7 @@ namespace Input
     ENGINE_API bool isLeftTriggerPressed(int player = 0);
     ENGINE_API bool isRightTriggerPressed(int player = 0);
 
-    ENGINE_API bool isLeftTriggerJustPressed(int player = 0);
+    ENGINE_API bool isLeftTriggerJustPressed(int player = 0); 
     ENGINE_API bool isRightTriggerJustPressed(int player = 0);
 
     ENGINE_API bool isLeftTriggerReleased(int player = 0);

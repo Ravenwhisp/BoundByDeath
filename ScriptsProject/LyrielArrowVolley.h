@@ -19,5 +19,5 @@ public:
     void Start()  override;
     void Update() override;
 
-    ScriptFieldList getExposedFields() const override;
+   // ScriptFieldList getExposedFields() const override;
 };

@@ -9,11 +9,11 @@
 // TODO and must be properly implemented.
 // ============================================================
 
-static const ScriptFieldInfo LyrielChargedAttackFields[] =
+/*static const ScriptFieldInfo LyrielChargedAttackFields[] =
 {
 };
 
-IMPLEMENT_SCRIPT_FIELDS(LyrielChargedAttack, LyrielChargedAttackFields)
+IMPLEMENT_SCRIPT_FIELDS(LyrielChargedAttack, LyrielChargedAttackFields)*/
 
 LyrielChargedAttack::LyrielChargedAttack(GameObject* owner)
     : AbilityBase(owner)

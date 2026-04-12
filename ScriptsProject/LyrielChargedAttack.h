@@ -19,7 +19,7 @@ public:
     void Start()  override;
     void Update() override;
 
-    ScriptFieldList getExposedFields() const override;
+   // ScriptFieldList getExposedFields() const override;
 
 private:
     // Aim direction updated each frame from Input::getLookAxis while isActive().

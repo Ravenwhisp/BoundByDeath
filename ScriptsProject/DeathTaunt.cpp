@@ -1,24 +1,16 @@
 #include "pch.h"
 #include "DeathTaunt.h"
 #include "CharacterBase.h"
-#include "DeathCharacter.h"
+#include "EnemyDetectionAggro.h"
 
-// ============================================================
-// PROPOSAL — This script shows how a timed passive ability
-// should communicate with AbilityBase. All game logic is marked
-// TODO and must be properly implemented.
-// Mechanic is also pending final design definition.
-// ============================================================
+#include <cmath>
 
-static const ScriptFieldInfo DeathTauntFields[] =
-{
-};
-
-IMPLEMENT_SCRIPT_FIELDS(DeathTaunt, DeathTauntFields)
+//IMPLEMENT_SCRIPT_FIELDS(DeathTaunt, nullptr)
 
 DeathTaunt::DeathTaunt(GameObject* owner)
     : AbilityBase(owner)
 {
+    m_cooldown = kTauntCooldownSeconds;
 }
 
 void DeathTaunt::Start()
@@ -42,31 +34,122 @@ void DeathTaunt::Update()
         return;
     }
 
-    // --- Activate taunt ---
-    if (!isActive() && canActivate() && Input::isLeftTriggerJustPressed(getPlayerIndex()))
+    bool leftTriggerPressed = Input::isLeftTriggerJustPressed(getPlayerIndex());
+    bool tKeyPressed = Input::isKeyDown(KeyCode::T);//TODO: Delete after finish testing
+    bool canActivateNow = canActivate();
+    bool isActiveNow = isActive();
+
+
+    if (!isActiveNow && canActivateNow && (leftTriggerPressed || tKeyPressed))
     {
-        m_tauntTimer = 0.0f;
-        onActivate();  // sets isActive = true, blocks other abilities via canAct
-        // TODO: play taunt animation / VFX
-        // TODO: apply taunt effect to nearby enemies (aggro, debuff, etc.) — pending design
+        onActivate();
+        applyTauntToEnemiesInCone();
+        onDeactivate();
+    }
+}
+
+void DeathTaunt::drawGizmo()
+{
+    Transform* ownerTransform = GameObjectAPI::getTransform(m_owner);
+    if (ownerTransform == nullptr)
+    {
         return;
     }
 
-    // --- Tick taunt duration ---
-    if (isActive())
+    const Vector3 ownerPosition = TransformAPI::getPosition(ownerTransform);
+    const Vector3 ownerForward = TransformAPI::getForward(ownerTransform);
+
+    // Dibujar el cono siempre visible
+    DebugDrawAPI::drawCone(ownerPosition, ownerForward * kTauntRange, Vector3(1.0f, 0.0f, 0.0f), kTauntRange, 0.0f, 0, false);
+}
+
+void DeathTaunt::onActivate()
+{
+    AbilityBase::onActivate();
+
+    // Taunt applies its effect instantly and should not lock Death during the taunt duration.
+    m_character->setCanAct(true);
+}
+
+void DeathTaunt::onDeactivate()
+{
+    const bool restoreCanAct = m_character != nullptr && !m_character->isDead();
+
+    AbilityBase::onDeactivate();
+
+    if (restoreCanAct)
     {
-        m_tauntTimer += Time::getDeltaTime();
-
-        const float tauntDuration = static_cast<DeathCharacter*>(m_character)->m_tauntDuration;
-
-        // TODO: sustain taunt effect on enemies each frame
-
-        if (m_tauntTimer >= tauntDuration)
-        {
-            // TODO: remove taunt effect from enemies
-            onDeactivate();  // sets isActive = false, starts cooldown, unblocks canAct
-        }
+        m_character->setCanAct(true);
     }
+}
+
+void DeathTaunt::applyTauntToEnemiesInCone() const
+{
+    Transform* ownerTransform = GameObjectAPI::getTransform(m_owner);
+    if (ownerTransform == nullptr)
+    {
+        return;
+    }
+
+    const Vector3 ownerPosition = TransformAPI::getPosition(ownerTransform);
+    const Vector3 ownerForward = TransformAPI::getForward(ownerTransform);
+
+    const std::vector<GameObject*> enemies = SceneAPI::findAllGameObjectsByTag(Tag::ENEMY);
+    for (GameObject* enemy : enemies)
+    {
+        if (!isEnemyInsideTauntCone(enemy, ownerPosition, ownerForward))
+        {
+            continue;
+        }
+
+        Script* script = GameObjectAPI::getScript(enemy, "EnemyDetectionAggro");
+        if (script == nullptr)
+        {
+            continue;
+        }
+
+        static_cast<EnemyDetectionAggro*>(script)->applyTaunt(ownerTransform, kTauntDurationSeconds);
+    }
+}
+
+bool DeathTaunt::isEnemyInsideTauntCone(GameObject* enemy, const Vector3& ownerPosition, const Vector3& ownerForward) const
+{
+    if (enemy == nullptr)
+    {
+        return false;
+    }
+
+    Transform* enemyTransform = GameObjectAPI::getTransform(enemy);
+    if (enemyTransform == nullptr)
+    {
+        return false;
+    }
+
+    Vector3 directionToEnemy = TransformAPI::getPosition(enemyTransform) - ownerPosition;
+    directionToEnemy.y = 0.0f;
+
+    const float distanceToEnemy = directionToEnemy.Length();
+    if (distanceToEnemy <= 0.0f || distanceToEnemy > kTauntRange)
+    {
+        return false;
+    }
+
+    Vector3 flattenedForward = ownerForward;
+    flattenedForward.y = 0.0f;
+
+    if (flattenedForward.LengthSquared() <= 0.0001f)
+    {
+        return false;
+    }
+
+    flattenedForward.Normalize();
+    directionToEnemy.Normalize();
+
+    const float halfAngleRadians = kTauntHalfAngleDegrees * (3.14159265f / 180.0f);
+    const float coneThreshold = std::cos(halfAngleRadians);
+
+    // TODO: Add a line-of-sight / wall check before confirming the taunt hit.
+    return flattenedForward.Dot(directionToEnemy) >= coneThreshold;
 }
 
 IMPLEMENT_SCRIPT(DeathTaunt)

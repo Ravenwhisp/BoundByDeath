@@ -2,13 +2,11 @@
 
 #include "AbilityBase.h"
 
-// Death's taunt — provokes nearby enemies for a duration (LT / L2).
-// Sibling script of DeathCharacter on the same GameObject.
-// Reads m_tauntDuration from DeathCharacter via static_cast<DeathCharacter*>(m_character).
-//
-// isActive() (from AbilityBase) reflects whether the taunt is currently active.
-// The exact effect on enemies (aggro, debuff, etc.) is pending design definition.
-// TODO: define taunt mechanic — what does it actually do to enemies?
+class EnemyDetectionAggro;
+
+// Death's taunt applies a cone-shaped provoke in front of the caster.
+// Enemies affected by the cone keep the taunt for a fixed duration even if
+// the caster later leaves their detection radius.
 class DeathTaunt : public AbilityBase
 {
     DECLARE_SCRIPT(DeathTaunt)
@@ -18,10 +16,19 @@ public:
 
     void Start()  override;
     void Update() override;
+    void drawGizmo() override;
 
-    ScriptFieldList getExposedFields() const override;
+protected:
+    void onActivate() override;
+    void onDeactivate() override;
 
 private:
-    // Time elapsed since the taunt began.
-    float m_tauntTimer = 0.0f;
+    void applyTauntToEnemiesInCone() const;
+    bool isEnemyInsideTauntCone(GameObject* enemy, const Vector3& ownerPosition, const Vector3& ownerForward) const;
+
+private:
+    static constexpr float kTauntCooldownSeconds = 8.0f;
+    static constexpr float kTauntDurationSeconds = 3.0f;
+    static constexpr float kTauntRange = 2.5f;
+    static constexpr float kTauntHalfAngleDegrees = 35.0f;
 };
