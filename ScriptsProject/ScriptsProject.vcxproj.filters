@@ -31,6 +31,12 @@
     <Filter Include="Player\Abilities\Lyriel">
       <UniqueIdentifier>{640bef78-242e-4966-b317-5e9632e1f92b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Player\Transform">
+      <UniqueIdentifier>{fb6b58e2-7f9f-44b4-9755-36d7239c1bd0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Enemies">
+      <UniqueIdentifier>{994356b7-31d7-4286-a7d0-f22fa651b995}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -81,6 +87,12 @@
     <ClInclude Include="DeathBasicAttack.h">
       <Filter>Player\Abilities\Death</Filter>
     </ClInclude>
+    <ClInclude Include="EnemyDetectionAggro.h">
+      <Filter>Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyDeathHandler.h">
+      <Filter>Enemies</Filter>
+    </ClInclude>
     <ClInclude Include="DeathDash.h">
       <Filter>Player\Abilities\Death</Filter>
     </ClInclude>
@@ -98,6 +110,12 @@
     </ClInclude>
     <ClInclude Include="LyrielArrowVolley.h">
       <Filter>Player\Abilities\Lyriel</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerRotation.h">
+      <Filter>Player\Transform</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerMovement.h">
+      <Filter>Player\Transform</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -167,5 +185,18 @@
     <ClCompile Include="LyrielArrowVolley.cpp">
       <Filter>Player\Abilities\Lyriel</Filter>
     </ClCompile>
+    <ClCompile Include="EnemyDetectionAggro.cpp">
+      <Filter>Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyDeathHandler.cpp">
+      <Filter>Enemies</Filter>
+    </ClCompile>
+	<ClCompile Include="PlayerRotation.cpp">
+      <Filter>Player\Transform</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerMovement.cpp">
+      <Filter>Player\Transform</Filter>
+    </ClCompile>
+    <ClCompile Include="EngineDependencies\SimpleMath.cpp" />
   </ItemGroup>
 </Project>
