@@ -1,7 +1,6 @@
 #pragma once
 
 #include "ScriptAPI.h"
-#include "ScriptComponentRef.h"
 
 class Damageable;
 class Transform;

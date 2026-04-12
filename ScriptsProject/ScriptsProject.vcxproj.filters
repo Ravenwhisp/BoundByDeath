@@ -28,6 +28,12 @@
     <Filter Include="Player\Bound">
       <UniqueIdentifier>{34f33962-8cb1-448d-a276-35c10310aef1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Player\Transform">
+      <UniqueIdentifier>{fb6b58e2-7f9f-44b4-9755-36d7239c1bd0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Enemies">
+      <UniqueIdentifier>{994356b7-31d7-4286-a7d0-f22fa651b995}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -77,9 +83,20 @@
     <ClInclude Include="PlayerDownState.h">
       <Filter>Player\States</Filter>
     </ClInclude>
-    <ClInclude Include="EnemyDetectionAggro.h" />
     <ClInclude Include="Bound.h">
       <Filter>Player\Bound</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyDetectionAggro.h">
+      <Filter>Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyDeathHandler.h">
+      <Filter>Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerRotation.h">
+      <Filter>Player\Transform</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerMovement.h">
+      <Filter>Player\Transform</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -130,9 +147,21 @@
     <ClCompile Include="PlayerDownState.cpp">
       <Filter>Player\States</Filter>
     </ClCompile>
-    <ClCompile Include="EnemyDetectionAggro.cpp" />
     <ClCompile Include="Bound.cpp">
       <Filter>Player\Bound</Filter>
     </ClCompile>
+    <ClCompile Include="EnemyDetectionAggro.cpp">
+      <Filter>Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyDeathHandler.cpp">
+      <Filter>Enemies</Filter>
+    </ClCompile>
+	<ClCompile Include="PlayerRotation.cpp">
+      <Filter>Player\Transform</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerMovement.cpp">
+      <Filter>Player\Transform</Filter>
+    </ClCompile>
+    <ClCompile Include="EngineDependencies\SimpleMath.cpp" />
   </ItemGroup>
 </Project>
