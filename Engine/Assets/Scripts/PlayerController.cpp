@@ -47,9 +47,11 @@ void PlayerController::Update()
 
     if (m_playerMovement)
     {
-        const Vector2 moveAxis = Input::getMoveAxis(m_playerIndex);
+        //const Vector2 moveAxis = Input::getMoveAxis(m_playerIndex); //esto se usara cuando se haga todo desde playercontroller, lo he añadido para poder hacer el readmovedirection desde el dash
+		m_moveAxis = Input::getMoveAxis(m_playerIndex); //esto se quitara cuando se haga todo desde playercontroller, lo he añadido para poder hacer el readmovedirection desde el dash
 
-        Vector3 moveDirection = readMoveDirection(moveAxis);
+        //Vector3 moveDirection = readMoveDirection(moveAxis);
+        Vector3 moveDirection = readMoveDirection(m_moveAxis);
         const bool isMoving = moveDirection.x != 0.0f || moveDirection.y != 0.0f || moveDirection.z != 0.0f;
 
         if (isMoving)

@@ -11,6 +11,7 @@
 
 static const ScriptFieldInfo LyrielBasicAttackFields[] =
 {
+    {}
 };
 
 IMPLEMENT_SCRIPT_FIELDS(LyrielBasicAttack, LyrielBasicAttackFields)

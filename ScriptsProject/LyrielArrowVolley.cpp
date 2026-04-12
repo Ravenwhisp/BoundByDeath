@@ -12,6 +12,7 @@
 
 static const ScriptFieldInfo LyrielArrowVolleyFields[] =
 {
+    {}
 };
 
 IMPLEMENT_SCRIPT_FIELDS(LyrielArrowVolley, LyrielArrowVolleyFields)

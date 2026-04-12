@@ -20,6 +20,10 @@ public:
 
     bool getGodMode() const { return m_godMode; }
 
+	Vector2 getMoveAxis() const { return m_moveAxis; } //esto se quitara cuando se haga todo desde playercontroller, lo he añadido para poder hacer el readmovedirection desde el dash
+
+    Vector3 readMoveDirection(const Vector2& moveAxis) const; //esto se quitara cuando se haga todo desde playercontroller, lo he añadido para poder hacer el readmovedirection desde el dash
+
 public:
 	int m_playerIndex = 0;
 
@@ -32,8 +36,10 @@ private:
 
 	Transform* m_cameraTransform = nullptr;
 
+	Vector2 m_moveAxis = { 0.0f, 0.0f }; //esto se quitara cuando se haga todo desde playercontroller, lo he añadido para poder hacer el readmovedirection desde el dash
+
 private:
-    Vector3 readMoveDirection(const Vector2& moveAxis) const;
+    //Vector3 readMoveDirection(const Vector2& moveAxis) const;
 
     PlayerMovement* findMovementScript(GameObject* owner);
     PlayerRotation* findRotationScript(GameObject* owner);

@@ -12,6 +12,7 @@
 
 static const ScriptFieldInfo DeathTauntFields[] =
 {
+    {}
 };
 
 IMPLEMENT_SCRIPT_FIELDS(DeathTaunt, DeathTauntFields)

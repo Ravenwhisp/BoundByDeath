@@ -43,6 +43,8 @@ public:
     // Disable or re-enable this ability externally (e.g. stun, death lock, cutscene).
     void setEnabled(bool enabled) { m_isEnabled = enabled; }
 
+    void setActive(bool active) { m_isActive = active; }
+
 protected:
     // Returns true when all pre-conditions for activation are met:
     // isEnabled, !isActive, character exists, character alive, canAct, cooldown ready.

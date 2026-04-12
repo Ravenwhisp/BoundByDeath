@@ -5,7 +5,7 @@
 #define MAX_CHARGES 3
 
 class PlayerController;
-//class PlayerMovement;
+class PlayerMovement;
 
 // Lyriel's evasive dash — moves away from danger (LB / L1).
 // Unlike Death's aggressive dash (towards the target), this one moves in the
@@ -43,7 +43,7 @@ protected:
 
 private:
 	PlayerController* m_playerController = nullptr;
-	//PlayerMovement* m_playerMovement = nullptr;
+	PlayerMovement* m_playerMovement = nullptr;
     // Time elapsed since the dash began.
     float m_dashTimer = 0.0f;
 	float m_cooldownTimer = 0.0f;
@@ -68,5 +68,5 @@ private:
 	void calculateDashMovement(const float dt);
 
 	PlayerController* findControllerScript(GameObject* owner) const;
-	//PlayerMovement* findMovementScript(GameObject* owner) const;
+	PlayerMovement* findMovementScript(GameObject* owner) const;
 };

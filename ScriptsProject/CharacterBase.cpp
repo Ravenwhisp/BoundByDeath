@@ -49,11 +49,11 @@ void CharacterBase::onDeath()
     // Any ability currently executing will cancel itself via AbilityBase::Update().
     m_canAct = false;
 
-    // Disable movement — a dead character should not keep walking.
-    if (m_playerController != nullptr)
-    {
-        ComponentAPI::setActive(m_playerController, false);
-    }
+    //// Disable movement — a dead character should not keep walking.
+    //if (m_playerController != nullptr)
+    //{
+    //    ComponentAPI::setActive(m_playerController, false);
+    //}
 }
 
 void CharacterBase::onRevive()
@@ -64,8 +64,8 @@ void CharacterBase::onRevive()
     m_canAct = true;
 
     // Restore movement.
-    if (m_playerController != nullptr)
-    {
-        ComponentAPI::setActive(m_playerController, true);
-    }
+    //if (m_playerController != nullptr)
+    //{
+    //    ComponentAPI::setActive(m_playerController, true);
+    //}
 }
