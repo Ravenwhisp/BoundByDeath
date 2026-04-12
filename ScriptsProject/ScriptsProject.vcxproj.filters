@@ -31,11 +31,11 @@
     <Filter Include="Character\Player\Transform">
       <UniqueIdentifier>{fb6b58e2-7f9f-44b4-9755-36d7239c1bd0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Character\Animation">
-      <UniqueIdentifier>{4a98ebe5-a59f-4a7d-b70e-e5078225b0c9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Enemies">
       <UniqueIdentifier>{994356b7-31d7-4286-a7d0-f22fa651b995}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Character\Player\Animation">
+      <UniqueIdentifier>{4a98ebe5-a59f-4a7d-b70e-e5078225b0c9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -98,8 +98,8 @@
     <ClInclude Include="PlayerMovement.h">
       <Filter>Character\Player\Transform</Filter>
     </ClInclude>
-    <ClInclude Include="CharacterAnimation.h">
-      <Filter>Character\Animation</Filter>
+    <ClInclude Include="AnimationController.h">
+      <Filter>Character\Player\Animation</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -156,15 +156,15 @@
     <ClCompile Include="EnemyDeathHandler.cpp">
       <Filter>Enemies</Filter>
     </ClCompile>
-	<ClCompile Include="PlayerRotation.cpp">
+    <ClCompile Include="PlayerRotation.cpp">
       <Filter>Character\Player\Transform</Filter>
     </ClCompile>
     <ClCompile Include="PlayerMovement.cpp">
       <Filter>Character\Player\Transform</Filter>
     </ClCompile>
     <ClCompile Include="EngineDependencies\SimpleMath.cpp" />
-    <ClCompile Include="CharacterAnimation.cpp">
-      <Filter>Character\Animation</Filter>
+    <ClCompile Include="AnimationController.cpp">
+      <Filter>Character\Player\Animation</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
