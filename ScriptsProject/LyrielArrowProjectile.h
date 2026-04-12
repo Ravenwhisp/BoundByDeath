@@ -20,6 +20,9 @@ public:
     bool isInUse() const;
     void setPool(ArrowPool* pool);
 
+private:    
+    void orientToDirection(Transform* transform, const Vector3& direction);
+
 private:
     ArrowPool* m_pool = nullptr;
 

@@ -29,7 +29,8 @@ void LyrielArrowProjectile::launch(const Vector3& start_position, const Vector3&
     Transform* transform = GameObjectAPI::getTransform(getOwner());
     if (transform != nullptr)
     {
-        TransformAPI::setPosition(transform, start_position);
+        TransformAPI::setGlobalPosition(transform, start_position);
+        orientToDirection(transform, m_direction);
     }
 
     GameObjectAPI::setActive(getOwner(), true);
@@ -47,7 +48,7 @@ void LyrielArrowProjectile::Update()
     Transform* transform = GameObjectAPI::getTransform(getOwner());
     if (transform != nullptr)
     {
-        TransformAPI::translate(transform, m_direction * m_speed * Time::getDeltaTime());
+        TransformAPI::translateGlobal(transform, m_direction * m_speed * Time::getDeltaTime());
     }
 
     if (m_lifeTimer >= m_currentLifetime)
@@ -76,6 +77,30 @@ void LyrielArrowProjectile::returnToPool()
     }
 
     m_pool->releaseArrow(this);
+}
+
+void LyrielArrowProjectile::orientToDirection(Transform* transform, const Vector3& direction)
+{
+    if (transform == nullptr)
+    {
+        return;
+    }
+
+    Vector3 dir = direction;
+    if (dir.LengthSquared() <= 0.0001f)
+    {
+        return;
+    }
+
+    dir.Normalize();
+
+    const float yawRadians = atan2f(dir.x, dir.z);
+    const float pitchRadians = -asinf(dir.y);
+
+    const float radToDeg = 57.2957795f;
+    Vector3 eulerDegrees(pitchRadians * radToDeg, yawRadians * radToDeg, 0.0f);
+
+    TransformAPI::setRotationEuler(transform, eulerDegrees);
 }
 
 IMPLEMENT_SCRIPT(LyrielArrowProjectile)

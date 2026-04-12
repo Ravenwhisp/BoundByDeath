@@ -113,8 +113,8 @@ void LyrielBasicAttack::spawnArrowToTarget(GameObject* target)
         return;
     }
 
-    const Vector3 startPosition = TransformAPI::getPosition(spawnTransform);
-    const Vector3 targetPosition = TransformAPI::getPosition(targetTransform);
+    const Vector3 startPosition = TransformAPI::getGlobalPosition(spawnTransform);
+    const Vector3 targetPosition = TransformAPI::getGlobalPosition(targetTransform);
 
     Vector3 direction = targetPosition - startPosition;
     Debug::log("[LyrielBasicAttack] Start Pos: (%.2f, %.2f, %.2f) | Target Pos: (%.2f, %.2f, %.2f)",
