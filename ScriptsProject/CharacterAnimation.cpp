@@ -5,8 +5,8 @@
 
 static const ScriptFieldInfo CharacterAnimationFields[] =
 {
-	{ "Idle State Name", ScriptFieldType::String, offsetof(CharacterAnimation, m_idleStateName)  },
-	{ "Move State Name", ScriptFieldType::String, offsetof(CharacterAnimation, m_moveStateName) }
+	{ "\"Idle -> Move\" trigger name", ScriptFieldType::String, offsetof(CharacterAnimation, m_triggerIdleToMove)  },
+	{ "\"Move -> Idle\" trigger name", ScriptFieldType::String, offsetof(CharacterAnimation, m_triggerMoveToIdle) }
 };
 
 IMPLEMENT_SCRIPT_FIELDS(CharacterAnimation, CharacterAnimationFields)
@@ -30,19 +30,33 @@ void CharacterAnimation::Update()
 		return;
 	}
 
-	if(m_playerMovement && m_playerMovement->m_isMoving)
+	const bool isMoving = m_playerMovement && m_playerMovement->m_isMoving;
+
+	AnimState desiredState = isMoving ? AnimState::Move : AnimState::Idle;
+
+	if (desiredState == m_currentState)
 	{
-		const bool played = AnimationAPI::playState(m_animationComponent, m_moveStateName.c_str(), 0.0f);
-		if(!played)
-			Debug::warn("CharacterAnimation on '%s' could not play move state '%s'. Check if the state name is correct and exists in the AnimationComponent.",
-				GameObjectAPI::getName(m_owner), m_moveStateName.c_str());
 		return;
 	}
 
-	const bool played = AnimationAPI::playState(m_animationComponent, m_idleStateName.c_str(), 0.0f);
-	if(!played)
-		Debug::warn("CharacterAnimation on '%s' could not play idle state '%s'. Check if the state name is correct and exists in the AnimationComponent.",
-			GameObjectAPI::getName(m_owner), m_idleStateName.c_str());
+	m_currentState = desiredState;
+
+	const char* triggerName = nullptr;
+
+	switch (m_currentState)
+	{
+		case AnimState::Move: triggerName = m_triggerIdleToMove.c_str(); break;
+		case AnimState::Idle: triggerName = m_triggerMoveToIdle.c_str(); break;
+	}
+
+	const bool played = AnimationAPI::sendTrigger(m_animationComponent, triggerName);
+
+	if (!played)
+	{
+		Debug::warn("CharacterAnimation on '%s' could not play trigger '%s'.",
+			GameObjectAPI::getName(m_owner), triggerName);
+	}
+	
 }
 
 AnimationComponent* CharacterAnimation::findAnimationComponent()
