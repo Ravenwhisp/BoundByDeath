@@ -5,8 +5,12 @@
 
 static const ScriptFieldInfo CharacterAnimationFields[] =
 {
-	{ "\"Idle -> Move\" trigger name", ScriptFieldType::String, offsetof(CharacterAnimation, m_triggerIdleToMove)  },
-	{ "\"Move -> Idle\" trigger name", ScriptFieldType::String, offsetof(CharacterAnimation, m_triggerMoveToIdle) }
+	{ "Idle state name", ScriptFieldType::String, offsetof(CharacterAnimation, m_idleStateName)  },
+	{ "Move state name", ScriptFieldType::String, offsetof(CharacterAnimation, m_moveStateName) },
+	{ "Dash state name", ScriptFieldType::String, offsetof(CharacterAnimation, m_dashStateName) },
+	{ "Attack state name", ScriptFieldType::String, offsetof(CharacterAnimation, m_attackStateName) },
+	{ "Damaged state name", ScriptFieldType::String, offsetof(CharacterAnimation, m_damagedStateName) },
+	{ "Death state name", ScriptFieldType::String, offsetof(CharacterAnimation, m_deathStateName) }
 };
 
 IMPLEMENT_SCRIPT_FIELDS(CharacterAnimation, CharacterAnimationFields)
@@ -32,7 +36,20 @@ void CharacterAnimation::Update()
 
 	const bool isMoving = m_playerMovement && m_playerMovement->m_isMoving;
 
-	AnimState desiredState = isMoving ? AnimState::Move : AnimState::Idle;
+	AnimState desiredState;
+	if (isMoving)
+	{
+		desiredState = AnimState::Move;
+	}
+	/*
+	* else if() add conditions from abilities
+	* {
+	* ]
+	*/
+	else
+	{
+		desiredState = AnimState::Idle;
+	}
 
 	if (desiredState == m_currentState)
 	{
@@ -41,20 +58,24 @@ void CharacterAnimation::Update()
 
 	m_currentState = desiredState;
 
-	const char* triggerName = nullptr;
+	const char* stateName = nullptr;
 
 	switch (m_currentState)
 	{
-		case AnimState::Move: triggerName = m_triggerIdleToMove.c_str(); break;
-		case AnimState::Idle: triggerName = m_triggerMoveToIdle.c_str(); break;
+		case AnimState::Move: stateName = m_moveStateName.c_str(); break;
+		case AnimState::Idle: stateName = m_idleStateName.c_str(); break;
+		case AnimState::Dash: stateName = m_dashStateName.c_str(); break;
+		case AnimState::Attack: stateName = m_attackStateName.c_str(); break;
+		case AnimState::Damaged: stateName = m_damagedStateName.c_str(); break;
+		case AnimState::Death: stateName = m_deathStateName.c_str(); break;
 	}
 
-	const bool played = AnimationAPI::sendTrigger(m_animationComponent, triggerName);
+	const bool played = AnimationAPI::playState(m_animationComponent, stateName, 0.25f);
 
 	if (!played)
 	{
-		Debug::warn("CharacterAnimation on '%s' could not play trigger '%s'.",
-			GameObjectAPI::getName(m_owner), triggerName);
+		Debug::warn("CharacterAnimation on '%s' could not play state '%s'.",
+			GameObjectAPI::getName(m_owner), stateName);
 	}
 	
 }

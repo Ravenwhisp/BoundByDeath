@@ -8,7 +8,11 @@ class PlayerMovement;
 enum class AnimState
 {
     Idle,
-    Move
+    Move,
+    Dash,
+    Attack,
+    Damaged,
+    Death
 };
 
 class CharacterAnimation : public Script
@@ -23,8 +27,12 @@ public:
 
     ScriptFieldList getExposedFields() const override;
 
-    std::string m_triggerIdleToMove = "";
-	std::string m_triggerMoveToIdle = "";
+    std::string m_idleStateName = "";
+	std::string m_moveStateName = "";
+	std::string m_dashStateName = "";
+	std::string m_attackStateName = "";
+	std::string m_damagedStateName = "";
+	std::string m_deathStateName = "";
 
 private:
 	AnimationComponent* m_animationComponent = nullptr;
