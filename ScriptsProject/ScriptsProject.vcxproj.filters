@@ -34,6 +34,9 @@
     <Filter Include="Character\Animation">
       <UniqueIdentifier>{4a98ebe5-a59f-4a7d-b70e-e5078225b0c9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Enemies">
+      <UniqueIdentifier>{994356b7-31d7-4286-a7d0-f22fa651b995}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -83,7 +86,12 @@
     <ClInclude Include="PlayerDownState.h">
       <Filter>Character\Player\States</Filter>
     </ClInclude>
-    <ClInclude Include="EnemyDetectionAggro.h" />
+    <ClInclude Include="EnemyDetectionAggro.h">
+      <Filter>Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyDeathHandler.h">
+      <Filter>Enemies</Filter>
+    </ClInclude>
     <ClInclude Include="PlayerRotation.h">
       <Filter>Character\Player\Transform</Filter>
     </ClInclude>
@@ -142,8 +150,13 @@
     <ClCompile Include="PlayerDownState.cpp">
       <Filter>Character\Player\States</Filter>
     </ClCompile>
-    <ClCompile Include="EnemyDetectionAggro.cpp" />
-    <ClCompile Include="PlayerRotation.cpp">
+    <ClCompile Include="EnemyDetectionAggro.cpp">
+      <Filter>Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyDeathHandler.cpp">
+      <Filter>Enemies</Filter>
+    </ClCompile>
+	<ClCompile Include="PlayerRotation.cpp">
       <Filter>Character\Player\Transform</Filter>
     </ClCompile>
     <ClCompile Include="PlayerMovement.cpp">
