@@ -1,33 +1,33 @@
 #include "pch.h"
-#include "CharacterAnimation.h"
+#include "AnimationController.h"
 
 #include "PlayerMovement.h"
 
-static const ScriptFieldInfo CharacterAnimationFields[] =
+static const ScriptFieldInfo AnimationControllerFields[] =
 {
-	{ "Idle state name", ScriptFieldType::String, offsetof(CharacterAnimation, m_idleStateName)  },
-	{ "Move state name", ScriptFieldType::String, offsetof(CharacterAnimation, m_moveStateName) },
-	{ "Dash state name", ScriptFieldType::String, offsetof(CharacterAnimation, m_dashStateName) },
-	{ "Attack state name", ScriptFieldType::String, offsetof(CharacterAnimation, m_attackStateName) },
-	{ "Damaged state name", ScriptFieldType::String, offsetof(CharacterAnimation, m_damagedStateName) },
-	{ "Death state name", ScriptFieldType::String, offsetof(CharacterAnimation, m_deathStateName) }
+	{ "Idle state name", ScriptFieldType::String, offsetof(AnimationController, m_idleStateName)  },
+	{ "Move state name", ScriptFieldType::String, offsetof(AnimationController, m_moveStateName) },
+	{ "Dash state name", ScriptFieldType::String, offsetof(AnimationController, m_dashStateName) },
+	{ "Attack state name", ScriptFieldType::String, offsetof(AnimationController, m_attackStateName) },
+	{ "Damaged state name", ScriptFieldType::String, offsetof(AnimationController, m_damagedStateName) },
+	{ "Death state name", ScriptFieldType::String, offsetof(AnimationController, m_deathStateName) }
 };
 
-IMPLEMENT_SCRIPT_FIELDS(CharacterAnimation, CharacterAnimationFields)
+IMPLEMENT_SCRIPT_FIELDS(AnimationController, AnimationControllerFields)
 
-CharacterAnimation::CharacterAnimation(GameObject* owner)
+AnimationController::AnimationController(GameObject* owner)
     : Script(owner)
 {
 }
 
-void CharacterAnimation::Start()
+void AnimationController::Start()
 {
 	m_animationComponent = findAnimationComponent();
 
 	m_playerMovement = findPlayerMovement();
 }
 
-void CharacterAnimation::Update()
+void AnimationController::Update()
 {
 	if (!m_animationComponent)
 	{
@@ -80,7 +80,7 @@ void CharacterAnimation::Update()
 	
 }
 
-AnimationComponent* CharacterAnimation::findAnimationComponent()
+AnimationComponent* AnimationController::findAnimationComponent()
 {
 	m_animationComponent = AnimationAPI::getAnimationComponent(m_owner);
 	if (m_animationComponent)
@@ -92,7 +92,7 @@ AnimationComponent* CharacterAnimation::findAnimationComponent()
 	return nullptr;
 }
 
-PlayerMovement* CharacterAnimation::findPlayerMovement()
+PlayerMovement* AnimationController::findPlayerMovement()
 {
 	Script* movementScript = m_owner ? GameObjectAPI::getScript(m_owner, "PlayerMovement") : nullptr;
 	if (movementScript)
@@ -104,4 +104,4 @@ PlayerMovement* CharacterAnimation::findPlayerMovement()
 	return nullptr;
 }
 
-IMPLEMENT_SCRIPT(CharacterAnimation)
+IMPLEMENT_SCRIPT(AnimationController)

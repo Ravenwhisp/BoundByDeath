@@ -15,12 +15,12 @@ enum class AnimState
     Death
 };
 
-class CharacterAnimation : public Script
+class AnimationController : public Script
 {
-    DECLARE_SCRIPT(CharacterAnimation)
+    DECLARE_SCRIPT(AnimationController)
 
 public:
-    explicit CharacterAnimation(GameObject* owner);
+    explicit AnimationController(GameObject* owner);
 
     void Start() override;
     void Update() override;
