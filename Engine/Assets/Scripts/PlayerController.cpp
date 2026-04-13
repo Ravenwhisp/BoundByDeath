@@ -45,6 +45,11 @@ void PlayerController::Update()
 
     const float dt = Time::getDeltaTime();
 
+    if (m_playerState && !m_playerState->canMove())
+    {
+        return;
+    }
+
     if (m_playerMovement)
     {
         const Vector2 moveAxis = Input::getMoveAxis(m_playerIndex);
