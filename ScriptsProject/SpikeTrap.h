@@ -44,6 +44,10 @@ public:
 	GameObject* owner = getOwner();
 	Transform* ownerTransform = GameObjectAPI::getTransform(owner);
 
+	float startPositionY = 0.0f;
+	float waitPositionY = -0.5f;
+	float activePositionY = 0.0f;
+
 private:
     
     bool containsPoint(const Vector3& triggerCenter, const Vector3& point) const;

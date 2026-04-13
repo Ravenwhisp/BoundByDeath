@@ -7,7 +7,10 @@ static const ScriptFieldInfo myScriptFields[] =
     { "Spectral Spikes", ScriptFieldType::ComponentRef, offsetof(SpikeTrap, m_spectralSpike), {}, {}, { ComponentType::TRANSFORM } },
 	{ "Alternative Mode", ScriptFieldType::Bool, offsetof(SpikeTrap, alternativeMode) },
     { "Active Duration" , ScriptFieldType::Float, offsetof(SpikeTrap, a_duration), {0.0f, 50.0f, 0.1f } },
-	{ "Preparing Duration" , ScriptFieldType::Float, offsetof(SpikeTrap, p_duration), {0.0f, 50.0f, 0.1f } }
+	{ "Preparing Duration" , ScriptFieldType::Float, offsetof(SpikeTrap, p_duration), {0.0f, 50.0f, 0.1f } },
+    { "Start Position Y", ScriptFieldType::Float, offsetof(SpikeTrap, startPositionY), { -10.0f, 10.0f, 0.1f } },
+    { "Wait Position Y", ScriptFieldType::Float, offsetof(SpikeTrap, waitPositionY), { -10.0f, 10.0f, 0.1f } },
+	{ "Active Position Y", ScriptFieldType::Float, offsetof(SpikeTrap, activePositionY), { -10.0f, 10.0f, 0.1f } },
 };
 
 IMPLEMENT_SCRIPT_FIELDS(SpikeTrap, myScriptFields)
@@ -36,18 +39,18 @@ void SpikeTrap::Update()
             
             if (spikeType == 0)
             {
-				normalSpikePosition.y = -0.4f;
+				normalSpikePosition.y = waitPositionY;
                 TransformAPI::setPosition(m_normalSpike.getReferencedComponent(), normalSpikePosition);
             }
             else if (spikeType == 1)
             {
-				spectralSpikePosition.y = -0.4f;
+				spectralSpikePosition.y = waitPositionY;
 				TransformAPI::setPosition(m_spectralSpike.getReferencedComponent(), spectralSpikePosition);
             }
 
             if (currentTime >= p_duration && spikeType == 0)
             {
-                normalSpikePosition.y = 0.0f;
+                normalSpikePosition.y = activePositionY;
 				TransformAPI::setPosition(m_normalSpike.getReferencedComponent(), normalSpikePosition);
                 state = ACTIVE;
                 currentTime = 0.0f;
@@ -55,7 +58,7 @@ void SpikeTrap::Update()
             }
 			else if(currentTime >= p_duration && spikeType == 1)
             {
-				spectralSpikePosition.y = 0.0f;
+				spectralSpikePosition.y = activePositionY;
                 TransformAPI::setPosition(m_spectralSpike.getReferencedComponent(), spectralSpikePosition);
                 state = ACTIVE;
 				currentTime = 0.0f;
@@ -65,8 +68,8 @@ void SpikeTrap::Update()
         case SpikeTrap::ACTIVE:
             if (currentTime >= a_duration && spikeType == 0)
             {
-				normalSpikePosition.y = -0.5f;
-				spectralSpikePosition.y = -0.4f;
+				normalSpikePosition.y = startPositionY;
+				spectralSpikePosition.y = waitPositionY;
 				TransformAPI::setPosition(m_normalSpike.getReferencedComponent(), normalSpikePosition);
                 TransformAPI::setPosition(m_spectralSpike.getReferencedComponent(), spectralSpikePosition);
 				spikeType = 1;
@@ -75,8 +78,8 @@ void SpikeTrap::Update()
             }
 			else if (currentTime >= a_duration && spikeType == 1)
 			{
-				normalSpikePosition.y = -0.4f;
-				spectralSpikePosition.y = -0.5f;
+				normalSpikePosition.y = waitPositionY;
+				spectralSpikePosition.y = startPositionY;
                 TransformAPI::setPosition(m_normalSpike.getReferencedComponent(), normalSpikePosition);
                 TransformAPI::setPosition(m_spectralSpike.getReferencedComponent(), spectralSpikePosition);
 				spikeType = 0;
