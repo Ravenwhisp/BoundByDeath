@@ -30,7 +30,7 @@ void LyrielArrowProjectile::launch(const Vector3& start_position, const Vector3&
     if (transform != nullptr)
     {
         TransformAPI::setGlobalPosition(transform, start_position);
-        orientToDirection(transform, m_direction);
+        TransformAPI::lookAt(transform, start_position + m_direction);
     }
 
     GameObjectAPI::setActive(getOwner(), true);
@@ -77,30 +77,6 @@ void LyrielArrowProjectile::returnToPool()
     }
 
     m_pool->releaseArrow(this);
-}
-
-void LyrielArrowProjectile::orientToDirection(Transform* transform, const Vector3& direction)
-{
-    if (transform == nullptr)
-    {
-        return;
-    }
-
-    Vector3 dir = direction;
-    if (dir.LengthSquared() <= 0.0001f)
-    {
-        return;
-    }
-
-    dir.Normalize();
-
-    const float yawRadians = atan2f(dir.x, dir.z);
-    const float pitchRadians = -asinf(dir.y);
-
-    const float radToDeg = 57.2957795f;
-    Vector3 eulerDegrees(pitchRadians * radToDeg, yawRadians * radToDeg, 0.0f);
-
-    TransformAPI::setRotationEuler(transform, eulerDegrees);
 }
 
 IMPLEMENT_SCRIPT(LyrielArrowProjectile)
