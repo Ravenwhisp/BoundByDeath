@@ -1,17 +1,13 @@
 #include "pch.h"
 #include "DeathDash.h"
 #include "CharacterBase.h"
-#include "DeathCharacter.h"
 #include "PlayerTargetController.h"
 
-// ============================================================
-// PROPOSAL — This script shows how a timed-movement ability
-// should communicate with AbilityBase. All game logic is marked
-// TODO and must be properly implemented.
-// ============================================================
+#define PI 3.1415926535897931f
 
 static const ScriptFieldInfo DeathDashFields[] =
 {
+    { "Dash Distance", ScriptFieldType::Float, offsetof(DeathDash, m_dashDistance), { 0.1f, 20.0f, 0.1f } },
     { "Dash Duration", ScriptFieldType::Float, offsetof(DeathDash, m_dashDuration), { 0.05f, 1.0f, 0.01f } },
 };
 
@@ -25,9 +21,7 @@ DeathDash::DeathDash(GameObject* owner)
 
 void DeathDash::Start()
 {
-    m_character = static_cast<CharacterBase*>(
-        GameObjectAPI::getScript(m_owner, "DeathCharacter"));
-
+    m_character = static_cast<CharacterBase*>(GameObjectAPI::getScript(m_owner, "DeathCharacter"));
     if (m_character == nullptr)
     {
         Debug::warn("DeathDash: DeathCharacter not found on this GameObject.");
@@ -36,7 +30,6 @@ void DeathDash::Start()
 
 void DeathDash::Update()
 {
-    // MUST be called first — handles dead guard, force-cancel on death, cooldown tick.
     AbilityBase::Update();
 
     if (m_character == nullptr)
@@ -44,33 +37,128 @@ void DeathDash::Update()
         return;
     }
 
-    // --- Activate dash ---
-    if (!isActive() && canActivate() && Input::isLeftShoulderJustPressed(getPlayerIndex()))
+    // =========================================================
+    // ACTIVACION DEL DASH
+    // PRIORIDAD:
+    // 1) direccion del joystick izquierdo / move axis
+    // 2) enemigo targeteado
+    // 3) forward del personaje
+    // =========================================================
+
+    const bool testKeyDown = Input::isKeyDown(KeyCode::Space);
+    const bool testKeyJustPressed = testKeyDown && !m_debugDashKeyWasDown;
+    m_debugDashKeyWasDown = testKeyDown;
+
+    // Para mando, descomenta esta linea:
+    // const bool dashJustPressed = Input::isLeftShoulderJustPressed(getPlayerIndex());
+
+    // Para probar con teclado:
+    const bool dashJustPressed = testKeyJustPressed;
+
+    if (!isActive() && canActivate() && dashJustPressed)
     {
         m_dashTimer = 0.0f;
 
-        // TODO: compute m_dashDirection toward the current target (or character forward if none).
-        //       Use m_character->getTargetController()->getCurrentTarget() to get the target,
-        //       then derive direction from positions via TransformAPI::getPosition().
+        Transform* ownerTransform = GameObjectAPI::getTransform(m_owner);
+        if (ownerTransform == nullptr)
+        {
+            return;
+        }
 
-        onActivate();  // sets isActive = true, blocks other abilities via canAct
-        // TODO: play dash animation / start dash VFX
+        Vector3 dashDirection = { 0.0f, 0.0f, 0.0f };
+
+        // 1) Si hay input de movimiento, usar esa direccion
+        Vector2 moveAxis = Input::getMoveAxis(getPlayerIndex());
+        if (moveAxis.x != 0.0f || moveAxis.y != 0.0f)
+        {
+            dashDirection = Vector3(moveAxis.x, 0.0f, moveAxis.y);
+        }
+        else
+        {
+            // 2) Si no hay input, intentar ir hacia el target actual
+            PlayerTargetController* targetController = m_character->getTargetController();
+            GameObject* currentTarget = nullptr;
+
+            if (targetController != nullptr)
+            {
+                currentTarget = targetController->getCurrentTarget();
+            }
+
+            if (currentTarget != nullptr)
+            {
+                Transform* targetTransform = GameObjectAPI::getTransform(currentTarget);
+                if (targetTransform != nullptr)
+                {
+                    Vector3 ownerPos = TransformAPI::getPosition(ownerTransform);
+                    Vector3 targetPos = TransformAPI::getPosition(targetTransform);
+
+                    dashDirection = targetPos - ownerPos;
+                    dashDirection.y = 0.0f;
+                }
+            }
+            else
+            {
+                // 3) Si no hay input ni target, hacia adelante
+                dashDirection = -TransformAPI::getForward(ownerTransform);
+                dashDirection.y = 0.0f;
+            }
+        }
+
+        float lenSq =
+            dashDirection.x * dashDirection.x +
+            dashDirection.y * dashDirection.y +
+            dashDirection.z * dashDirection.z;
+
+        if (lenSq <= 0.0001f)
+        {
+            dashDirection = -TransformAPI::getForward(ownerTransform);
+            dashDirection.y = 0.0f;
+
+            lenSq =
+                dashDirection.x * dashDirection.x +
+                dashDirection.y * dashDirection.y +
+                dashDirection.z * dashDirection.z;
+        }
+
+        if (lenSq <= 0.0001f)
+        {
+            Debug::warn("DeathDash: invalid dash direction.");
+            return;
+        }
+
+        const float invLen = 1.0f / sqrtf(lenSq);
+        m_dashDirection = dashDirection * invLen;
+
+        Debug::log("DeathDash activated.");
+        onActivate();
         return;
     }
 
-    // --- Tick dash movement ---
+    // =========================================================
+    // MOVIMIENTO DEL DASH
+    // =========================================================
     if (isActive())
     {
-        m_dashTimer += Time::getDeltaTime();
+        const float dt = Time::getDeltaTime();
+        m_dashTimer += dt;
 
-        // TODO: move the character along m_dashDirection each frame.
-        //       Use: dashDistance = static_cast<DeathCharacter*>(m_character)->m_dashDistance
-        //       And: TransformAPI::translate(GameObjectAPI::getTransform(m_owner), ...)
+        const float rawT = m_dashTimer / m_dashDuration;
+        const float t = (rawT < 0.0f) ? 0.0f : (rawT > 1.0f ? 1.0f : rawT);
+
+        const float curveSpeed = 0.5f * PI * cosf(t * PI * 0.5f);
+        const float dashSpeed = (m_dashDistance / m_dashDuration) * curveSpeed;
+
+        Transform* ownerTransform = GameObjectAPI::getTransform(m_owner);
+        if (ownerTransform != nullptr)
+        {
+            const Vector3 delta = m_dashDirection * dashSpeed * dt;
+            TransformAPI::translate(ownerTransform, delta);
+        }
 
         if (m_dashTimer >= m_dashDuration)
         {
-            onDeactivate();  // sets isActive = false, starts cooldown, unblocks canAct
-            // TODO: stop dash VFX
+            onDeactivate();
+            Debug::log("DeathDash finished.");
         }
     }
 }

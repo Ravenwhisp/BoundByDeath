@@ -24,6 +24,7 @@ public:
 public:
     // Total time (seconds) the dash movement lasts.
     float m_dashDuration = 0.2f;
+    float m_dashDistance = 3.0f;
 
 private:
     // Time elapsed since the dash began.
@@ -31,4 +32,6 @@ private:
 
     // Direction calculated at the moment of activation, used throughout the dash.
     Vector3 m_dashDirection = { 0.0f, 0.0f, 0.0f };
+
+    bool m_debugDashKeyWasDown = false;
 };
