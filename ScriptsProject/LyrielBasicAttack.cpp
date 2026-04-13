@@ -77,14 +77,6 @@ void LyrielBasicAttack::tryAttack()
         return;
     }
 
-    Script* script = GameObjectAPI::getScript(target, "Damageable");
-    Damageable* damageable = dynamic_cast<Damageable*>(script);
-    if (damageable == nullptr)
-    {
-        return;
-    }
-
-    damageable->takeDamage(m_attackDamage);
     spawnArrowToTarget(target);
 
     m_cooldownTimer = m_attackCooldown;
@@ -117,9 +109,6 @@ void LyrielBasicAttack::spawnArrowToTarget(GameObject* target)
     const Vector3 targetPosition = TransformAPI::getGlobalPosition(targetTransform);
 
     Vector3 direction = targetPosition - startPosition;
-    Debug::log("[LyrielBasicAttack] Start Pos: (%.2f, %.2f, %.2f) | Target Pos: (%.2f, %.2f, %.2f)",
-        startPosition.x, startPosition.y, startPosition.z,
-        targetPosition.x, targetPosition.y, targetPosition.z);
     const float distance = direction.Length();
 
     if (distance <= 0.0001f)
@@ -133,7 +122,7 @@ void LyrielBasicAttack::spawnArrowToTarget(GameObject* target)
 
     float arrowLifetime = distance / m_arrowSpeed;
 
-    arrow->launch(startPosition, direction, m_arrowSpeed, arrowLifetime);
+    arrow->launch(startPosition, direction, m_arrowSpeed, arrowLifetime, target, m_attackDamage);
 }
 
 Transform* LyrielBasicAttack::findArrowSpawnTransform() const

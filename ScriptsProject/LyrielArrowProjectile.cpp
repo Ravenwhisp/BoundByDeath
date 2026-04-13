@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "LyrielArrowProjectile.h"
 #include "ArrowPool.h"
+#include "Damageable.h"
 
 LyrielArrowProjectile::LyrielArrowProjectile(GameObject* owner)
     : Script(owner)
@@ -17,7 +18,7 @@ bool LyrielArrowProjectile::isInUse() const
     return m_inUse;
 }
 
-void LyrielArrowProjectile::launch(const Vector3& start_position, const Vector3& direction, float speed, float lifetime)
+void LyrielArrowProjectile::launch(const Vector3& start_position, const Vector3& direction, float speed, float lifetime, GameObject* target, float damage)
 {
     m_inUse = true;
     m_direction = direction;
@@ -25,6 +26,8 @@ void LyrielArrowProjectile::launch(const Vector3& start_position, const Vector3&
     m_speed = speed;
     m_lifeTimer = 0.0f;
     m_currentLifetime = lifetime;
+    m_target = target;
+    m_damage = damage;
 
     Transform* transform = GameObjectAPI::getTransform(getOwner());
     if (transform != nullptr)
@@ -53,6 +56,7 @@ void LyrielArrowProjectile::Update()
 
     if (m_lifeTimer >= m_currentLifetime)
     {
+        applyImpactDamage();
         returnToPool();
     }
 }
@@ -64,6 +68,8 @@ void LyrielArrowProjectile::resetProjectile()
     m_speed = 0.0f;
     m_lifeTimer = 0.0f;
     m_currentLifetime = 0.0f;
+    m_target = nullptr;
+    m_damage = 0.0f;
 
     GameObjectAPI::setActive(getOwner(), false);
 }
@@ -77,6 +83,22 @@ void LyrielArrowProjectile::returnToPool()
     }
 
     m_pool->releaseArrow(this);
+}
+
+void LyrielArrowProjectile::applyImpactDamage()
+{
+    if (m_target == nullptr)
+    {
+        return;
+    }
+
+    Script* script = GameObjectAPI::getScript(m_target, "Damageable");
+    Damageable* damageable = dynamic_cast<Damageable*>(script);
+
+    if (damageable != nullptr)
+    {
+        damageable->takeDamage(m_damage);
+    }
 }
 
 IMPLEMENT_SCRIPT(LyrielArrowProjectile)
