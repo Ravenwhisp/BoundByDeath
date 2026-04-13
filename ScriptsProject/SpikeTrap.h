@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ScriptAPI.h"
+#include <unordered_set>
 
 class SpikeTrap : public Script
 {
@@ -25,10 +26,9 @@ public:
 
 	float currentTime = 0.0f;
 
-	bool alternativeMode = false;
+	float trapDamage = 20.0f;
 
-    ScriptComponentRef<Transform> m_firstTarget;
-    ScriptComponentRef<Transform> m_secondTarget;
+	bool alternativeMode = false;
 
     ScriptComponentRef<Transform> m_normalSpike;
     ScriptComponentRef<Transform> m_spectralSpike;
@@ -44,6 +44,8 @@ public:
 	GameObject* owner = getOwner();
 	Transform* ownerTransform = GameObjectAPI::getTransform(owner);
 
+
+    //This will make posible use different height for the spikes, which let us use different models. If finally we use animations this will disspaear.
 	float startPositionY = 0.0f;
 	float waitPositionY = -0.5f;
 	float activePositionY = 0.0f;
@@ -53,7 +55,13 @@ private:
     bool containsPoint(const Vector3& triggerCenter, const Vector3& point) const;
     void TrapLoop();
 
+	void damagePlayer(GameObject* player);
+
+    void triggerBoxDamage();
+
 	int spikeType = 0; // 0 for normal, 1 for spectral
+
+    std::unordered_set<GameObject*> damagedPlayers;
 
 	TrapState state = WAIT;
 };

@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "SpikeTrap.h"
+#include "Damageable.h"
 
 static const ScriptFieldInfo myScriptFields[] =
 {
@@ -11,6 +12,7 @@ static const ScriptFieldInfo myScriptFields[] =
     { "Start Position Y", ScriptFieldType::Float, offsetof(SpikeTrap, startPositionY), { -10.0f, 10.0f, 0.1f } },
     { "Wait Position Y", ScriptFieldType::Float, offsetof(SpikeTrap, waitPositionY), { -10.0f, 10.0f, 0.1f } },
 	{ "Active Position Y", ScriptFieldType::Float, offsetof(SpikeTrap, activePositionY), { -10.0f, 10.0f, 0.1f } },
+	{ "Trap Damage", ScriptFieldType::Float, offsetof(SpikeTrap, trapDamage), { 0.0f, 1000.0f, 1.0f } },
 };
 
 IMPLEMENT_SCRIPT_FIELDS(SpikeTrap, myScriptFields)
@@ -66,6 +68,7 @@ void SpikeTrap::Update()
             break;
 
         case SpikeTrap::ACTIVE:
+			triggerBoxDamage();
             if (currentTime >= a_duration && spikeType == 0)
             {
 				normalSpikePosition.y = startPositionY;
@@ -75,6 +78,7 @@ void SpikeTrap::Update()
 				spikeType = 1;
                 state = WAIT;
                 currentTime = 0.0f;
+				damagedPlayers.clear();
             }
 			else if (currentTime >= a_duration && spikeType == 1)
 			{
@@ -85,25 +89,13 @@ void SpikeTrap::Update()
 				spikeType = 0;
 				state = WAIT;
 				currentTime = 0.0f;
+                damagedPlayers.clear();
             }
             break;
 
         default:
             break;
     }
-
-        /*const Vector3 triggerCenter = TransformAPI::getPosition(ownerTransform);
-
-        Transform* firstTarget = m_firstTarget.getReferencedComponent();
-        if (firstTarget && containsPoint(triggerCenter, TransformAPI::getPosition(firstTarget)))
-        {
-            return;
-        }
-
-        Transform* secondTarget = m_secondTarget.getReferencedComponent();
-        if (secondTarget && containsPoint(triggerCenter, TransformAPI::getPosition(secondTarget)))
-        {
-        }*/
 
     }
 
@@ -122,6 +114,60 @@ void SpikeTrap::TrapLoop()
 {
     
         
+}
+
+void SpikeTrap::damagePlayer(GameObject* player)
+{
+    // Skip if this player was already damaged
+    if (damagedPlayers.count(player)) return;
+
+    Script* damageableScript = GameObjectAPI::getScript(player, "Damageable");
+    Damageable* damageable = dynamic_cast<Damageable*>(damageableScript);
+    if (damageable)
+    {
+        damageable->takeDamage(trapDamage);
+        damagedPlayers.insert(player);
+    }
+}
+
+void SpikeTrap::triggerBoxDamage()
+{
+    GameObject* owner = getOwner();
+    Transform* ownerTransform = GameObjectAPI::getTransform(owner);
+    const Vector3 trapPosition = TransformAPI::getPosition(ownerTransform);
+    std::vector<GameObject*> playersInScene = SceneAPI::findAllGameObjectsByTag(Tag::PLAYER);
+    for (GameObject* player : playersInScene)
+    {
+		const char* name = GameObjectAPI::getName(player);
+        
+        if(name && strcmp(name, "Lyriel") == 0 && spikeType == 0)
+        {
+            Transform* playerTransform = GameObjectAPI::getTransform(player);
+            const Vector3 playerPosition = TransformAPI::getPosition(playerTransform);
+            if (containsPoint(trapPosition, playerPosition))
+            {
+                damagePlayer(player);
+            }
+            else
+            {
+                damagedPlayers.erase(player);
+            }
+		}
+        if(name && strcmp(name, "Death") == 0 && spikeType == 1)
+        {
+            Transform* playerTransform = GameObjectAPI::getTransform(player);
+            const Vector3 playerPosition = TransformAPI::getPosition(playerTransform);
+            if (containsPoint(trapPosition, playerPosition))
+            {
+                damagePlayer(player);
+            }
+            else
+            {
+                damagedPlayers.erase(player);
+            }
+		}
+        
+    }
 }
 
 
