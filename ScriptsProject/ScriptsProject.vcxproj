@@ -158,7 +158,7 @@
     <ClInclude Include="..\Engine\Assets\Scripts\PlayerController.h" />
     <ClInclude Include="..\Engine\Assets\Scripts\TestingButton.h" />
     <ClInclude Include="..\Engine\Assets\Scripts\TriggerArea.h" />
-    <ClInclude Include="PlayerAnimationController.h" />
+    <ClInclude Include="Bound.h" />
     <ClInclude Include="Damageable.h" />
     <ClInclude Include="DebugDamageTrigger.h" />
     <ClInclude Include="DebugDrawTest.h" />
@@ -167,6 +167,7 @@
     <ClInclude Include="framework.h" />
     <ClInclude Include="DefeatConditionManager.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="PlayerAnimationController.h" />
     <ClInclude Include="PlayerDamageable.h" />
     <ClInclude Include="PlayerDownState.h" />
     <ClInclude Include="PlayerMovement.h" />
@@ -182,7 +183,7 @@
     <ClCompile Include="..\Engine\Assets\Scripts\PlayerController.cpp" />
     <ClCompile Include="..\Engine\Assets\Scripts\TestingButton.cpp" />
     <ClCompile Include="..\Engine\Assets\Scripts\TriggerArea.cpp" />
-    <ClCompile Include="PlayerAnimationController.cpp" />
+    <ClCompile Include="Bound.cpp" />
     <ClCompile Include="Damageable.cpp" />
     <ClCompile Include="DebugDamageTrigger.cpp" />
     <ClCompile Include="DebugDrawTest.cpp" />
@@ -200,6 +201,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="PlayerAnimationController.cpp" />
     <ClCompile Include="PlayerDamageable.cpp" />
     <ClCompile Include="PlayerDownState.cpp" />
     <ClCompile Include="PlayerMovement.cpp" />
