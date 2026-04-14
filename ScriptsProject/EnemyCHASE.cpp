@@ -64,7 +64,7 @@ void EnemyCHASE::OnStateUpdate()
 	if (m_enemyController->isTargetInCombatRange())
 	{
 		m_enemyController->faceCurrentTarget();
-		AnimationAPI::playState(animation, "Idle"); // need to trigger combat state
+		AnimationAPI::playState(animation, "Attack");
 		return;
 	}
 
