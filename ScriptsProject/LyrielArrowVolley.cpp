@@ -69,6 +69,15 @@ void LyrielArrowVolley::Start()
 void LyrielArrowVolley::Update()
 {
     updateCooldown();
+
+    if (m_attackStateTimer > 0.0f)
+    {
+        if (m_attackFacingDirection.LengthSquared() > 0.0001f)
+        {
+            faceDirection(m_attackFacingDirection);
+        }
+    }
+
     updateAttackStateTimer();
 
     if (canStartAim() && Input::isLeftTriggerJustPressed(m_playerIndex))
@@ -99,13 +108,9 @@ void LyrielArrowVolley::drawGizmo()
         return;
     }
 
-    Transform* spawnTransform = findArrowSpawnTransform();
-    if (spawnTransform == nullptr)
-    {
-        return;
-    }
+    Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
 
-    const Vector3 origin = TransformAPI::getGlobalPosition(spawnTransform);
+    const Vector3 origin = TransformAPI::getGlobalPosition(ownerTransform);
     drawAimPreview(origin, m_currentAimDirection);
 }
 
@@ -134,6 +139,7 @@ void LyrielArrowVolley::updateAttackStateTimer()
     if (m_attackStateTimer <= 0.0f)
     {
         m_attackStateTimer = 0.0f;
+        m_attackFacingDirection = Vector3::Zero;
 
         if (m_playerState != nullptr && m_playerState->isAttacking())
         {
@@ -191,14 +197,6 @@ void LyrielArrowVolley::updateAim()
     {
         m_currentAimDirection = aimDirection;
     }
-
-    if (m_currentAimDirection.LengthSquared() <= 0.0001f)
-    {
-        return;
-    }
-
-    faceDirection(m_currentAimDirection);
-
 }
 
 void LyrielArrowVolley::releaseAimAndCast()
@@ -224,6 +222,7 @@ void LyrielArrowVolley::releaseAimAndCast()
     const Vector3 origin = TransformAPI::getGlobalPosition(spawnTransform);
     const Vector3 forward = m_currentAimDirection;
 
+    m_attackFacingDirection = forward;
     faceDirection(forward);
 
     std::vector<GameObject*> targets;
@@ -238,7 +237,6 @@ void LyrielArrowVolley::releaseAimAndCast()
 
     if (m_playerAnimationController != nullptr)
     {
-        // Replace with the specific ability animation request if you add one later.
         m_playerAnimationController->requestAttack();
     }
 
@@ -457,7 +455,6 @@ void LyrielArrowVolley::drawAimPreview(const Vector3& origin, const Vector3& for
     const int arcSteps = 16;
 
     const Vector3 previewColor(0.2f, 1.0f, 0.2f);
-    const Vector3 centerColor(1.0f, 1.0f, 0.2f);
 
     auto rotateXZ = [](const Vector3& dir, float angleRad) -> Vector3
         {
@@ -479,7 +476,6 @@ void LyrielArrowVolley::drawAimPreview(const Vector3& origin, const Vector3& for
 
     DebugDrawAPI::drawLine(origin, origin + leftDir * m_volleyRange, previewColor, 0, true);
     DebugDrawAPI::drawLine(origin, origin + rightDir * m_volleyRange, previewColor, 0, true);
-    DebugDrawAPI::drawLine(origin, origin + flatForward * m_volleyRange, centerColor, 0, true);
 
     Vector3 previousPoint = origin + leftDir * m_volleyRange;
 

@@ -69,6 +69,8 @@ private:
     float m_cooldownTimer = 0.0f;
     float m_attackStateTimer = 0.0f;
 
+    Vector3 m_attackFacingDirection = Vector3::Zero;
+
     bool m_isAiming = false;
     Vector3 m_currentAimDirection = Vector3::Zero;
 };
