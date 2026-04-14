@@ -1,16 +1,22 @@
 #include "pch.h"
 #include "DeathTaunt.h"
 #include "CharacterBase.h"
+#include "DeathCharacter.h"
 #include "EnemyDetectionAggro.h"
 
 #include <cmath>
 
-//IMPLEMENT_SCRIPT_FIELDS(DeathTaunt, nullptr)
+static const ScriptFieldInfo DeathTauntFields[] =
+{
+    { "FuckOFF Window", ScriptFieldType::Float, offsetof(DeathTaunt, m_TauntCooldownSeconds), { 0.1f, 3.0f, 0.05f } },
+};
+
+IMPLEMENT_SCRIPT_FIELDS(DeathTaunt, DeathTauntFields)
 
 DeathTaunt::DeathTaunt(GameObject* owner)
     : AbilityBase(owner)
 {
-    m_cooldown = kTauntCooldownSeconds;
+    m_cooldown = m_TauntCooldownSeconds;
 }
 
 void DeathTaunt::Start()
@@ -60,7 +66,7 @@ void DeathTaunt::drawGizmo()
     const Vector3 ownerForward = TransformAPI::getForward(ownerTransform);
 
     // Dibujar el cono siempre visible
-    DebugDrawAPI::drawCone(ownerPosition, ownerForward * kTauntRange, Vector3(1.0f, 0.0f, 0.0f), kTauntRange, 0.0f, 0, false);
+    DebugDrawAPI::drawCone(ownerPosition, ownerForward * m_TauntRange, Vector3(1.0f, 0.0f, 0.0f), m_TauntRange, 0.0f, 0, false);
 }
 
 void DeathTaunt::onActivate()
@@ -108,7 +114,7 @@ void DeathTaunt::applyTauntToEnemiesInCone() const
             continue;
         }
 
-        static_cast<EnemyDetectionAggro*>(script)->applyTaunt(ownerTransform, kTauntDurationSeconds);
+        static_cast<EnemyDetectionAggro*>(script)->applyTaunt(ownerTransform, m_TauntDurationSeconds);
     }
 }
 
@@ -129,7 +135,7 @@ bool DeathTaunt::isEnemyInsideTauntCone(GameObject* enemy, const Vector3& ownerP
     directionToEnemy.y = 0.0f;
 
     const float distanceToEnemy = directionToEnemy.Length();
-    if (distanceToEnemy <= 0.0f || distanceToEnemy > kTauntRange)
+    if (distanceToEnemy <= 0.0f || distanceToEnemy > m_TauntRange)
     {
         return false;
     }
@@ -145,7 +151,7 @@ bool DeathTaunt::isEnemyInsideTauntCone(GameObject* enemy, const Vector3& ownerP
     flattenedForward.Normalize();
     directionToEnemy.Normalize();
 
-    const float halfAngleRadians = kTauntHalfAngleDegrees * (3.14159265f / 180.0f);
+    const float halfAngleRadians = m_TauntHalfAngleDegrees * (3.14159265f / 180.0f);
     const float coneThreshold = std::cos(halfAngleRadians);
 
     // TODO: Add a line-of-sight / wall check before confirming the taunt hit.

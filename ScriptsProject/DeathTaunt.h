@@ -1,12 +1,10 @@
 #pragma once
-
+#include "ScriptAPI.h"
 #include "AbilityBase.h"
+
 
 class EnemyDetectionAggro;
 
-// Death's taunt applies a cone-shaped provoke in front of the caster.
-// Enemies affected by the cone keep the taunt for a fixed duration even if
-// the caster later leaves their detection radius.
 class DeathTaunt : public AbilityBase
 {
     DECLARE_SCRIPT(DeathTaunt)
@@ -16,6 +14,8 @@ public:
 
     void Start()  override;
     void Update() override;
+
+    ScriptFieldList getExposedFields() const override;
     void drawGizmo() override;
 
 protected:
@@ -26,9 +26,9 @@ private:
     void applyTauntToEnemiesInCone() const;
     bool isEnemyInsideTauntCone(GameObject* enemy, const Vector3& ownerPosition, const Vector3& ownerForward) const;
 
-private:
-    static constexpr float kTauntCooldownSeconds = 8.0f;
-    static constexpr float kTauntDurationSeconds = 3.0f;
-    static constexpr float kTauntRange = 2.5f;
-    static constexpr float kTauntHalfAngleDegrees = 35.0f;
+public:
+    float m_TauntCooldownSeconds = 8.0f;
+    float m_TauntDurationSeconds = 3.0f;
+    float m_TauntRange = 2.5f;
+    float m_TauntHalfAngleDegrees = 35.0f;
 };
