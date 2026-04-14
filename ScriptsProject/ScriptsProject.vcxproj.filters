@@ -34,6 +34,9 @@
     <Filter Include="Enemies">
       <UniqueIdentifier>{994356b7-31d7-4286-a7d0-f22fa651b995}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Enemies\States">
+      <UniqueIdentifier>{920d4967-84f4-4616-9099-b8b0c3eeb8af}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -98,6 +101,15 @@
     <ClInclude Include="PlayerMovement.h">
       <Filter>Player\Transform</Filter>
     </ClInclude>
+    <ClInclude Include="EnemyController.h">
+      <Filter>Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyIDLE.h">
+      <Filter>Enemies\States</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyCHASE.h">
+      <Filter>Enemies\States</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
@@ -156,12 +168,21 @@
     <ClCompile Include="EnemyDeathHandler.cpp">
       <Filter>Enemies</Filter>
     </ClCompile>
-	<ClCompile Include="PlayerRotation.cpp">
+    <ClCompile Include="PlayerRotation.cpp">
       <Filter>Player\Transform</Filter>
     </ClCompile>
     <ClCompile Include="PlayerMovement.cpp">
       <Filter>Player\Transform</Filter>
     </ClCompile>
     <ClCompile Include="EngineDependencies\SimpleMath.cpp" />
+    <ClCompile Include="EnemyController.cpp">
+      <Filter>Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyIDLE.cpp">
+      <Filter>Enemies\States</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyCHASE.cpp">
+      <Filter>Enemies\States</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
