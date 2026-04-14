@@ -19,8 +19,6 @@ void EnemyCHASE::OnStateEnter()
 	Script* script = GameObjectAPI::getScript(getOwner(), "EnemyController");
 	m_enemyController = dynamic_cast<EnemyController*>(script);
 
-	Debug::log("EnemyCHASE Started");
-
 	if (!m_enemyController)
 	{
 		return;
@@ -59,14 +57,14 @@ void EnemyCHASE::OnStateUpdate()
 
 	if (!m_enemyController->hasValidTarget())
 	{
-		AnimationAPI::sendTrigger(animation, "Idle");
+		AnimationAPI::playState(animation, "Idle");
 		return;
 	}
 
 	if (m_enemyController->isTargetInCombatRange())
 	{
 		m_enemyController->faceCurrentTarget();
-		AnimationAPI::sendTrigger(animation, "Idle"); // need to trigger combat state
+		AnimationAPI::playState(animation, "Idle"); // need to trigger combat state
 		return;
 	}
 

@@ -27,10 +27,6 @@ void EnemyIDLE::OnStateEnter()
 	m_enemyController->clearPath();
 	m_enemyController->resetRepathTimer();
 
-	if (m_debugEnabled)
-	{
-		Debug::log("[EnemyIDLE] ENTER");
-	}
 }
 
 void EnemyIDLE::OnStateUpdate()
@@ -59,7 +55,7 @@ void EnemyIDLE::OnStateUpdate()
 		return;
 	}
 
-	AnimationAPI::sendTrigger(animation, "chase");
+	AnimationAPI::playState(animation, "Chase");
 
 	if (m_debugEnabled)
 	{
