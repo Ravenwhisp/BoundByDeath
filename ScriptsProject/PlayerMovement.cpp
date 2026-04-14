@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "PlayerMovement.h"
+#include "PlayerAnimationController.h"
 
 static const ScriptFieldInfo playerMovementFields[]
 {
@@ -17,11 +18,26 @@ PlayerMovement::PlayerMovement(GameObject* owner)
 
 void PlayerMovement::Start()
 {
-    GameObject* owner = getOwner();
+    m_playerAnimationController = findAnimationController();
 }
 
 void PlayerMovement::Update()
 {
+}
+
+void PlayerMovement::setMoving(bool isMoving)
+{
+    if (m_isMoving == isMoving)
+    {
+        return;
+    }
+
+    m_isMoving = isMoving;
+
+    if (m_playerAnimationController)
+    {
+        m_playerAnimationController->setMoving(m_isMoving);
+    }
 }
 
 void PlayerMovement::moveInternal(GameObject* owner, const Vector3& displacement) const
@@ -48,6 +64,18 @@ void PlayerMovement::applyTranslation(Transform* transform, const Vector3& curre
     {
         TransformAPI::setPosition(transform, constrainedPos);
     }
+}
+
+PlayerAnimationController* PlayerMovement::findAnimationController()
+{
+    Script* animationScript = m_owner ? GameObjectAPI::getScript(m_owner, "PlayerAnimationController") : nullptr;
+    if (animationScript)
+    {
+        return static_cast<PlayerAnimationController*>(animationScript);
+    }
+
+    Debug::warn("PlayerMovement on '%s' could not find PlayerAnimationController on the same GameObject.", GameObjectAPI::getName(m_owner));
+    return nullptr;
 }
 
 IMPLEMENT_SCRIPT(PlayerMovement)
