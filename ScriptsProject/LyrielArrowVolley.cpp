@@ -87,6 +87,28 @@ void LyrielArrowVolley::Update()
     }
 }
 
+void LyrielArrowVolley::drawGizmo()
+{
+    if (!m_isAiming)
+    {
+        return;
+    }
+
+    if (m_currentAimDirection.LengthSquared() <= 0.0001f)
+    {
+        return;
+    }
+
+    Transform* spawnTransform = findArrowSpawnTransform();
+    if (spawnTransform == nullptr)
+    {
+        return;
+    }
+
+    const Vector3 origin = TransformAPI::getGlobalPosition(spawnTransform);
+    drawAimPreview(origin, m_currentAimDirection);
+}
+
 void LyrielArrowVolley::updateCooldown()
 {
     if (m_cooldownTimer <= 0.0f)
@@ -164,12 +186,6 @@ void LyrielArrowVolley::beginAim()
 
 void LyrielArrowVolley::updateAim()
 {
-    Transform* spawnTransform = findArrowSpawnTransform();
-    if (spawnTransform == nullptr)
-    {
-        return;
-    }
-
     Vector3 aimDirection = computeAimDirection();
     if (isAimStickValid(aimDirection))
     {
@@ -183,8 +199,6 @@ void LyrielArrowVolley::updateAim()
 
     faceDirection(m_currentAimDirection);
 
-    const Vector3 origin = TransformAPI::getGlobalPosition(spawnTransform);
-    drawAimPreview(origin, m_currentAimDirection);
 }
 
 void LyrielArrowVolley::releaseAimAndCast()

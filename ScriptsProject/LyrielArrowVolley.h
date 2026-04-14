@@ -17,6 +17,7 @@ public:
 
     void Start() override;
     void Update() override;
+    void drawGizmo() override;
 
     ScriptFieldList getExposedFields() const override;
 
@@ -44,18 +45,6 @@ private:
 
     bool isAimStickValid(const Vector3& direction) const;
 
-private:
-    ArrowPool* m_arrowPool = nullptr;
-    PlayerState* m_playerState = nullptr;
-    PlayerRotation* m_playerRotation = nullptr;
-    PlayerAnimationController* m_playerAnimationController = nullptr;
-
-    float m_cooldownTimer = 0.0f;
-    float m_attackStateTimer = 0.0f;
-
-    bool m_isAiming = false;
-    Vector3 m_currentAimDirection = Vector3::Zero;
-
 public:
     int m_playerIndex = 0;
 
@@ -70,4 +59,16 @@ public:
     float m_attackLockDuration = 0.2f;
 
     std::string m_arrowSpawnChildName = "ArrowSpawn";
+
+private:
+    ArrowPool* m_arrowPool = nullptr;
+    PlayerState* m_playerState = nullptr;
+    PlayerRotation* m_playerRotation = nullptr;
+    PlayerAnimationController* m_playerAnimationController = nullptr;
+
+    float m_cooldownTimer = 0.0f;
+    float m_attackStateTimer = 0.0f;
+
+    bool m_isAiming = false;
+    Vector3 m_currentAimDirection = Vector3::Zero;
 };
