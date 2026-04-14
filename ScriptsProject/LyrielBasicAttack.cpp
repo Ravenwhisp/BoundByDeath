@@ -6,6 +6,7 @@
 #include "LyrielArrowProjectile.h"
 #include "PlayerState.h"
 #include "PlayerRotation.h"
+#include "PlayerAnimationController.h"
 
 static const ScriptFieldInfo LyrielBasicAttackFields[] =
 {
@@ -38,6 +39,9 @@ void LyrielBasicAttack::Start()
     Script* rotationScript = GameObjectAPI::getScript(getOwner(), "PlayerRotation");
     m_playerRotation = dynamic_cast<PlayerRotation*>(rotationScript);
 
+    Script* animationScript = GameObjectAPI::getScript(getOwner(), "PlayerAnimationController");
+    m_playerAnimationController = dynamic_cast<PlayerAnimationController*>(animationScript);
+
     if (m_targetController == nullptr)
     {
         Debug::log("[LyrielBasicAttack] PlayerTargetController not found on owner.");
@@ -56,6 +60,11 @@ void LyrielBasicAttack::Start()
     if (m_playerRotation == nullptr)
     {
         Debug::log("[LyrielBasicAttack] PlayerRotation not found on owner.");
+    }
+
+    if (m_playerAnimationController == nullptr)
+    {
+        Debug::log("[LyrielBasicAttack] PlayerAnimationController not found on owner.");
     }
 }
 
@@ -116,6 +125,11 @@ void LyrielBasicAttack::tryAttack()
     if (m_playerState != nullptr)
     {
         m_playerState->setState(PlayerStateType::Attacking);
+    }
+
+    if (m_playerAnimationController != nullptr)
+    {
+        m_playerAnimationController->requestAttack();
     }
 
     m_attackStateTimer = m_attackLockDuration;

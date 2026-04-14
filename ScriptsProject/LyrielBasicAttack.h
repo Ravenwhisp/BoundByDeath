@@ -7,6 +7,7 @@ class ArrowPool;
 class LyrielArrowProjectile;
 class PlayerState;
 class PlayerRotation;
+class PlayerAnimationController;
 
 class LyrielBasicAttack : public Script
 {
@@ -32,6 +33,7 @@ private:
     ArrowPool* m_arrowPool = nullptr;
     PlayerState* m_playerState = nullptr;
     PlayerRotation* m_playerRotation = nullptr;
+    PlayerAnimationController* m_playerAnimationController = nullptr;
 
     float m_cooldownTimer = 0.0f;
     float m_attackStateTimer = 0.0f;

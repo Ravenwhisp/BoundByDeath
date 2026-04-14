@@ -47,6 +47,10 @@ void PlayerController::Update()
 
     if (m_playerState && !m_playerState->canMove())
     {
+        if (m_playerMovement)
+        {
+            m_playerMovement->setMoving(false);
+        }
         return;
     }
 
