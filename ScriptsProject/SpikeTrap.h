@@ -30,8 +30,8 @@ public:
 
 	bool alternativeMode = false;
 
-    ScriptComponentRef<Transform> m_normalSpike;
-    ScriptComponentRef<Transform> m_spectralSpike;
+    /*ScriptComponentRef<Transform> m_normalSpike;
+    ScriptComponentRef<Transform> m_spectralSpike;*/
 
 	Vector3 normalSpikePosition = Vector3(0.0f, -1.0f, 0.0f);
 	Vector3 spectralSpikePosition = Vector3(0.0f, -1.0f, 0.0f);
@@ -44,10 +44,13 @@ public:
 	GameObject* owner = getOwner();
 	Transform* ownerTransform = GameObjectAPI::getTransform(owner);
 
+    Transform* m_normalSpike;
+	Transform* m_spectralSpike;
+
 
     //This will make posible use different height for the spikes, which let us use different models. If finally we use animations this will disspaear.
-	float startPositionY = 0.0f;
-	float waitPositionY = -0.5f;
+	float startPositionY = -1.0f;
+	float waitPositionY = -0.7f;
 	float activePositionY = 0.0f;
 
 private:
