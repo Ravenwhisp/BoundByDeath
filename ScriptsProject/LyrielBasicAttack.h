@@ -26,6 +26,7 @@ private:
     void spawnArrowToTarget(GameObject* target);
     Transform* findArrowSpawnTransform() const;
     void faceTarget(GameObject* target);
+    void updateCooldown();
     void updateAttackStateTimer();
 
 private:
