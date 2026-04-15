@@ -2,13 +2,19 @@
 #include "DeathBasicAttack.h"
 #include "CharacterBase.h"
 #include "DeathCharacter.h"
+#include "PlayerTargetController.h"
+#include "PlayerState.h"
+#include "PlayerAnimationController.h"
+#include "PlayerRotation.h"
 
 #include <cmath>
 
-ScriptFieldList DeathBasicAttack::getExposedFields() const
+static const ScriptFieldInfo DeathBasicAttackFields[] =
 {
-    return {};  // no inspector fields — all parameters live on DeathCharacter
-}
+    { "Attack Lock Duration", ScriptFieldType::Float, offsetof(DeathBasicAttack, m_attackLockDuration), { 0.05f, 2.0f, 0.05f } },
+};
+
+IMPLEMENT_SCRIPT_FIELDS(DeathBasicAttack, DeathBasicAttackFields)
 
 DeathBasicAttack::DeathBasicAttack(GameObject* owner)
     : AbilityBase(owner)
@@ -20,10 +26,23 @@ void DeathBasicAttack::Start()
     m_character = static_cast<CharacterBase*>(
         GameObjectAPI::getScript(m_owner, "DeathCharacter"));
 
+    m_playerState = static_cast<PlayerState*>(
+        GameObjectAPI::getScript(m_owner, "PlayerState"));
+
+    m_animController = static_cast<PlayerAnimationController*>(
+        GameObjectAPI::getScript(m_owner, "PlayerAnimationController"));
+
+    m_playerRotation = static_cast<PlayerRotation*>(
+        GameObjectAPI::getScript(m_owner, "PlayerRotation"));
+
     if (m_character == nullptr)
-    {
         Debug::warn("DeathBasicAttack: DeathCharacter not found on this GameObject.");
-    }
+    if (m_playerState == nullptr)
+        Debug::warn("DeathBasicAttack: PlayerState not found on this GameObject.");
+    if (m_animController == nullptr)
+        Debug::warn("DeathBasicAttack: PlayerAnimationController not found on this GameObject.");
+    if (m_playerRotation == nullptr)
+        Debug::warn("DeathBasicAttack: PlayerRotation not found on this GameObject.");
 }
 
 void DeathBasicAttack::Update()
@@ -35,16 +54,41 @@ void DeathBasicAttack::Update()
         return;
     }
 
-    const int playerIdx = getPlayerIndex();
+    DeathCharacter* deathChar = static_cast<DeathCharacter*>(m_character);
+    const float dt = Time::getDeltaTime();
 
-    if (!Input::isRightShoulderJustPressed(playerIdx))
+    // --- Attack lock tick ---
+    // The ability stays active (canAct = false) for m_attackLockDuration after each hit.
+    // This gives the animation time to play before the next R1 is accepted.
+    if (m_attackLockTimer > 0.0f)
+    {
+        faceTarget(m_attackFacingTarget);
+
+        // requestAttack() is a one-frame flag — call it every frame during the lock
+        // so PlayerAnimationController stays in Attack state until the swing finishes.
+        if (m_animController != nullptr)
+            m_animController->requestAttack();
+
+        m_attackLockTimer -= dt;
+        if (m_attackLockTimer <= 0.0f)
+        {
+            m_attackLockTimer    = 0.0f;
+            m_attackFacingTarget = nullptr;
+            if (m_playerState != nullptr)
+                m_playerState->setState(PlayerStateType::Normal);
+            onDeactivate();
+        }
+        return;
+    }
+
+    // --- Input ---
+    if (!Input::isRightShoulderJustPressed(getPlayerIndex()))
     {
         return;
     }
 
     if (!canActivate())
     {
-        DeathCharacter* deathChar = static_cast<DeathCharacter*>(m_character);
         if (m_character->isDead())
             Debug::log("[R1] bloqueado — personaje muerto");
         else if (!m_character->canAct())
@@ -54,22 +98,34 @@ void DeathBasicAttack::Update()
         return;
     }
 
-    onActivate();
+    // --- Execute hit ---
+    GameObject* target = m_character->getTargetController()
+        ? m_character->getTargetController()->getCurrentTarget()
+        : nullptr;
 
-    DeathCharacter* deathChar = static_cast<DeathCharacter*>(m_character);
+    faceTarget(target);          // snap towards target (or stay forward if no target)
+    m_attackFacingTarget = target;  // keep rotating during the lock
+
+    onActivate();  // sets isActive = true, canAct = false
+
     const int   comboStep = deathChar->getComboStep();
     const float damage    = deathChar->m_basicAttackDamage;
 
     deathChar->dealDamageInArc(damage);
     deathChar->advanceCombo(false);
 
-    // comboStep antes de avanzar: 0=hit1, 1=hit2, 2=hit3(reset)
+    m_attackLockTimer = m_attackLockDuration;
+
+    if (m_animController != nullptr)
+        m_animController->requestAttack();
+
+    if (m_playerState != nullptr)
+        m_playerState->setState(PlayerStateType::Attacking);
+
     if (comboStep < 2)
-        Debug::log("[COMBO] R1  step %d/3  ventana=%.1fs", comboStep + 1, deathChar->m_comboWindow);
+        Debug::log("[COMBO] R1  step %d/3  lock=%.2fs", comboStep + 1, m_attackLockDuration);
     else
         Debug::log("[COMBO] R1  step 3/3  COMPLETO — reset");
-
-    onDeactivate();
 }
 
 void DeathBasicAttack::drawGizmo()
@@ -92,7 +148,9 @@ void DeathBasicAttack::drawGizmo()
     const float   range = deathChar->m_arcRange;
     const float   angle = deathChar->m_arcAngle;
 
-    // fill = 1.0 right after a hit, depletes to 0.0 as the combo window expires.
+    // fill = 1.0 right after a hit, drains over DeathCharacter::m_comboWindow.
+    // Resets to 1.0 if the next hit lands before it empties.
+    // Snaps to 0 after the 3rd hit or when the window expires.
     const float fill = deathChar->getComboFillRatio();
 
     constexpr float k_degToRad = 3.14159265f / 180.0f;
@@ -149,6 +207,30 @@ void DeathBasicAttack::drawGizmo()
         // Overdraw boundary rays in purple only for the filled side.
         DebugDrawAPI::drawLine(posFlat, posFlat + leftRay * range, colPurple);
     }
+}
+
+void DeathBasicAttack::faceTarget(GameObject* target)
+{
+    if (m_playerRotation == nullptr || target == nullptr)
+    {
+        return;
+    }
+
+    Transform* myTransform     = GameObjectAPI::getTransform(m_owner);
+    Transform* targetTransform = GameObjectAPI::getTransform(target);
+
+    Vector3 myPos     = TransformAPI::getGlobalPosition(myTransform);
+    Vector3 targetPos = TransformAPI::getGlobalPosition(targetTransform);
+
+    Vector3 dir = targetPos - myPos;
+    dir.y = 0.0f;
+    if (dir.LengthSquared() <= 0.0001f)
+    {
+        return;
+    }
+    dir.Normalize();
+
+    m_playerRotation->applyFacingFromDirection(m_owner, dir, Time::getDeltaTime());
 }
 
 IMPLEMENT_SCRIPT(DeathBasicAttack)

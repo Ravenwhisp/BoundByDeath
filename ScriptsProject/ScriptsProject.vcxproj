@@ -158,9 +158,16 @@
     <ClInclude Include="..\Engine\Assets\Scripts\PlayerController.h" />
     <ClInclude Include="..\Engine\Assets\Scripts\TestingButton.h" />
     <ClInclude Include="..\Engine\Assets\Scripts\TriggerArea.h" />
+    <ClInclude Include="AbilityBase.h" />
     <ClInclude Include="ArrowPool.h" />
     <ClInclude Include="Bound.h" />
+    <ClInclude Include="CharacterBase.h" />
     <ClInclude Include="Damageable.h" />
+    <ClInclude Include="DeathBasicAttack.h" />
+    <ClInclude Include="DeathCharacter.h" />
+    <ClInclude Include="DeathChargedAttack.h" />
+    <ClInclude Include="DeathDash.h" />
+    <ClInclude Include="DeathTaunt.h" />
     <ClInclude Include="DebugDamageTrigger.h" />
     <ClInclude Include="DebugDrawTest.h" />
     <ClInclude Include="EnemyDeathHandler.h" />
@@ -169,6 +176,9 @@
     <ClInclude Include="DefeatConditionManager.h" />
     <ClInclude Include="LyrielArrowProjectile.h" />
     <ClInclude Include="LyrielBasicAttack.h" />
+    <ClInclude Include="LyrielCharacter.h" />
+    <ClInclude Include="LyrielChargedAttack.h" />
+    <ClInclude Include="LyrielDash.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="PlayerAnimationController.h" />
     <ClInclude Include="PlayerDamageable.h" />
@@ -186,9 +196,16 @@
     <ClCompile Include="..\Engine\Assets\Scripts\PlayerController.cpp" />
     <ClCompile Include="..\Engine\Assets\Scripts\TestingButton.cpp" />
     <ClCompile Include="..\Engine\Assets\Scripts\TriggerArea.cpp" />
+    <ClCompile Include="AbilityBase.cpp" />
     <ClCompile Include="ArrowPool.cpp" />
     <ClCompile Include="Bound.cpp" />
+    <ClCompile Include="CharacterBase.cpp" />
     <ClCompile Include="Damageable.cpp" />
+    <ClCompile Include="DeathBasicAttack.cpp" />
+    <ClCompile Include="DeathCharacter.cpp" />
+    <ClCompile Include="DeathChargedAttack.cpp" />
+    <ClCompile Include="DeathDash.cpp" />
+    <ClCompile Include="DeathTaunt.cpp" />
     <ClCompile Include="DebugDamageTrigger.cpp" />
     <ClCompile Include="DebugDrawTest.cpp" />
     <ClCompile Include="dllmain.cpp" />
@@ -201,6 +218,9 @@
     </ClCompile>
     <ClCompile Include="LyrielArrowProjectile.cpp" />
     <ClCompile Include="LyrielBasicAttack.cpp" />
+    <ClCompile Include="LyrielCharacter.cpp" />
+    <ClCompile Include="LyrielChargedAttack.cpp" />
+    <ClCompile Include="LyrielDash.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
