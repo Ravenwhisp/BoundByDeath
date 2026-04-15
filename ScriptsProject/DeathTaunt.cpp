@@ -10,11 +10,7 @@
 // Mechanic is also pending final design definition.
 // ============================================================
 
-static const ScriptFieldInfo DeathTauntFields[] =
-{
-};
-
-IMPLEMENT_SCRIPT_FIELDS(DeathTaunt, DeathTauntFields)
+ScriptFieldList DeathTaunt::getExposedFields() const { return {}; }
 
 DeathTaunt::DeathTaunt(GameObject* owner)
     : AbilityBase(owner)

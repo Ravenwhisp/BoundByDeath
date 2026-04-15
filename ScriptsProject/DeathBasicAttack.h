@@ -2,13 +2,17 @@
 
 #include "AbilityBase.h"
 
-// Death's basic attack — up to a 3-hit melee combo (RB / R1).
+// Death's light attack — chains up to 3 hits (R1 / RB).
 // Sibling script of DeathCharacter on the same GameObject.
-// Reads m_basicAttackDamage from DeathCharacter via static_cast<DeathCharacter*>(m_character).
 //
-// Each individual hit is an instant activate → deactivate so canAct is only
-// blocked for a single frame per hit, allowing the player to chain inputs freely.
-// The combo state is tracked independently via m_comboStep and m_comboTimer.
+// Each hit is instant (activate → deactivate in the same frame), so canAct
+// is only blocked for a single frame, allowing fluid combo input.
+//
+// Combo state (step, consecutive R2 count, window timer) is shared with
+// DeathChargedAttack and lives in DeathCharacter.
+//
+// Every hit deals damage to ALL enemies within the character's attack arc
+// (m_arcRange, m_arcAngle on DeathCharacter).
 class DeathBasicAttack : public AbilityBase
 {
     DECLARE_SCRIPT(DeathBasicAttack)
@@ -16,21 +20,9 @@ class DeathBasicAttack : public AbilityBase
 public:
     explicit DeathBasicAttack(GameObject* owner);
 
-    void Start()  override;
-    void Update() override;
+    void Start()      override;
+    void Update()     override;
+    void drawGizmo()  override;
 
     ScriptFieldList getExposedFields() const override;
-
-public:
-    // Time window (seconds) within which the next combo hit must be input.
-    // Exposed to the inspector so designers can tune the feel.
-    float m_comboWindow = 1.0f;
-
-private:
-    // Current hit in the combo sequence: 0 = idle, 1 = first hit, 2 = second, 3 = third.
-    // Resets to 0 after the third hit or when m_comboTimer exceeds m_comboWindow.
-    int   m_comboStep  = 0;
-
-    // Time elapsed since the last hit. Resets on each successful hit input.
-    float m_comboTimer = 0.0f;
 };

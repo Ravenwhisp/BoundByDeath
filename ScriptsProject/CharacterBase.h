@@ -21,7 +21,8 @@ class CharacterBase : public Damageable
 public:
     explicit CharacterBase(GameObject* owner);
 
-    void Start() override;
+    void Start()  override;
+    void Update() override;
 
     bool canAct()          const { return m_canAct; }
     void setCanAct(bool v)       { m_canAct = v; }

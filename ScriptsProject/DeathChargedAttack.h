@@ -2,12 +2,21 @@
 
 #include "AbilityBase.h"
 
-// Death's charged attack — hold RT / R2 to charge, release to strike (RB / R1).
-// Sibling script of DeathCharacter on the same GameObject.
-// Reads m_chargedAttackDamage from DeathCharacter via static_cast<DeathCharacter*>(m_character).
+// Death's heavy attack — R2 (RT) with two modes:
 //
-// isActive() (from AbilityBase) reflects whether the charge is currently held.
-// The attack is only executed if the button is released after m_minChargeTime seconds.
+//   Quick press  (release before m_minChargeTime):
+//     Deals m_chargedAttackDamage to all enemies in the attack arc.
+//     Applies a brief stun (m_briefStunDuration on DeathCharacter).
+//     Can be used up to twice consecutively in a combo (enforced by DeathCharacter).
+//
+//   Charged press (hold ≥ m_minChargeTime, release to fire):
+//     Scales damage from 1× to 2× m_chargedAttackDamage and stun from
+//     brief to extended based on how close the charge is to m_maxChargeTime.
+//     COMBO STARTER ONLY — ignored if already mid-combo (comboStep > 0).
+//     After landing, the combo continues normally.
+//
+// isActive() reflects whether the trigger is currently held.
+// Arc parameters (range, angle, stun durations) live on DeathCharacter.
 class DeathChargedAttack : public AbilityBase
 {
     DECLARE_SCRIPT(DeathChargedAttack)
@@ -21,10 +30,9 @@ public:
     ScriptFieldList getExposedFields() const override;
 
 public:
-    // Minimum hold time (seconds) required for the strike to fire on release.
+    // Minimum hold time (seconds) that distinguishes a hold from a quick press.
     float m_minChargeTime = 0.5f;
 
 private:
-    // Time accumulated while the trigger is held.
     float m_chargeTime = 0.0f;
 };

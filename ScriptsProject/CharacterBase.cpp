@@ -35,6 +35,11 @@ void CharacterBase::Start()
     }
 }
 
+void CharacterBase::Update()
+{
+    Damageable::Update();
+}
+
 void CharacterBase::onDamaged(float amount)
 {
     Damageable::onDamaged(amount);
@@ -49,11 +54,9 @@ void CharacterBase::onDeath()
     // Any ability currently executing will cancel itself via AbilityBase::Update().
     m_canAct = false;
 
-    // Disable movement — a dead character should not keep walking.
-    if (m_playerController != nullptr)
-    {
-        ComponentAPI::setActive(m_playerController, false);
-    }
+    // TODO: disable PlayerController movement on death.
+    // ComponentAPI::setActive requires Component*, but Script* has no implicit conversion.
+    // Needs engine API support or a dedicated disableMovement() call.
 }
 
 void CharacterBase::onRevive()
@@ -63,9 +66,5 @@ void CharacterBase::onRevive()
     // Allow abilities to be used again.
     m_canAct = true;
 
-    // Restore movement.
-    if (m_playerController != nullptr)
-    {
-        ComponentAPI::setActive(m_playerController, true);
-    }
+    // TODO: re-enable PlayerController movement on revive (see onDeath TODO).
 }

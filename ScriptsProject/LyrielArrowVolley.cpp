@@ -10,11 +10,7 @@
 // Mechanic is also pending final design definition.
 // ============================================================
 
-static const ScriptFieldInfo LyrielArrowVolleyFields[] =
-{
-};
-
-IMPLEMENT_SCRIPT_FIELDS(LyrielArrowVolley, LyrielArrowVolleyFields)
+ScriptFieldList LyrielArrowVolley::getExposedFields() const { return {}; }
 
 LyrielArrowVolley::LyrielArrowVolley(GameObject* owner)
     : AbilityBase(owner)
