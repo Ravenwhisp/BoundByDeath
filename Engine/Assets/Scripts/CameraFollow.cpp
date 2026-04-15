@@ -43,8 +43,6 @@ void CameraFollow::Update()
 
     const float dt = Time::getDeltaTime();
 
-    TransformAPI::setRotationEuler(cameraTransform, m_rotationOffset);
-
     Vector3 followPoint = computeFollowPoint();
 
     float targetExtraHeight = 0.0f;
@@ -57,7 +55,7 @@ void CameraFollow::Update()
 
     m_currentExtraHeight = smoothExtraHeight(m_currentExtraHeight, targetExtraHeight, m_zoomSharpness, dt);
 
-    const Vector3 desiredPos = computeDesiredCameraPosition(followPoint, cameraTransform);
+    const Vector3 desiredPos = computeDesiredCameraPosition(followPoint);
 
     if (m_firstUpdateAfterResolve)
     {
@@ -71,6 +69,7 @@ void CameraFollow::Update()
     const Vector3 smoothedCameraPosition = smoothCameraPosition(currentPos, desiredPos, m_followSharpness, dt);
 
     TransformAPI::setPosition(cameraTransform, smoothedCameraPosition);
+    TransformAPI::setRotationEuler(cameraTransform, m_rotationOffset);
 }
 
 Vector3 CameraFollow::computeFollowPoint() const
@@ -124,7 +123,7 @@ float CameraFollow::smoothExtraHeight(float current, float target, float sharpne
     return lerpFloat(current, target, zoomFraction);
 }
 
-Vector3 CameraFollow::computeDesiredCameraPosition(const Vector3& followPoint, Transform* const& cameraTransform) const
+Vector3 CameraFollow::computeDesiredCameraPosition(const Vector3& followPoint) const
 {
     Transform* firstTarget = m_firstTarget.getReferencedComponent();
     Transform* secondTarget = m_secondTarget.getReferencedComponent();
@@ -145,12 +144,7 @@ Vector3 CameraFollow::computeDesiredCameraPosition(const Vector3& followPoint, T
         }
     }
 
-    desiredPos.y = highestTargetY + m_transformOffset.y;
-
-    Vector3 forward = TransformAPI::getForward(cameraTransform);
-    forward.Normalize();
-
-    desiredPos -= forward * m_currentExtraHeight;
+    desiredPos.y = highestTargetY + m_transformOffset.y + m_currentExtraHeight;
 
     return desiredPos;
 }
