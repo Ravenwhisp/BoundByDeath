@@ -86,7 +86,7 @@ void PlayerDownState::enterDownState()
 
     if (m_playerState)
     {
-        m_playerState->setState(PlayerLifeState::Downed);
+        m_playerState->setState(PlayerStateType::Downed);
     }
 
     m_reviveProgress = 0.0f;
@@ -166,7 +166,7 @@ void PlayerDownState::completeRevive()
 
     if (m_playerState)
     {
-        m_playerState->setState(PlayerLifeState::Normal);
+        m_playerState->setState(PlayerStateType::Normal);
     }
 
     if (m_damageable)
