@@ -6,9 +6,29 @@
 
 #include <cmath>
 
+static Vector3 getHorizontalForward(const Transform* transform)
+{
+    Vector3 forward = TransformAPI::getForward(transform);
+    forward.y = 0.0f;
+
+    if (forward.LengthSquared() <= 0.0001f)
+    {
+        const Vector3 euler = TransformAPI::getEulerDegrees(transform);
+        const float radians = euler.y * (3.14159265f / 180.0f);
+        forward = Vector3(std::sin(radians), 0.0f, std::cos(radians));
+    }
+
+    forward.Normalize();
+    return forward;
+}
+
 static const ScriptFieldInfo DeathTauntFields[] =
 {
-    { "FuckOFF Window", ScriptFieldType::Float, offsetof(DeathTaunt, m_TauntCooldownSeconds), { 0.1f, 3.0f, 0.05f } },
+    { "Cooldown", ScriptFieldType::Float, offsetof(DeathTaunt, m_TauntCooldownSeconds), { 1.0f, 10.0f, 0.05f } },
+    { "Duration", ScriptFieldType::Float, offsetof(DeathTaunt, m_TauntDurationSeconds), { 1.0f, 10.0f, 0.05f } },
+    { "Range", ScriptFieldType::Float, offsetof(DeathTaunt, m_TauntRange), { 1.0f, 10.0f, 0.1f } },
+    { "Half Angle Degrees", ScriptFieldType::Float, offsetof(DeathTaunt, m_TauntHalfAngleDegrees), { 1.0f, 180.0f, 1.0f } }
+    
 };
 
 IMPLEMENT_SCRIPT_FIELDS(DeathTaunt, DeathTauntFields)
@@ -16,11 +36,12 @@ IMPLEMENT_SCRIPT_FIELDS(DeathTaunt, DeathTauntFields)
 DeathTaunt::DeathTaunt(GameObject* owner)
     : AbilityBase(owner)
 {
-    m_cooldown = m_TauntCooldownSeconds;
 }
 
 void DeathTaunt::Start()
 {
+    m_cooldown = (m_TauntCooldownSeconds < 0.0f ? 0.0f : m_TauntCooldownSeconds);
+
     m_character = static_cast<CharacterBase*>(
         GameObjectAPI::getScript(m_owner, "DeathCharacter"));
 
@@ -32,6 +53,8 @@ void DeathTaunt::Start()
 
 void DeathTaunt::Update()
 {
+    m_cooldown = (m_TauntCooldownSeconds < 0.0f ? 0.0f : m_TauntCooldownSeconds);
+
     // MUST be called first — handles dead guard, force-cancel on death, cooldown tick.
     AbilityBase::Update();
 
@@ -40,15 +63,16 @@ void DeathTaunt::Update()
         return;
     }
 
-    bool leftTriggerPressed = Input::isLeftTriggerJustPressed(getPlayerIndex());
-    bool tKeyPressed = Input::isKeyDown(KeyCode::T);//TODO: Delete after finish testing
+    bool leftTriggerPressed = Input::isLeftTriggerJustPressed(getPlayerIndex()); //TODO:Check Index
     bool canActivateNow = canActivate();
     bool isActiveNow = isActive();
 
 
-    if (!isActiveNow && canActivateNow && (leftTriggerPressed || tKeyPressed))
+    if (!isActiveNow && canActivateNow && (leftTriggerPressed))
     {
         onActivate();
+        Debug::log("DeathTaunt activated - Cooldown: %.2f, Duration: %.2f, Range: %.2f, Half Angle: %.2f",
+            m_TauntCooldownSeconds, m_TauntDurationSeconds, m_TauntRange, m_TauntHalfAngleDegrees);
         applyTauntToEnemiesInCone();
         onDeactivate();
     }
@@ -63,10 +87,13 @@ void DeathTaunt::drawGizmo()
     }
 
     const Vector3 ownerPosition = TransformAPI::getPosition(ownerTransform);
-    const Vector3 ownerForward = TransformAPI::getForward(ownerTransform);
+    const Vector3 ownerForward = getHorizontalForward(ownerTransform);
 
-    // Dibujar el cono siempre visible
-    DebugDrawAPI::drawCone(ownerPosition, ownerForward * m_TauntRange, Vector3(1.0f, 0.0f, 0.0f), m_TauntRange, 0.0f, 0, false);
+    const float clampedHalfAngle = (m_TauntHalfAngleDegrees < 0.1f) ? 0.1f : ((m_TauntHalfAngleDegrees > 89.9f) ? 89.9f : m_TauntHalfAngleDegrees);
+    const float halfAngleRadians = clampedHalfAngle * (3.14159265f / 180.0f);
+    const float baseRadius = m_TauntRange * std::tan(halfAngleRadians);
+
+    DebugDrawAPI::drawCone(ownerPosition, ownerForward * m_TauntRange, Vector3(1.0f, 0.0f, 0.0f), baseRadius, 0.0f, 0, false);
 }
 
 void DeathTaunt::onActivate()
@@ -98,7 +125,7 @@ void DeathTaunt::applyTauntToEnemiesInCone() const
     }
 
     const Vector3 ownerPosition = TransformAPI::getPosition(ownerTransform);
-    const Vector3 ownerForward = TransformAPI::getForward(ownerTransform);
+    const Vector3 ownerForward = getHorizontalForward(ownerTransform);
 
     const std::vector<GameObject*> enemies = SceneAPI::findAllGameObjectsByTag(Tag::ENEMY);
     for (GameObject* enemy : enemies)
@@ -140,14 +167,12 @@ bool DeathTaunt::isEnemyInsideTauntCone(GameObject* enemy, const Vector3& ownerP
         return false;
     }
 
-    Vector3 flattenedForward = ownerForward;
-    flattenedForward.y = 0.0f;
-
-    if (flattenedForward.LengthSquared() <= 0.0001f)
+    if (ownerForward.LengthSquared() <= 0.0001f)
     {
         return false;
     }
 
+    Vector3 flattenedForward = ownerForward;
     flattenedForward.Normalize();
     directionToEnemy.Normalize();
 
