@@ -64,7 +64,7 @@ void DeathTaunt::Update()
     }
 
     const bool leftTriggerPressed = Input::isLeftTriggerJustPressed(getPlayerIndex()); //TODO:Check Index
-    const bool debugConeKey = Input::isKeyDown(KeyCode::U);
+    const bool debugConeKey = Input::isKeyDown(KeyCode::U); //TODO:Eliminar debug key
     bool canActivateNow = canActivate();
     bool isActiveNow = isActive();
 
@@ -104,9 +104,25 @@ void DeathTaunt::drawGizmo()
 
     const float clampedHalfAngle = (m_TauntHalfAngleDegrees < 0.1f) ? 0.1f : ((m_TauntHalfAngleDegrees > 89.9f) ? 89.9f : m_TauntHalfAngleDegrees);
     const float halfAngleRadians = clampedHalfAngle * (3.14159265f / 180.0f);
-    const float baseRadius = m_TauntRange * std::tan(halfAngleRadians);
 
-    DebugDrawAPI::drawCone(ownerPosition, ownerForward * m_TauntRange, Vector3(1.0f, 0.0f, 0.0f), baseRadius, 0.0f, 0, false);
+    // Draw the sector as lines from center to arc points
+    const int numSteps = 16;
+    const float angleStep = (2.0f * halfAngleRadians) / (numSteps - 1);
+    const Vector3 color(1.0f, 0.0f, 0.0f); // Red color
+
+    for (int i = 0; i < numSteps; ++i)
+    {
+        float angle = -halfAngleRadians + i * angleStep;
+        Vector3 direction = ownerForward;
+        direction = Vector3(
+            direction.x * std::cos(angle) - direction.z * std::sin(angle),
+            0.0f,
+            direction.x * std::sin(angle) + direction.z * std::cos(angle)
+        );
+        direction.Normalize();
+        Vector3 arcPoint = ownerPosition + direction * m_TauntRange;
+        DebugDrawAPI::drawLine(ownerPosition, arcPoint, color, 0, false);
+    }
 }
 
 void DeathTaunt::onFieldEdited(const ScriptFieldInfo& field)
