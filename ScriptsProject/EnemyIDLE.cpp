@@ -55,7 +55,7 @@ void EnemyIDLE::OnStateUpdate()
 		return;
 	}
 
-	AnimationAPI::playState(animation, "Chase");
+	AnimationAPI::playState(animation, "Chase"); // sendTrigger
 
 	if (m_debugEnabled)
 	{

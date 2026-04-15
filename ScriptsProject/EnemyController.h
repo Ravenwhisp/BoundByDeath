@@ -27,7 +27,6 @@ private:
     EnemyDetectionAggro* m_enemyDetectionAggro = nullptr;
     Transform* m_currentTarget = nullptr;
     float m_repathTimer = 0.0f;
-    AnimationComponent* m_animation = nullptr;
 
     std::vector<Vector3> m_path;
     bool m_hasPath = false;

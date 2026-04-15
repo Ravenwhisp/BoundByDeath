@@ -57,7 +57,7 @@ void EnemyCHASE::OnStateUpdate()
 
 	if (!m_enemyController->hasValidTarget())
 	{
-		AnimationAPI::playState(animation, "Idle");
+		AnimationAPI::playState(animation, "Idle"); // sendTrigger
 		return;
 	}
 
