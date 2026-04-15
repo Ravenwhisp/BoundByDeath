@@ -8,7 +8,6 @@
 #include "PlayerRotation.h"
 #include "PlayerAnimationController.h"
 
-#include <algorithm>
 #include <cmath>
 
 static const ScriptFieldInfo LyrielArrowVolleyFields[] =
