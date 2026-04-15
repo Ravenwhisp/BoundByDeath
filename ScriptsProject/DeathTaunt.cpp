@@ -63,7 +63,7 @@ void DeathTaunt::Update()
         return;
     }
 
-    bool leftTriggerPressed = Input::isLeftTriggerJustPressed(getPlayerIndex()); //TODO:Check Index
+    const bool leftTriggerPressed = Input::isLeftTriggerJustPressed(getPlayerIndex()); //TODO:Check Index
     bool canActivateNow = canActivate();
     bool isActiveNow = isActive();
 
@@ -71,8 +71,6 @@ void DeathTaunt::Update()
     if (!isActiveNow && canActivateNow && (leftTriggerPressed))
     {
         onActivate();
-        Debug::log("DeathTaunt activated - Cooldown: %.2f, Duration: %.2f, Range: %.2f, Half Angle: %.2f",
-            m_TauntCooldownSeconds, m_TauntDurationSeconds, m_TauntRange, m_TauntHalfAngleDegrees);
         applyTauntToEnemiesInCone();
         onDeactivate();
     }
