@@ -17,6 +17,7 @@ public:
 
     ScriptFieldList getExposedFields() const override;
     void drawGizmo() override;
+    void onFieldEdited(const ScriptFieldInfo& field) override;
 
 protected:
     void onActivate() override;
@@ -25,6 +26,8 @@ protected:
 private:
     void applyTauntToEnemiesInCone() const;
     bool isEnemyInsideTauntCone(GameObject* enemy, const Vector3& ownerPosition, const Vector3& ownerForward) const;
+
+    float m_debugConeTimer = 0.0f;
 
 public:
     float m_TauntCooldownSeconds = 8.0f;

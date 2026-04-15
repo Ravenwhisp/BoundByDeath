@@ -24,10 +24,10 @@ static Vector3 getHorizontalForward(const Transform* transform)
 
 static const ScriptFieldInfo DeathTauntFields[] =
 {
-    { "Cooldown", ScriptFieldType::Float, offsetof(DeathTaunt, m_TauntCooldownSeconds), { 1.0f, 10.0f, 0.05f } },
-    { "Duration", ScriptFieldType::Float, offsetof(DeathTaunt, m_TauntDurationSeconds), { 1.0f, 10.0f, 0.05f } },
-    { "Range", ScriptFieldType::Float, offsetof(DeathTaunt, m_TauntRange), { 1.0f, 10.0f, 0.1f } },
-    { "Half Angle Degrees", ScriptFieldType::Float, offsetof(DeathTaunt, m_TauntHalfAngleDegrees), { 1.0f, 180.0f, 1.0f } }
+    { "Ability Cooldown", ScriptFieldType::Float, offsetof(DeathTaunt, m_TauntCooldownSeconds), { 1.0f, 10.0f, 0.05f } },
+    { "Ability Duration", ScriptFieldType::Float, offsetof(DeathTaunt, m_TauntDurationSeconds), { 1.0f, 10.0f, 0.05f } },
+    { "Cone Range", ScriptFieldType::Float, offsetof(DeathTaunt, m_TauntRange), { 1.0f, 10.0f, 0.1f } },
+    { "Cone Angle", ScriptFieldType::Float, offsetof(DeathTaunt, m_TauntHalfAngleDegrees), { 1.0f, 180.0f, 1.0f } }
     
 };
 
@@ -64,20 +64,35 @@ void DeathTaunt::Update()
     }
 
     const bool leftTriggerPressed = Input::isLeftTriggerJustPressed(getPlayerIndex()); //TODO:Check Index
+    const bool debugConeKey = Input::isKeyDown(KeyCode::U);
     bool canActivateNow = canActivate();
     bool isActiveNow = isActive();
 
-
-    if (!isActiveNow && canActivateNow && (leftTriggerPressed))
+    if (!isActiveNow && canActivateNow && (leftTriggerPressed || debugConeKey))
     {
         onActivate();
         applyTauntToEnemiesInCone();
+        m_debugConeTimer = 0.25f;
         onDeactivate();
+    }
+
+    if (m_debugConeTimer > 0.0f)
+    {
+        m_debugConeTimer -= Time::getDeltaTime();
+        if (m_debugConeTimer < 0.0f)
+        {
+            m_debugConeTimer = 0.0f;
+        }
     }
 }
 
 void DeathTaunt::drawGizmo()
 {
+    if (m_debugConeTimer <= 0.0f)
+    {
+        return;
+    }
+
     Transform* ownerTransform = GameObjectAPI::getTransform(m_owner);
     if (ownerTransform == nullptr)
     {
@@ -92,6 +107,14 @@ void DeathTaunt::drawGizmo()
     const float baseRadius = m_TauntRange * std::tan(halfAngleRadians);
 
     DebugDrawAPI::drawCone(ownerPosition, ownerForward * m_TauntRange, Vector3(1.0f, 0.0f, 0.0f), baseRadius, 0.0f, 0, false);
+}
+
+void DeathTaunt::onFieldEdited(const ScriptFieldInfo& field)
+{
+    if (strcmp(field.name, "Cone Range") == 0 || strcmp(field.name, "Cone Angle") == 0)
+    {
+        m_debugConeTimer = 1.0f;
+    }
 }
 
 void DeathTaunt::onActivate()
