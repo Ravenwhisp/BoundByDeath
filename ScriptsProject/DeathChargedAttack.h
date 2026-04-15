@@ -2,6 +2,10 @@
 
 #include "AbilityBase.h"
 
+class PlayerState;
+class PlayerAnimationController;
+class PlayerRotation;
+
 // Death's heavy attack — R2 (RT) with two modes:
 //
 //   Quick press  (release before m_minChargeTime):
@@ -33,6 +37,18 @@ public:
     // Minimum hold time (seconds) that distinguishes a hold from a quick press.
     float m_minChargeTime = 0.5f;
 
+    // How long to lock input after the hit lands — tune to match the animation length.
+    // Must be less than DeathCharacter::m_comboWindow.
+    float m_attackLockDuration = 0.55f;
+
 private:
-    float m_chargeTime = 0.0f;
+    void faceTarget(GameObject* target);
+
+    float m_chargeTime      = 0.0f;
+    float m_attackLockTimer = 0.0f;
+
+    GameObject*                m_attackFacingTarget = nullptr;
+    PlayerState*               m_playerState        = nullptr;
+    PlayerAnimationController* m_animController     = nullptr;
+    PlayerRotation*            m_playerRotation     = nullptr;
 };

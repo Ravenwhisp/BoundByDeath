@@ -9,7 +9,8 @@ class Damageable : public Script
 public:
     explicit Damageable(GameObject* owner);
 
-    void Start() override;
+    void Start()     override;
+    void drawGizmo() override;
     ScriptFieldList getExposedFields() const override;
 
     void takeDamage(float amount);

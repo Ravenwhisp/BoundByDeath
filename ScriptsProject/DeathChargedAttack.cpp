@@ -2,10 +2,15 @@
 #include "DeathChargedAttack.h"
 #include "CharacterBase.h"
 #include "DeathCharacter.h"
+#include "PlayerTargetController.h"
+#include "PlayerState.h"
+#include "PlayerAnimationController.h"
+#include "PlayerRotation.h"
 
 static const ScriptFieldInfo DeathChargedAttackFields[] =
 {
-    { "Min Charge Time", ScriptFieldType::Float, offsetof(DeathChargedAttack, m_minChargeTime), { 0.0f, 3.0f, 0.05f } },
+    { "Min Charge Time",      ScriptFieldType::Float, offsetof(DeathChargedAttack, m_minChargeTime),      { 0.0f, 3.0f,  0.05f } },
+    { "Attack Lock Duration", ScriptFieldType::Float, offsetof(DeathChargedAttack, m_attackLockDuration), { 0.05f, 2.0f, 0.05f } },
 };
 
 IMPLEMENT_SCRIPT_FIELDS(DeathChargedAttack, DeathChargedAttackFields)
@@ -20,10 +25,17 @@ void DeathChargedAttack::Start()
     m_character = static_cast<CharacterBase*>(
         GameObjectAPI::getScript(m_owner, "DeathCharacter"));
 
+    m_playerState = static_cast<PlayerState*>(
+        GameObjectAPI::getScript(m_owner, "PlayerState"));
+
+    m_animController = static_cast<PlayerAnimationController*>(
+        GameObjectAPI::getScript(m_owner, "PlayerAnimationController"));
+
+    m_playerRotation = static_cast<PlayerRotation*>(
+        GameObjectAPI::getScript(m_owner, "PlayerRotation"));
+
     if (m_character == nullptr)
-    {
         Debug::warn("DeathChargedAttack: DeathCharacter not found on this GameObject.");
-    }
 }
 
 void DeathChargedAttack::Update()
@@ -37,6 +49,27 @@ void DeathChargedAttack::Update()
     }
 
     DeathCharacter* deathChar = static_cast<DeathCharacter*>(m_character);
+    const float dt = Time::getDeltaTime();
+
+    // --- Attack lock tick (after the hit lands) ---
+    if (m_attackLockTimer > 0.0f)
+    {
+        faceTarget(m_attackFacingTarget);
+
+        if (m_animController != nullptr)
+            m_animController->requestAttack();
+
+        m_attackLockTimer -= dt;
+        if (m_attackLockTimer <= 0.0f)
+        {
+            m_attackLockTimer    = 0.0f;
+            m_attackFacingTarget = nullptr;
+            if (m_playerState != nullptr)
+                m_playerState->setState(PlayerStateType::Normal);
+            onDeactivate();
+        }
+        return;
+    }
 
     // --- Start charging (R2 just pressed) ---
     if (Input::isRightTriggerJustPressed(getPlayerIndex()))
@@ -122,8 +155,45 @@ void DeathChargedAttack::Update()
 
     deathChar->advanceCombo(true);
 
-    m_chargeTime = 0.0f;
-    onDeactivate();
+    // Face target and start animation lock — onDeactivate() fires when the lock expires.
+    GameObject* target = m_character->getTargetController()
+        ? m_character->getTargetController()->getCurrentTarget()
+        : nullptr;
+
+    faceTarget(target);
+    m_attackFacingTarget = target;
+    m_chargeTime         = 0.0f;
+    m_attackLockTimer    = m_attackLockDuration;
+
+    if (m_animController != nullptr)
+        m_animController->requestAttack();
+
+    if (m_playerState != nullptr)
+        m_playerState->setState(PlayerStateType::Attacking);
+}
+
+void DeathChargedAttack::faceTarget(GameObject* target)
+{
+    if (m_playerRotation == nullptr || target == nullptr)
+    {
+        return;
+    }
+
+    Transform* myTransform     = GameObjectAPI::getTransform(m_owner);
+    Transform* targetTransform = GameObjectAPI::getTransform(target);
+
+    Vector3 myPos     = TransformAPI::getGlobalPosition(myTransform);
+    Vector3 targetPos = TransformAPI::getGlobalPosition(targetTransform);
+
+    Vector3 dir = targetPos - myPos;
+    dir.y = 0.0f;
+    if (dir.LengthSquared() <= 0.0001f)
+    {
+        return;
+    }
+    dir.Normalize();
+
+    m_playerRotation->applyFacingFromDirection(m_owner, dir, Time::getDeltaTime());
 }
 
 IMPLEMENT_SCRIPT(DeathChargedAttack)

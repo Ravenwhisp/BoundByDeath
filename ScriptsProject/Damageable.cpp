@@ -155,6 +155,41 @@ void Damageable::onRevive()
     Debug::log("%s revived. HP: %.2f / %.2f", GameObjectAPI::getName(m_owner), m_currentHp, m_maxHp);
 }
 
+void Damageable::drawGizmo()
+{
+    if (!m_isStunned)
+    {
+        return;
+    }
+
+    const Transform* t = GameObjectAPI::getTransform(m_owner);
+    if (t == nullptr)
+    {
+        return;
+    }
+
+    const Vector3 pos    = TransformAPI::getPosition(t);
+    const Vector3 center = { pos.x, pos.y + 2.2f, pos.z };
+    const Vector3 colYellow = { 1.0f, 0.9f, 0.0f };
+
+    // Outer ring
+    DebugDrawAPI::drawCircle(center, { 0.0f, 1.0f, 0.0f }, colYellow, 0.4f, 12.0f);
+
+    // Four short radiating spikes around the ring — classic stun stars
+    constexpr float k_pi     = 3.14159265f;
+    constexpr float spikeLen = 0.25f;
+    for (int i = 0; i < 4; ++i)
+    {
+        const float angle = (k_pi * 0.5f) * static_cast<float>(i);
+        const Vector3 dir  = { cosf(angle), 0.0f, sinf(angle) };
+        const Vector3 base = center + dir * 0.4f;
+        DebugDrawAPI::drawLine(base, base + dir * spikeLen, colYellow);
+    }
+
+    // Inner dot
+    DebugDrawAPI::drawPoint(center, colYellow, 4.0f);
+}
+
 void Damageable::Update()
 {
     if (m_isStunned)
