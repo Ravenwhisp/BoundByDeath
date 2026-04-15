@@ -102,6 +102,7 @@ void LyrielArrowVolley::drawGizmo()
         return;
     }
 
+    //Would be nice if we had math API to check agains a threshold directly
     if (m_currentAimDirection.LengthSquared() <= 0.0001f)
     {
         return;
@@ -249,11 +250,6 @@ Transform* LyrielArrowVolley::findArrowSpawnTransform() const
 {
     Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
 
-    if (ownerTransform == nullptr)
-    {
-        return nullptr;
-    }
-
     if (!m_arrowSpawnChildName.empty())
     {
         Transform* spawnTransform = TransformAPI::findChildByName(ownerTransform, m_arrowSpawnChildName.c_str());
@@ -326,10 +322,6 @@ void LyrielArrowVolley::collectEnemiesInCone(const Vector3& origin, const Vector
         }
 
         Transform* enemyTransform = GameObjectAPI::getTransform(enemy);
-        if (enemyTransform == nullptr)
-        {
-            continue;
-        }
 
         Vector3 enemyPosition = TransformAPI::getGlobalPosition(enemyTransform);
         Vector3 toEnemy = enemyPosition - origin;
