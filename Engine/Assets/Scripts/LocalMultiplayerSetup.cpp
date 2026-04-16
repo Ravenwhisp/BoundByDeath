@@ -12,7 +12,11 @@ static const ScriptFieldInfo localMultiplayerSetupFields[] =
     { "Setup Mode", ScriptFieldType::EnumInt, offsetof(LocalMultiplayerSetup, m_setupMode), {}, { setupModeNames, 2 } }
 };
 
-IMPLEMENT_SCRIPT_FIELDS(LocalMultiplayerSetup, localMultiplayerSetupFields)
+static const ScriptMethodInfo UIControllerMethods[] =
+{
+    {"Set Keyboard + Gamepad", [](Script* s) { static_cast<LocalMultiplayerSetup*>(s)->setKeyboardGamepad(); } },
+    { "Set Two Gamepads", [](Script* s) { static_cast<LocalMultiplayerSetup*>(s)->setTwoGamepad(); } }
+};
 
 LocalMultiplayerSetup::LocalMultiplayerSetup(GameObject* owner)
     : Script(owner)
@@ -22,6 +26,11 @@ LocalMultiplayerSetup::LocalMultiplayerSetup(GameObject* owner)
 void LocalMultiplayerSetup::Start()
 {
     chooseConfiguration();
+}
+
+ScriptMethodList LocalMultiplayerSetup::getExposedMethods() const
+{
+    return { UIControllerMethods, sizeof(UIControllerMethods) / sizeof(ScriptMethodInfo) };
 }
 
 void LocalMultiplayerSetup::setKeyboardGamepad()

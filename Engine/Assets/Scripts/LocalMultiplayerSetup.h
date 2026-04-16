@@ -11,7 +11,7 @@ public:
 
     void Start() override;
 
-    ScriptFieldList getExposedFields() const override;
+    ScriptMethodList getExposedMethods() const override;
 
     void setKeyboardGamepad();
     void setTwoGamepad();
