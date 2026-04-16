@@ -63,12 +63,11 @@ void DeathTaunt::Update()
         return;
     }
 
-    const bool leftTriggerPressed = Input::isLeftTriggerJustPressed(getPlayerIndex()); //TODO:Check Index
-    const bool debugConeKey = Input::isKeyDown(KeyCode::U); //TODO:Eliminar debug key
+    const bool leftTriggerPressed = Input::isLeftTriggerJustPressed(getPlayerIndex()); 
     bool canActivateNow = canActivate();
     bool isActiveNow = isActive();
 
-    if (!isActiveNow && canActivateNow && (leftTriggerPressed || debugConeKey))
+    if (!isActiveNow && canActivateNow && (leftTriggerPressed))
     {
         onActivate();
         applyTauntToEnemiesInCone();
