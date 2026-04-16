@@ -40,6 +40,7 @@ public:
     bool hasValidTarget() const;
     void updateCurrentTarget();
     bool isTargetInCombatRange() const;
+    Transform* getCurrentTarget() const { return m_currentTarget; }
     void clearPath();
     bool buildPathToTarget();
     void followPath();

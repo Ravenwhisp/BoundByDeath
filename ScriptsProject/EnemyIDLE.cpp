@@ -55,11 +55,11 @@ void EnemyIDLE::OnStateUpdate()
 	if (m_enemyController->isTargetInCombatRange())
 	{
 		m_enemyController->faceCurrentTarget();
-		AnimationAPI::playState(animation, "Paladin_Attack");
+		AnimationAPI::playState(animation, "Attack");
 		return;
 	}
 
-	AnimationAPI::playState(animation, "Paladin_Walk");
+	AnimationAPI::playState(animation, "Chase");
 }
 
 void EnemyIDLE::OnStateExit()

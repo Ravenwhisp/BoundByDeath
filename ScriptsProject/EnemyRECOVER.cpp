@@ -44,13 +44,13 @@ void EnemyRECOVER::OnStateUpdate()
 
 	if (!m_enemyController->hasValidTarget())
 	{
-		AnimationAPI::playState(animation, "Paladin_Idle");
+		AnimationAPI::playState(animation, "Idle");
 		return;
 	}
 
 	if (!m_enemyController->isTargetInCombatRange())
 	{
-		AnimationAPI::playState(animation, "Paladin_Walk");
+		AnimationAPI::playState(animation, "Chase");
 		return;
 	}
 
@@ -60,7 +60,7 @@ void EnemyRECOVER::OnStateUpdate()
 
 	if (m_recoverTimer >= m_recoverDuration)
 	{
-		AnimationAPI::playState(animation, "Paladin_Attack");
+		AnimationAPI::playState(animation, "Attack");
 		return;
 	}
 }

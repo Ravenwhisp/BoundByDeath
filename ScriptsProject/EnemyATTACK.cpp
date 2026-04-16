@@ -1,6 +1,28 @@
 #include "pch.h"
 #include "EnemyATTACK.h"
 #include "EnemyController.h"
+#include "Damageable.h"
+
+static Damageable* findDamageable(GameObject* gameObject)
+{
+	if (!gameObject)
+	{
+		return nullptr;
+	}
+
+	Script* script = GameObjectAPI::getScript(gameObject, "PlayerDamageable");
+	Damageable* damageable = dynamic_cast<Damageable*>(script);
+
+	if (damageable)
+	{
+		return damageable;
+	}
+
+	script = GameObjectAPI::getScript(gameObject, "Damageable");
+	damageable = dynamic_cast<Damageable*>(script);
+
+	return damageable;
+}
 
 static const ScriptFieldInfo ATTACKFields[] =
 {
@@ -45,13 +67,13 @@ void EnemyATTACK::OnStateUpdate()
 
 	if (!m_enemyController->hasValidTarget())
 	{
-		AnimationAPI::playState(animation, "Paladin_Idle");
+		AnimationAPI::playState(animation, "Idle");
 		return;
 	}
 
 	if (!m_enemyController->isTargetInCombatRange())
 	{
-		AnimationAPI::playState(animation, "Paladin_Walk");
+		AnimationAPI::playState(animation, "Chase");
 		return;
 	}
 
@@ -63,7 +85,7 @@ void EnemyATTACK::OnStateUpdate()
 	{
 		performAttack();
 		m_attackTimer = 0.0f;
-		AnimationAPI::playState(animation, "Paladin_Idle_long");
+		AnimationAPI::playState(animation, "Attack");
 		return;
 	}
 }
@@ -78,9 +100,46 @@ void EnemyATTACK::OnStateExit()
 
 void EnemyATTACK::performAttack()
 {
+	if (!m_enemyController)
+	{
+		return;
+	}
+
+	Transform* targetTransform = m_enemyController->getCurrentTarget();
+	if (!targetTransform)
+	{
+		if (m_debugEnabled)
+		{
+			Debug::warn("[EnemyATTACK] No current target.");
+		}
+		return;
+	}
+
+	GameObject* targetObject = ComponentAPI::getOwner(targetTransform);
+	if (!targetObject)
+	{
+		if (m_debugEnabled)
+		{
+			Debug::warn("[EnemyATTACK] Could not resolve target GameObject.");
+		}
+		return;
+	}
+
+	Damageable* damageable = findDamageable(targetObject);
+	if (!damageable)
+	{
+		if (m_debugEnabled)
+		{
+			Debug::warn("[EnemyATTACK] No PlayerDamageable or Damageable found on '%s'.", GameObjectAPI::getName(targetObject));
+		}
+		return;
+	}
+
+	damageable->takeDamage(m_attackDamage);
+
 	if (m_debugEnabled)
 	{
-		Debug::log("[EnemyATTACK] Attack triggered. Damage: %.2f", m_attackDamage);
+		Debug::log("[EnemyATTACK] Attack triggered on '%s'. Damage: %.2f", GameObjectAPI::getName(targetObject), m_attackDamage);
 	}
 }
 

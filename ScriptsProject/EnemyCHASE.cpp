@@ -56,14 +56,14 @@ void EnemyCHASE::OnStateUpdate()
 
 	if (!m_enemyController->hasValidTarget())
 	{
-		AnimationAPI::playState(animation, "Paladin_Idle");
+		AnimationAPI::playState(animation, "Idle");
 		return;
 	}
 
 	if (m_enemyController->isTargetInCombatRange())
 	{
 		m_enemyController->faceCurrentTarget();
-		AnimationAPI::playState(animation, "Paladin_Attack");
+		AnimationAPI::playState(animation, "Attack");
 		return;
 	}
 
