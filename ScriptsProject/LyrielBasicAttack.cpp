@@ -70,14 +70,7 @@ void LyrielBasicAttack::Start()
 
 void LyrielBasicAttack::Update()
 {
-    if (m_cooldownTimer > 0.0f)
-    {
-        m_cooldownTimer -= Time::getDeltaTime();
-        if (m_cooldownTimer < 0.0f)
-        {
-            m_cooldownTimer = 0.0f;
-        }
-    }
+    updateCooldown();
 
     if (m_attackStateTimer > 0.0f)
     {
@@ -220,6 +213,20 @@ void LyrielBasicAttack::faceTarget(GameObject* target)
     direction.Normalize();
 
     m_playerRotation->applyFacingFromDirection(getOwner(), direction, Time::getDeltaTime());
+}
+
+void LyrielBasicAttack::updateCooldown()
+{
+    if (m_cooldownTimer <= 0.0f)
+    {
+        return;
+    }
+
+    m_cooldownTimer -= Time::getDeltaTime();
+    if (m_cooldownTimer < 0.0f)
+    {
+        m_cooldownTimer = 0.0f;
+    }
 }
 
 void LyrielBasicAttack::updateAttackStateTimer()
