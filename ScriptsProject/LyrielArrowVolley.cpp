@@ -102,8 +102,15 @@ void LyrielArrowVolley::drawGizmo()
         return;
     }
 
+
+    Vector3 previewDirection = m_currentAimDirection;
+    if (previewDirection.LengthSquared() <= 0.0001f)
+    {
+        previewDirection = getFallbackFacingDirection();
+    }
+
     //Would be nice if we had math API to check agains a threshold directly
-    if (m_currentAimDirection.LengthSquared() <= 0.0001f)
+    if (previewDirection.LengthSquared() <= 0.0001f)
     {
         return;
     }
@@ -111,7 +118,7 @@ void LyrielArrowVolley::drawGizmo()
     Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
 
     const Vector3 origin = TransformAPI::getGlobalPosition(ownerTransform);
-    drawAimPreview(origin, m_currentAimDirection);
+    drawAimPreview(origin, previewDirection);
 }
 
 void LyrielArrowVolley::updateCooldown()
@@ -208,11 +215,6 @@ void LyrielArrowVolley::releaseAimAndCast()
         return;
     }
 
-    if (m_currentAimDirection.LengthSquared() <= 0.0001f)
-    {
-        return;
-    }
-
     Transform* spawnTransform = findArrowSpawnTransform();
     if (spawnTransform == nullptr)
     {
@@ -220,7 +222,17 @@ void LyrielArrowVolley::releaseAimAndCast()
     }
 
     const Vector3 origin = TransformAPI::getGlobalPosition(spawnTransform);
-    const Vector3 forward = m_currentAimDirection;
+    Vector3 forward = m_currentAimDirection;
+
+    if (forward.LengthSquared() <= 0.0001f)
+    {
+        forward = getFallbackFacingDirection();
+    }
+
+    if (forward.LengthSquared() <= 0.0001f)
+    {
+        return;
+    }
 
     m_attackFacingDirection = forward;
     faceDirection(forward);
@@ -285,6 +297,22 @@ void LyrielArrowVolley::faceDirection(const Vector3& direction)
 
     flatDirection.Normalize();
     m_playerRotation->applyFacingFromDirection(getOwner(), flatDirection, Time::getDeltaTime());
+}
+
+Vector3 LyrielArrowVolley::getFallbackFacingDirection() const
+{
+    Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
+
+    Vector3 forward = TransformAPI::getForward(ownerTransform);
+    forward.y = 0.0f;
+
+    if (forward.LengthSquared() <= 0.0001f)
+    {
+        return Vector3::Zero;
+    }
+
+    forward.Normalize();
+    return forward;
 }
 
 bool LyrielArrowVolley::isAimStickValid(const Vector3& direction) const

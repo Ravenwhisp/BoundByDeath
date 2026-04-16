@@ -36,6 +36,7 @@ private:
 
     Vector3 computeAimDirection() const;
     void faceDirection(const Vector3& direction);
+    Vector3 getFallbackFacingDirection() const;
 
     void collectEnemiesInCone(const Vector3& origin, const Vector3& forward, std::vector<GameObject*>& outTargets);
     void applyVolleyDamage(const std::vector<GameObject*>& targets);
