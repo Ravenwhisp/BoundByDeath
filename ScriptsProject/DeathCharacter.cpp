@@ -7,24 +7,17 @@
 
 static const ScriptFieldInfo DeathCharacterFields[] =
 {
-    // Inherited from Damageable
-    { "Max HP",                   ScriptFieldType::Float, offsetof(DeathCharacter, m_maxHp),                { 0.0f,  999.0f, 1.0f  } },
-    // Inherited from CharacterBase
-    { "Player Index",             ScriptFieldType::Int,   offsetof(DeathCharacter, m_playerIndex) },
-    // Combat stats — read by sibling ability scripts
-    { "Basic Attack Damage",      ScriptFieldType::Float, offsetof(DeathCharacter, m_basicAttackDamage),    { 0.0f,  200.0f, 1.0f  } },
-    { "Charged Attack Damage",    ScriptFieldType::Float, offsetof(DeathCharacter, m_chargedAttackDamage),  { 0.0f,  200.0f, 1.0f  } },
-    { "Dash Distance",            ScriptFieldType::Float, offsetof(DeathCharacter, m_dashDistance),         { 0.0f,  20.0f,  0.1f  } },
-    { "Taunt Duration",           ScriptFieldType::Float, offsetof(DeathCharacter, m_tauntDuration),        { 0.0f,  10.0f,  0.1f  } },
-    // Attack arc
-    { "Arc Range",                ScriptFieldType::Float, offsetof(DeathCharacter, m_arcRange),             { 0.5f,  10.0f,  0.1f  } },
-    { "Arc Angle",                ScriptFieldType::Float, offsetof(DeathCharacter, m_arcAngle),             { 10.0f, 360.0f, 5.0f  } },
-    // Stun
-    { "Brief Stun Duration",      ScriptFieldType::Float, offsetof(DeathCharacter, m_briefStunDuration),    { 0.0f,  5.0f,   0.05f } },
-    { "Extended Stun Duration",   ScriptFieldType::Float, offsetof(DeathCharacter, m_extendedStunDuration), { 0.0f,  10.0f,  0.1f  } },
-    // Charge & combo timing
-    { "Max Charge Time",          ScriptFieldType::Float, offsetof(DeathCharacter, m_maxChargeTime),        { 0.5f,  5.0f,   0.1f  } },
-    { "Combo Window",             ScriptFieldType::Float, offsetof(DeathCharacter, m_comboWindow),          { 0.1f,  3.0f,   0.05f } },
+    { "Max HP",                ScriptFieldType::Float, offsetof(DeathCharacter, m_maxHp),               { 0.0f,  999.0f, 1.0f  } },
+    { "Player Index",          ScriptFieldType::Int,   offsetof(DeathCharacter, m_playerIndex) },
+    { "Basic Attack Damage",   ScriptFieldType::Float, offsetof(DeathCharacter, m_basicAttackDamage),   { 0.0f,  200.0f, 1.0f  } },
+    { "Charged Attack Damage", ScriptFieldType::Float, offsetof(DeathCharacter, m_chargedAttackDamage), { 0.0f,  200.0f, 1.0f  } },
+    { "Dash Distance",         ScriptFieldType::Float, offsetof(DeathCharacter, m_dashDistance),        { 0.0f,  20.0f,  0.1f  } },
+    { "Taunt Duration",        ScriptFieldType::Float, offsetof(DeathCharacter, m_tauntDuration),       { 0.0f,  10.0f,  0.1f  } },
+    { "Arc Range",             ScriptFieldType::Float, offsetof(DeathCharacter, m_arcRange),            { 0.5f,  10.0f,  0.1f  } },
+    { "Arc Angle",             ScriptFieldType::Float, offsetof(DeathCharacter, m_arcAngle),            { 10.0f, 360.0f, 5.0f  } },
+    { "Max Charge Time",       ScriptFieldType::Float, offsetof(DeathCharacter, m_maxChargeTime),       { 0.5f,  5.0f,   0.1f  } },
+    { "Combo Window",          ScriptFieldType::Float, offsetof(DeathCharacter, m_comboWindow),         { 0.1f,  3.0f,   0.05f } },
+    { "Combo Cooldown",        ScriptFieldType::Float, offsetof(DeathCharacter, m_comboCooldown),       { 0.0f,  5.0f,   0.1f  } },
 };
 
 IMPLEMENT_SCRIPT_FIELDS(DeathCharacter, DeathCharacterFields)
@@ -47,6 +40,11 @@ void DeathCharacter::Update()
 
 void DeathCharacter::tickCombo(float dt)
 {
+    if (m_comboCooldownTimer > 0.0f)
+    {
+        m_comboCooldownTimer -= dt;
+    }
+
     if (m_comboStep == 0)
     {
         return;
@@ -61,18 +59,23 @@ void DeathCharacter::tickCombo(float dt)
 
 void DeathCharacter::advanceCombo(bool isR2)
 {
-    m_comboTimer = 0.0f;  // reset window so the player has full time for the next hit
+    m_comboTimer = 0.0f;
 
     if (isR2)
+    {
         m_consecutiveR2Count++;
+    }
     else
-        m_consecutiveR2Count = 0;  // any R1 breaks the R2 streak
+    {
+        m_consecutiveR2Count = 0;
+    }
 
     m_comboStep++;
 
     if (m_comboStep >= 3)
     {
-        resetCombo();  // third hit completed — chain is over
+        resetCombo();
+        m_comboCooldownTimer = m_comboCooldown;
     }
 }
 
@@ -83,7 +86,7 @@ void DeathCharacter::resetCombo()
     m_comboTimer         = 0.0f;
 }
 
-void DeathCharacter::dealDamageInArc(float damage, float stunDuration) const
+void DeathCharacter::dealDamageInArc(float damage) const
 {
     const Transform* myTransform = GameObjectAPI::getTransform(m_owner);
     if (myTransform == nullptr)
@@ -94,7 +97,6 @@ void DeathCharacter::dealDamageInArc(float damage, float stunDuration) const
     Vector3 myPos     = TransformAPI::getPosition(myTransform);
     Vector3 myForward = TransformAPI::getForward(myTransform);
 
-    // Flatten to XZ so height differences don't affect the arc check.
     myForward.y = 0.0f;
     const float fwdLen = myForward.Length();
     if (fwdLen > 0.0001f)
@@ -112,10 +114,16 @@ void DeathCharacter::dealDamageInArc(float damage, float stunDuration) const
 
     for (GameObject* enemy : enemies)
     {
-        if (enemy == nullptr) continue;
+        if (enemy == nullptr)
+        {
+            continue;
+        }
 
         const Transform* enemyTr = GameObjectAPI::getTransform(enemy);
-        if (enemyTr == nullptr) continue;
+        if (enemyTr == nullptr)
+        {
+            continue;
+        }
 
         scanned++;
 
@@ -124,21 +132,24 @@ void DeathCharacter::dealDamageInArc(float damage, float stunDuration) const
 
         const float distSq = toEnemy.LengthSquared();
         if (distSq > arcRangeSq)
+        {
             continue;
+        }
 
         if (m_arcAngle < 360.0f && distSq > 0.0001f)
         {
             Vector3 toEnemyNorm = toEnemy;
             toEnemyNorm.Normalize();
             if (myForward.Dot(toEnemyNorm) < halfAngleCos)
+            {
                 continue;
+            }
         }
 
         Script* damScript = GameObjectAPI::getScript(enemy, "Damageable");
         if (damScript == nullptr)
         {
-            Debug::log("[ARC] '%s' en rango pero sin Damageable — añadelo en el editor",
-                GameObjectAPI::getName(enemy));
+            Debug::log("[ARC] '%s' has no Damageable.", GameObjectAPI::getName(enemy));
             continue;
         }
 
@@ -148,36 +159,16 @@ void DeathCharacter::dealDamageInArc(float damage, float stunDuration) const
         Debug::log("[ARC] hit '%s'  dmg=%.1f  hp=%.1f/%.1f",
             GameObjectAPI::getName(enemy), damage,
             damageable->getCurrentHp(), damageable->getMaxHp());
-
-        if (stunDuration > 0.0f)
-            damageable->stun(stunDuration);
     }
 
     if (scanned == 0)
-        Debug::log("[ARC] sin enemigos ENEMY en escena (tag correcto?)");
+    {
+        Debug::log("[ARC] no ENEMY tagged objects in scene.");
+    }
     else if (hit == 0)
-        Debug::log("[ARC] 0 hits — %d enemigos escaneados, ninguno en rango/angulo (range=%.1f angle=%.0f)",
-            scanned, m_arcRange, m_arcAngle);
-}
-
-void DeathCharacter::onDamaged(float amount)
-{
-    CharacterBase::onDamaged(amount);
-    // TODO: Death-specific hit reaction (animation, VFX, sound)
-}
-
-void DeathCharacter::onDeath()
-{
-    CharacterBase::onDeath();  // disables canAct + PlayerController
-    // TODO: Death-specific death response (animation, sound)
-    Debug::log("Death has died.");
-}
-
-void DeathCharacter::onRevive()
-{
-    CharacterBase::onRevive();  // restores canAct + PlayerController
-    // TODO: Death-specific revive response (animation, sound)
-    Debug::log("Death has revived.");
+    {
+        Debug::log("[ARC] 0 hits — %d enemies scanned, none in range/angle.", scanned);
+    }
 }
 
 IMPLEMENT_SCRIPT(DeathCharacter)

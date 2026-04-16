@@ -41,7 +41,11 @@ void DeathChargedAttack::Update()
     // --- Start charging (R2 just pressed) ---
     if (Input::isRightTriggerJustPressed(getPlayerIndex()))
     {
-        if (!canActivate())
+        if (deathChar->isInComboCooldown())
+        {
+            Debug::log("[R2] bloqueado — cooldown post-combo");
+        }
+        else if (!canActivate())
         {
             if (m_character->isDead())
                 Debug::log("[R2] bloqueado — personaje muerto");
@@ -94,30 +98,34 @@ void DeathChargedAttack::Update()
         const float rawRatio    = m_chargeTime / deathChar->m_maxChargeTime;
         const float chargeRatio = rawRatio > 1.0f ? 1.0f : rawRatio;
         const float damage      = deathChar->m_chargedAttackDamage * (1.0f + chargeRatio);
-        const float stunDuration = deathChar->m_briefStunDuration
-            + chargeRatio * (deathChar->m_extendedStunDuration - deathChar->m_briefStunDuration);
 
         if (isLast)
-            Debug::log("[COMBO] R2 CARGADO  step 3/3  COMPLETO — reset  ratio=%.0f%%  dmg=%.1f  stun=%.2fs",
-                chargeRatio * 100.0f, damage, stunDuration);
+        {
+            Debug::log("[COMBO] R2 CARGADO  step 3/3  COMPLETO — reset  ratio=%.0f%%  dmg=%.1f",
+                chargeRatio * 100.0f, damage);
+        }
         else
-            Debug::log("[COMBO] R2 CARGADO  step %d/3  ventana=%.1fs  ratio=%.0f%%  dmg=%.1f  stun=%.2fs",
-                stepBefore + 1, deathChar->m_comboWindow, chargeRatio * 100.0f, damage, stunDuration);
+        {
+            Debug::log("[COMBO] R2 CARGADO  step %d/3  ventana=%.1fs  ratio=%.0f%%  dmg=%.1f",
+                stepBefore + 1, deathChar->m_comboWindow, chargeRatio * 100.0f, damage);
+        }
 
-        deathChar->dealDamageInArc(damage, stunDuration);
+        deathChar->dealDamageInArc(damage);
     }
     else
     {
         if (isLast)
-            Debug::log("[COMBO] R2  step 3/3  COMPLETO — reset  dmg=%.1f  stun=%.2fs",
-                deathChar->m_chargedAttackDamage, deathChar->m_briefStunDuration);
+        {
+            Debug::log("[COMBO] R2  step 3/3  COMPLETO — reset  dmg=%.1f",
+                deathChar->m_chargedAttackDamage);
+        }
         else
-            Debug::log("[COMBO] R2  step %d/3  ventana=%.1fs  dmg=%.1f  stun=%.2fs",
-                stepBefore + 1, deathChar->m_comboWindow,
-                deathChar->m_chargedAttackDamage, deathChar->m_briefStunDuration);
+        {
+            Debug::log("[COMBO] R2  step %d/3  ventana=%.1fs  dmg=%.1f",
+                stepBefore + 1, deathChar->m_comboWindow, deathChar->m_chargedAttackDamage);
+        }
 
-        deathChar->dealDamageInArc(deathChar->m_chargedAttackDamage,
-                                   deathChar->m_briefStunDuration);
+        deathChar->dealDamageInArc(deathChar->m_chargedAttackDamage);
     }
 
     deathChar->advanceCombo(true);

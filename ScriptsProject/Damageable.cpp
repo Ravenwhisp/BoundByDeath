@@ -155,38 +155,4 @@ void Damageable::onRevive()
     Debug::log("%s revived. HP: %.2f / %.2f", GameObjectAPI::getName(m_owner), m_currentHp, m_maxHp);
 }
 
-void Damageable::Update()
-{
-    if (m_isStunned)
-    {
-        m_stunTimer -= Time::getDeltaTime();
-        if (m_stunTimer <= 0.0f)
-        {
-            m_stunTimer = 0.0f;
-            m_isStunned = false;
-        }
-    }
-}
-
-void Damageable::stun(float duration)
-{
-    if (m_isDead || duration <= 0.0f)
-    {
-        return;
-    }
-
-    // Only extend the timer, never reduce it.
-    if (duration > m_stunTimer)
-    {
-        m_stunTimer = duration;
-    }
-    m_isStunned = true;
-}
-
-void Damageable::clearStun()
-{
-    m_stunTimer = 0.0f;
-    m_isStunned = false;
-}
-
 IMPLEMENT_SCRIPT(Damageable)
