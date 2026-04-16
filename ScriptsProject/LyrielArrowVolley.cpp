@@ -172,11 +172,6 @@ bool LyrielArrowVolley::canStartAim() const
 
 bool LyrielArrowVolley::canCast() const
 {
-    if (m_arrowPool == nullptr)
-    {
-        return false;
-    }
-
     if (m_playerState != nullptr && m_playerState->isDowned())
     {
         return false;
