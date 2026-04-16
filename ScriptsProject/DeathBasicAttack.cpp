@@ -77,7 +77,7 @@ void DeathBasicAttack::Update()
         m_attackLockTimer -= dt;
         if (m_attackLockTimer <= 0.0f)
         {
-            m_attackLockTimer    = 0.0f;
+            m_attackLockTimer = 0.0f;
             m_attackFacingTarget = nullptr;
             if (m_playerState != nullptr)
             {
@@ -112,8 +112,8 @@ void DeathBasicAttack::Update()
 
     onActivate();
 
-    const int   comboStep = m_deathChar->getComboStep();
-    const float damage    = m_deathChar->m_basicAttackDamage;
+    const int comboStep = m_deathChar->getComboStep();
+    const float damage = m_deathChar->m_basicAttackDamage;
 
     m_deathChar->dealDamageInArc(damage);
     m_deathChar->advanceCombo(false);
@@ -153,23 +153,23 @@ void DeathBasicAttack::drawGizmo()
         return;
     }
 
-    const Vector3 pos   = TransformAPI::getPosition(t);
-    const Vector3 fwd   = TransformAPI::getForward(t);
-    const float   range = m_deathChar->m_arcRange;
-    const float   angle = m_deathChar->m_arcAngle;
-    const float   fill  = m_deathChar->getComboFillRatio();
+    const Vector3 pos = TransformAPI::getPosition(t);
+    const Vector3 fwd = TransformAPI::getForward(t);
+    const float range = m_deathChar->m_arcRange;
+    const float angle = m_deathChar->m_arcAngle;
+    const float fill = m_deathChar->getComboFillRatio();
 
     constexpr float k_degToRad = 3.14159265f / 180.0f;
     const float halfRad = angle * 0.5f * k_degToRad;
-    const float cosA    = cosf(halfRad);
-    const float sinA    = sinf(halfRad);
+    const float cosA = cosf(halfRad);
+    const float sinA = sinf(halfRad);
 
-    const Vector3 posFlat  = { pos.x, pos.y, pos.z };
-    const Vector3 leftRay  = { fwd.x * cosA + fwd.z * sinA,  0.0f, -fwd.x * sinA + fwd.z * cosA };
-    const Vector3 rightRay = { fwd.x * cosA - fwd.z * sinA,  0.0f,  fwd.x * sinA + fwd.z * cosA };
+    const Vector3 posFlat = { pos.x, pos.y, pos.z };
+    const Vector3 leftRay = { fwd.x * cosA + fwd.z * sinA, 0.0f, -fwd.x * sinA + fwd.z * cosA };
+    const Vector3 rightRay = { fwd.x * cosA - fwd.z * sinA, 0.0f, fwd.x * sinA + fwd.z * cosA };
 
-    const Vector3 colGrey   = { 0.35f, 0.35f, 0.35f };
-    const Vector3 colPurple = { 0.9f,  0.0f,  0.9f  };
+    const Vector3 colGrey = { 0.35f, 0.35f, 0.35f };
+    const Vector3 colPurple = { 0.9f, 0.0f, 0.9f };
 
     auto radialDir = [&](float a) -> Vector3
     {
@@ -182,8 +182,8 @@ void DeathBasicAttack::drawGizmo()
     DebugDrawAPI::drawLine(posFlat, posFlat + leftRay  * range, colGrey);
     DebugDrawAPI::drawLine(posFlat, posFlat + rightRay * range, colGrey);
 
-    const int   edgeSegs = 16;
-    const float arcStep  = (angle * k_degToRad) / static_cast<float>(edgeSegs);
+    const int edgeSegs = 16;
+    const float arcStep = (angle * k_degToRad) / static_cast<float>(edgeSegs);
     for (int i = 0; i < edgeSegs; ++i)
     {
         const float a0 = -halfRad + arcStep * static_cast<float>(i);
@@ -194,7 +194,7 @@ void DeathBasicAttack::drawGizmo()
 
     if (fill > 0.0f)
     {
-        const int   fillLines   = 24;
+        const int fillLines = 24;
         const float filledAngle = fill * 2.0f * halfRad;
 
         for (int i = 0; i <= fillLines; ++i)
@@ -215,10 +215,10 @@ void DeathBasicAttack::faceTarget(GameObject* target)
         return;
     }
 
-    Transform* myTransform     = GameObjectAPI::getTransform(m_owner);
+    Transform* myTransform = GameObjectAPI::getTransform(m_owner);
     Transform* targetTransform = GameObjectAPI::getTransform(target);
 
-    Vector3 myPos     = TransformAPI::getGlobalPosition(myTransform);
+    Vector3 myPos = TransformAPI::getGlobalPosition(myTransform);
     Vector3 targetPos = TransformAPI::getGlobalPosition(targetTransform);
 
     Vector3 dir = targetPos - myPos;

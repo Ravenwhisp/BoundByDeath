@@ -7,17 +7,18 @@
 
 static const ScriptFieldInfo DeathCharacterFields[] =
 {
-    { "Max HP",                ScriptFieldType::Float, offsetof(DeathCharacter, m_maxHp),               { 0.0f,  999.0f, 1.0f  } },
-    { "Player Index",          ScriptFieldType::Int,   offsetof(DeathCharacter, m_playerIndex) },
-    { "Basic Attack Damage",   ScriptFieldType::Float, offsetof(DeathCharacter, m_basicAttackDamage),   { 0.0f,  200.0f, 1.0f  } },
-    { "Charged Attack Damage", ScriptFieldType::Float, offsetof(DeathCharacter, m_chargedAttackDamage), { 0.0f,  200.0f, 1.0f  } },
-    { "Dash Distance",         ScriptFieldType::Float, offsetof(DeathCharacter, m_dashDistance),        { 0.0f,  20.0f,  0.1f  } },
-    { "Taunt Duration",        ScriptFieldType::Float, offsetof(DeathCharacter, m_tauntDuration),       { 0.0f,  10.0f,  0.1f  } },
-    { "Arc Range",             ScriptFieldType::Float, offsetof(DeathCharacter, m_arcRange),            { 0.5f,  10.0f,  0.1f  } },
-    { "Arc Angle",             ScriptFieldType::Float, offsetof(DeathCharacter, m_arcAngle),            { 10.0f, 360.0f, 5.0f  } },
-    { "Max Charge Time",       ScriptFieldType::Float, offsetof(DeathCharacter, m_maxChargeTime),       { 0.5f,  5.0f,   0.1f  } },
-    { "Combo Window",          ScriptFieldType::Float, offsetof(DeathCharacter, m_comboWindow),         { 0.1f,  3.0f,   0.05f } },
-    { "Combo Cooldown",        ScriptFieldType::Float, offsetof(DeathCharacter, m_comboCooldown),       { 0.0f,  5.0f,   0.1f  } },
+    { "Max HP",                          ScriptFieldType::Float, offsetof(DeathCharacter, m_maxHp),                      { 0.0f,  999.0f,  1.0f  } },
+    { "Player Index",                    ScriptFieldType::Int,   offsetof(DeathCharacter, m_playerIndex) },
+    { "Basic Attack Damage",             ScriptFieldType::Float, offsetof(DeathCharacter, m_basicAttackDamage),           { 0.0f,  200.0f,  1.0f  } },
+    { "Charged Attack Damage",           ScriptFieldType::Float, offsetof(DeathCharacter, m_chargedAttackDamage),         { 0.0f,  200.0f,  1.0f  } },
+    { "Dash Distance",                   ScriptFieldType::Float, offsetof(DeathCharacter, m_dashDistance),                { 0.0f,  20.0f,   0.1f  } },
+    { "Taunt Duration",                  ScriptFieldType::Float, offsetof(DeathCharacter, m_tauntDuration),               { 0.0f,  10.0f,   0.1f  } },
+    { "Arc Range",                       ScriptFieldType::Float, offsetof(DeathCharacter, m_arcRange),                   { 0.5f,  10.0f,   0.1f  } },
+    { "Arc Angle",                       ScriptFieldType::Float, offsetof(DeathCharacter, m_arcAngle),                   { 10.0f, 360.0f,  5.0f  } },
+    { "Combo Window",                    ScriptFieldType::Float, offsetof(DeathCharacter, m_comboWindow),                  { 0.1f, 3.0f,  0.05f } },
+    { "Quick R2 Combo Window Mult",      ScriptFieldType::Float, offsetof(DeathCharacter, m_quickR2ComboWindowMultiplier), { 1.0f, 10.0f, 0.5f  } },
+    { "Charged Combo Window Mult",       ScriptFieldType::Float, offsetof(DeathCharacter, m_chargedComboWindowMultiplier), { 1.0f, 10.0f, 0.5f  } },
+    { "Combo Cooldown",                  ScriptFieldType::Float, offsetof(DeathCharacter, m_comboCooldown),                { 0.0f, 5.0f,  0.1f  } },
 };
 
 IMPLEMENT_SCRIPT_FIELDS(DeathCharacter, DeathCharacterFields)
@@ -51,15 +52,28 @@ void DeathCharacter::tickCombo(float dt)
     }
 
     m_comboTimer += dt;
-    if (m_comboTimer >= m_comboWindow)
+    if (m_comboTimer >= m_comboWindow * m_activeComboMultiplier)
     {
         resetCombo();
     }
 }
 
-void DeathCharacter::advanceCombo(bool isR2)
+void DeathCharacter::advanceCombo(bool isR2, bool isCharged)
 {
     m_comboTimer = 0.0f;
+
+    if (isCharged)
+    {
+        m_activeComboMultiplier = m_chargedComboWindowMultiplier;
+    }
+    else if (isR2)
+    {
+        m_activeComboMultiplier = m_quickR2ComboWindowMultiplier;
+    }
+    else
+    {
+        m_activeComboMultiplier = 1.0f;
+    }
 
     if (isR2)
     {
@@ -72,7 +86,7 @@ void DeathCharacter::advanceCombo(bool isR2)
 
     m_comboStep++;
 
-    if (m_comboStep >= 3)
+    if (m_comboStep >= 3 || m_consecutiveR2Count >= 2)
     {
         resetCombo();
         m_comboCooldownTimer = m_comboCooldown;
@@ -81,9 +95,10 @@ void DeathCharacter::advanceCombo(bool isR2)
 
 void DeathCharacter::resetCombo()
 {
-    m_comboStep          = 0;
+    m_comboStep = 0;
     m_consecutiveR2Count = 0;
-    m_comboTimer         = 0.0f;
+    m_comboTimer = 0.0f;
+    m_activeComboMultiplier = 1.0f;
 }
 
 void DeathCharacter::dealDamageInArc(float damage) const
@@ -94,7 +109,7 @@ void DeathCharacter::dealDamageInArc(float damage) const
         return;
     }
 
-    Vector3 myPos     = TransformAPI::getPosition(myTransform);
+    Vector3 myPos = TransformAPI::getPosition(myTransform);
     Vector3 myForward = TransformAPI::getForward(myTransform);
 
     myForward.y = 0.0f;
@@ -104,13 +119,13 @@ void DeathCharacter::dealDamageInArc(float damage) const
         myForward /= fwdLen;
     }
 
-    constexpr float k_degToRad   = 3.14159265f / 180.0f;
-    const float     halfAngleCos = cosf(m_arcAngle * 0.5f * k_degToRad);
-    const float     arcRangeSq   = m_arcRange * m_arcRange;
+    constexpr float k_degToRad = 3.14159265f / 180.0f;
+    const float halfAngleCos = cosf(m_arcAngle * 0.5f * k_degToRad);
+    const float arcRangeSq = m_arcRange * m_arcRange;
 
     const auto enemies = SceneAPI::findAllGameObjectsByTag(Tag::ENEMY);
     int scanned = 0;
-    int hit     = 0;
+    int hit = 0;
 
     for (GameObject* enemy : enemies)
     {

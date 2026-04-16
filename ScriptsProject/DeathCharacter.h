@@ -21,11 +21,11 @@ public:
     float getComboFillRatio()  const
     {
         if (m_comboStep == 0 || m_comboWindow <= 0.0f) return 0.0f;
-        const float r = 1.0f - (m_comboTimer / m_comboWindow);
+        const float r = 1.0f - (m_comboTimer / (m_comboWindow * m_activeComboMultiplier));
         return r < 0.0f ? 0.0f : r;
     }
 
-    void advanceCombo(bool isR2);
+    void advanceCombo(bool isR2, bool isCharged = false);
     void resetCombo();
     void dealDamageInArc(float damage) const;
 
@@ -36,15 +36,17 @@ public:
     float m_tauntDuration       = 2.0f;
     float m_arcRange            = 2.5f;
     float m_arcAngle            = 120.0f;
-    float m_maxChargeTime       = 2.0f;
-    float m_comboWindow         = 1.0f;
-    float m_comboCooldown       = 1.0f;
+    float m_comboWindow                  = 1.0f;
+    float m_quickR2ComboWindowMultiplier = 2.0f;
+    float m_chargedComboWindowMultiplier = 3.0f;
+    float m_comboCooldown                = 1.0f;
 
 private:
-    int   m_comboStep          = 0;
-    int   m_consecutiveR2Count = 0;
-    float m_comboTimer         = 0.0f;
-    float m_comboCooldownTimer = 0.0f;
+    int   m_comboStep             = 0;
+    int   m_consecutiveR2Count    = 0;
+    float m_comboTimer            = 0.0f;
+    float m_comboCooldownTimer    = 0.0f;
+    float m_activeComboMultiplier = 1.0f;
 
     void tickCombo(float dt);
 };
