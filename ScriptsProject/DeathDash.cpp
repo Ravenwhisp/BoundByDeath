@@ -49,16 +49,13 @@ void DeathDash::Update()
     // =========================================================
 
     // Para mando, descomenta esta linea:
-    const bool testKeyDown = Input::isKeyDown(KeyCode::Space);
 
+    const bool testKeyDown = Input::isKeyDown(KeyCode::LeftShift);
     const bool testKeyJustPressed = testKeyDown && !m_debugDashKeyWasDown;
     m_debugDashKeyWasDown = testKeyDown;
 
-    // Para mando, descomenta esta linea:
-    // const bool dashJustPressed = Input::isLeftShoulderJustPressed(getPlayerIndex());
-
-    // Para probar con teclado:
-    const bool dashJustPressed = testKeyJustPressed;
+    const bool mappedDashJustPressed = Input::isLeftShoulderJustPressed(getPlayerIndex());
+    const bool dashJustPressed = testKeyJustPressed || mappedDashJustPressed;
 
     if (!isActive() && canActivate() && dashJustPressed)
     {
@@ -140,9 +137,6 @@ void DeathDash::Update()
         return;
     }
 
-    // =========================================================
-    // MOVIMIENTO DEL DASH
-    // =========================================================
     if (isActive())
     {
         Transform* ownerTransform = GameObjectAPI::getTransform(m_owner);
