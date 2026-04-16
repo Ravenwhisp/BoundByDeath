@@ -1,17 +1,6 @@
 #include "pch.h"
 #include "UIController.h"
 
-
-static void ChangeScene(Script* s)
-{
-	static_cast<UIController*>(s)->ChangeScene("MainMenu");
-}
-static void SetActive(Script* s)
-{
-	static_cast<UIController*>(s)->setGameObjectActive(false);
-}
-
-
 UIController::UIController(GameObject* owner): Script(owner) {}
 
 void UIController::Start()
@@ -22,15 +11,16 @@ void UIController::Update()
 {
 }
 
-static const ScriptMethodInfo TestingButtonMethods[] =
+static const ScriptMethodInfo UIControllerMethods[] =
 {
-	{ "ChangeScene", &ChangeScene, ScriptMethodParamType::String, "sceneName" },
-	{ "SetActive", &SetActive, 
+	{ "ChangeScene", nullptr, ScriptMethodParamType::String, "sceneName", [](Script* s, const void* param) { static_cast<UIController*>(s)->ChangeScene(*static_cast<const std::string*>(param)); } },
+	{ "ExitApplication", [](Script* s) { static_cast<UIController*>(s)->ExitApplication(); } },
+	{ "PauseGame", nullptr, ScriptMethodParamType::Bool, "pause", [](Script* s, const void* param) { static_cast<UIController*>(s)->PauseGame(*static_cast<const bool*>(param)); } }
 };
 
 ScriptMethodList UIController::getExposedMethods() const
 {
-	return { TestingButtonMethods, sizeof(TestingButtonMethods) / sizeof(ScriptMethodInfo) };
+	return { UIControllerMethods, sizeof(UIControllerMethods) / sizeof(ScriptMethodInfo) };
 }
 
 void UIController::ChangeScene(const std::string& sceneName)
@@ -38,9 +28,16 @@ void UIController::ChangeScene(const std::string& sceneName)
 	SceneAPI::requestSceneChange(sceneName.c_str());
 }
 
-void UIController::setGameObjectActive(bool active)
+void UIController::ExitApplication()
 {
-	getOwner()->SetActive(active);
+	ApplicationAPI::quit();
+}
+
+void UIController::PauseGame(bool pause)
+{
+	Debug::log("Pausing game: %s", pause ? "true" : "false");
+	Time::setTimeScale(pause ? 0.0f : 1.0f);
+	Debug::log("Game %s", Time::getTimeScale() == 0.0f ? "paused" : "resumed");
 }
 
 IMPLEMENT_SCRIPT(UIController)

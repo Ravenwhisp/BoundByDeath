@@ -15,5 +15,6 @@ public:
     ScriptMethodList getExposedMethods() const override;
 
 	void ChangeScene(const std::string& sceneName);
-	void setGameObjectActive(bool active);
+	void ExitApplication();
+	void PauseGame(bool pause);
 };
