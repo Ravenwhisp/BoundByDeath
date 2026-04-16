@@ -9,7 +9,6 @@ static const ScriptFieldInfo CHASEFields[] =
 
 IMPLEMENT_SCRIPT_FIELDS(EnemyCHASE, CHASEFields)
 
-
 EnemyCHASE::EnemyCHASE(GameObject* owner) : StateMachineScript(owner)
 {
 }
@@ -57,14 +56,14 @@ void EnemyCHASE::OnStateUpdate()
 
 	if (!m_enemyController->hasValidTarget())
 	{
-		AnimationAPI::playState(animation, "Idle");
+		AnimationAPI::playState(animation, "Paladin_Idle");
 		return;
 	}
 
 	if (m_enemyController->isTargetInCombatRange())
 	{
 		m_enemyController->faceCurrentTarget();
-		AnimationAPI::playState(animation, "Attack");
+		AnimationAPI::playState(animation, "Paladin_Attack");
 		return;
 	}
 

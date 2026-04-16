@@ -9,7 +9,6 @@ static const ScriptFieldInfo IDLEFields[] =
 
 IMPLEMENT_SCRIPT_FIELDS(EnemyIDLE, IDLEFields)
 
-
 EnemyIDLE::EnemyIDLE(GameObject* owner) : StateMachineScript(owner)
 {
 }
@@ -27,11 +26,21 @@ void EnemyIDLE::OnStateEnter()
 	m_enemyController->clearPath();
 	m_enemyController->resetRepathTimer();
 
+	if (m_debugEnabled)
+	{
+		Debug::log("[EnemyIDLE] ENTER");
+	}
 }
 
 void EnemyIDLE::OnStateUpdate()
 {
 	if (!m_enemyController)
+	{
+		return;
+	}
+
+	AnimationComponent* animation = AnimationAPI::getAnimationComponent(getOwner());
+	if (!animation)
 	{
 		return;
 	}
@@ -46,21 +55,11 @@ void EnemyIDLE::OnStateUpdate()
 	if (m_enemyController->isTargetInCombatRange())
 	{
 		m_enemyController->faceCurrentTarget();
+		AnimationAPI::playState(animation, "Paladin_Attack");
 		return;
 	}
 
-	AnimationComponent* animation = AnimationAPI::getAnimationComponent(getOwner());
-	if (!animation)
-	{
-		return;
-	}
-
-	AnimationAPI::playState(animation, "Chase");
-
-	if (m_debugEnabled)
-	{
-		Debug::log("[EnemyIDLE] Chase trigger sent");
-	}
+	AnimationAPI::playState(animation, "Paladin_Walk");
 }
 
 void EnemyIDLE::OnStateExit()

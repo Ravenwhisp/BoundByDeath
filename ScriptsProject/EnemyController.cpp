@@ -52,24 +52,24 @@ void EnemyController::drawGizmo()
 
 bool EnemyController::hasValidTarget() const
 {
-	if (m_enemyDetectionAggro->getCurrentTarget())
-	{
-		return true;
-	}
-
-	return false;
+	return m_enemyDetectionAggro && m_enemyDetectionAggro->getCurrentTarget() != nullptr;
 }
 
 void EnemyController::updateCurrentTarget()
 {
 	if (!m_enemyDetectionAggro)
 	{
-		m_currentTarget = nullptr;
+		Script* script = GameObjectAPI::getScript(m_owner, "EnemyDetectionAggro");
+		m_enemyDetectionAggro = dynamic_cast<EnemyDetectionAggro*>(script);
 	}
-	else
+
+	if (!m_enemyDetectionAggro)
 	{
-		m_currentTarget = m_enemyDetectionAggro->getCurrentTarget();
+		m_currentTarget = nullptr;
+		return;
 	}
+
+	m_currentTarget = m_enemyDetectionAggro->getCurrentTarget();
 }
 
 bool EnemyController::isTargetInCombatRange() const
