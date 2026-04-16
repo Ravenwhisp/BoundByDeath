@@ -158,10 +158,12 @@ void LyrielChargedAttack::updateAttackStateTimer()
         m_attackStateTimer = 0.0f;
         m_attackFacingDirection = Vector3::Zero;
 
+        setAbilityLocked(false);
+
         if (m_playerState != nullptr && m_playerState->isAttacking())
         {
             m_playerState->setState(PlayerStateType::Normal);
-        }
+        }  
     }
 }
 
@@ -172,7 +174,12 @@ bool LyrielChargedAttack::canStartCharge() const
         return false;
     }
 
-    if (m_playerState != nullptr && m_playerState->isDowned())
+    if (m_playerState == nullptr)
+    {
+        return false;
+    }
+
+    if (m_playerState->isDowned() || m_playerState->isUsingAbility())
     {
         return false;
     }
@@ -193,6 +200,9 @@ bool LyrielChargedAttack::canShoot() const
 void LyrielChargedAttack::beginCharge()
 {
     m_isCharging = true;
+
+    setAbilityLocked(true);
+
     m_chargeTimer = 0.0f;
     m_currentAimDirection = Vector3::Zero;
 
@@ -215,6 +225,331 @@ void LyrielChargedAttack::updateCharge()
     if (isAimStickValid(aimDirection))
     {
         m_currentAimDirection = aimDirection;
+    }
+}
+
+void LyrielChargedAttack::releaseChargeAndShoot()
+{
+    m_isCharging = false;
+
+    if (!canShoot())
+    {
+        setAbilityLocked(false);
+        m_chargeTimer = 0.0f;
+        return;
+    }
+
+    Transform* spawnTransform = findArrowSpawnTransform();
+    if (spawnTransform == nullptr)
+    {
+        setAbilityLocked(false);
+        m_chargeTimer = 0.0f;
+        return;
+    }
+
+    const Vector3 origin = TransformAPI::getGlobalPosition(spawnTransform);
+    Vector3 forward = m_currentAimDirection;
+
+    if (forward.LengthSquared() <= 0.0001f)
+    {
+        forward = getFallbackFacingDirection();
+    }
+
+    if (forward.LengthSquared() <= 0.0001f)
+    {
+        setAbilityLocked(false);
+        m_chargeTimer = 0.0f;
+        return;
+    }
+
+    const float damage = computeChargedDamage();
+
+    float chargeRatio = 0.0f;
+    if (m_maxChargeTime > 0.0001f)
+    {
+        chargeRatio = m_chargeTimer / m_maxChargeTime;
+    }
+
+    if (chargeRatio > 1.0f)
+    {
+        chargeRatio = 1.0f;
+    }
+
+    m_attackFacingDirection = forward;
+    faceDirection(forward);
+
+    std::vector<GameObject*> targets;
+    collectEnemiesInLine(origin, forward, targets);
+    applyChargedDamage(targets, damage);
+    spawnChargedArrow(origin, forward, chargeRatio);
+
+    if (m_playerState != nullptr)
+    {
+        m_playerState->setState(PlayerStateType::Attacking);
+    }
+
+    if (m_playerAnimationController != nullptr)
+    {
+        m_playerAnimationController->requestAttack();
+    }
+
+    m_attackStateTimer = m_attackLockDuration;
+    m_cooldownTimer = m_attackCooldown;
+    m_chargeTimer = 0.0f;
+
+    Debug::log("[LyrielChargedAttack] Fired charged shot. Targets hit: %d Damage: %.2f", static_cast<int>(targets.size()), damage);
+}
+
+Transform* LyrielChargedAttack::findArrowSpawnTransform() const
+{
+    Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
+
+    if (!m_arrowSpawnChildName.empty())
+    {
+        Transform* spawnTransform = TransformAPI::findChildByName(ownerTransform, m_arrowSpawnChildName.c_str());
+        if (spawnTransform != nullptr)
+        {
+            return spawnTransform;
+        }
+    }
+
+    return ownerTransform;
+}
+
+Vector3 LyrielChargedAttack::computeAimDirection() const
+{
+    const Vector2 lookAxis = Input::getLookAxis(m_playerIndex);
+    return Vector3(lookAxis.x, 0.0f, lookAxis.y);
+}
+
+void LyrielChargedAttack::faceDirection(const Vector3& direction)
+{
+    if (m_playerRotation == nullptr)
+    {
+        return;
+    }
+
+    Vector3 flatDirection = direction;
+    flatDirection.y = 0.0f;
+
+    if (flatDirection.LengthSquared() <= 0.0001f)
+    {
+        return;
+    }
+
+    flatDirection.Normalize();
+    m_playerRotation->applyFacingFromDirection(getOwner(), flatDirection, Time::getDeltaTime());
+}
+
+Vector3 LyrielChargedAttack::getFallbackFacingDirection() const
+{
+    Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
+
+    Vector3 forward = TransformAPI::getForward(ownerTransform);
+    forward.y = 0.0f;
+
+    if (forward.LengthSquared() <= 0.0001f)
+    {
+        return Vector3::Zero;
+    }
+
+    forward.Normalize();
+    return forward;
+}
+
+float LyrielChargedAttack::computeChargedDamage() const
+{
+    float chargeRatio = 0.0f;
+
+    if (m_maxChargeTime > 0.0001f)
+    {
+        chargeRatio = m_chargeTimer / m_maxChargeTime;
+    }
+
+    if (chargeRatio < 0.0f)
+    {
+        chargeRatio = 0.0f;
+    }
+
+    if (chargeRatio > 1.0f)
+    {
+        chargeRatio = 1.0f;
+    }
+
+    float damage = m_minDamage + (m_maxDamage - m_minDamage) * chargeRatio;
+
+    return damage;
+}
+
+bool LyrielChargedAttack::isAimStickValid(const Vector3& direction) const
+{
+    Vector3 flatDirection = direction;
+    flatDirection.y = 0.0f;
+
+    return flatDirection.LengthSquared() > 0.0001f;
+}
+
+void LyrielChargedAttack::collectEnemiesInLine(const Vector3& origin, const Vector3& forward, std::vector<GameObject*>& outTargets)
+{
+    outTargets.clear();
+
+    std::vector<GameObject*> allEnemies = SceneAPI::findAllGameObjectsByTag(Tag::ENEMY, true);
+
+    Vector3 flatForward = forward;
+    flatForward.y = 0.0f;
+
+    if (flatForward.LengthSquared() <= 0.0001f)
+    {
+        return;
+    }
+
+    flatForward.Normalize();
+
+    const float lineHalfWidthSq = m_lineHalfWidth * m_lineHalfWidth;
+
+    for (GameObject* enemy : allEnemies)
+    {
+        if (enemy == nullptr)
+        {
+            continue;
+        }
+
+        Transform* enemyTransform = GameObjectAPI::getTransform(enemy);
+
+        Vector3 enemyPosition = TransformAPI::getGlobalPosition(enemyTransform);
+        enemyPosition.y = origin.y;
+
+        Vector3 toEnemy = enemyPosition - origin;
+        toEnemy.y = 0.0f;
+
+        const float forwardDistance = toEnemy.Dot(flatForward);
+        if (forwardDistance < 0.0f)
+        {
+            continue;
+        }
+
+        if (forwardDistance > m_attackRange)
+        {
+            continue;
+        }
+
+        Vector3 closestPoint = origin + flatForward * forwardDistance;
+        Vector3 lateralOffset = enemyPosition - closestPoint;
+        lateralOffset.y = 0.0f;
+
+        if (lateralOffset.LengthSquared() <= lineHalfWidthSq)
+        {
+            outTargets.push_back(enemy);
+        }
+    }
+}
+
+void LyrielChargedAttack::applyChargedDamage(const std::vector<GameObject*>& targets, float damage)
+{
+    for (GameObject* target : targets)
+    {
+        if (target == nullptr)
+        {
+            continue;
+        }
+
+        Script* script = GameObjectAPI::getScript(target, "Damageable");
+        Damageable* damageable = dynamic_cast<Damageable*>(script);
+
+        if (damageable != nullptr)
+        {
+            damageable->takeDamage(damage);
+        }
+    }
+}
+
+void LyrielChargedAttack::spawnChargedArrow(const Vector3& origin, const Vector3& forward, float chargeRatio)
+{
+    if (m_arrowPool == nullptr)
+    {
+        return;
+    }
+
+    LyrielArrowProjectile* arrow = m_arrowPool->acquireArrow();
+    if (arrow == nullptr)
+    {
+        Debug::log("[LyrielChargedAttack] No available arrow in pool for charged shot visual.");
+        return;
+    }
+
+    Vector3 flatForward = forward;
+    flatForward.y = 0.0f;
+
+    if (flatForward.LengthSquared() <= 0.0001f)
+    {
+        return;
+    }
+
+    flatForward.Normalize();
+
+    float range = m_attackRange;
+    // Optional: make the visual reach grow a bit with charge.
+    // If you want fixed range always, just keep range = m_attackRange.
+    range = m_attackRange * (0.4f + 0.6f * chargeRatio);
+
+    float lifetime = 0.0f;
+    if (m_arrowSpeed > 0.0001f)
+    {
+        lifetime = range / m_arrowSpeed;
+    }
+
+    arrow->launch(origin, flatForward, m_arrowSpeed, lifetime, nullptr, 0.0f);
+}
+
+void LyrielChargedAttack::drawChargePreview(const Vector3& origin, const Vector3& forward, float chargeRatio) const
+{
+    Vector3 flatForward = forward;
+    flatForward.y = 0.0f;
+
+    if (flatForward.LengthSquared() <= 0.0001f)
+    {
+        return;
+    }
+
+    flatForward.Normalize();
+
+    if (chargeRatio < 0.0f)
+    {
+        chargeRatio = 0.0f;
+    }
+
+    if (chargeRatio > 1.0f)
+    {
+        chargeRatio = 1.0f;
+    }
+
+    const float previewRange = m_attackRange * (0.4f + 0.6f * chargeRatio);
+
+    Vector3 right(-flatForward.z, 0.0f, flatForward.x);
+    if (right.LengthSquared() <= 0.0001f)
+    {
+        return;
+    }
+    right.Normalize();
+
+    const Vector3 previewColor(0.2f, 1.0f, 1.0f);
+
+    const Vector3 leftStart = origin - right * m_lineHalfWidth;
+    const Vector3 rightStart = origin + right * m_lineHalfWidth;
+
+    const Vector3 leftEnd = leftStart + flatForward * previewRange;
+    const Vector3 rightEnd = rightStart + flatForward * previewRange;
+
+    DebugDrawAPI::drawLine(leftStart, leftEnd, previewColor, 0, true);
+    DebugDrawAPI::drawLine(rightStart, rightEnd, previewColor, 0, true);
+    DebugDrawAPI::drawLine(leftEnd, rightEnd, previewColor, 0, true);
+}
+
+void LyrielChargedAttack::setAbilityLocked(bool locked)
+{
+    if (m_playerState != nullptr)
+    {
+        m_playerState->setUsingAbility(locked);
     }
 }
 

@@ -23,6 +23,11 @@ public:
     bool isAttacking() const { return getState() == PlayerStateType::Attacking; }
     bool canMove() const { return getState() == PlayerStateType::Normal; }
 
+    bool isUsingAbility() const;
+    void setUsingAbility(bool value);
+
 private:
     int m_state = static_cast<int>(PlayerStateType::Normal);
+
+    bool m_isUsingAbility = false;
 };

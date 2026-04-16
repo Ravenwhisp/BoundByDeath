@@ -23,11 +23,13 @@ public:
 
 private:
     void tryAttack();
-    void spawnArrowToTarget(GameObject* target);
+    bool spawnArrowToTarget(GameObject* target);
     Transform* findArrowSpawnTransform() const;
     void faceTarget(GameObject* target);
     void updateCooldown();
     void updateAttackStateTimer();
+
+    void setAbilityLocked(bool locked);
 
 private:
     PlayerTargetController* m_targetController = nullptr;

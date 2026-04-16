@@ -46,6 +46,8 @@ private:
 
     bool isAimStickValid(const Vector3& direction) const;
 
+    void setAbilityLocked(bool locked);
+
 public:
     int m_playerIndex = 0;
 

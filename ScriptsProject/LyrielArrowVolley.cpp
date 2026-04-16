@@ -148,6 +148,8 @@ void LyrielArrowVolley::updateAttackStateTimer()
         m_attackStateTimer = 0.0f;
         m_attackFacingDirection = Vector3::Zero;
 
+        setAbilityLocked(false);
+
         if (m_playerState != nullptr && m_playerState->isAttacking())
         {
             m_playerState->setState(PlayerStateType::Normal);
@@ -162,7 +164,12 @@ bool LyrielArrowVolley::canStartAim() const
         return false;
     }
 
-    if (m_playerState != nullptr && m_playerState->isDowned())
+    if (m_playerState == nullptr)
+    {
+        return false;
+    }
+
+    if (m_playerState->isDowned() || m_playerState->isUsingAbility())
     {
         return false;
     }
@@ -183,6 +190,9 @@ bool LyrielArrowVolley::canCast() const
 void LyrielArrowVolley::beginAim()
 {
     m_isAiming = true;
+
+    setAbilityLocked(true);
+
     m_currentAimDirection = Vector3::Zero;
 
     Vector3 aimDirection = computeAimDirection();
@@ -207,12 +217,14 @@ void LyrielArrowVolley::releaseAimAndCast()
 
     if (!canCast())
     {
+        setAbilityLocked(false);
         return;
     }
 
     Transform* spawnTransform = findArrowSpawnTransform();
     if (spawnTransform == nullptr)
     {
+        setAbilityLocked(false);
         return;
     }
 
@@ -226,6 +238,7 @@ void LyrielArrowVolley::releaseAimAndCast()
 
     if (forward.LengthSquared() <= 0.0001f)
     {
+        setAbilityLocked(false);
         return;
     }
 
@@ -505,6 +518,14 @@ void LyrielArrowVolley::drawAimPreview(const Vector3& origin, const Vector3& for
 
         DebugDrawAPI::drawLine(previousPoint, currentPoint, previewColor, 0, true);
         previousPoint = currentPoint;
+    }
+}
+
+void LyrielArrowVolley::setAbilityLocked(bool locked)
+{
+    if (m_playerState != nullptr)
+    {
+        m_playerState->setUsingAbility(locked);
     }
 }
 

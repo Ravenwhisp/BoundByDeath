@@ -100,7 +100,12 @@ void LyrielBasicAttack::tryAttack()
         return;
     }
 
-    if (m_playerState != nullptr && m_playerState->isDowned())
+    if (m_playerState == nullptr)
+    {
+        return;
+    }
+
+    if (m_playerState->isDowned() || m_playerState->isUsingAbility())
     {
         return;
     }
@@ -112,8 +117,17 @@ void LyrielBasicAttack::tryAttack()
         return;
     }
 
+    setAbilityLocked(true);
+
     faceTarget(target);
     m_attackFacingTarget = target;
+
+    if (!spawnArrowToTarget(target))
+    {
+        setAbilityLocked(false);
+        m_attackFacingTarget = nullptr;
+        return;
+    }
 
     if (m_playerState != nullptr)
     {
@@ -126,25 +140,22 @@ void LyrielBasicAttack::tryAttack()
     }
 
     m_attackStateTimer = m_attackLockDuration;
-
-    spawnArrowToTarget(target);
-
     m_cooldownTimer = m_attackCooldown;
 
     Debug::log("[LyrielBasicAttack] Shot arrow to target '%s'.", GameObjectAPI::getName(target));
 }
 
-void LyrielBasicAttack::spawnArrowToTarget(GameObject* target)
+bool LyrielBasicAttack::spawnArrowToTarget(GameObject* target)
 {
     if (m_arrowPool == nullptr || target == nullptr)
     {
-        return;
+        return false;
     }
 
     LyrielArrowProjectile* arrow = m_arrowPool->acquireArrow();
     if (arrow == nullptr)
     {
-        return;
+        return false;
     }
 
     Transform* spawnTransform = findArrowSpawnTransform();
@@ -152,7 +163,7 @@ void LyrielBasicAttack::spawnArrowToTarget(GameObject* target)
 
     if (spawnTransform == nullptr || targetTransform == nullptr)
     {
-        return;
+        return false;
     }
 
     const Vector3 startPosition = TransformAPI::getGlobalPosition(spawnTransform);
@@ -171,8 +182,9 @@ void LyrielBasicAttack::spawnArrowToTarget(GameObject* target)
     }
 
     float arrowLifetime = distance / m_arrowSpeed;
-
     arrow->launch(startPosition, direction, m_arrowSpeed, arrowLifetime, target, m_attackDamage);
+
+    return true;
 }
 
 Transform* LyrielBasicAttack::findArrowSpawnTransform() const
@@ -242,10 +254,20 @@ void LyrielBasicAttack::updateAttackStateTimer()
         m_attackStateTimer = 0.0f;
         m_attackFacingTarget = nullptr;
 
+        setAbilityLocked(false);
+
         if (m_playerState != nullptr && m_playerState->isAttacking())
         {
             m_playerState->setState(PlayerStateType::Normal);
         }
+    }
+}
+
+void LyrielBasicAttack::setAbilityLocked(bool locked)
+{
+    if (m_playerState != nullptr)
+    {
+        m_playerState->setUsingAbility(locked);
     }
 }
 
