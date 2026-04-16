@@ -128,7 +128,7 @@ void LyrielChargedAttack::drawGizmo()
         chargeRatio = 1.0f;
     }
 
-    drawChargePreview(origin, previewDirection, chargeRatio);
+    drawChargePreview(origin, previewDirection);
 }
 
 void LyrielChargedAttack::updateCooldown()
@@ -281,7 +281,7 @@ void LyrielChargedAttack::releaseChargeAndShoot()
     std::vector<GameObject*> targets;
     collectEnemiesInLine(origin, forward, targets);
     applyChargedDamage(targets, damage);
-    spawnChargedArrow(origin, forward, chargeRatio);
+    spawnChargedArrow(origin, forward);
 
     if (m_playerState != nullptr)
     {
@@ -463,7 +463,7 @@ void LyrielChargedAttack::applyChargedDamage(const std::vector<GameObject*>& tar
     }
 }
 
-void LyrielChargedAttack::spawnChargedArrow(const Vector3& origin, const Vector3& forward, float chargeRatio)
+void LyrielChargedAttack::spawnChargedArrow(const Vector3& origin, const Vector3& forward)
 {
     if (m_arrowPool == nullptr)
     {
@@ -487,10 +487,7 @@ void LyrielChargedAttack::spawnChargedArrow(const Vector3& origin, const Vector3
 
     flatForward.Normalize();
 
-    float range = m_attackRange;
-    // Optional: make the visual reach grow a bit with charge.
-    // If you want fixed range always, just keep range = m_attackRange.
-    range = m_attackRange * (0.4f + 0.6f * chargeRatio);
+    const float range = m_attackRange;
 
     float lifetime = 0.0f;
     if (m_arrowSpeed > 0.0001f)
@@ -501,7 +498,7 @@ void LyrielChargedAttack::spawnChargedArrow(const Vector3& origin, const Vector3
     arrow->launch(origin, flatForward, m_arrowSpeed, lifetime, nullptr, 0.0f);
 }
 
-void LyrielChargedAttack::drawChargePreview(const Vector3& origin, const Vector3& forward, float chargeRatio) const
+void LyrielChargedAttack::drawChargePreview(const Vector3& origin, const Vector3& forward) const
 {
     Vector3 flatForward = forward;
     flatForward.y = 0.0f;
@@ -513,17 +510,7 @@ void LyrielChargedAttack::drawChargePreview(const Vector3& origin, const Vector3
 
     flatForward.Normalize();
 
-    if (chargeRatio < 0.0f)
-    {
-        chargeRatio = 0.0f;
-    }
-
-    if (chargeRatio > 1.0f)
-    {
-        chargeRatio = 1.0f;
-    }
-
-    const float previewRange = m_attackRange * (0.4f + 0.6f * chargeRatio);
+    const float previewRange = m_attackRange;
 
     Vector3 right(-flatForward.z, 0.0f, flatForward.x);
     if (right.LengthSquared() <= 0.0001f)
