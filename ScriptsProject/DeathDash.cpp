@@ -48,7 +48,9 @@ void DeathDash::Update()
     // 3) forward del personaje
     // =========================================================
 
+    // Para mando, descomenta esta linea:
     const bool testKeyDown = Input::isKeyDown(KeyCode::Space);
+
     const bool testKeyJustPressed = testKeyDown && !m_debugDashKeyWasDown;
     m_debugDashKeyWasDown = testKeyDown;
 
