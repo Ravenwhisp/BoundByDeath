@@ -2,9 +2,10 @@
 
 #include "ScriptAPI.h"
 
-enum class PlayerLifeState
+enum class PlayerStateType
 {
     Normal = 0,
+    Attacking,
     Downed
 };
 
@@ -15,12 +16,13 @@ class PlayerState : public Script
 public:
     explicit PlayerState(GameObject* owner);
 
-    PlayerLifeState getState() const { return static_cast<PlayerLifeState>(m_state); }
-    void setState(PlayerLifeState state);
+    PlayerStateType getState() const { return static_cast<PlayerStateType>(m_state); }
+    void setState(PlayerStateType state);
 
-    bool isDowned() const { return getState() == PlayerLifeState::Downed; }
-    bool canMove() const { return getState() == PlayerLifeState::Normal; }
+    bool isDowned() const { return getState() == PlayerStateType::Downed; }
+    bool isAttacking() const { return getState() == PlayerStateType::Attacking; }
+    bool canMove() const { return getState() == PlayerStateType::Normal; }
 
 private:
-    int m_state = static_cast<int>(PlayerLifeState::Normal);
+    int m_state = static_cast<int>(PlayerStateType::Normal);
 };

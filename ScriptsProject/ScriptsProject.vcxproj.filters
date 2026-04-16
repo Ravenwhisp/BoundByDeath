@@ -53,6 +53,9 @@
     <ClInclude Include="..\Engine\Assets\Scripts\CameraSwitcher.h">
       <Filter>Camera</Filter>
     </ClInclude>
+    <ClInclude Include="SpikeTrap.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
     <ClInclude Include="DebugDrawTest.h">
       <Filter>Tests</Filter>
     </ClInclude>
@@ -107,10 +110,14 @@
     <ClInclude Include="PlayerAnimationController.h">
       <Filter>Character\Player\Animation</Filter>
     </ClInclude>
-    <ClInclude Include="Bound.h" />
     <ClInclude Include="UIController.h">
       <Filter>UI</Filter>
     </ClInclude>
+    <ClInclude Include="ArrowPool.h" />
+    <ClInclude Include="Bound.h" />
+    <ClInclude Include="LyrielArrowProjectile.h" />
+    <ClInclude Include="LyrielBasicAttack.h" />
+    <ClInclude Include="LyrielArrowVolley.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
@@ -120,6 +127,9 @@
     </ClCompile>
     <ClCompile Include="..\Engine\Assets\Scripts\CameraSwitcher.cpp">
       <Filter>Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="SpikeTrap.cpp">
+      <Filter>Archivos de origen</Filter>
     </ClCompile>
     <ClCompile Include="DebugDrawTest.cpp">
       <Filter>Tests</Filter>
@@ -176,9 +186,13 @@
     <ClCompile Include="PlayerAnimationController.cpp">
       <Filter>Character\Player\Animation</Filter>
     </ClCompile>
-    <ClCompile Include="Bound.cpp" />
     <ClCompile Include="UIController.cpp">
       <Filter>UI</Filter>
     </ClCompile>
+    <ClCompile Include="ArrowPool.cpp" />
+    <ClCompile Include="Bound.cpp" />
+    <ClCompile Include="LyrielArrowProjectile.cpp" />
+    <ClCompile Include="LyrielBasicAttack.cpp" />
+    <ClCompile Include="LyrielArrowVolley.cpp" />
   </ItemGroup>
 </Project>
