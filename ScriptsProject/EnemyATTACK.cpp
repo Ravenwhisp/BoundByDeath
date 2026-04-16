@@ -63,6 +63,8 @@ void EnemyATTACK::OnStateUpdate()
 	{
 		performAttack();
 		m_attackTimer = 0.0f;
+		AnimationAPI::playState(animation, "Paladin_Idle_long");
+		return;
 	}
 }
 
