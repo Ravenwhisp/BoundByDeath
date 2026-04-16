@@ -10,17 +10,16 @@ class PlayerRotation;
 //
 //   Quick press  (release before m_minChargeTime):
 //     Deals m_chargedAttackDamage to all enemies in the attack arc.
-//     Applies a brief stun (m_briefStunDuration on DeathCharacter).
 //     Can be used up to twice consecutively in a combo (enforced by DeathCharacter).
 //
 //   Charged press (hold ≥ m_minChargeTime, release to fire):
-//     Scales damage from 1× to 2× m_chargedAttackDamage and stun from
-//     brief to extended based on how close the charge is to m_maxChargeTime.
+//     Scales damage from 1× to 2× m_chargedAttackDamage based on how close
+//     the charge is to m_maxChargeTime.
 //     COMBO STARTER ONLY — ignored if already mid-combo (comboStep > 0).
 //     After landing, the combo continues normally.
 //
 // isActive() reflects whether the trigger is currently held.
-// Arc parameters (range, angle, stun durations) live on DeathCharacter.
+// Arc parameters (range, angle) live on DeathCharacter.
 class DeathChargedAttack : public AbilityBase
 {
     DECLARE_SCRIPT(DeathChargedAttack)
