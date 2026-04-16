@@ -1,11 +1,11 @@
 #pragma once
 
 #include "AbilityBase.h"
+#include <vector>
 
 // Death's aggressive dash — launches towards the current target (LB / L1).
 // If there is no target, dashes in the character's forward direction instead.
 // Sibling script of DeathCharacter on the same GameObject.
-// Reads m_dashDistance from DeathCharacter via static_cast<DeathCharacter*>(m_character).
 //
 // isActive() (from AbilityBase) reflects whether the dash is currently in motion.
 // Movement is applied over m_dashDuration seconds then onDeactivate() is called.
@@ -16,15 +16,16 @@ class DeathDash : public AbilityBase
 public:
     explicit DeathDash(GameObject* owner);
 
-    void Start()  override;
+    void Start() override;
     void Update() override;
 
     ScriptFieldList getExposedFields() const override;
 
 public:
-    // Total time (seconds) the dash movement lasts.
     float m_dashDuration = 0.2f;
     float m_dashDistance = 3.0f;
+    float m_dashDamage = 20.0f;
+    float m_hitRadius = 1.0f;
 
 private:
     // Time elapsed since the dash began.
@@ -34,4 +35,11 @@ private:
     Vector3 m_dashDirection = { 0.0f, 0.0f, 0.0f };
 
     bool m_debugDashKeyWasDown = false;
+
+    std::vector<GameObject*> m_hitEnemiesThisDash;
+
+private:
+    void checkDashHits(const Vector3& previousPosition, const Vector3& currentPosition);
+    bool hasAlreadyHit(GameObject* enemy) const;
+    static float distancePointToSegmentSquaredXZ(const Vector3& point, const Vector3& segmentStart, const Vector3& segmentEnd);
 };
