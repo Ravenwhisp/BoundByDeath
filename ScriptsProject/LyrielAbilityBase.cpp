@@ -32,10 +32,78 @@ void LyrielAbilityBase::Update()
     updateAttackStateTimer();
 }
 
-void LyrielAbilityBase::beginAttackLock(const Vector3& facingDirection)
+Transform* LyrielAbilityBase::findArrowSpawnTransform() const
+{
+    Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
+    if (ownerTransform == nullptr || m_lyriel == nullptr)
+    {
+        return nullptr;
+    }
+
+    if (!m_lyriel->m_arrowSpawnChildName.empty())
+    {
+        Transform* spawnTransform = TransformAPI::findChildByName(
+            ownerTransform,
+            m_lyriel->m_arrowSpawnChildName.c_str());
+
+        if (spawnTransform != nullptr)
+        {
+            return spawnTransform;
+        }
+    }
+
+    return ownerTransform;
+}
+
+void LyrielAbilityBase::faceDirection(const Vector3& direction)
+{
+    if (m_character == nullptr)
+    {
+        return;
+    }
+
+    PlayerRotation* playerRotation = m_character->getPlayerRotation();
+    if (playerRotation == nullptr)
+    {
+        return;
+    }
+
+    Vector3 flatDirection = direction;
+    flatDirection.y = 0.0f;
+
+    if (flatDirection.LengthSquared() <= 0.0001f)
+    {
+        return;
+    }
+
+    flatDirection.Normalize();
+    playerRotation->applyFacingFromDirection(getOwner(), flatDirection, Time::getDeltaTime());
+}
+
+Vector3 LyrielAbilityBase::getFallbackFacingDirection() const
+{
+    Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
+    if (ownerTransform == nullptr)
+    {
+        return Vector3::Zero;
+    }
+
+    Vector3 forward = TransformAPI::getForward(ownerTransform);
+    forward.y = 0.0f;
+
+    if (forward.LengthSquared() <= 0.0001f)
+    {
+        return Vector3::Zero;
+    }
+
+    forward.Normalize();
+    return forward;
+}
+
+void LyrielAbilityBase::beginAttackLock(const Vector3& facingDirection, float lockDuration)
 {
     m_attackFacingDirection = facingDirection;
-    m_attackStateTimer = m_attackLockDuration;
+    m_attackStateTimer = lockDuration;
 }
 
 void LyrielAbilityBase::updateAttackFacing()

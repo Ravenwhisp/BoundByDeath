@@ -21,12 +21,11 @@ protected:
 
     void updateAttackFacing();
     void updateAttackStateTimer();
-    void beginAttackLock(const Vector3& facingDirection);
+    void beginAttackLock(const Vector3& facingDirection, float lockDuration);
 
 protected:
     LyrielCharacter* m_lyriel = nullptr;
 
     float m_attackStateTimer = 0.0f;
-    float m_attackLockDuration = 0.2f;
     Vector3 m_attackFacingDirection = Vector3::Zero;
 };

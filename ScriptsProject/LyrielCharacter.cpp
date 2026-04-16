@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "LyrielCharacter.h"
+#include "ArrowPool.h"
 
 static const ScriptFieldInfo LyrielCharacterFields[] =
 {
@@ -17,6 +18,14 @@ LyrielCharacter::LyrielCharacter(GameObject* owner)
 void LyrielCharacter::Start()
 {
     CharacterBase::Start();
+
+    Script* arrowPoolScript = GameObjectAPI::getScript(getOwner(), "ArrowPool");
+    m_arrowPool = dynamic_cast<ArrowPool*>(arrowPoolScript);
+
+    if (m_arrowPool == nullptr)
+    {
+        Debug::log("[LyrielCharacter] ArrowPool not found on owner '%s'.", GameObjectAPI::getName(getOwner()));
+    }
 }
 
 IMPLEMENT_SCRIPT(LyrielCharacter)
