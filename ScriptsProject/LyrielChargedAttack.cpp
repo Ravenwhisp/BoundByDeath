@@ -15,7 +15,8 @@ static const ScriptFieldInfo LyrielChargedAttackFields[] =
     { "Min Damage", ScriptFieldType::Float, offsetof(LyrielChargedAttack, m_minDamage), { 0.0f, 100.0f, 0.5f } },
     { "Max Damage", ScriptFieldType::Float, offsetof(LyrielChargedAttack, m_maxDamage), { 0.0f, 200.0f, 0.5f } },
     { "Max Charge Time", ScriptFieldType::Float, offsetof(LyrielChargedAttack, m_maxChargeTime), { 0.1f, 5.0f, 0.05f } },
-    { "Attack Range", ScriptFieldType::Float, offsetof(LyrielChargedAttack, m_attackRange), { 0.0f, 50.0f, 0.1f } },
+    { "Min Attack Range", ScriptFieldType::Float, offsetof(LyrielChargedAttack, m_minAttackRange), { 0.0f, 50.0f, 0.1f } },
+    { "Max Attack Range", ScriptFieldType::Float, offsetof(LyrielChargedAttack, m_maxAttackRange), { 0.0f, 50.0f, 0.1f } },
     { "Line Half Width", ScriptFieldType::Float, offsetof(LyrielChargedAttack, m_lineHalfWidth), { 0.1f, 10.0f, 0.05f } },
     { "Attack Cooldown", ScriptFieldType::Float, offsetof(LyrielChargedAttack, m_attackCooldown), { 0.0f, 10.0f, 0.05f } },
     { "Attack Lock Duration", ScriptFieldType::Float, offsetof(LyrielChargedAttack, m_attackLockDuration), { 0.0f, 2.0f, 0.01f } },
@@ -218,6 +219,28 @@ float LyrielChargedAttack::computeChargedDamage() const
     return m_minDamage + (m_maxDamage - m_minDamage) * chargeRatio;
 }
 
+float LyrielChargedAttack::computeChargedRange() const
+{
+    float chargeRatio = 0.0f;
+
+    if (m_maxChargeTime > 0.0001f)
+    {
+        chargeRatio = m_chargeTimer / m_maxChargeTime;
+    }
+
+    if (chargeRatio < 0.0f)
+    {
+        chargeRatio = 0.0f;
+    }
+
+    if (chargeRatio > 1.0f)
+    {
+        chargeRatio = 1.0f;
+    }
+
+    return m_minAttackRange + (m_maxAttackRange - m_minAttackRange) * chargeRatio;
+}
+
 bool LyrielChargedAttack::isAimStickValid(const Vector3& direction) const
 {
     Vector3 flatDirection = direction;
@@ -241,6 +264,7 @@ void LyrielChargedAttack::collectEnemiesInLine(const Vector3& origin, const Vect
 
     flatForward.Normalize();
 
+    const float currentRange = computeChargedRange();
     const float lineHalfWidthSq = m_lineHalfWidth * m_lineHalfWidth;
 
     for (GameObject* enemy : allEnemies)
@@ -268,7 +292,7 @@ void LyrielChargedAttack::collectEnemiesInLine(const Vector3& origin, const Vect
             continue;
         }
 
-        if (forwardDistance > m_attackRange)
+        if (forwardDistance > currentRange)
         {
             continue;
         }
@@ -333,7 +357,7 @@ void LyrielChargedAttack::spawnChargedArrow(const Vector3& origin, const Vector3
 
     flatForward.Normalize();
 
-    const float range = m_attackRange;
+    const float range = computeChargedRange();
 
     float lifetime = 0.0f;
     if (m_arrowSpeed > 0.0001f)
@@ -356,7 +380,7 @@ void LyrielChargedAttack::drawChargePreview(const Vector3& origin, const Vector3
 
     flatForward.Normalize();
 
-    const float previewRange = m_attackRange;
+    const float previewRange = computeChargedRange();
 
     Vector3 right(-flatForward.z, 0.0f, flatForward.x);
     if (right.LengthSquared() <= 0.0001f)

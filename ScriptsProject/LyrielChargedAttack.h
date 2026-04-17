@@ -30,6 +30,7 @@ private:
 
     Vector3 computeAimDirection() const;
     float computeChargedDamage() const;
+    float computeChargedRange() const;
 
     void collectEnemiesInLine(const Vector3& origin, const Vector3& forward, std::vector<GameObject*>& outTargets);
     void applyChargedDamage(const std::vector<GameObject*>& targets, float damage);
@@ -50,7 +51,8 @@ public:
     float m_maxDamage = 30.0f;
     float m_maxChargeTime = 2.0f;
 
-    float m_attackRange = 10.0f;
+    float m_minAttackRange = 4.0f;
+    float m_maxAttackRange = 10.0f;
     float m_lineHalfWidth = 0.75f;
 
     float m_attackCooldown = 4.0f;
