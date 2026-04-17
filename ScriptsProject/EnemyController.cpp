@@ -123,14 +123,13 @@ bool EnemyController::isTargetInCombatRange() const
 		return false;
 	}
 
-	Vector3 distance = m_owner->GetTransform()->getPosition() - m_currentTarget->getPosition();
+	Vector3 ownerPosition = m_owner->GetTransform()->getPosition();
+	Vector3 targetPosition = m_currentTarget->getPosition();
 
-	if (distance.Length() <= m_combatRange)
-	{
-		return true;
-	}
+	Vector3 difference = ownerPosition - targetPosition;
+	difference.y = 0.0f;
 
-	return false;
+	return difference.Length() <= m_combatRange;
 }
 
 void EnemyController::clearPath()
