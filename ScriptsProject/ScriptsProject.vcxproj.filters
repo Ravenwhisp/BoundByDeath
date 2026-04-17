@@ -53,9 +53,6 @@
     <ClInclude Include="..\Engine\Assets\Scripts\CameraSwitcher.h">
       <Filter>Camera</Filter>
     </ClInclude>
-    <ClInclude Include="SpikeTrap.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
     <ClInclude Include="DebugDrawTest.h">
       <Filter>Tests</Filter>
     </ClInclude>
@@ -124,6 +121,11 @@
     <ClInclude Include="LyrielArrowProjectile.h" />
     <ClInclude Include="LyrielBasicAttack.h" />
     <ClInclude Include="LyrielArrowVolley.h" />
+    <ClInclude Include="SpikeTrap.h" />
+    <ClInclude Include="DeathCharacter.h" />
+    <ClInclude Include="AbilityBase.h" />
+    <ClInclude Include="DeathDash.h" />
+    <ClInclude Include="CharacterBase.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
@@ -133,9 +135,6 @@
     </ClCompile>
     <ClCompile Include="..\Engine\Assets\Scripts\CameraSwitcher.cpp">
       <Filter>Camera</Filter>
-    </ClCompile>
-    <ClCompile Include="SpikeTrap.cpp">
-      <Filter>Archivos de origen</Filter>
     </ClCompile>
     <ClCompile Include="DebugDrawTest.cpp">
       <Filter>Tests</Filter>
@@ -206,5 +205,10 @@
     <ClCompile Include="LyrielArrowProjectile.cpp" />
     <ClCompile Include="LyrielBasicAttack.cpp" />
     <ClCompile Include="LyrielArrowVolley.cpp" />
+    <ClCompile Include="SpikeTrap.cpp" />
+    <ClCompile Include="DeathCharacter.cpp" />
+    <ClCompile Include="AbilityBase.cpp" />
+    <ClCompile Include="DeathDash.cpp" />
+    <ClCompile Include="CharacterBase.cpp" />
   </ItemGroup>
 </Project>
