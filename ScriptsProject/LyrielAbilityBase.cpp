@@ -4,6 +4,7 @@
 #include "LyrielCharacter.h"
 #include "PlayerRotation.h"
 #include "PlayerState.h"
+#include "PlayerAnimationController.h"
 
 LyrielAbilityBase::LyrielAbilityBase(GameObject* owner)
     : AbilityBase(owner)
@@ -13,7 +14,6 @@ LyrielAbilityBase::LyrielAbilityBase(GameObject* owner)
 void LyrielAbilityBase::Start()
 {
     m_lyriel = dynamic_cast<LyrielCharacter*>(GameObjectAPI::getScript(getOwner(), "LyrielCharacter"));
-
     m_character = m_lyriel;
 
     AbilityBase::Start();
@@ -27,8 +27,17 @@ void LyrielAbilityBase::Start()
 void LyrielAbilityBase::Update()
 {
     AbilityBase::Update();
-    updateAttackFacing();
-    updateAttackStateTimer();
+
+    if (m_attackStateTimer > 0.0f)
+    {
+        onAttackWindowUpdate();
+
+        m_attackStateTimer -= Time::getDeltaTime();
+        if (m_attackStateTimer <= 0.0f)
+        {
+            finishAttackWindow();
+        }
+    }
 }
 
 Transform* LyrielAbilityBase::findArrowSpawnTransform() const
@@ -99,45 +108,45 @@ Vector3 LyrielAbilityBase::getFallbackFacingDirection() const
     return forward;
 }
 
-void LyrielAbilityBase::beginAttackLock(const Vector3& facingDirection, float lockDuration)
+void LyrielAbilityBase::beginAttackWindow(float lockDuration)
 {
-    m_attackFacingDirection = facingDirection;
     m_attackStateTimer = lockDuration;
 }
 
-void LyrielAbilityBase::updateAttackFacing()
+void LyrielAbilityBase::finishAttackWindow()
 {
-    if (m_attackStateTimer > 0.0f)
+    m_attackStateTimer = 0.0f;
+
+    setAbilityLocked(false);
+
+    if (m_character != nullptr)
     {
-        if (m_attackFacingDirection.LengthSquared() > 0.0001f)
+        PlayerState* playerState = m_character->getPlayerState();
+        if (playerState != nullptr && playerState->isAttacking())
         {
-            faceDirection(m_attackFacingDirection);
+            playerState->setState(PlayerStateType::Normal);
         }
     }
+
+    onAttackWindowFinished();
 }
 
-void LyrielAbilityBase::updateAttackStateTimer()
+void LyrielAbilityBase::beginAttackPresentation()
 {
-    if (m_attackStateTimer <= 0.0f)
+    if (m_character == nullptr)
     {
         return;
     }
 
-    m_attackStateTimer -= Time::getDeltaTime();
-    if (m_attackStateTimer <= 0.0f)
+    PlayerState* playerState = m_character->getPlayerState();
+    if (playerState != nullptr)
     {
-        m_attackStateTimer = 0.0f;
-        m_attackFacingDirection = Vector3::Zero;
+        playerState->setState(PlayerStateType::Attacking);
+    }
 
-        setAbilityLocked(false);
-
-        if (m_character != nullptr)
-        {
-            PlayerState* playerState = m_character->getPlayerState();
-            if (playerState != nullptr && playerState->isAttacking())
-            {
-                playerState->setState(PlayerStateType::Normal);
-            }
-        }
+    PlayerAnimationController* animationController = m_character->getAnimationController();
+    if (animationController != nullptr)
+    {
+        animationController->requestAttack();
     }
 }

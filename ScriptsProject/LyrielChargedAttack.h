@@ -16,6 +16,10 @@ public:
 
     ScriptFieldList getExposedFields() const override;
 
+protected:
+    void onAttackWindowUpdate() override;
+    void onAttackWindowFinished() override;
+
 private:
     void beginCharge();
     void updateCharge();
@@ -39,6 +43,7 @@ private:
     bool m_isCharging = false;
     float m_chargeTimer = 0.0f;
     Vector3 m_currentAimDirection = Vector3::Zero;
+    Vector3 m_attackFacingDirection = Vector3::Zero;
 
 public:
     float m_minDamage = 5.0f;

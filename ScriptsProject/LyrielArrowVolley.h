@@ -16,6 +16,10 @@ public:
 
     ScriptFieldList getExposedFields() const override;
 
+protected:
+    void onAttackWindowUpdate() override;
+    void onAttackWindowFinished() override;
+
 private:
     void beginAim();
     void updateAim();
@@ -36,6 +40,7 @@ private:
 private:
     bool m_isAiming = false;
     Vector3 m_currentAimDirection = Vector3::Zero;
+    Vector3 m_attackFacingDirection = Vector3::Zero;
 
 public:
     float m_volleyDamage = 20.0f;

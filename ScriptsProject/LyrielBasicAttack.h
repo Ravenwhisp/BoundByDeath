@@ -21,6 +21,10 @@ private:
     bool spawnArrowToTarget(GameObject* target);
     void faceTarget(GameObject* target);
 
+protected:
+    void onAttackWindowUpdate() override;
+    void onAttackWindowFinished() override;
+
 private:
     GameObject* m_attackFacingTarget = nullptr;
 

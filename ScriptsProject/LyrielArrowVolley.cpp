@@ -7,7 +7,6 @@
 #include "LyrielArrowProjectile.h"
 #include "Damageable.h"
 #include "PlayerState.h"
-#include "PlayerAnimationController.h"
 
 #include <cmath>
 
@@ -83,6 +82,19 @@ void LyrielArrowVolley::drawGizmo()
     drawAimPreview(origin, previewDirection);
 }
 
+void LyrielArrowVolley::onAttackWindowUpdate()
+{
+    if (m_attackFacingDirection.LengthSquared() > 0.0001f)
+    {
+        faceDirection(m_attackFacingDirection);
+    }
+}
+
+void LyrielArrowVolley::onAttackWindowFinished()
+{
+    m_attackFacingDirection = Vector3::Zero;
+}
+
 bool LyrielArrowVolley::canStartAim() const
 {
     return canStartAbility();
@@ -155,22 +167,9 @@ void LyrielArrowVolley::releaseAimAndCast()
     applyVolleyDamage(targets);
     spawnVolleyArrows(origin, forward);
 
-    if (m_character != nullptr)
-    {
-        PlayerState* playerState = m_character->getPlayerState();
-        if (playerState != nullptr)
-        {
-            playerState->setState(PlayerStateType::Attacking);
-        }
+    beginAttackPresentation();
 
-        PlayerAnimationController* animationController = m_character->getAnimationController();
-        if (animationController != nullptr)
-        {
-            animationController->requestAttack();
-        }
-    }
-
-    m_attackStateTimer = m_attackLockDuration;
+    beginAttackWindow(m_attackLockDuration);
     m_cooldownTimer = m_cooldown;
 
     Debug::log("[LyrielArrowVolley] Cast Arrow Volley. Targets hit: %d", static_cast<int>(targets.size()));

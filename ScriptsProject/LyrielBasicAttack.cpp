@@ -6,7 +6,6 @@
 #include "PlayerTargetController.h"
 #include "PlayerState.h"
 #include "PlayerRotation.h"
-#include "PlayerAnimationController.h"
 #include "ArrowPool.h"
 #include "LyrielArrowProjectile.h"
 
@@ -35,18 +34,23 @@ void LyrielBasicAttack::Update()
 {
     LyrielAbilityBase::Update();
 
-    if (m_attackStateTimer > 0.0f)
-    {
-        if (m_attackFacingTarget != nullptr)
-        {
-            faceTarget(m_attackFacingTarget);
-        }
-    }
-
     if (Input::isRightShoulderJustPressed(getPlayerIndex()))
     {
         tryAttack();
     }
+}
+
+void LyrielBasicAttack::onAttackWindowUpdate()
+{
+    if (m_attackFacingTarget != nullptr)
+    {
+        faceTarget(m_attackFacingTarget);
+    }
+}
+
+void LyrielBasicAttack::onAttackWindowFinished()
+{
+    m_attackFacingTarget = nullptr;
 }
 
 void LyrielBasicAttack::tryAttack()
@@ -86,19 +90,9 @@ void LyrielBasicAttack::tryAttack()
         return;
     }
 
-    PlayerState* playerState = m_character->getPlayerState();
-    if (playerState != nullptr)
-    {
-        playerState->setState(PlayerStateType::Attacking);
-    }
+    beginAttackPresentation();
 
-    PlayerAnimationController* animationController = m_character->getAnimationController();
-    if (animationController != nullptr)
-    {
-        animationController->requestAttack();
-    }
-
-    m_attackStateTimer = m_attackLockDuration;
+    beginAttackWindow(m_attackLockDuration);
     m_cooldownTimer = m_cooldown;
 
     Debug::log("[LyrielBasicAttack] Shot arrow to target '%s'.", GameObjectAPI::getName(target));

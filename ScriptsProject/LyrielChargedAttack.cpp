@@ -7,7 +7,6 @@
 #include "LyrielArrowProjectile.h"
 #include "Damageable.h"
 #include "PlayerState.h"
-#include "PlayerAnimationController.h"
 
 #include <cmath>
 
@@ -82,6 +81,19 @@ void LyrielChargedAttack::drawGizmo()
 
     const Vector3 origin = TransformAPI::getGlobalPosition(ownerTransform);
     drawChargePreview(origin, previewDirection);
+}
+
+void LyrielChargedAttack::onAttackWindowUpdate()
+{
+    if (m_attackFacingDirection.LengthSquared() > 0.0001f)
+    {
+        faceDirection(m_attackFacingDirection);
+    }
+}
+
+void LyrielChargedAttack::onAttackWindowFinished()
+{
+    m_attackFacingDirection = Vector3::Zero;
 }
 
 bool LyrielChargedAttack::canStartCharge() const
@@ -168,22 +180,9 @@ void LyrielChargedAttack::releaseChargeAndShoot()
     applyChargedDamage(targets, damage);
     spawnChargedArrow(origin, forward);
 
-    if (m_character != nullptr)
-    {
-        PlayerState* playerState = m_character->getPlayerState();
-        if (playerState != nullptr)
-        {
-            playerState->setState(PlayerStateType::Attacking);
-        }
+    beginAttackPresentation();
 
-        PlayerAnimationController* animationController = m_character->getAnimationController();
-        if (animationController != nullptr)
-        {
-            animationController->requestAttack();
-        }
-    }
-
-    m_attackStateTimer = m_attackLockDuration;
+    beginAttackWindow(m_attackLockDuration);
     m_cooldownTimer = m_cooldown;
     m_chargeTimer = 0.0f;
 
