@@ -44,7 +44,7 @@ void Damageable::takeDamage(float amount)
 
     if (m_currentHp <= 0.0f)
     {
-        kill();
+        onHpDepleted();
     }
 }
 
@@ -138,6 +138,11 @@ void Damageable::onDamaged(float amount)
 void Damageable::onHealed(float amount)
 {
     Debug::log("%s healed %.2f HP. HP: %.2f / %.2f", GameObjectAPI::getName(m_owner), amount, m_currentHp, m_maxHp);
+}
+
+void Damageable::onHpDepleted()
+{
+    kill();
 }
 
 void Damageable::onDeath()

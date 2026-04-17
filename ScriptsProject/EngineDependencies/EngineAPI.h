@@ -19,6 +19,8 @@ class GameObject;
 class Transform;
 class Component;
 class Script;
+class AnimationComponent;
+class UISlider;
 
 ENGINE_API void registerScript(const char* scriptName, ScriptCreator creator);
 
@@ -38,23 +40,37 @@ namespace GameObjectAPI
 
     ENGINE_API Tag getTag(const GameObject* gameObject);
     ENGINE_API void setTag(GameObject* gameObject, Tag tag);
+
+    ENGINE_API GameObject* createGameObject(const char* name, GameObject* parentObject = nullptr);
+    ENGINE_API void removeGameObject(GameObject* gameObject);
+
+    //ENGINE_API GameObject* instantiate(GameObject* gameObject, const Vector3& position, const Vector3& rotationEuler, GameObject* parentObject = nullptr);
+    ENGINE_API GameObject* instantiatePrefab(const char* path, const Vector3& position, const Vector3& rotationEuler, GameObject* parentObject = nullptr);
 }
 
 namespace TransformAPI
 {
     ENGINE_API Vector3 getPosition(const Transform* transform);
     ENGINE_API void setPosition(Transform* transform, const Vector3& newPosition);
+    ENGINE_API Vector3 getGlobalPosition(const Transform* transform);
+    ENGINE_API void setGlobalPosition(Transform* transform, const Vector3& worldPosition);
 
     ENGINE_API Vector3 getScale(const Transform* transform);
     ENGINE_API void setScale(Transform* transform, const Vector3& newScale);
 
     ENGINE_API Vector3 getEulerDegrees(const Transform* transform);
     ENGINE_API void setRotationEuler(Transform* transform, const Vector3& eulerDegrees);
+    ENGINE_API Vector3 getGlobalEulerDegrees(const Transform* transform);
+    ENGINE_API void setGlobalRotationEuler(Transform* transform, const Vector3& eulerDegrees);
 
     ENGINE_API Vector3 getForward(const Transform* transform);
     ENGINE_API Vector3 getRight(const Transform* transform);
     ENGINE_API Vector3 getUp(const Transform* transform);
+
     ENGINE_API void translate(Transform* transform, const Vector3& delta);
+    ENGINE_API void translateGlobal(Transform* transform, const Vector3& delta);
+
+    ENGINE_API void lookAt(Transform* transform, const Vector3& targetWorldPosition);
 
     ENGINE_API Transform* getParent(Transform* transform);
     ENGINE_API const Transform* getParent(const Transform* transform);
@@ -72,6 +88,37 @@ namespace ComponentAPI
     ENGINE_API void setActive(Component* component, bool active);
 }
 
+namespace AnimationAPI
+{
+    ENGINE_API AnimationComponent* getAnimationComponent(GameObject* gameObject);
+    ENGINE_API const AnimationComponent* getAnimationComponent(const GameObject* gameObject);
+
+    ENGINE_API bool hasStateMachine(const AnimationComponent* animation);
+    ENGINE_API bool hasActiveState(const AnimationComponent* animation);
+    ENGINE_API const char* getActiveStateName(const AnimationComponent* animation);
+
+    ENGINE_API bool playState(AnimationComponent* animation, const char* stateName, float transitionTimeSeconds = 0.0f);
+    ENGINE_API bool playDefaultState(AnimationComponent* animation, float transitionTimeSeconds = 0.0f);
+    ENGINE_API bool sendTrigger(AnimationComponent* animation, const char* triggerName);
+
+    ENGINE_API void play(AnimationComponent* animation);
+    ENGINE_API void pause(AnimationComponent* animation);
+    ENGINE_API void stop(AnimationComponent* animation);
+    ENGINE_API bool isPlaying(const AnimationComponent* animation);
+
+    ENGINE_API float getPlaybackTime(const AnimationComponent* animation);
+    ENGINE_API void setPlaybackTime(AnimationComponent* animation, float seconds);
+    ENGINE_API float getPlaybackDuration(const AnimationComponent* animation);
+
+    ENGINE_API float getSpeedMultiplier(const AnimationComponent* animation);
+    ENGINE_API void setSpeedMultiplier(AnimationComponent* animation, float speedMultiplier);
+}
+
+namespace ApplicationAPI
+{
+    ENGINE_API void quit();
+}
+
 namespace SceneAPI
 {
     ENGINE_API std::vector<GameObject*> findAllGameObjectsByComponent(ComponentType componentType, bool onlyActive = true);
@@ -86,6 +133,8 @@ namespace SceneAPI
 namespace Time
 {
     ENGINE_API float getDeltaTime();
+	ENGINE_API void setTimeScale(float timeScale);
+	ENGINE_API float getTimeScale();
 }
 
 namespace Input
@@ -162,6 +211,12 @@ namespace NavigationAPI
     ENGINE_API bool canReachTarget(const Vector3& startPosition, const Vector3& endPosition, const Vector3& searchExtents);
     ENGINE_API float getPathLength(const Vector3* pathPoints, int pointCount);
     ENGINE_API bool findRandomReachablePointAround(const Vector3& centerPosition, float radius, Vector3& outPoint, const Vector3& searchExtents, int maxAttempts);
+}
+
+namespace SliderAPI
+{
+    ENGINE_API float getFillAmount(const UISlider* slider);
+    ENGINE_API void setFillAmount(UISlider* slider, float amount);
 }
 
 namespace DebugDrawAPI

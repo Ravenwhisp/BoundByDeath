@@ -1,22 +1,51 @@
 #pragma once
 
-#include "AbilityBase.h"
+#include "ScriptAPI.h"
 
-// Lyriel's basic attack — fires a single arrow directly at the current target (RB / R1).
-// Sibling script of LyrielCharacter on the same GameObject.
-// Reads m_basicArrowDamage from LyrielCharacter via static_cast<LyrielCharacter*>(m_character).
-//
-// Instant ability: activates and deactivates within the same frame.
-// A cooldown (m_cooldown) prevents spamming.
-class LyrielBasicAttack : public AbilityBase
+class PlayerTargetController;
+class ArrowPool;
+class LyrielArrowProjectile;
+class PlayerState;
+class PlayerRotation;
+class PlayerAnimationController;
+
+class LyrielBasicAttack : public Script
 {
     DECLARE_SCRIPT(LyrielBasicAttack)
 
 public:
     explicit LyrielBasicAttack(GameObject* owner);
 
-    void Start()  override;
+    void Start() override;
     void Update() override;
 
     ScriptFieldList getExposedFields() const override;
+
+private:
+    void tryAttack();
+    void spawnArrowToTarget(GameObject* target);
+    Transform* findArrowSpawnTransform() const;
+    void faceTarget(GameObject* target);
+    void updateCooldown();
+    void updateAttackStateTimer();
+
+private:
+    PlayerTargetController* m_targetController = nullptr;
+    ArrowPool* m_arrowPool = nullptr;
+    PlayerState* m_playerState = nullptr;
+    PlayerRotation* m_playerRotation = nullptr;
+    PlayerAnimationController* m_playerAnimationController = nullptr;
+
+    float m_cooldownTimer = 0.0f;
+    float m_attackStateTimer = 0.0f;
+
+    GameObject* m_attackFacingTarget = nullptr;
+
+public:
+    int m_playerIndex = 0;
+    float m_attackDamage = 10.0f;
+    float m_attackCooldown = 0.4f;
+    float m_arrowSpeed = 18.0f;
+    float m_attackLockDuration = 0.2f;
+    std::string m_arrowSpawnChildName = "ArrowSpawn";
 };
