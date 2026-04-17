@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "EnemyController.h"
 #include "EnemyDetectionAggro.h"
+#include "Damageable.h"
 #include <cmath>
 
 static const ScriptFieldInfo EnemyControllerFields[] =
@@ -11,6 +12,26 @@ static const ScriptFieldInfo EnemyControllerFields[] =
 	{ "Interval", ScriptFieldType::Float, offsetof(EnemyController, m_intervalRepath), { 0.0f, 50.0f, 0.1f } },
 	{ "Debug Enabled", ScriptFieldType::Bool, offsetof(EnemyController, m_debugEnabled) }
 };
+static Damageable* findDamageableOnTarget(GameObject* gameObject)
+{
+	if (!gameObject)
+	{
+		return nullptr;
+	}
+
+	Script* script = GameObjectAPI::getScript(gameObject, "PlayerDamageable");
+	Damageable* damageable = dynamic_cast<Damageable*>(script);
+
+	if (damageable)
+	{
+		return damageable;
+	}
+
+	script = GameObjectAPI::getScript(gameObject, "Damageable");
+	damageable = dynamic_cast<Damageable*>(script);
+
+	return damageable;
+}
 
 IMPLEMENT_SCRIPT_FIELDS(EnemyController, EnemyControllerFields)
 
@@ -52,9 +73,32 @@ void EnemyController::drawGizmo()
 
 bool EnemyController::hasValidTarget() const
 {
-	return m_enemyDetectionAggro && m_enemyDetectionAggro->getCurrentTarget() != nullptr;
-}
+	if (!m_enemyDetectionAggro)
+	{
+		return false;
+	}
 
+	Transform* targetTransform = m_enemyDetectionAggro->getCurrentTarget();
+	if (!targetTransform)
+	{
+		return false;
+	}
+
+	GameObject* targetObject = ComponentAPI::getOwner(targetTransform);
+	if (!targetObject)
+	{
+		return false;
+	}
+
+	Damageable* damageable = findDamageableOnTarget(targetObject);
+
+	if (damageable && damageable->isDead())
+	{
+		return false;
+	}
+
+	return true;
+}
 void EnemyController::updateCurrentTarget()
 {
 	if (!m_enemyDetectionAggro)

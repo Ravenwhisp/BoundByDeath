@@ -134,7 +134,14 @@ void EnemyATTACK::performAttack()
 		}
 		return;
 	}
-
+	if (damageable->isDead())
+	{
+		if (m_debugEnabled)
+		{
+			Debug::log("[EnemyATTACK] Target '%s' is already dead. Attack skipped.", GameObjectAPI::getName(targetObject));
+		}
+		return;
+	}
 	damageable->takeDamage(m_attackDamage);
 
 	if (m_debugEnabled)
