@@ -1,14 +1,9 @@
 #pragma once
 
-#include "ScriptAPI.h"
+#include "LyrielAbilityBase.h"
 #include <vector>
 
-class ArrowPool;
-class PlayerState;
-class PlayerRotation;
-class PlayerAnimationController;
-
-class LyrielChargedAttack : public Script
+class LyrielChargedAttack : public LyrielAbilityBase
 {
     DECLARE_SCRIPT(LyrielChargedAttack)
 
@@ -22,9 +17,6 @@ public:
     ScriptFieldList getExposedFields() const override;
 
 private:
-    void updateCooldown();
-    void updateAttackStateTimer();
-
     void beginCharge();
     void updateCharge();
     void releaseChargeAndShoot();
@@ -32,12 +24,7 @@ private:
     bool canStartCharge() const;
     bool canShoot() const;
 
-    Transform* findArrowSpawnTransform() const;
-
     Vector3 computeAimDirection() const;
-    void faceDirection(const Vector3& direction);
-    Vector3 getFallbackFacingDirection() const;
-
     float computeChargedDamage() const;
 
     void collectEnemiesInLine(const Vector3& origin, const Vector3& forward, std::vector<GameObject*>& outTargets);
@@ -48,11 +35,12 @@ private:
 
     bool isAimStickValid(const Vector3& direction) const;
 
-    void setAbilityLocked(bool locked);
+private:
+    bool m_isCharging = false;
+    float m_chargeTimer = 0.0f;
+    Vector3 m_currentAimDirection = Vector3::Zero;
 
 public:
-    int m_playerIndex = 0;
-
     float m_minDamage = 5.0f;
     float m_maxDamage = 30.0f;
     float m_maxChargeTime = 2.0f;
@@ -64,21 +52,4 @@ public:
     float m_attackLockDuration = 0.3f;
 
     float m_arrowSpeed = 20.0f;
-
-    std::string m_arrowSpawnChildName = "ArrowSpawn";
-
-private:
-    ArrowPool* m_arrowPool = nullptr;
-    PlayerState* m_playerState = nullptr;
-    PlayerRotation* m_playerRotation = nullptr;
-    PlayerAnimationController* m_playerAnimationController = nullptr;
-
-    float m_cooldownTimer = 0.0f;
-    float m_attackStateTimer = 0.0f;
-
-    bool m_isCharging = false;
-    float m_chargeTimer = 0.0f;
-
-    Vector3 m_currentAimDirection = Vector3::Zero;
-    Vector3 m_attackFacingDirection = Vector3::Zero;
 };

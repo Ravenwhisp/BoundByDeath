@@ -1,18 +1,18 @@
 #include "pch.h"
 #include "LyrielChargedAttack.h"
 
+#include "LyrielCharacter.h"
+#include "CharacterBase.h"
 #include "ArrowPool.h"
 #include "LyrielArrowProjectile.h"
 #include "Damageable.h"
 #include "PlayerState.h"
-#include "PlayerRotation.h"
 #include "PlayerAnimationController.h"
 
 #include <cmath>
 
 static const ScriptFieldInfo LyrielChargedAttackFields[] =
 {
-    { "Player Index", ScriptFieldType::Int, offsetof(LyrielChargedAttack, m_playerIndex) },
     { "Min Damage", ScriptFieldType::Float, offsetof(LyrielChargedAttack, m_minDamage), { 0.0f, 100.0f, 0.5f } },
     { "Max Damage", ScriptFieldType::Float, offsetof(LyrielChargedAttack, m_maxDamage), { 0.0f, 200.0f, 0.5f } },
     { "Max Charge Time", ScriptFieldType::Float, offsetof(LyrielChargedAttack, m_maxChargeTime), { 0.1f, 5.0f, 0.05f } },
@@ -20,77 +20,37 @@ static const ScriptFieldInfo LyrielChargedAttackFields[] =
     { "Line Half Width", ScriptFieldType::Float, offsetof(LyrielChargedAttack, m_lineHalfWidth), { 0.1f, 10.0f, 0.05f } },
     { "Attack Cooldown", ScriptFieldType::Float, offsetof(LyrielChargedAttack, m_attackCooldown), { 0.0f, 10.0f, 0.05f } },
     { "Attack Lock Duration", ScriptFieldType::Float, offsetof(LyrielChargedAttack, m_attackLockDuration), { 0.0f, 2.0f, 0.01f } },
-    { "Arrow Speed", ScriptFieldType::Float, offsetof(LyrielChargedAttack, m_arrowSpeed), { 0.0f, 100.0f, 0.5f } },
-    { "Arrow Spawn Child Name", ScriptFieldType::String, offsetof(LyrielChargedAttack, m_arrowSpawnChildName) }
+    { "Arrow Speed", ScriptFieldType::Float, offsetof(LyrielChargedAttack, m_arrowSpeed), { 0.0f, 100.0f, 0.5f } }
 };
 
 IMPLEMENT_SCRIPT_FIELDS(LyrielChargedAttack, LyrielChargedAttackFields)
 
 LyrielChargedAttack::LyrielChargedAttack(GameObject* owner)
-    : Script(owner)
+    : LyrielAbilityBase(owner)
 {
 }
 
 void LyrielChargedAttack::Start()
 {
-    Script* arrowPoolScript = GameObjectAPI::getScript(getOwner(), "ArrowPool");
-    m_arrowPool = dynamic_cast<ArrowPool*>(arrowPoolScript);
-
-    Script* stateScript = GameObjectAPI::getScript(getOwner(), "PlayerState");
-    m_playerState = dynamic_cast<PlayerState*>(stateScript);
-
-    Script* rotationScript = GameObjectAPI::getScript(getOwner(), "PlayerRotation");
-    m_playerRotation = dynamic_cast<PlayerRotation*>(rotationScript);
-
-    Script* animationScript = GameObjectAPI::getScript(getOwner(), "PlayerAnimationController");
-    m_playerAnimationController = dynamic_cast<PlayerAnimationController*>(animationScript);
-
-    if (m_arrowPool == nullptr)
-    {
-        Debug::log("[LyrielChargedAttack] ArrowPool not found on owner.");
-    }
-
-    if (m_playerState == nullptr)
-    {
-        Debug::log("[LyrielChargedAttack] PlayerState not found on owner.");
-    }
-
-    if (m_playerRotation == nullptr)
-    {
-        Debug::log("[LyrielChargedAttack] PlayerRotation not found on owner.");
-    }
-
-    if (m_playerAnimationController == nullptr)
-    {
-        Debug::log("[LyrielChargedAttack] PlayerAnimationController not found on owner.");
-    }
+    LyrielAbilityBase::Start();
+    m_cooldown = m_attackCooldown;
 }
 
 void LyrielChargedAttack::Update()
 {
-    updateCooldown();
+    LyrielAbilityBase::Update();
 
-    if (m_attackStateTimer > 0.0f)
-    {
-        if (m_attackFacingDirection.LengthSquared() > 0.0001f)
-        {
-            faceDirection(m_attackFacingDirection);
-        }
-    }
-
-    updateAttackStateTimer();
-
-    if (canStartCharge() && Input::isRightTriggerJustPressed(m_playerIndex))
+    if (canStartCharge() && Input::isRightTriggerJustPressed(getPlayerIndex()))
     {
         beginCharge();
     }
 
-    if (m_isCharging && Input::isRightTriggerPressed(m_playerIndex))
+    if (m_isCharging && Input::isRightTriggerPressed(getPlayerIndex()))
     {
         updateCharge();
     }
 
-    if (m_isCharging && Input::isRightTriggerReleased(m_playerIndex))
+    if (m_isCharging && Input::isRightTriggerReleased(getPlayerIndex()))
     {
         releaseChargeAndShoot();
     }
@@ -115,92 +75,28 @@ void LyrielChargedAttack::drawGizmo()
     }
 
     Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
+    if (ownerTransform == nullptr)
+    {
+        return;
+    }
+
     const Vector3 origin = TransformAPI::getGlobalPosition(ownerTransform);
-
-    float chargeRatio = 0.0f;
-    if (m_maxChargeTime > 0.0001f)
-    {
-        chargeRatio = m_chargeTimer / m_maxChargeTime;
-    }
-
-    if (chargeRatio > 1.0f)
-    {
-        chargeRatio = 1.0f;
-    }
-
     drawChargePreview(origin, previewDirection);
-}
-
-void LyrielChargedAttack::updateCooldown()
-{
-    if (m_cooldownTimer <= 0.0f)
-    {
-        return;
-    }
-
-    m_cooldownTimer -= Time::getDeltaTime();
-    if (m_cooldownTimer < 0.0f)
-    {
-        m_cooldownTimer = 0.0f;
-    }
-}
-
-void LyrielChargedAttack::updateAttackStateTimer()
-{
-    if (m_attackStateTimer <= 0.0f)
-    {
-        return;
-    }
-
-    m_attackStateTimer -= Time::getDeltaTime();
-    if (m_attackStateTimer <= 0.0f)
-    {
-        m_attackStateTimer = 0.0f;
-        m_attackFacingDirection = Vector3::Zero;
-
-        setAbilityLocked(false);
-
-        if (m_playerState != nullptr && m_playerState->isAttacking())
-        {
-            m_playerState->setState(PlayerStateType::Normal);
-        }  
-    }
 }
 
 bool LyrielChargedAttack::canStartCharge() const
 {
-    if (m_cooldownTimer > 0.0f)
-    {
-        return false;
-    }
-
-    if (m_playerState == nullptr)
-    {
-        return false;
-    }
-
-    if (m_playerState->isDowned() || m_playerState->isUsingAbility())
-    {
-        return false;
-    }
-
-    return true;
+    return canStartAbility();
 }
 
 bool LyrielChargedAttack::canShoot() const
 {
-    if (m_playerState != nullptr && m_playerState->isDowned())
-    {
-        return false;
-    }
-
-    return true;
+    return m_character != nullptr && !m_character->isDowned();
 }
 
 void LyrielChargedAttack::beginCharge()
 {
     m_isCharging = true;
-
     setAbilityLocked(true);
 
     m_chargeTimer = 0.0f;
@@ -248,8 +144,8 @@ void LyrielChargedAttack::releaseChargeAndShoot()
     }
 
     const Vector3 origin = TransformAPI::getGlobalPosition(spawnTransform);
-    Vector3 forward = m_currentAimDirection;
 
+    Vector3 forward = m_currentAimDirection;
     if (forward.LengthSquared() <= 0.0001f)
     {
         forward = getFallbackFacingDirection();
@@ -264,17 +160,6 @@ void LyrielChargedAttack::releaseChargeAndShoot()
 
     const float damage = computeChargedDamage();
 
-    float chargeRatio = 0.0f;
-    if (m_maxChargeTime > 0.0001f)
-    {
-        chargeRatio = m_chargeTimer / m_maxChargeTime;
-    }
-
-    if (chargeRatio > 1.0f)
-    {
-        chargeRatio = 1.0f;
-    }
-
     m_attackFacingDirection = forward;
     faceDirection(forward);
 
@@ -283,78 +168,33 @@ void LyrielChargedAttack::releaseChargeAndShoot()
     applyChargedDamage(targets, damage);
     spawnChargedArrow(origin, forward);
 
-    if (m_playerState != nullptr)
+    if (m_character != nullptr)
     {
-        m_playerState->setState(PlayerStateType::Attacking);
-    }
-
-    if (m_playerAnimationController != nullptr)
-    {
-        m_playerAnimationController->requestAttack();
-    }
-
-    m_attackStateTimer = m_attackLockDuration;
-    m_cooldownTimer = m_attackCooldown;
-    m_chargeTimer = 0.0f;
-
-    Debug::log("[LyrielChargedAttack] Fired charged shot. Targets hit: %d Damage: %.2f", static_cast<int>(targets.size()), damage);
-}
-
-Transform* LyrielChargedAttack::findArrowSpawnTransform() const
-{
-    Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
-
-    if (!m_arrowSpawnChildName.empty())
-    {
-        Transform* spawnTransform = TransformAPI::findChildByName(ownerTransform, m_arrowSpawnChildName.c_str());
-        if (spawnTransform != nullptr)
+        PlayerState* playerState = m_character->getPlayerState();
+        if (playerState != nullptr)
         {
-            return spawnTransform;
+            playerState->setState(PlayerStateType::Attacking);
+        }
+
+        PlayerAnimationController* animationController = m_character->getAnimationController();
+        if (animationController != nullptr)
+        {
+            animationController->requestAttack();
         }
     }
 
-    return ownerTransform;
+    m_attackStateTimer = m_attackLockDuration;
+    m_cooldownTimer = m_cooldown;
+    m_chargeTimer = 0.0f;
+
+    Debug::log("[LyrielChargedAttack] Fired charged shot. Targets hit: %d Damage: %.2f",
+        static_cast<int>(targets.size()), damage);
 }
 
 Vector3 LyrielChargedAttack::computeAimDirection() const
 {
-    const Vector2 lookAxis = Input::getLookAxis(m_playerIndex);
+    const Vector2 lookAxis = Input::getLookAxis(getPlayerIndex());
     return Vector3(lookAxis.x, 0.0f, lookAxis.y);
-}
-
-void LyrielChargedAttack::faceDirection(const Vector3& direction)
-{
-    if (m_playerRotation == nullptr)
-    {
-        return;
-    }
-
-    Vector3 flatDirection = direction;
-    flatDirection.y = 0.0f;
-
-    if (flatDirection.LengthSquared() <= 0.0001f)
-    {
-        return;
-    }
-
-    flatDirection.Normalize();
-    m_playerRotation->applyFacingFromDirection(getOwner(), flatDirection, Time::getDeltaTime());
-}
-
-Vector3 LyrielChargedAttack::getFallbackFacingDirection() const
-{
-    Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
-
-    Vector3 forward = TransformAPI::getForward(ownerTransform);
-    forward.y = 0.0f;
-
-    if (forward.LengthSquared() <= 0.0001f)
-    {
-        return Vector3::Zero;
-    }
-
-    forward.Normalize();
-    return forward;
 }
 
 float LyrielChargedAttack::computeChargedDamage() const
@@ -376,16 +216,13 @@ float LyrielChargedAttack::computeChargedDamage() const
         chargeRatio = 1.0f;
     }
 
-    float damage = m_minDamage + (m_maxDamage - m_minDamage) * chargeRatio;
-
-    return damage;
+    return m_minDamage + (m_maxDamage - m_minDamage) * chargeRatio;
 }
 
 bool LyrielChargedAttack::isAimStickValid(const Vector3& direction) const
 {
     Vector3 flatDirection = direction;
     flatDirection.y = 0.0f;
-
     return flatDirection.LengthSquared() > 0.0001f;
 }
 
@@ -415,6 +252,10 @@ void LyrielChargedAttack::collectEnemiesInLine(const Vector3& origin, const Vect
         }
 
         Transform* enemyTransform = GameObjectAPI::getTransform(enemy);
+        if (enemyTransform == nullptr)
+        {
+            continue;
+        }
 
         Vector3 enemyPosition = TransformAPI::getGlobalPosition(enemyTransform);
         enemyPosition.y = origin.y;
@@ -465,12 +306,18 @@ void LyrielChargedAttack::applyChargedDamage(const std::vector<GameObject*>& tar
 
 void LyrielChargedAttack::spawnChargedArrow(const Vector3& origin, const Vector3& forward)
 {
-    if (m_arrowPool == nullptr)
+    if (m_lyriel == nullptr)
     {
         return;
     }
 
-    LyrielArrowProjectile* arrow = m_arrowPool->acquireArrow();
+    ArrowPool* arrowPool = m_lyriel->getArrowPool();
+    if (arrowPool == nullptr)
+    {
+        return;
+    }
+
+    LyrielArrowProjectile* arrow = arrowPool->acquireArrow();
     if (arrow == nullptr)
     {
         Debug::log("[LyrielChargedAttack] No available arrow in pool for charged shot visual.");
@@ -530,14 +377,6 @@ void LyrielChargedAttack::drawChargePreview(const Vector3& origin, const Vector3
     DebugDrawAPI::drawLine(leftStart, leftEnd, previewColor, 0, true);
     DebugDrawAPI::drawLine(rightStart, rightEnd, previewColor, 0, true);
     DebugDrawAPI::drawLine(leftEnd, rightEnd, previewColor, 0, true);
-}
-
-void LyrielChargedAttack::setAbilityLocked(bool locked)
-{
-    if (m_playerState != nullptr)
-    {
-        m_playerState->setUsingAbility(locked);
-    }
 }
 
 IMPLEMENT_SCRIPT(LyrielChargedAttack)
