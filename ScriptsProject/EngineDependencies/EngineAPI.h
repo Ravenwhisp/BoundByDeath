@@ -20,6 +20,7 @@ class Transform;
 class Component;
 class Script;
 class AnimationComponent;
+class UISlider;
 
 ENGINE_API void registerScript(const char* scriptName, ScriptCreator creator);
 
@@ -113,6 +114,11 @@ namespace AnimationAPI
     ENGINE_API void setSpeedMultiplier(AnimationComponent* animation, float speedMultiplier);
 }
 
+namespace ApplicationAPI
+{
+    ENGINE_API void quit();
+}
+
 namespace SceneAPI
 {
     ENGINE_API std::vector<GameObject*> findAllGameObjectsByComponent(ComponentType componentType, bool onlyActive = true);
@@ -127,6 +133,8 @@ namespace SceneAPI
 namespace Time
 {
     ENGINE_API float getDeltaTime();
+	ENGINE_API void setTimeScale(float timeScale);
+	ENGINE_API float getTimeScale();
 }
 
 namespace Input
@@ -203,6 +211,12 @@ namespace NavigationAPI
     ENGINE_API bool canReachTarget(const Vector3& startPosition, const Vector3& endPosition, const Vector3& searchExtents);
     ENGINE_API float getPathLength(const Vector3* pathPoints, int pointCount);
     ENGINE_API bool findRandomReachablePointAround(const Vector3& centerPosition, float radius, Vector3& outPoint, const Vector3& searchExtents, int maxAttempts);
+}
+
+namespace SliderAPI
+{
+    ENGINE_API float getFillAmount(const UISlider* slider);
+    ENGINE_API void setFillAmount(UISlider* slider, float amount);
 }
 
 namespace DebugDrawAPI

@@ -2,6 +2,8 @@
 
 #include "ScriptAPI.h"
 
+class PlayerAnimationController;
+
 class PlayerMovement : public Script
 {
     DECLARE_SCRIPT(PlayerMovement)
@@ -23,6 +25,9 @@ public:
         moveInternal(owner, displacement);
     }
 
+    void setMoving(bool isMoving);
+    bool isMoving() const { return m_isMoving; }
+
 public:
     float m_moveSpeed = 3.5f;
 
@@ -32,5 +37,10 @@ public:
 private:
     void moveInternal(GameObject* owner, const Vector3& desiredPos) const;
     void applyTranslation(Transform* transform, const Vector3& currentPos, const Vector3& desiredPos) const;
+    PlayerAnimationController* findAnimationController();
+
+private:
+    bool m_isMoving = false;
+    PlayerAnimationController* m_playerAnimationController = nullptr;
 
 };
