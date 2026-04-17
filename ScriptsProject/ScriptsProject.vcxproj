@@ -118,7 +118,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)../Engine/Assets/;$(SolutionDir)EngineDependencies</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)../Engine/Assets/;$(SolutionDir)EngineDependencies;$(ProjectDir)../Engine/Assets/Scripts</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -139,7 +139,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)../Engine/Assets/;$(SolutionDir)EngineDependencies</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)../Engine/Assets/;$(SolutionDir)EngineDependencies;$(ProjectDir)../Engine/Assets/Scripts</AdditionalIncludeDirectories>
       <AdditionalHeaderUnitDependencies>
       </AdditionalHeaderUnitDependencies>
     </ClCompile>
@@ -158,8 +158,10 @@
     <ClInclude Include="..\Engine\Assets\Scripts\PlayerController.h" />
     <ClInclude Include="..\Engine\Assets\Scripts\TestingButton.h" />
     <ClInclude Include="..\Engine\Assets\Scripts\TriggerArea.h" />
+    <ClInclude Include="AbilityBase.h" />
     <ClInclude Include="ArrowPool.h" />
     <ClInclude Include="Bound.h" />
+    <ClInclude Include="CharacterBase.h" />
     <ClInclude Include="Damageable.h" />
     <ClInclude Include="DebugDamageTrigger.h" />
     <ClInclude Include="DebugDrawTest.h" />
@@ -170,9 +172,12 @@
     <ClInclude Include="EnemyIDLE.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="DefeatConditionManager.h" />
+    <ClInclude Include="LyrielAbilityBase.h" />
     <ClInclude Include="LyrielArrowProjectile.h" />
     <ClInclude Include="LyrielArrowVolley.h" />
     <ClInclude Include="LyrielBasicAttack.h" />
+    <ClInclude Include="LyrielCharacter.h" />
+    <ClInclude Include="LyrielChargedAttack.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="SpikeTrap.h" />
     <ClInclude Include="PlayerAnimationController.h" />
@@ -192,8 +197,10 @@
     <ClCompile Include="..\Engine\Assets\Scripts\PlayerController.cpp" />
     <ClCompile Include="..\Engine\Assets\Scripts\TestingButton.cpp" />
     <ClCompile Include="..\Engine\Assets\Scripts\TriggerArea.cpp" />
+    <ClCompile Include="AbilityBase.cpp" />
     <ClCompile Include="ArrowPool.cpp" />
     <ClCompile Include="Bound.cpp" />
+    <ClCompile Include="CharacterBase.cpp" />
     <ClCompile Include="Damageable.cpp" />
     <ClCompile Include="DebugDamageTrigger.cpp" />
     <ClCompile Include="DebugDrawTest.cpp" />
@@ -208,9 +215,12 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="LyrielAbilityBase.cpp" />
     <ClCompile Include="LyrielArrowProjectile.cpp" />
     <ClCompile Include="LyrielArrowVolley.cpp" />
     <ClCompile Include="LyrielBasicAttack.cpp" />
+    <ClCompile Include="LyrielCharacter.cpp" />
+    <ClCompile Include="LyrielChargedAttack.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

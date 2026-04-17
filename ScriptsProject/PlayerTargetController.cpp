@@ -1,10 +1,11 @@
 #include "pch.h"
 #include "PlayerTargetController.h"
 
+#include "CharacterBase.h"
+
 static const ScriptFieldInfo playerTargetControllerFields[] =
 {
-    { "Target Range", ScriptFieldType::Float, offsetof(PlayerTargetController, m_targetRange), { 0.0f, 20.0f, 0.05f } },
-    { "Player Index", ScriptFieldType::Int, offsetof(PlayerTargetController, m_playerIndex) }
+    { "Target Range", ScriptFieldType::Float, offsetof(PlayerTargetController, m_targetRange), { 0.0f, 20.0f, 0.05f } }
 };
 
 IMPLEMENT_SCRIPT_FIELDS(PlayerTargetController, playerTargetControllerFields)
@@ -16,6 +17,18 @@ PlayerTargetController::PlayerTargetController(GameObject* owner)
 
 void PlayerTargetController::Start()
 {
+    Script* characterScript = GameObjectAPI::getScript(getOwner(), "LyrielCharacter");
+    if (characterScript == nullptr)
+    {
+        characterScript = GameObjectAPI::getScript(getOwner(), "DeathCharacter");
+    }
+
+    m_character = static_cast<CharacterBase*>(characterScript);
+
+    if (m_character == nullptr)
+    {
+        Debug::warn("PlayerTargetController on '%s' could not find CharacterBase-derived script on the same GameObject.", GameObjectAPI::getName(getOwner()));
+    }
 }
 
 void PlayerTargetController::Update()
@@ -23,7 +36,12 @@ void PlayerTargetController::Update()
     updateEnemiesInRange();
     ensureValidCurrentTarget();
 
-    if (Input::isRightStickJustPressed(m_playerIndex))
+    if (m_character == nullptr)
+    {
+        return;
+    }
+
+    if (Input::isRightStickJustPressed(m_character->getPlayerIndex()))
     {
         cycleTarget();
     }
@@ -35,6 +53,10 @@ void PlayerTargetController::drawGizmo()
 
     GameObject* owner = getOwner();
     Transform* ownerTransform = GameObjectAPI::getTransform(owner);
+    if (ownerTransform == nullptr)
+    {
+        return;
+    }
 
     const Vector3 ownerPosition = TransformAPI::getPosition(ownerTransform);
 
@@ -135,6 +157,11 @@ bool PlayerTargetController::isEnemyInRange(GameObject* enemy) const
 
     Transform* ownerTransform = GameObjectAPI::getTransform(owner);
     Transform* enemyTransform = GameObjectAPI::getTransform(enemy);
+
+    if (ownerTransform == nullptr || enemyTransform == nullptr)
+    {
+        return false;
+    }
 
     const Vector3 ownerPosition = TransformAPI::getPosition(ownerTransform);
     const Vector3 enemyPosition = TransformAPI::getPosition(enemyTransform);
