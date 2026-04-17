@@ -40,6 +40,9 @@
     <Filter Include="Character\Player\Animation">
       <UniqueIdentifier>{4a98ebe5-a59f-4a7d-b70e-e5078225b0c9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Character\Lyriel">
+      <UniqueIdentifier>{baeff935-96bc-442d-af85-e9a86e4b1eb2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -104,17 +107,37 @@
     <ClInclude Include="PlayerAnimationController.h">
       <Filter>Character\Player\Animation</Filter>
     </ClInclude>
-    <ClInclude Include="ArrowPool.h" />
-    <ClInclude Include="Bound.h" />
-    <ClInclude Include="LyrielArrowProjectile.h" />
-    <ClInclude Include="LyrielBasicAttack.h" />
-    <ClInclude Include="LyrielArrowVolley.h" />
-    <ClInclude Include="AbilityBase.h" />
-    <ClInclude Include="CharacterBase.h" />
-    <ClInclude Include="LyrielAbilityBase.h" />
-    <ClInclude Include="LyrielCharacter.h" />
-    <ClInclude Include="LyrielChargedAttack.h" />
     <ClInclude Include="SpikeTrap.h" />
+    <ClInclude Include="CharacterBase.h">
+      <Filter>Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Bound.h">
+      <Filter>Character\Player\Bound</Filter>
+    </ClInclude>
+    <ClInclude Include="AbilityBase.h">
+      <Filter>Character</Filter>
+    </ClInclude>
+    <ClInclude Include="LyrielAbilityBase.h">
+      <Filter>Character\Lyriel</Filter>
+    </ClInclude>
+    <ClInclude Include="LyrielArrowProjectile.h">
+      <Filter>Character\Lyriel</Filter>
+    </ClInclude>
+    <ClInclude Include="LyrielArrowVolley.h">
+      <Filter>Character\Lyriel</Filter>
+    </ClInclude>
+    <ClInclude Include="LyrielBasicAttack.h">
+      <Filter>Character\Lyriel</Filter>
+    </ClInclude>
+    <ClInclude Include="LyrielCharacter.h">
+      <Filter>Character\Lyriel</Filter>
+    </ClInclude>
+    <ClInclude Include="ArrowPool.h">
+      <Filter>Character\Lyriel</Filter>
+    </ClInclude>
+    <ClInclude Include="LyrielChargedAttack.h">
+      <Filter>Character\Lyriel</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
@@ -180,16 +203,36 @@
     <ClCompile Include="PlayerAnimationController.cpp">
       <Filter>Character\Player\Animation</Filter>
     </ClCompile>
-    <ClCompile Include="ArrowPool.cpp" />
-    <ClCompile Include="Bound.cpp" />
-    <ClCompile Include="LyrielArrowProjectile.cpp" />
-    <ClCompile Include="LyrielBasicAttack.cpp" />
-    <ClCompile Include="LyrielArrowVolley.cpp" />
-    <ClCompile Include="AbilityBase.cpp" />
-    <ClCompile Include="CharacterBase.cpp" />
-    <ClCompile Include="LyrielAbilityBase.cpp" />
-    <ClCompile Include="LyrielCharacter.cpp" />
-    <ClCompile Include="LyrielChargedAttack.cpp" />
     <ClCompile Include="SpikeTrap.cpp" />
+    <ClCompile Include="CharacterBase.cpp">
+      <Filter>Character</Filter>
+    </ClCompile>
+    <ClCompile Include="Bound.cpp">
+      <Filter>Character\Player\Bound</Filter>
+    </ClCompile>
+    <ClCompile Include="AbilityBase.cpp">
+      <Filter>Character</Filter>
+    </ClCompile>
+    <ClCompile Include="LyrielAbilityBase.cpp">
+      <Filter>Character\Lyriel</Filter>
+    </ClCompile>
+    <ClCompile Include="LyrielArrowProjectile.cpp">
+      <Filter>Character\Lyriel</Filter>
+    </ClCompile>
+    <ClCompile Include="LyrielArrowVolley.cpp">
+      <Filter>Character\Lyriel</Filter>
+    </ClCompile>
+    <ClCompile Include="LyrielBasicAttack.cpp">
+      <Filter>Character\Lyriel</Filter>
+    </ClCompile>
+    <ClCompile Include="LyrielCharacter.cpp">
+      <Filter>Character\Lyriel</Filter>
+    </ClCompile>
+    <ClCompile Include="ArrowPool.cpp">
+      <Filter>Character\Lyriel</Filter>
+    </ClCompile>
+    <ClCompile Include="LyrielChargedAttack.cpp">
+      <Filter>Character\Lyriel</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
