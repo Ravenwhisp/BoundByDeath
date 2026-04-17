@@ -22,6 +22,9 @@ protected:
     void onDashUpdate(float dt) override;
 
 public:
+    float m_dashDurationLyriel = 0.15f;
+    float m_dashDistanceLyriel = 3.0f;
+    float m_dashCooldown = 0.5f;
     float m_chargeRechargeTime = 3.0f;
 
 private:

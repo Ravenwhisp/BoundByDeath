@@ -7,16 +7,6 @@
 
 #define PI 3.1415926535897931f
 
-static const ScriptFieldInfo AbilityDashFields[] =
-{
-    { "Dash Duration", ScriptFieldType::Float, offsetof(AbilityDash, m_dashDuration), { 0.0f, 1.0f, 0.01f } },
-    { "Dash Distance", ScriptFieldType::Float, offsetof(AbilityDash, m_dashDistance), { 0.0f, 10.0f, 0.1f } },
-    { "Dash Cooldown", ScriptFieldType::Float, offsetof(AbilityDash, m_dashCooldown), { 0.0f, 5.0f, 0.01f } },
-    { "Enable Debug",  ScriptFieldType::Bool, offsetof(AbilityDash, m_debugEnabled) }
-};
-
-IMPLEMENT_SCRIPT_FIELDS(AbilityDash, AbilityDashFields)
-
 AbilityDash::AbilityDash(GameObject* owner)
     : AbilityBase(owner)
 {
@@ -28,8 +18,6 @@ void AbilityDash::Start()
 
     m_playerController = findControllerScript(getOwner());
     m_playerMovement = findMovementScript(getOwner());
-
-    m_cooldown = m_dashCooldown;
 
     if (m_character == nullptr)
     {
@@ -191,4 +179,3 @@ PlayerMovement* AbilityDash::findMovementScript(GameObject* owner) const
     return static_cast<PlayerMovement*>(script);
 }
 
-IMPLEMENT_SCRIPT(AbilityDash)

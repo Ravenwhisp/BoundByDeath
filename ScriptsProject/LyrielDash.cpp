@@ -3,6 +3,9 @@
 
 static const ScriptFieldInfo LyrielDashFields[] =
 {
+    { "Dash Duration", ScriptFieldType::Float, offsetof(LyrielDash, m_dashDurationLyriel), { 0.0f, 1.0f, 0.01f } },
+    { "Dash Distance", ScriptFieldType::Float, offsetof(LyrielDash, m_dashDistanceLyriel), { 0.0f, 10.0f, 0.1f } },
+    { "Dash Cooldown", ScriptFieldType::Float, offsetof(LyrielDash, m_dashCooldown), { 0.0f, 5.0f, 0.01f } },
     { "Charge Recharge Time", ScriptFieldType::Float, offsetof(LyrielDash, m_chargeRechargeTime), { 0.1f, 10.0f, 0.1f } }
 };
 
@@ -15,6 +18,10 @@ LyrielDash::LyrielDash(GameObject* owner)
 
 void LyrielDash::Start()
 {
+    m_dashDuration = m_dashDurationLyriel;
+    m_dashDistance = m_dashDistanceLyriel;
+    m_cooldown = m_dashCooldown;
+
     AbilityDash::Start();
 }
 
