@@ -2,8 +2,8 @@
 #include "ScriptAPI.h"
 #include "AbilityBase.h"
 
-
 class EnemyDetectionAggro;
+class PlayerRotation;
 
 class DeathTaunt : public AbilityBase
 {
@@ -24,10 +24,23 @@ protected:
     void onDeactivate() override;
 
 private:
-    void applyTauntToEnemiesInCone() const;
+    void beginAim();
+    void updateAim();
+    void releaseAimAndCast();
+
+    void applyTauntToEnemiesInCone(const Vector3& ownerForward) const;
     bool isEnemyInsideTauntCone(GameObject* enemy, const Vector3& ownerPosition, const Vector3& ownerForward) const;
 
+    Vector3 computeAimDirection() const;
+    Vector3 getFallbackFacingDirection() const;
+    void faceDirection(const Vector3& direction);
+    bool isAimStickValid(const Vector3& direction) const;
+
+    PlayerRotation* m_playerRotation = nullptr;
+
     float m_debugConeTimer = 0.0f;
+    bool m_isAiming = false;
+    Vector3 m_currentAimDirection = Vector3::Zero;
 
 public:
     float m_TauntCooldownSeconds = 8.0f;

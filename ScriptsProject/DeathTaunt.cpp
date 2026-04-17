@@ -3,6 +3,7 @@
 #include "CharacterBase.h"
 #include "DeathCharacter.h"
 #include "EnemyDetectionAggro.h"
+#include "PlayerRotation.h"
 
 #include <cmath>
 
@@ -45,6 +46,9 @@ void DeathTaunt::Start()
     m_character = static_cast<CharacterBase*>(
         GameObjectAPI::getScript(m_owner, "DeathCharacter"));
 
+    Script* rotationScript = GameObjectAPI::getScript(m_owner, "PlayerRotation");
+    m_playerRotation = dynamic_cast<PlayerRotation*>(rotationScript);
+
     if (m_character == nullptr)
     {
         Debug::warn("DeathTaunt: DeathCharacter not found on this GameObject.");
@@ -58,24 +62,32 @@ void DeathTaunt::Update()
     // MUST be called first — handles dead guard, force-cancel on death, cooldown tick.
     AbilityBase::Update();
 
-    if (m_character == nullptr)
+    if (m_character == nullptr || m_character->isDead())
     {
+        m_isAiming = false;
+        m_currentAimDirection = Vector3::Zero;
         return;
     }
 
-    const bool leftTriggerPressed = Input::isLeftTriggerJustPressed(getPlayerIndex()); 
-    bool canActivateNow = canActivate();
-    bool isActiveNow = isActive();
-
-    if (!isActiveNow && canActivateNow && (leftTriggerPressed))
+    if (!m_isAiming && canActivate() && Input::isLeftTriggerJustPressed(getPlayerIndex()))
     {
-        onActivate();
-        applyTauntToEnemiesInCone();
-        m_debugConeTimer = 0.25f;
-        onDeactivate();
+        beginAim();
     }
 
-    if (m_debugConeTimer > 0.0f)
+    if (m_isAiming)
+    {
+        if (Input::isLeftTriggerPressed(getPlayerIndex()))
+        {
+            updateAim();
+        }
+
+        if (Input::isLeftTriggerReleased(getPlayerIndex()))
+        {
+            releaseAimAndCast();
+        }
+    }
+
+    if (!m_isAiming && m_debugConeTimer > 0.0f)
     {
         m_debugConeTimer -= Time::getDeltaTime();
         if (m_debugConeTimer < 0.0f)
@@ -87,7 +99,7 @@ void DeathTaunt::Update()
 
 void DeathTaunt::drawGizmo()
 {
-    if (m_debugConeTimer <= 0.0f)
+    if (!m_isAiming && m_debugConeTimer <= 0.0f)
     {
         return;
     }
@@ -99,15 +111,26 @@ void DeathTaunt::drawGizmo()
     }
 
     const Vector3 ownerPosition = TransformAPI::getPosition(ownerTransform);
-    const Vector3 ownerForward = getHorizontalForward(ownerTransform);
+
+    Vector3 ownerForward = m_currentAimDirection;
+    if (ownerForward.LengthSquared() <= 0.0001f)
+    {
+        ownerForward = getHorizontalForward(ownerTransform);
+    }
+
+    if (ownerForward.LengthSquared() <= 0.0001f)
+    {
+        return;
+    }
+
+    ownerForward.Normalize();
 
     const float clampedHalfAngle = (m_TauntHalfAngleDegrees < 0.1f) ? 0.1f : ((m_TauntHalfAngleDegrees > 89.9f) ? 89.9f : m_TauntHalfAngleDegrees);
     const float halfAngleRadians = clampedHalfAngle * (3.14159265f / 180.0f);
 
-    // Draw the sector as lines from center to arc points
     const int numSteps = 16;
     const float angleStep = (2.0f * halfAngleRadians) / (numSteps - 1);
-    const Vector3 color(1.0f, 0.0f, 0.0f); // Red color
+    const Vector3 color(1.0f, 0.0f, 0.0f);
 
     for (int i = 0; i < numSteps; ++i)
     {
@@ -152,7 +175,54 @@ void DeathTaunt::onDeactivate()
     }
 }
 
-void DeathTaunt::applyTauntToEnemiesInCone() const
+void DeathTaunt::beginAim()
+{
+    onActivate();
+
+    m_isAiming = true;
+    m_debugConeTimer = 0.25f;
+    m_currentAimDirection = getFallbackFacingDirection();
+
+    Vector3 aimDirection = computeAimDirection();
+    if (isAimStickValid(aimDirection))
+    {
+        m_currentAimDirection = aimDirection;
+        faceDirection(m_currentAimDirection);
+    }
+}
+
+void DeathTaunt::updateAim()
+{
+    Vector3 aimDirection = computeAimDirection();
+    if (isAimStickValid(aimDirection))
+    {
+        m_currentAimDirection = aimDirection;
+        faceDirection(m_currentAimDirection);
+    }
+}
+
+void DeathTaunt::releaseAimAndCast()
+{
+    m_isAiming = false;
+
+    Vector3 finalDirection = m_currentAimDirection;
+    if (!isAimStickValid(finalDirection))
+    {
+        finalDirection = getFallbackFacingDirection();
+    }
+
+    if (isAimStickValid(finalDirection))
+    {
+        faceDirection(finalDirection);
+        applyTauntToEnemiesInCone(finalDirection);
+        m_debugConeTimer = 0.25f;
+    }
+
+    m_currentAimDirection = Vector3::Zero;
+    onDeactivate();
+}
+
+void DeathTaunt::applyTauntToEnemiesInCone(const Vector3& ownerForward) const
 {
     Transform* ownerTransform = GameObjectAPI::getTransform(m_owner);
     if (ownerTransform == nullptr)
@@ -161,7 +231,6 @@ void DeathTaunt::applyTauntToEnemiesInCone() const
     }
 
     const Vector3 ownerPosition = TransformAPI::getPosition(ownerTransform);
-    const Vector3 ownerForward = getHorizontalForward(ownerTransform);
 
     const std::vector<GameObject*> enemies = SceneAPI::findAllGameObjectsByTag(Tag::ENEMY);
     for (GameObject* enemy : enemies)
@@ -179,6 +248,49 @@ void DeathTaunt::applyTauntToEnemiesInCone() const
 
         static_cast<EnemyDetectionAggro*>(script)->applyTaunt(ownerTransform, m_TauntDurationSeconds);
     }
+}
+
+Vector3 DeathTaunt::computeAimDirection() const
+{
+    const Vector2 lookAxis = Input::getLookAxis(getPlayerIndex());
+    return Vector3(lookAxis.x, 0.0f, lookAxis.y);
+}
+
+Vector3 DeathTaunt::getFallbackFacingDirection() const
+{
+    Transform* ownerTransform = GameObjectAPI::getTransform(m_owner);
+    if (ownerTransform == nullptr)
+    {
+        return Vector3::Zero;
+    }
+
+    return getHorizontalForward(ownerTransform);
+}
+
+void DeathTaunt::faceDirection(const Vector3& direction)
+{
+    Vector3 flatDirection = direction;
+    flatDirection.y = 0.0f;
+
+    if (flatDirection.LengthSquared() <= 0.0001f)
+    {
+        return;
+    }
+
+    flatDirection.Normalize();
+
+    if (m_playerRotation != nullptr)
+    {
+        m_playerRotation->applyFacingFromDirection(getOwner(), flatDirection, Time::getDeltaTime());
+    }
+}
+
+bool DeathTaunt::isAimStickValid(const Vector3& direction) const
+{
+    Vector3 flatDirection = direction;
+    flatDirection.y = 0.0f;
+
+    return flatDirection.LengthSquared() > 0.0001f;
 }
 
 bool DeathTaunt::isEnemyInsideTauntCone(GameObject* enemy, const Vector3& ownerPosition, const Vector3& ownerForward) const
