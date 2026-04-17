@@ -19,23 +19,23 @@ public:
     ScriptFieldList getExposedFields() const override;
 
     bool getGodMode() const { return m_godMode; }
+    int getPlayerIndex() const { return m_playerIndex; }
 
 public:
-	int m_playerIndex = 0;
-
-	bool m_godMode = false;
+    int m_playerIndex = 0;
+    bool m_godMode = false;
 
 private:
-	PlayerMovement* m_playerMovement = nullptr;
-	PlayerRotation* m_playerRotation = nullptr;
+    PlayerMovement* m_playerMovement = nullptr;
+    PlayerRotation* m_playerRotation = nullptr;
     PlayerState* m_playerState = nullptr;
 
-	Transform* m_cameraTransform = nullptr;
+    Transform* m_cameraTransform = nullptr;
 
 private:
     Vector3 readMoveDirection(const Vector2& moveAxis) const;
 
     PlayerMovement* findMovementScript(GameObject* owner);
     PlayerRotation* findRotationScript(GameObject* owner);
-	PlayerState* findStateScript(GameObject* owner);
+    PlayerState* findStateScript(GameObject* owner);
 };

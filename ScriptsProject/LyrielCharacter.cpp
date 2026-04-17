@@ -4,7 +4,6 @@
 
 static const ScriptFieldInfo LyrielCharacterFields[] =
 {
-    { "Player Index", ScriptFieldType::Int, offsetof(LyrielCharacter, m_playerIndex) },
     { "Arrow Spawn Child Name", ScriptFieldType::String, offsetof(LyrielCharacter, m_arrowSpawnChildName) }
 };
 
@@ -20,7 +19,7 @@ void LyrielCharacter::Start()
     CharacterBase::Start();
 
     Script* arrowPoolScript = GameObjectAPI::getScript(getOwner(), "ArrowPool");
-    m_arrowPool = dynamic_cast<ArrowPool*>(arrowPoolScript);
+    m_arrowPool = static_cast<ArrowPool*>(arrowPoolScript);
 
     if (m_arrowPool == nullptr)
     {
