@@ -12,8 +12,7 @@ LyrielAbilityBase::LyrielAbilityBase(GameObject* owner)
 
 void LyrielAbilityBase::Start()
 {
-    m_lyriel = dynamic_cast<LyrielCharacter*>(
-        GameObjectAPI::getScript(getOwner(), "LyrielCharacter"));
+    m_lyriel = dynamic_cast<LyrielCharacter*>(GameObjectAPI::getScript(getOwner(), "LyrielCharacter"));
 
     m_character = m_lyriel;
 

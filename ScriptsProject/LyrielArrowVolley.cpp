@@ -1,95 +1,55 @@
 #include "pch.h"
 #include "LyrielArrowVolley.h"
 
+#include "LyrielCharacter.h"
+#include "CharacterBase.h"
 #include "ArrowPool.h"
 #include "LyrielArrowProjectile.h"
 #include "Damageable.h"
 #include "PlayerState.h"
-#include "PlayerRotation.h"
 #include "PlayerAnimationController.h"
 
 #include <cmath>
 
 static const ScriptFieldInfo LyrielArrowVolleyFields[] =
 {
-    { "Player Index", ScriptFieldType::Int, offsetof(LyrielArrowVolley, m_playerIndex) },
     { "Volley Damage", ScriptFieldType::Float, offsetof(LyrielArrowVolley, m_volleyDamage), { 0.0f, 100.0f, 0.5f } },
     { "Volley Cooldown", ScriptFieldType::Float, offsetof(LyrielArrowVolley, m_volleyCooldown), { 0.0f, 20.0f, 0.1f } },
     { "Volley Range", ScriptFieldType::Float, offsetof(LyrielArrowVolley, m_volleyRange), { 0.0f, 50.0f, 0.1f } },
     { "Cone Angle Degrees", ScriptFieldType::Float, offsetof(LyrielArrowVolley, m_coneAngleDegrees), { 1.0f, 180.0f, 1.0f } },
     { "Num Visual Arrows", ScriptFieldType::Int, offsetof(LyrielArrowVolley, m_numVisualArrows), { 1.0f, 20.0f, 1.0f } },
     { "Arrow Speed", ScriptFieldType::Float, offsetof(LyrielArrowVolley, m_arrowSpeed), { 0.0f, 100.0f, 0.5f } },
-    { "Attack Lock Duration", ScriptFieldType::Float, offsetof(LyrielArrowVolley, m_attackLockDuration), { 0.0f, 2.0f, 0.01f } },
-    { "Arrow Spawn Child Name", ScriptFieldType::String, offsetof(LyrielArrowVolley, m_arrowSpawnChildName) }
+    { "Attack Lock Duration", ScriptFieldType::Float, offsetof(LyrielArrowVolley, m_attackLockDuration), { 0.0f, 2.0f, 0.01f } }
 };
 
 IMPLEMENT_SCRIPT_FIELDS(LyrielArrowVolley, LyrielArrowVolleyFields)
 
 LyrielArrowVolley::LyrielArrowVolley(GameObject* owner)
-    : Script(owner)
+    : LyrielAbilityBase(owner)
 {
 }
 
 void LyrielArrowVolley::Start()
 {
-    Script* arrowPoolScript = GameObjectAPI::getScript(getOwner(), "ArrowPool");
-    m_arrowPool = dynamic_cast<ArrowPool*>(arrowPoolScript);
-
-    Script* stateScript = GameObjectAPI::getScript(getOwner(), "PlayerState");
-    m_playerState = dynamic_cast<PlayerState*>(stateScript);
-
-    Script* rotationScript = GameObjectAPI::getScript(getOwner(), "PlayerRotation");
-    m_playerRotation = dynamic_cast<PlayerRotation*>(rotationScript);
-
-    Script* animationScript = GameObjectAPI::getScript(getOwner(), "PlayerAnimationController");
-    m_playerAnimationController = dynamic_cast<PlayerAnimationController*>(animationScript);
-
-    if (m_arrowPool == nullptr)
-    {
-        Debug::log("[LyrielArrowVolley] ArrowPool not found on owner.");
-    }
-
-    if (m_playerState == nullptr)
-    {
-        Debug::log("[LyrielArrowVolley] PlayerState not found on owner.");
-    }
-
-    if (m_playerRotation == nullptr)
-    {
-        Debug::log("[LyrielArrowVolley] PlayerRotation not found on owner.");
-    }
-
-    if (m_playerAnimationController == nullptr)
-    {
-        Debug::log("[LyrielArrowVolley] PlayerAnimationController not found on owner.");
-    }
+    LyrielAbilityBase::Start();
+    m_cooldown = m_volleyCooldown;
 }
 
 void LyrielArrowVolley::Update()
 {
-    updateCooldown();
+    LyrielAbilityBase::Update();
 
-    if (m_attackStateTimer > 0.0f)
-    {
-        if (m_attackFacingDirection.LengthSquared() > 0.0001f)
-        {
-            faceDirection(m_attackFacingDirection);
-        }
-    }
-
-    updateAttackStateTimer();
-
-    if (canStartAim() && Input::isLeftTriggerJustPressed(m_playerIndex))
+    if (canStartAim() && Input::isLeftTriggerJustPressed(getPlayerIndex()))
     {
         beginAim();
     }
 
-    if (m_isAiming && Input::isLeftTriggerPressed(m_playerIndex))
+    if (m_isAiming && Input::isLeftTriggerPressed(getPlayerIndex()))
     {
         updateAim();
     }
 
-    if (m_isAiming && Input::isLeftTriggerReleased(m_playerIndex))
+    if (m_isAiming && Input::isLeftTriggerReleased(getPlayerIndex()))
     {
         releaseAimAndCast();
     }
@@ -102,95 +62,40 @@ void LyrielArrowVolley::drawGizmo()
         return;
     }
 
-
     Vector3 previewDirection = m_currentAimDirection;
     if (previewDirection.LengthSquared() <= 0.0001f)
     {
         previewDirection = getFallbackFacingDirection();
     }
 
-    //Would be nice if we had math API to check agains a threshold directly
     if (previewDirection.LengthSquared() <= 0.0001f)
     {
         return;
     }
 
     Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
+    if (ownerTransform == nullptr)
+    {
+        return;
+    }
 
     const Vector3 origin = TransformAPI::getGlobalPosition(ownerTransform);
     drawAimPreview(origin, previewDirection);
 }
 
-void LyrielArrowVolley::updateCooldown()
-{
-    if (m_cooldownTimer <= 0.0f)
-    {
-        return;
-    }
-
-    m_cooldownTimer -= Time::getDeltaTime();
-    if (m_cooldownTimer < 0.0f)
-    {
-        m_cooldownTimer = 0.0f;
-    }
-}
-
-void LyrielArrowVolley::updateAttackStateTimer()
-{
-    if (m_attackStateTimer <= 0.0f)
-    {
-        return;
-    }
-
-    m_attackStateTimer -= Time::getDeltaTime();
-    if (m_attackStateTimer <= 0.0f)
-    {
-        m_attackStateTimer = 0.0f;
-        m_attackFacingDirection = Vector3::Zero;
-
-        setAbilityLocked(false);
-
-        if (m_playerState != nullptr && m_playerState->isAttacking())
-        {
-            m_playerState->setState(PlayerStateType::Normal);
-        }
-    }
-}
-
 bool LyrielArrowVolley::canStartAim() const
 {
-    if (m_cooldownTimer > 0.0f)
-    {
-        return false;
-    }
-
-    if (m_playerState == nullptr)
-    {
-        return false;
-    }
-
-    if (m_playerState->isDowned() || m_playerState->isUsingAbility())
-    {
-        return false;
-    }
-
-    return true;
+    return canStartAbility();
 }
 
 bool LyrielArrowVolley::canCast() const
 {
-    if (m_playerState != nullptr && m_playerState->isDowned())
-    {
-        return false;
-    }
-
-    return true;
+    return m_character != nullptr && !m_character->isDowned();
 }
 
 void LyrielArrowVolley::beginAim()
 {
     m_isAiming = true;
-
     setAbilityLocked(true);
 
     m_currentAimDirection = Vector3::Zero;
@@ -229,8 +134,8 @@ void LyrielArrowVolley::releaseAimAndCast()
     }
 
     const Vector3 origin = TransformAPI::getGlobalPosition(spawnTransform);
-    Vector3 forward = m_currentAimDirection;
 
+    Vector3 forward = m_currentAimDirection;
     if (forward.LengthSquared() <= 0.0001f)
     {
         forward = getFallbackFacingDirection();
@@ -250,84 +155,37 @@ void LyrielArrowVolley::releaseAimAndCast()
     applyVolleyDamage(targets);
     spawnVolleyArrows(origin, forward);
 
-    if (m_playerState != nullptr)
+    if (m_character != nullptr)
     {
-        m_playerState->setState(PlayerStateType::Attacking);
-    }
+        PlayerState* playerState = m_character->getPlayerState();
+        if (playerState != nullptr)
+        {
+            playerState->setState(PlayerStateType::Attacking);
+        }
 
-    if (m_playerAnimationController != nullptr)
-    {
-        m_playerAnimationController->requestAttack();
+        PlayerAnimationController* animationController = m_character->getAnimationController();
+        if (animationController != nullptr)
+        {
+            animationController->requestAttack();
+        }
     }
 
     m_attackStateTimer = m_attackLockDuration;
-    m_cooldownTimer = m_volleyCooldown;
+    m_cooldownTimer = m_cooldown;
 
     Debug::log("[LyrielArrowVolley] Cast Arrow Volley. Targets hit: %d", static_cast<int>(targets.size()));
 }
 
-Transform* LyrielArrowVolley::findArrowSpawnTransform() const
-{
-    Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
-
-    if (!m_arrowSpawnChildName.empty())
-    {
-        Transform* spawnTransform = TransformAPI::findChildByName(ownerTransform, m_arrowSpawnChildName.c_str());
-        if (spawnTransform != nullptr)
-        {
-            return spawnTransform;
-        }
-    }
-
-    return ownerTransform;
-}
-
 Vector3 LyrielArrowVolley::computeAimDirection() const
 {
-    const Vector2 lookAxis = Input::getLookAxis(m_playerIndex);
+    const Vector2 lookAxis = Input::getLookAxis(getPlayerIndex());
     return Vector3(lookAxis.x, 0.0f, lookAxis.y);
-}
-
-void LyrielArrowVolley::faceDirection(const Vector3& direction)
-{
-    if (m_playerRotation == nullptr)
-    {
-        return;
-    }
-
-    Vector3 flatDirection = direction;
-    flatDirection.y = 0.0f;
-
-    if (flatDirection.LengthSquared() <= 0.0001f)
-    {
-        return;
-    }
-
-    flatDirection.Normalize();
-    m_playerRotation->applyFacingFromDirection(getOwner(), flatDirection, Time::getDeltaTime());
-}
-
-Vector3 LyrielArrowVolley::getFallbackFacingDirection() const
-{
-    Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
-
-    Vector3 forward = TransformAPI::getForward(ownerTransform);
-    forward.y = 0.0f;
-
-    if (forward.LengthSquared() <= 0.0001f)
-    {
-        return Vector3::Zero;
-    }
-
-    forward.Normalize();
-    return forward;
 }
 
 bool LyrielArrowVolley::isAimStickValid(const Vector3& direction) const
 {
     Vector3 flatDirection = direction;
     flatDirection.y = 0.0f;
-
     return flatDirection.LengthSquared() > 0.0001f;
 }
 
@@ -358,6 +216,10 @@ void LyrielArrowVolley::collectEnemiesInCone(const Vector3& origin, const Vector
         }
 
         Transform* enemyTransform = GameObjectAPI::getTransform(enemy);
+        if (enemyTransform == nullptr)
+        {
+            continue;
+        }
 
         Vector3 enemyPosition = TransformAPI::getGlobalPosition(enemyTransform);
         Vector3 toEnemy = enemyPosition - origin;
@@ -405,7 +267,13 @@ void LyrielArrowVolley::applyVolleyDamage(const std::vector<GameObject*>& target
 
 void LyrielArrowVolley::spawnVolleyArrows(const Vector3& origin, const Vector3& forward)
 {
-    if (m_arrowPool == nullptr || m_numVisualArrows <= 0)
+    if (m_lyriel == nullptr || m_numVisualArrows <= 0)
+    {
+        return;
+    }
+
+    ArrowPool* arrowPool = m_lyriel->getArrowPool();
+    if (arrowPool == nullptr)
     {
         return;
     }
@@ -421,15 +289,16 @@ void LyrielArrowVolley::spawnVolleyArrows(const Vector3& origin, const Vector3& 
     flatForward.Normalize();
 
     const float totalAngle = m_coneAngleDegrees;
+
     float lifetime = 0.0f;
-    if  (m_arrowSpeed > 0.0001f) 
+    if (m_arrowSpeed > 0.0001f)
     {
         lifetime = m_volleyRange / m_arrowSpeed;
-    } 
+    }
 
     for (int i = 0; i < m_numVisualArrows; ++i)
     {
-        LyrielArrowProjectile* arrow = m_arrowPool->acquireArrow();
+        LyrielArrowProjectile* arrow = arrowPool->acquireArrow();
         if (arrow == nullptr)
         {
             Debug::log("[LyrielArrowVolley] No available arrow in pool for visual arrow %d.", i);
@@ -518,14 +387,6 @@ void LyrielArrowVolley::drawAimPreview(const Vector3& origin, const Vector3& for
 
         DebugDrawAPI::drawLine(previousPoint, currentPoint, previewColor, 0, true);
         previousPoint = currentPoint;
-    }
-}
-
-void LyrielArrowVolley::setAbilityLocked(bool locked)
-{
-    if (m_playerState != nullptr)
-    {
-        m_playerState->setUsingAbility(locked);
     }
 }
 
