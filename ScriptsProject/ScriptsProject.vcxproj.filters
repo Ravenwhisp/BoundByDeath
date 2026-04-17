@@ -159,7 +159,12 @@
     <ClInclude Include="EnemyController.h">
       <Filter>Enemies</Filter>
     </ClInclude>
-    <ClInclude Include="AbilityDash.h" />
+    <ClInclude Include="LyrielDash.h">
+      <Filter>Character\Lyriel\Abilities</Filter>
+    </ClInclude>
+    <ClInclude Include="AbilityDash.h">
+      <Filter>Character</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
@@ -258,7 +263,7 @@
     </ClCompile>
     <ClCompile Include="UIController.cpp">
       <Filter>UI</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="EnemyIDLE.cpp">
       <Filter>Enemies\States</Filter>
     </ClCompile>
@@ -268,6 +273,11 @@
     <ClCompile Include="EnemyController.cpp">
       <Filter>Enemies</Filter>
     </ClCompile>
-    <ClCompile Include="AbilityDash.cpp" />
+    <ClCompile Include="LyrielDash.cpp">
+      <Filter>Character\Lyriel\Abilities</Filter>
+    </ClCompile>
+    <ClCompile Include="AbilityDash.cpp">
+      <Filter>Character</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
