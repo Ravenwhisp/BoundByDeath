@@ -9,11 +9,10 @@
 
 static const ScriptFieldInfo AbilityDashFields[] =
 {
-    { "Dash Cooldown",        ScriptFieldType::Float, offsetof(AbilityDash, m_dashCooldown),       { 0.0f, 5.0f, 0.01f } },
-    { "Dash Duration",        ScriptFieldType::Float, offsetof(AbilityDash, m_dashDuration),       { 0.0f, 1.0f, 0.01f } },
-    { "Dash Distance",        ScriptFieldType::Float, offsetof(AbilityDash, m_dashDistance),       { 0.0f, 10.0f, 0.1f } },
-    { "Charge Recharge Time", ScriptFieldType::Float, offsetof(AbilityDash, m_chargeRechargeTime), { 0.1f, 10.0f, 0.1f } },
-    { "Enable Debug",         ScriptFieldType::Bool,  offsetof(AbilityDash, m_debugEnabled) }
+    { "Dash Duration", ScriptFieldType::Float, offsetof(AbilityDash, m_dashDuration), { 0.0f, 1.0f, 0.01f } },
+    { "Dash Distance", ScriptFieldType::Float, offsetof(AbilityDash, m_dashDistance), { 0.0f, 10.0f, 0.1f } },
+    { "Dash Cooldown", ScriptFieldType::Float, offsetof(AbilityDash, m_dashCooldown), { 0.0f, 5.0f, 0.01f } },
+    { "Enable Debug",  ScriptFieldType::Bool, offsetof(AbilityDash, m_debugEnabled) }
 };
 
 IMPLEMENT_SCRIPT_FIELDS(AbilityDash, AbilityDashFields)
@@ -27,10 +26,10 @@ void AbilityDash::Start()
 {
     AbilityBase::Start();
 
-    m_cooldown = m_dashCooldown;
-
     m_playerController = findControllerScript(getOwner());
     m_playerMovement = findMovementScript(getOwner());
+
+    m_cooldown = m_dashCooldown;
 
     if (m_character == nullptr)
     {
@@ -49,7 +48,7 @@ void AbilityDash::Update()
 
     const float dt = Time::getDeltaTime();
 
-    updateChargeRecovery(dt);
+    onDashUpdate(dt);
 
     if (m_isDashing)
     {
@@ -67,17 +66,13 @@ void AbilityDash::drawGizmo()
 {
 }
 
-void AbilityDash::recoverCharge()
+bool AbilityDash::canDash() const
 {
-    if (m_charges < MAX_DASH_CHARGES)
-    {
-        ++m_charges;
+    return true;
+}
 
-        if (m_charges == MAX_DASH_CHARGES)
-        {
-            m_chargeRecoveryTimer = 0.0f;
-        }
-    }
+void AbilityDash::onDashStarted()
+{
 }
 
 void AbilityDash::tryStartDash()
@@ -87,7 +82,7 @@ void AbilityDash::tryStartDash()
         return;
     }
 
-    if (m_charges <= 0)
+    if (!canDash())
     {
         return;
     }
@@ -97,7 +92,6 @@ void AbilityDash::tryStartDash()
         return;
     }
 
-    --m_charges;
     m_dashTimer = 0.0f;
     m_isDashing = true;
 
@@ -128,6 +122,8 @@ void AbilityDash::tryStartDash()
     {
         m_dashDirection.Normalize();
     }
+
+    onDashStarted();
 }
 
 void AbilityDash::updateDash(float dt)
@@ -148,28 +144,6 @@ void AbilityDash::stopDash()
     m_dashDirection = Vector3::Zero;
 
     setAbilityLocked(false);
-}
-
-void AbilityDash::updateChargeRecovery(float dt)
-{
-    if (m_charges >= MAX_DASH_CHARGES)
-    {
-        return;
-    }
-
-    m_chargeRecoveryTimer += dt;
-
-    while (m_chargeRecoveryTimer >= m_chargeRechargeTime && m_charges < MAX_DASH_CHARGES)
-    {
-        ++m_charges;
-        m_chargeRecoveryTimer -= m_chargeRechargeTime;
-    }
-
-    if (m_charges >= MAX_DASH_CHARGES)
-    {
-        m_charges = MAX_DASH_CHARGES;
-        m_chargeRecoveryTimer = 0.0f;
-    }
 }
 
 void AbilityDash::calculateDashMovement(float dt)
