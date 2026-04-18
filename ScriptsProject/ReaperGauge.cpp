@@ -71,13 +71,13 @@ void ReaperGauge::drawGizmo()
     if (t == nullptr)
         return;
 
-    Vector3 pos = TransformAPI::getGlobalPosition(t);
-    pos.y += 2.4f;
+    const Vector3 pos = TransformAPI::getGlobalPosition(t);
 
-    // Segment bars drawn horizontally above Lyriel
-    const float segW    = 0.18f;
-    const float segH    = 0.08f;
-    const float padding = 0.04f;
+    // Segmented bar flat in XZ plane, centred on Lyriel, slightly below feet
+    const float groundY = pos.y + 0.05f;
+    const float segW    = 0.30f;
+    const float segD    = 0.12f; // depth along Z
+    const float padding = 0.05f;
     const int   segs    = m_numSegments > 0 ? m_numSegments : 1;
     const float total   = segs * segW + (segs - 1) * padding;
     const float startX  = pos.x - total * 0.5f;
@@ -85,46 +85,60 @@ void ReaperGauge::drawGizmo()
     const float gaugePercent = getGaugePercent();
     const float filled       = gaugePercent * static_cast<float>(segs);
 
+    const Vector3 colFilled = { 0.85f, 0.10f, 0.10f };
+    const Vector3 colEmpty  = { 0.30f, 0.30f, 0.30f };
+
     for (int i = 0; i < segs; ++i)
     {
-        const float cx = startX + i * (segW + padding) + segW * 0.5f;
+        const float x0 = startX + i * (segW + padding);
+        const float x1 = x0 + segW;
+        const float z0 = pos.z - segD * 0.5f;
+        const float z1 = pos.z + segD * 0.5f;
 
         const float segFill = filled - static_cast<float>(i);
         const float ratio   = segFill < 0.0f ? 0.0f : (segFill > 1.0f ? 1.0f : segFill);
+        const Vector3 col   = ratio > 0.0f ? colFilled : colEmpty;
 
-        const Vector3 colFilled  = { 0.85f, 0.10f, 0.10f };
-        const Vector3 colEmpty   = { 0.30f, 0.30f, 0.30f };
-        const Vector3 col        = ratio > 0.0f ? colFilled : colEmpty;
+        // Outline rectangle in XZ
+        DebugDrawAPI::drawLine({ x0, groundY, z0 }, { x1, groundY, z0 }, col, 0, true);
+        DebugDrawAPI::drawLine({ x0, groundY, z1 }, { x1, groundY, z1 }, col, 0, true);
+        DebugDrawAPI::drawLine({ x0, groundY, z0 }, { x0, groundY, z1 }, col, 0, true);
+        DebugDrawAPI::drawLine({ x1, groundY, z0 }, { x1, groundY, z1 }, col, 0, true);
 
-        const Vector3 bl = { cx - segW * 0.5f, pos.y,          pos.z };
-        const Vector3 br = { cx + segW * 0.5f, pos.y,          pos.z };
-        const Vector3 tl = { cx - segW * 0.5f, pos.y + segH,   pos.z };
-        const Vector3 tr = { cx + segW * 0.5f, pos.y + segH,   pos.z };
-
-        DebugDrawAPI::drawLine(bl, br, col, 0, true);
-        DebugDrawAPI::drawLine(tl, tr, col, 0, true);
-        DebugDrawAPI::drawLine(bl, tl, col, 0, true);
-        DebugDrawAPI::drawLine(br, tr, col, 0, true);
-
-        // Fill line inside segment proportional to fill ratio
+        // Fill: diagonal cross-lines inside the filled portion of the segment
         if (ratio > 0.0f)
         {
-            const float fillRight = cx - segW * 0.5f + segW * ratio;
-            const float midY      = pos.y + segH * 0.5f;
-            DebugDrawAPI::drawLine(
-                { cx - segW * 0.5f, midY, pos.z },
-                { fillRight,        midY, pos.z },
-                colFilled, 0, true);
+            const float fillX = x0 + segW * ratio;
+            DebugDrawAPI::drawLine({ x0,    groundY, z0 }, { fillX, groundY, z1 }, colFilled, 0, true);
+            DebugDrawAPI::drawLine({ x0,    groundY, z1 }, { fillX, groundY, z0 }, colFilled, 0, true);
         }
     }
 
-    // Grace/decay indicator: small dot above bar, white=grace, red=decaying
+    // Decay timer arc around bar centre — white=grace, red=decaying
     if (m_everExploited && m_gauge > 0.0f)
     {
-        const bool    inGrace   = m_decayTimer <= m_gracePeriod;
-        const Vector3 dotColor  = inGrace ? Vector3{ 1.0f, 1.0f, 1.0f } : Vector3{ 1.0f, 0.2f, 0.2f };
-        const Vector3 dotPos    = { pos.x, pos.y + segH + 0.12f, pos.z };
-        DebugDrawAPI::drawPoint(dotPos, dotColor, 5.0f, 0, true);
+        const bool  inGrace = m_decayTimer <= m_gracePeriod;
+        const float ratio   = inGrace
+            ? 1.0f - (m_decayTimer / m_gracePeriod)
+            : 0.0f;
+
+        const Vector3 arcColor = inGrace ? Vector3{ 1.0f, 1.0f, 1.0f } : Vector3{ 1.0f, 0.2f, 0.2f };
+        const float   arcR     = total * 0.5f + 0.2f;
+        const int     totalSeg = 24;
+        const int     fillSeg  = inGrace
+            ? static_cast<int>(ratio * static_cast<float>(totalSeg))
+            : totalSeg;
+        constexpr float pi2    = 2.0f * 3.14159265f;
+        const float     step   = pi2 / static_cast<float>(totalSeg);
+
+        for (int i = 0; i < fillSeg; ++i)
+        {
+            const float   a0 = step * static_cast<float>(i);
+            const float   a1 = a0 + step;
+            const Vector3 p0 = { pos.x + cosf(a0) * arcR, groundY, pos.z + sinf(a0) * arcR };
+            const Vector3 p1 = { pos.x + cosf(a1) * arcR, groundY, pos.z + sinf(a1) * arcR };
+            DebugDrawAPI::drawLine(p0, p1, arcColor, 0, true);
+        }
     }
 }
 
