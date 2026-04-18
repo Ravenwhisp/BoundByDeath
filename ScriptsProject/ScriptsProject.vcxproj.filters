@@ -40,14 +40,17 @@
     <Filter Include="Character\Player\Animation">
       <UniqueIdentifier>{4a98ebe5-a59f-4a7d-b70e-e5078225b0c9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Character\Player\Lyriel">
-      <UniqueIdentifier>{9077b456-2558-4edb-afe7-14e10e481dfb}</UniqueIdentifier>
+    <Filter Include="Character\Lyriel">
+      <UniqueIdentifier>{baeff935-96bc-442d-af85-e9a86e4b1eb2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Character\Player\Death">
-      <UniqueIdentifier>{a3f1c2d5-e8b7-4906-9cde-f23456789012}</UniqueIdentifier>
+    <Filter Include="Character\Lyriel\Abilities">
+      <UniqueIdentifier>{d27654ae-43ad-48d2-91e5-16143d51c28e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Character\Base">
-      <UniqueIdentifier>{c4d5e6f7-a8b9-4012-cdef-012345678901}</UniqueIdentifier>
+    <Filter Include="UI">
+      <UniqueIdentifier>{3a330624-25ab-415b-82e0-9a45e3d74f07}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Enemies\States">
+      <UniqueIdentifier>{ca0db9c2-3e6e-4394-8415-d08752132e0d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -113,38 +116,51 @@
     <ClInclude Include="PlayerAnimationController.h">
       <Filter>Character\Player\Animation</Filter>
     </ClInclude>
-    <ClInclude Include="ArrowPool.h">
-      <Filter>Character\Player\Lyriel</Filter>
+    <ClInclude Include="SpikeTrap.h" />
+    <ClInclude Include="CharacterBase.h">
+      <Filter>Character</Filter>
     </ClInclude>
     <ClInclude Include="Bound.h">
       <Filter>Character\Player\Bound</Filter>
     </ClInclude>
+    <ClInclude Include="AbilityBase.h">
+      <Filter>Character</Filter>
+    </ClInclude>
     <ClInclude Include="LyrielArrowProjectile.h">
-      <Filter>Character\Player\Lyriel</Filter>
+      <Filter>Character\Lyriel</Filter>
+    </ClInclude>
+    <ClInclude Include="LyrielCharacter.h">
+      <Filter>Character\Lyriel</Filter>
+    </ClInclude>
+    <ClInclude Include="ArrowPool.h">
+      <Filter>Character\Lyriel</Filter>
+    </ClInclude>
+    <ClInclude Include="LyrielArrowVolley.h">
+      <Filter>Character\Lyriel\Abilities</Filter>
     </ClInclude>
     <ClInclude Include="LyrielBasicAttack.h">
-      <Filter>Character\Player\Lyriel</Filter>
+      <Filter>Character\Lyriel\Abilities</Filter>
     </ClInclude>
-    <ClInclude Include="AbilityBase.h">
-      <Filter>Character\Base</Filter>
+    <ClInclude Include="LyrielChargedAttack.h">
+      <Filter>Character\Lyriel\Abilities</Filter>
     </ClInclude>
-    <ClInclude Include="CharacterBase.h">
-      <Filter>Character\Base</Filter>
+    <ClInclude Include="LyrielAbilityBase.h">
+      <Filter>Character\Lyriel\Abilities</Filter>
     </ClInclude>
-    <ClInclude Include="DeathBasicAttack.h">
-      <Filter>Character\Player\Death</Filter>
+    <ClInclude Include="UIController.h">
+      <Filter>UI</Filter>
     </ClInclude>
-    <ClInclude Include="DeathCharacter.h">
-      <Filter>Character\Player\Death</Filter>
+    <ClInclude Include="EnemyIDLE.h">
+      <Filter>Enemies\States</Filter>
     </ClInclude>
-    <ClInclude Include="DeathChargedAttack.h">
-      <Filter>Character\Player\Death</Filter>
+    <ClInclude Include="EnemyCHASE.h">
+      <Filter>Enemies\States</Filter>
     </ClInclude>
-    <ClInclude Include="DeathDash.h">
-      <Filter>Character\Player\Death</Filter>
+    <ClInclude Include="EnemyController.h">
+      <Filter>Enemies</Filter>
     </ClInclude>
-    <ClInclude Include="DeathTaunt.h">
-      <Filter>Character\Player\Death</Filter>
+    <ClInclude Include="EnemyDamageable.h">
+      <Filter>Enemies</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -211,38 +227,51 @@
     <ClCompile Include="PlayerAnimationController.cpp">
       <Filter>Character\Player\Animation</Filter>
     </ClCompile>
-    <ClCompile Include="ArrowPool.cpp">
-      <Filter>Character\Player\Lyriel</Filter>
+    <ClCompile Include="SpikeTrap.cpp" />
+    <ClCompile Include="CharacterBase.cpp">
+      <Filter>Character</Filter>
     </ClCompile>
     <ClCompile Include="Bound.cpp">
       <Filter>Character\Player\Bound</Filter>
     </ClCompile>
+    <ClCompile Include="AbilityBase.cpp">
+      <Filter>Character</Filter>
+    </ClCompile>
     <ClCompile Include="LyrielArrowProjectile.cpp">
-      <Filter>Character\Player\Lyriel</Filter>
+      <Filter>Character\Lyriel</Filter>
+    </ClCompile>
+    <ClCompile Include="LyrielCharacter.cpp">
+      <Filter>Character\Lyriel</Filter>
+    </ClCompile>
+    <ClCompile Include="ArrowPool.cpp">
+      <Filter>Character\Lyriel</Filter>
+    </ClCompile>
+    <ClCompile Include="LyrielArrowVolley.cpp">
+      <Filter>Character\Lyriel\Abilities</Filter>
     </ClCompile>
     <ClCompile Include="LyrielBasicAttack.cpp">
-      <Filter>Character\Player\Lyriel</Filter>
+      <Filter>Character\Lyriel\Abilities</Filter>
     </ClCompile>
-    <ClCompile Include="AbilityBase.cpp">
-      <Filter>Character\Base</Filter>
+    <ClCompile Include="LyrielChargedAttack.cpp">
+      <Filter>Character\Lyriel\Abilities</Filter>
     </ClCompile>
-    <ClCompile Include="CharacterBase.cpp">
-      <Filter>Character\Base</Filter>
+    <ClCompile Include="LyrielAbilityBase.cpp">
+      <Filter>Character\Lyriel\Abilities</Filter>
     </ClCompile>
-    <ClCompile Include="DeathBasicAttack.cpp">
-      <Filter>Character\Player\Death</Filter>
+    <ClCompile Include="UIController.cpp">
+      <Filter>UI</Filter>
+	</ClCompile>
+    <ClCompile Include="EnemyIDLE.cpp">
+      <Filter>Enemies\States</Filter>
     </ClCompile>
-    <ClCompile Include="DeathCharacter.cpp">
-      <Filter>Character\Player\Death</Filter>
+    <ClCompile Include="EnemyCHASE.cpp">
+      <Filter>Enemies\States</Filter>
     </ClCompile>
-    <ClCompile Include="DeathChargedAttack.cpp">
-      <Filter>Character\Player\Death</Filter>
+    <ClCompile Include="EnemyController.cpp">
+      <Filter>Enemies</Filter>
     </ClCompile>
-    <ClCompile Include="DeathDash.cpp">
-      <Filter>Character\Player\Death</Filter>
-    </ClCompile>
-    <ClCompile Include="DeathTaunt.cpp">
-      <Filter>Character\Player\Death</Filter>
+    <ClCompile Include="EnemyDamageable.cpp">
+      <Filter>Enemies</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

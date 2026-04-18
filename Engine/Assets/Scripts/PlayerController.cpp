@@ -11,7 +11,7 @@ static const float PI = 3.1415926535897931f;
 
 static const ScriptFieldInfo playerControllerFields[] =
 {
-    { "Player Index", ScriptFieldType::Int, offsetof(PlayerController, m_playerIndex) }, // 0 keyboard, 1 gamepad
+    { "Player Index", ScriptFieldType::Int, offsetof(PlayerController, m_playerIndex) },
     { "God Mode", ScriptFieldType::Bool, offsetof(PlayerController, m_godMode) }
 };
 
@@ -28,7 +28,7 @@ void PlayerController::Start()
 
     m_playerMovement = findMovementScript(owner);
     m_playerRotation = findRotationScript(owner);
-	m_playerState = findStateScript(owner);
+    m_playerState = findStateScript(owner);
 
     m_cameraTransform = SceneAPI::getDefaultCameraGameObject() ?
         GameObjectAPI::getTransform(SceneAPI::getDefaultCameraGameObject()) :
@@ -60,21 +60,22 @@ void PlayerController::Update()
 
         Vector3 moveDirection = readMoveDirection(moveAxis);
         const bool isMoving = moveDirection.x != 0.0f || moveDirection.y != 0.0f || moveDirection.z != 0.0f;
-		m_playerMovement->setMoving(isMoving);
+        m_playerMovement->setMoving(isMoving);
 
         if (isMoving)
         {
             if (m_playerRotation)
             {
-				Vector3 horizontalDir(moveDirection.x, 0.0f, moveDirection.z);
+                Vector3 horizontalDir(moveDirection.x, 0.0f, moveDirection.z);
                 if (horizontalDir.x != 0.0f || horizontalDir.z != 0.0f)
                 {
                     horizontalDir.Normalize();
-					m_playerRotation->applyFacingFromDirection(owner, horizontalDir, dt);
+                    m_playerRotation->applyFacingFromDirection(owner, horizontalDir, dt);
                 }
             }
-			moveDirection.Normalize();
-			m_playerMovement->playerMovement(owner, moveDirection * dt);
+
+            moveDirection.Normalize();
+            m_playerMovement->playerMovement(owner, moveDirection * dt);
         }
     }
 }

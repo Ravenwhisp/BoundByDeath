@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ScriptAPI.h"
+#include "UISlider.h"
 
 class Damageable : public Script
 {
@@ -37,6 +38,7 @@ private:
 
 public:
     float m_maxHp = 100.0f;
+	ScriptComponentRef<UISlider> m_healthBar;
 
 private:
     float m_currentHp   = 100.0f;

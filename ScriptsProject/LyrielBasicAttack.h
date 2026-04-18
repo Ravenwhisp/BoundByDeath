@@ -1,15 +1,10 @@
 #pragma once
 
-#include "ScriptAPI.h"
+#include "LyrielAbilityBase.h"
 
-class PlayerTargetController;
-class ArrowPool;
 class LyrielArrowProjectile;
-class PlayerState;
-class PlayerRotation;
-class PlayerAnimationController;
 
-class LyrielBasicAttack : public Script
+class LyrielBasicAttack : public LyrielAbilityBase
 {
     DECLARE_SCRIPT(LyrielBasicAttack)
 
@@ -23,28 +18,19 @@ public:
 
 private:
     void tryAttack();
-    void spawnArrowToTarget(GameObject* target);
-    Transform* findArrowSpawnTransform() const;
+    bool spawnArrowToTarget(GameObject* target);
     void faceTarget(GameObject* target);
-    void updateAttackStateTimer();
+
+protected:
+    void onAttackWindowUpdate() override;
+    void onAttackWindowFinished() override;
 
 private:
-    PlayerTargetController* m_targetController = nullptr;
-    ArrowPool* m_arrowPool = nullptr;
-    PlayerState* m_playerState = nullptr;
-    PlayerRotation* m_playerRotation = nullptr;
-    PlayerAnimationController* m_playerAnimationController = nullptr;
-
-    float m_cooldownTimer = 0.0f;
-    float m_attackStateTimer = 0.0f;
-
     GameObject* m_attackFacingTarget = nullptr;
 
 public:
-    int m_playerIndex = 0;
     float m_attackDamage = 10.0f;
     float m_attackCooldown = 0.4f;
     float m_arrowSpeed = 18.0f;
     float m_attackLockDuration = 0.2f;
-    std::string m_arrowSpawnChildName = "ArrowSpawn";
 };

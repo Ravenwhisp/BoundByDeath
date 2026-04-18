@@ -1,157 +1,120 @@
 #include "pch.h"
 #include "LyrielBasicAttack.h"
 
+#include "LyrielCharacter.h"
+#include "CharacterBase.h"
 #include "PlayerTargetController.h"
-#include "ArrowPool.h"
-#include "LyrielArrowProjectile.h"
 #include "PlayerState.h"
 #include "PlayerRotation.h"
-#include "PlayerAnimationController.h"
+#include "ArrowPool.h"
+#include "LyrielArrowProjectile.h"
 
 static const ScriptFieldInfo LyrielBasicAttackFields[] =
 {
-    { "Player Index", ScriptFieldType::Int, offsetof(LyrielBasicAttack, m_playerIndex) },
     { "Attack Damage", ScriptFieldType::Float, offsetof(LyrielBasicAttack, m_attackDamage), { 0.0f, 100.0f, 0.5f } },
     { "Attack Cooldown", ScriptFieldType::Float, offsetof(LyrielBasicAttack, m_attackCooldown), { 0.0f, 5.0f, 0.05f } },
     { "Arrow Speed", ScriptFieldType::Float, offsetof(LyrielBasicAttack, m_arrowSpeed), { 0.0f, 100.0f, 0.5f } },
-    { "Attack Lock Duration", ScriptFieldType::Float, offsetof(LyrielBasicAttack, m_attackLockDuration), { 0.0f, 2.0f, 0.01f } },
-    { "Arrow Spawn Child Name", ScriptFieldType::String, offsetof(LyrielBasicAttack, m_arrowSpawnChildName) }
+    { "Attack Lock Duration", ScriptFieldType::Float, offsetof(LyrielBasicAttack, m_attackLockDuration), { 0.0f, 2.0f, 0.01f } }
 };
 
 IMPLEMENT_SCRIPT_FIELDS(LyrielBasicAttack, LyrielBasicAttackFields)
 
 LyrielBasicAttack::LyrielBasicAttack(GameObject* owner)
-    : Script(owner)
+    : LyrielAbilityBase(owner)
 {
 }
 
 void LyrielBasicAttack::Start()
 {
-    Script* targetControllerScript = GameObjectAPI::getScript(getOwner(), "PlayerTargetController");
-    m_targetController = dynamic_cast<PlayerTargetController*>(targetControllerScript);
-
-    Script* arrowPoolScript = GameObjectAPI::getScript(getOwner(), "ArrowPool");
-    m_arrowPool = dynamic_cast<ArrowPool*>(arrowPoolScript);
-
-    Script* stateScript = GameObjectAPI::getScript(getOwner(), "PlayerState");
-    m_playerState = dynamic_cast<PlayerState*>(stateScript);
-
-    Script* rotationScript = GameObjectAPI::getScript(getOwner(), "PlayerRotation");
-    m_playerRotation = dynamic_cast<PlayerRotation*>(rotationScript);
-
-    Script* animationScript = GameObjectAPI::getScript(getOwner(), "PlayerAnimationController");
-    m_playerAnimationController = dynamic_cast<PlayerAnimationController*>(animationScript);
-
-    if (m_targetController == nullptr)
-    {
-        Debug::log("[LyrielBasicAttack] PlayerTargetController not found on owner.");
-    }
-
-    if (m_arrowPool == nullptr)
-    {
-        Debug::log("[LyrielBasicAttack] ArrowPool not found on owner.");
-    }
-
-    if (m_playerState == nullptr)
-    {
-        Debug::log("[LyrielBasicAttack] PlayerState not found on owner.");
-    }
-
-    if (m_playerRotation == nullptr)
-    {
-        Debug::log("[LyrielBasicAttack] PlayerRotation not found on owner.");
-    }
-
-    if (m_playerAnimationController == nullptr)
-    {
-        Debug::log("[LyrielBasicAttack] PlayerAnimationController not found on owner.");
-    }
+    LyrielAbilityBase::Start();
+    m_cooldown = m_attackCooldown;
 }
 
 void LyrielBasicAttack::Update()
 {
-    if (m_cooldownTimer > 0.0f)
-    {
-        m_cooldownTimer -= Time::getDeltaTime();
-        if (m_cooldownTimer < 0.0f)
-        {
-            m_cooldownTimer = 0.0f;
-        }
-    }
+    LyrielAbilityBase::Update();
 
-    if (m_attackStateTimer > 0.0f)
-    {
-        if (m_attackFacingTarget != nullptr)
-        {
-            faceTarget(m_attackFacingTarget);
-        }
-    }
-
-    updateAttackStateTimer();
-
-    if (Input::isRightShoulderJustPressed(m_playerIndex))
+    if (Input::isRightShoulderJustPressed(getPlayerIndex()))
     {
         tryAttack();
     }
 }
 
+void LyrielBasicAttack::onAttackWindowUpdate()
+{
+    if (m_attackFacingTarget != nullptr)
+    {
+        faceTarget(m_attackFacingTarget);
+    }
+}
+
+void LyrielBasicAttack::onAttackWindowFinished()
+{
+    m_attackFacingTarget = nullptr;
+}
+
 void LyrielBasicAttack::tryAttack()
 {
-    if (m_cooldownTimer > 0.0f)
+    if (!canStartAbility())
     {
         return;
     }
 
-    if (m_targetController == nullptr)
+    if (m_character == nullptr)
     {
         return;
     }
 
-    if (m_playerState != nullptr && m_playerState->isDowned())
+    PlayerTargetController* targetController = m_character->getTargetController();
+    if (targetController == nullptr)
     {
         return;
     }
 
-    GameObject* target = m_targetController->getCurrentTarget();
+    GameObject* target = targetController->getCurrentTarget();
     if (target == nullptr)
     {
         Debug::log("[LyrielBasicAttack] No current target.");
         return;
     }
 
+    setAbilityLocked(true);
+
     faceTarget(target);
     m_attackFacingTarget = target;
 
-    if (m_playerState != nullptr)
+    if (!spawnArrowToTarget(target))
     {
-        m_playerState->setState(PlayerStateType::Attacking);
+        setAbilityLocked(false);
+        m_attackFacingTarget = nullptr;
+        return;
     }
 
-    if (m_playerAnimationController != nullptr)
-    {
-        m_playerAnimationController->requestAttack();
-    }
+    beginAttackPresentation();
 
-    m_attackStateTimer = m_attackLockDuration;
-
-    spawnArrowToTarget(target);
-
-    m_cooldownTimer = m_attackCooldown;
+    beginAttackWindow(m_attackLockDuration);
+    m_cooldownTimer = m_cooldown;
 
     Debug::log("[LyrielBasicAttack] Shot arrow to target '%s'.", GameObjectAPI::getName(target));
 }
 
-void LyrielBasicAttack::spawnArrowToTarget(GameObject* target)
+bool LyrielBasicAttack::spawnArrowToTarget(GameObject* target)
 {
-    if (m_arrowPool == nullptr || target == nullptr)
+    if (m_lyriel == nullptr || target == nullptr)
     {
-        return;
+        return false;
     }
 
-    LyrielArrowProjectile* arrow = m_arrowPool->acquireArrow();
+    ArrowPool* arrowPool = m_lyriel->getArrowPool();
+    if (arrowPool == nullptr)
+    {
+        return false;
+    }
+
+    LyrielArrowProjectile* arrow = arrowPool->acquireArrow();
     if (arrow == nullptr)
     {
-        return;
+        return false;
     }
 
     Transform* spawnTransform = findArrowSpawnTransform();
@@ -159,7 +122,7 @@ void LyrielBasicAttack::spawnArrowToTarget(GameObject* target)
 
     if (spawnTransform == nullptr || targetTransform == nullptr)
     {
-        return;
+        return false;
     }
 
     const Vector3 startPosition = TransformAPI::getGlobalPosition(spawnTransform);
@@ -177,30 +140,21 @@ void LyrielBasicAttack::spawnArrowToTarget(GameObject* target)
         direction.Normalize();
     }
 
-    float arrowLifetime = distance / m_arrowSpeed;
-
+    const float arrowLifetime = distance / m_arrowSpeed;
     arrow->launch(startPosition, direction, m_arrowSpeed, arrowLifetime, target, m_attackDamage);
-}
 
-Transform* LyrielBasicAttack::findArrowSpawnTransform() const
-{
-    Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
-
-    if (!m_arrowSpawnChildName.empty())
-    {
-        Transform* spawnTransform = TransformAPI::findChildByName(ownerTransform, m_arrowSpawnChildName.c_str());
-        if (spawnTransform != nullptr)
-        {
-            return spawnTransform;
-        }
-    }
-
-    return ownerTransform;
+    return true;
 }
 
 void LyrielBasicAttack::faceTarget(GameObject* target)
 {
-    if (m_playerRotation == nullptr || target == nullptr)
+    if (m_character == nullptr || target == nullptr)
+    {
+        return;
+    }
+
+    PlayerRotation* playerRotation = m_character->getPlayerRotation();
+    if (playerRotation == nullptr)
     {
         return;
     }
@@ -208,38 +162,24 @@ void LyrielBasicAttack::faceTarget(GameObject* target)
     Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
     Transform* targetTransform = GameObjectAPI::getTransform(target);
 
-    Vector3 ownerPosition = TransformAPI::getGlobalPosition(ownerTransform);
-    Vector3 targetPosition = TransformAPI::getGlobalPosition(targetTransform);
+    if (ownerTransform == nullptr || targetTransform == nullptr)
+    {
+        return;
+    }
+
+    const Vector3 ownerPosition = TransformAPI::getGlobalPosition(ownerTransform);
+    const Vector3 targetPosition = TransformAPI::getGlobalPosition(targetTransform);
 
     Vector3 direction = targetPosition - ownerPosition;
     direction.y = 0.0f;
+
     if (direction.LengthSquared() <= 0.0001f)
     {
         return;
     }
+
     direction.Normalize();
-
-    m_playerRotation->applyFacingFromDirection(getOwner(), direction, Time::getDeltaTime());
-}
-
-void LyrielBasicAttack::updateAttackStateTimer()
-{
-    if (m_attackStateTimer <= 0.0f)
-    {
-        return;
-    }
-
-    m_attackStateTimer -= Time::getDeltaTime();
-    if (m_attackStateTimer <= 0.0f)
-    {
-        m_attackStateTimer = 0.0f;
-        m_attackFacingTarget = nullptr;
-
-        if (m_playerState != nullptr && m_playerState->isAttacking())
-        {
-            m_playerState->setState(PlayerStateType::Normal);
-        }
-    }
+    playerRotation->applyFacingFromDirection(getOwner(), direction, Time::getDeltaTime());
 }
 
 IMPLEMENT_SCRIPT(LyrielBasicAttack)

@@ -1,33 +1,39 @@
 #pragma once
 
-#include "PlayerDamageable.h"
+#include "ScriptAPI.h"
 
+class PlayerState;
+class PlayerController;
+class PlayerRotation;
+class PlayerAnimationController;
 class PlayerTargetController;
+class Damageable;
 
-class CharacterBase : public PlayerDamageable
+class CharacterBase : public Script
 {
 public:
     explicit CharacterBase(GameObject* owner);
 
-    void Start()  override;
-    void Update() override;
+    void Start() override;
 
-    bool canAct()          const { return m_canAct; }
-    void setCanAct(bool v)       { m_canAct = v; }
-    int  getPlayerIndex()  const { return m_playerIndex; }
+    int getPlayerIndex() const;
 
+    PlayerState* getPlayerState() const { return m_playerState; }
+    PlayerController* getPlayerController() const { return m_playerController; }
+    PlayerRotation* getPlayerRotation() const { return m_playerRotation; }
+    PlayerAnimationController* getAnimationController() const { return m_playerAnimationController; }
     PlayerTargetController* getTargetController() const { return m_targetController; }
+    Damageable* getDamageable() const { return m_damageable; }
+
+    bool isDowned() const;
+    bool isUsingAbility() const;
+    void setUsingAbility(bool value);
 
 protected:
-    void onDeath()   override;
-    void onRevive()  override;
-
-public:
-    int m_playerIndex = 0;
-
-private:
-    bool m_canAct = true;
-
+    PlayerState* m_playerState = nullptr;
+    PlayerController* m_playerController = nullptr;
+    PlayerRotation* m_playerRotation = nullptr;
+    PlayerAnimationController* m_playerAnimationController = nullptr;
     PlayerTargetController* m_targetController = nullptr;
-    Script*                 m_playerController = nullptr;
+    Damageable* m_damageable = nullptr;
 };
