@@ -15,7 +15,8 @@ public:
 
     ScriptFieldList getExposedFields() const override;
 
-    float m_attackLockDuration = 0.35f;
+    float m_attackLockDuration      = 0.35f;
+    float m_finalHitLockDuration    = 0.7f;
 
 protected:
     void onAttackWindowUpdate()   override;

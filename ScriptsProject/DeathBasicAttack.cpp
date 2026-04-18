@@ -10,7 +10,8 @@
 
 static const ScriptFieldInfo DeathBasicAttackFields[] =
 {
-    { "Attack Lock Duration", ScriptFieldType::Float, offsetof(DeathBasicAttack, m_attackLockDuration), { 0.05f, 2.0f, 0.05f } },
+    { "Attack Lock Duration",       ScriptFieldType::Float, offsetof(DeathBasicAttack, m_attackLockDuration),   { 0.05f, 2.0f, 0.05f } },
+    { "Final Hit Lock Duration",    ScriptFieldType::Float, offsetof(DeathBasicAttack, m_finalHitLockDuration), { 0.05f, 3.0f, 0.05f } },
 };
 
 IMPLEMENT_SCRIPT_FIELDS(DeathBasicAttack, DeathBasicAttackFields)
@@ -86,10 +87,13 @@ void DeathBasicAttack::tryAttack()
     m_deathChar->dealDamageBasicAttack(damage, target);
     m_deathChar->advanceCombo(false);
 
-    beginAttackPresentation();
-    beginAttackWindow(m_attackLockDuration);
+    const bool  isFinalHit  = (comboStep >= 2);
+    const float lockDuration = isFinalHit ? m_finalHitLockDuration : m_attackLockDuration;
 
-    if (comboStep < 2)
+    beginAttackPresentation();
+    beginAttackWindow(lockDuration);
+
+    if (!isFinalHit)
     {
         Debug::log("[R1] step %d/3", comboStep + 1);
     }
@@ -129,11 +133,14 @@ void DeathBasicAttack::releaseComboMoveLock()
 {
     m_movementLockedForCombo = false;
 
+    // Another ability may still be holding the lock (e.g. charged attack window still active).
+    // Leave PlayerState alone — that ability's finishAttackWindow will release it.
+    if (m_character != nullptr && m_character->isUsingAbility())
+        return;
+
     PlayerState* ps = m_character ? m_character->getPlayerState() : nullptr;
     if (ps != nullptr && ps->isAttacking())
-    {
         ps->setState(PlayerStateType::Normal);
-    }
 }
 
 void DeathBasicAttack::drawGizmo()
@@ -162,6 +169,8 @@ void DeathBasicAttack::drawGizmo()
 
     const Vector3 colGrey   = { 0.35f, 0.35f, 0.35f };
     const Vector3 colPurple = { 0.9f,  0.0f,  0.9f  };
+    const Vector3 colOrange = { 1.0f,  0.55f, 0.0f  };
+    const Vector3 colFill   = m_deathChar->wasLastHitR2() ? colOrange : colPurple;
 
     auto radialDir = [&](float a) -> Vector3
     {
@@ -198,7 +207,7 @@ void DeathBasicAttack::drawGizmo()
                                posFlat + radialDir(a1) * range, colGrey);
     }
 
-    // Combo fill: purple on hit zone arc
+    // Combo fill: purple (R1 last) or orange (R2 last) on hit zone arc
     if (fill > 0.0f)
     {
         const int   fillLines   = 16;
@@ -208,10 +217,10 @@ void DeathBasicAttack::drawGizmo()
         {
             const float t2 = static_cast<float>(i) / static_cast<float>(fillLines);
             const float a  = -hitHalfRad + t2 * filledAngle;
-            DebugDrawAPI::drawLine(posFlat, posFlat + radialDir(a) * range, colPurple);
+            DebugDrawAPI::drawLine(posFlat, posFlat + radialDir(a) * range, colFill);
         }
 
-        DebugDrawAPI::drawLine(posFlat, posFlat + hitLeft * range, colPurple);
+        DebugDrawAPI::drawLine(posFlat, posFlat + hitLeft * range, colFill);
     }
 }
 

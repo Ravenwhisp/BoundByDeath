@@ -15,9 +15,11 @@ static const ScriptFieldInfo DeathCharacterFields[] =
     { "Taunt Duration",         ScriptFieldType::Float, offsetof(DeathCharacter, m_tauntDuration),       { 0.0f,  10.0f,  0.1f  } },
     { "Arc Range",              ScriptFieldType::Float, offsetof(DeathCharacter, m_arcRange),            { 0.5f,  10.0f,  0.1f  } },
     { "Arc Angle",              ScriptFieldType::Float, offsetof(DeathCharacter, m_arcAngle),            { 10.0f, 360.0f, 5.0f  } },
-    { "Max Charge Time",        ScriptFieldType::Float, offsetof(DeathCharacter, m_maxChargeTime),       { 0.5f,  5.0f,   0.1f  } },
-    { "Combo Window",           ScriptFieldType::Float, offsetof(DeathCharacter, m_comboWindow),         { 0.1f,  3.0f,   0.05f } },
-    { "Combo Cooldown",         ScriptFieldType::Float, offsetof(DeathCharacter, m_comboCooldown),       { 0.0f,  5.0f,   0.1f  } },
+    { "Max Charge Time",           ScriptFieldType::Float, offsetof(DeathCharacter, m_maxChargeTime),         { 0.5f, 5.0f, 0.1f  } },
+    { "Combo Window R1",           ScriptFieldType::Float, offsetof(DeathCharacter, m_comboWindow),           { 0.1f, 5.0f, 0.05f } },
+    { "Combo Window R2",           ScriptFieldType::Float, offsetof(DeathCharacter, m_comboWindowR2),         { 0.1f, 5.0f, 0.05f } },
+    { "Combo Window Max Charge",   ScriptFieldType::Float, offsetof(DeathCharacter, m_comboWindowMaxCharge),  { 0.1f, 5.0f, 0.05f } },
+    { "Combo Cooldown",            ScriptFieldType::Float, offsetof(DeathCharacter, m_comboCooldown),         { 0.0f, 5.0f, 0.1f  } },
 };
 
 IMPLEMENT_SCRIPT_FIELDS(DeathCharacter, DeathCharacterFields)
@@ -51,15 +53,16 @@ void DeathCharacter::tickCombo(float dt)
     }
 
     m_comboTimer += dt;
-    if (m_comboTimer >= m_comboWindow)
+    if (m_comboTimer >= m_activeComboWindow)
     {
         resetCombo();
     }
 }
 
-void DeathCharacter::advanceCombo(bool isR2)
+void DeathCharacter::advanceCombo(bool isR2, float comboWindowOverride)
 {
-    m_comboTimer = 0.0f;
+    m_comboTimer        = 0.0f;
+    m_activeComboWindow = (comboWindowOverride > 0.0f) ? comboWindowOverride : m_comboWindow;
 
     if (isR2)
     {
