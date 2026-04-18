@@ -1,11 +1,10 @@
 #pragma once
-#include "ScriptAPI.h"
-#include "AbilityBase.h"
+#include "DeathAbilityBase.h"
 
 class EnemyDetectionAggro;
 class PlayerRotation;
 
-class DeathTaunt : public AbilityBase
+class DeathTaunt : public DeathAbilityBase
 {
     DECLARE_SCRIPT(DeathTaunt)
 
@@ -18,10 +17,6 @@ public:
     ScriptFieldList getExposedFields() const override;
     void drawGizmo() override;
     void onFieldEdited(const ScriptFieldInfo& field) override;
-
-protected:
-    void onActivate() override;
-    void onDeactivate() override;
 
 private:
     void beginAim();

@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "DeathTaunt.h"
-#include "CharacterBase.h"
 #include "DeathCharacter.h"
 #include "EnemyDetectionAggro.h"
 #include "PlayerRotation.h"
@@ -35,43 +34,46 @@ static const ScriptFieldInfo DeathTauntFields[] =
 IMPLEMENT_SCRIPT_FIELDS(DeathTaunt, DeathTauntFields)
 
 DeathTaunt::DeathTaunt(GameObject* owner)
-    : AbilityBase(owner)
+    : DeathAbilityBase(owner)
 {
 }
 
 void DeathTaunt::Start()
 {
+    DeathAbilityBase::Start();
+
     m_cooldown = (m_TauntCooldownSeconds < 0.0f ? 0.0f : m_TauntCooldownSeconds);
 
-    m_character = static_cast<CharacterBase*>(
-        GameObjectAPI::getScript(m_owner, "DeathCharacter"));
-
-    Script* rotationScript = GameObjectAPI::getScript(m_owner, "PlayerRotation");
-    m_playerRotation = dynamic_cast<PlayerRotation*>(rotationScript);
-
-    if (m_character == nullptr)
+    if (m_character != nullptr)
     {
-        Debug::warn("DeathTaunt: DeathCharacter not found on this GameObject.");
+        m_playerRotation = m_character->getPlayerRotation();
     }
 }
 
 void DeathTaunt::Update()
 {
-    m_cooldown = (m_TauntCooldownSeconds < 0.0f ? 0.0f : m_TauntCooldownSeconds);
+    DeathAbilityBase::Update();
 
-    // MUST be called first — handles dead guard, force-cancel on death, cooldown tick.
-    AbilityBase::Update();
-
-    if (m_character == nullptr || m_character->isDead())
+    if (m_character == nullptr || m_character->isDowned())
     {
         m_isAiming = false;
         m_currentAimDirection = Vector3::Zero;
         return;
     }
 
-    if (!m_isAiming && canActivate() && Input::isLeftTriggerJustPressed(getPlayerIndex()))
+    if (!m_isAiming && Input::isLeftTriggerJustPressed(getPlayerIndex()))
     {
-        beginAim();
+        if (!canStartAbility())
+        {
+            Debug::log("[DeathTaunt] L2 pressed but canStartAbility=false (cooldown=%.2f, usingAbility=%d, downed=%d)",
+                m_cooldownTimer,
+                m_character->isUsingAbility() ? 1 : 0,
+                m_character->isDowned() ? 1 : 0);
+        }
+        else
+        {
+            beginAim();
+        }
     }
 
     if (m_isAiming)
@@ -155,30 +157,9 @@ void DeathTaunt::onFieldEdited(const ScriptFieldInfo& field)
     }
 }
 
-void DeathTaunt::onActivate()
-{
-    AbilityBase::onActivate();
-
-    // Taunt applies its effect instantly and should not lock Death during the taunt duration.
-    m_character->setCanAct(true);
-}
-
-void DeathTaunt::onDeactivate()
-{
-    const bool restoreCanAct = m_character != nullptr && !m_character->isDead();
-
-    AbilityBase::onDeactivate();
-
-    if (restoreCanAct)
-    {
-        m_character->setCanAct(true);
-    }
-}
-
 void DeathTaunt::beginAim()
 {
-    onActivate();
-
+    Debug::log("[DeathTaunt] Aim started.");
     m_isAiming = true;
     m_debugConeTimer = 0.25f;
     m_currentAimDirection = getFallbackFacingDirection();
@@ -203,6 +184,7 @@ void DeathTaunt::updateAim()
 
 void DeathTaunt::releaseAimAndCast()
 {
+    Debug::log("[DeathTaunt] L2 released — casting.");
     m_isAiming = false;
 
     Vector3 finalDirection = m_currentAimDirection;
@@ -219,7 +201,7 @@ void DeathTaunt::releaseAimAndCast()
     }
 
     m_currentAimDirection = Vector3::Zero;
-    onDeactivate();
+    m_cooldownTimer = m_cooldown;
 }
 
 void DeathTaunt::applyTauntToEnemiesInCone(const Vector3& ownerForward) const
@@ -233,21 +215,30 @@ void DeathTaunt::applyTauntToEnemiesInCone(const Vector3& ownerForward) const
     const Vector3 ownerPosition = TransformAPI::getPosition(ownerTransform);
 
     const std::vector<GameObject*> enemies = SceneAPI::findAllGameObjectsByTag(Tag::ENEMY);
+    Debug::log("[DeathTaunt] Enemies with Tag::ENEMY found: %d", (int)enemies.size());
+
+    int taunted = 0;
     for (GameObject* enemy : enemies)
     {
         if (!isEnemyInsideTauntCone(enemy, ownerPosition, ownerForward))
         {
+            Debug::log("[DeathTaunt] Enemy '%s' outside cone.", GameObjectAPI::getName(enemy));
             continue;
         }
 
         Script* script = GameObjectAPI::getScript(enemy, "EnemyDetectionAggro");
         if (script == nullptr)
         {
+            Debug::log("[DeathTaunt] Enemy '%s' in cone but no EnemyDetectionAggro.", GameObjectAPI::getName(enemy));
             continue;
         }
 
         static_cast<EnemyDetectionAggro*>(script)->applyTaunt(ownerTransform, m_TauntDurationSeconds);
+        Debug::log("[DeathTaunt] Taunt applied to '%s' for %.1fs.", GameObjectAPI::getName(enemy), m_TauntDurationSeconds);
+        ++taunted;
     }
+
+    Debug::log("[DeathTaunt] Cast complete — %d enemies taunted.", taunted);
 }
 
 Vector3 DeathTaunt::computeAimDirection() const
