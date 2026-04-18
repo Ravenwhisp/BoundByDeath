@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ScriptAPI.h"
+#include "UISlider.h"
 
 class Damageable : public Script
 {
@@ -9,7 +10,8 @@ class Damageable : public Script
 public:
     explicit Damageable(GameObject* owner);
 
-    void Start() override;
+    void Start()     override;
+    void drawGizmo() override;
     ScriptFieldList getExposedFields() const override;
 
     void takeDamage(float amount);
@@ -37,10 +39,11 @@ private:
 
 public:
     float m_maxHp = 100.0f;
+	ScriptComponentRef<UISlider> m_healthBar;
 
 private:
-    float m_currentHp = 100.0f;
-    bool m_invulnerable = false;
-    bool m_isDead = false;
+    float m_currentHp   = 100.0f;
+    bool  m_invulnerable = false;
+    bool  m_isDead       = false;
 
 };
