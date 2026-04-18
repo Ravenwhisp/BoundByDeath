@@ -1,45 +1,93 @@
 #include "pch.h"
 #include "CharacterBase.h"
+
+#include "PlayerState.h"
+#include "PlayerController.h"
+#include "PlayerRotation.h"
+#include "PlayerAnimationController.h"
 #include "PlayerTargetController.h"
+#include "Damageable.h"
 
 CharacterBase::CharacterBase(GameObject* owner)
-    : PlayerDamageable(owner)
+    : Script(owner)
 {
 }
 
 void CharacterBase::Start()
 {
-    PlayerDamageable::Start();
+    Script* stateScript = GameObjectAPI::getScript(getOwner(), "PlayerState");
+    m_playerState = static_cast<PlayerState*>(stateScript);
 
-    m_targetController = static_cast<PlayerTargetController*>(
-        GameObjectAPI::getScript(m_owner, "PlayerTargetController"));
+    Script* controllerScript = GameObjectAPI::getScript(getOwner(), "PlayerController");
+    m_playerController = static_cast<PlayerController*>(controllerScript);
 
-    m_playerController = GameObjectAPI::getScript(m_owner, "PlayerController");
+    Script* rotationScript = GameObjectAPI::getScript(getOwner(), "PlayerRotation");
+    m_playerRotation = static_cast<PlayerRotation*>(rotationScript);
 
-    if (m_targetController == nullptr)
+    Script* animationScript = GameObjectAPI::getScript(getOwner(), "PlayerAnimationController");
+    m_playerAnimationController = static_cast<PlayerAnimationController*>(animationScript);
+
+    Script* targetControllerScript = GameObjectAPI::getScript(getOwner(), "PlayerTargetController");
+    m_targetController = static_cast<PlayerTargetController*>(targetControllerScript);
+
+    Script* damageableScript = GameObjectAPI::getScript(getOwner(), "PlayerDamageable");
+    m_damageable = static_cast<Damageable*>(damageableScript);
+
+    if (m_playerState == nullptr)
     {
-        Debug::warn("CharacterBase (%s): PlayerTargetController not found.", GameObjectAPI::getName(m_owner));
+        Debug::log("[CharacterBase] PlayerState not found on owner '%s'.", GameObjectAPI::getName(getOwner()));
     }
 
     if (m_playerController == nullptr)
     {
-        Debug::warn("CharacterBase (%s): PlayerController not found.", GameObjectAPI::getName(m_owner));
+        Debug::log("[CharacterBase] PlayerController not found on owner '%s'.", GameObjectAPI::getName(getOwner()));
+    }
+
+    if (m_playerRotation == nullptr)
+    {
+        Debug::log("[CharacterBase] PlayerRotation not found on owner '%s'.", GameObjectAPI::getName(getOwner()));
+    }
+
+    if (m_playerAnimationController == nullptr)
+    {
+        Debug::log("[CharacterBase] PlayerAnimationController not found on owner '%s'.", GameObjectAPI::getName(getOwner()));
+    }
+
+    if (m_targetController == nullptr)
+    {
+        Debug::log("[CharacterBase] PlayerTargetController not found on owner '%s'.", GameObjectAPI::getName(getOwner()));
+    }
+
+    if (m_damageable == nullptr)
+    {
+        Debug::log("[CharacterBase] Damageable not found on owner '%s'.", GameObjectAPI::getName(getOwner()));
     }
 }
 
-void CharacterBase::Update()
+int CharacterBase::getPlayerIndex() const
 {
-    PlayerDamageable::Update();
+    if (m_playerController == nullptr)
+    {
+        return 0;
+    }
+
+    return m_playerController->getPlayerIndex();
 }
 
-void CharacterBase::onDeath()
+bool CharacterBase::isDowned() const
 {
-    PlayerDamageable::onDeath();
-    m_canAct = false;
+    return m_playerState != nullptr && m_playerState->isDowned();
 }
 
-void CharacterBase::onRevive()
+bool CharacterBase::isUsingAbility() const
 {
-    PlayerDamageable::onRevive();
-    m_canAct = true;
+    return m_playerState != nullptr && m_playerState->isUsingAbility();
+}
+
+void CharacterBase::setUsingAbility(bool value)
+{
+    if (m_playerState != nullptr)
+    {
+        m_playerState->setUsingAbility(value);
+    }
 }

@@ -1,14 +1,7 @@
 #include "pch.h"
 #include "DeathDash.h"
-#include "CharacterBase.h"
 #include "DeathCharacter.h"
 #include "PlayerTargetController.h"
-
-// ============================================================
-// PROPOSAL — This script shows how a timed-movement ability
-// should communicate with AbilityBase. All game logic is marked
-// TODO and must be properly implemented.
-// ============================================================
 
 static const ScriptFieldInfo DeathDashFields[] =
 {
@@ -18,26 +11,19 @@ static const ScriptFieldInfo DeathDashFields[] =
 IMPLEMENT_SCRIPT_FIELDS(DeathDash, DeathDashFields)
 
 DeathDash::DeathDash(GameObject* owner)
-    : AbilityBase(owner)
+    : DeathAbilityBase(owner)
 {
     m_cooldown = 0.5f;
 }
 
 void DeathDash::Start()
 {
-    m_character = static_cast<CharacterBase*>(
-        GameObjectAPI::getScript(m_owner, "DeathCharacter"));
-
-    if (m_character == nullptr)
-    {
-        Debug::warn("DeathDash: DeathCharacter not found on this GameObject.");
-    }
+    DeathAbilityBase::Start();
 }
 
 void DeathDash::Update()
 {
-    // MUST be called first — handles dead guard, force-cancel on death, cooldown tick.
-    AbilityBase::Update();
+    DeathAbilityBase::Update();
 
     if (m_character == nullptr)
     {
@@ -45,7 +31,7 @@ void DeathDash::Update()
     }
 
     // --- Activate dash ---
-    if (!isActive() && canActivate() && Input::isLeftShoulderJustPressed(getPlayerIndex()))
+    if (!m_isDashing && canStartAbility() && Input::isLeftShoulderJustPressed(getPlayerIndex()))
     {
         m_dashTimer = 0.0f;
 
@@ -53,23 +39,26 @@ void DeathDash::Update()
         //       Use m_character->getTargetController()->getCurrentTarget() to get the target,
         //       then derive direction from positions via TransformAPI::getPosition().
 
-        onActivate();  // sets isActive = true, blocks other abilities via canAct
+        m_isDashing = true;
+        setAbilityLocked(true);
         // TODO: play dash animation / start dash VFX
         return;
     }
 
     // --- Tick dash movement ---
-    if (isActive())
+    if (m_isDashing)
     {
         m_dashTimer += Time::getDeltaTime();
 
         // TODO: move the character along m_dashDirection each frame.
-        //       Use: dashDistance = static_cast<DeathCharacter*>(m_character)->m_dashDistance
-        //       And: TransformAPI::translate(GameObjectAPI::getTransform(m_owner), ...)
+        //       Use: dashDistance = m_deathChar->m_dashDistance
+        //       And: TransformAPI::translate(GameObjectAPI::getTransform(getOwner()), ...)
 
         if (m_dashTimer >= m_dashDuration)
         {
-            onDeactivate();  // sets isActive = false, starts cooldown, unblocks canAct
+            m_isDashing = false;
+            setAbilityLocked(false);
+            m_cooldownTimer = m_cooldown;
             // TODO: stop dash VFX
         }
     }

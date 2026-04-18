@@ -1,23 +1,55 @@
 #pragma once
 
-#include "AbilityBase.h"
+#include "LyrielAbilityBase.h"
+#include <vector>
 
-// Lyriel's arrow volley — fires N arrows spread in an arc around the current target (LT / L2).
-// Sibling script of LyrielCharacter on the same GameObject.
-// Reads m_arrowVolleyCount and m_arrowVolleySpread from LyrielCharacter
-// via static_cast<LyrielCharacter*>(m_character).
-//
-// Instant ability: all arrows fire in the same frame.
-// TODO: define whether arrows hit only enemies in the arc or the single target multiple times.
-class LyrielArrowVolley : public AbilityBase
+class LyrielArrowVolley : public LyrielAbilityBase
 {
     DECLARE_SCRIPT(LyrielArrowVolley)
 
 public:
     explicit LyrielArrowVolley(GameObject* owner);
 
-    void Start()  override;
+    void Start() override;
     void Update() override;
+    void drawGizmo() override;
 
     ScriptFieldList getExposedFields() const override;
+
+protected:
+    void onAttackWindowUpdate() override;
+    void onAttackWindowFinished() override;
+
+private:
+    void beginAim();
+    void updateAim();
+    void releaseAimAndCast();
+
+    bool canStartAim() const;
+    bool canCast() const;
+
+    Vector3 computeAimDirection() const;
+    bool isAimStickValid(const Vector3& direction) const;
+
+    void collectEnemiesInCone(const Vector3& origin, const Vector3& forward, std::vector<GameObject*>& outTargets);
+    void applyVolleyDamage(const std::vector<GameObject*>& targets);
+    void spawnVolleyArrows(const Vector3& origin, const Vector3& forward);
+
+    void drawAimPreview(const Vector3& origin, const Vector3& forward) const;
+
+private:
+    bool m_isAiming = false;
+    Vector3 m_currentAimDirection = Vector3::Zero;
+    Vector3 m_attackFacingDirection = Vector3::Zero;
+
+public:
+    float m_volleyDamage = 20.0f;
+    float m_volleyCooldown = 5.0f;
+    float m_volleyRange = 8.0f;
+    float m_coneAngleDegrees = 50.0f;
+
+    int m_numVisualArrows = 5;
+    float m_arrowSpeed = 18.0f;
+
+    float m_attackLockDuration = 0.2f;
 };

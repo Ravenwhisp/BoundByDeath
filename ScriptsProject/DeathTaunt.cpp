@@ -1,37 +1,24 @@
 #include "pch.h"
 #include "DeathTaunt.h"
-#include "CharacterBase.h"
 #include "DeathCharacter.h"
 
-// ============================================================
-// PROPOSAL — This script shows how a timed passive ability
-// should communicate with AbilityBase. All game logic is marked
-// TODO and must be properly implemented.
-// Mechanic is also pending final design definition.
-// ============================================================
+// TODO: define taunt mechanic — pending design definition.
 
 ScriptFieldList DeathTaunt::getExposedFields() const { return {}; }
 
 DeathTaunt::DeathTaunt(GameObject* owner)
-    : AbilityBase(owner)
+    : DeathAbilityBase(owner)
 {
 }
 
 void DeathTaunt::Start()
 {
-    m_character = static_cast<CharacterBase*>(
-        GameObjectAPI::getScript(m_owner, "DeathCharacter"));
-
-    if (m_character == nullptr)
-    {
-        Debug::warn("DeathTaunt: DeathCharacter not found on this GameObject.");
-    }
+    DeathAbilityBase::Start();
 }
 
 void DeathTaunt::Update()
 {
-    // MUST be called first — handles dead guard, force-cancel on death, cooldown tick.
-    AbilityBase::Update();
+    DeathAbilityBase::Update();
 
     if (m_character == nullptr)
     {
@@ -39,28 +26,29 @@ void DeathTaunt::Update()
     }
 
     // --- Activate taunt ---
-    if (!isActive() && canActivate() && Input::isLeftTriggerJustPressed(getPlayerIndex()))
+    if (!m_isTaunting && canStartAbility() && Input::isLeftTriggerJustPressed(getPlayerIndex()))
     {
         m_tauntTimer = 0.0f;
-        onActivate();  // sets isActive = true, blocks other abilities via canAct
+        m_isTaunting = true;
+        setAbilityLocked(true);
         // TODO: play taunt animation / VFX
-        // TODO: apply taunt effect to nearby enemies (aggro, debuff, etc.) — pending design
+        // TODO: apply taunt effect to nearby enemies — pending design
         return;
     }
 
     // --- Tick taunt duration ---
-    if (isActive())
+    if (m_isTaunting)
     {
         m_tauntTimer += Time::getDeltaTime();
 
-        const float tauntDuration = static_cast<DeathCharacter*>(m_character)->m_tauntDuration;
-
         // TODO: sustain taunt effect on enemies each frame
 
-        if (m_tauntTimer >= tauntDuration)
+        if (m_tauntTimer >= m_deathChar->m_tauntDuration)
         {
             // TODO: remove taunt effect from enemies
-            onDeactivate();  // sets isActive = false, starts cooldown, unblocks canAct
+            m_isTaunting = false;
+            setAbilityLocked(false);
+            m_cooldownTimer = m_cooldown;
         }
     }
 }

@@ -1,13 +1,19 @@
 #pragma once
 
-#include "AbilityBase.h"
+#include "DeathAbilityBase.h"
 
-class DeathCharacter;
-class PlayerState;
-class PlayerAnimationController;
-class PlayerRotation;
-
-class DeathChargedAttack : public AbilityBase
+// Death's heavy attack — R2 (RT) with two modes:
+//
+//   Quick press  (release before m_minChargeTime):
+//     Deals m_chargedAttackDamage to all enemies in the attack arc.
+//     Can be used up to twice consecutively in a combo (enforced by DeathCharacter).
+//
+//   Charged press (hold >= m_minChargeTime, release to fire):
+//     Scales damage from 1x to 2x m_chargedAttackDamage based on how close
+//     the charge is to m_maxChargeTime.
+//     COMBO STARTER ONLY — ignored if already mid-combo (comboStep > 0).
+//     After landing, the combo continues normally.
+class DeathChargedAttack : public DeathAbilityBase
 {
     DECLARE_SCRIPT(DeathChargedAttack)
 
@@ -20,21 +26,9 @@ public:
     ScriptFieldList getExposedFields() const override;
 
 public:
-    float m_minChargeTime             = 0.5f;
-    float m_maxChargeTime             = 1.0f;
-    float m_attackLockDuration        = 0.55f;
-    float m_chargedAttackLockDuration = 0.8f;
+    float m_minChargeTime = 0.5f;
 
 private:
-    void faceTarget(GameObject* target);
-
-    float m_chargeTime      = 0.0f;
-    float m_attackLockTimer = 0.0f;
-    bool  m_quickPressOnly  = false;
-
-    DeathCharacter*            m_deathChar          = nullptr;
-    GameObject*                m_attackFacingTarget = nullptr;
-    PlayerState*               m_playerState        = nullptr;
-    PlayerAnimationController* m_animController     = nullptr;
-    PlayerRotation*            m_playerRotation     = nullptr;
+    float m_chargeTime  = 0.0f;
+    bool  m_isCharging  = false;
 };
