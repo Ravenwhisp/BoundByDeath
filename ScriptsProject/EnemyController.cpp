@@ -10,6 +10,7 @@ static const ScriptFieldInfo EnemyControllerFields[] =
 	{ "Move Speed", ScriptFieldType::Float, offsetof(EnemyController, m_moveSpeed), { 0.0f, 50.0f, 0.1f } },
 	{ "Turn Speed", ScriptFieldType::Float, offsetof(EnemyController, m_turnSpeed), { 0.0f, 5.0f, 0.1f } },
 	{ "Interval", ScriptFieldType::Float, offsetof(EnemyController, m_intervalRepath), { 0.0f, 50.0f, 0.1f } },
+	{ "Charge Cooldown", ScriptFieldType::Float, offsetof(EnemyController, m_chargeCooldown), { 0.0f, 20.0f, 0.1f } },
 	{ "Debug Enabled", ScriptFieldType::Bool, offsetof(EnemyController, m_debugEnabled) }
 };
 static Damageable* findDamageableOnTarget(GameObject* gameObject)
@@ -315,6 +316,28 @@ void EnemyController::addToRepathTimer(float dt)
 bool EnemyController::shouldRepath() const
 {
 	return m_repathTimer >= m_intervalRepath;
+}
+void EnemyController::tickChargeCooldown(float dt)
+{
+	if (m_chargeCooldownTimer > 0.0f)
+	{
+		m_chargeCooldownTimer -= dt;
+
+		if (m_chargeCooldownTimer < 0.0f)
+		{
+			m_chargeCooldownTimer = 0.0f;
+		}
+	}
+}
+
+bool EnemyController::isChargeReady() const
+{
+	return m_chargeCooldownTimer <= 0.0f;
+}
+
+void EnemyController::consumeChargeCooldown()
+{
+	m_chargeCooldownTimer = m_chargeCooldown;
 }
 
 IMPLEMENT_SCRIPT(EnemyController)

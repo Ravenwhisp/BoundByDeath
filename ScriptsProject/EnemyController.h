@@ -21,13 +21,14 @@ public:
     float m_moveSpeed = 1.0f;
     float m_turnSpeed = 2.0f;
     float m_intervalRepath = 0.4f;
+    float m_chargeCooldown = 3.0f;
     bool m_debugEnabled = true;
 
 private:
     EnemyDetectionAggro* m_enemyDetectionAggro = nullptr;
     Transform* m_currentTarget = nullptr;
     float m_repathTimer = 0.0f;
-
+    float m_chargeCooldownTimer = 0.0f;
     std::vector<Vector3> m_path;
     bool m_hasPath = false;
     size_t m_currentIndex = 0;
@@ -47,6 +48,9 @@ public:
     void resetRepathTimer();
     void addToRepathTimer(float dt);
     bool shouldRepath() const;
+    void tickChargeCooldown(float dt);
+    bool isChargeReady() const;
+    void consumeChargeCooldown();
 
 private:
     Vector3 getChasePosition() const;

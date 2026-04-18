@@ -5,12 +5,12 @@
 
 class EnemyController;
 
-class EnemyCHASE : public StateMachineScript
+class EnemyCHARGE : public StateMachineScript
 {
-	DECLARE_SCRIPT(EnemyCHASE)
+	DECLARE_SCRIPT(EnemyCHARGE)
 
 public:
-	explicit EnemyCHASE(GameObject* owner);
+	explicit EnemyCHARGE(GameObject* owner);
 
 	void OnStateEnter() override;
 	void OnStateUpdate() override;
@@ -20,9 +20,11 @@ public:
 
 private:
 	EnemyController* m_enemyController = nullptr;
+	Vector3 m_chargeDirection = Vector3(0.0f, 0.0f, 1.0f);
+	float m_elapsedTime = 0.0f;
 
 public:
+	float m_chargeDuration = 0.5f;
+	float m_chargeSpeed = 6.0f;
 	bool m_debugEnabled = true;
-	bool m_useCharge = false;
-	float m_chargeTriggerRange = 4.0f;
 };

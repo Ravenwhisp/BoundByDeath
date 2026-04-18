@@ -4,6 +4,8 @@
 
 static const ScriptFieldInfo CHASEFields[] =
 {
+	{ "Use Charge", ScriptFieldType::Bool, offsetof(EnemyCHASE, m_useCharge) },
+	{ "Charge Trigger Range", ScriptFieldType::Float, offsetof(EnemyCHASE, m_chargeTriggerRange), { 0.0f, 50.0f, 0.1f } },
 	{ "Debug Enabled", ScriptFieldType::Bool, offsetof(EnemyCHASE, m_debugEnabled) }
 };
 
@@ -52,12 +54,34 @@ void EnemyCHASE::OnStateUpdate()
 		return;
 	}
 
+	m_enemyController->tickChargeCooldown(Time::getDeltaTime());
 	m_enemyController->updateCurrentTarget();
 
 	if (!m_enemyController->hasValidTarget())
 	{
 		AnimationAPI::playState(animation, "Idle"); // sendTrigger
 		return;
+	}
+
+	Transform* currentTarget = m_enemyController->getCurrentTarget();
+
+	if (m_useCharge && currentTarget && m_enemyController->isChargeReady())
+	{
+		Vector3 ownerPosition = getOwner()->GetTransform()->getPosition();
+		Vector3 targetPosition = currentTarget->getPosition();
+
+		Vector3 difference = targetPosition - ownerPosition;
+		difference.y = 0.0f;
+
+		float distanceToTarget = difference.Length();
+
+		if (distanceToTarget <= m_chargeTriggerRange && distanceToTarget > m_enemyController->m_combatRange)
+		{
+			m_enemyController->faceCurrentTarget();
+			m_enemyController->consumeChargeCooldown();
+			AnimationAPI::playState(animation, "Charge");
+			return;
+		}
 	}
 
 	if (m_enemyController->isTargetInCombatRange())
