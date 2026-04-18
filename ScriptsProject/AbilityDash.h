@@ -18,6 +18,7 @@ protected:
     virtual bool canDash() const;
     virtual void onDashStarted();
     virtual void onDashUpdate(float dt) {}
+    virtual void onDashEnded() {}
 
 private:
     void tryStartDash();
