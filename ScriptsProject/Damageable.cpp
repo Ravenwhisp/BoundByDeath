@@ -14,6 +14,10 @@ Damageable::Damageable(GameObject* owner)
 {
 }
 
+void Damageable::drawGizmo()
+{
+}
+
 void Damageable::Start()
 {
     m_currentHp = m_maxHp;
