@@ -23,6 +23,7 @@ protected:
 
 private:
     void tryAttack();
+    void snapFaceTarget(GameObject* target);
     void faceTarget(GameObject* target);
     void releaseComboMoveLock();
 

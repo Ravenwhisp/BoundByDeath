@@ -77,7 +77,7 @@ void DeathBasicAttack::tryAttack()
     setAbilityLocked(true);
     m_movementLockedForCombo = true;
 
-    faceTarget(target);
+    snapFaceTarget(target);
     m_attackFacingTarget = target;
 
     const int   comboStep = m_deathChar->getComboStep();
@@ -213,6 +213,40 @@ void DeathBasicAttack::drawGizmo()
 
         DebugDrawAPI::drawLine(posFlat, posFlat + hitLeft * range, colPurple);
     }
+}
+
+void DeathBasicAttack::snapFaceTarget(GameObject* target)
+{
+    if (target == nullptr)
+    {
+        return;
+    }
+
+    Transform* myTransform     = GameObjectAPI::getTransform(getOwner());
+    Transform* targetTransform = GameObjectAPI::getTransform(target);
+    if (myTransform == nullptr || targetTransform == nullptr)
+    {
+        return;
+    }
+
+    const float rangeSq = m_deathChar->m_basicAttackRange * m_deathChar->m_basicAttackRange;
+
+    Vector3 myPos     = TransformAPI::getGlobalPosition(myTransform);
+    Vector3 targetPos = TransformAPI::getGlobalPosition(targetTransform);
+    Vector3 dir       = targetPos - myPos;
+    dir.y = 0.0f;
+
+    if (dir.LengthSquared() > rangeSq || dir.LengthSquared() <= 0.0001f)
+    {
+        return;
+    }
+
+    dir.Normalize();
+
+    constexpr float k_radToDeg = 180.0f / 3.14159265f;
+    const float     yaw        = atan2f(dir.x, dir.z) * k_radToDeg;
+    const Vector3   euler      = TransformAPI::getEulerDegrees(myTransform);
+    TransformAPI::setRotationEuler(myTransform, Vector3(euler.x, yaw, euler.z));
 }
 
 void DeathBasicAttack::faceTarget(GameObject* target)
