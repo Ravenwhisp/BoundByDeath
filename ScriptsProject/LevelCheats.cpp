@@ -3,6 +3,7 @@
 #include "KeyCode.h"
 #include "PlayerState.h"
 #include "PlayerDamageable.h"
+#include "PlayerController.h"
 
 //static const ScriptFieldInfo myScriptFields[] =
 //{
@@ -85,24 +86,44 @@ void LevelCheats::Teleport()
     for (GameObject* player : players)
     {
         Transform* playerTransform = GameObjectAPI::getTransform(player);
-        TransformAPI::setPosition(playerTransform, spawnPoints[m_spawnIndex]);
-        m_spawnIndex += 1;
-        if(m_spawnIndex >= spawnPoints.size())
-        {
-            m_spawnIndex = 0;
-		}
+        TransformAPI::setPosition(playerTransform, spawnPoints[m_spawnIndex]);  
+    }
+    m_spawnIndex += 1;
+    if (m_spawnIndex >= spawnPoints.size())
+    {
+        m_spawnIndex = 0;
     }
 }
 
 void LevelCheats::ActivateGodMode()
 {
-    Debug::log("God Mode activated!");
+    Debug::log("God Mode");
+    std::vector<GameObject*> players = SceneAPI::findAllGameObjectsByTag(Tag::PLAYER);
+
+    for (GameObject* player : players)
+    {
+        Script* playerControllerScript = GameObjectAPI::getScript(player, "PlayerController");
+		PlayerController* playerController = dynamic_cast<PlayerController*>(playerControllerScript);
+        if (playerController)
+        {
+            playerController->m_godMode = !playerController->m_godMode;
+		}
+    }
+	
     
 }
 
 void LevelCheats::SpawnEnemies()
 {
     Debug::log("Spawn Enemies activated!");
+
+    GameObject* player = SceneAPI::findAllGameObjectsByTag(Tag::PLAYER)[m_playerIndex];
+	Transform* playerTransform = GameObjectAPI::getTransform(player);
+	Vector3 playerPosition = TransformAPI::getPosition(playerTransform);
+
+	Vector3 enemySpawnPosition = playerPosition + Vector3(2.0f, 0.0f, 0.0f);
+
+	GameObject* enemyPrefab = GameObjectAPI::instantiatePrefab("Assets/Prefabs/Spider.prefab", enemySpawnPosition, Vector3(0, 0, 0));
     
 }
 
@@ -121,7 +142,7 @@ void LevelCheats::RestoreHealth()
 
 void LevelCheats::DownState()
 {
-    Debug::log("Down State activated! Player % i healed", m_playerIndex+1);
+    Debug::log("Down State activated! Player % i downed", m_playerIndex+1);
 	GameObject* player = SceneAPI::findAllGameObjectsByTag(Tag::PLAYER)[m_playerIndex];
     Script* damageableScript = GameObjectAPI::getScript(player, "PlayerState");
     PlayerState* playerState = dynamic_cast<PlayerState*>(damageableScript);

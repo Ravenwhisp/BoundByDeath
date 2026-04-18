@@ -30,9 +30,9 @@ private:
     int m_spawnIndex = 0;
 
     std::vector<Vector3> spawnPoints = {
-    Vector3(11.46f, 0.0f, 31.93f),
-    Vector3(20.679f, 0.0f, -16.721f),
-    Vector3(-8.706f, -1.739f, 29.411f),
+    Vector3(11.46f, 1.156f, 31.93f),
+    Vector3(20.679f, 1.156f, -16.721f),
+    Vector3(-8.706f, 0.0f, 29.411f),
     Vector3(-44.055f, 4.275f, -14.0f),
     Vector3(-64.385f, -22.566f, 22.565f),
     Vector3(-45.819f, -16.11f, 81.79f),
