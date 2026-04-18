@@ -105,7 +105,7 @@ void DeathDash::applyDashDamage()
 
         if (damageable != nullptr)
         {
-            damageable->takeDamageEnemy(m_dashDamage, GameObjectAPI::getTransform(getOwner());
+            damageable->takeDamageEnemy(m_dashDamage, GameObjectAPI::getTransform(getOwner()));
         }
     }
 }
