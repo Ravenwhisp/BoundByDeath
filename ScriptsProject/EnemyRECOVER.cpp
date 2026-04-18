@@ -5,6 +5,7 @@
 static const ScriptFieldInfo RECOVERFields[] =
 {
 	{ "Recover Duration", ScriptFieldType::Float, offsetof(EnemyRECOVER, m_recoverDuration), { 0.0f, 10.0f, 0.1f } },
+	{ "Go To Stun After Recover", ScriptFieldType::Bool, offsetof(EnemyRECOVER, m_goToStunAfterRecover) },
 	{ "Debug Enabled", ScriptFieldType::Bool, offsetof(EnemyRECOVER, m_debugEnabled) }
 };
 
@@ -60,7 +61,15 @@ void EnemyRECOVER::OnStateUpdate()
 
 	if (m_recoverTimer >= m_recoverDuration)
 	{
-		AnimationAPI::playState(animation, "Attack");
+		if (m_goToStunAfterRecover)
+		{
+			AnimationAPI::playState(animation, "Stun");
+		}
+		else
+		{
+			AnimationAPI::playState(animation, "Attack");
+		}
+
 		return;
 	}
 }

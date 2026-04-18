@@ -5,12 +5,12 @@
 
 class EnemyController;
 
-class EnemyRECOVER : public StateMachineScript
+class EnemySTUN : public StateMachineScript
 {
-	DECLARE_SCRIPT(EnemyRECOVER)
+	DECLARE_SCRIPT(EnemySTUN)
 
 public:
-	explicit EnemyRECOVER(GameObject* owner);
+	explicit EnemySTUN(GameObject* owner);
 
 	void OnStateEnter() override;
 	void OnStateUpdate() override;
@@ -20,10 +20,9 @@ public:
 
 private:
 	EnemyController* m_enemyController = nullptr;
-	float m_recoverTimer = 0.0f;
+	float m_elapsedTime = 0.0f;
 
 public:
-	float m_recoverDuration = 0.6f;
+	float m_stunDuration = 1.0f;
 	bool m_debugEnabled = true;
-	bool m_goToStunAfterRecover = false;
 };
