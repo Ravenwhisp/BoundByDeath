@@ -24,36 +24,54 @@ void LevelCheats::Start()
 
 void LevelCheats::Update()
 {
-    if(Input::isKeyDown(KeyCode::K) && Input::isKeyDown(KeyCode::RightShift))
+    if(Input::isKeyDown(KeyCode::Q) && Input::isKeyDown(KeyCode::RightShift))
     {
         AutoWin();
 	}
 
-    if(Input::isKeyDown(KeyCode::L) && Input::isKeyDown(KeyCode::RightShift))
+    if(Input::isKeyDown(KeyCode::W) && Input::isKeyDown(KeyCode::RightShift))
     {
         AutoLose();
     }
-    if(Input::isKeyDown(KeyCode::T) && Input::isKeyDown(KeyCode::RightShift))
+    if(Input::isKeyDown(KeyCode::E) && Input::isKeyDown(KeyCode::RightShift))
     {
         Teleport();
     }
-    if(Input::isKeyDown(KeyCode::J) && Input::isKeyDown(KeyCode::RightShift))
+    if(Input::isKeyDown(KeyCode::R) && Input::isKeyDown(KeyCode::RightShift))
     {
         ActivateGodMode();
     }
-    if(Input::isKeyDown(KeyCode::E) && Input::isKeyDown(KeyCode::RightShift))
+    if(Input::isKeyDown(KeyCode::T) && Input::isKeyDown(KeyCode::RightShift))
     {
         SpawnEnemies();
     }
-    if(Input::isKeyDown(KeyCode::W) && Input::isKeyDown(KeyCode::RightShift))
+    if(Input::isKeyDown(KeyCode::A) && Input::isKeyDown(KeyCode::RightShift))
     {
-        RestoreHealth();
+        if(Input::isKeyDown(KeyCode::Num1))
+        {
+			m_playerIndex = 0;
+            RestoreHealth();
+		}
+        else if (Input::isKeyDown(KeyCode::Num2))
+        {
+            m_playerIndex = 1;
+            RestoreHealth();
+        }      
+    }
+    if(Input::isKeyDown(KeyCode::S) && Input::isKeyDown(KeyCode::RightShift))
+    {
+        if (Input::isKeyDown(KeyCode::Num1))
+        {
+            m_playerIndex = 0;
+            DownState();
+        }
+        else if (Input::isKeyDown(KeyCode::Num2))
+        {
+            m_playerIndex = 1;
+            DownState();
+        }
     }
     if(Input::isKeyDown(KeyCode::D) && Input::isKeyDown(KeyCode::RightShift))
-    {
-        DownState();
-    }
-    if(Input::isKeyDown(KeyCode::R) && Input::isKeyDown(KeyCode::RightShift))
     {
         restartLevel();
 	}
@@ -73,10 +91,13 @@ void LevelCheats::AutoLose()
 
 void LevelCheats::Teleport()
 {
-    Debug::log("Teleport activated!");
-    GameObject* player = SceneAPI::findAllGameObjectsByTag(Tag::PLAYER)[0];
-    Transform* playerTransform = GameObjectAPI::getTransform(player);
-    TransformAPI::setPosition(playerTransform, Vector3(0.0f, 0.0f, 0.0f));
+    std::vector<GameObject*> players = SceneAPI::findAllGameObjectsByTag(Tag::PLAYER);
+
+    for (GameObject* player : players)
+    {
+        Transform* playerTransform = GameObjectAPI::getTransform(player);
+        TransformAPI::setPosition(playerTransform, Vector3(0.0f, 0.0f, 0.0f));
+    }
 }
 
 void LevelCheats::ActivateGodMode()
@@ -93,8 +114,8 @@ void LevelCheats::SpawnEnemies()
 
 void LevelCheats::RestoreHealth()
 {
-    Debug::log("Restore Health activated!");
-	GameObject* player = SceneAPI::findAllGameObjectsByTag(Tag::PLAYER)[0];
+    Debug::log("Restore Health activated! Player %i healed",m_playerIndex+1);
+	GameObject* player = SceneAPI::findAllGameObjectsByTag(Tag::PLAYER)[m_playerIndex];
     Script* damageableScript = GameObjectAPI::getScript(player, "PlayerDamageable");
     PlayerDamageable* damageable = dynamic_cast<PlayerDamageable*>(damageableScript);
     if (damageable)
@@ -106,8 +127,8 @@ void LevelCheats::RestoreHealth()
 
 void LevelCheats::DownState()
 {
-    Debug::log("Down State activated!");
-	GameObject* player = SceneAPI::findAllGameObjectsByTag(Tag::PLAYER)[0];
+    Debug::log("Down State activated! Player % i healed", m_playerIndex+1);
+	GameObject* player = SceneAPI::findAllGameObjectsByTag(Tag::PLAYER)[m_playerIndex];
     Script* damageableScript = GameObjectAPI::getScript(player, "PlayerState");
     PlayerState* playerState = dynamic_cast<PlayerState*>(damageableScript);
     if (playerState)

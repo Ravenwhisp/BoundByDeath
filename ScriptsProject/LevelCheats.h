@@ -22,5 +22,9 @@ public:
 	void restartLevel();
 
     //ScriptFieldList getExposedFields() const override;
+
+private:
+
+	int m_playerIndex = 0;
 };
 
