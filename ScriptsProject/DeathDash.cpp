@@ -29,29 +29,9 @@ void DeathDash::Start()
     AbilityDash::Start();
 }
 
-void DeathDash::recoverCharge()
-{
-    if (m_charges < MAX_DASH_CHARGES)
-    {
-        ++m_charges;
-
-        if (m_charges == MAX_DASH_CHARGES)
-        {
-            m_chargeRecoveryTimer = 0.0f;
-        }
-    }
-}
-
-bool DeathDash::canDash() const
-{
-    return m_charges > 0;
-}
-
 
 void DeathDash::onDashStarted()
 {
-    --m_charges;
-
     Transform* t = GameObjectAPI::getTransform(getOwner());
     m_dashStartPosition = (t != nullptr) ? TransformAPI::getPosition(t) : Vector3::Zero;
     m_dashDamageDealt = false;
@@ -64,24 +44,7 @@ void DeathDash::onDashEnded()
 
 void DeathDash::onDashUpdate(float dt)
 {
-    if (m_charges >= MAX_DASH_CHARGES)
-    {
-        return;
-    }
 
-    m_chargeRecoveryTimer += dt;
-
-    while (m_chargeRecoveryTimer >= m_chargeRechargeTime && m_charges < MAX_DASH_CHARGES)
-    {
-        ++m_charges;
-        m_chargeRecoveryTimer -= m_chargeRechargeTime;
-    }
-
-    if (m_charges >= MAX_DASH_CHARGES)
-    {
-        m_charges = MAX_DASH_CHARGES;
-        m_chargeRecoveryTimer = 0.0f;
-    }
 }
 
 

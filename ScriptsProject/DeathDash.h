@@ -2,8 +2,6 @@
 
 #include "AbilityDash.h"
 
-#define MAX_DASH_CHARGES 1
-
 class DeathDash : public AbilityDash
 {
     DECLARE_SCRIPT(LyrielDash)
@@ -14,10 +12,7 @@ public:
     void Start() override;
     ScriptFieldList getExposedFields() const override;
 
-    void recoverCharge();
-
 protected:
-    bool canDash() const override;
 
     void onDashStarted() override;
     void onDashEnded() override;
@@ -26,7 +21,7 @@ protected:
 public:
     float m_dashDurationLyriel = 0.15f;
     float m_dashDistanceLyriel = 3.0f;
-    float m_dashCooldown = 0.5f;
+    float m_dashCooldown = 4.0f;
     float m_chargeRechargeTime = 3.0f;
 
     float m_dashHitWidth = 3.0f;
@@ -34,7 +29,6 @@ public:
     float m_dashDamage = 20.0f;
 
 private:
-    int   m_charges = MAX_DASH_CHARGES;
     float m_chargeRecoveryTimer = 0.0f;
 
     Vector3 m_dashStartPosition = Vector3::Zero;
