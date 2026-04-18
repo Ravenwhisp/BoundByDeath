@@ -2,14 +2,13 @@
 #include "DeathDash.h"
 
 #include "CharacterBase.h"
-#include "Damageable.h"
+#include "EnemyDamageable.h"
 
 static const ScriptFieldInfo LyrielDashFields[] =
 {
     { "Dash Duration",        ScriptFieldType::Float, offsetof(DeathDash, m_dashDurationLyriel), { 0.0f, 1.0f,  0.01f } },
     { "Dash Distance",        ScriptFieldType::Float, offsetof(DeathDash, m_dashDistanceLyriel), { 0.0f, 10.0f, 0.1f  } },
     { "Dash Cooldown",        ScriptFieldType::Float, offsetof(DeathDash, m_dashCooldown),        { 0.0f, 5.0f,  0.01f } },
-    { "Charge Recharge Time", ScriptFieldType::Float, offsetof(DeathDash, m_chargeRechargeTime),  { 0.1f, 10.0f, 0.1f  } },
     { "Dash Hit Width",       ScriptFieldType::Float, offsetof(DeathDash, m_dashHitWidth),        { 0.1f, 5.0f,  0.05f } },
     { "Dash Damage",          ScriptFieldType::Float, offsetof(DeathDash, m_dashDamage),          { 0.0f, 100.0f, 1.0f } },
 };
@@ -101,12 +100,12 @@ void DeathDash::applyDashDamage()
             continue;
         }
 
-        Script* script = GameObjectAPI::getScript(enemyObj, "Damageable");
-        Damageable* damageable = dynamic_cast<Damageable*>(script);
+        Script* script = GameObjectAPI::getScript(enemyObj, "EnemyDamageable");
+        EnemyDamageable* damageable = dynamic_cast<EnemyDamageable*>(script);
 
         if (damageable != nullptr)
         {
-            damageable->takeDamage(m_dashDamage);
+            damageable->takeDamageEnemy(m_dashDamage, GameObjectAPI::getTransform(getOwner());
         }
     }
 }
