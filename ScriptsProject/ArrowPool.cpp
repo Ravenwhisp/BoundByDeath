@@ -51,6 +51,7 @@ bool ArrowPool::createArrow()
     LyrielArrowProjectile* arrow = static_cast<LyrielArrowProjectile*>(script);
 
     arrow->setPool(this);
+    arrow->setArrowOwnerTransform(GameObjectAPI::getTransform(getOwner()));
     arrow->resetProjectile();
 
     m_arrows.push_back(arrow);
