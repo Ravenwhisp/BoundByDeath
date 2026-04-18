@@ -1,13 +1,8 @@
 #pragma once
 
-#include "AbilityBase.h"
+#include "DeathAbilityBase.h"
 
-class DeathCharacter;
-class PlayerState;
-class PlayerAnimationController;
-class PlayerRotation;
-
-class DeathBasicAttack : public AbilityBase
+class DeathBasicAttack : public DeathAbilityBase
 {
     DECLARE_SCRIPT(DeathBasicAttack)
 
@@ -22,14 +17,15 @@ public:
 
     float m_attackLockDuration = 0.35f;
 
+protected:
+    void onAttackWindowUpdate()   override;
+    void onAttackWindowFinished() override;
+
 private:
+    void tryAttack();
     void faceTarget(GameObject* target);
+    void releaseComboMoveLock();
 
-    float m_attackLockTimer = 0.0f;
-
-    DeathCharacter*            m_deathChar          = nullptr;
-    GameObject*                m_attackFacingTarget = nullptr;
-    PlayerState*               m_playerState        = nullptr;
-    PlayerAnimationController* m_animController     = nullptr;
-    PlayerRotation*            m_playerRotation     = nullptr;
+    GameObject* m_attackFacingTarget    = nullptr;
+    bool        m_movementLockedForCombo = false;
 };

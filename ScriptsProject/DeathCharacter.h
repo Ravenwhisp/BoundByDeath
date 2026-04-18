@@ -27,18 +27,21 @@ public:
 
     void advanceCombo(bool isR2);
     void resetCombo();
+    void dealDamageBasicAttack(float damage, GameObject* target) const;
     void dealDamageInArc(float damage) const;
 
 public:
-    float m_basicAttackDamage   = 20.0f;
-    float m_chargedAttackDamage = 40.0f;
-    float m_dashDistance        = 5.0f;
-    float m_tauntDuration       = 2.0f;
-    float m_arcRange            = 2.5f;
-    float m_arcAngle            = 120.0f;
-    float m_maxChargeTime       = 2.0f;
-    float m_comboWindow         = 1.0f;
-    float m_comboCooldown       = 1.0f;
+    float m_basicAttackDamage    = 20.0f;
+    float m_basicAttackRange     = 1.5f;
+    float m_basicAttackHitAngle  = 50.0f;
+    float m_chargedAttackDamage  = 40.0f;
+    float m_dashDistance         = 5.0f;
+    float m_tauntDuration        = 2.0f;
+    float m_arcRange             = 2.5f;
+    float m_arcAngle             = 120.0f;
+    float m_maxChargeTime        = 2.0f;
+    float m_comboWindow          = 1.0f;
+    float m_comboCooldown        = 1.0f;
 
 private:
     int   m_comboStep          = 0;

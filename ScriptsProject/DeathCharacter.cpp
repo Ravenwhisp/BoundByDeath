@@ -7,17 +7,17 @@
 
 static const ScriptFieldInfo DeathCharacterFields[] =
 {
-    { "Max HP",                ScriptFieldType::Float, offsetof(DeathCharacter, m_maxHp),               { 0.0f,  999.0f, 1.0f  } },
-    { "Player Index",          ScriptFieldType::Int,   offsetof(DeathCharacter, m_playerIndex) },
-    { "Basic Attack Damage",   ScriptFieldType::Float, offsetof(DeathCharacter, m_basicAttackDamage),   { 0.0f,  200.0f, 1.0f  } },
-    { "Charged Attack Damage", ScriptFieldType::Float, offsetof(DeathCharacter, m_chargedAttackDamage), { 0.0f,  200.0f, 1.0f  } },
-    { "Dash Distance",         ScriptFieldType::Float, offsetof(DeathCharacter, m_dashDistance),        { 0.0f,  20.0f,  0.1f  } },
-    { "Taunt Duration",        ScriptFieldType::Float, offsetof(DeathCharacter, m_tauntDuration),       { 0.0f,  10.0f,  0.1f  } },
-    { "Arc Range",             ScriptFieldType::Float, offsetof(DeathCharacter, m_arcRange),            { 0.5f,  10.0f,  0.1f  } },
-    { "Arc Angle",             ScriptFieldType::Float, offsetof(DeathCharacter, m_arcAngle),            { 10.0f, 360.0f, 5.0f  } },
-    { "Max Charge Time",       ScriptFieldType::Float, offsetof(DeathCharacter, m_maxChargeTime),       { 0.5f,  5.0f,   0.1f  } },
-    { "Combo Window",          ScriptFieldType::Float, offsetof(DeathCharacter, m_comboWindow),         { 0.1f,  3.0f,   0.05f } },
-    { "Combo Cooldown",        ScriptFieldType::Float, offsetof(DeathCharacter, m_comboCooldown),       { 0.0f,  5.0f,   0.1f  } },
+    { "Basic Attack Damage",    ScriptFieldType::Float, offsetof(DeathCharacter, m_basicAttackDamage),   { 0.0f,  200.0f, 1.0f  } },
+    { "Basic Attack Range",     ScriptFieldType::Float, offsetof(DeathCharacter, m_basicAttackRange),    { 0.5f,  10.0f,  0.1f  } },
+    { "Basic Attack Hit Angle", ScriptFieldType::Float, offsetof(DeathCharacter, m_basicAttackHitAngle), { 5.0f,  180.0f, 5.0f  } },
+    { "Charged Attack Damage",  ScriptFieldType::Float, offsetof(DeathCharacter, m_chargedAttackDamage), { 0.0f,  200.0f, 1.0f  } },
+    { "Dash Distance",          ScriptFieldType::Float, offsetof(DeathCharacter, m_dashDistance),        { 0.0f,  20.0f,  0.1f  } },
+    { "Taunt Duration",         ScriptFieldType::Float, offsetof(DeathCharacter, m_tauntDuration),       { 0.0f,  10.0f,  0.1f  } },
+    { "Arc Range",              ScriptFieldType::Float, offsetof(DeathCharacter, m_arcRange),            { 0.5f,  10.0f,  0.1f  } },
+    { "Arc Angle",              ScriptFieldType::Float, offsetof(DeathCharacter, m_arcAngle),            { 10.0f, 360.0f, 5.0f  } },
+    { "Max Charge Time",        ScriptFieldType::Float, offsetof(DeathCharacter, m_maxChargeTime),       { 0.5f,  5.0f,   0.1f  } },
+    { "Combo Window",           ScriptFieldType::Float, offsetof(DeathCharacter, m_comboWindow),         { 0.1f,  3.0f,   0.05f } },
+    { "Combo Cooldown",         ScriptFieldType::Float, offsetof(DeathCharacter, m_comboCooldown),       { 0.0f,  5.0f,   0.1f  } },
 };
 
 IMPLEMENT_SCRIPT_FIELDS(DeathCharacter, DeathCharacterFields)
@@ -86,6 +86,108 @@ void DeathCharacter::resetCombo()
     m_comboTimer         = 0.0f;
 }
 
+void DeathCharacter::dealDamageBasicAttack(float damage, GameObject* target) const
+{
+    const Transform* myTransform = GameObjectAPI::getTransform(m_owner);
+    if (myTransform == nullptr)
+    {
+        return;
+    }
+
+    const Vector3 myPos = TransformAPI::getPosition(myTransform);
+    Vector3 myForward   = TransformAPI::getForward(myTransform);
+    myForward.y = 0.0f;
+    const float fwdLen = myForward.Length();
+    if (fwdLen > 0.0001f)
+    {
+        myForward /= fwdLen;
+    }
+
+    constexpr float k_degToRad  = 3.14159265f / 180.0f;
+    const float halfHitCos      = cosf(m_basicAttackHitAngle * 0.5f * k_degToRad);
+    const float rangeSq         = m_basicAttackRange * m_basicAttackRange;
+
+    auto isInHitZone = [&](GameObject* enemy) -> bool
+    {
+        if (enemy == nullptr)
+        {
+            return false;
+        }
+        const Transform* eTr = GameObjectAPI::getTransform(enemy);
+        if (eTr == nullptr)
+        {
+            return false;
+        }
+        Vector3 toE = TransformAPI::getPosition(eTr) - myPos;
+        toE.y = 0.0f;
+        if (toE.LengthSquared() > rangeSq)
+        {
+            return false;
+        }
+        if (toE.LengthSquared() > 0.0001f)
+        {
+            Vector3 toENorm = toE;
+            toENorm.Normalize();
+            if (myForward.Dot(toENorm) < halfHitCos)
+            {
+                return false;
+            }
+        }
+        return true;
+    };
+
+    auto applyDamage = [&](GameObject* enemy)
+    {
+        Script* damScript = GameObjectAPI::getScript(enemy, "EnemyDamageable");
+        if (damScript == nullptr)
+        {
+            return;
+        }
+        Damageable* damageable = static_cast<Damageable*>(damScript);
+        damageable->takeDamage(damage);
+        Debug::log("[BASIC] hit '%s'  dmg=%.1f  hp=%.1f/%.1f",
+            GameObjectAPI::getName(enemy), damage,
+            damageable->getCurrentHp(), damageable->getMaxHp());
+    };
+
+    // Priority 1: targeted enemy in hit zone
+    if (target != nullptr && isInHitZone(target))
+    {
+        applyDamage(target);
+        return;
+    }
+
+    // Priority 2: most-centered enemy in hit zone (no target or target out of zone)
+    float       bestDot  = -2.0f;
+    GameObject* best     = nullptr;
+    for (GameObject* enemy : SceneAPI::findAllGameObjectsByTag(Tag::ENEMY))
+    {
+        if (!isInHitZone(enemy))
+        {
+            continue;
+        }
+        const Transform* eTr = GameObjectAPI::getTransform(enemy);
+        Vector3 toE = TransformAPI::getPosition(eTr) - myPos;
+        toE.y = 0.0f;
+        toE.Normalize();
+        const float dot = myForward.Dot(toE);
+        if (dot > bestDot)
+        {
+            bestDot = dot;
+            best    = enemy;
+        }
+    }
+
+    if (best != nullptr)
+    {
+        applyDamage(best);
+    }
+    else
+    {
+        Debug::log("[BASIC] 0 hits — no enemy in hit zone.");
+    }
+}
+
 void DeathCharacter::dealDamageInArc(float damage) const
 {
     const Transform* myTransform = GameObjectAPI::getTransform(m_owner);
@@ -146,10 +248,10 @@ void DeathCharacter::dealDamageInArc(float damage) const
             }
         }
 
-        Script* damScript = GameObjectAPI::getScript(enemy, "Damageable");
+        Script* damScript = GameObjectAPI::getScript(enemy, "EnemyDamageable");
         if (damScript == nullptr)
         {
-            Debug::log("[ARC] '%s' has no Damageable.", GameObjectAPI::getName(enemy));
+            Debug::log("[ARC] '%s' has no EnemyDamageable.", GameObjectAPI::getName(enemy));
             continue;
         }
 
