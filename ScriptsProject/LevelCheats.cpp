@@ -24,57 +24,46 @@ void LevelCheats::Start()
 
 void LevelCheats::Update()
 {
-    if(Input::isKeyDown(KeyCode::Q) && Input::isKeyDown(KeyCode::RightShift))
+    if (KeyComboPressed(KeyCode::Q)) AutoWin();
+    if (KeyComboPressed(KeyCode::W)) AutoLose();
+    if (KeyComboPressed(KeyCode::E)) Teleport();
+    if (KeyComboPressed(KeyCode::R)) ActivateGodMode();
+    if (KeyComboPressed(KeyCode::T)) SpawnEnemies();
+    if (KeyComboPressed(KeyCode::D)) restartLevel();
+    if (Input::isKeyDown(KeyCode::RightShift) && Input::isKeyDown(KeyCode::A))
     {
-        AutoWin();
-	}
+        if (KeyComboPressed(KeyCode::Num1)) 
+        { 
+            m_playerIndex = 0; 
+            RestoreHealth(); 
+        }
+        else if (KeyComboPressed(KeyCode::Num2)) 
+        { 
+            m_playerIndex = 1; 
+            RestoreHealth(); 
+        }
+    }
+    if (Input::isKeyDown(KeyCode::RightShift) && Input::isKeyDown(KeyCode::S))
+    {
+        if (KeyComboPressed(KeyCode::Num1)) 
+        { 
+            m_playerIndex = 0; 
+            DownState(); 
+        }
+        else if (KeyComboPressed(KeyCode::Num2)) 
+        { 
+            m_playerIndex = 1; 
+            DownState(); 
+        }
+    }
+}
 
-    if(Input::isKeyDown(KeyCode::W) && Input::isKeyDown(KeyCode::RightShift))
-    {
-        AutoLose();
-    }
-    if(Input::isKeyDown(KeyCode::E) && Input::isKeyDown(KeyCode::RightShift))
-    {
-        Teleport();
-    }
-    if(Input::isKeyDown(KeyCode::R) && Input::isKeyDown(KeyCode::RightShift))
-    {
-        ActivateGodMode();
-    }
-    if(Input::isKeyDown(KeyCode::T) && Input::isKeyDown(KeyCode::RightShift))
-    {
-        SpawnEnemies();
-    }
-    if(Input::isKeyDown(KeyCode::A) && Input::isKeyDown(KeyCode::RightShift))
-    {
-        if(Input::isKeyDown(KeyCode::Num1))
-        {
-			m_playerIndex = 0;
-            RestoreHealth();
-		}
-        else if (Input::isKeyDown(KeyCode::Num2))
-        {
-            m_playerIndex = 1;
-            RestoreHealth();
-        }      
-    }
-    if(Input::isKeyDown(KeyCode::S) && Input::isKeyDown(KeyCode::RightShift))
-    {
-        if (Input::isKeyDown(KeyCode::Num1))
-        {
-            m_playerIndex = 0;
-            DownState();
-        }
-        else if (Input::isKeyDown(KeyCode::Num2))
-        {
-            m_playerIndex = 1;
-            DownState();
-        }
-    }
-    if(Input::isKeyDown(KeyCode::D) && Input::isKeyDown(KeyCode::RightShift))
-    {
-        restartLevel();
-	}
+bool LevelCheats::KeyComboPressed(KeyCode mainKey)
+{
+    bool isDown = Input::isKeyDown(mainKey) && Input::isKeyDown(KeyCode::RightShift);
+    bool wasDown = m_previousKeyStates[mainKey];
+    m_previousKeyStates[mainKey] = isDown;
+    return isDown && !wasDown;
 }
 
 void LevelCheats::AutoWin()
@@ -96,7 +85,12 @@ void LevelCheats::Teleport()
     for (GameObject* player : players)
     {
         Transform* playerTransform = GameObjectAPI::getTransform(player);
-        TransformAPI::setPosition(playerTransform, Vector3(0.0f, 0.0f, 0.0f));
+        TransformAPI::setPosition(playerTransform, spawnPoints[m_spawnIndex]);
+        m_spawnIndex += 1;
+        if(m_spawnIndex >= spawnPoints.size())
+        {
+            m_spawnIndex = 0;
+		}
     }
 }
 

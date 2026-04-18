@@ -135,7 +135,7 @@ void SpikeTrap::triggerBoxDamage()
 {
     GameObject* owner = getOwner();
     Transform* ownerTransform = GameObjectAPI::getTransform(owner);
-    const Vector3 trapPosition = TransformAPI::getPosition(ownerTransform);
+    const Vector3 trapPosition = TransformAPI::getGlobalPosition(ownerTransform);
     std::vector<GameObject*> playersInScene = SceneAPI::findAllGameObjectsByTag(Tag::PLAYER);
     for (GameObject* player : playersInScene)
     {
