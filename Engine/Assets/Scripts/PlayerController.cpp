@@ -80,6 +80,12 @@ void PlayerController::Update()
     }
 }
 
+Vector3 PlayerController::getMoveDirection() const
+{
+    const Vector2 moveAxis = Input::getMoveAxis(m_playerIndex);
+    return readMoveDirection(moveAxis);
+}
+
 Vector3 PlayerController::readMoveDirection(const Vector2& moveAxis) const
 {
     Vector3 cameraForward = m_cameraTransform ? TransformAPI::getForward(m_cameraTransform) : Vector3(0.0f, 0.0f, 1.0f);
