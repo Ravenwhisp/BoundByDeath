@@ -18,7 +18,6 @@ EnemyDetectionAggro::EnemyDetectionAggro(GameObject* owner) : Script(owner) {}
 
 void EnemyDetectionAggro::Start()
 {
-
 }
 
 void EnemyDetectionAggro::Update()

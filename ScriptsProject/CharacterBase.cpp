@@ -1,71 +1,93 @@
 #include "pch.h"
 #include "CharacterBase.h"
-#include "PlayerTargetController.h"
 
-// No IMPLEMENT_SCRIPT_FIELDS / IMPLEMENT_SCRIPT — abstract class, never registered in the engine.
+#include "PlayerState.h"
+#include "PlayerController.h"
+#include "PlayerRotation.h"
+#include "PlayerAnimationController.h"
+#include "PlayerTargetController.h"
+#include "Damageable.h"
 
 CharacterBase::CharacterBase(GameObject* owner)
-    : Damageable(owner)
+    : Script(owner)
 {
 }
 
 void CharacterBase::Start()
 {
-    // Initialise HP through Damageable (sets m_currentHp = m_maxHp, etc.)
-    Damageable::Start();
+    Script* stateScript = GameObjectAPI::getScript(getOwner(), "PlayerState");
+    m_playerState = static_cast<PlayerState*>(stateScript);
 
-    // Obtain sibling scripts from the same GameObject.
-    m_targetController = static_cast<PlayerTargetController*>(
-        GameObjectAPI::getScript(m_owner, "PlayerTargetController"));
+    Script* controllerScript = GameObjectAPI::getScript(getOwner(), "PlayerController");
+    m_playerController = static_cast<PlayerController*>(controllerScript);
 
-    // PlayerController is an engine script — stored as Script* and only used
-    // through ComponentAPI::setActive to stop/restore movement.
-    m_playerController = GameObjectAPI::getScript(m_owner, "PlayerController");
+    Script* rotationScript = GameObjectAPI::getScript(getOwner(), "PlayerRotation");
+    m_playerRotation = static_cast<PlayerRotation*>(rotationScript);
 
-    if (m_targetController == nullptr)
+    Script* animationScript = GameObjectAPI::getScript(getOwner(), "PlayerAnimationController");
+    m_playerAnimationController = static_cast<PlayerAnimationController*>(animationScript);
+
+    Script* targetControllerScript = GameObjectAPI::getScript(getOwner(), "PlayerTargetController");
+    m_targetController = static_cast<PlayerTargetController*>(targetControllerScript);
+
+    Script* damageableScript = GameObjectAPI::getScript(getOwner(), "PlayerDamageable");
+    m_damageable = static_cast<Damageable*>(damageableScript);
+
+    if (m_playerState == nullptr)
     {
-        Debug::warn("CharacterBase (%s): PlayerTargetController not found on this GameObject.",
-            GameObjectAPI::getName(m_owner));
+        Debug::log("[CharacterBase] PlayerState not found on owner '%s'.", GameObjectAPI::getName(getOwner()));
     }
 
     if (m_playerController == nullptr)
     {
-        Debug::warn("CharacterBase (%s): PlayerController not found on this GameObject.",
-            GameObjectAPI::getName(m_owner));
+        Debug::log("[CharacterBase] PlayerController not found on owner '%s'.", GameObjectAPI::getName(getOwner()));
+    }
+
+    if (m_playerRotation == nullptr)
+    {
+        Debug::log("[CharacterBase] PlayerRotation not found on owner '%s'.", GameObjectAPI::getName(getOwner()));
+    }
+
+    if (m_playerAnimationController == nullptr)
+    {
+        Debug::log("[CharacterBase] PlayerAnimationController not found on owner '%s'.", GameObjectAPI::getName(getOwner()));
+    }
+
+    if (m_targetController == nullptr)
+    {
+        Debug::log("[CharacterBase] PlayerTargetController not found on owner '%s'.", GameObjectAPI::getName(getOwner()));
+    }
+
+    if (m_damageable == nullptr)
+    {
+        Debug::log("[CharacterBase] Damageable not found on owner '%s'.", GameObjectAPI::getName(getOwner()));
     }
 }
 
-void CharacterBase::onDamaged(float amount)
+int CharacterBase::getPlayerIndex() const
 {
-    Damageable::onDamaged(amount);
-    // TODO: trigger hit-reaction animation, VFX, sound
+    if (m_playerController == nullptr)
+    {
+        return 0;
+    }
+
+    return m_playerController->getPlayerIndex();
 }
 
-void CharacterBase::onDeath()
+bool CharacterBase::isDowned() const
 {
-    Damageable::onDeath();
-
-    // Prevent any new ability from activating while the character is dead.
-    // Any ability currently executing will cancel itself via AbilityBase::Update().
-    m_canAct = false;
-
-    /* Disable movement — a dead character should not keep walking.
-    if (m_playerController != nullptr)
-    {
-        ComponentAPI::setActive(m_playerController, false);
-    }*/
+    return m_playerState != nullptr && m_playerState->isDowned();
 }
 
-void CharacterBase::onRevive()
+bool CharacterBase::isUsingAbility() const
 {
-    Damageable::onRevive();
+    return m_playerState != nullptr && m_playerState->isUsingAbility();
+}
 
-    // Allow abilities to be used again.
-    m_canAct = true;
-
-    /* Restore movement.
-    if (m_playerController != nullptr)
+void CharacterBase::setUsingAbility(bool value)
+{
+    if (m_playerState != nullptr)
     {
-        ComponentAPI::setActive(m_playerController, true);
-    }*/
+        m_playerState->setUsingAbility(value);
+    }
 }

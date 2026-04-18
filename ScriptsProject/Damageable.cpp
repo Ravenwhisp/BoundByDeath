@@ -4,12 +4,17 @@
 static const ScriptFieldInfo damageableFields[] =
 {
     { "Max HP", ScriptFieldType::Float, offsetof(Damageable, m_maxHp), { 0.0f, 999999.0f, 1.0f } },
+    { "Health Slider", ScriptFieldType::ComponentRef, offsetof(Damageable, m_healthBar), {}, {},{ ComponentType::UISLIDER } },
 };
 
 IMPLEMENT_SCRIPT_FIELDS(Damageable, damageableFields)
 
 Damageable::Damageable(GameObject* owner)
     : Script(owner)
+{
+}
+
+void Damageable::drawGizmo()
 {
 }
 
@@ -41,6 +46,12 @@ void Damageable::takeDamage(float amount)
     clampHp();
 
     onDamaged(amount);
+
+	UISlider* healthBar = m_healthBar.getReferencedComponent();
+    if (healthBar)
+    {
+		SliderAPI::setFillAmount(healthBar, getHpPercent());
+	}
 
     if (m_currentHp <= 0.0f)
     {
