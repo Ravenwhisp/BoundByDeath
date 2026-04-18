@@ -30,7 +30,7 @@ void LevelCheats::Update()
     if (KeyComboPressed(KeyCode::E)) Teleport();
     if (KeyComboPressed(KeyCode::R)) ActivateGodMode();
     if (KeyComboPressed(KeyCode::T)) SpawnEnemies();
-    if (KeyComboPressed(KeyCode::D)) restartLevel();
+    //if (KeyComboPressed(KeyCode::D)) restartLevel();
     if (Input::isKeyDown(KeyCode::RightShift) && Input::isKeyDown(KeyCode::A))
     {
         if (KeyComboPressed(KeyCode::Num1)) 
@@ -156,7 +156,7 @@ void LevelCheats::DownState()
 void LevelCheats::restartLevel()
 {
     Debug::log("Restart Level activated!");
-    SceneAPI::requestSceneChange("Level1");
+    SceneAPI::requestSceneChange("LVL1Cheats");
 }
 
 IMPLEMENT_SCRIPT(LevelCheats)
