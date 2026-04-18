@@ -11,6 +11,8 @@ static const ScriptFieldInfo DeathChargedAttackFields[] =
     { "Min Charge Time",         ScriptFieldType::Float, offsetof(DeathChargedAttack, m_minChargeTime),        { 0.0f,  3.0f, 0.05f } },
     { "Attack Lock Duration",    ScriptFieldType::Float, offsetof(DeathChargedAttack, m_attackLockDuration),   { 0.05f, 2.0f, 0.05f } },
     { "Final Hit Lock Duration", ScriptFieldType::Float, offsetof(DeathChargedAttack, m_finalHitLockDuration), { 0.05f, 3.0f, 0.05f } },
+    { "Charged Arc Range",       ScriptFieldType::Float, offsetof(DeathChargedAttack, m_chargedArcRange),      { 0.5f, 10.0f, 0.1f  } },
+    { "Charged Arc Angle",       ScriptFieldType::Float, offsetof(DeathChargedAttack, m_chargedArcAngle),      { 10.0f, 360.0f, 5.0f } },
 };
 
 IMPLEMENT_SCRIPT_FIELDS(DeathChargedAttack, DeathChargedAttackFields)
@@ -127,7 +129,7 @@ void DeathChargedAttack::fireAttack()
         Debug::log("[COMBO] R2  step %d/3  dmg=%.1f", comboStep + 1, damage);
     }
 
-    m_deathChar->dealDamageInArc(damage);
+    m_deathChar->dealDamageInArc(damage, m_chargedArcRange, m_chargedArcAngle);
 
     // Max charge (auto-fired at full charge, always step 0) gets longer combo window
     const float window = (isChargedShot && isMaxCharge)
@@ -220,7 +222,7 @@ void DeathChargedAttack::drawGizmo()
         return;
 
     const Vector3 pos   = TransformAPI::getPosition(t);
-    const float   range = m_deathChar->m_arcRange;
+    const float   range = m_chargedArcRange;
 
     // While charging with stick input, show arc in aim direction; otherwise use character forward
     Vector3 fwd;
@@ -233,7 +235,7 @@ void DeathChargedAttack::drawGizmo()
     {
         fwd = TransformAPI::getForward(t);
     }
-    const float   angle   = m_deathChar->m_arcAngle;
+    const float   angle   = m_chargedArcAngle;
     const Vector3 posFlat = { pos.x, pos.y, pos.z };
 
     constexpr float k_degToRad = 3.14159265f / 180.0f;

@@ -34,6 +34,8 @@ public:
     float m_minChargeTime         = 0.5f;
     float m_attackLockDuration    = 0.4f;
     float m_finalHitLockDuration  = 0.8f;
+    float m_chargedArcRange       = 3.5f;
+    float m_chargedArcAngle       = 150.0f;
 
 protected:
     void onAttackWindowUpdate()   override;

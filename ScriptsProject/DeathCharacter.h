@@ -30,6 +30,7 @@ public:
     void resetCombo();
     void dealDamageBasicAttack(float damage, GameObject* target) const;
     void dealDamageInArc(float damage) const;
+    void dealDamageInArc(float damage, float range, float angle) const;
 
 public:
     float m_basicAttackDamage    = 20.0f;

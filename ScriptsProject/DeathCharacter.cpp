@@ -276,4 +276,15 @@ void DeathCharacter::dealDamageInArc(float damage) const
     }
 }
 
+void DeathCharacter::dealDamageInArc(float damage, float range, float angle) const
+{
+    const float savedRange = m_arcRange;
+    const float savedAngle = m_arcAngle;
+    const_cast<DeathCharacter*>(this)->m_arcRange = range;
+    const_cast<DeathCharacter*>(this)->m_arcAngle = angle;
+    dealDamageInArc(damage);
+    const_cast<DeathCharacter*>(this)->m_arcRange = savedRange;
+    const_cast<DeathCharacter*>(this)->m_arcAngle = savedAngle;
+}
+
 IMPLEMENT_SCRIPT(DeathCharacter)
