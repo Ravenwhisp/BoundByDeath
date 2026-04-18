@@ -128,6 +128,7 @@ void AbilityDash::updateDash(float dt)
 void AbilityDash::stopDash()
 {
     m_isDashing = false;
+    onDashEnded();
     m_dashTimer = 0.0f;
     m_dashDirection = Vector3::Zero;
 

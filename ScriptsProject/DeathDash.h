@@ -1,27 +1,36 @@
 #pragma once
 
-#include "DeathAbilityBase.h"
+#include "AbilityDash.h"
 
-// Death's aggressive dash — launches towards the current target (LB / L1).
-// If there is no target, dashes in the character's forward direction instead.
-// Reads m_dashDistance from DeathCharacter via m_deathChar.
-class DeathDash : public DeathAbilityBase
+class DeathDash : public AbilityDash
 {
-    DECLARE_SCRIPT(DeathDash)
+    DECLARE_SCRIPT(LyrielDash)
 
 public:
     explicit DeathDash(GameObject* owner);
 
-    void Start()  override;
-    void Update() override;
-
+    void Start() override;
     ScriptFieldList getExposedFields() const override;
 
+protected:
+
+    void onDashStarted() override;
+    void onDashEnded() override;
+    void onDashUpdate(float dt) override;
+
 public:
-    float m_dashDuration = 0.2f;
+    float m_dashDurationLyriel = 0.15f;
+    float m_dashDistanceLyriel = 3.0f;
+    float m_dashCooldown = 4.0f;
+
+    float m_dashHitWidth = 3.0f;
+
+    float m_dashDamage = 20.0f;
 
 private:
-    float   m_dashTimer     = 0.0f;
-    bool    m_isDashing     = false;
-    Vector3 m_dashDirection = { 0.0f, 0.0f, 0.0f };
+    Vector3 m_dashStartPosition = Vector3::Zero;
+    bool    m_dashDamageDealt = false;   // guard: damage fires only once per dash
+
+    void applyDashDamage();
+    bool isInsideDashRectangle(const Vector3& point) const;
 };
