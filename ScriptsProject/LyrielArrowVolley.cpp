@@ -6,6 +6,7 @@
 #include "ArrowPool.h"
 #include "LyrielArrowProjectile.h"
 #include "Damageable.h"
+#include "EnemyShadowMark.h"
 #include "PlayerState.h"
 
 #include <cmath>
@@ -260,6 +261,14 @@ void LyrielArrowVolley::applyVolleyDamage(const std::vector<GameObject*>& target
         if (damageable != nullptr)
         {
             damageable->takeDamage(m_volleyDamage);
+
+            Script* markScript = GameObjectAPI::getScript(target, "EnemyShadowMark");
+            if (markScript != nullptr)
+            {
+                EnemyShadowMark* mark = static_cast<EnemyShadowMark*>(markScript);
+                if (mark->isExploitable())
+                    mark->exploit();
+            }
         }
     }
 }

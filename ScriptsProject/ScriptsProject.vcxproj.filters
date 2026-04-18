@@ -52,6 +52,9 @@
     <Filter Include="Character\Death\Abilities">
       <UniqueIdentifier>{b2d34e56-789a-4bcd-ef01-234567890abc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Character\Mark">
+      <UniqueIdentifier>{c3e45f67-89ab-4cde-f012-345678901bcd}</UniqueIdentifier>
+    </Filter>
     <Filter Include="UI">
       <UniqueIdentifier>{3a330624-25ab-415b-82e0-9a45e3d74f07}</UniqueIdentifier>
     </Filter>
@@ -186,6 +189,12 @@
     <ClInclude Include="EnemyDamageable.h">
       <Filter>Enemies</Filter>
     </ClInclude>
+    <ClInclude Include="EnemyShadowMark.h">
+      <Filter>Character\Mark</Filter>
+    </ClInclude>
+    <ClInclude Include="ReaperGauge.h">
+      <Filter>Character\Mark</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
@@ -314,6 +323,12 @@
     </ClCompile>
     <ClCompile Include="EnemyDamageable.cpp">
       <Filter>Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyShadowMark.cpp">
+      <Filter>Character\Mark</Filter>
+    </ClCompile>
+    <ClCompile Include="ReaperGauge.cpp">
+      <Filter>Character\Mark</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
