@@ -20,6 +20,7 @@ public:
 
     bool getGodMode() const { return m_godMode; }
     int getPlayerIndex() const { return m_playerIndex; }
+    Vector3 getMoveDirection() const;
 
 public:
     int m_playerIndex = 0;

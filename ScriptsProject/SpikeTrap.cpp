@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "SpikeTrap.h"
-#include "Damageable.h"
+#include "PlayerDamageable.h"
 
 static const ScriptFieldInfo myScriptFields[] =
 {
@@ -122,8 +122,8 @@ void SpikeTrap::damagePlayer(GameObject* player)
     // Skip if this player was already damaged
     if (damagedPlayers.count(player)) return;
 
-    Script* damageableScript = GameObjectAPI::getScript(player, "Damageable");
-    Damageable* damageable = dynamic_cast<Damageable*>(damageableScript);
+    Script* damageableScript = GameObjectAPI::getScript(player, "PlayerDamageable");
+    PlayerDamageable* damageable = dynamic_cast<PlayerDamageable*>(damageableScript);
     if (damageable)
     {
         damageable->takeDamage(trapDamage);
@@ -135,7 +135,7 @@ void SpikeTrap::triggerBoxDamage()
 {
     GameObject* owner = getOwner();
     Transform* ownerTransform = GameObjectAPI::getTransform(owner);
-    const Vector3 trapPosition = TransformAPI::getPosition(ownerTransform);
+    const Vector3 trapPosition = TransformAPI::getGlobalPosition(ownerTransform);
     std::vector<GameObject*> playersInScene = SceneAPI::findAllGameObjectsByTag(Tag::PLAYER);
     for (GameObject* player : playersInScene)
     {

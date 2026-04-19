@@ -46,6 +46,12 @@
     <Filter Include="Character\Lyriel\Abilities">
       <UniqueIdentifier>{d27654ae-43ad-48d2-91e5-16143d51c28e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Character\Death">
+      <UniqueIdentifier>{a1c23f45-6789-4abc-def0-1234567890ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Character\Death\Abilities">
+      <UniqueIdentifier>{b2d34e56-789a-4bcd-ef01-234567890abc}</UniqueIdentifier>
+    </Filter>
     <Filter Include="UI">
       <UniqueIdentifier>{3a330624-25ab-415b-82e0-9a45e3d74f07}</UniqueIdentifier>
     </Filter>
@@ -126,6 +132,24 @@
     <ClInclude Include="AbilityBase.h">
       <Filter>Character</Filter>
     </ClInclude>
+    <ClInclude Include="DeathCharacter.h">
+      <Filter>Character\Death</Filter>
+    </ClInclude>
+    <ClInclude Include="DeathAbilityBase.h">
+      <Filter>Character\Death\Abilities</Filter>
+    </ClInclude>
+    <ClInclude Include="DeathBasicAttack.h">
+      <Filter>Character\Death\Abilities</Filter>
+    </ClInclude>
+    <ClInclude Include="DeathChargedAttack.h">
+      <Filter>Character\Death\Abilities</Filter>
+    </ClInclude>
+    <ClInclude Include="DeathDash.h">
+      <Filter>Character\Death\Abilities</Filter>
+    </ClInclude>
+    <ClInclude Include="DeathTaunt.h">
+      <Filter>Character\Death\Abilities</Filter>
+    </ClInclude>
     <ClInclude Include="LyrielArrowProjectile.h">
       <Filter>Character\Lyriel</Filter>
     </ClInclude>
@@ -159,9 +183,17 @@
     <ClInclude Include="EnemyController.h">
       <Filter>Enemies</Filter>
     </ClInclude>
+    <ClInclude Include="LyrielDash.h">
+      <Filter>Character\Lyriel\Abilities</Filter>
+    </ClInclude>
+    <ClInclude Include="AbilityDash.h">
+      <Filter>Character</Filter>
+    </ClInclude>
     <ClInclude Include="EnemyDamageable.h">
       <Filter>Enemies</Filter>
     </ClInclude>
+    <ClInclude Include="SpikeTrap.h" />
+    <ClInclude Include="LevelCheats.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
@@ -237,6 +269,24 @@
     <ClCompile Include="AbilityBase.cpp">
       <Filter>Character</Filter>
     </ClCompile>
+    <ClCompile Include="DeathCharacter.cpp">
+      <Filter>Character\Death</Filter>
+    </ClCompile>
+    <ClCompile Include="DeathAbilityBase.cpp">
+      <Filter>Character\Death\Abilities</Filter>
+    </ClCompile>
+    <ClCompile Include="DeathBasicAttack.cpp">
+      <Filter>Character\Death\Abilities</Filter>
+    </ClCompile>
+    <ClCompile Include="DeathChargedAttack.cpp">
+      <Filter>Character\Death\Abilities</Filter>
+    </ClCompile>
+    <ClCompile Include="DeathDash.cpp">
+      <Filter>Character\Death\Abilities</Filter>
+    </ClCompile>
+    <ClCompile Include="DeathTaunt.cpp">
+      <Filter>Character\Death\Abilities</Filter>
+    </ClCompile>
     <ClCompile Include="LyrielArrowProjectile.cpp">
       <Filter>Character\Lyriel</Filter>
     </ClCompile>
@@ -260,7 +310,7 @@
     </ClCompile>
     <ClCompile Include="UIController.cpp">
       <Filter>UI</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="EnemyIDLE.cpp">
       <Filter>Enemies\States</Filter>
     </ClCompile>
@@ -270,8 +320,16 @@
     <ClCompile Include="EnemyController.cpp">
       <Filter>Enemies</Filter>
     </ClCompile>
+    <ClCompile Include="LyrielDash.cpp">
+      <Filter>Character\Lyriel\Abilities</Filter>
+    </ClCompile>
+    <ClCompile Include="AbilityDash.cpp">
+      <Filter>Character</Filter>
+    </ClCompile>
     <ClCompile Include="EnemyDamageable.cpp">
       <Filter>Enemies</Filter>
     </ClCompile>
+    <ClCompile Include="SpikeTrap.cpp" />
+    <ClCompile Include="LevelCheats.cpp" />
   </ItemGroup>
 </Project>
