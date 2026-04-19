@@ -16,6 +16,8 @@ public:
 
     ScriptFieldList getExposedFields() const override;
 
+    ScriptComponentRef<Transform> m_ChargedAttackUI;
+
 protected:
     void onAttackWindowUpdate() override;
     void onAttackWindowFinished() override;

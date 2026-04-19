@@ -10,8 +10,11 @@
 
 #include <cmath>
 
+static const float PI = 3.1415926535897931f;
+
 static const ScriptFieldInfo LyrielChargedAttackFields[] =
 {
+	{ "Charged Attack UI", ScriptFieldType::ComponentRef, offsetof(LyrielChargedAttack, m_ChargedAttackUI), {}, {}, { ComponentType::TRANSFORM } },
     { "Min Damage", ScriptFieldType::Float, offsetof(LyrielChargedAttack, m_minDamage), { 0.0f, 100.0f, 0.5f } },
     { "Max Damage", ScriptFieldType::Float, offsetof(LyrielChargedAttack, m_maxDamage), { 0.0f, 200.0f, 0.5f } },
     { "Max Charge Time", ScriptFieldType::Float, offsetof(LyrielChargedAttack, m_maxChargeTime), { 0.1f, 5.0f, 0.05f } },
@@ -60,6 +63,10 @@ void LyrielChargedAttack::drawGizmo()
 {
     if (!m_isCharging)
     {
+        if (m_ChargedAttackUI.getReferencedComponent())
+        {
+			m_ChargedAttackUI.getReferencedComponent()->getOwner()->SetActive(false);
+		}
         return;
     }
 
@@ -81,6 +88,19 @@ void LyrielChargedAttack::drawGizmo()
     }
 
     const Vector3 origin = TransformAPI::getGlobalPosition(ownerTransform);
+    if (m_ChargedAttackUI.getReferencedComponent())
+    {
+        m_ChargedAttackUI.getReferencedComponent()->getOwner()->SetActive(true);
+
+        const float yawRad = std::atan2(previewDirection.x, previewDirection.z);
+        const float targetYawDeg = yawRad * (180.0f / PI);
+
+        const float range = m_chargeTimer / m_maxChargeTime * 0.45f + 0.65f;
+
+		TransformAPI::setPosition(m_ChargedAttackUI.getReferencedComponent(), origin);
+        TransformAPI::setRotationEuler(m_ChargedAttackUI.getReferencedComponent(), Vector3(0.0f, targetYawDeg, 0.0f));
+        TransformAPI::setScale(m_ChargedAttackUI.getReferencedComponent(), Vector3(1.0f, 1.0f, range));
+    }
     drawChargePreview(origin, previewDirection);
 }
 
