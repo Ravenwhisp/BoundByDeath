@@ -69,8 +69,8 @@ Damageable* DebugDamageTrigger::findDamageable() const
         return damageable;
     }
 
-    Script* script = GameObjectAPI::getScript(m_owner, "EnemyDamageable");
-    Damageable* damageable = dynamic_cast<Damageable*>(script);
+    script = GameObjectAPI::getScript(m_owner, "EnemyDamageable");
+    damageable = dynamic_cast<Damageable*>(script);
 
     if (damageable)
     {
