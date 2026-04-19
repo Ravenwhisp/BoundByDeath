@@ -243,8 +243,7 @@ void DeathTaunt::applyTauntToEnemiesInCone(const Vector3& ownerForward) const
 
 Vector3 DeathTaunt::computeAimDirection() const
 {
-    const Vector2 lookAxis = Input::getLookAxis(getPlayerIndex());
-    return Vector3(lookAxis.x, 0.0f, lookAxis.y);
+    return computeCameraRelativeAimDirection();
 }
 
 Vector3 DeathTaunt::getFallbackFacingDirection() const
