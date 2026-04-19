@@ -34,6 +34,8 @@ public:
 
 public:
 	void notifyPlayerAttackedEnemy(Transform* playerTransform);
+	void applyTaunt(Transform* playerTransform, float durationSeconds);
+	void clearTaunt(Transform* playerTransform);
 
 	bool isAggro() const { return m_isAggro; }
 	bool canSeeTarget() const { return m_canSeeTarget; }
@@ -48,6 +50,8 @@ private:
 	bool m_isAggro = false;
 	bool m_canSeeTarget = false;
 	Vector3 m_lastKnownTargetPosition = Vector3(0.0f, 0.0f, 0.0f);
+	Transform* m_tauntTargetTransform = nullptr;
+	float m_tauntTimer = 0.0f;
 
 	float m_currentTargetLockTimer = 0.0f;
 	float m_currentTime = 0.0f;
@@ -61,6 +65,8 @@ private:
 	bool isTargetLockActive() const;
 	void startTargetLock();
 	void updateTargetLockTimer();
+	void updateTauntTimer();
+	bool isTaunted() const;
 
 	Transform* selectClosestDetectedPlayer() const;
 	Transform* selectReevaluatedTarget() const;
@@ -82,6 +88,7 @@ private:
 
 	bool isPlayer1Aggroing() const;
 	bool isPlayer2Aggroing() const;
+	bool isTransformAlive(Transform* target) const;
 
 	AggroEntry* getAggroEntry(Transform* target);
 	const AggroEntry* getAggroEntry(Transform* target) const;

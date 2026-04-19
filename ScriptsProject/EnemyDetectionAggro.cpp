@@ -1,5 +1,7 @@
 #include "pch.h"
 #include "EnemyDetectionAggro.h"
+#include "Damageable.h"
+#include "DeathCharacter.h" 
 
 static const ScriptFieldInfo enemyDetectionAggroFields[] =
 {
@@ -23,6 +25,7 @@ void EnemyDetectionAggro::Update()
 	m_currentTime += Time::getDeltaTime();
 
 	updateTargetLockTimer();
+	updateTauntTimer();
 	updateAggroState();
 }
 
@@ -78,6 +81,22 @@ void EnemyDetectionAggro::enterAggro(Transform* target)
 void EnemyDetectionAggro::updateAggroState()
 {
 	updateAggroEntries();
+
+	if (isTaunted())
+	{
+		if (!isTransformAlive(m_tauntTargetTransform))
+		{
+			clearTaunt(m_tauntTargetTransform);
+		}
+		else
+		{
+			m_isAggro = true;
+			m_canSeeTarget = true;
+			m_currentTargetTransform = m_tauntTargetTransform;
+			m_lastKnownTargetPosition = TransformAPI::getPosition(m_tauntTargetTransform);
+			return;
+		}
+	}
 
 	if (!m_isAggro)
 	{
@@ -168,6 +187,26 @@ void EnemyDetectionAggro::updateTargetLockTimer()
 	}
 }
 
+void EnemyDetectionAggro::updateTauntTimer()
+{
+	if (!isTaunted())
+	{
+		return;
+	}
+
+	m_tauntTimer -= Time::getDeltaTime();
+
+	if (m_tauntTimer <= 0.0f)
+	{
+		clearTaunt(m_tauntTargetTransform);
+	}
+}
+
+bool EnemyDetectionAggro::isTaunted() const
+{
+	return m_tauntTargetTransform != nullptr && m_tauntTimer > 0.0f;
+}
+
 Transform* EnemyDetectionAggro::selectClosestDetectedPlayer() const
 {
 	const bool player1InRange = m_player1Aggro.isInDetectionRange;
@@ -231,7 +270,7 @@ Transform* EnemyDetectionAggro::selectReevaluatedTarget() const
 void EnemyDetectionAggro::notifyPlayerAttackedEnemy(Transform* playerTransform)
 {
 	AggroEntry* entry = getAggroEntry(playerTransform);
-	
+
 	if (!entry)
 	{
 		return;
@@ -243,6 +282,61 @@ void EnemyDetectionAggro::notifyPlayerAttackedEnemy(Transform* playerTransform)
 	{
 		enterAggro(playerTransform);
 		startTargetLock();
+	}
+}
+
+void EnemyDetectionAggro::applyTaunt(Transform* playerTransform, float durationSeconds)
+{
+	if (playerTransform == nullptr || durationSeconds <= 0.0f)
+	{
+		return;
+	}
+
+	m_tauntTargetTransform = playerTransform;
+	m_tauntTimer = durationSeconds;
+	m_currentTargetLockTimer = 0.0f;
+	enterAggro(playerTransform);
+
+	// While taunted, range is ignored and line-of-sight is intentionally skipped.
+	// TODO: Require wall checks / line-of-sight before applying the taunt effect.
+	AggroEntry* entry = getAggroEntry(playerTransform);
+	if (entry != nullptr)
+	{
+		entry->lastAttackTime = m_currentTime;
+	}
+}
+
+void EnemyDetectionAggro::clearTaunt(Transform* playerTransform)
+{
+	if (playerTransform != nullptr && playerTransform != m_tauntTargetTransform)
+	{
+		return;
+	}
+
+	const bool wasCurrentTarget = (m_currentTargetTransform == m_tauntTargetTransform);
+
+	m_tauntTargetTransform = nullptr;
+	m_tauntTimer = 0.0f;
+
+	if (!wasCurrentTarget)
+	{
+		return;
+	}
+
+	Transform* fallbackTarget = selectClosestDetectedPlayer();
+	if (fallbackTarget != nullptr)
+	{
+		m_currentTargetTransform = fallbackTarget;
+		m_lastKnownTargetPosition = TransformAPI::getPosition(fallbackTarget);
+		m_canSeeTarget = true;
+		m_isAggro = true;
+	}
+	else
+	{
+		m_currentTargetTransform = nullptr;
+		m_canSeeTarget = false;
+		m_isAggro = false;
+		m_currentTargetLockTimer = 0.0f;
 	}
 }
 
@@ -344,6 +438,29 @@ bool EnemyDetectionAggro::isPlayer2Aggroing() const
 	}
 
 	return (m_currentTime - m_player2Aggro.lastAttackTime) <= m_recentAttackMemory;
+}
+
+bool EnemyDetectionAggro::isTransformAlive(Transform* target) const
+{
+	if (target == nullptr)
+	{
+		return false;
+	}
+
+	GameObject* targetOwner = ComponentAPI::getOwner(target);
+	if (targetOwner == nullptr)
+	{
+		return false;
+	}
+
+	Script* script = GameObjectAPI::getScript(targetOwner, "Damageable");
+	if (script == nullptr)
+	{
+		script = GameObjectAPI::getScript(targetOwner, "DeathCharacter");
+	}
+
+	Damageable* damageable = static_cast<Damageable*>(script);
+	return damageable == nullptr || !damageable->isDead();
 }
 
 EnemyDetectionAggro::AggroEntry* EnemyDetectionAggro::getAggroEntry(Transform* target)
