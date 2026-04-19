@@ -193,8 +193,7 @@ void LyrielChargedAttack::releaseChargeAndShoot()
 
 Vector3 LyrielChargedAttack::computeAimDirection() const
 {
-    const Vector2 lookAxis = Input::getLookAxis(getPlayerIndex());
-    return Vector3(lookAxis.x, 0.0f, lookAxis.y);
+    return computeCameraRelativeAimDirection();
 }
 
 float LyrielChargedAttack::computeChargedDamage() const
