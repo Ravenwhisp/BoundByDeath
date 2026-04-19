@@ -86,6 +86,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -120,6 +121,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)../Engine/Assets/;$(SolutionDir)EngineDependencies;$(ProjectDir)../Engine/Assets/Scripts</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -171,12 +173,16 @@
     <ClInclude Include="DeathTaunt.h" />
     <ClInclude Include="DebugDamageTrigger.h" />
     <ClInclude Include="DebugDrawTest.h" />
+    <ClInclude Include="EnemyAttackState.h" />
     <ClInclude Include="EnemyCHASE.h" />
+    <ClInclude Include="EnemyChaseState.h" />
     <ClInclude Include="EnemyDamageable.h" />
     <ClInclude Include="EnemyDeathHandler.h" />
+    <ClInclude Include="EnemyDeathState.h" />
     <ClInclude Include="EnemyDetectionAggro.h" />
     <ClInclude Include="EnemyController.h" />
     <ClInclude Include="EnemyIDLE.h" />
+    <ClInclude Include="EnemyIdleState.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="DefeatConditionManager.h" />
     <ClInclude Include="LyrielAbilityBase.h" />
@@ -188,6 +194,7 @@
     <ClInclude Include="AbilityDash.h" />
     <ClInclude Include="LyrielDash.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="RangedEnemyController.h" />
     <ClInclude Include="SpikeTrap.h" />
     <ClInclude Include="PlayerAnimationController.h" />
     <ClInclude Include="PlayerDamageable.h" />
@@ -220,13 +227,17 @@
     <ClCompile Include="DebugDamageTrigger.cpp" />
     <ClCompile Include="DebugDrawTest.cpp" />
     <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="EnemyAttackState.cpp" />
     <ClCompile Include="EnemyCHASE.cpp" />
+    <ClCompile Include="EnemyChaseState.cpp" />
     <ClCompile Include="EnemyDamageable.cpp" />
     <ClCompile Include="EnemyDeathHandler.cpp" />
+    <ClCompile Include="EnemyDeathState.cpp" />
     <ClCompile Include="EnemyDetectionAggro.cpp" />
     <ClCompile Include="DefeatConditionManager.cpp" />
     <ClCompile Include="EnemyController.cpp" />
     <ClCompile Include="EnemyIDLE.cpp" />
+    <ClCompile Include="EnemyIdleState.cpp" />
     <ClCompile Include="EngineDependencies\SimpleMath.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
@@ -245,6 +256,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="RangedEnemyController.cpp" />
     <ClCompile Include="SpikeTrap.cpp" />
     <ClCompile Include="PlayerAnimationController.cpp" />
     <ClCompile Include="PlayerDamageable.cpp" />

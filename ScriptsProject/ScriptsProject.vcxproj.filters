@@ -192,6 +192,11 @@
     <ClInclude Include="EnemyDamageable.h">
       <Filter>Enemies</Filter>
     </ClInclude>
+    <ClInclude Include="EnemyIdleState.h" />
+    <ClInclude Include="EnemyDeathState.h" />
+    <ClInclude Include="EnemyChaseState.h" />
+    <ClInclude Include="EnemyAttackState.h" />
+    <ClInclude Include="RangedEnemyController.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
@@ -327,5 +332,10 @@
     <ClCompile Include="EnemyDamageable.cpp">
       <Filter>Enemies</Filter>
     </ClCompile>
+    <ClCompile Include="EnemyIdleState.cpp" />
+    <ClCompile Include="EnemyDeathState.cpp" />
+    <ClCompile Include="EnemyChaseState.cpp" />
+    <ClCompile Include="EnemyAttackState.cpp" />
+    <ClCompile Include="RangedEnemyController.cpp" />
   </ItemGroup>
 </Project>
