@@ -177,8 +177,7 @@ void LyrielArrowVolley::releaseAimAndCast()
 
 Vector3 LyrielArrowVolley::computeAimDirection() const
 {
-    const Vector2 lookAxis = Input::getLookAxis(getPlayerIndex());
-    return Vector3(lookAxis.x, 0.0f, lookAxis.y);
+    return computeCameraRelativeAimDirection();
 }
 
 bool LyrielArrowVolley::isAimStickValid(const Vector3& direction) const

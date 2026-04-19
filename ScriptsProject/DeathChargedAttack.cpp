@@ -153,12 +153,12 @@ void DeathChargedAttack::fireAttack()
 
 void DeathChargedAttack::updateAimDirection()
 {
-    const Vector2 lookAxis = Input::getLookAxis(getPlayerIndex());
-    const float   magSq    = lookAxis.x * lookAxis.x + lookAxis.y * lookAxis.y;
+    Vector3 aimDirection = computeCameraRelativeAimDirection(0.09f);
 
-    // Only update if the stick is past the deadzone (~0.3 magnitude)
-    if (magSq >= 0.09f)
-        m_aimDirection = Vector3(lookAxis.x, 0.0f, lookAxis.y);
+    if (aimDirection.LengthSquared() > 0.0001f)
+    {
+        m_aimDirection = aimDirection;
+    }
 }
 
 void DeathChargedAttack::snapFaceAimDirection()
