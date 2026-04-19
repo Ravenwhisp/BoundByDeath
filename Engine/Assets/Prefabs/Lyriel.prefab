@@ -33,7 +33,7 @@
           "Active": true,
           "ScriptName": "PlayerController",
           "ScriptFields": {
-            "Player Index": 1,
+            "Player Index": 0,
             "God Mode": false
           }
         }
@@ -65,6 +65,19 @@
           "ScriptName": "PlayerRotation",
           "ScriptFields": {
             "Turn Speed (deg/s)": 720.0
+          }
+        }
+      },
+      {
+        "Type": 3,
+        "Data": {
+          "UID": 16883425835392279493,
+          "ComponentType": 3,
+          "Active": true,
+          "ScriptName": "PlayerDamageable",
+          "ScriptFields": {
+            "Max HP": 100.0,
+            "Health Slider": 0
           }
         }
       },
@@ -158,6 +171,21 @@
       {
         "Type": 3,
         "Data": {
+          "UID": 10081058517690664425,
+          "ComponentType": 3,
+          "Active": true,
+          "ScriptName": "LyrielDash",
+          "ScriptFields": {
+            "Dash Duration": 0.15000000596046448,
+            "Dash Distance": 3.0,
+            "Dash Cooldown": 0.5,
+            "Charge Recharge Time": 3.0
+          }
+        }
+      },
+      {
+        "Type": 3,
+        "Data": {
           "UID": 3995874977905656264,
           "ComponentType": 3,
           "Active": true,
@@ -201,21 +229,6 @@
           "PlayOnStart": true,
           "ApplyScale": false,
           "ForceWorldAfterApply": true
-        }
-      },
-      {
-        "Type": 3,
-        "Data": {
-          "UID": 10081058517690664425,
-          "ComponentType": 3,
-          "Active": true,
-          "ScriptName": "LyrielDash",
-          "ScriptFields": {
-            "Dash Duration": 0.15000000596046448,
-            "Dash Distance": 3.0,
-            "Dash Cooldown": 0.5,
-            "Charge Recharge Time": 3.0
-          }
         }
       }
     ],
@@ -307,6 +320,11 @@
               {
                 "Name": "chest",
                 "Active": true,
+                "PrefabLink": {
+                  "SourcePath": "Assets\\Models\\Weapons\\Arrow\\LyrielArrow.prefab",
+                  "AssetUID": "632379a70f6c1f2081bb0e5c2d08a0c2",
+                  "PrefabUID": 17132166714651909079
+                },
                 "Transform": {
                   "position": [
                     -2.3980815637837487e-16,
@@ -354,6 +372,11 @@
                   {
                     "Name": "arm_1_L",
                     "Active": true,
+                    "PrefabLink": {
+                      "SourcePath": "Assets\\Models\\Weapons\\Arrow\\LyrielArrow.prefab",
+                      "AssetUID": "632379a70f6c1f2081bb0e5c2d08a0c2",
+                      "PrefabUID": 17132166714651909079
+                    },
                     "Transform": {
                       "position": [
                         0.08617053180932999,
@@ -377,6 +400,11 @@
                       {
                         "Name": "arm_2_L",
                         "Active": true,
+                        "PrefabLink": {
+                          "SourcePath": "Assets\\Models\\Weapons\\Arrow\\LyrielArrow.prefab",
+                          "AssetUID": "632379a70f6c1f2081bb0e5c2d08a0c2",
+                          "PrefabUID": 17132166714651909079
+                        },
                         "Transform": {
                           "position": [
                             0.14420633018016815,
@@ -453,6 +481,11 @@
                   {
                     "Name": "joint1",
                     "Active": true,
+                    "PrefabLink": {
+                      "SourcePath": "Assets\\Models\\Weapons\\Arrow\\LyrielArrow.prefab",
+                      "AssetUID": "632379a70f6c1f2081bb0e5c2d08a0c2",
+                      "PrefabUID": 17132166714651909079
+                    },
                     "Transform": {
                       "position": [
                         0.037950001657009125,
@@ -1045,6 +1078,75 @@
         },
         "Components": [],
         "Children": []
+      },
+      {
+        "Name": "LyrielTargetUI",
+        "Active": true,
+        "Transform": {
+          "position": [
+            1.0,
+            0.0,
+            1.0
+          ],
+          "rotation": [
+            -0.0,
+            0.0,
+            -0.0,
+            1.0
+          ],
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "Components": [
+          {
+            "Type": 3,
+            "Data": {
+              "UID": 2231860231447148967,
+              "ComponentType": 3,
+              "Active": true,
+              "ScriptName": "TargetIndicatorUI",
+              "ScriptFields": {
+                "Player Transform": 1405533363151494369,
+                "Indicator Visual Transform": 10612104198570499766,
+                "Position Offset": [
+                  0.0,
+                  0.05000000074505806,
+                  0.0
+                ],
+                "Follow Sharpness": 20.0
+              }
+            }
+          }
+        ],
+        "Children": [
+          {
+            "Name": "Target",
+            "Active": true,
+            "Transform": {
+              "position": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "rotation": [
+                -0.0,
+                0.0,
+                -0.0,
+                1.0
+              ],
+              "scale": [
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            "Components": [],
+            "Children": []
+          }
+        ]
       }
     ]
   }

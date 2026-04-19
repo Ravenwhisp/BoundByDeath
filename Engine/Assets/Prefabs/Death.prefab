@@ -1,0 +1,1921 @@
+{
+  "SourcePath": "Assets\\Prefabs\\Death.prefab",
+  "Name": "Death",
+  "Version": 2,
+  "PrefabUID": 10291226617945194565,
+  "GameObject": {
+    "Name": "Death",
+    "Active": true,
+    "Transform": {
+      "position": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    "Components": [
+      {
+        "Type": 3,
+        "Data": {
+          "UID": 17552742287355624818,
+          "ComponentType": 3,
+          "Active": true,
+          "ScriptName": "PlayerController",
+          "ScriptFields": {
+            "Player Index": 0,
+            "God Mode": false
+          }
+        }
+      },
+      {
+        "Type": 3,
+        "Data": {
+          "UID": 13878196573321575153,
+          "ComponentType": 3,
+          "Active": true,
+          "ScriptName": "PlayerMovement",
+          "ScriptFields": {
+            "Move Speed": 3.5,
+            "Constrain To NavMesh": false,
+            "Nav Extents": [
+              2.0,
+              4.0,
+              2.0
+            ]
+          }
+        }
+      },
+      {
+        "Type": 3,
+        "Data": {
+          "UID": 1222580917286184826,
+          "ComponentType": 3,
+          "Active": true,
+          "ScriptName": "PlayerRotation",
+          "ScriptFields": {
+            "Turn Speed (deg/s)": 720.0
+          }
+        }
+      },
+      {
+        "Type": 3,
+        "Data": {
+          "UID": 9731596718254886087,
+          "ComponentType": 3,
+          "Active": true,
+          "ScriptName": "PlayerDamageable",
+          "ScriptFields": {
+            "Max HP": 100.0,
+            "Health Slider": 0
+          }
+        }
+      },
+      {
+        "Type": 3,
+        "Data": {
+          "UID": 3622837756234909394,
+          "ComponentType": 3,
+          "Active": true,
+          "ScriptName": "PlayerTargetController",
+          "ScriptFields": {
+            "Target Range": 8.0
+          }
+        }
+      },
+      {
+        "Type": 3,
+        "Data": {
+          "UID": 9803941909065608540,
+          "ComponentType": 3,
+          "Active": true,
+          "ScriptName": "PlayerAnimationController",
+          "ScriptFields": {
+            "Idle state name": "Ghost_Idle",
+            "Move state name": "Ghost_Fly",
+            "Dash state name": "Ghost_Fly",
+            "Attack state name": "Ghost_Attack",
+            "Damaged state name": "Ghost_Damage",
+            "Downed state name": "Ghost_Death",
+            "Death state name": "Ghost_Death",
+            "Default blend time": 0.25,
+            "Attack blend time": 0.15000000596046448,
+            "Damaged blend time": 0.10000000149011612,
+            "Downed blend time": 0.10000000149011612,
+            "Death blend time": 0.10000000149011612
+          }
+        }
+      },
+      {
+        "Type": 16,
+        "Data": {
+          "UID": 18237902618323877154,
+          "ComponentType": 16,
+          "Active": true,
+          "StateMachineUID": "3afeb210935d60f23e0c384fdbf1bfb6",
+          "PlayOnStart": true,
+          "ApplyScale": false,
+          "ForceWorldAfterApply": true
+        }
+      },
+      {
+        "Type": 3,
+        "Data": {
+          "UID": 10997888983905851879,
+          "ComponentType": 3,
+          "Active": true,
+          "ScriptName": "PlayerState",
+          "ScriptFields": {}
+        }
+      },
+      {
+        "Type": 3,
+        "Data": {
+          "UID": 6363478117187124791,
+          "ComponentType": 3,
+          "Active": true,
+          "ScriptName": "DeathCharacter",
+          "ScriptFields": {
+            "Basic Attack Damage": 20.0,
+            "Basic Attack Range": 1.5,
+            "Basic Attack Hit Angle": 50.0,
+            "Charged Attack Damage": 40.0,
+            "Dash Distance": 5.0,
+            "Taunt Duration": 2.0,
+            "Arc Range": 2.5,
+            "Arc Angle": 120.0,
+            "Max Charge Time": 2.0,
+            "Combo Window R1": 1.0,
+            "Combo Window R2": 2.0,
+            "Combo Window Max Charge": 3.0,
+            "Combo Cooldown": 1.0
+          }
+        }
+      },
+      {
+        "Type": 3,
+        "Data": {
+          "UID": 13490481001941010135,
+          "ComponentType": 3,
+          "Active": true,
+          "ScriptName": "DeathBasicAttack",
+          "ScriptFields": {
+            "Attack Lock Duration": 0.550000011920929,
+            "Final Hit Lock Duration": 0.699999988079071
+          }
+        }
+      },
+      {
+        "Type": 3,
+        "Data": {
+          "UID": 9537520067407259782,
+          "ComponentType": 3,
+          "Active": true,
+          "ScriptName": "DeathChargedAttack",
+          "ScriptFields": {
+            "Min Charge Time": 0.5,
+            "Attack Lock Duration": 1.0,
+            "Final Hit Lock Duration": 0.800000011920929,
+            "Charged Arc Range": 2.299999952316284,
+            "Charged Arc Angle": 100.0
+          }
+        }
+      },
+      {
+        "Type": 3,
+        "Data": {
+          "UID": 14828557506756097041,
+          "ComponentType": 3,
+          "Active": true,
+          "ScriptName": "DeathTaunt",
+          "ScriptFields": {
+            "Ability Cooldown": 8.0,
+            "Ability Duration": 3.0,
+            "Cone Range": 2.5,
+            "Cone Angle": 35.0
+          }
+        }
+      },
+      {
+        "Type": 3,
+        "Data": {
+          "UID": 8601216814207365205,
+          "ComponentType": 3,
+          "Active": true,
+          "ScriptName": "DeathDash",
+          "ScriptFields": {
+            "Dash Duration": 0.15000000596046448,
+            "Dash Distance": 3.0,
+            "Dash Cooldown": 4.0,
+            "Dash Hit Width": 3.0,
+            "Dash Damage": 20.0
+          }
+        }
+      }
+    ],
+    "Children": [
+      {
+        "Name": "Ghost",
+        "Active": true,
+        "Transform": {
+          "position": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rotation": [
+            -0.0,
+            0.0,
+            -0.0,
+            1.0
+          ],
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "Components": [
+          {
+            "Type": 1,
+            "Data": {
+              "UID": 15394185171667840236,
+              "ComponentType": 1,
+              "Active": true,
+              "MeshAssetId": "95b959f6c45cb0499d98317040b939f9",
+              "SkinAssetId": "66e92236c916336b4796bfc281171a4d",
+              "MaterialAssetId": [
+                "2b531aa193df7aa5cc5a6f41b085892f"
+              ]
+            }
+          }
+        ],
+        "Children": []
+      },
+      {
+        "Name": "bones",
+        "Active": true,
+        "Transform": {
+          "position": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rotation": [
+            -0.0,
+            0.0,
+            -0.0,
+            1.0
+          ],
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "Components": [],
+        "Children": [
+          {
+            "Name": "body",
+            "Active": true,
+            "Transform": {
+              "position": [
+                -0.03779827430844307,
+                0.6431729197502136,
+                0.008090910501778126
+              ],
+              "rotation": [
+                -0.004501990508288145,
+                -0.36643439531326294,
+                -0.01382626686245203,
+                0.9303302764892578
+              ],
+              "scale": [
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            "Components": [],
+            "Children": [
+              {
+                "Name": "chest",
+                "Active": true,
+                "Transform": {
+                  "position": [
+                    8.881783998477905e-18,
+                    0.2144506722688675,
+                    -0.024735206738114357
+                  ],
+                  "rotation": [
+                    -0.05028114095330238,
+                    -0.08881130814552307,
+                    0.004489018581807613,
+                    0.9947684407234192
+                  ],
+                  "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ]
+                },
+                "Components": [],
+                "Children": [
+                  {
+                    "Name": "arm_L_1",
+                    "Active": true,
+                    "Transform": {
+                      "position": [
+                        0.140786275267601,
+                        0.018130194395780563,
+                        -0.012459373101592064
+                      ],
+                      "rotation": [
+                        0.1858021467924118,
+                        -0.151572123169899,
+                        -0.3504681885242462,
+                        0.905359387397766
+                      ],
+                      "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                      ]
+                    },
+                    "Components": [],
+                    "Children": [
+                      {
+                        "Name": "arm_L_2",
+                        "Active": true,
+                        "Transform": {
+                          "position": [
+                            0.15516744554042816,
+                            1.4210854397564646e-16,
+                            -0.0067684161476790905
+                          ],
+                          "rotation": [
+                            6.54520688665772e-17,
+                            -0.4593791365623474,
+                            9.634607360535071e-17,
+                            0.8882403373718262
+                          ],
+                          "scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                          ]
+                        },
+                        "Components": [],
+                        "Children": [
+                          {
+                            "Name": "hand_L",
+                            "Active": true,
+                            "Transform": {
+                              "position": [
+                                0.15353770554065704,
+                                -1.4210854397564646e-16,
+                                0.0
+                              ],
+                              "rotation": [
+                                0.4189035594463349,
+                                -0.007230700924992561,
+                                0.19340935349464417,
+                                0.8871642351150513
+                              ],
+                              "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                              ]
+                            },
+                            "Components": [],
+                            "Children": [
+                              {
+                                "Name": "finger_L",
+                                "Active": true,
+                                "Transform": {
+                                  "position": [
+                                    0.10439938306808472,
+                                    0.012402857653796673,
+                                    0.043763723224401474
+                                  ],
+                                  "rotation": [
+                                    0.19014452397823337,
+                                    0.15155430138111117,
+                                    0.1589849889278412,
+                                    0.9568699598312378
+                                  ],
+                                  "scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                  ]
+                                },
+                                "Components": [],
+                                "Children": []
+                              },
+                              {
+                                "Name": "finger_B_L",
+                                "Active": true,
+                                "Transform": {
+                                  "position": [
+                                    0.037972405552864075,
+                                    0.05236395075917244,
+                                    0.07247015088796616
+                                  ],
+                                  "rotation": [
+                                    0.6828840970993042,
+                                    -0.5244953036308289,
+                                    0.3218025863170624,
+                                    0.39372211694717407
+                                  ],
+                                  "scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                  ]
+                                },
+                                "Components": [],
+                                "Children": []
+                              }
+                            ]
+                          },
+                          {
+                            "Name": "chain_hand_ctrl_L",
+                            "Active": true,
+                            "Transform": {
+                              "position": [
+                                0.13166014850139618,
+                                0.00031560438219457865,
+                                0.0010757128475233912
+                              ],
+                              "rotation": [
+                                0.060299020260572433,
+                                -0.1100502982735634,
+                                0.023847978562116623,
+                                0.9918085932731628
+                              ],
+                              "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                              ]
+                            },
+                            "Components": [],
+                            "Children": [
+                              {
+                                "Name": "chain_L_8",
+                                "Active": true,
+                                "Transform": {
+                                  "position": [
+                                    -0.00907609425485134,
+                                    -0.05853059142827988,
+                                    0.08453671634197235
+                                  ],
+                                  "rotation": [
+                                    -0.4730337858200073,
+                                    0.7885041832923889,
+                                    0.3045225441455841,
+                                    0.2485283762216568
+                                  ],
+                                  "scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                  ]
+                                },
+                                "Components": [],
+                                "Children": [
+                                  {
+                                    "Name": "chain_L_7",
+                                    "Active": true,
+                                    "Transform": {
+                                      "position": [
+                                        -0.015309586189687252,
+                                        -0.007413793820887804,
+                                        0.00018656515749171376
+                                      ],
+                                      "rotation": [
+                                        0.15514956414699554,
+                                        -0.10126446187496184,
+                                        0.17266954481601715,
+                                        0.9673982262611388
+                                      ],
+                                      "scale": [
+                                        1.0,
+                                        1.0,
+                                        1.0
+                                      ]
+                                    },
+                                    "Components": [],
+                                    "Children": [
+                                      {
+                                        "Name": "chain_L_6",
+                                        "Active": true,
+                                        "Transform": {
+                                          "position": [
+                                            -0.034081753343343735,
+                                            -0.004779492039233446,
+                                            -0.0047888304106891155
+                                          ],
+                                          "rotation": [
+                                            0.19541235268115997,
+                                            -0.16508957743644714,
+                                            -0.018023421987891197,
+                                            0.9665581583976746
+                                          ],
+                                          "scale": [
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                          ]
+                                        },
+                                        "Components": [],
+                                        "Children": [
+                                          {
+                                            "Name": "chain_L_5",
+                                            "Active": true,
+                                            "Transform": {
+                                              "position": [
+                                                -0.028410306200385097,
+                                                0.008523915894329548,
+                                                -0.009306109510362148
+                                              ],
+                                              "rotation": [
+                                                0.111505389213562,
+                                                -0.2901100218296051,
+                                                -0.1431386023759842,
+                                                0.9396350979804992
+                                              ],
+                                              "scale": [
+                                                1.0,
+                                                1.0,
+                                                1.0
+                                              ]
+                                            },
+                                            "Components": [],
+                                            "Children": [
+                                              {
+                                                "Name": "chain_L_4",
+                                                "Active": true,
+                                                "Transform": {
+                                                  "position": [
+                                                    -0.037189606577157974,
+                                                    -0.006429516710340977,
+                                                    0.0013992601307108998
+                                                  ],
+                                                  "rotation": [
+                                                    0.05482187494635582,
+                                                    -0.10277561098337172,
+                                                    0.003955696243792772,
+                                                    0.9931848645210266
+                                                  ],
+                                                  "scale": [
+                                                    1.0,
+                                                    1.0,
+                                                    1.0
+                                                  ]
+                                                },
+                                                "Components": [],
+                                                "Children": [
+                                                  {
+                                                    "Name": "chain_L_3",
+                                                    "Active": true,
+                                                    "Transform": {
+                                                      "position": [
+                                                        -0.030045995488762856,
+                                                        0.011859409511089323,
+                                                        -0.004391854163259268
+                                                      ],
+                                                      "rotation": [
+                                                        0.04892115667462349,
+                                                        -0.09234775602817535,
+                                                        -0.267027348279953,
+                                                        0.9580057263374328
+                                                      ],
+                                                      "scale": [
+                                                        1.0,
+                                                        1.0,
+                                                        1.0
+                                                      ]
+                                                    },
+                                                    "Components": [],
+                                                    "Children": [
+                                                      {
+                                                        "Name": "chain_L_2",
+                                                        "Active": true,
+                                                        "Transform": {
+                                                          "position": [
+                                                            -0.035000815987586975,
+                                                            0.0036691997665911913,
+                                                            0.005020943004637957
+                                                          ],
+                                                          "rotation": [
+                                                            0.05345727503299713,
+                                                            -0.060054633766412735,
+                                                            -0.05399971082806587,
+                                                            0.9952988624572754
+                                                          ],
+                                                          "scale": [
+                                                            1.0,
+                                                            1.0,
+                                                            1.0
+                                                          ]
+                                                        },
+                                                        "Components": [],
+                                                        "Children": [
+                                                          {
+                                                            "Name": "chain_L_1",
+                                                            "Active": true,
+                                                            "Transform": {
+                                                              "position": [
+                                                                -0.06349476426839828,
+                                                                0.010657613165676594,
+                                                                -0.004298136569559574
+                                                              ],
+                                                              "rotation": [
+                                                                -0.2797090709209442,
+                                                                0.18906065821647644,
+                                                                0.1075398325920105,
+                                                                0.9351224899291992
+                                                              ],
+                                                              "scale": [
+                                                                1.0,
+                                                                1.0,
+                                                                1.0
+                                                              ]
+                                                            },
+                                                            "Components": [],
+                                                            "Children": []
+                                                          }
+                                                        ]
+                                                      }
+                                                    ]
+                                                  }
+                                                ]
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "Name": "neck",
+                    "Active": true,
+                    "Transform": {
+                      "position": [
+                        -1.554312241092664e-17,
+                        0.10022325068712234,
+                        -0.013709781691432
+                      ],
+                      "rotation": [
+                        -0.002845274517312646,
+                        0.1949596256017685,
+                        -0.015464331954717636,
+                        0.9806852340698242
+                      ],
+                      "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                      ]
+                    },
+                    "Components": [],
+                    "Children": [
+                      {
+                        "Name": "chain",
+                        "Active": true,
+                        "Transform": {
+                          "position": [
+                            3.5527135993911615e-17,
+                            0.024032291024923325,
+                            0.11713694036006927
+                          ],
+                          "rotation": [
+                            0.29487472772598267,
+                            -0.44324541091918945,
+                            -0.45687079429626465,
+                            0.7126370072364807
+                          ],
+                          "scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                          ]
+                        },
+                        "Components": [],
+                        "Children": []
+                      },
+                      {
+                        "Name": "head",
+                        "Active": true,
+                        "Transform": {
+                          "position": [
+                            1.7763567996955808e-17,
+                            0.06392078101634979,
+                            -0.009265595115721226
+                          ],
+                          "rotation": [
+                            0.01206197403371334,
+                            -8.353268857487969e-17,
+                            -2.1545404670323748e-17,
+                            0.999927282333374
+                          ],
+                          "scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                          ]
+                        },
+                        "Components": [],
+                        "Children": [
+                          {
+                            "Name": "eyes",
+                            "Active": true,
+                            "Transform": {
+                              "position": [
+                                4.7683714754498405e-9,
+                                0.10029089450836182,
+                                0.08784819394350052
+                              ],
+                              "rotation": [
+                                0.005551300011575222,
+                                -2.782256070163346e-17,
+                                -1.1988798456318959e-17,
+                                0.999984622001648
+                              ],
+                              "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                              ]
+                            },
+                            "Components": [],
+                            "Children": []
+                          },
+                          {
+                            "Name": "hood_1",
+                            "Active": true,
+                            "Transform": {
+                              "position": [
+                                0.0,
+                                0.16311196982860565,
+                                -0.009791061282157898
+                              ],
+                              "rotation": [
+                                0.4015726745128632,
+                                0.568359375,
+                                0.3791764676570892,
+                                0.6098624467849731
+                              ],
+                              "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                              ]
+                            },
+                            "Components": [],
+                            "Children": [
+                              {
+                                "Name": "hood_2",
+                                "Active": true,
+                                "Transform": {
+                                  "position": [
+                                    0.13185559213161469,
+                                    7.105427198782323e-17,
+                                    -3.5527135993911615e-17
+                                  ],
+                                  "rotation": [
+                                    -0.38539358973503113,
+                                    -0.6026884317398071,
+                                    -0.3989548981189728,
+                                    0.5736491680145264
+                                  ],
+                                  "scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                  ]
+                                },
+                                "Components": [],
+                                "Children": []
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "Name": "arm_R_1",
+                    "Active": true,
+                    "Transform": {
+                      "position": [
+                        -0.13766974210739136,
+                        0.018130527809262276,
+                        -0.012459338642656805
+                      ],
+                      "rotation": [
+                        0.9471635222434998,
+                        0.09901512414216997,
+                        -0.19229434430599213,
+                        0.236854687333107
+                      ],
+                      "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                      ]
+                    },
+                    "Components": [],
+                    "Children": [
+                      {
+                        "Name": "arm_R_2",
+                        "Active": true,
+                        "Transform": {
+                          "position": [
+                            -0.15516723692417145,
+                            5.519410137821978e-7,
+                            0.006768484599888325
+                          ],
+                          "rotation": [
+                            0.0000022034057565178955,
+                            -0.6827433109283447,
+                            0.000002360472535656299,
+                            0.7306583523750305
+                          ],
+                          "scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                          ]
+                        },
+                        "Components": [],
+                        "Children": [
+                          {
+                            "Name": "hand_R",
+                            "Active": true,
+                            "Transform": {
+                              "position": [
+                                -0.15353812277317047,
+                                7.302404014808417e-9,
+                                -2.710352760004753e-7
+                              ],
+                              "rotation": [
+                                -0.5829806327819824,
+                                0.17537954449653623,
+                                -0.03390292078256607,
+                                0.7926072478294373
+                              ],
+                              "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                              ]
+                            },
+                            "Components": [],
+                            "Children": [
+                              {
+                                "Name": "finger_R",
+                                "Active": true,
+                                "Transform": {
+                                  "position": [
+                                    -0.10439956188201904,
+                                    -0.012402985244989395,
+                                    -0.043763380497694016
+                                  ],
+                                  "rotation": [
+                                    0.22583073377609253,
+                                    0.11294135451316832,
+                                    0.3171446919441223,
+                                    0.914146602153778
+                                  ],
+                                  "scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                  ]
+                                },
+                                "Components": [],
+                                "Children": []
+                              },
+                              {
+                                "Name": "finger_B_R",
+                                "Active": true,
+                                "Transform": {
+                                  "position": [
+                                    -0.03635171800851822,
+                                    -0.0511317178606987,
+                                    -0.07054762542247772
+                                  ],
+                                  "rotation": [
+                                    0.7068342566490173,
+                                    -0.5056579113006592,
+                                    0.4757798910140991,
+                                    0.13538417220115662
+                                  ],
+                                  "scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                  ]
+                                },
+                                "Components": [],
+                                "Children": []
+                              }
+                            ]
+                          },
+                          {
+                            "Name": "chain_hand_ctrl_R",
+                            "Active": true,
+                            "Transform": {
+                              "position": [
+                                -0.13166046142578125,
+                                -0.00031561008654534817,
+                                -0.0010760333389043808
+                              ],
+                              "rotation": [
+                                0.060299020260572433,
+                                -0.1100502982735634,
+                                0.023847978562116623,
+                                0.9918085932731628
+                              ],
+                              "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                              ]
+                            },
+                            "Components": [],
+                            "Children": [
+                              {
+                                "Name": "chain_R_8",
+                                "Active": true,
+                                "Transform": {
+                                  "position": [
+                                    0.009076046757400036,
+                                    0.058529939502477646,
+                                    -0.08453653752803802
+                                  ],
+                                  "rotation": [
+                                    0.591303825378418,
+                                    0.8018971681594849,
+                                    -0.05100981891155243,
+                                    0.06869315356016159
+                                  ],
+                                  "scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                  ]
+                                },
+                                "Components": [],
+                                "Children": [
+                                  {
+                                    "Name": "chain_R_7",
+                                    "Active": true,
+                                    "Transform": {
+                                      "position": [
+                                        0.02076781913638115,
+                                        0.010282441973686218,
+                                        -0.00029468844877555966
+                                      ],
+                                      "rotation": [
+                                        0.03528834134340286,
+                                        -0.09924404323101044,
+                                        0.18350045382976532,
+                                        0.977360188961029
+                                      ],
+                                      "scale": [
+                                        1.0,
+                                        1.0,
+                                        1.0
+                                      ]
+                                    },
+                                    "Components": [],
+                                    "Children": [
+                                      {
+                                        "Name": "chain_R_6",
+                                        "Active": true,
+                                        "Transform": {
+                                          "position": [
+                                            0.04847931116819382,
+                                            0.0072861104272305965,
+                                            0.0006672029849141836
+                                          ],
+                                          "rotation": [
+                                            0.014010630548000336,
+                                            -0.07674463838338852,
+                                            -0.01716148480772972,
+                                            0.996804654598236
+                                          ],
+                                          "scale": [
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                          ]
+                                        },
+                                        "Components": [],
+                                        "Children": [
+                                          {
+                                            "Name": "chain_R_5",
+                                            "Active": true,
+                                            "Transform": {
+                                              "position": [
+                                                0.04531252384185791,
+                                                -0.005890018306672573,
+                                                0.006569234654307365
+                                              ],
+                                              "rotation": [
+                                                -0.10132134705781937,
+                                                -0.2174207717180252,
+                                                -0.19237953424453735,
+                                                0.9515525698661804
+                                              ],
+                                              "scale": [
+                                                1.0,
+                                                1.0,
+                                                1.0
+                                              ]
+                                            },
+                                            "Components": [],
+                                            "Children": [
+                                              {
+                                                "Name": "chain_R_4",
+                                                "Active": true,
+                                                "Transform": {
+                                                  "position": [
+                                                    0.05915942043066025,
+                                                    0.007651129271835089,
+                                                    -0.011010329239070415
+                                                  ],
+                                                  "rotation": [
+                                                    -0.20888829231262207,
+                                                    -0.08852901309728622,
+                                                    -0.1510924994945526,
+                                                    0.962132692337036
+                                                  ],
+                                                  "scale": [
+                                                    1.0,
+                                                    1.0,
+                                                    1.0
+                                                  ]
+                                                },
+                                                "Components": [],
+                                                "Children": [
+                                                  {
+                                                    "Name": "chain_R_3",
+                                                    "Active": true,
+                                                    "Transform": {
+                                                      "position": [
+                                                        0.04640046879649162,
+                                                        -0.01571378856897354,
+                                                        0.0023522654082626104
+                                                      ],
+                                                      "rotation": [
+                                                        -0.07211307436227798,
+                                                        -0.08497709035873413,
+                                                        -0.4123944342136383,
+                                                        0.9041622877120972
+                                                      ],
+                                                      "scale": [
+                                                        1.0,
+                                                        1.0,
+                                                        1.0
+                                                      ]
+                                                    },
+                                                    "Components": [],
+                                                    "Children": [
+                                                      {
+                                                        "Name": "chain_R_2",
+                                                        "Active": true,
+                                                        "Transform": {
+                                                          "position": [
+                                                            0.0492141991853714,
+                                                            -0.0030319918878376484,
+                                                            -0.0047661298885941505
+                                                          ],
+                                                          "rotation": [
+                                                            0.008027913048863411,
+                                                            -0.05249227583408356,
+                                                            -0.16044892370700836,
+                                                            0.9856146574020386
+                                                          ],
+                                                          "scale": [
+                                                            1.0,
+                                                            1.0,
+                                                            1.0
+                                                          ]
+                                                        },
+                                                        "Components": [],
+                                                        "Children": [
+                                                          {
+                                                            "Name": "chain_R_1",
+                                                            "Active": true,
+                                                            "Transform": {
+                                                              "position": [
+                                                                0.08871399611234665,
+                                                                -0.016408519819378853,
+                                                                0.009556282311677933
+                                                              ],
+                                                              "rotation": [
+                                                                0.6636068820953369,
+                                                                -0.2331916242837906,
+                                                                -0.16675308346748352,
+                                                                0.6909710168838501
+                                                              ],
+                                                              "scale": [
+                                                                1.0,
+                                                                1.0,
+                                                                1.0
+                                                              ]
+                                                            },
+                                                            "Components": [],
+                                                            "Children": []
+                                                          }
+                                                        ]
+                                                      }
+                                                    ]
+                                                  }
+                                                ]
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "Name": "cloth_bottom",
+                "Active": true,
+                "Transform": {
+                  "position": [
+                    3.108624482185328e-17,
+                    -0.05434659868478775,
+                    0.0029309450183063745
+                  ],
+                  "rotation": [
+                    -0.07199109345674515,
+                    0.0368155837059021,
+                    -0.10346822440624236,
+                    0.9913406372070313
+                  ],
+                  "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ]
+                },
+                "Components": [],
+                "Children": [
+                  {
+                    "Name": "cloth_bot_26",
+                    "Active": true,
+                    "Transform": {
+                      "position": [
+                        -0.046384088695049286,
+                        -0.16254934668540957,
+                        0.1430065929889679
+                      ],
+                      "rotation": [
+                        -0.5961706042289734,
+                        0.7662122845649719,
+                        -0.18401393294334412,
+                        -0.15374736487865448
+                      ],
+                      "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                      ]
+                    },
+                    "Components": [],
+                    "Children": [
+                      {
+                        "Name": "cloth_bot_27",
+                        "Active": true,
+                        "Transform": {
+                          "position": [
+                            0.11056920140981674,
+                            0.002080788603052497,
+                            0.012122240848839285
+                          ],
+                          "rotation": [
+                            0.01406705006957054,
+                            -0.023033345118165016,
+                            0.006627744063735008,
+                            0.9996137619018556
+                          ],
+                          "scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                          ]
+                        },
+                        "Components": [],
+                        "Children": [
+                          {
+                            "Name": "cloth_bot_28",
+                            "Active": true,
+                            "Transform": {
+                              "position": [
+                                0.14698436856269836,
+                                0.018726352602243423,
+                                0.010304576717317104
+                              ],
+                              "rotation": [
+                                -0.005091393366456032,
+                                0.993228793144226,
+                                -0.004589509218931198,
+                                0.11597281694412231
+                              ],
+                              "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                              ]
+                            },
+                            "Components": [],
+                            "Children": []
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "Name": "cloth_bot_23",
+                    "Active": true,
+                    "Transform": {
+                      "position": [
+                        -0.13600598275661469,
+                        -0.15653695166110992,
+                        0.09789684414863586
+                      ],
+                      "rotation": [
+                        0.1607811450958252,
+                        -0.4238514006137848,
+                        -0.7254999876022339,
+                        0.5178312659263611
+                      ],
+                      "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                      ]
+                    },
+                    "Components": [],
+                    "Children": [
+                      {
+                        "Name": "cloth_bot_24",
+                        "Active": true,
+                        "Transform": {
+                          "position": [
+                            0.12069512158632278,
+                            -0.02226867154240608,
+                            -0.012295055203139782
+                          ],
+                          "rotation": [
+                            -0.06601929664611816,
+                            -0.03510235622525215,
+                            0.994961142539978,
+                            0.06679525971412659
+                          ],
+                          "scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                          ]
+                        },
+                        "Components": [],
+                        "Children": [
+                          {
+                            "Name": "cloth_bot_25",
+                            "Active": true,
+                            "Transform": {
+                              "position": [
+                                -0.10356240719556808,
+                                0.023495061323046684,
+                                0.006643407978117466
+                              ],
+                              "rotation": [
+                                0.057379350066185,
+                                -0.004839996341615915,
+                                -0.0760800912976265,
+                                0.9954376220703124
+                              ],
+                              "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                              ]
+                            },
+                            "Components": [],
+                            "Children": []
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "Name": "cloth_bot_4",
+                    "Active": true,
+                    "Transform": {
+                      "position": [
+                        0.13551588356494904,
+                        -0.143388032913208,
+                        0.09150591492652892
+                      ],
+                      "rotation": [
+                        -0.35828059911727905,
+                        0.3132505714893341,
+                        -0.5477299094200134,
+                        0.6881141066551208
+                      ],
+                      "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                      ]
+                    },
+                    "Components": [],
+                    "Children": [
+                      {
+                        "Name": "cloth_bot_5",
+                        "Active": true,
+                        "Transform": {
+                          "position": [
+                            0.0966801419854164,
+                            0.00537442322820425,
+                            -0.0099314758554101
+                          ],
+                          "rotation": [
+                            -0.027517063543200493,
+                            0.1203274503350258,
+                            0.013361082412302494,
+                            0.9922628998756408
+                          ],
+                          "scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                          ]
+                        },
+                        "Components": [],
+                        "Children": [
+                          {
+                            "Name": "cloth_bot_6",
+                            "Active": true,
+                            "Transform": {
+                              "position": [
+                                0.11150547116994858,
+                                0.0297124981880188,
+                                -0.0011410975130274892
+                              ],
+                              "rotation": [
+                                0.7444823384284973,
+                                0.08702955394983292,
+                                0.6602535843849182,
+                                -0.04729843884706497
+                              ],
+                              "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                              ]
+                            },
+                            "Components": [],
+                            "Children": []
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "Name": "cloth_bot_7",
+                    "Active": true,
+                    "Transform": {
+                      "position": [
+                        0.17614200711250305,
+                        -0.1243881657719612,
+                        0.01678594760596752
+                      ],
+                      "rotation": [
+                        -0.4909679591655731,
+                        0.3719295859336853,
+                        -0.3073691129684448,
+                        0.7253572344779968
+                      ],
+                      "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                      ]
+                    },
+                    "Components": [],
+                    "Children": [
+                      {
+                        "Name": "cloth_bot_8",
+                        "Active": true,
+                        "Transform": {
+                          "position": [
+                            0.0982840210199356,
+                            0.0069844662211835384,
+                            0.009093735367059708
+                          ],
+                          "rotation": [
+                            0.06642785668373108,
+                            -0.23158863186836243,
+                            0.15983639657497406,
+                            0.9572911858558656
+                          ],
+                          "scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                          ]
+                        },
+                        "Components": [],
+                        "Children": [
+                          {
+                            "Name": "cloth_bot_9",
+                            "Active": true,
+                            "Transform": {
+                              "position": [
+                                0.03731483221054077,
+                                0.008485228754580021,
+                                0.0066930619068443775
+                              ],
+                              "rotation": [
+                                -0.16276055574417114,
+                                0.9054401516914368,
+                                -0.1098567396402359,
+                                0.376322478055954
+                              ],
+                              "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                              ]
+                            },
+                            "Components": [],
+                            "Children": []
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "Name": "cloth_bot_1",
+                    "Active": true,
+                    "Transform": {
+                      "position": [
+                        0.057557228952646255,
+                        -0.17937178909778595,
+                        0.13766880333423617
+                      ],
+                      "rotation": [
+                        -0.18849290907382965,
+                        0.02312903106212616,
+                        -0.6068140268325806,
+                        0.7718240022659302
+                      ],
+                      "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                      ]
+                    },
+                    "Components": [],
+                    "Children": [
+                      {
+                        "Name": "cloth_bot_2",
+                        "Active": true,
+                        "Transform": {
+                          "position": [
+                            0.11705844849348068,
+                            -0.006797982379794121,
+                            -0.01935511827468872
+                          ],
+                          "rotation": [
+                            0.046491384506225586,
+                            0.025228768587112427,
+                            -0.028543459251523014,
+                            0.998192012310028
+                          ],
+                          "scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                          ]
+                        },
+                        "Components": [],
+                        "Children": [
+                          {
+                            "Name": "cloth_bot_3",
+                            "Active": true,
+                            "Transform": {
+                              "position": [
+                                0.10467265546321868,
+                                0.01270570047199726,
+                                -0.004068000707775354
+                              ],
+                              "rotation": [
+                                -0.02251441404223442,
+                                -0.5279768705368042,
+                                0.07541918009519577,
+                                0.8456036448478699
+                              ],
+                              "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                              ]
+                            },
+                            "Components": [],
+                            "Children": []
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "Name": "cloth_bot_10",
+                    "Active": true,
+                    "Transform": {
+                      "position": [
+                        0.15773040056228638,
+                        -0.12789250910282135,
+                        -0.07337920367717743
+                      ],
+                      "rotation": [
+                        -0.6170048117637634,
+                        0.5436722636222839,
+                        -0.000407749495934695,
+                        0.5689688324928284
+                      ],
+                      "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                      ]
+                    },
+                    "Components": [],
+                    "Children": [
+                      {
+                        "Name": "cloth_bot_11",
+                        "Active": true,
+                        "Transform": {
+                          "position": [
+                            0.0938652902841568,
+                            0.005188225768506527,
+                            -0.010193701833486555
+                          ],
+                          "rotation": [
+                            -0.027149520814418793,
+                            0.02399243786931038,
+                            0.999231219291687,
+                            0.014977465383708475
+                          ],
+                          "scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                          ]
+                        },
+                        "Components": [],
+                        "Children": []
+                      }
+                    ]
+                  },
+                  {
+                    "Name": "cloth_bot_12",
+                    "Active": true,
+                    "Transform": {
+                      "position": [
+                        0.08934017270803452,
+                        -0.11213281750679016,
+                        -0.15568807721138
+                      ],
+                      "rotation": [
+                        -0.02945808693766594,
+                        -0.43817102909088135,
+                        -0.6839741468429565,
+                        0.5825098752975464
+                      ],
+                      "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                      ]
+                    },
+                    "Components": [],
+                    "Children": [
+                      {
+                        "Name": "cloth_bot_13",
+                        "Active": true,
+                        "Transform": {
+                          "position": [
+                            0.003807556815445423,
+                            0.007195818237960339,
+                            -0.10538436472415924
+                          ],
+                          "rotation": [
+                            0.04020826518535614,
+                            -0.5614824295043945,
+                            -0.01010146364569664,
+                            0.8264495134353638
+                          ],
+                          "scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                          ]
+                        },
+                        "Components": [],
+                        "Children": []
+                      }
+                    ]
+                  },
+                  {
+                    "Name": "cloth_bot_14",
+                    "Active": true,
+                    "Transform": {
+                      "position": [
+                        -7.105427198782323e-17,
+                        -0.10832507163286208,
+                        -0.17817696928977966
+                      ],
+                      "rotation": [
+                        -0.6140510439872742,
+                        0.6706260442733765,
+                        0.2860683500766754,
+                        0.3022696375846863
+                      ],
+                      "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                      ]
+                    },
+                    "Components": [],
+                    "Children": [
+                      {
+                        "Name": "cloth_bot_15",
+                        "Active": true,
+                        "Transform": {
+                          "position": [
+                            0.09144943207502364,
+                            0.005452805198729038,
+                            0.003937899600714445
+                          ],
+                          "rotation": [
+                            -0.16070342063903809,
+                            0.05380909517407417,
+                            0.984112024307251,
+                            -0.05293911695480347
+                          ],
+                          "scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                          ]
+                        },
+                        "Components": [],
+                        "Children": []
+                      }
+                    ]
+                  },
+                  {
+                    "Name": "cloth_bot_16",
+                    "Active": true,
+                    "Transform": {
+                      "position": [
+                        -0.09442957490682602,
+                        -0.108596533536911,
+                        -0.15381625294685364
+                      ],
+                      "rotation": [
+                        -0.42874792218208313,
+                        0.02089722454547882,
+                        -0.5015590786933899,
+                        0.7511171698570251
+                      ],
+                      "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                      ]
+                    },
+                    "Components": [],
+                    "Children": [
+                      {
+                        "Name": "cloth_bot_17",
+                        "Active": true,
+                        "Transform": {
+                          "position": [
+                            0.019374147057533264,
+                            -0.005036435555666685,
+                            -0.14813007414340973
+                          ],
+                          "rotation": [
+                            0.05721607059240341,
+                            -0.7193960547447205,
+                            0.006499789655208588,
+                            0.6922090649604797
+                          ],
+                          "scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                          ]
+                        },
+                        "Components": [],
+                        "Children": []
+                      }
+                    ]
+                  },
+                  {
+                    "Name": "cloth_bot_20",
+                    "Active": true,
+                    "Transform": {
+                      "position": [
+                        -0.2035866379737854,
+                        -0.1655901074409485,
+                        -0.012206891551613808
+                      ],
+                      "rotation": [
+                        -0.3187757432460785,
+                        0.5125055909156799,
+                        0.6253990530967712,
+                        -0.49456652998924255
+                      ],
+                      "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                      ]
+                    },
+                    "Components": [],
+                    "Children": [
+                      {
+                        "Name": "cloth_bot_21",
+                        "Active": true,
+                        "Transform": {
+                          "position": [
+                            0.09446981549263,
+                            0.013228769414126871,
+                            -0.018737899139523503
+                          ],
+                          "rotation": [
+                            0.9791155457496644,
+                            -0.10557642579078674,
+                            -0.17319263517856598,
+                            0.01381030399352312
+                          ],
+                          "scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                          ]
+                        },
+                        "Components": [],
+                        "Children": [
+                          {
+                            "Name": "cloth_bot_22",
+                            "Active": true,
+                            "Transform": {
+                              "position": [
+                                0.07483022660017014,
+                                0.0258908960968256,
+                                -0.011792163364589214
+                              ],
+                              "rotation": [
+                                0.9984041452407836,
+                                0.04407433792948723,
+                                0.028554100543260574,
+                                0.02076786942780018
+                              ],
+                              "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                              ]
+                            },
+                            "Components": [],
+                            "Children": []
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "Name": "cloth_bot_18",
+                    "Active": true,
+                    "Transform": {
+                      "position": [
+                        -0.1620427817106247,
+                        -0.10901377350091934,
+                        -0.08850543946027756
+                      ],
+                      "rotation": [
+                        -0.32322362065315247,
+                        0.38364455103874207,
+                        -0.5876054763793945,
+                        0.634872555732727
+                      ],
+                      "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                      ]
+                    },
+                    "Components": [],
+                    "Children": [
+                      {
+                        "Name": "cloth_bot_19",
+                        "Active": true,
+                        "Transform": {
+                          "position": [
+                            0.11343041062355042,
+                            0.002564890077337622,
+                            0.006284041795879602
+                          ],
+                          "rotation": [
+                            0.009067721664905548,
+                            0.9974545240402222,
+                            0.03867000341415405,
+                            0.059219229966402054
+                          ],
+                          "scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                          ]
+                        },
+                        "Components": [],
+                        "Children": []
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "Name": "kosa",
+            "Active": true,
+            "Transform": {
+              "position": [
+                -0.15405143797397614,
+                0.7479873299598694,
+                0.2066312879323959
+              ],
+              "rotation": [
+                -0.23199692368507385,
+                -0.2814842760562897,
+                0.29323217272758484,
+                0.8837187886238098
+              ],
+              "scale": [
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            "Components": [],
+            "Children": []
+          }
+        ]
+      }
+    ]
+  }
+}
