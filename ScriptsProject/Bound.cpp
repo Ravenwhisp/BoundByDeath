@@ -81,8 +81,8 @@ void Bound::Update()
 
     if (m_previousDistance < m_distanceInstaKill && distance >= m_distanceInstaKill)
     {
-        m_firstDamageable->kill();
-        m_secondDamageable->kill();
+        m_firstDamageable->takeDamage(m_firstDamageable->getCurrentHp());
+        m_secondDamageable->takeDamage(m_secondDamageable->getCurrentHp());
         return;
     }
 
