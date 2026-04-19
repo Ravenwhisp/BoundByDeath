@@ -4,6 +4,7 @@
 #include "PlayerState.h"
 #include "PlayerDamageable.h"
 #include "PlayerController.h"
+#include "EnemyDamageable.h"
 
 //static const ScriptFieldInfo myScriptFields[] =
 //{
@@ -31,6 +32,7 @@ void LevelCheats::Update()
     if (KeyComboPressed(KeyCode::R)) ActivateGodMode();
     /*if (KeyComboPressed(KeyCode::T)) SpawnEnemies();*/
     if (KeyComboPressed(KeyCode::D)) restartLevel();
+	if (KeyComboPressed(KeyCode::F)) killEnemies();
     if (Input::isKeyDown(KeyCode::RightShift) && Input::isKeyDown(KeyCode::A))
     {
         if (KeyComboPressed(KeyCode::Num1)) 
@@ -157,6 +159,21 @@ void LevelCheats::restartLevel()
 {
     Debug::log("Restart Level activated!");
     SceneAPI::requestSceneChange("Level1");
+}
+
+void LevelCheats::killEnemies()
+{
+    Debug::log("Kill Enemies activated!");
+    std::vector<GameObject*> enemies = SceneAPI::findAllGameObjectsByTag(Tag::ENEMY);
+    for (GameObject* enemy : enemies)
+    {
+        Script* damageableScript = GameObjectAPI::getScript(enemy, "EnemyDamageable");
+        EnemyDamageable* damageable = dynamic_cast<EnemyDamageable*>(damageableScript);
+        if (damageable)
+        {
+            damageable->takeDamage(damageable->getCurrentHp());
+        }
+    }
 }
 
 IMPLEMENT_SCRIPT(LevelCheats)
