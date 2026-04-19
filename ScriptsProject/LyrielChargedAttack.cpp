@@ -5,7 +5,7 @@
 #include "CharacterBase.h"
 #include "ArrowPool.h"
 #include "LyrielArrowProjectile.h"
-#include "Damageable.h"
+#include "EnemyDamageable.h"
 #include "PlayerState.h"
 
 #include <cmath>
@@ -317,12 +317,12 @@ void LyrielChargedAttack::applyChargedDamage(const std::vector<GameObject*>& tar
             continue;
         }
 
-        Script* script = GameObjectAPI::getScript(target, "Damageable");
-        Damageable* damageable = dynamic_cast<Damageable*>(script);
+        Script* script = GameObjectAPI::getScript(target, "EnemyDamageable");
+        EnemyDamageable* damageable = static_cast<EnemyDamageable*>(script);
 
         if (damageable != nullptr)
         {
-            damageable->takeDamage(damage);
+            damageable->takeDamageEnemy(damage, GameObjectAPI::getTransform(getOwner()));
         }
     }
 }

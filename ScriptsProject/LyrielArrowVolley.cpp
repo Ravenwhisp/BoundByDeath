@@ -5,7 +5,7 @@
 #include "CharacterBase.h"
 #include "ArrowPool.h"
 #include "LyrielArrowProjectile.h"
-#include "Damageable.h"
+#include "EnemyDamageable.h"
 #include "PlayerState.h"
 
 #include <cmath>
@@ -254,12 +254,12 @@ void LyrielArrowVolley::applyVolleyDamage(const std::vector<GameObject*>& target
             continue;
         }
 
-        Script* script = GameObjectAPI::getScript(target, "Damageable");
-        Damageable* damageable = dynamic_cast<Damageable*>(script);
+        Script* script = GameObjectAPI::getScript(target, "EnemyDamageable");
+        EnemyDamageable* damageable = static_cast<EnemyDamageable*>(script);
 
         if (damageable != nullptr)
         {
-            damageable->takeDamage(m_volleyDamage);
+            damageable->takeDamageEnemy(m_volleyDamage, GameObjectAPI::getTransform(getOwner()));
         }
     }
 }

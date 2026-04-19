@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "DeathCharacter.h"
-#include "Damageable.h"
+#include "EnemyDamageable.h"
 
 #include <cmath>
 #include <vector>
@@ -146,8 +146,8 @@ void DeathCharacter::dealDamageBasicAttack(float damage, GameObject* target) con
         {
             return;
         }
-        Damageable* damageable = static_cast<Damageable*>(damScript);
-        damageable->takeDamage(damage);
+        EnemyDamageable* damageable = static_cast<EnemyDamageable*>(damScript);
+        damageable->takeDamageEnemy(damage, GameObjectAPI::getTransform(getOwner()));
         Debug::log("[BASIC] hit '%s'  dmg=%.1f  hp=%.1f/%.1f",
             GameObjectAPI::getName(enemy), damage,
             damageable->getCurrentHp(), damageable->getMaxHp());
@@ -258,8 +258,8 @@ void DeathCharacter::dealDamageInArc(float damage) const
             continue;
         }
 
-        Damageable* damageable = static_cast<Damageable*>(damScript);
-        damageable->takeDamage(damage);
+        EnemyDamageable* damageable = static_cast<EnemyDamageable*>(damScript);
+        damageable->takeDamageEnemy(damage, GameObjectAPI::getTransform(getOwner()));
         hit++;
         Debug::log("[ARC] hit '%s'  dmg=%.1f  hp=%.1f/%.1f",
             GameObjectAPI::getName(enemy), damage,
