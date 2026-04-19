@@ -12,6 +12,7 @@
 
 static const ScriptFieldInfo LyrielArrowVolleyFields[] =
 {
+	{ "Ability UI", ScriptFieldType::ComponentRef, offsetof(LyrielArrowVolley, m_AbilityUI), {}, {}, { ComponentType::TRANSFORM } },
     { "Volley Damage", ScriptFieldType::Float, offsetof(LyrielArrowVolley, m_volleyDamage), { 0.0f, 100.0f, 0.5f } },
     { "Volley Cooldown", ScriptFieldType::Float, offsetof(LyrielArrowVolley, m_volleyCooldown), { 0.0f, 20.0f, 0.1f } },
     { "Volley Range", ScriptFieldType::Float, offsetof(LyrielArrowVolley, m_volleyRange), { 0.0f, 50.0f, 0.1f } },
@@ -117,6 +118,10 @@ void LyrielArrowVolley::beginAim()
     {
         m_currentAimDirection = aimDirection;
     }
+    if (m_AbilityUI.getReferencedComponent())
+    {
+        m_AbilityUI.getReferencedComponent()->getOwner()->SetActive(true);
+	}
 }
 
 void LyrielArrowVolley::updateAim()
@@ -126,11 +131,25 @@ void LyrielArrowVolley::updateAim()
     {
         m_currentAimDirection = aimDirection;
     }
+    if (m_AbilityUI.getReferencedComponent())
+    {
+        const Vector3 origin = TransformAPI::getGlobalPosition(GameObjectAPI::getTransform(getOwner()));
+        const float yawRad = std::atan2(m_currentAimDirection.x, m_currentAimDirection.z);
+        const float targetYawDeg = yawRad * (180.0f / 3.14159265f);
+
+        TransformAPI::setPosition(m_AbilityUI.getReferencedComponent(), origin);
+        TransformAPI::setRotationEuler(m_AbilityUI.getReferencedComponent(), Vector3(0.0f, targetYawDeg, 0.0f));
+    }
 }
 
 void LyrielArrowVolley::releaseAimAndCast()
 {
     m_isAiming = false;
+
+    if (m_AbilityUI.getReferencedComponent())
+    {
+        m_AbilityUI.getReferencedComponent()->getOwner()->SetActive(false);
+	}
 
     if (!canCast())
     {
