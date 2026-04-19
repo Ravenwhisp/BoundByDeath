@@ -37,6 +37,9 @@
     <Filter Include="Enemies\States">
       <UniqueIdentifier>{920d4967-84f4-4616-9099-b8b0c3eeb8af}</UniqueIdentifier>
     </Filter>
+    <Filter Include="UI">
+      <UniqueIdentifier>{e135fa5e-751a-4bac-acd9-1ede1f2173ca}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -130,6 +133,26 @@
     </ClInclude>
     <ClInclude Include="SpikeTrap.h" />
     <ClInclude Include="LevelCheats.h" />
+    <ClInclude Include="AbilityBase.h" />
+    <ClInclude Include="CharacterBase.h" />
+    <ClInclude Include="DeathAbilityBase.h" />
+    <ClInclude Include="DeathBasicAttack.h" />
+    <ClInclude Include="DeathCharacter.h" />
+    <ClInclude Include="DeathChargedAttack.h" />
+    <ClInclude Include="DeathDash.h" />
+    <ClInclude Include="DeathTaunt.h" />
+    <ClInclude Include="EnemyDamageable.h" />
+    <ClInclude Include="LyrielAbilityBase.h" />
+    <ClInclude Include="LyrielCharacter.h" />
+    <ClInclude Include="LyrielChargedAttack.h" />
+    <ClInclude Include="AbilityDash.h" />
+    <ClInclude Include="LyrielDash.h" />
+    <ClInclude Include="UIController.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UIPause.h">
+      <Filter>UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
@@ -224,5 +247,25 @@
     </ClCompile>
     <ClCompile Include="SpikeTrap.cpp" />
     <ClCompile Include="LevelCheats.cpp" />
+    <ClCompile Include="AbilityBase.cpp" />
+    <ClCompile Include="CharacterBase.cpp" />
+    <ClCompile Include="DeathAbilityBase.cpp" />
+    <ClCompile Include="DeathBasicAttack.cpp" />
+    <ClCompile Include="DeathCharacter.cpp" />
+    <ClCompile Include="DeathChargedAttack.cpp" />
+    <ClCompile Include="DeathDash.cpp" />
+    <ClCompile Include="DeathTaunt.cpp" />
+    <ClCompile Include="EnemyDamageable.cpp" />
+    <ClCompile Include="LyrielAbilityBase.cpp" />
+    <ClCompile Include="LyrielCharacter.cpp" />
+    <ClCompile Include="LyrielChargedAttack.cpp" />
+    <ClCompile Include="AbilityDash.cpp" />
+    <ClCompile Include="LyrielDash.cpp" />
+    <ClCompile Include="UIController.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UIPause.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
