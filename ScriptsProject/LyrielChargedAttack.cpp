@@ -63,10 +63,6 @@ void LyrielChargedAttack::drawGizmo()
 {
     if (!m_isCharging)
     {
-        if (m_ChargedAttackUI.getReferencedComponent())
-        {
-			m_ChargedAttackUI.getReferencedComponent()->getOwner()->SetActive(false);
-		}
         return;
     }
 
@@ -88,19 +84,6 @@ void LyrielChargedAttack::drawGizmo()
     }
 
     const Vector3 origin = TransformAPI::getGlobalPosition(ownerTransform);
-    if (m_ChargedAttackUI.getReferencedComponent())
-    {
-        m_ChargedAttackUI.getReferencedComponent()->getOwner()->SetActive(true);
-
-        const float yawRad = std::atan2(previewDirection.x, previewDirection.z);
-        const float targetYawDeg = yawRad * (180.0f / PI);
-
-        const float range = m_chargeTimer / m_maxChargeTime * 0.45f + 0.65f;
-
-		TransformAPI::setPosition(m_ChargedAttackUI.getReferencedComponent(), origin);
-        TransformAPI::setRotationEuler(m_ChargedAttackUI.getReferencedComponent(), Vector3(0.0f, targetYawDeg, 0.0f));
-        TransformAPI::setScale(m_ChargedAttackUI.getReferencedComponent(), Vector3(1.0f, 1.0f, range));
-    }
     drawChargePreview(origin, previewDirection);
 }
 
@@ -140,6 +123,11 @@ void LyrielChargedAttack::beginCharge()
     {
         m_currentAimDirection = aimDirection;
     }
+
+    if (m_ChargedAttackUI.getReferencedComponent())
+    {
+        m_ChargedAttackUI.getReferencedComponent()->getOwner()->SetActive(true);
+    }
 }
 
 void LyrielChargedAttack::updateCharge()
@@ -155,11 +143,30 @@ void LyrielChargedAttack::updateCharge()
     {
         m_currentAimDirection = aimDirection;
     }
+
+    if (m_ChargedAttackUI.getReferencedComponent())
+    {
+		const Vector3 origin = TransformAPI::getGlobalPosition(GameObjectAPI::getTransform(getOwner()));
+
+        const float yawRad = std::atan2(aimDirection.x, aimDirection.z);
+        const float targetYawDeg = yawRad * (180.0f / PI);
+
+        const float range = m_chargeTimer / m_maxChargeTime * 0.45f + 0.65f;
+
+        TransformAPI::setPosition(m_ChargedAttackUI.getReferencedComponent(), origin);
+        TransformAPI::setRotationEuler(m_ChargedAttackUI.getReferencedComponent(), Vector3(0.0f, targetYawDeg, 0.0f));
+        TransformAPI::setScale(m_ChargedAttackUI.getReferencedComponent(), Vector3(1.0f, 1.0f, range));
+    }
 }
 
 void LyrielChargedAttack::releaseChargeAndShoot()
 {
     m_isCharging = false;
+
+    if (m_ChargedAttackUI.getReferencedComponent())
+    {
+        m_ChargedAttackUI.getReferencedComponent()->getOwner()->SetActive(false);
+    }
 
     if (!canShoot())
     {
