@@ -124,7 +124,7 @@ void DeathBasicAttack::onAttackWindowFinished()
         PlayerState* ps = m_character ? m_character->getPlayerState() : nullptr;
         if (ps != nullptr)
         {
-            ps->setState(PlayerStateType::Attacking);
+            ps->setState(PlayerStateType::AttackRecovery);
         }
     }
 }
@@ -139,7 +139,7 @@ void DeathBasicAttack::releaseComboMoveLock()
         return;
 
     PlayerState* ps = m_character ? m_character->getPlayerState() : nullptr;
-    if (ps != nullptr && ps->isAttacking())
+    if (ps != nullptr && ps->isRecoveringAttack())
         ps->setState(PlayerStateType::Normal);
 }
 

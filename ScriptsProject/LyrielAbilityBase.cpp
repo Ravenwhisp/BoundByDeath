@@ -122,7 +122,7 @@ void LyrielAbilityBase::finishAttackWindow()
     if (m_character != nullptr)
     {
         PlayerState* playerState = m_character->getPlayerState();
-        if (playerState != nullptr && playerState->isAttacking())
+        if (playerState != nullptr && playerState->isRecoveringAttack())
         {
             playerState->setState(PlayerStateType::Normal);
         }
@@ -141,7 +141,7 @@ void LyrielAbilityBase::beginAttackPresentation()
     PlayerState* playerState = m_character->getPlayerState();
     if (playerState != nullptr)
     {
-        playerState->setState(PlayerStateType::Attacking);
+        playerState->setState(PlayerStateType::AttackRecovery);
     }
 
     PlayerAnimationController* animationController = m_character->getAnimationController();

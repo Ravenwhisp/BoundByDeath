@@ -52,7 +52,7 @@ void DeathAbilityBase::finishAttackWindow()
     if (m_character != nullptr)
     {
         PlayerState* playerState = m_character->getPlayerState();
-        if (playerState != nullptr && playerState->isAttacking())
+        if (playerState != nullptr && playerState->isRecoveringAttack())
         {
             playerState->setState(PlayerStateType::Normal);
         }
@@ -71,7 +71,7 @@ void DeathAbilityBase::beginAttackPresentation()
     PlayerState* playerState = m_character->getPlayerState();
     if (playerState != nullptr)
     {
-        playerState->setState(PlayerStateType::Attacking);
+        playerState->setState(PlayerStateType::AttackRecovery);
         Debug::log("[DeathAbility] State -> Attacking (PlayerState found)");
     }
     else
