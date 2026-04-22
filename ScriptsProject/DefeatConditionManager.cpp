@@ -46,7 +46,24 @@ void DefeatConditionManager::Update()
         return;
     }
 
-    if (m_player1State->isDowned() && m_player2State->isDowned())
+    const bool bothPlayersDowned = m_player1State->isDowned() && m_player2State->isDowned();
+
+    if (!bothPlayersDowned)
+    {
+        m_defeatCountdownStarted = false;
+        m_defeatTimer = 0.0f;
+        return;
+    }
+
+    if (!m_defeatCountdownStarted)
+    {
+        m_defeatCountdownStarted = true;
+        m_defeatTimer = 0.0f;
+    }
+
+    m_defeatTimer += Time::getDeltaTime();
+
+    if (m_defeatTimer >= m_defeatDelay)
     {
         triggerDefeat();
     }
@@ -73,7 +90,8 @@ void DefeatConditionManager::triggerDefeat()
 {
     m_hasTriggeredDefeat = true;
 
-    Debug::log("DefeatConditionManager: both players are downed. Defeat triggered.");
+    SceneAPI::requestSceneChange("LoseScene");
 }
 
 IMPLEMENT_SCRIPT(DefeatConditionManager)
+

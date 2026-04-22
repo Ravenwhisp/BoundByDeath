@@ -24,6 +24,7 @@ static Vector3 getHorizontalForward(const Transform* transform)
 
 static const ScriptFieldInfo DeathTauntFields[] =
 {
+	{ "Ability UI", ScriptFieldType::ComponentRef, offsetof(DeathTaunt, m_AbilityUI), {}, {}, { ComponentType::TRANSFORM } },
     { "Ability Cooldown", ScriptFieldType::Float, offsetof(DeathTaunt, m_TauntCooldownSeconds), { 1.0f, 10.0f, 0.05f } },
     { "Ability Duration", ScriptFieldType::Float, offsetof(DeathTaunt, m_TauntDurationSeconds), { 1.0f, 10.0f, 0.05f } },
     { "Cone Range", ScriptFieldType::Float, offsetof(DeathTaunt, m_TauntRange), { 1.0f, 10.0f, 0.1f } },
@@ -170,6 +171,10 @@ void DeathTaunt::beginAim()
         m_currentAimDirection = aimDirection;
         faceDirection(m_currentAimDirection);
     }
+    if (m_AbilityUI.getReferencedComponent())
+    {
+        m_AbilityUI.getReferencedComponent()->getOwner()->SetActive(true);
+	}
 }
 
 void DeathTaunt::updateAim()
@@ -180,12 +185,26 @@ void DeathTaunt::updateAim()
         m_currentAimDirection = aimDirection;
         faceDirection(m_currentAimDirection);
     }
+    if (m_AbilityUI.getReferencedComponent())
+    {
+        const Vector3 origin = TransformAPI::getGlobalPosition(GameObjectAPI::getTransform(getOwner()));
+        const float yawRad = std::atan2(m_currentAimDirection.x, m_currentAimDirection.z);
+        const float targetYawDeg = yawRad * (180.0f / 3.14159265f);
+
+        TransformAPI::setPosition(m_AbilityUI.getReferencedComponent(), origin);
+        TransformAPI::setRotationEuler(m_AbilityUI.getReferencedComponent(), Vector3(0.0f, targetYawDeg, 0.0f));
+    }
 }
 
 void DeathTaunt::releaseAimAndCast()
 {
     Debug::log("[DeathTaunt] L2 released — casting.");
     m_isAiming = false;
+
+    if (m_AbilityUI.getReferencedComponent())
+    {
+        m_AbilityUI.getReferencedComponent()->getOwner()->SetActive(false);
+    }
 
     Vector3 finalDirection = m_currentAimDirection;
     if (!isAimStickValid(finalDirection))

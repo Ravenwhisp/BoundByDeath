@@ -30,6 +30,8 @@ public:
 
     ScriptFieldList getExposedFields() const override;
 
+    ScriptComponentRef<Transform> m_ChargedAttackUI;
+
 public:
     float m_minChargeTime         = 0.5f;
     float m_attackLockDuration    = 0.4f;

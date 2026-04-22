@@ -6,6 +6,7 @@ static const ScriptFieldInfo boundFields[] =
 {
      { "Player 1 Transform", ScriptFieldType::ComponentRef, offsetof(Bound, m_firstTarget), {}, {}, { ComponentType::TRANSFORM } },
     { "Player 2 Transform", ScriptFieldType::ComponentRef, offsetof(Bound, m_secondTarget), {}, {}, { ComponentType::TRANSFORM } },
+	{ "Bound UI",           ScriptFieldType::ComponentRef, offsetof(Bound, m_BoundUI), {}, {}, { ComponentType::TRANSFORM } },
     { "Min Distance",       ScriptFieldType::Float,        offsetof(Bound, m_minDistance),       {}, {}, {} },
     { "Damage Distance",    ScriptFieldType::Float,        offsetof(Bound, m_distanceDamage),    {}, {}, {} },
     { "InstaKill Distance", ScriptFieldType::Float,        offsetof(Bound, m_distanceInstaKill), {}, {}, {} },
@@ -73,6 +74,10 @@ void Bound::Update()
 
     // Midpoint
     m_center = (p1 + p2) * 0.5f;
+	if (m_BoundUI.getReferencedComponent())
+	{
+		TransformAPI::setPosition(m_BoundUI.getReferencedComponent(), m_center);
+	}
 
     const float distance = Vector3::Distance(p1, p2);
 

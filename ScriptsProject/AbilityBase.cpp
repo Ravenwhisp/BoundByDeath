@@ -158,7 +158,7 @@ Vector3 AbilityBase::computeCameraRelativeAimDirection(float deadzoneSq) const
     cameraForward.Normalize();
     cameraRight.Normalize();
 
-    Vector3 aimDirection = cameraRight * lookAxis.x + cameraForward * lookAxis.y;
+    Vector3 aimDirection = -cameraRight * lookAxis.x - cameraForward * lookAxis.y;
 
     if (aimDirection.LengthSquared() <= 0.0001f)
     {
