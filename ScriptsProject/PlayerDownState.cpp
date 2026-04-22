@@ -167,6 +167,7 @@ void PlayerDownState::completeRevive()
     if (m_playerState)
     {
         m_playerState->setState(PlayerStateType::Normal);
+        m_playerState->setUsingAbility(false);
     }
 
     if (m_damageable)

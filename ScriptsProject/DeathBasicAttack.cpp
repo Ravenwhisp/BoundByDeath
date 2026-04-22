@@ -122,7 +122,7 @@ void DeathBasicAttack::onAttackWindowFinished()
     if (m_movementLockedForCombo && m_deathChar != nullptr && m_deathChar->getComboStep() > 0)
     {
         PlayerState* ps = m_character ? m_character->getPlayerState() : nullptr;
-        if (ps != nullptr)
+        if (ps != nullptr && !ps->isDowned())
         {
             ps->setState(PlayerStateType::AttackRecovery);
         }

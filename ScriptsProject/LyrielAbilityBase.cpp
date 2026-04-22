@@ -141,6 +141,11 @@ void LyrielAbilityBase::beginAttackPresentation()
     PlayerState* playerState = m_character->getPlayerState();
     if (playerState != nullptr)
     {
+        if (playerState->isDowned())
+        {
+            return;
+        }
+
         playerState->setState(PlayerStateType::AttackRecovery);
     }
 

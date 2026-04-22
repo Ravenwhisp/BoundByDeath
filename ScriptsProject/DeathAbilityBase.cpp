@@ -71,12 +71,12 @@ void DeathAbilityBase::beginAttackPresentation()
     PlayerState* playerState = m_character->getPlayerState();
     if (playerState != nullptr)
     {
+        if (playerState->isDowned())
+        {
+            return;
+        }
+
         playerState->setState(PlayerStateType::AttackRecovery);
-        Debug::log("[DeathAbility] State -> Attacking (PlayerState found)");
-    }
-    else
-    {
-        Debug::warn("[DeathAbility] PlayerState is NULL — canMove() block will not work!");
     }
 
     PlayerAnimationController* animController = m_character->getAnimationController();
