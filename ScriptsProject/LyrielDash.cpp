@@ -1,15 +1,12 @@
 #include "pch.h"
 #include "LyrielDash.h"
 
-static const ScriptFieldInfo LyrielDashFields[] =
-{
-    { "Dash Duration", ScriptFieldType::Float, offsetof(LyrielDash, m_dashDurationLyriel), { 0.0f, 1.0f, 0.01f } },
-    { "Dash Distance", ScriptFieldType::Float, offsetof(LyrielDash, m_dashDistanceLyriel), { 0.0f, 10.0f, 0.1f } },
-    { "Dash Cooldown", ScriptFieldType::Float, offsetof(LyrielDash, m_dashCooldown), { 0.0f, 5.0f, 0.01f } },
-    { "Charge Recharge Time", ScriptFieldType::Float, offsetof(LyrielDash, m_chargeRechargeTime), { 0.1f, 10.0f, 0.1f } }
-};
-
-IMPLEMENT_SCRIPT_FIELDS(LyrielDash, LyrielDashFields)
+IMPLEMENT_SCRIPT_FIELDS(LyrielDash,
+    SERIALIZED_FLOAT(m_dashDurationLyriel, "Dash Duration", 0.0f, 1.0f, 0.01f),
+    SERIALIZED_FLOAT(m_dashDistanceLyriel, "Dash Distance", 0.0f, 10.0f, 0.1f),
+    SERIALIZED_FLOAT(m_dashCooldown, "Dash Cooldown", 0.0f, 5.0f, 0.01f),
+    SERIALIZED_FLOAT(m_chargeRechargeTime, "Charge Recharge Time", 0.1f, 10.0f, 0.1f)
+)
 
 LyrielDash::LyrielDash(GameObject* owner)
     : AbilityDash(owner)
