@@ -41,7 +41,6 @@ private:
     Vector3 m_currentAimDirection = Vector3::Zero;
 
 public:
-    float m_TauntCooldownSeconds = 8.0f;
     float m_TauntDurationSeconds = 3.0f;
     float m_TauntRange = 2.5f;
     float m_TauntHalfAngleDegrees = 35.0f;
