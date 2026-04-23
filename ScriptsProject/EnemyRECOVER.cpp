@@ -2,14 +2,11 @@
 #include "EnemyRECOVER.h"
 #include "EnemyController.h"
 
-static const ScriptFieldInfo RECOVERFields[] =
-{
-	{ "Recover Duration", ScriptFieldType::Float, offsetof(EnemyRECOVER, m_recoverDuration), { 0.0f, 10.0f, 0.1f } },
-	{ "Go To Stun After Recover", ScriptFieldType::Bool, offsetof(EnemyRECOVER, m_goToStunAfterRecover) },
-	{ "Debug Enabled", ScriptFieldType::Bool, offsetof(EnemyRECOVER, m_debugEnabled) }
-};
-
-IMPLEMENT_SCRIPT_FIELDS(EnemyRECOVER, RECOVERFields)
+IMPLEMENT_SCRIPT_FIELDS(EnemyRECOVER,
+	SERIALIZED_FLOAT(m_recoverDuration, "Recover Duration", 0.0f, 10.0f, 0.1f),
+	SERIALIZED_BOOL(m_goToStunAfterRecover, "Go To Stun After Recover"),
+	SERIALIZED_BOOL(m_debugEnabled, "Debug Enabled")
+)
 
 EnemyRECOVER::EnemyRECOVER(GameObject* owner) : StateMachineScript(owner)
 {
