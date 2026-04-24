@@ -118,7 +118,10 @@ void LyrielChargedAttack::beginCharge()
     {
         m_currentAimDirection = aimDirection;
     }
-
+    else
+    {
+        m_currentAimDirection = getFallbackFacingDirection();
+    }
     if (m_ChargedAttackUI.getReferencedComponent())
     {
         m_ChargedAttackUI.getReferencedComponent()->getOwner()->SetActive(true);
@@ -143,7 +146,7 @@ void LyrielChargedAttack::updateCharge()
     {
 		const Vector3 origin = TransformAPI::getGlobalPosition(GameObjectAPI::getTransform(getOwner()));
 
-        const float yawRad = std::atan2(aimDirection.x, aimDirection.z);
+        const float yawRad = std::atan2(m_currentAimDirection.x, m_currentAimDirection.z);
         const float targetYawDeg = yawRad * (180.0f / PI);
 
         const float range = m_chargeTimer / m_maxChargeTime * 0.45f + 0.65f;

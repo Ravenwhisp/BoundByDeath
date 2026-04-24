@@ -17,7 +17,7 @@ IMPLEMENT_SCRIPT_FIELDS_INHERITED(LyrielArrowVolley, LyrielAbilityBase,
     SERIALIZED_FLOAT(m_coneAngleDegrees, "Cone Angle Degrees", 1.0f, 180.0f, 1.0f),
     SERIALIZED_INT(m_numVisualArrows, "Num Visual Arrows"),
     SERIALIZED_FLOAT(m_arrowSpeed, "Arrow Speed", 0.0f, 100.0f, 0.5f),
-    SERIALIZED_FLOAT(m_attackLockDuration, "Attack Lock Duration", 0.0f, 2.0f, 0.01f)
+    SERIALIZED_FLOAT(m_attackLockDuration, "Attack Lock Duration", 0.0f, 2.0f, 0.0001f)
 )
 
 LyrielArrowVolley::LyrielArrowVolley(GameObject* owner)
@@ -112,6 +112,10 @@ void LyrielArrowVolley::beginAim()
     if (isAimStickValid(aimDirection))
     {
         m_currentAimDirection = aimDirection;
+    }
+    else
+    {
+		m_currentAimDirection = getFallbackFacingDirection();
     }
     if (m_AbilityUI.getReferencedComponent())
     {

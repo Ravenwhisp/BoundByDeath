@@ -172,3 +172,23 @@ Vector3 AbilityBase::computeCameraRelativeAimDirection(float deadzoneSq) const
     aimDirection.Normalize();
     return aimDirection;
 }
+
+Vector3 AbilityBase::getFallbackFacingDirection() const
+{
+    Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
+    if (ownerTransform == nullptr)
+    {
+        return Vector3::Zero;
+    }
+
+    Vector3 forward = TransformAPI::getForward(ownerTransform);
+    forward.y = 0.0f;
+
+    if (forward.LengthSquared() <= 0.0001f)
+    {
+        return Vector3::Zero;
+    }
+
+    forward.Normalize();
+    return forward;
+}

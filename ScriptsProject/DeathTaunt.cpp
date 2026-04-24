@@ -6,22 +6,6 @@
 
 #include <cmath>
 
-static Vector3 getHorizontalForward(const Transform* transform)
-{
-    Vector3 forward = TransformAPI::getForward(transform);
-    forward.y = 0.0f;
-
-    if (forward.LengthSquared() <= 0.0001f)
-    {
-        const Vector3 euler = TransformAPI::getEulerDegrees(transform);
-        const float radians = euler.y * (3.14159265f / 180.0f);
-        forward = Vector3(std::sin(radians), 0.0f, std::cos(radians));
-    }
-
-    forward.Normalize();
-    return forward;
-}
-
 IMPLEMENT_SCRIPT_FIELDS_INHERITED(DeathTaunt, DeathAbilityBase,
     SERIALIZED_COMPONENT_REF(m_AbilityUI, "Ability UI", ComponentType::TRANSFORM),
     SERIALIZED_FLOAT(m_TauntDurationSeconds, "Ability Duration", 1.0f, 10.0f, 0.05f),
@@ -111,7 +95,7 @@ void DeathTaunt::drawGizmo()
     Vector3 ownerForward = m_currentAimDirection;
     if (ownerForward.LengthSquared() <= 0.0001f)
     {
-        ownerForward = getHorizontalForward(ownerTransform);
+        ownerForward = getFallbackFacingDirection();
     }
 
     if (ownerForward.LengthSquared() <= 0.0001f)
@@ -162,8 +146,12 @@ void DeathTaunt::beginAim()
     if (isAimStickValid(aimDirection))
     {
         m_currentAimDirection = aimDirection;
-        faceDirection(m_currentAimDirection);
     }
+    else
+    {
+		m_currentAimDirection = getFallbackFacingDirection();
+    }
+    faceDirection(m_currentAimDirection);
     if (m_AbilityUI.getReferencedComponent())
     {
         m_AbilityUI.getReferencedComponent()->getOwner()->SetActive(true);
@@ -256,17 +244,6 @@ void DeathTaunt::applyTauntToEnemiesInCone(const Vector3& ownerForward) const
 Vector3 DeathTaunt::computeAimDirection() const
 {
     return computeCameraRelativeAimDirection();
-}
-
-Vector3 DeathTaunt::getFallbackFacingDirection() const
-{
-    Transform* ownerTransform = GameObjectAPI::getTransform(m_owner);
-    if (ownerTransform == nullptr)
-    {
-        return Vector3::Zero;
-    }
-
-    return getHorizontalForward(ownerTransform);
 }
 
 void DeathTaunt::faceDirection(const Vector3& direction)
