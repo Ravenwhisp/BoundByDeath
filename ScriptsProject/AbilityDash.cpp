@@ -89,7 +89,7 @@ void AbilityDash::tryStartDash()
     m_isDashing = true;
 
     setAbilityLocked(true);
-    m_cooldownTimer = m_cooldown;
+    startCooldown();
 
     Vector3 moveDirection = m_playerController->getMoveDirection();
 

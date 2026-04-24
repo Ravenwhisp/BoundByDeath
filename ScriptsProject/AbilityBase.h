@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ScriptAPI.h"
+#include "UISlider.h"
 
 class CharacterBase;
 
@@ -20,6 +21,7 @@ protected:
     virtual bool canStartAbility() const;
 
     void updateCooldown();
+	void startCooldown();
     bool isCooldownReady() const { return m_cooldownTimer <= 0.0f; }
 
     void setAbilityLocked(bool locked);
@@ -35,6 +37,8 @@ protected:
 
     float m_cooldown = 0.0f;
     float m_cooldownTimer = 0.0f;
+    ScriptComponentRef<Transform> m_cdUI;
+    ScriptComponentRef<UISlider> m_cdBar;
 
     bool m_isEnabled = true;
 };

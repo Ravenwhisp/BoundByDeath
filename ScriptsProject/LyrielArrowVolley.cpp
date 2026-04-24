@@ -188,7 +188,7 @@ void LyrielArrowVolley::releaseAimAndCast()
     beginAttackPresentation();
 
     beginAttackWindow(m_attackLockDuration);
-    m_cooldownTimer = m_cooldown;
+    startCooldown();
 
     Debug::log("[LyrielArrowVolley] Cast Arrow Volley. Targets hit: %d", static_cast<int>(targets.size()));
 }

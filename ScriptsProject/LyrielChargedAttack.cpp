@@ -209,7 +209,7 @@ void LyrielChargedAttack::releaseChargeAndShoot()
     beginAttackPresentation();
 
     beginAttackWindow(m_attackLockDuration);
-    m_cooldownTimer = m_cooldown;
+    startCooldown();
     m_chargeTimer = 0.0f;
 
     Debug::log("[LyrielChargedAttack] Fired charged shot. Targets hit: %d Damage: %.2f",
