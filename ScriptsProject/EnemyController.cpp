@@ -11,6 +11,8 @@ static const ScriptFieldInfo EnemyControllerFields[] =
 	{ "Turn Speed", ScriptFieldType::Float, offsetof(EnemyController, m_turnSpeed), { 0.0f, 5.0f, 0.1f } },
 	{ "Interval", ScriptFieldType::Float, offsetof(EnemyController, m_intervalRepath), { 0.0f, 50.0f, 0.1f } },
 	{ "Charge Cooldown", ScriptFieldType::Float, offsetof(EnemyController, m_chargeCooldown), { 0.0f, 20.0f, 0.1f } },
+	{ "Attack Enter Range Bonus", ScriptFieldType::Float, offsetof(EnemyController, m_attackEnterRangeBonus), { 0.0f, 5.0f, 0.05f } },
+    { "Attack Exit Range Bonus", ScriptFieldType::Float, offsetof(EnemyController, m_attackExitRangeBonus), { 0.0f, 5.0f, 0.05f } },
 	{ "Debug Enabled", ScriptFieldType::Bool, offsetof(EnemyController, m_debugEnabled) }
 };
 static Damageable* findDamageableOnTarget(GameObject* gameObject)
@@ -131,6 +133,37 @@ bool EnemyController::isTargetInCombatRange() const
 	difference.y = 0.0f;
 
 	return difference.Length() <= m_combatRange;
+}
+bool EnemyController::isTargetInAttackEnterRange() const
+{
+	if (!m_currentTarget)
+	{
+		return false;
+	}
+
+	Vector3 ownerPosition = m_owner->GetTransform()->getPosition();
+	Vector3 targetPosition = m_currentTarget->getPosition();
+
+	Vector3 difference = ownerPosition - targetPosition;
+	difference.y = 0.0f;
+
+	return difference.Length() <= (m_combatRange + m_attackEnterRangeBonus);
+}
+
+bool EnemyController::isTargetInAttackExitRange() const
+{
+	if (!m_currentTarget)
+	{
+		return false;
+	}
+
+	Vector3 ownerPosition = m_owner->GetTransform()->getPosition();
+	Vector3 targetPosition = m_currentTarget->getPosition();
+
+	Vector3 difference = ownerPosition - targetPosition;
+	difference.y = 0.0f;
+
+	return difference.Length() <= (m_combatRange + m_attackExitRangeBonus);
 }
 
 void EnemyController::clearPath()

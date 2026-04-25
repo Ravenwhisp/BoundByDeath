@@ -84,7 +84,7 @@ void EnemyCHASE::OnStateUpdate()
 		}
 	}
 
-	if (m_enemyController->isTargetInCombatRange())
+	if (m_enemyController->isTargetInAttackEnterRange())
 	{
 		m_enemyController->faceCurrentTarget();
 		AnimationAPI::playState(animation, "Attack");
