@@ -6,6 +6,7 @@ static const ScriptFieldInfo CHARGEFields[] =
 {
 	{ "Charge Duration", ScriptFieldType::Float, offsetof(EnemyCHARGE, m_chargeDuration), { 0.0f, 10.0f, 0.1f } },
 	{ "Charge Speed", ScriptFieldType::Float, offsetof(EnemyCHARGE, m_chargeSpeed), { 0.0f, 50.0f, 0.1f } },
+	{ "Charge Cooldown", ScriptFieldType::Float, offsetof(EnemyCHARGE, m_chargeCooldown), { 0.0f, 20.0f, 0.1f } },
 	{ "Debug Enabled", ScriptFieldType::Bool, offsetof(EnemyCHARGE, m_debugEnabled) }
 };
 
@@ -31,6 +32,7 @@ void EnemyCHARGE::OnStateEnter()
 
 	if (m_enemyController)
 	{
+		m_enemyController->consumeChargeCooldown(m_chargeCooldown);
 		m_enemyController->clearPath();
 		m_enemyController->resetRepathTimer();
 		m_enemyController->updateCurrentTarget();

@@ -10,7 +10,6 @@ static const ScriptFieldInfo EnemyControllerFields[] =
 	{ "Move Speed", ScriptFieldType::Float, offsetof(EnemyController, m_moveSpeed), { 0.0f, 50.0f, 0.1f } },
 	{ "Turn Speed", ScriptFieldType::Float, offsetof(EnemyController, m_turnSpeed), { 0.0f, 5.0f, 0.1f } },
 	{ "Interval", ScriptFieldType::Float, offsetof(EnemyController, m_intervalRepath), { 0.0f, 50.0f, 0.1f } },
-	{ "Charge Cooldown", ScriptFieldType::Float, offsetof(EnemyController, m_chargeCooldown), { 0.0f, 20.0f, 0.1f } },
 	{ "Attack Enter Range Bonus", ScriptFieldType::Float, offsetof(EnemyController, m_attackEnterRangeBonus), { 0.0f, 5.0f, 0.05f } },
     { "Attack Exit Range Bonus", ScriptFieldType::Float, offsetof(EnemyController, m_attackExitRangeBonus), { 0.0f, 5.0f, 0.05f } },
 	{ "Debug Enabled", ScriptFieldType::Bool, offsetof(EnemyController, m_debugEnabled) }
@@ -368,9 +367,9 @@ bool EnemyController::isChargeReady() const
 	return m_chargeCooldownTimer <= 0.0f;
 }
 
-void EnemyController::consumeChargeCooldown()
+void EnemyController::consumeChargeCooldown(float cooldownDuration)
 {
-	m_chargeCooldownTimer = m_chargeCooldown;
+	m_chargeCooldownTimer = cooldownDuration;
 }
 
 IMPLEMENT_SCRIPT(EnemyController)

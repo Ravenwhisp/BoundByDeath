@@ -21,7 +21,6 @@ public:
     float m_moveSpeed = 1.0f;
     float m_turnSpeed = 2.0f;
     float m_intervalRepath = 0.4f;
-    float m_chargeCooldown = 3.0f;
     bool m_debugEnabled = true;
     float m_attackEnterRangeBonus = 0.45f;
     float m_attackExitRangeBonus = 0.80f;
@@ -55,7 +54,7 @@ public:
     bool shouldRepath() const;
     void tickChargeCooldown(float dt);
     bool isChargeReady() const;
-    void consumeChargeCooldown();
+    void consumeChargeCooldown(float cooldownDuration);
 
 private:
     Vector3 getChasePosition() const;
