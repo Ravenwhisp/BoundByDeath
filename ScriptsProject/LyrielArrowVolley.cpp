@@ -10,10 +10,9 @@
 
 #include <cmath>
 
-IMPLEMENT_SCRIPT_FIELDS(LyrielArrowVolley,
+IMPLEMENT_SCRIPT_FIELDS_INHERITED(LyrielArrowVolley, LyrielAbilityBase,
     SERIALIZED_COMPONENT_REF(m_AbilityUI, "Ability UI", ComponentType::TRANSFORM),
     SERIALIZED_FLOAT(m_volleyDamage, "Volley Damage", 0.0f, 100.0f, 0.5f),
-    SERIALIZED_FLOAT(m_volleyCooldown, "Volley Cooldown", 0.0f, 20.0f, 0.1f),
     SERIALIZED_FLOAT(m_volleyRange, "Volley Range", 0.0f, 50.0f, 0.1f),
     SERIALIZED_FLOAT(m_coneAngleDegrees, "Cone Angle Degrees", 1.0f, 180.0f, 1.0f),
     SERIALIZED_INT(m_numVisualArrows, "Num Visual Arrows"),
@@ -29,7 +28,6 @@ LyrielArrowVolley::LyrielArrowVolley(GameObject* owner)
 void LyrielArrowVolley::Start()
 {
     LyrielAbilityBase::Start();
-    m_cooldown = m_volleyCooldown;
 }
 
 void LyrielArrowVolley::Update()

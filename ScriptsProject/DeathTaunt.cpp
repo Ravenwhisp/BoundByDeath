@@ -22,9 +22,8 @@ static Vector3 getHorizontalForward(const Transform* transform)
     return forward;
 }
 
-IMPLEMENT_SCRIPT_FIELDS(DeathTaunt,
+IMPLEMENT_SCRIPT_FIELDS_INHERITED(DeathTaunt, DeathAbilityBase,
     SERIALIZED_COMPONENT_REF(m_AbilityUI, "Ability UI", ComponentType::TRANSFORM),
-    SERIALIZED_FLOAT(m_TauntCooldownSeconds, "Ability Cooldown", 1.0f, 10.0f, 0.05f),
     SERIALIZED_FLOAT(m_TauntDurationSeconds, "Ability Duration", 1.0f, 10.0f, 0.05f),
     SERIALIZED_FLOAT(m_TauntRange, "Cone Range", 1.0f, 10.0f, 0.1f),
     SERIALIZED_FLOAT(m_TauntHalfAngleDegrees, "Cone Angle", 1.0f, 180.0f, 1.0f)
@@ -38,8 +37,6 @@ DeathTaunt::DeathTaunt(GameObject* owner)
 void DeathTaunt::Start()
 {
     DeathAbilityBase::Start();
-
-    m_cooldown = (m_TauntCooldownSeconds < 0.0f ? 0.0f : m_TauntCooldownSeconds);
 
     if (m_character != nullptr)
     {

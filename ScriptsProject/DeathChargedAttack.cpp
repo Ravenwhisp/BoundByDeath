@@ -6,7 +6,7 @@
 
 #include <cmath>
 
-IMPLEMENT_SCRIPT_FIELDS(DeathChargedAttack,
+IMPLEMENT_SCRIPT_FIELDS_INHERITED(DeathChargedAttack, DeathAbilityBase,
     SERIALIZED_COMPONENT_REF(m_ChargedAttackUI, "Charged Attack UI", ComponentType::TRANSFORM),
     SERIALIZED_FLOAT(m_minChargeTime, "Min Charge Time", 0.0f, 3.0f, 0.05f),
     SERIALIZED_FLOAT(m_attackLockDuration, "Attack Lock Duration", 0.05f, 2.0f, 0.05f),
