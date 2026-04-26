@@ -10,10 +10,11 @@ class RangedEnemyController : public EnemyController
 public:
     explicit RangedEnemyController(GameObject* owner);
 
-    void OnStart() override;
-    void OnUpdate() override;
-
     ScriptFieldList getExposedFields() const override;
 
     bool m_debugEnabled = true;
+
+protected:
+    void OnStart() override;
+    void OnUpdate() override;
 };

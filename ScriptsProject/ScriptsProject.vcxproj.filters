@@ -58,6 +58,12 @@
     <Filter Include="Enemy">
       <UniqueIdentifier>{48909dd4-920b-4242-8d9c-e9cfb62721fe}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Enemy\State">
+      <UniqueIdentifier>{65d8a248-bf90-470d-9046-b7668c9cea17}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Enemy\Controllers">
+      <UniqueIdentifier>{ae0c2e4b-1ff4-4e37-95e8-00f74539e369}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -213,11 +219,17 @@
     <ClInclude Include="EnemySTUN.h">
       <Filter>Enemies\States</Filter>
     </ClInclude>
-    <ClInclude Include="EnemyController.h">
-      <Filter>Enemy</Filter>
+    <ClInclude Include="EnemyIdleState.h">
+      <Filter>Enemy\State</Filter>
     </ClInclude>
     <ClInclude Include="EnemyState.h">
-      <Filter>Enemy</Filter>
+      <Filter>Enemy\State</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyController.h">
+      <Filter>Enemy\Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="RangedEnemyController.h">
+      <Filter>Enemy\Controllers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -375,11 +387,17 @@
     <ClCompile Include="EnemySTUN.cpp">
       <Filter>Enemies\States</Filter>
     </ClCompile>
-    <ClCompile Include="EnemyController.cpp">
-      <Filter>Enemy</Filter>
+    <ClCompile Include="EnemyIdleState.cpp">
+      <Filter>Enemy\State</Filter>
     </ClCompile>
     <ClCompile Include="EnemyState.cpp">
-      <Filter>Enemy</Filter>
+      <Filter>Enemy\State</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyController.cpp">
+      <Filter>Enemy\Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="RangedEnemyController.cpp">
+      <Filter>Enemy\Controllers</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
