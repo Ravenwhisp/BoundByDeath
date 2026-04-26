@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "EnemyCHASE.h"
-#include "EnemyController.h"
+#include "Enemy_Controller.h"
 
 IMPLEMENT_SCRIPT_FIELDS(EnemyCHASE,
 	SERIALIZED_BOOL(m_useCharge, "Use Charge"),
@@ -14,8 +14,8 @@ EnemyCHASE::EnemyCHASE(GameObject* owner) : StateMachineScript(owner)
 
 void EnemyCHASE::OnStateEnter()
 {
-	Script* script = GameObjectAPI::getScript(getOwner(), "EnemyController");
-	m_enemyController = dynamic_cast<EnemyController*>(script);
+	Script* script = GameObjectAPI::getScript(getOwner(), "Enemy_Controller");
+	m_enemyController = dynamic_cast<Enemy_Controller*>(script);
 
 	if (!m_enemyController)
 	{

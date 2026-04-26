@@ -3,7 +3,7 @@
 #include "ScriptAPI.h"
 #include "StateMachineScript.h"
 
-class EnemyController;
+class Enemy_Controller;
 
 class EnemyCHARGE : public StateMachineScript
 {
@@ -19,7 +19,7 @@ public:
 	ScriptFieldList getExposedFields() const override;
 
 private:
-	EnemyController* m_enemyController = nullptr;
+	Enemy_Controller* m_enemyController = nullptr;
 	Vector3 m_chargeDirection = Vector3(0.0f, 0.0f, 1.0f);
 	float m_elapsedTime = 0.0f;
 

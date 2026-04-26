@@ -86,6 +86,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -120,6 +121,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)../Engine/Assets/;$(SolutionDir)EngineDependencies;$(ProjectDir)../Engine/Assets/Scripts</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -174,10 +176,12 @@
     <ClInclude Include="EnemyATTACK.h" />
     <ClInclude Include="EnemyCHARGE.h" />
     <ClInclude Include="EnemyCHASE.h" />
+    <ClInclude Include="EnemyController.h" />
     <ClInclude Include="EnemyDamageable.h" />
     <ClInclude Include="EnemyDeathHandler.h" />
     <ClInclude Include="EnemyDetectionAggro.h" />
-    <ClInclude Include="EnemyController.h" />
+    <ClInclude Include="EnemyState.h" />
+    <ClInclude Include="Enemy_Controller.h" />
     <ClInclude Include="EnemyIDLE.h" />
     <ClInclude Include="EnemyRECOVER.h" />
     <ClInclude Include="EnemySTUN.h" />
@@ -229,11 +233,13 @@
     <ClCompile Include="EnemyATTACK.cpp" />
     <ClCompile Include="EnemyCHARGE.cpp" />
     <ClCompile Include="EnemyCHASE.cpp" />
+    <ClCompile Include="EnemyController.cpp" />
     <ClCompile Include="EnemyDamageable.cpp" />
     <ClCompile Include="EnemyDeathHandler.cpp" />
     <ClCompile Include="EnemyDetectionAggro.cpp" />
     <ClCompile Include="DefeatConditionManager.cpp" />
-    <ClCompile Include="EnemyController.cpp" />
+    <ClCompile Include="EnemyState.cpp" />
+    <ClCompile Include="Enemy_Controller.cpp" />
     <ClCompile Include="EnemyIDLE.cpp" />
     <ClCompile Include="EnemyRECOVER.cpp" />
     <ClCompile Include="EnemySTUN.cpp" />

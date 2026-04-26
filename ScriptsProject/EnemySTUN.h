@@ -3,7 +3,7 @@
 #include "ScriptAPI.h"
 #include "StateMachineScript.h"
 
-class EnemyController;
+class Enemy_Controller;
 
 class EnemySTUN : public StateMachineScript
 {
@@ -19,7 +19,7 @@ public:
 	ScriptFieldList getExposedFields() const override;
 
 private:
-	EnemyController* m_enemyController = nullptr;
+	Enemy_Controller* m_enemyController = nullptr;
 	float m_elapsedTime = 0.0f;
 
 public:

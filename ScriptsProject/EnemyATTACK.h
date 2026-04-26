@@ -3,7 +3,7 @@
 #include "ScriptAPI.h"
 #include "StateMachineScript.h"
 
-class EnemyController;
+class Enemy_Controller;
 
 class EnemyATTACK : public StateMachineScript
 {
@@ -22,7 +22,7 @@ private:
 	void performAttack();
 
 private:
-	EnemyController* m_enemyController = nullptr;
+	Enemy_Controller* m_enemyController = nullptr;
 	float m_attackTimer = 0.0f;
 
 public:

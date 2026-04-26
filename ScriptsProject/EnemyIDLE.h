@@ -3,7 +3,7 @@
 #include "ScriptAPI.h"
 #include "StateMachineScript.h"
 
-class EnemyController;
+class Enemy_Controller;
 
 class EnemyIDLE : public StateMachineScript
 {
@@ -19,7 +19,7 @@ public:
 	ScriptFieldList getExposedFields() const override;
 
 private:
-	EnemyController* m_enemyController = nullptr;
+	Enemy_Controller* m_enemyController = nullptr;
 
 public:
 	bool m_debugEnabled = true;

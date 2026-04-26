@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "EnemySTUN.h"
-#include "EnemyController.h"
+#include "Enemy_Controller.h"
 
 IMPLEMENT_SCRIPT_FIELDS(EnemySTUN,
 	SERIALIZED_FLOAT(m_stunDuration, "Stun Duration", 0.0f, 10.0f, 0.1f),
@@ -16,8 +16,8 @@ void EnemySTUN::OnStateEnter()
 {
 	m_elapsedTime = 0.0f;
 
-	Script* script = GameObjectAPI::getScript(getOwner(), "EnemyController");
-	m_enemyController = dynamic_cast<EnemyController*>(script);
+	Script* script = GameObjectAPI::getScript(getOwner(), "Enemy_Controller");
+	m_enemyController = dynamic_cast<Enemy_Controller*>(script);
 
 	if (m_enemyController)
 	{

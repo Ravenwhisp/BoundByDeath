@@ -1,38 +1,14 @@
 #include "pch.h"
 #include "EnemyController.h"
-#include "EnemyDetectionAggro.h"
-#include "Damageable.h"
-#include <cmath>
 
-IMPLEMENT_SCRIPT_FIELDS(EnemyController,
-	SERIALIZED_FLOAT(m_combatRange, "Combat Range", 0.0f, 50.0f, 0.1f),
-	SERIALIZED_FLOAT(m_moveSpeed, "Move Speed", 0.0f, 50.0f, 0.1f),
-	SERIALIZED_FLOAT(m_turnSpeed, "Turn Speed", 0.0f, 5.0f, 0.1f),
-	SERIALIZED_FLOAT(m_intervalRepath, "Interval", 0.0f, 50.0f, 0.1f),
-	SERIALIZED_FLOAT(m_chargeCooldown, "Charge Cooldown", 0.0f, 20.0f, 0.1f),
-	SERIALIZED_BOOL(m_debugEnabled, "Debug Enabled")
-)
+#include <algorithm>
+#include <cfloat>
 
-static Damageable* findDamageableOnTarget(GameObject* gameObject)
-{
-	if (!gameObject)
-	{
-		return nullptr;
-	}
-
-	Script* script = GameObjectAPI::getScript(gameObject, "PlayerDamageable");
-	Damageable* damageable = dynamic_cast<Damageable*>(script);
-
-	if (damageable)
-	{
-		return damageable;
-	}
-
-	script = GameObjectAPI::getScript(gameObject, "Damageable");
-	damageable = dynamic_cast<Damageable*>(script);
-
-	return damageable;
-}
+//static const ScriptFieldInfo EnemyControllerFields[] =
+//{
+//};
+//
+//IMPLEMENT_SCRIPT_FIELDS(EnemyController, EnemyControllerFields)
 
 EnemyController::EnemyController(GameObject* owner)
     : Script(owner)
@@ -41,301 +17,103 @@ EnemyController::EnemyController(GameObject* owner)
 
 void EnemyController::Start()
 {
+    m_maxHealth = (std::max)(1.0f, m_maxHealth);
+    m_health = std::clamp(m_health, 0.0f, m_maxHealth);
+    m_isDead = m_health <= 0.0f;
 
-	Script* script = GameObjectAPI::getScript(m_owner, "EnemyDetectionAggro");
-	m_enemyDetectionAggro = dynamic_cast<EnemyDetectionAggro*>(script);
-
-	if (!m_enemyDetectionAggro)
-	{
-		Debug::error("EnemyDetectionAggro script not found!");
-	}
+    OnStart();
 }
 
-void EnemyController::drawGizmo()
+void EnemyController::Update()
 {
-	if (!m_debugEnabled)
-	{
-		return;
-	}
+    if (m_isDead)
+    {
+        return;
+    }
 
-	if (m_path.size() < 2)
-	{
-		return;
-	}
-
-	const Vector3 cyan = { 0.0f, 1.0f, 1.0f };
-	for (int i = 0; i < m_path.size() - 1; ++i)
-	{
-		DebugDrawAPI::drawLine(m_path[i], m_path[i + 1], cyan, 0, true);
-	}
+    OnUpdate();
 }
 
-bool EnemyController::hasValidTarget() const
+bool EnemyController::IsTargetDetected() const
 {
-	if (!m_enemyDetectionAggro)
-	{
-		return false;
-	}
+    if (m_isDead || !HasTarget())
+    {
+        return false;
+    }
 
-	Transform* targetTransform = m_enemyDetectionAggro->getCurrentTarget();
-	if (!targetTransform)
-	{
-		return false;
-	}
-
-	GameObject* targetObject = ComponentAPI::getOwner(targetTransform);
-	if (!targetObject)
-	{
-		return false;
-	}
-
-	Damageable* damageable = findDamageableOnTarget(targetObject);
-
-	if (damageable && damageable->isDead())
-	{
-		return false;
-	}
-
-	return true;
-}
-void EnemyController::updateCurrentTarget()
-{
-	if (!m_enemyDetectionAggro)
-	{
-		Script* script = GameObjectAPI::getScript(m_owner, "EnemyDetectionAggro");
-		m_enemyDetectionAggro = dynamic_cast<EnemyDetectionAggro*>(script);
-	}
-
-	if (!m_enemyDetectionAggro)
-	{
-		m_currentTarget = nullptr;
-		return;
-	}
-
-	m_currentTarget = m_enemyDetectionAggro->getCurrentTarget();
+    return GetDistanceToTarget() <= m_detectionRange;
 }
 
-bool EnemyController::isTargetInCombatRange() const
+bool EnemyController::IsTargetInAttackRange() const
 {
-	if (!m_currentTarget)
-	{
-		return false;
-	}
+    if (m_isDead || !HasTarget())
+    {
+        return false;
+    }
 
-	Vector3 ownerPosition = m_owner->GetTransform()->getPosition();
-	Vector3 targetPosition = m_currentTarget->getPosition();
-
-	Vector3 difference = ownerPosition - targetPosition;
-	difference.y = 0.0f;
-
-	return difference.Length() <= m_combatRange;
+    return GetDistanceToTarget() <= m_attackRange;
 }
 
-void EnemyController::clearPath()
+bool EnemyController::IsTargetLost() const
 {
-	m_path.clear();
-	m_hasPath = false;
-	m_currentIndex = 0;
+    if (m_isDead || !HasTarget())
+    {
+        return true;
+    }
+
+    return GetDistanceToTarget() >= m_loseTargetRange;
 }
 
-bool EnemyController::buildPathToTarget()
+void EnemyController::TakeDamage(float damage)
 {
-	if (!m_currentTarget)
-	{
-		return false;
-	}
+    if (m_isDead)
+    {
+        return;
+    }
 
-	Vector3 start = m_owner->GetTransform()->getPosition();
-	Vector3 end = getChasePosition();
+    damage = (std::max)(0.0f, damage);
 
-	std::vector<Vector3> tempPath;
-	tempPath.resize(m_maxPathPoints);
+    if (damage <= 0.0f)
+    {
+        return;
+    }
 
-	int pointCount = NavigationAPI::findStraightPath(start, end, tempPath.data(), m_maxPathPoints, m_searchExtents);
+    m_health -= damage;
 
-	if (pointCount > 0)
-	{
-		clearPath();
+    OnDamaged(damage);
 
-		for (int i = 0; i < pointCount; ++i)
-		{
-			m_path.push_back(tempPath[i]);
-		}
+    if (m_health <= 0.0f)
+    {
+        m_health = 0.0f;
+        m_isDead = true;
 
-		// need to check if first point is current position or not
-		m_currentIndex = 0;
-		m_hasPath = true;
-		return true;
-	}
-	
-	clearPath();
-
-	return false;
+        StopMoving();
+        OnDeath();
+    }
 }
 
-void EnemyController::followPath()
+float EnemyController::GetDistanceToTarget() const
 {
-	if (!m_hasPath)
-	{
-		return;
-	}
+    if (!getOwner() || !m_target)
+    {
+        return FLT_MAX;
+    }
 
-	if (m_currentIndex >= m_path.size())
-	{
-		clearPath();
-		return;
-	}
+    Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
+    Transform* targetTransform = GameObjectAPI::getTransform(m_target);
 
-	Vector3 currentPosition = m_owner->GetTransform()->getPosition();
-	Vector3 targetPoint = m_path[m_currentIndex];
-	Vector3 direction = targetPoint - currentPosition;
+    if (!ownerTransform || !targetTransform)
+    {
+        return FLT_MAX;
+    }
 
-	float distance = direction.Length();
+    const Vector3 ownerPosition = TransformAPI::getPosition(ownerTransform);
+    const Vector3 targetPosition = TransformAPI::getPosition(targetTransform);
 
-	if (distance < 0.1f)
-	{
-		m_currentIndex++;
-		if (m_currentIndex >= m_path.size())
-		{
-			clearPath();
-			return;
-		}
-		return;
-	}
+    Vector3 delta = targetPosition - ownerPosition;
+    delta.y = 0.0f;
 
-	direction.Normalize();
-	rotateTowardsDirection(direction);
-	float dt = Time::getDeltaTime();
-
-	currentPosition += direction * m_moveSpeed * dt;
-
-	TransformAPI::setPosition(m_owner->GetTransform(), currentPosition);	
-}
-
-Vector3 EnemyController::getChasePosition() const
-{
-	if (!m_currentTarget)
-	{
-		return m_owner->GetTransform()->getPosition();
-	}
-
-	Vector3 ownerPos = m_owner->GetTransform()->getPosition();
-	Vector3 targetPos = m_currentTarget->getPosition();
-	Vector3 direction = targetPos - ownerPos;
-
-	float distance = direction.Length();
-
-	if (distance < 0.001f)
-	{
-		return targetPos;
-	}
-
-	direction.Normalize();
-
-	Vector3 chasePosition = targetPos - direction * (m_combatRange - 0.1f);
-
-	return chasePosition;
-}
-
-void EnemyController::rotateTowardsDirection(const Vector3& direction)
-{
-	Vector3 desiredDirection = direction;
-	desiredDirection.y = 0.0f;
-
-	if (desiredDirection.LengthSquared() < 0.0001f)
-	{
-		return;
-	}
-
-	Vector3 currentForward = TransformAPI::getForward(m_owner->GetTransform());
-	currentForward.y = 0.0f;
-
-	if (currentForward.LengthSquared() < 0.0001f)
-	{
-		return;
-	}
-
-	desiredDirection.Normalize();
-	currentForward.Normalize();
-
-	float dot = currentForward.Dot(desiredDirection);
-
-	if (dot > 1.0f) dot = 1.0f;
-	if (dot < -1.0f) dot = -1.0f;
-
-	float angle = std::acos(dot);
-
-	Vector3 cross = currentForward.Cross(desiredDirection);
-
-	float sign = (cross.y > 0) ? 1.0f : -1.0f;
-
-	Vector3 currentEulerRotation = TransformAPI::getEulerDegrees(m_owner->GetTransform());
-	float maxStep = (m_turnSpeed * 100) * Time::getDeltaTime();
-
-	float step = 0.0f;
-	float angleDeg = angle * RADIANS_TO_DEGREES;
-	if (angleDeg > maxStep)
-	{
-		step = maxStep * sign;
-	}
-	else
-	{
-		step = angleDeg * sign;
-	}
-
-	currentEulerRotation.y += step;
-	TransformAPI::setRotationEuler(m_owner->GetTransform(), currentEulerRotation);
-}
-
-void EnemyController::faceCurrentTarget()
-{
-	if (!m_currentTarget)
-	{
-		return;
-	}
-	
-	Vector3 ownerPos = m_owner->GetTransform()->getPosition();
-	Vector3 targetPos = m_currentTarget->getPosition();
-	Vector3 direction = targetPos - ownerPos;
-
-	rotateTowardsDirection(direction);
-}
-
-void EnemyController::resetRepathTimer()
-{
-	m_repathTimer = 0.0f;
-}
-
-void EnemyController::addToRepathTimer(float dt)
-{
-	m_repathTimer += dt;
-}
-
-bool EnemyController::shouldRepath() const
-{
-	return m_repathTimer >= m_intervalRepath;
-}
-void EnemyController::tickChargeCooldown(float dt)
-{
-	if (m_chargeCooldownTimer > 0.0f)
-	{
-		m_chargeCooldownTimer -= dt;
-
-		if (m_chargeCooldownTimer < 0.0f)
-		{
-			m_chargeCooldownTimer = 0.0f;
-		}
-	}
-}
-
-bool EnemyController::isChargeReady() const
-{
-	return m_chargeCooldownTimer <= 0.0f;
-}
-
-void EnemyController::consumeChargeCooldown()
-{
-	m_chargeCooldownTimer = m_chargeCooldown;
+    return delta.Length();
 }
 
 IMPLEMENT_SCRIPT(EnemyController)

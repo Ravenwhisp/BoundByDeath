@@ -1,0 +1,341 @@
+#include "pch.h"
+#include "Enemy_Controller.h"
+#include "EnemyDetectionAggro.h"
+#include "Damageable.h"
+#include <cmath>
+
+IMPLEMENT_SCRIPT_FIELDS(Enemy_Controller,
+	SERIALIZED_FLOAT(m_combatRange, "Combat Range", 0.0f, 50.0f, 0.1f),
+	SERIALIZED_FLOAT(m_moveSpeed, "Move Speed", 0.0f, 50.0f, 0.1f),
+	SERIALIZED_FLOAT(m_turnSpeed, "Turn Speed", 0.0f, 5.0f, 0.1f),
+	SERIALIZED_FLOAT(m_intervalRepath, "Interval", 0.0f, 50.0f, 0.1f),
+	SERIALIZED_FLOAT(m_chargeCooldown, "Charge Cooldown", 0.0f, 20.0f, 0.1f),
+	SERIALIZED_BOOL(m_debugEnabled, "Debug Enabled")
+)
+
+static Damageable* findDamageableOnTarget(GameObject* gameObject)
+{
+	if (!gameObject)
+	{
+		return nullptr;
+	}
+
+	Script* script = GameObjectAPI::getScript(gameObject, "PlayerDamageable");
+	Damageable* damageable = dynamic_cast<Damageable*>(script);
+
+	if (damageable)
+	{
+		return damageable;
+	}
+
+	script = GameObjectAPI::getScript(gameObject, "Damageable");
+	damageable = dynamic_cast<Damageable*>(script);
+
+	return damageable;
+}
+
+Enemy_Controller::Enemy_Controller(GameObject* owner)
+    : Script(owner)
+{
+}
+
+void Enemy_Controller::Start()
+{
+
+	Script* script = GameObjectAPI::getScript(m_owner, "EnemyDetectionAggro");
+	m_enemyDetectionAggro = dynamic_cast<EnemyDetectionAggro*>(script);
+
+	if (!m_enemyDetectionAggro)
+	{
+		Debug::error("EnemyDetectionAggro script not found!");
+	}
+}
+
+void Enemy_Controller::drawGizmo()
+{
+	if (!m_debugEnabled)
+	{
+		return;
+	}
+
+	if (m_path.size() < 2)
+	{
+		return;
+	}
+
+	const Vector3 cyan = { 0.0f, 1.0f, 1.0f };
+	for (int i = 0; i < m_path.size() - 1; ++i)
+	{
+		DebugDrawAPI::drawLine(m_path[i], m_path[i + 1], cyan, 0, true);
+	}
+}
+
+bool Enemy_Controller::hasValidTarget() const
+{
+	if (!m_enemyDetectionAggro)
+	{
+		return false;
+	}
+
+	Transform* targetTransform = m_enemyDetectionAggro->getCurrentTarget();
+	if (!targetTransform)
+	{
+		return false;
+	}
+
+	GameObject* targetObject = ComponentAPI::getOwner(targetTransform);
+	if (!targetObject)
+	{
+		return false;
+	}
+
+	Damageable* damageable = findDamageableOnTarget(targetObject);
+
+	if (damageable && damageable->isDead())
+	{
+		return false;
+	}
+
+	return true;
+}
+void Enemy_Controller::updateCurrentTarget()
+{
+	if (!m_enemyDetectionAggro)
+	{
+		Script* script = GameObjectAPI::getScript(m_owner, "EnemyDetectionAggro");
+		m_enemyDetectionAggro = dynamic_cast<EnemyDetectionAggro*>(script);
+	}
+
+	if (!m_enemyDetectionAggro)
+	{
+		m_currentTarget = nullptr;
+		return;
+	}
+
+	m_currentTarget = m_enemyDetectionAggro->getCurrentTarget();
+}
+
+bool Enemy_Controller::isTargetInCombatRange() const
+{
+	if (!m_currentTarget)
+	{
+		return false;
+	}
+
+	Vector3 ownerPosition = m_owner->GetTransform()->getPosition();
+	Vector3 targetPosition = m_currentTarget->getPosition();
+
+	Vector3 difference = ownerPosition - targetPosition;
+	difference.y = 0.0f;
+
+	return difference.Length() <= m_combatRange;
+}
+
+void Enemy_Controller::clearPath()
+{
+	m_path.clear();
+	m_hasPath = false;
+	m_currentIndex = 0;
+}
+
+bool Enemy_Controller::buildPathToTarget()
+{
+	if (!m_currentTarget)
+	{
+		return false;
+	}
+
+	Vector3 start = m_owner->GetTransform()->getPosition();
+	Vector3 end = getChasePosition();
+
+	std::vector<Vector3> tempPath;
+	tempPath.resize(m_maxPathPoints);
+
+	int pointCount = NavigationAPI::findStraightPath(start, end, tempPath.data(), m_maxPathPoints, m_searchExtents);
+
+	if (pointCount > 0)
+	{
+		clearPath();
+
+		for (int i = 0; i < pointCount; ++i)
+		{
+			m_path.push_back(tempPath[i]);
+		}
+
+		// need to check if first point is current position or not
+		m_currentIndex = 0;
+		m_hasPath = true;
+		return true;
+	}
+	
+	clearPath();
+
+	return false;
+}
+
+void Enemy_Controller::followPath()
+{
+	if (!m_hasPath)
+	{
+		return;
+	}
+
+	if (m_currentIndex >= m_path.size())
+	{
+		clearPath();
+		return;
+	}
+
+	Vector3 currentPosition = m_owner->GetTransform()->getPosition();
+	Vector3 targetPoint = m_path[m_currentIndex];
+	Vector3 direction = targetPoint - currentPosition;
+
+	float distance = direction.Length();
+
+	if (distance < 0.1f)
+	{
+		m_currentIndex++;
+		if (m_currentIndex >= m_path.size())
+		{
+			clearPath();
+			return;
+		}
+		return;
+	}
+
+	direction.Normalize();
+	rotateTowardsDirection(direction);
+	float dt = Time::getDeltaTime();
+
+	currentPosition += direction * m_moveSpeed * dt;
+
+	TransformAPI::setPosition(m_owner->GetTransform(), currentPosition);	
+}
+
+Vector3 Enemy_Controller::getChasePosition() const
+{
+	if (!m_currentTarget)
+	{
+		return m_owner->GetTransform()->getPosition();
+	}
+
+	Vector3 ownerPos = m_owner->GetTransform()->getPosition();
+	Vector3 targetPos = m_currentTarget->getPosition();
+	Vector3 direction = targetPos - ownerPos;
+
+	float distance = direction.Length();
+
+	if (distance < 0.001f)
+	{
+		return targetPos;
+	}
+
+	direction.Normalize();
+
+	Vector3 chasePosition = targetPos - direction * (m_combatRange - 0.1f);
+
+	return chasePosition;
+}
+
+void Enemy_Controller::rotateTowardsDirection(const Vector3& direction)
+{
+	Vector3 desiredDirection = direction;
+	desiredDirection.y = 0.0f;
+
+	if (desiredDirection.LengthSquared() < 0.0001f)
+	{
+		return;
+	}
+
+	Vector3 currentForward = TransformAPI::getForward(m_owner->GetTransform());
+	currentForward.y = 0.0f;
+
+	if (currentForward.LengthSquared() < 0.0001f)
+	{
+		return;
+	}
+
+	desiredDirection.Normalize();
+	currentForward.Normalize();
+
+	float dot = currentForward.Dot(desiredDirection);
+
+	if (dot > 1.0f) dot = 1.0f;
+	if (dot < -1.0f) dot = -1.0f;
+
+	float angle = std::acos(dot);
+
+	Vector3 cross = currentForward.Cross(desiredDirection);
+
+	float sign = (cross.y > 0) ? 1.0f : -1.0f;
+
+	Vector3 currentEulerRotation = TransformAPI::getEulerDegrees(m_owner->GetTransform());
+	float maxStep = (m_turnSpeed * 100) * Time::getDeltaTime();
+
+	float step = 0.0f;
+	float angleDeg = angle * RADIANS_TO_DEGREES;
+	if (angleDeg > maxStep)
+	{
+		step = maxStep * sign;
+	}
+	else
+	{
+		step = angleDeg * sign;
+	}
+
+	currentEulerRotation.y += step;
+	TransformAPI::setRotationEuler(m_owner->GetTransform(), currentEulerRotation);
+}
+
+void Enemy_Controller::faceCurrentTarget()
+{
+	if (!m_currentTarget)
+	{
+		return;
+	}
+	
+	Vector3 ownerPos = m_owner->GetTransform()->getPosition();
+	Vector3 targetPos = m_currentTarget->getPosition();
+	Vector3 direction = targetPos - ownerPos;
+
+	rotateTowardsDirection(direction);
+}
+
+void Enemy_Controller::resetRepathTimer()
+{
+	m_repathTimer = 0.0f;
+}
+
+void Enemy_Controller::addToRepathTimer(float dt)
+{
+	m_repathTimer += dt;
+}
+
+bool Enemy_Controller::shouldRepath() const
+{
+	return m_repathTimer >= m_intervalRepath;
+}
+void Enemy_Controller::tickChargeCooldown(float dt)
+{
+	if (m_chargeCooldownTimer > 0.0f)
+	{
+		m_chargeCooldownTimer -= dt;
+
+		if (m_chargeCooldownTimer < 0.0f)
+		{
+			m_chargeCooldownTimer = 0.0f;
+		}
+	}
+}
+
+bool Enemy_Controller::isChargeReady() const
+{
+	return m_chargeCooldownTimer <= 0.0f;
+}
+
+void Enemy_Controller::consumeChargeCooldown()
+{
+	m_chargeCooldownTimer = m_chargeCooldown;
+}
+
+IMPLEMENT_SCRIPT(Enemy_Controller)

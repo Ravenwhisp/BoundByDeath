@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "EnemyIDLE.h"
-#include "EnemyController.h"
+#include "Enemy_Controller.h"
 
 IMPLEMENT_SCRIPT_FIELDS(EnemyIDLE,
 	SERIALIZED_BOOL(m_debugEnabled, "Debug Enabled")
@@ -13,7 +13,7 @@ EnemyIDLE::EnemyIDLE(GameObject* owner) : StateMachineScript(owner)
 void EnemyIDLE::OnStateEnter()
 {
 	Script* script = GameObjectAPI::getScript(getOwner(), "EnemyController");
-	m_enemyController = dynamic_cast<EnemyController*>(script);
+	m_enemyController = dynamic_cast<Enemy_Controller*>(script);
 
 	if (!m_enemyController)
 	{

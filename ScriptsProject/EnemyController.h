@@ -2,57 +2,53 @@
 
 #include "ScriptAPI.h"
 
-class EnemyDetectionAggro;
-
 class EnemyController : public Script
 {
     DECLARE_SCRIPT(EnemyController)
 
 public:
     explicit EnemyController(GameObject* owner);
+    ~EnemyController() override = default;
 
-    void Start() override;
-    void drawGizmo() override;
+    void Start() override final;
+    void Update() override final;
 
-    ScriptFieldList getExposedFields() const override;
+    bool IsDead() const { return m_isDead; }
+    bool HasTarget() const { return m_target != nullptr; }
 
-public:
-    float m_combatRange = 2.0f;
-    float m_moveSpeed = 1.0f;
-    float m_turnSpeed = 2.0f;
-    float m_intervalRepath = 0.4f;
-    float m_chargeCooldown = 3.0f;
-    bool m_debugEnabled = true;
+    GameObject* GetTarget() const { return m_target; }
+    void SetTarget(GameObject* target) { m_target = target; }
 
-private:
-    EnemyDetectionAggro* m_enemyDetectionAggro = nullptr;
-    Transform* m_currentTarget = nullptr;
-    float m_repathTimer = 0.0f;
-    float m_chargeCooldownTimer = 0.0f;
-    std::vector<Vector3> m_path;
-    bool m_hasPath = false;
-    size_t m_currentIndex = 0;
-    size_t m_maxPathPoints = 32;
-    Vector3 m_searchExtents = Vector3(5.0f, 5.0f, 5.0f);
-    const float RADIANS_TO_DEGREES = 180.0f / 3.14159265f;
+    bool IsTargetDetected() const;
+    bool IsTargetInAttackRange() const;
+    bool IsTargetLost() const;
 
-public:
-    bool hasValidTarget() const;
-    void updateCurrentTarget();
-    bool isTargetInCombatRange() const;
-    Transform* getCurrentTarget() const { return m_currentTarget; }
-    void clearPath();
-    bool buildPathToTarget();
-    void followPath();
-    void faceCurrentTarget();
-    void resetRepathTimer();
-    void addToRepathTimer(float dt);
-    bool shouldRepath() const;
-    void tickChargeCooldown(float dt);
-    bool isChargeReady() const;
-    void consumeChargeCooldown();
+    virtual void MoveToTarget() {}
+    virtual void StopMoving() {}
+    virtual void FaceTarget() {}
+    virtual void Attack() {}
 
-private:
-    Vector3 getChasePosition() const;
-    void rotateTowardsDirection(const Vector3& direction);
+    void TakeDamage(float damage);
+
+protected:
+    virtual void OnStart() {}
+    virtual void OnUpdate() {}
+    virtual void OnDamaged(float damage) {}
+    virtual void OnDeath() {}
+
+    float GetDistanceToTarget() const;
+
+protected:
+    GameObject* m_target = nullptr;
+
+    float m_health = 100.0f;
+    float m_maxHealth = 100.0f;
+
+    float m_detectionRange = 10.0f;
+    float m_attackRange = 2.0f;
+    float m_loseTargetRange = 15.0f;
+
+    bool m_isDead = false;
+
+    //ScriptFieldList getExposedFields() const override;
 };

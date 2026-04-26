@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "EnemyATTACK.h"
-#include "EnemyController.h"
+#include "Enemy_Controller.h"
 #include "Damageable.h"
 
 static Damageable* findDamageable(GameObject* gameObject)
@@ -36,8 +36,8 @@ EnemyATTACK::EnemyATTACK(GameObject* owner) : StateMachineScript(owner)
 
 void EnemyATTACK::OnStateEnter()
 {
-	Script* script = GameObjectAPI::getScript(getOwner(), "EnemyController");
-	m_enemyController = dynamic_cast<EnemyController*>(script);
+	Script* script = GameObjectAPI::getScript(getOwner(), "Enemy_Controller");
+	m_enemyController = dynamic_cast<Enemy_Controller*>(script);
 
 	m_attackTimer = m_attackCooldown;
 
