@@ -4,7 +4,9 @@
 
 IMPLEMENT_SCRIPT_FIELDS(EnemyDeathHandler,
     SERIALIZED_FLOAT(m_destroyDelay, "Destroy Delay", 0.0f, 30.0f, 0.1f),
-    SERIALIZED_STRING(m_deathStateName, "Death State Name")
+    SERIALIZED_STRING(m_deathStateName, "Death State Name"),
+    SERIALIZED_STRING(m_healthPrefabPath, "Health Prefab Path"),
+    SERIALIZED_FLOAT(m_healthDropChance, "Health Drop Chance", 0.0f, 1.0f, 0.05f)
 )
 
 EnemyDeathHandler::EnemyDeathHandler(GameObject* owner)
@@ -56,6 +58,7 @@ void EnemyDeathHandler::processDeath()
     m_hasProcessedDeath = true;
 
     playDeathAnimation();
+    DropHealth();
     startDestroyCountdown(m_destroyDelay);
 }
 
@@ -94,5 +97,29 @@ void EnemyDeathHandler::destroyEnemyNow()
     GameObjectAPI::removeGameObject(m_owner);
 }
 
+void EnemyDeathHandler::DropHealth()
+{
+    if (m_healthPrefabPath.empty())
+    {
+        return;
+    }
 
+    if (m_healthDropChance < 1.0f)
+    {
+        const float roll = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+        if (roll > m_healthDropChance)
+        {
+            return;
+        }
+    }
+
+    const Transform* myTransform = GameObjectAPI::getTransform(m_owner);
+    if (myTransform == nullptr)
+    {
+        return;
+    }
+
+    const Vector3 spawnPosition = TransformAPI::getGlobalPosition(myTransform);
+    GameObjectAPI::instantiatePrefab(m_healthPrefabPath.c_str(), spawnPosition, Vector3::Zero);
+}
 IMPLEMENT_SCRIPT(EnemyDeathHandler)

@@ -21,10 +21,13 @@ private:
     void startDestroyCountdown(float delay);
     void destroyEnemyNow();
     void processDeath();
+    void DropHealth();
 
 public:
     float m_destroyDelay = 2.0f;
     std::string m_deathStateName = "";
+    std::string m_healthPrefabPath = "";
+    float m_healthDropChance = 1.0f;
 
 private:
     Damageable* m_damageable = nullptr;
