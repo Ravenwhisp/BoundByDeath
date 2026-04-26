@@ -12,7 +12,7 @@
 
 static const float PI = 3.1415926535897931f;
 
-IMPLEMENT_SCRIPT_FIELDS(LyrielChargedAttack,
+IMPLEMENT_SCRIPT_FIELDS_INHERITED(LyrielChargedAttack, LyrielAbilityBase,
     SERIALIZED_COMPONENT_REF(m_ChargedAttackUI, "Charged Attack UI", ComponentType::TRANSFORM),
     SERIALIZED_FLOAT(m_minDamage, "Min Damage", 0.0f, 100.0f, 0.5f),
     SERIALIZED_FLOAT(m_maxDamage, "Max Damage", 0.0f, 200.0f, 0.5f),
@@ -20,7 +20,6 @@ IMPLEMENT_SCRIPT_FIELDS(LyrielChargedAttack,
     SERIALIZED_FLOAT(m_minAttackRange, "Min Attack Range", 0.0f, 50.0f, 0.1f),
     SERIALIZED_FLOAT(m_maxAttackRange, "Max Attack Range", 0.0f, 50.0f, 0.1f),
     SERIALIZED_FLOAT(m_lineHalfWidth, "Line Half Width", 0.1f, 10.0f, 0.05f),
-    SERIALIZED_FLOAT(m_attackCooldown, "Attack Cooldown", 0.0f, 10.0f, 0.05f),
     SERIALIZED_FLOAT(m_attackLockDuration, "Attack Lock Duration", 0.0f, 2.0f, 0.01f),
     SERIALIZED_FLOAT(m_arrowSpeed, "Arrow Speed", 0.0f, 100.0f, 0.5f)
 )
@@ -33,7 +32,6 @@ LyrielChargedAttack::LyrielChargedAttack(GameObject* owner)
 void LyrielChargedAttack::Start()
 {
     LyrielAbilityBase::Start();
-    m_cooldown = m_attackCooldown;
 }
 
 void LyrielChargedAttack::Update()

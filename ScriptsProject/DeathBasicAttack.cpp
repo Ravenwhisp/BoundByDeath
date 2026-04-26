@@ -8,7 +8,7 @@
 
 #include <cmath>
 
-IMPLEMENT_SCRIPT_FIELDS(DeathBasicAttack,
+IMPLEMENT_SCRIPT_FIELDS_INHERITED(DeathBasicAttack, DeathAbilityBase,
     SERIALIZED_FLOAT(m_attackLockDuration, "Attack Lock Duration", 0.05f, 2.0f, 0.05f),
     SERIALIZED_FLOAT(m_finalHitLockDuration, "Final Hit Lock Duration", 0.05f, 3.0f, 0.05f)
 )
