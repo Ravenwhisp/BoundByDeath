@@ -36,6 +36,11 @@ void PlayerDownState::Start()
 
 void PlayerDownState::Update()
 {
+    if (m_reviveBlocked)
+    {
+        return;
+    }
+
     if (!isDowned())
     {
         return;
@@ -81,6 +86,8 @@ void PlayerDownState::enterDownState()
         return;
     }
 
+    m_reviveBlocked = false;
+
     if (m_playerState)
     {
         m_playerState->setState(PlayerStateType::Downed);
@@ -94,6 +101,16 @@ void PlayerDownState::enterDownState()
     }
 
     Debug::log("%s entered down state.", GameObjectAPI::getName(m_owner));
+}
+
+void PlayerDownState::enterDefeatedState()
+{
+    blockRevive();
+
+    if (m_damageable)
+    {
+        m_damageable->kill();
+    }
 }
 
 bool PlayerDownState::isDowned() const
@@ -121,6 +138,12 @@ float PlayerDownState::getReviveProgress() const
     }
 
     return progress;
+}
+
+void PlayerDownState::blockRevive()
+{
+    m_reviveBlocked = true;
+    m_reviveProgress = 0.0f;
 }
 
 Damageable* PlayerDownState::findDamageable() const
@@ -159,6 +182,11 @@ bool PlayerDownState::isTeammateInAssistRange() const
 
 void PlayerDownState::completeRevive()
 {
+    if (m_reviveBlocked)
+    {
+        return;
+    }
+
     m_reviveProgress = 0.0f;
 
     if (m_playerState)
