@@ -30,7 +30,6 @@ private:
     bool isEnemyInsideTauntCone(GameObject* enemy, const Vector3& ownerPosition, const Vector3& ownerForward) const;
 
     Vector3 computeAimDirection() const;
-    Vector3 getFallbackFacingDirection() const;
     void faceDirection(const Vector3& direction);
     bool isAimStickValid(const Vector3& direction) const;
 
