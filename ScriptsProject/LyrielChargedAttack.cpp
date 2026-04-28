@@ -6,6 +6,7 @@
 #include "ArrowPool.h"
 #include "LyrielArrowProjectile.h"
 #include "EnemyDamageable.h"
+#include "EnemyShadowMark.h"
 #include "PlayerState.h"
 
 #include <cmath>
@@ -322,6 +323,14 @@ void LyrielChargedAttack::applyChargedDamage(const std::vector<GameObject*>& tar
         if (damageable != nullptr)
         {
             damageable->takeDamageEnemy(damage, GameObjectAPI::getTransform(getOwner()));
+
+            Script* markScript = GameObjectAPI::getScript(target, "EnemyShadowMark");
+            if (markScript != nullptr)
+            {
+                EnemyShadowMark* mark = static_cast<EnemyShadowMark*>(markScript);
+                if (mark->isExploitable())
+                    mark->exploit();
+            }
         }
     }
 }

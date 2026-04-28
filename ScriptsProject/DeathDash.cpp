@@ -3,6 +3,7 @@
 
 #include "CharacterBase.h"
 #include "EnemyDamageable.h"
+#include "EnemyShadowMark.h"
 
 static const ScriptFieldInfo LyrielDashFields[] =
 {
@@ -106,6 +107,10 @@ void DeathDash::applyDashDamage()
         if (damageable != nullptr)
         {
             damageable->takeDamageEnemy(m_dashDamage, GameObjectAPI::getTransform(getOwner()));
+
+            Script* markScript = GameObjectAPI::getScript(enemyObj, "EnemyShadowMark");
+            if (markScript != nullptr)
+                static_cast<EnemyShadowMark*>(markScript)->notifyDeathHit();
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Camera">
@@ -13,14 +13,8 @@
     <Filter Include="Player">
       <UniqueIdentifier>{ea20d3d3-b809-4bab-b577-5f4740898a79}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Interaction/Gameplay">
-      <UniqueIdentifier>{4ca7c366-15f4-4471-b3a6-dbfca40a14c4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Player\Targeting">
       <UniqueIdentifier>{3061405a-a204-4131-a028-1ff12d239d69}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Combat">
-      <UniqueIdentifier>{d4713e17-7ef0-4338-a2ce-d04eea529fa6}</UniqueIdentifier>
     </Filter>
     <Filter Include="Player\States">
       <UniqueIdentifier>{efb0d3d4-8d69-407b-8da8-4ffc1137e7a4}</UniqueIdentifier>
@@ -31,11 +25,35 @@
     <Filter Include="Player\Transform">
       <UniqueIdentifier>{fb6b58e2-7f9f-44b4-9755-36d7239c1bd0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Player\Animation">
+      <UniqueIdentifier>{f6c7d8e9-a0b1-2345-f012-345678901235}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Interaction/Gameplay">
+      <UniqueIdentifier>{4ca7c366-15f4-4471-b3a6-dbfca40a14c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Combat">
+      <UniqueIdentifier>{d4713e17-7ef0-4338-a2ce-d04eea529fa6}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Enemies">
       <UniqueIdentifier>{994356b7-31d7-4286-a7d0-f22fa651b995}</UniqueIdentifier>
     </Filter>
     <Filter Include="Enemies\States">
       <UniqueIdentifier>{920d4967-84f4-4616-9099-b8b0c3eeb8af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Character">
+      <UniqueIdentifier>{a1f2e3d4-b5c6-7890-abcd-ef1234567890}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Character\Death">
+      <UniqueIdentifier>{b2e3f4a5-c6d7-8901-bcde-f01234567891}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Character\Death\Abilities">
+      <UniqueIdentifier>{c3f4a5b6-d7e8-9012-cdef-012345678902}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Character\Lyriel">
+      <UniqueIdentifier>{d4a5b6c7-e8f9-0123-def0-123456789013}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Character\Lyriel\Abilities">
+      <UniqueIdentifier>{e5b6c7d8-f9a0-1234-ef01-234567890124}</UniqueIdentifier>
     </Filter>
     <Filter Include="UI">
       <UniqueIdentifier>{e135fa5e-751a-4bac-acd9-1ede1f2173ca}</UniqueIdentifier>
@@ -59,29 +77,23 @@
     <ClInclude Include="..\Engine\Assets\Scripts\TriggerArea.h">
       <Filter>Interaction/Gameplay</Filter>
     </ClInclude>
+    <ClInclude Include="SpikeTrap.h">
+      <Filter>Interaction/Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Engine\Assets\Scripts\PlayerController.h">
+      <Filter>Player</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerDamageable.h">
+      <Filter>Player</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerAnimationController.h">
+      <Filter>Player\Animation</Filter>
+    </ClInclude>
     <ClInclude Include="PlayerTargetController.h">
       <Filter>Player\Targeting</Filter>
     </ClInclude>
     <ClInclude Include="TargetIndicatorUI.h">
       <Filter>Player\Targeting</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Engine\Assets\Scripts\PlayerController.h">
-      <Filter>Player</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Engine\Assets\Scripts\LocalMultiplayerSetup.h">
-      <Filter>Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="DefeatConditionManager.h">
-      <Filter>Combat</Filter>
-    </ClInclude>
-    <ClInclude Include="DebugDamageTrigger.h">
-      <Filter>Combat</Filter>
-    </ClInclude>
-    <ClInclude Include="Damageable.h">
-      <Filter>Combat</Filter>
-    </ClInclude>
-    <ClInclude Include="PlayerDamageable.h">
-      <Filter>Player</Filter>
     </ClInclude>
     <ClInclude Include="PlayerState.h">
       <Filter>Player\States</Filter>
@@ -92,19 +104,55 @@
     <ClInclude Include="Bound.h">
       <Filter>Player\Bound</Filter>
     </ClInclude>
-    <ClInclude Include="EnemyDetectionAggro.h">
-      <Filter>Enemies</Filter>
-    </ClInclude>
-    <ClInclude Include="EnemyDeathHandler.h">
-      <Filter>Enemies</Filter>
-    </ClInclude>
     <ClInclude Include="PlayerRotation.h">
       <Filter>Player\Transform</Filter>
     </ClInclude>
     <ClInclude Include="PlayerMovement.h">
       <Filter>Player\Transform</Filter>
     </ClInclude>
+    <ClInclude Include="..\Engine\Assets\Scripts\LocalMultiplayerSetup.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelCheats.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Damageable.h">
+      <Filter>Combat</Filter>
+    </ClInclude>
+    <ClInclude Include="DefeatConditionManager.h">
+      <Filter>Combat</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugDamageTrigger.h">
+      <Filter>Combat</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyShadowMark.h">
+      <Filter>Combat</Filter>
+    </ClInclude>
+    <ClInclude Include="ReaperGauge.h">
+      <Filter>Combat</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyDamageable.h">
+      <Filter>Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyDetectionAggro.h">
+      <Filter>Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyDeathHandler.h">
+      <Filter>Enemies</Filter>
+    </ClInclude>
     <ClInclude Include="EnemyController.h">
+      <Filter>Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyATTACK.h">
+      <Filter>Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyRECOVER.h">
+      <Filter>Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemySTUN.h">
+      <Filter>Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyCHARGE.h">
       <Filter>Enemies</Filter>
     </ClInclude>
     <ClInclude Include="EnemyIDLE.h">
@@ -113,40 +161,57 @@
     <ClInclude Include="EnemyCHASE.h">
       <Filter>Enemies\States</Filter>
     </ClInclude>
-    <ClInclude Include="EnemyATTACK.h">
-      <Filter>Enemies</Filter>
+    <ClInclude Include="CharacterBase.h">
+      <Filter>Character</Filter>
     </ClInclude>
-    <ClInclude Include="EnemyRECOVER.h">
-      <Filter>Enemies</Filter>
+    <ClInclude Include="AbilityBase.h">
+      <Filter>Character</Filter>
     </ClInclude>
-    <ClInclude Include="ArrowPool.h" />
-    <ClInclude Include="LyrielArrowProjectile.h" />
-    <ClInclude Include="LyrielArrowVolley.h" />
-    <ClInclude Include="LyrielBasicAttack.h" />
-    <ClInclude Include="SpikeTrap.h" />
-    <ClInclude Include="PlayerAnimationController.h" />
-    <ClInclude Include="EnemySTUN.h">
-      <Filter>Enemies</Filter>
+    <ClInclude Include="AbilityDash.h">
+      <Filter>Character</Filter>
     </ClInclude>
-    <ClInclude Include="EnemyCHARGE.h">
-      <Filter>Enemies</Filter>
+    <ClInclude Include="DeathCharacter.h">
+      <Filter>Character\Death</Filter>
     </ClInclude>
-    <ClInclude Include="SpikeTrap.h" />
-    <ClInclude Include="LevelCheats.h" />
-    <ClInclude Include="AbilityBase.h" />
-    <ClInclude Include="CharacterBase.h" />
-    <ClInclude Include="DeathAbilityBase.h" />
-    <ClInclude Include="DeathBasicAttack.h" />
-    <ClInclude Include="DeathCharacter.h" />
-    <ClInclude Include="DeathChargedAttack.h" />
-    <ClInclude Include="DeathDash.h" />
-    <ClInclude Include="DeathTaunt.h" />
-    <ClInclude Include="EnemyDamageable.h" />
-    <ClInclude Include="LyrielAbilityBase.h" />
-    <ClInclude Include="LyrielCharacter.h" />
-    <ClInclude Include="LyrielChargedAttack.h" />
-    <ClInclude Include="AbilityDash.h" />
-    <ClInclude Include="LyrielDash.h" />
+    <ClInclude Include="DeathAbilityBase.h">
+      <Filter>Character\Death\Abilities</Filter>
+    </ClInclude>
+    <ClInclude Include="DeathBasicAttack.h">
+      <Filter>Character\Death\Abilities</Filter>
+    </ClInclude>
+    <ClInclude Include="DeathChargedAttack.h">
+      <Filter>Character\Death\Abilities</Filter>
+    </ClInclude>
+    <ClInclude Include="DeathDash.h">
+      <Filter>Character\Death\Abilities</Filter>
+    </ClInclude>
+    <ClInclude Include="DeathTaunt.h">
+      <Filter>Character\Death\Abilities</Filter>
+    </ClInclude>
+    <ClInclude Include="LyrielCharacter.h">
+      <Filter>Character\Lyriel</Filter>
+    </ClInclude>
+    <ClInclude Include="LyrielArrowProjectile.h">
+      <Filter>Character\Lyriel</Filter>
+    </ClInclude>
+    <ClInclude Include="ArrowPool.h">
+      <Filter>Character\Lyriel</Filter>
+    </ClInclude>
+    <ClInclude Include="LyrielAbilityBase.h">
+      <Filter>Character\Lyriel\Abilities</Filter>
+    </ClInclude>
+    <ClInclude Include="LyrielBasicAttack.h">
+      <Filter>Character\Lyriel\Abilities</Filter>
+    </ClInclude>
+    <ClInclude Include="LyrielChargedAttack.h">
+      <Filter>Character\Lyriel\Abilities</Filter>
+    </ClInclude>
+    <ClInclude Include="LyrielArrowVolley.h">
+      <Filter>Character\Lyriel\Abilities</Filter>
+    </ClInclude>
+    <ClInclude Include="LyrielDash.h">
+      <Filter>Character\Lyriel\Abilities</Filter>
+    </ClInclude>
     <ClInclude Include="UIController.h">
       <Filter>UI</Filter>
     </ClInclude>
@@ -172,29 +237,23 @@
     <ClCompile Include="..\Engine\Assets\Scripts\TriggerArea.cpp">
       <Filter>Interaction/Gameplay</Filter>
     </ClCompile>
+    <ClCompile Include="SpikeTrap.cpp">
+      <Filter>Interaction/Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Engine\Assets\Scripts\PlayerController.cpp">
+      <Filter>Player</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerDamageable.cpp">
+      <Filter>Player</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerAnimationController.cpp">
+      <Filter>Player\Animation</Filter>
+    </ClCompile>
     <ClCompile Include="PlayerTargetController.cpp">
       <Filter>Player\Targeting</Filter>
     </ClCompile>
     <ClCompile Include="TargetIndicatorUI.cpp">
       <Filter>Player\Targeting</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Engine\Assets\Scripts\PlayerController.cpp">
-      <Filter>Player</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Engine\Assets\Scripts\LocalMultiplayerSetup.cpp">
-      <Filter>Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="DefeatConditionManager.cpp">
-      <Filter>Combat</Filter>
-    </ClCompile>
-    <ClCompile Include="DebugDamageTrigger.cpp">
-      <Filter>Combat</Filter>
-    </ClCompile>
-    <ClCompile Include="Damageable.cpp">
-      <Filter>Combat</Filter>
-    </ClCompile>
-    <ClCompile Include="PlayerDamageable.cpp">
-      <Filter>Player</Filter>
     </ClCompile>
     <ClCompile Include="PlayerState.cpp">
       <Filter>Player\States</Filter>
@@ -205,20 +264,55 @@
     <ClCompile Include="Bound.cpp">
       <Filter>Player\Bound</Filter>
     </ClCompile>
-    <ClCompile Include="EnemyDetectionAggro.cpp">
-      <Filter>Enemies</Filter>
-    </ClCompile>
-    <ClCompile Include="EnemyDeathHandler.cpp">
-      <Filter>Enemies</Filter>
-    </ClCompile>
     <ClCompile Include="PlayerRotation.cpp">
       <Filter>Player\Transform</Filter>
     </ClCompile>
     <ClCompile Include="PlayerMovement.cpp">
       <Filter>Player\Transform</Filter>
     </ClCompile>
-    <ClCompile Include="EngineDependencies\SimpleMath.cpp" />
+    <ClCompile Include="..\Engine\Assets\Scripts\LocalMultiplayerSetup.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelCheats.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="Damageable.cpp">
+      <Filter>Combat</Filter>
+    </ClCompile>
+    <ClCompile Include="DefeatConditionManager.cpp">
+      <Filter>Combat</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugDamageTrigger.cpp">
+      <Filter>Combat</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyShadowMark.cpp">
+      <Filter>Combat</Filter>
+    </ClCompile>
+    <ClCompile Include="ReaperGauge.cpp">
+      <Filter>Combat</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyDamageable.cpp">
+      <Filter>Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyDetectionAggro.cpp">
+      <Filter>Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyDeathHandler.cpp">
+      <Filter>Enemies</Filter>
+    </ClCompile>
     <ClCompile Include="EnemyController.cpp">
+      <Filter>Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyATTACK.cpp">
+      <Filter>Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyRECOVER.cpp">
+      <Filter>Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemySTUN.cpp">
+      <Filter>Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyCHARGE.cpp">
       <Filter>Enemies</Filter>
     </ClCompile>
     <ClCompile Include="EnemyIDLE.cpp">
@@ -227,40 +321,58 @@
     <ClCompile Include="EnemyCHASE.cpp">
       <Filter>Enemies\States</Filter>
     </ClCompile>
-    <ClCompile Include="EnemyATTACK.cpp">
-      <Filter>Enemies</Filter>
+    <ClCompile Include="EngineDependencies\SimpleMath.cpp" />
+    <ClCompile Include="CharacterBase.cpp">
+      <Filter>Character</Filter>
     </ClCompile>
-    <ClCompile Include="EnemyRECOVER.cpp">
-      <Filter>Enemies</Filter>
+    <ClCompile Include="AbilityBase.cpp">
+      <Filter>Character</Filter>
     </ClCompile>
-    <ClCompile Include="ArrowPool.cpp" />
-    <ClCompile Include="LyrielArrowProjectile.cpp" />
-    <ClCompile Include="LyrielArrowVolley.cpp" />
-    <ClCompile Include="LyrielBasicAttack.cpp" />
-    <ClCompile Include="SpikeTrap.cpp" />
-    <ClCompile Include="PlayerAnimationController.cpp" />
-    <ClCompile Include="EnemySTUN.cpp">
-      <Filter>Enemies</Filter>
+    <ClCompile Include="AbilityDash.cpp">
+      <Filter>Character</Filter>
     </ClCompile>
-    <ClCompile Include="EnemyCHARGE.cpp">
-      <Filter>Enemies</Filter>
+    <ClCompile Include="DeathCharacter.cpp">
+      <Filter>Character\Death</Filter>
     </ClCompile>
-    <ClCompile Include="SpikeTrap.cpp" />
-    <ClCompile Include="LevelCheats.cpp" />
-    <ClCompile Include="AbilityBase.cpp" />
-    <ClCompile Include="CharacterBase.cpp" />
-    <ClCompile Include="DeathAbilityBase.cpp" />
-    <ClCompile Include="DeathBasicAttack.cpp" />
-    <ClCompile Include="DeathCharacter.cpp" />
-    <ClCompile Include="DeathChargedAttack.cpp" />
-    <ClCompile Include="DeathDash.cpp" />
-    <ClCompile Include="DeathTaunt.cpp" />
-    <ClCompile Include="EnemyDamageable.cpp" />
-    <ClCompile Include="LyrielAbilityBase.cpp" />
-    <ClCompile Include="LyrielCharacter.cpp" />
-    <ClCompile Include="LyrielChargedAttack.cpp" />
-    <ClCompile Include="AbilityDash.cpp" />
-    <ClCompile Include="LyrielDash.cpp" />
+    <ClCompile Include="DeathAbilityBase.cpp">
+      <Filter>Character\Death\Abilities</Filter>
+    </ClCompile>
+    <ClCompile Include="DeathBasicAttack.cpp">
+      <Filter>Character\Death\Abilities</Filter>
+    </ClCompile>
+    <ClCompile Include="DeathChargedAttack.cpp">
+      <Filter>Character\Death\Abilities</Filter>
+    </ClCompile>
+    <ClCompile Include="DeathDash.cpp">
+      <Filter>Character\Death\Abilities</Filter>
+    </ClCompile>
+    <ClCompile Include="DeathTaunt.cpp">
+      <Filter>Character\Death\Abilities</Filter>
+    </ClCompile>
+    <ClCompile Include="LyrielCharacter.cpp">
+      <Filter>Character\Lyriel</Filter>
+    </ClCompile>
+    <ClCompile Include="LyrielArrowProjectile.cpp">
+      <Filter>Character\Lyriel</Filter>
+    </ClCompile>
+    <ClCompile Include="ArrowPool.cpp">
+      <Filter>Character\Lyriel</Filter>
+    </ClCompile>
+    <ClCompile Include="LyrielAbilityBase.cpp">
+      <Filter>Character\Lyriel\Abilities</Filter>
+    </ClCompile>
+    <ClCompile Include="LyrielBasicAttack.cpp">
+      <Filter>Character\Lyriel\Abilities</Filter>
+    </ClCompile>
+    <ClCompile Include="LyrielChargedAttack.cpp">
+      <Filter>Character\Lyriel\Abilities</Filter>
+    </ClCompile>
+    <ClCompile Include="LyrielArrowVolley.cpp">
+      <Filter>Character\Lyriel\Abilities</Filter>
+    </ClCompile>
+    <ClCompile Include="LyrielDash.cpp">
+      <Filter>Character\Lyriel\Abilities</Filter>
+    </ClCompile>
     <ClCompile Include="UIController.cpp">
       <Filter>UI</Filter>
     </ClCompile>
