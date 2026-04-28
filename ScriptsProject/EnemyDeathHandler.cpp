@@ -1,12 +1,14 @@
 #include "pch.h"
 #include "EnemyDeathHandler.h"
 #include "Damageable.h"
+#include "HealthPickup.h"
 
 IMPLEMENT_SCRIPT_FIELDS(EnemyDeathHandler,
     SERIALIZED_FLOAT(m_destroyDelay, "Destroy Delay", 0.0f, 30.0f, 0.1f),
     SERIALIZED_STRING(m_deathStateName, "Death State Name"),
     SERIALIZED_STRING(m_healthPrefabPath, "Health Prefab Path"),
-    SERIALIZED_FLOAT(m_healthDropChance, "Health Drop Chance", 0.0f, 1.0f, 0.05f)
+    SERIALIZED_INT(m_healthDropQuantity, "Health Drop Quantity"),
+    SERIALIZED_FLOAT(m_healthDropAmount, "Health Drop Amount", 0.0f, 100.0f, 1.0f)
 )
 
 EnemyDeathHandler::EnemyDeathHandler(GameObject* owner)
@@ -104,15 +106,6 @@ void EnemyDeathHandler::DropHealth()
         return;
     }
 
-    if (m_healthDropChance < 1.0f)
-    {
-        const float roll = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
-        if (roll > m_healthDropChance)
-        {
-            return;
-        }
-    }
-
     const Transform* myTransform = GameObjectAPI::getTransform(m_owner);
     if (myTransform == nullptr)
     {
@@ -120,6 +113,21 @@ void EnemyDeathHandler::DropHealth()
     }
 
     const Vector3 spawnPosition = TransformAPI::getGlobalPosition(myTransform);
-    GameObjectAPI::instantiatePrefab(m_healthPrefabPath.c_str(), spawnPosition, Vector3::Zero);
+
+    for (int i = 0; i < m_healthDropQuantity; ++i)
+    {
+        GameObject* pickup = GameObjectAPI::instantiatePrefab(m_healthPrefabPath.c_str(), spawnPosition, Vector3::Zero);
+
+        if (pickup == nullptr)
+        {
+            continue;
+        }
+
+        Script* script = GameObjectAPI::getScript(pickup, "HealthPickup");
+        if (script != nullptr)
+        {
+            static_cast<HealthPickup*>(script)->m_healAmount = m_healthDropAmount;
+        }
+    }
 }
 IMPLEMENT_SCRIPT(EnemyDeathHandler)
