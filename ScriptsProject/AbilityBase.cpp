@@ -4,6 +4,8 @@
 
 IMPLEMENT_SCRIPT_FIELDS(AbilityBase,
     SERIALIZED_FLOAT(m_cooldown, "Cooldown", 0.0f, 10.0f, 0.01f),
+    SERIALIZED_COMPONENT_REF(m_cdUI, "CD UI", ComponentType::TRANSFORM),
+    SERIALIZED_COMPONENT_REF(m_cdBar, "CD Slider", ComponentType::UISLIDER)
 )
 
 AbilityBase::AbilityBase(GameObject* owner)
@@ -29,10 +31,36 @@ void AbilityBase::updateCooldown()
     }
 
     m_cooldownTimer -= Time::getDeltaTime();
-    if (m_cooldownTimer < 0.0f)
+    if (m_cooldownTimer <= 0.0f)
     {
+		Transform* cdUITransform = m_cdUI.getReferencedComponent();
+        if (cdUITransform)
+        {
+            GameObject* cdUIObject = cdUITransform->getOwner();
+            if (cdUIObject)
+            {
+                GameObjectAPI::setActive(cdUIObject, false);
+            }
+		}
         m_cooldownTimer = 0.0f;
+        return;
     }
+	SliderAPI::setFillAmount(m_cdBar.getReferencedComponent(), (m_cooldownTimer / m_cooldown));
+
+}
+
+void AbilityBase::startCooldown()
+{
+    m_cooldownTimer = m_cooldown;
+	Transform* cdUITransform = m_cdUI.getReferencedComponent();
+    if (cdUITransform)
+    {
+        GameObject* cdUIObject = cdUITransform->getOwner();
+        if (cdUIObject)
+        {
+            GameObjectAPI::setActive(cdUIObject, true);
+        }
+	}
 }
 
 bool AbilityBase::canStartAbility() const
@@ -171,4 +199,24 @@ Vector3 AbilityBase::computeCameraRelativeAimDirection(float deadzoneSq) const
 
     aimDirection.Normalize();
     return aimDirection;
+}
+
+Vector3 AbilityBase::getFallbackFacingDirection() const
+{
+    Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
+    if (ownerTransform == nullptr)
+    {
+        return Vector3::Zero;
+    }
+
+    Vector3 forward = TransformAPI::getForward(ownerTransform);
+    forward.y = 0.0f;
+
+    if (forward.LengthSquared() <= 0.0001f)
+    {
+        return Vector3::Zero;
+    }
+
+    forward.Normalize();
+    return forward;
 }

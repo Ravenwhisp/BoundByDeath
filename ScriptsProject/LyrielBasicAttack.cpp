@@ -88,7 +88,7 @@ void LyrielBasicAttack::tryAttack()
     beginAttackPresentation();
 
     beginAttackWindow(m_attackLockDuration);
-    m_cooldownTimer = m_cooldown;
+    startCooldown();
 
     Debug::log("[LyrielBasicAttack] Shot arrow to target '%s'.", GameObjectAPI::getName(target));
 }
