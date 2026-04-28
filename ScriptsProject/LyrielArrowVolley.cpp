@@ -10,18 +10,15 @@
 
 #include <cmath>
 
-static const ScriptFieldInfo LyrielArrowVolleyFields[] =
-{
-    { "Volley Damage", ScriptFieldType::Float, offsetof(LyrielArrowVolley, m_volleyDamage), { 0.0f, 100.0f, 0.5f } },
-    { "Volley Cooldown", ScriptFieldType::Float, offsetof(LyrielArrowVolley, m_volleyCooldown), { 0.0f, 20.0f, 0.1f } },
-    { "Volley Range", ScriptFieldType::Float, offsetof(LyrielArrowVolley, m_volleyRange), { 0.0f, 50.0f, 0.1f } },
-    { "Cone Angle Degrees", ScriptFieldType::Float, offsetof(LyrielArrowVolley, m_coneAngleDegrees), { 1.0f, 180.0f, 1.0f } },
-    { "Num Visual Arrows", ScriptFieldType::Int, offsetof(LyrielArrowVolley, m_numVisualArrows), { 1.0f, 20.0f, 1.0f } },
-    { "Arrow Speed", ScriptFieldType::Float, offsetof(LyrielArrowVolley, m_arrowSpeed), { 0.0f, 100.0f, 0.5f } },
-    { "Attack Lock Duration", ScriptFieldType::Float, offsetof(LyrielArrowVolley, m_attackLockDuration), { 0.0f, 2.0f, 0.01f } }
-};
-
-IMPLEMENT_SCRIPT_FIELDS(LyrielArrowVolley, LyrielArrowVolleyFields)
+IMPLEMENT_SCRIPT_FIELDS_INHERITED(LyrielArrowVolley, LyrielAbilityBase,
+    SERIALIZED_COMPONENT_REF(m_AbilityUI, "Ability UI", ComponentType::TRANSFORM),
+    SERIALIZED_FLOAT(m_volleyDamage, "Volley Damage", 0.0f, 100.0f, 0.5f),
+    SERIALIZED_FLOAT(m_volleyRange, "Volley Range", 0.0f, 50.0f, 0.1f),
+    SERIALIZED_FLOAT(m_coneAngleDegrees, "Cone Angle Degrees", 1.0f, 180.0f, 1.0f),
+    SERIALIZED_INT(m_numVisualArrows, "Num Visual Arrows"),
+    SERIALIZED_FLOAT(m_arrowSpeed, "Arrow Speed", 0.0f, 100.0f, 0.5f),
+    SERIALIZED_FLOAT(m_attackLockDuration, "Attack Lock Duration", 0.0f, 2.0f, 0.0001f)
+)
 
 LyrielArrowVolley::LyrielArrowVolley(GameObject* owner)
     : LyrielAbilityBase(owner)
@@ -31,7 +28,6 @@ LyrielArrowVolley::LyrielArrowVolley(GameObject* owner)
 void LyrielArrowVolley::Start()
 {
     LyrielAbilityBase::Start();
-    m_cooldown = m_volleyCooldown;
 }
 
 void LyrielArrowVolley::Update()
@@ -117,6 +113,14 @@ void LyrielArrowVolley::beginAim()
     {
         m_currentAimDirection = aimDirection;
     }
+    else
+    {
+		m_currentAimDirection = getFallbackFacingDirection();
+    }
+    if (m_AbilityUI.getReferencedComponent())
+    {
+        m_AbilityUI.getReferencedComponent()->getOwner()->SetActive(true);
+	}
 }
 
 void LyrielArrowVolley::updateAim()
@@ -126,11 +130,25 @@ void LyrielArrowVolley::updateAim()
     {
         m_currentAimDirection = aimDirection;
     }
+    if (m_AbilityUI.getReferencedComponent())
+    {
+        const Vector3 origin = TransformAPI::getGlobalPosition(GameObjectAPI::getTransform(getOwner()));
+        const float yawRad = std::atan2(m_currentAimDirection.x, m_currentAimDirection.z);
+        const float targetYawDeg = yawRad * (180.0f / 3.14159265f);
+
+        TransformAPI::setPosition(m_AbilityUI.getReferencedComponent(), origin);
+        TransformAPI::setRotationEuler(m_AbilityUI.getReferencedComponent(), Vector3(0.0f, targetYawDeg, 0.0f));
+    }
 }
 
 void LyrielArrowVolley::releaseAimAndCast()
 {
     m_isAiming = false;
+
+    if (m_AbilityUI.getReferencedComponent())
+    {
+        m_AbilityUI.getReferencedComponent()->getOwner()->SetActive(false);
+	}
 
     if (!canCast())
     {
@@ -170,7 +188,7 @@ void LyrielArrowVolley::releaseAimAndCast()
     beginAttackPresentation();
 
     beginAttackWindow(m_attackLockDuration);
-    m_cooldownTimer = m_cooldown;
+    startCooldown();
 
     Debug::log("[LyrielArrowVolley] Cast Arrow Volley. Targets hit: %d", static_cast<int>(targets.size()));
 }

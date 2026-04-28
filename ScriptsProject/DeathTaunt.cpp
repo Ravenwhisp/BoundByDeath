@@ -6,32 +6,12 @@
 
 #include <cmath>
 
-static Vector3 getHorizontalForward(const Transform* transform)
-{
-    Vector3 forward = TransformAPI::getForward(transform);
-    forward.y = 0.0f;
-
-    if (forward.LengthSquared() <= 0.0001f)
-    {
-        const Vector3 euler = TransformAPI::getEulerDegrees(transform);
-        const float radians = euler.y * (3.14159265f / 180.0f);
-        forward = Vector3(std::sin(radians), 0.0f, std::cos(radians));
-    }
-
-    forward.Normalize();
-    return forward;
-}
-
-static const ScriptFieldInfo DeathTauntFields[] =
-{
-    { "Ability Cooldown", ScriptFieldType::Float, offsetof(DeathTaunt, m_TauntCooldownSeconds), { 1.0f, 10.0f, 0.05f } },
-    { "Ability Duration", ScriptFieldType::Float, offsetof(DeathTaunt, m_TauntDurationSeconds), { 1.0f, 10.0f, 0.05f } },
-    { "Cone Range", ScriptFieldType::Float, offsetof(DeathTaunt, m_TauntRange), { 1.0f, 10.0f, 0.1f } },
-    { "Cone Angle", ScriptFieldType::Float, offsetof(DeathTaunt, m_TauntHalfAngleDegrees), { 1.0f, 180.0f, 1.0f } }
-    
-};
-
-IMPLEMENT_SCRIPT_FIELDS(DeathTaunt, DeathTauntFields)
+IMPLEMENT_SCRIPT_FIELDS_INHERITED(DeathTaunt, DeathAbilityBase,
+    SERIALIZED_COMPONENT_REF(m_AbilityUI, "Ability UI", ComponentType::TRANSFORM),
+    SERIALIZED_FLOAT(m_TauntDurationSeconds, "Ability Duration", 1.0f, 10.0f, 0.05f),
+    SERIALIZED_FLOAT(m_TauntRange, "Cone Range", 1.0f, 10.0f, 0.1f),
+    SERIALIZED_FLOAT(m_TauntHalfAngleDegrees, "Cone Angle", 1.0f, 180.0f, 1.0f)
+)
 
 DeathTaunt::DeathTaunt(GameObject* owner)
     : DeathAbilityBase(owner)
@@ -41,8 +21,6 @@ DeathTaunt::DeathTaunt(GameObject* owner)
 void DeathTaunt::Start()
 {
     DeathAbilityBase::Start();
-
-    m_cooldown = (m_TauntCooldownSeconds < 0.0f ? 0.0f : m_TauntCooldownSeconds);
 
     if (m_character != nullptr)
     {
@@ -117,7 +95,7 @@ void DeathTaunt::drawGizmo()
     Vector3 ownerForward = m_currentAimDirection;
     if (ownerForward.LengthSquared() <= 0.0001f)
     {
-        ownerForward = getHorizontalForward(ownerTransform);
+        ownerForward = getFallbackFacingDirection();
     }
 
     if (ownerForward.LengthSquared() <= 0.0001f)
@@ -168,8 +146,16 @@ void DeathTaunt::beginAim()
     if (isAimStickValid(aimDirection))
     {
         m_currentAimDirection = aimDirection;
-        faceDirection(m_currentAimDirection);
     }
+    else
+    {
+		m_currentAimDirection = getFallbackFacingDirection();
+    }
+    faceDirection(m_currentAimDirection);
+    if (m_AbilityUI.getReferencedComponent())
+    {
+        m_AbilityUI.getReferencedComponent()->getOwner()->SetActive(true);
+	}
 }
 
 void DeathTaunt::updateAim()
@@ -180,12 +166,26 @@ void DeathTaunt::updateAim()
         m_currentAimDirection = aimDirection;
         faceDirection(m_currentAimDirection);
     }
+    if (m_AbilityUI.getReferencedComponent())
+    {
+        const Vector3 origin = TransformAPI::getGlobalPosition(GameObjectAPI::getTransform(getOwner()));
+        const float yawRad = std::atan2(m_currentAimDirection.x, m_currentAimDirection.z);
+        const float targetYawDeg = yawRad * (180.0f / 3.14159265f);
+
+        TransformAPI::setPosition(m_AbilityUI.getReferencedComponent(), origin);
+        TransformAPI::setRotationEuler(m_AbilityUI.getReferencedComponent(), Vector3(0.0f, targetYawDeg, 0.0f));
+    }
 }
 
 void DeathTaunt::releaseAimAndCast()
 {
     Debug::log("[DeathTaunt] L2 released — casting.");
     m_isAiming = false;
+
+    if (m_AbilityUI.getReferencedComponent())
+    {
+        m_AbilityUI.getReferencedComponent()->getOwner()->SetActive(false);
+    }
 
     Vector3 finalDirection = m_currentAimDirection;
     if (!isAimStickValid(finalDirection))
@@ -201,7 +201,7 @@ void DeathTaunt::releaseAimAndCast()
     }
 
     m_currentAimDirection = Vector3::Zero;
-    m_cooldownTimer = m_cooldown;
+    startCooldown();
 }
 
 void DeathTaunt::applyTauntToEnemiesInCone(const Vector3& ownerForward) const
@@ -244,17 +244,6 @@ void DeathTaunt::applyTauntToEnemiesInCone(const Vector3& ownerForward) const
 Vector3 DeathTaunt::computeAimDirection() const
 {
     return computeCameraRelativeAimDirection();
-}
-
-Vector3 DeathTaunt::getFallbackFacingDirection() const
-{
-    Transform* ownerTransform = GameObjectAPI::getTransform(m_owner);
-    if (ownerTransform == nullptr)
-    {
-        return Vector3::Zero;
-    }
-
-    return getHorizontalForward(ownerTransform);
 }
 
 void DeathTaunt::faceDirection(const Vector3& direction)

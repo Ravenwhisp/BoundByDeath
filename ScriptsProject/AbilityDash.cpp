@@ -7,6 +7,11 @@
 
 #define PI 3.1415926535897931f
 
+IMPLEMENT_SCRIPT_FIELDS_INHERITED(AbilityDash, AbilityBase,
+    SERIALIZED_FLOAT(m_dashDuration, "Dash Duration", 0.0f, 1.0f, 0.01f),
+    SERIALIZED_FLOAT(m_dashDistance, "Dash Distance", 0.0f, 10.0f, 0.1f)
+)
+
 AbilityDash::AbilityDash(GameObject* owner)
     : AbilityBase(owner)
 {
@@ -84,7 +89,7 @@ void AbilityDash::tryStartDash()
     m_isDashing = true;
 
     setAbilityLocked(true);
-    m_cooldownTimer = m_cooldown;
+    startCooldown();
 
     Vector3 moveDirection = m_playerController->getMoveDirection();
 

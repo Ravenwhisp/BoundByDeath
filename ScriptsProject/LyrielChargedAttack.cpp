@@ -11,20 +11,19 @@
 
 #include <cmath>
 
-static const ScriptFieldInfo LyrielChargedAttackFields[] =
-{
-    { "Min Damage", ScriptFieldType::Float, offsetof(LyrielChargedAttack, m_minDamage), { 0.0f, 100.0f, 0.5f } },
-    { "Max Damage", ScriptFieldType::Float, offsetof(LyrielChargedAttack, m_maxDamage), { 0.0f, 200.0f, 0.5f } },
-    { "Max Charge Time", ScriptFieldType::Float, offsetof(LyrielChargedAttack, m_maxChargeTime), { 0.1f, 5.0f, 0.05f } },
-    { "Min Attack Range", ScriptFieldType::Float, offsetof(LyrielChargedAttack, m_minAttackRange), { 0.0f, 50.0f, 0.1f } },
-    { "Max Attack Range", ScriptFieldType::Float, offsetof(LyrielChargedAttack, m_maxAttackRange), { 0.0f, 50.0f, 0.1f } },
-    { "Line Half Width", ScriptFieldType::Float, offsetof(LyrielChargedAttack, m_lineHalfWidth), { 0.1f, 10.0f, 0.05f } },
-    { "Attack Cooldown", ScriptFieldType::Float, offsetof(LyrielChargedAttack, m_attackCooldown), { 0.0f, 10.0f, 0.05f } },
-    { "Attack Lock Duration", ScriptFieldType::Float, offsetof(LyrielChargedAttack, m_attackLockDuration), { 0.0f, 2.0f, 0.01f } },
-    { "Arrow Speed", ScriptFieldType::Float, offsetof(LyrielChargedAttack, m_arrowSpeed), { 0.0f, 100.0f, 0.5f } }
-};
+static const float PI = 3.1415926535897931f;
 
-IMPLEMENT_SCRIPT_FIELDS(LyrielChargedAttack, LyrielChargedAttackFields)
+IMPLEMENT_SCRIPT_FIELDS_INHERITED(LyrielChargedAttack, LyrielAbilityBase,
+    SERIALIZED_COMPONENT_REF(m_ChargedAttackUI, "Charged Attack UI", ComponentType::TRANSFORM),
+    SERIALIZED_FLOAT(m_minDamage, "Min Damage", 0.0f, 100.0f, 0.5f),
+    SERIALIZED_FLOAT(m_maxDamage, "Max Damage", 0.0f, 200.0f, 0.5f),
+    SERIALIZED_FLOAT(m_maxChargeTime, "Max Charge Time", 0.1f, 5.0f, 0.05f),
+    SERIALIZED_FLOAT(m_minAttackRange, "Min Attack Range", 0.0f, 50.0f, 0.1f),
+    SERIALIZED_FLOAT(m_maxAttackRange, "Max Attack Range", 0.0f, 50.0f, 0.1f),
+    SERIALIZED_FLOAT(m_lineHalfWidth, "Line Half Width", 0.1f, 10.0f, 0.05f),
+    SERIALIZED_FLOAT(m_attackLockDuration, "Attack Lock Duration", 0.0f, 2.0f, 0.01f),
+    SERIALIZED_FLOAT(m_arrowSpeed, "Arrow Speed", 0.0f, 100.0f, 0.5f)
+)
 
 LyrielChargedAttack::LyrielChargedAttack(GameObject* owner)
     : LyrielAbilityBase(owner)
@@ -34,7 +33,6 @@ LyrielChargedAttack::LyrielChargedAttack(GameObject* owner)
 void LyrielChargedAttack::Start()
 {
     LyrielAbilityBase::Start();
-    m_cooldown = m_attackCooldown;
 }
 
 void LyrielChargedAttack::Update()
@@ -121,6 +119,14 @@ void LyrielChargedAttack::beginCharge()
     {
         m_currentAimDirection = aimDirection;
     }
+    else
+    {
+        m_currentAimDirection = getFallbackFacingDirection();
+    }
+    if (m_ChargedAttackUI.getReferencedComponent())
+    {
+        m_ChargedAttackUI.getReferencedComponent()->getOwner()->SetActive(true);
+    }
 }
 
 void LyrielChargedAttack::updateCharge()
@@ -136,11 +142,30 @@ void LyrielChargedAttack::updateCharge()
     {
         m_currentAimDirection = aimDirection;
     }
+
+    if (m_ChargedAttackUI.getReferencedComponent())
+    {
+		const Vector3 origin = TransformAPI::getGlobalPosition(GameObjectAPI::getTransform(getOwner()));
+
+        const float yawRad = std::atan2(m_currentAimDirection.x, m_currentAimDirection.z);
+        const float targetYawDeg = yawRad * (180.0f / PI);
+
+        const float range = m_chargeTimer / m_maxChargeTime * 0.45f + 0.65f;
+
+        TransformAPI::setPosition(m_ChargedAttackUI.getReferencedComponent(), origin);
+        TransformAPI::setRotationEuler(m_ChargedAttackUI.getReferencedComponent(), Vector3(0.0f, targetYawDeg, 0.0f));
+        TransformAPI::setScale(m_ChargedAttackUI.getReferencedComponent(), Vector3(1.0f, 1.0f, range));
+    }
 }
 
 void LyrielChargedAttack::releaseChargeAndShoot()
 {
     m_isCharging = false;
+
+    if (m_ChargedAttackUI.getReferencedComponent())
+    {
+        m_ChargedAttackUI.getReferencedComponent()->getOwner()->SetActive(false);
+    }
 
     if (!canShoot())
     {
@@ -185,7 +210,7 @@ void LyrielChargedAttack::releaseChargeAndShoot()
     beginAttackPresentation();
 
     beginAttackWindow(m_attackLockDuration);
-    m_cooldownTimer = m_cooldown;
+    startCooldown();
     m_chargeTimer = 0.0f;
 
     Debug::log("[LyrielChargedAttack] Fired charged shot. Targets hit: %d Damage: %.2f",

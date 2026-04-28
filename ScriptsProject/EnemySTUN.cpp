@@ -2,13 +2,10 @@
 #include "EnemySTUN.h"
 #include "EnemyController.h"
 
-static const ScriptFieldInfo STUNFields[] =
-{
-	{ "Stun Duration", ScriptFieldType::Float, offsetof(EnemySTUN, m_stunDuration), { 0.0f, 10.0f, 0.1f } },
-	{ "Debug Enabled", ScriptFieldType::Bool, offsetof(EnemySTUN, m_debugEnabled) }
-};
-
-IMPLEMENT_SCRIPT_FIELDS(EnemySTUN, STUNFields)
+IMPLEMENT_SCRIPT_FIELDS(EnemySTUN,
+	SERIALIZED_FLOAT(m_stunDuration, "Stun Duration", 0.0f, 10.0f, 0.1f),
+	SERIALIZED_BOOL(m_debugEnabled, "Debug Enabled")
+)
 
 EnemySTUN::EnemySTUN(GameObject* owner)
 	: StateMachineScript(owner)

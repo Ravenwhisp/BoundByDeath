@@ -5,16 +5,10 @@
 #include "EnemyDamageable.h"
 #include "EnemyShadowMark.h"
 
-static const ScriptFieldInfo LyrielDashFields[] =
-{
-    { "Dash Duration",        ScriptFieldType::Float, offsetof(DeathDash, m_dashDurationLyriel), { 0.0f, 1.0f,  0.01f } },
-    { "Dash Distance",        ScriptFieldType::Float, offsetof(DeathDash, m_dashDistanceLyriel), { 0.0f, 10.0f, 0.1f  } },
-    { "Dash Cooldown",        ScriptFieldType::Float, offsetof(DeathDash, m_dashCooldown),        { 0.0f, 5.0f,  0.01f } },
-    { "Dash Hit Width",       ScriptFieldType::Float, offsetof(DeathDash, m_dashHitWidth),        { 0.1f, 5.0f,  0.05f } },
-    { "Dash Damage",          ScriptFieldType::Float, offsetof(DeathDash, m_dashDamage),          { 0.0f, 100.0f, 1.0f } },
-};
-
-IMPLEMENT_SCRIPT_FIELDS(DeathDash, LyrielDashFields)
+IMPLEMENT_SCRIPT_FIELDS_INHERITED(DeathDash, AbilityDash,
+    SERIALIZED_FLOAT(m_dashHitWidth, "Dash Hit Width", 0.1f, 5.0f, 0.05f),
+    SERIALIZED_FLOAT(m_dashDamage, "Dash Damage", 0.0f, 100.0f, 1.0f)
+)
 
 DeathDash::DeathDash(GameObject* owner): AbilityDash(owner)
 {
@@ -22,10 +16,6 @@ DeathDash::DeathDash(GameObject* owner): AbilityDash(owner)
 
 void DeathDash::Start()
 {
-    m_dashDuration = m_dashDurationLyriel;
-    m_dashDistance = m_dashDistanceLyriel;
-    m_cooldown = m_dashCooldown;
-
     AbilityDash::Start();
 }
 

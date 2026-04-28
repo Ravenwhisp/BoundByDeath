@@ -16,6 +16,8 @@ public:
 
     ScriptFieldList getExposedFields() const override;
 
+    ScriptComponentRef<Transform> m_AbilityUI;
+
 protected:
     void onAttackWindowUpdate() override;
     void onAttackWindowFinished() override;
@@ -44,7 +46,6 @@ private:
 
 public:
     float m_volleyDamage = 20.0f;
-    float m_volleyCooldown = 5.0f;
     float m_volleyRange = 8.0f;
     float m_coneAngleDegrees = 50.0f;
 

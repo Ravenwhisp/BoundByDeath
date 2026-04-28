@@ -15,6 +15,9 @@ public:
     void Update() override;
 
     ScriptFieldList getExposedFields() const override;
+
+    ScriptComponentRef<Transform> m_AbilityUI;
+
     void drawGizmo() override;
     void onFieldEdited(const ScriptFieldInfo& field) override;
 
@@ -27,7 +30,6 @@ private:
     bool isEnemyInsideTauntCone(GameObject* enemy, const Vector3& ownerPosition, const Vector3& ownerForward) const;
 
     Vector3 computeAimDirection() const;
-    Vector3 getFallbackFacingDirection() const;
     void faceDirection(const Vector3& direction);
     bool isAimStickValid(const Vector3& direction) const;
 
@@ -38,7 +40,6 @@ private:
     Vector3 m_currentAimDirection = Vector3::Zero;
 
 public:
-    float m_TauntCooldownSeconds = 8.0f;
     float m_TauntDurationSeconds = 3.0f;
     float m_TauntRange = 2.5f;
     float m_TauntHalfAngleDegrees = 35.0f;

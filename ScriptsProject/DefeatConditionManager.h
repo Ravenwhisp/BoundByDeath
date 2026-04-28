@@ -31,4 +31,8 @@ private:
     PlayerState* m_player2State = nullptr;
 
     bool m_hasTriggeredDefeat = false;
+
+    bool m_defeatCountdownStarted = false;
+    float m_defeatTimer = 0.0f;
+    float m_defeatDelay = 3.0f;
 };

@@ -6,16 +6,14 @@
 
 #include <cmath>
 
-static const ScriptFieldInfo DeathChargedAttackFields[] =
-{
-    { "Min Charge Time",         ScriptFieldType::Float, offsetof(DeathChargedAttack, m_minChargeTime),        { 0.0f,  3.0f, 0.05f } },
-    { "Attack Lock Duration",    ScriptFieldType::Float, offsetof(DeathChargedAttack, m_attackLockDuration),   { 0.05f, 2.0f, 0.05f } },
-    { "Final Hit Lock Duration", ScriptFieldType::Float, offsetof(DeathChargedAttack, m_finalHitLockDuration), { 0.05f, 3.0f, 0.05f } },
-    { "Charged Arc Range",       ScriptFieldType::Float, offsetof(DeathChargedAttack, m_chargedArcRange),      { 0.5f, 10.0f, 0.1f  } },
-    { "Charged Arc Angle",       ScriptFieldType::Float, offsetof(DeathChargedAttack, m_chargedArcAngle),      { 10.0f, 360.0f, 5.0f } },
-};
-
-IMPLEMENT_SCRIPT_FIELDS(DeathChargedAttack, DeathChargedAttackFields)
+IMPLEMENT_SCRIPT_FIELDS_INHERITED(DeathChargedAttack, DeathAbilityBase,
+    SERIALIZED_COMPONENT_REF(m_ChargedAttackUI, "Charged Attack UI", ComponentType::TRANSFORM),
+    SERIALIZED_FLOAT(m_minChargeTime, "Min Charge Time", 0.0f, 3.0f, 0.05f),
+    SERIALIZED_FLOAT(m_attackLockDuration, "Attack Lock Duration", 0.05f, 2.0f, 0.05f),
+    SERIALIZED_FLOAT(m_finalHitLockDuration, "Final Hit Lock Duration", 0.05f, 3.0f, 0.05f),
+    SERIALIZED_FLOAT(m_chargedArcRange, "Charged Arc Range", 0.5f, 10.0f, 0.1f),
+    SERIALIZED_FLOAT(m_chargedArcAngle, "Charged Arc Angle", 10.0f, 360.0f, 5.0f)
+)
 
 DeathChargedAttack::DeathChargedAttack(GameObject* owner)
     : DeathAbilityBase(owner)
@@ -51,6 +49,17 @@ void DeathChargedAttack::Update()
         m_chargeTime += Time::getDeltaTime();
         updateAimDirection();
 
+        if (m_ChargedAttackUI.getReferencedComponent())
+        {
+			m_ChargedAttackUI.getReferencedComponent()->getOwner()->SetActive(true);
+
+			const float yawRad = std::atan2(m_aimDirection.x, m_aimDirection.z);
+			const float targetYawDeg = yawRad * (180.0f / 3.14159265f);
+
+			TransformAPI::setPosition(m_ChargedAttackUI.getReferencedComponent(), TransformAPI::getGlobalPosition(GameObjectAPI::getTransform(getOwner())));
+			TransformAPI::setRotationEuler(m_ChargedAttackUI.getReferencedComponent(), Vector3(0.0f, targetYawDeg, 0.0f));
+        }
+
         const bool maxReached = (m_chargeTime >= m_deathChar->m_maxChargeTime);
         const bool released   = Input::isRightTriggerReleased(getPlayerIndex());
 
@@ -58,6 +67,10 @@ void DeathChargedAttack::Update()
             fireAttack();
 
         return;
+    }
+    else if (m_ChargedAttackUI.getReferencedComponent())
+    {
+        m_ChargedAttackUI.getReferencedComponent()->getOwner()->SetActive(false);
     }
 
     // Wait for R2 press
@@ -158,6 +171,10 @@ void DeathChargedAttack::updateAimDirection()
     if (aimDirection.LengthSquared() > 0.0001f)
     {
         m_aimDirection = aimDirection;
+    }
+    else
+    {
+        m_aimDirection = getFallbackFacingDirection();
     }
 }
 
