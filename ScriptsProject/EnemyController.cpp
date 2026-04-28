@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "EnemyController.h"
 #include "EnemyDetectionAggro.h"
+#include "Damageable.h"
 #include <cmath>
 
 static const ScriptFieldInfo EnemyControllerFields[] =
@@ -9,8 +10,29 @@ static const ScriptFieldInfo EnemyControllerFields[] =
 	{ "Move Speed", ScriptFieldType::Float, offsetof(EnemyController, m_moveSpeed), { 0.0f, 50.0f, 0.1f } },
 	{ "Turn Speed", ScriptFieldType::Float, offsetof(EnemyController, m_turnSpeed), { 0.0f, 5.0f, 0.1f } },
 	{ "Interval", ScriptFieldType::Float, offsetof(EnemyController, m_intervalRepath), { 0.0f, 50.0f, 0.1f } },
+	{ "Charge Cooldown", ScriptFieldType::Float, offsetof(EnemyController, m_chargeCooldown), { 0.0f, 20.0f, 0.1f } },
 	{ "Debug Enabled", ScriptFieldType::Bool, offsetof(EnemyController, m_debugEnabled) }
 };
+static Damageable* findDamageableOnTarget(GameObject* gameObject)
+{
+	if (!gameObject)
+	{
+		return nullptr;
+	}
+
+	Script* script = GameObjectAPI::getScript(gameObject, "PlayerDamageable");
+	Damageable* damageable = dynamic_cast<Damageable*>(script);
+
+	if (damageable)
+	{
+		return damageable;
+	}
+
+	script = GameObjectAPI::getScript(gameObject, "Damageable");
+	damageable = dynamic_cast<Damageable*>(script);
+
+	return damageable;
+}
 
 IMPLEMENT_SCRIPT_FIELDS(EnemyController, EnemyControllerFields)
 
@@ -52,24 +74,47 @@ void EnemyController::drawGizmo()
 
 bool EnemyController::hasValidTarget() const
 {
-	if (m_enemyDetectionAggro->getCurrentTarget())
+	if (!m_enemyDetectionAggro)
 	{
-		return true;
+		return false;
 	}
 
-	return false;
-}
+	Transform* targetTransform = m_enemyDetectionAggro->getCurrentTarget();
+	if (!targetTransform)
+	{
+		return false;
+	}
 
+	GameObject* targetObject = ComponentAPI::getOwner(targetTransform);
+	if (!targetObject)
+	{
+		return false;
+	}
+
+	Damageable* damageable = findDamageableOnTarget(targetObject);
+
+	if (damageable && damageable->isDead())
+	{
+		return false;
+	}
+
+	return true;
+}
 void EnemyController::updateCurrentTarget()
 {
 	if (!m_enemyDetectionAggro)
 	{
-		m_currentTarget = nullptr;
+		Script* script = GameObjectAPI::getScript(m_owner, "EnemyDetectionAggro");
+		m_enemyDetectionAggro = dynamic_cast<EnemyDetectionAggro*>(script);
 	}
-	else
+
+	if (!m_enemyDetectionAggro)
 	{
-		m_currentTarget = m_enemyDetectionAggro->getCurrentTarget();
+		m_currentTarget = nullptr;
+		return;
 	}
+
+	m_currentTarget = m_enemyDetectionAggro->getCurrentTarget();
 }
 
 bool EnemyController::isTargetInCombatRange() const
@@ -79,14 +124,13 @@ bool EnemyController::isTargetInCombatRange() const
 		return false;
 	}
 
-	Vector3 distance = m_owner->GetTransform()->getPosition() - m_currentTarget->getPosition();
+	Vector3 ownerPosition = m_owner->GetTransform()->getPosition();
+	Vector3 targetPosition = m_currentTarget->getPosition();
 
-	if (distance.Length() <= m_combatRange)
-	{
-		return true;
-	}
+	Vector3 difference = ownerPosition - targetPosition;
+	difference.y = 0.0f;
 
-	return false;
+	return difference.Length() <= m_combatRange;
 }
 
 void EnemyController::clearPath()
@@ -272,6 +316,28 @@ void EnemyController::addToRepathTimer(float dt)
 bool EnemyController::shouldRepath() const
 {
 	return m_repathTimer >= m_intervalRepath;
+}
+void EnemyController::tickChargeCooldown(float dt)
+{
+	if (m_chargeCooldownTimer > 0.0f)
+	{
+		m_chargeCooldownTimer -= dt;
+
+		if (m_chargeCooldownTimer < 0.0f)
+		{
+			m_chargeCooldownTimer = 0.0f;
+		}
+	}
+}
+
+bool EnemyController::isChargeReady() const
+{
+	return m_chargeCooldownTimer <= 0.0f;
+}
+
+void EnemyController::consumeChargeCooldown()
+{
+	m_chargeCooldownTimer = m_chargeCooldown;
 }
 
 IMPLEMENT_SCRIPT(EnemyController)

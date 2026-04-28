@@ -5,8 +5,7 @@
 #include "CharacterBase.h"
 #include "ArrowPool.h"
 #include "LyrielArrowProjectile.h"
-#include "Damageable.h"
-#include "EnemyShadowMark.h"
+#include "EnemyDamageable.h"
 #include "PlayerState.h"
 
 #include <cmath>
@@ -178,8 +177,7 @@ void LyrielArrowVolley::releaseAimAndCast()
 
 Vector3 LyrielArrowVolley::computeAimDirection() const
 {
-    const Vector2 lookAxis = Input::getLookAxis(getPlayerIndex());
-    return Vector3(lookAxis.x, 0.0f, lookAxis.y);
+    return computeCameraRelativeAimDirection();
 }
 
 bool LyrielArrowVolley::isAimStickValid(const Vector3& direction) const
@@ -255,20 +253,12 @@ void LyrielArrowVolley::applyVolleyDamage(const std::vector<GameObject*>& target
             continue;
         }
 
-        Script* script = GameObjectAPI::getScript(target, "Damageable");
-        Damageable* damageable = dynamic_cast<Damageable*>(script);
+        Script* script = GameObjectAPI::getScript(target, "EnemyDamageable");
+        EnemyDamageable* damageable = static_cast<EnemyDamageable*>(script);
 
         if (damageable != nullptr)
         {
-            damageable->takeDamage(m_volleyDamage);
-
-            Script* markScript = GameObjectAPI::getScript(target, "EnemyShadowMark");
-            if (markScript != nullptr)
-            {
-                EnemyShadowMark* mark = static_cast<EnemyShadowMark*>(markScript);
-                if (mark->isExploitable())
-                    mark->exploit();
-            }
+            damageable->takeDamageEnemy(m_volleyDamage, GameObjectAPI::getTransform(getOwner()));
         }
     }
 }

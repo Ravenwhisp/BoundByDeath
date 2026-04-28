@@ -9,6 +9,7 @@ AbilityBase::AbilityBase(GameObject* owner)
 
 void AbilityBase::Start()
 {
+    m_character = findCharacterScript(getOwner());
 }
 
 void AbilityBase::Update()
@@ -76,4 +77,94 @@ int AbilityBase::getPlayerIndex() const
     }
 
     return m_character->getPlayerIndex();
+}
+
+CharacterBase* AbilityBase::findCharacterScript(GameObject* owner) const
+{
+    if (owner == nullptr)
+    {
+        return nullptr;
+    }
+
+    Script* script = GameObjectAPI::getScript(owner, "LyrielCharacter");
+    if (script != nullptr)
+    {
+        return static_cast<CharacterBase*>(script);
+    }
+
+    script = GameObjectAPI::getScript(owner, "DeathCharacter");
+    if (script != nullptr)
+    {
+        return static_cast<CharacterBase*>(script);
+    }
+
+    return nullptr;
+}
+
+Vector3 AbilityBase::computeCameraRelativeAimDirection(float deadzoneSq) const
+{
+    const Vector2 lookAxis = Input::getLookAxis(getPlayerIndex());
+    const float magSq = lookAxis.x * lookAxis.x + lookAxis.y * lookAxis.y;
+
+    if (magSq < deadzoneSq)
+    {
+        return Vector3::Zero;
+    }
+
+    GameObject* cameraObject = SceneAPI::getDefaultCameraGameObject();
+    if (cameraObject == nullptr)
+    {
+        Vector3 fallbackDirection(lookAxis.x, 0.0f, lookAxis.y);
+
+        if (fallbackDirection.LengthSquared() > 0.0001f)
+        {
+            fallbackDirection.Normalize();
+        }
+
+        return fallbackDirection;
+    }
+
+    Transform* cameraTransform = GameObjectAPI::getTransform(cameraObject);
+    if (cameraTransform == nullptr)
+    {
+        Vector3 fallbackDirection(lookAxis.x, 0.0f, lookAxis.y);
+
+        if (fallbackDirection.LengthSquared() > 0.0001f)
+        {
+            fallbackDirection.Normalize();
+        }
+
+        return fallbackDirection;
+    }
+
+    Vector3 cameraForward = TransformAPI::getForward(cameraTransform);
+    Vector3 cameraRight = TransformAPI::getRight(cameraTransform);
+
+    cameraForward.y = 0.0f;
+    cameraRight.y = 0.0f;
+
+    if (cameraForward.LengthSquared() <= 0.0001f || cameraRight.LengthSquared() <= 0.0001f)
+    {
+        Vector3 fallbackDirection(lookAxis.x, 0.0f, lookAxis.y);
+
+        if (fallbackDirection.LengthSquared() > 0.0001f)
+        {
+            fallbackDirection.Normalize();
+        }
+
+        return fallbackDirection;
+    }
+
+    cameraForward.Normalize();
+    cameraRight.Normalize();
+
+    Vector3 aimDirection = cameraRight * lookAxis.x + cameraForward * lookAxis.y;
+
+    if (aimDirection.LengthSquared() <= 0.0001f)
+    {
+        return Vector3::Zero;
+    }
+
+    aimDirection.Normalize();
+    return aimDirection;
 }

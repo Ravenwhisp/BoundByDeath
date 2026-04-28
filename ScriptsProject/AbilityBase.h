@@ -24,6 +24,10 @@ protected:
     void setAbilityLocked(bool locked);
     int getPlayerIndex() const;
 
+    CharacterBase* findCharacterScript(GameObject* owner) const;
+
+    Vector3 computeCameraRelativeAimDirection(float deadzoneSq = 0.0001f) const;
+
 protected:
     CharacterBase* m_character = nullptr;
 

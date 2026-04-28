@@ -171,6 +171,8 @@
     <ClInclude Include="DeathTaunt.h" />
     <ClInclude Include="DebugDamageTrigger.h" />
     <ClInclude Include="DebugDrawTest.h" />
+    <ClInclude Include="EnemyATTACK.h" />
+    <ClInclude Include="EnemyCHARGE.h" />
     <ClInclude Include="EnemyCHASE.h" />
     <ClInclude Include="EnemyDamageable.h" />
     <ClInclude Include="EnemyShadowMark.h" />
@@ -179,14 +181,19 @@
     <ClInclude Include="EnemyDetectionAggro.h" />
     <ClInclude Include="EnemyController.h" />
     <ClInclude Include="EnemyIDLE.h" />
+    <ClInclude Include="EnemyRECOVER.h" />
+    <ClInclude Include="EnemySTUN.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="DefeatConditionManager.h" />
+    <ClInclude Include="LevelCheats.h" />
     <ClInclude Include="LyrielAbilityBase.h" />
     <ClInclude Include="LyrielArrowProjectile.h" />
     <ClInclude Include="LyrielArrowVolley.h" />
     <ClInclude Include="LyrielBasicAttack.h" />
     <ClInclude Include="LyrielCharacter.h" />
     <ClInclude Include="LyrielChargedAttack.h" />
+    <ClInclude Include="AbilityDash.h" />
+    <ClInclude Include="LyrielDash.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="SpikeTrap.h" />
     <ClInclude Include="PlayerAnimationController.h" />
@@ -198,6 +205,7 @@
     <ClInclude Include="PlayerTargetController.h" />
     <ClInclude Include="TargetIndicatorUI.h" />
     <ClInclude Include="UIController.h" />
+    <ClInclude Include="UIPause.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Engine\Assets\Scripts\CameraFollow.cpp" />
@@ -220,6 +228,8 @@
     <ClCompile Include="DebugDamageTrigger.cpp" />
     <ClCompile Include="DebugDrawTest.cpp" />
     <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="EnemyATTACK.cpp" />
+    <ClCompile Include="EnemyCHARGE.cpp" />
     <ClCompile Include="EnemyCHASE.cpp" />
     <ClCompile Include="EnemyDamageable.cpp" />
     <ClCompile Include="EnemyShadowMark.cpp" />
@@ -229,16 +239,21 @@
     <ClCompile Include="DefeatConditionManager.cpp" />
     <ClCompile Include="EnemyController.cpp" />
     <ClCompile Include="EnemyIDLE.cpp" />
+    <ClCompile Include="EnemyRECOVER.cpp" />
+    <ClCompile Include="EnemySTUN.cpp" />
     <ClCompile Include="EngineDependencies\SimpleMath.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="LevelCheats.cpp" />
     <ClCompile Include="LyrielAbilityBase.cpp" />
     <ClCompile Include="LyrielArrowProjectile.cpp" />
     <ClCompile Include="LyrielArrowVolley.cpp" />
     <ClCompile Include="LyrielBasicAttack.cpp" />
     <ClCompile Include="LyrielCharacter.cpp" />
     <ClCompile Include="LyrielChargedAttack.cpp" />
+    <ClCompile Include="AbilityDash.cpp" />
+    <ClCompile Include="LyrielDash.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -255,6 +270,7 @@
     <ClCompile Include="PlayerTargetController.cpp" />
     <ClCompile Include="TargetIndicatorUI.cpp" />
     <ClCompile Include="UIController.cpp" />
+    <ClCompile Include="UIPause.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
