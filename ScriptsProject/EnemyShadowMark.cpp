@@ -4,12 +4,9 @@
 
 #include <cmath>
 
-static const ScriptFieldInfo EnemyShadowMarkFields[] =
-{
-    { "Mark Duration", ScriptFieldType::Float, offsetof(EnemyShadowMark, m_markDuration), { 0.5f, 10.0f, 0.1f } },
-};
-
-IMPLEMENT_SCRIPT_FIELDS(EnemyShadowMark, EnemyShadowMarkFields)
+IMPLEMENT_SCRIPT_FIELDS(EnemyShadowMark, 
+    SERIALIZED_FLOAT(m_markDuration, "Mark Duration", 0.5f, 10.0f, 0.1f)
+)
 
 EnemyShadowMark::EnemyShadowMark(GameObject* owner)
     : Script(owner)
