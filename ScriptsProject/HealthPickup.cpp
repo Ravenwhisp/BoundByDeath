@@ -9,7 +9,7 @@ IMPLEMENT_SCRIPT_FIELDS(HealthPickup,
     SERIALIZED_FLOAT(m_pickupRadius, "Pickup Radius", 0.0f,  10.0f, 0.1f),
     SERIALIZED_FLOAT(m_idleSpeed, "Idle Speed", 0.0f, 10.0f, 0.05f),
     SERIALIZED_FLOAT(m_horizontalAmplitude, "Horizontal Amplitude", 0.0f, 3.0f, 0.05f),
-    SERIALIZED_FLOAT(m_verticalAmplitude, "Vertical Amplitude", 0.0f, 3.0f, 0.05f)
+    SERIALIZED_FLOAT(m_verticalAmplitude, "Vertical Amplitude", 0.0f, 3.0f, 0.05f),
 )
 
 HealthPickup::HealthPickup(GameObject* owner)
@@ -19,6 +19,8 @@ HealthPickup::HealthPickup(GameObject* owner)
 
 void HealthPickup::Start()
 {
+    const Transform* t = GameObjectAPI::getTransform(getOwner());
+    m_startPosition = TransformAPI::getGlobalPosition(t);
 }
 
 void HealthPickup::Update()
@@ -40,19 +42,23 @@ void HealthPickup::OnTriggerEnter(GameObject* player){
         return;
     }
 
-    Script* script = GameObjectAPI::getScript(player, "PlayerDamageable");
-    PlayerDamageable* damageable = static_cast<PlayerDamageable*>(script);
+    PlayerDamageable* damageable = static_cast<PlayerDamageable*>(GameObjectAPI::getScript(player, "PlayerDamageable"));
 
-    if (damageable != nullptr && !damageable->isDead())
+    if (!damageable || damageable->isDead())
     {
-        if(damageable->getCurrentHp() < damageable->getMaxHp())
-        {
-            m_collected = true;
-            damageable->heal(m_healAmount);
-            GameObjectAPI::removeGameObject(m_owner);
-        }
-       return;
+        return;
     }
+
+    if (damageable->getCurrentHp() >= damageable->getMaxHp())
+    {
+        return;
+    }
+
+    m_collected = true;
+
+    damageable->heal(m_healAmount);
+
+    GameObjectAPI::removeGameObject(getOwner());
 }
 
 void HealthPickup::idleAnimation()

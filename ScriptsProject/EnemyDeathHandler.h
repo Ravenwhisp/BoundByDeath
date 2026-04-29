@@ -29,6 +29,7 @@ public:
     std::string m_healthPrefabPath = "";
     int m_healthDropQuantity = 1;
     float m_healthDropAmount = 10.0f;
+    float m_dropRadius   = 2.0f;
 
 private:
     Damageable* m_damageable = nullptr;
