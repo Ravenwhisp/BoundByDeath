@@ -26,16 +26,16 @@ HealthPickup::HealthPickup(GameObject* owner)
 
 void HealthPickup::Start()
 {
-    const Transform* t = GameObjectAPI::getTransform(getOwner());
-    m_startPosition = TransformAPI::getGlobalPosition(t);
+    m_startPosition = TransformAPI::getGlobalPosition(GameObjectAPI::getTransform(getOwner()));
 }
 
 void HealthPickup::Update()
 {
-    if (!m_collected)
+    if (m_collected)
     {
-        idleAnimation();
+       return;
     }
+    idleAnimation();
 
 }
 void HealthPickup::OnTriggerEnter(GameObject* player){
@@ -52,6 +52,7 @@ void HealthPickup::OnTriggerEnter(GameObject* player){
     {
         return;
     }
+    Debug::log("Player %s entered health pickup trigger", GameObjectAPI::getName(player));
     PlayerDamageable* damageable = static_cast<PlayerDamageable*>(GameObjectAPI::getScript(player, "PlayerDamageable"));
 
     if (!damageable || damageable->isDead())
@@ -63,7 +64,7 @@ void HealthPickup::OnTriggerEnter(GameObject* player){
     {
         return;
     }
-
+    Debug::log("Player %s can collect health pickup, healing for %f", GameObjectAPI::getName(player), m_healAmount);
     m_collected = true;
 
     damageable->heal(m_healAmount);
