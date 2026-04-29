@@ -17,12 +17,21 @@ public:
 
 private:
     void idleAnimation();
-
-public:
-
-    bool m_collected = false;
+    bool canBeCollectedBy(GameObject* other) const;
+public: 
     float m_healAmount   = 10.0f;
     float m_pickupRadius = 1.5f;
+private:
+      enum PowerUpTarget
+    {
+        LYRIEL = 0,
+        DEATH,
+        BOTH
+    };
+
+    int m_targetCharacter = BOTH;
+    bool m_collected = false;
+   
 
     Vector3 m_startPosition = Vector3::Zero;
 
