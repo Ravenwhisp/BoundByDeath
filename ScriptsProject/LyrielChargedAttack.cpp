@@ -150,7 +150,8 @@ void LyrielChargedAttack::updateCharge()
         const float yawRad = std::atan2(m_currentAimDirection.x, m_currentAimDirection.z);
         const float targetYawDeg = yawRad * (180.0f / PI);
 
-        const float range = m_chargeTimer / m_maxChargeTime * 0.45f + 0.65f;
+		const float timerRatio = m_chargeTimer / m_maxChargeTime;
+        const float range = m_minAttackRange + timerRatio * (m_maxAttackRange - m_minAttackRange);
 
         TransformAPI::setPosition(m_ChargedAttackUI.getReferencedComponent(), origin);
         TransformAPI::setRotationEuler(m_ChargedAttackUI.getReferencedComponent(), Vector3(0.0f, targetYawDeg, 0.0f));
