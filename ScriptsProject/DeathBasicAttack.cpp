@@ -25,8 +25,7 @@ void DeathBasicAttack::Start()
 
 void DeathBasicAttack::Update()
 {
-    DeathAbilityBase::Update();
-
+	DeathAbilityBase::Update();
     // Release movement lock when combo fully ends outside an attack window
     if (m_movementLockedForCombo && m_attackStateTimer <= 0.0f)
     {
@@ -42,32 +41,32 @@ void DeathBasicAttack::Update()
     {
         return;
     }
-
-    if (!Input::isRightShoulderJustPressed(getPlayerIndex()))
-    {
-        return;
-    }
-
-    tryAttack();
 }
 
-void DeathBasicAttack::tryAttack()
+bool DeathBasicAttack::canStartSpecificAbility() const
 {
-    if (m_character == nullptr || m_deathChar == nullptr)
-    {
-        return;
-    }
+    //if (m_deathChar == nullptr)
+    //{
+    //    return false;
+    //}
+    //// Can't start a new basic attack if currently in combo cooldown
+    //if (m_deathChar->isInComboCooldown())
+    //{
+    //    return false;
+    //}
+    //// If currently in a combo, can only continue with R1 (not allowed to use R2 or other abilities)
+    //if (m_deathChar->getComboStep() <= 0)
+    //{
+    //    return false;
+    //}
+    //// Not currently in a combo: can only start with R1
+    //return true;
 
-    if (m_deathChar->isInComboCooldown())
-    {
-        return;
-    }
+	return m_deathChar != nullptr && !m_deathChar->isInComboCooldown() && !m_character->isUsingAbility();
+}
 
-    if (!canStartAbility())
-    {
-        return;
-    }
-
+void DeathBasicAttack::startAbility()
+{
     GameObject* target = m_character->getTargetController()
         ? m_character->getTargetController()->getCurrentTarget()
         : nullptr;

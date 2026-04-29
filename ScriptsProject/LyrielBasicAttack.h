@@ -17,9 +17,11 @@ public:
     ScriptFieldList getExposedFields() const override;
 
 private:
-    void tryAttack();
+    void startAbility() override;
     bool spawnArrowToTarget(GameObject* target);
     void faceTarget(GameObject* target);
+
+	bool canStartSpecificAbility() const override;
 
 protected:
     void onAttackWindowUpdate() override;

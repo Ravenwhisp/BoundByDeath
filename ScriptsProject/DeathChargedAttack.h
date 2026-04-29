@@ -40,8 +40,12 @@ public:
     float m_chargedArcAngle       = 150.0f;
 
 protected:
-    void onAttackWindowUpdate()   override;
-    void onAttackWindowFinished() override;
+    void startAbility() override;
+
+    bool canStartSpecificAbility() const override;
+
+    void onAttackWindowUpdate()     override;
+    void onAttackWindowFinished()   override;
 
 private:
     void startCharging();

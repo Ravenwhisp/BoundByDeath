@@ -20,6 +20,10 @@ public:
 
     void drawGizmo() override;
     void onFieldEdited(const ScriptFieldInfo& field) override;
+protected:
+	void startAbility() override;
+
+	bool canStartSpecificAbility() const override;
 
 private:
     void beginAim();

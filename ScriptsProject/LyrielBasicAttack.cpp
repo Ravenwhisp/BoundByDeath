@@ -27,12 +27,8 @@ void LyrielBasicAttack::Start()
 
 void LyrielBasicAttack::Update()
 {
-    LyrielAbilityBase::Update();
+	LyrielAbilityBase::Update();
 
-    if (Input::isRightShoulderJustPressed(getPlayerIndex()))
-    {
-        tryAttack();
-    }
 }
 
 void LyrielBasicAttack::onAttackWindowUpdate()
@@ -48,18 +44,8 @@ void LyrielBasicAttack::onAttackWindowFinished()
     m_attackFacingTarget = nullptr;
 }
 
-void LyrielBasicAttack::tryAttack()
+void LyrielBasicAttack::startAbility()
 {
-    if (!canStartAbility())
-    {
-        return;
-    }
-
-    if (m_character == nullptr)
-    {
-        return;
-    }
-
     PlayerTargetController* targetController = m_character->getTargetController();
     if (targetController == nullptr)
     {
@@ -175,6 +161,11 @@ void LyrielBasicAttack::faceTarget(GameObject* target)
 
     direction.Normalize();
     playerRotation->applyFacingFromDirection(getOwner(), direction, Time::getDeltaTime());
+}
+
+bool LyrielBasicAttack::canStartSpecificAbility() const
+{
+    
 }
 
 IMPLEMENT_SCRIPT(LyrielBasicAttack)

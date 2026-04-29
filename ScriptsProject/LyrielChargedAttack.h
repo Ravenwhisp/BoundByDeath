@@ -22,6 +22,8 @@ protected:
     void onAttackWindowUpdate() override;
     void onAttackWindowFinished() override;
 
+	void startAbility() override;
+
 private:
     void beginCharge();
     void updateCharge();

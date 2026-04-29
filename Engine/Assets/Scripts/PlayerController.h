@@ -5,6 +5,7 @@
 class PlayerMovement;
 class PlayerRotation;
 class PlayerState;
+class AbilityBase;
 
 class PlayerController : public Script
 {
@@ -31,6 +32,11 @@ private:
     PlayerRotation* m_playerRotation = nullptr;
     PlayerState* m_playerState = nullptr;
 
+	AbilityBase* m_basicAttack = nullptr;
+    AbilityBase* m_chargedAttack = nullptr;
+	AbilityBase* m_dash = nullptr;
+	AbilityBase* m_specialAbility = nullptr; //Taunt or Arrow Volley
+
     Transform* m_cameraTransform = nullptr;
 
 private:
@@ -39,4 +45,9 @@ private:
     PlayerMovement* findMovementScript(GameObject* owner);
     PlayerRotation* findRotationScript(GameObject* owner);
     PlayerState* findStateScript(GameObject* owner);
+
+	AbilityBase* findBasicAttackScript(GameObject* owner);
+	AbilityBase* findChargedAttackScript(GameObject* owner);
+	AbilityBase* findDashScript(GameObject* owner);
+	AbilityBase* findSpecialAbilityScript(GameObject* owner);
 };

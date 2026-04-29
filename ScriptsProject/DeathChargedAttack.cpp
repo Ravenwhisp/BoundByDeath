@@ -29,19 +29,23 @@ void DeathChargedAttack::Update()
 {
     DeathAbilityBase::Update();
 
-    if (m_character == nullptr || m_deathChar == nullptr)
-        return;
+   /* if (m_character == nullptr || m_deathChar == nullptr)
+        return;*/
+
+    //TODO: if general para el update
 
     // Release combo movement lock once the attack window is done and combo has ended
     if (m_movementLockedForCombo && !m_isCharging && m_attackStateTimer <= 0.0f)
     {
         if (m_deathChar->getComboStep() == 0)
+        {
             releaseComboMoveLock();
+        }
     }
 
-    // Attack window running — base class handles the timer, no new input accepted
-    if (m_attackStateTimer > 0.0f)
-        return;
+    //// Attack window running — base class handles the timer, no new input accepted
+    //if (m_attackStateTimer > 0.0f)
+    //    return;
 
     // Charging phase — accumulate time, sample right stick for aim, auto-fire at max
     if (m_isCharging)
@@ -64,7 +68,9 @@ void DeathChargedAttack::Update()
         const bool released   = Input::isRightTriggerReleased(getPlayerIndex());
 
         if (maxReached || released)
+        {
             fireAttack();
+        }
 
         return;
     }
@@ -73,26 +79,53 @@ void DeathChargedAttack::Update()
         m_ChargedAttackUI.getReferencedComponent()->getOwner()->SetActive(false);
     }
 
-    // Wait for R2 press
-    if (!Input::isRightTriggerJustPressed(getPlayerIndex()))
-        return;
+    //if (m_deathChar->isInComboCooldown())
+    //{
+    //    Debug::log("[R2] bloqueado — cooldown post-combo");
+    //    return;
+    //}
 
-    if (m_deathChar->isInComboCooldown())
-    {
-        Debug::log("[R2] bloqueado — cooldown post-combo");
-        return;
-    }
+    //if (!canStartAbility())
+    //    return;
 
-    if (!canStartAbility())
-        return;
-
-    if (!m_deathChar->canUseR2InCombo())
+   /* if (!m_deathChar->canUseR2InCombo())
     {
         Debug::log("[R2] bloqueado — 2 R2 consecutivos ya usados, usa R1 primero");
         return;
-    }
+    }*/
 
+    //startCharging();
+}
+
+void DeathChargedAttack::startAbility()
+{
     startCharging();
+}
+
+bool DeathChargedAttack::canStartSpecificAbility() const
+{
+    //if (m_deathChar == nullptr)
+    //{
+    //    return;
+    //}
+
+    //if (m_attackStateTimer > 0.0f)
+    //{
+    //    return;
+    //}
+
+    //if (m_deathChar->isInComboCooldown())
+    //{
+    //    Debug::log("[R2] bloqueado — cooldown post-combo");
+    //    return;
+    //}
+
+    //if (!m_deathChar->canUseR2InCombo())
+    //{
+    //    Debug::log("[R2] bloqueado — 2 R2 consecutivos ya usados, usa R1 primero");
+    //    return;
+    //}
+	return m_deathChar != nullptr && m_attackStateTimer <= 0.0f && !m_deathChar->isInComboCooldown() && m_deathChar->canUseR2InCombo() && !m_deathChar->isUsingAbility();
 }
 
 void DeathChargedAttack::startCharging()

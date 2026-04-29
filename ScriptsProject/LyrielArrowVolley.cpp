@@ -34,20 +34,22 @@ void LyrielArrowVolley::Update()
 {
     LyrielAbilityBase::Update();
 
-    if (canStartAim() && Input::isLeftTriggerJustPressed(getPlayerIndex()))
+    if(m_isAiming)
     {
-        beginAim();
-    }
+        if (Input::isLeftTriggerPressed(getPlayerIndex()))
+        {
+            updateAim();
+        }
+        if (Input::isLeftTriggerReleased(getPlayerIndex()))
+        {
+            releaseAimAndCast();
+        }
+	}
+}
 
-    if (m_isAiming && Input::isLeftTriggerPressed(getPlayerIndex()))
-    {
-        updateAim();
-    }
-
-    if (m_isAiming && Input::isLeftTriggerReleased(getPlayerIndex()))
-    {
-        releaseAimAndCast();
-    }
+void LyrielArrowVolley::startAbility()
+{
+    beginAim();
 }
 
 void LyrielArrowVolley::drawGizmo()

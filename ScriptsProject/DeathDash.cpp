@@ -18,7 +18,6 @@ void DeathDash::Start()
     AbilityDash::Start();
 }
 
-
 void DeathDash::onDashStarted()
 {
     Transform* t = GameObjectAPI::getTransform(getOwner());

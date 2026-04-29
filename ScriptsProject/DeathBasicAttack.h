@@ -22,8 +22,10 @@ protected:
     void onAttackWindowUpdate()   override;
     void onAttackWindowFinished() override;
 
+	bool canStartSpecificAbility() const override;
+
 private:
-    void tryAttack();
+    void startAbility() override;
     void snapFaceTarget(GameObject* target);
     void faceTarget(GameObject* target);
     void releaseComboMoveLock();

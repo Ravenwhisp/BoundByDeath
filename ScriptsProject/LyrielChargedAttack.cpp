@@ -36,22 +36,28 @@ void LyrielChargedAttack::Start()
 
 void LyrielChargedAttack::Update()
 {
-    LyrielAbilityBase::Update();
+    AbilityBase::Update();
 
-    if (canStartCharge() && Input::isRightTriggerJustPressed(getPlayerIndex()))
-    {
-        beginCharge();
-    }
+    //if (m_isCharging && Input::isRightTriggerPressed(getPlayerIndex()))
+    //{
+    //    updateCharge();
+    //}
 
-    if (m_isCharging && Input::isRightTriggerPressed(getPlayerIndex()))
+    //if (m_isCharging && Input::isRightTriggerReleased(getPlayerIndex()))
+    //{
+    //    releaseChargeAndShoot();
+    //}
+    if (m_isCharging)
     {
-        updateCharge();
-    }
-
-    if (m_isCharging && Input::isRightTriggerReleased(getPlayerIndex()))
-    {
-        releaseChargeAndShoot();
-    }
+        if (!Input::isRightTriggerReleased(getPlayerIndex()))
+        {
+            updateCharge();
+        }
+        else
+        {
+            releaseChargeAndShoot();
+        }
+	}
 }
 
 void LyrielChargedAttack::drawGizmo()
@@ -95,9 +101,14 @@ void LyrielChargedAttack::onAttackWindowFinished()
     m_attackFacingDirection = Vector3::Zero;
 }
 
+void LyrielChargedAttack::startAbility()
+{
+    beginCharge();
+}
+
 bool LyrielChargedAttack::canStartCharge() const
 {
-    return canStartAbility();
+    return canStartAbility(); //borrar
 }
 
 bool LyrielChargedAttack::canShoot() const
