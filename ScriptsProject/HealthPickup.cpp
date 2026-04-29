@@ -20,5 +20,37 @@ void HealthPickup::Start()
 
 void HealthPickup::Update()
 {
-    
+    const Transform* myTransform = GameObjectAPI::getTransform(m_owner);
+    if (myTransform == nullptr)
+    {
+        return;
+    }
+
+    const Vector3 myPosition = TransformAPI::getGlobalPosition(myTransform);
+    const std::vector<GameObject*> players = SceneAPI::findAllGameObjectsByTag(Tag::PLAYER, true);
+
+    for (GameObject* player : players)
+    {
+        const Transform* playerTransform = GameObjectAPI::getTransform(player);
+        if (playerTransform == nullptr)
+        {
+            continue;
+        }
+
+        const Vector3 playerPosition = TransformAPI::getGlobalPosition(playerTransform);
+        const float distanceSq = Vector3::DistanceSquared(myPosition, playerPosition);
+
+        if (distanceSq <= m_pickupRadius * m_pickupRadius)
+        {
+            Script* script = GameObjectAPI::getScript(player, "PlayerDamageable");
+            PlayerDamageable* damageable = static_cast<PlayerDamageable*>(script);
+
+            if (damageable != nullptr && !damageable->isDead())
+            {
+                damageable->heal(m_healAmount);
+                GameObjectAPI::removeGameObject(m_owner);
+                return;
+            }
+        }
+    }
 }
