@@ -36,17 +36,8 @@ void LyrielChargedAttack::Start()
 
 void LyrielChargedAttack::Update()
 {
-    AbilityBase::Update();
+    LyrielAbilityBase::Update();
 
-    //if (m_isCharging && Input::isRightTriggerPressed(getPlayerIndex()))
-    //{
-    //    updateCharge();
-    //}
-
-    //if (m_isCharging && Input::isRightTriggerReleased(getPlayerIndex()))
-    //{
-    //    releaseChargeAndShoot();
-    //}
     if (m_isCharging)
     {
         if (!Input::isRightTriggerReleased(getPlayerIndex()))
@@ -364,12 +355,12 @@ void LyrielChargedAttack::applyChargedDamage(const std::vector<GameObject*>& tar
 
 void LyrielChargedAttack::spawnChargedArrow(const Vector3& origin, const Vector3& forward)
 {
-    if (m_lyriel == nullptr)
+    if (m_lyrielCharacter == nullptr)
     {
         return;
     }
 
-    ArrowPool* arrowPool = m_lyriel->getArrowPool();
+    ArrowPool* arrowPool = m_lyrielCharacter->getArrowPool();
     if (arrowPool == nullptr)
     {
         return;

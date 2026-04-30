@@ -39,21 +39,6 @@ void DeathTaunt::Update()
         return;
     }
 
-    //if (!m_isAiming && Input::isLeftTriggerJustPressed(getPlayerIndex()))
-    //{
-    //    if (!canStartAbility())
-    //    {
-    //        Debug::log("[DeathTaunt] L2 pressed but canStartAbility=false (cooldown=%.2f, usingAbility=%d, downed=%d)",
-    //            m_cooldownTimer,
-    //            m_character->isUsingAbility() ? 1 : 0,
-    //            m_character->isDowned() ? 1 : 0);
-    //    }
-    //    else
-    //    {
-    //        beginAim();
-    //    }
-    //}
-
     if (m_isAiming)
     {
         if (Input::isLeftTriggerPressed(getPlayerIndex()))

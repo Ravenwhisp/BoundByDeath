@@ -285,12 +285,12 @@ void LyrielArrowVolley::applyVolleyDamage(const std::vector<GameObject*>& target
 
 void LyrielArrowVolley::spawnVolleyArrows(const Vector3& origin, const Vector3& forward)
 {
-    if (m_lyriel == nullptr || m_numVisualArrows <= 0)
+    if (m_lyrielCharacter == nullptr || m_numVisualArrows <= 0)
     {
         return;
     }
 
-    ArrowPool* arrowPool = m_lyriel->getArrowPool();
+    ArrowPool* arrowPool = m_lyrielCharacter->getArrowPool();
     if (arrowPool == nullptr)
     {
         return;

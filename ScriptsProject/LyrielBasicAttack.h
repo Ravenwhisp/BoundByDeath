@@ -21,8 +21,6 @@ private:
     bool spawnArrowToTarget(GameObject* target);
     void faceTarget(GameObject* target);
 
-	bool canStartSpecificAbility() const override;
-
 protected:
     void onAttackWindowUpdate() override;
     void onAttackWindowFinished() override;

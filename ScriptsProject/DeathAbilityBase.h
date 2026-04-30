@@ -15,5 +15,5 @@ protected:
 
 
 protected:
-    DeathCharacter* m_deathChar       = nullptr;
+    DeathCharacter* m_deathCharacter = nullptr;
 };

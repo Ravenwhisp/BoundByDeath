@@ -16,5 +16,5 @@ protected:
     void faceDirection(const Vector3& direction);
 
 protected:
-    LyrielCharacter* m_lyriel = nullptr;
+    LyrielCharacter* m_lyrielCharacter = nullptr;
 };

@@ -28,7 +28,6 @@ void LyrielBasicAttack::Start()
 void LyrielBasicAttack::Update()
 {
 	LyrielAbilityBase::Update();
-
 }
 
 void LyrielBasicAttack::onAttackWindowUpdate()
@@ -81,12 +80,12 @@ void LyrielBasicAttack::startAbility()
 
 bool LyrielBasicAttack::spawnArrowToTarget(GameObject* target)
 {
-    if (m_lyriel == nullptr || target == nullptr)
+    if (m_lyrielCharacter == nullptr || target == nullptr)
     {
         return false;
     }
 
-    ArrowPool* arrowPool = m_lyriel->getArrowPool();
+    ArrowPool* arrowPool = m_lyrielCharacter->getArrowPool();
     if (arrowPool == nullptr)
     {
         return false;
@@ -161,11 +160,6 @@ void LyrielBasicAttack::faceTarget(GameObject* target)
 
     direction.Normalize();
     playerRotation->applyFacingFromDirection(getOwner(), direction, Time::getDeltaTime());
-}
-
-bool LyrielBasicAttack::canStartSpecificAbility() const
-{
-    
 }
 
 IMPLEMENT_SCRIPT(LyrielBasicAttack)

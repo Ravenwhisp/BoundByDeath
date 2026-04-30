@@ -30,11 +30,6 @@ void AbilityBase::tryAbility()
         return;
     }
 
-    if (!canStartSpecificAbility())
-    {
-        return;
-    }
-
     startAbility();
 }
 
@@ -117,6 +112,11 @@ bool AbilityBase::canStartAbility() const
     }
 
     if (m_character->isUsingAbility())
+    {
+        return false;
+    }
+
+    if (!canStartSpecificAbility())
     {
         return false;
     }

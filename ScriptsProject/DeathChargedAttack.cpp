@@ -29,23 +29,16 @@ void DeathChargedAttack::Update()
 {
     DeathAbilityBase::Update();
 
-   /* if (m_character == nullptr || m_deathChar == nullptr)
-        return;*/
-
     //TODO: if general para el update
 
     // Release combo movement lock once the attack window is done and combo has ended
     if (m_movementLockedForCombo && !m_isCharging && m_attackStateTimer <= 0.0f)
     {
-        if (m_deathChar->getComboStep() == 0)
+        if (m_deathCharacter->getComboStep() == 0)
         {
             releaseComboMoveLock();
         }
     }
-
-    //// Attack window running — base class handles the timer, no new input accepted
-    //if (m_attackStateTimer > 0.0f)
-    //    return;
 
     // Charging phase — accumulate time, sample right stick for aim, auto-fire at max
     if (m_isCharging)
@@ -64,7 +57,7 @@ void DeathChargedAttack::Update()
 			TransformAPI::setRotationEuler(m_ChargedAttackUI.getReferencedComponent(), Vector3(0.0f, targetYawDeg, 0.0f));
         }
 
-        const bool maxReached = (m_chargeTime >= m_deathChar->m_maxChargeTime);
+        const bool maxReached = (m_chargeTime >= m_deathCharacter->m_maxChargeTime);
         const bool released   = Input::isRightTriggerReleased(getPlayerIndex());
 
         if (maxReached || released)
@@ -74,27 +67,11 @@ void DeathChargedAttack::Update()
 
         return;
     }
+
     else if (m_ChargedAttackUI.getReferencedComponent())
     {
         m_ChargedAttackUI.getReferencedComponent()->getOwner()->SetActive(false);
     }
-
-    //if (m_deathChar->isInComboCooldown())
-    //{
-    //    Debug::log("[R2] bloqueado — cooldown post-combo");
-    //    return;
-    //}
-
-    //if (!canStartAbility())
-    //    return;
-
-   /* if (!m_deathChar->canUseR2InCombo())
-    {
-        Debug::log("[R2] bloqueado — 2 R2 consecutivos ya usados, usa R1 primero");
-        return;
-    }*/
-
-    //startCharging();
 }
 
 void DeathChargedAttack::startAbility()
@@ -104,28 +81,7 @@ void DeathChargedAttack::startAbility()
 
 bool DeathChargedAttack::canStartSpecificAbility() const
 {
-    //if (m_deathChar == nullptr)
-    //{
-    //    return;
-    //}
-
-    //if (m_attackStateTimer > 0.0f)
-    //{
-    //    return;
-    //}
-
-    //if (m_deathChar->isInComboCooldown())
-    //{
-    //    Debug::log("[R2] bloqueado — cooldown post-combo");
-    //    return;
-    //}
-
-    //if (!m_deathChar->canUseR2InCombo())
-    //{
-    //    Debug::log("[R2] bloqueado — 2 R2 consecutivos ya usados, usa R1 primero");
-    //    return;
-    //}
-	return m_deathChar != nullptr && m_attackStateTimer <= 0.0f && !m_deathChar->isInComboCooldown() && m_deathChar->canUseR2InCombo() && !m_deathChar->isUsingAbility();
+	return m_deathCharacter != nullptr && m_attackStateTimer <= 0.0f && !m_deathCharacter->isInComboCooldown() && m_deathCharacter->canUseR2InCombo() && !m_deathCharacter->isUsingAbility();
 }
 
 void DeathChargedAttack::startCharging()
@@ -142,7 +98,7 @@ void DeathChargedAttack::startCharging()
     if (ps != nullptr)
         ps->setState(PlayerStateType::Attacking);
 
-    Debug::log("[COMBO] R2 cargando  step=%d/3", m_deathChar->getComboStep() + 1);
+    Debug::log("[COMBO] R2 cargando  step=%d/3", m_deathCharacter->getComboStep() + 1);
 }
 
 void DeathChargedAttack::fireAttack()
@@ -150,8 +106,8 @@ void DeathChargedAttack::fireAttack()
     // Snap to the aim direction sampled during the hold, then deal damage in that direction
     snapFaceAimDirection();
 
-    const int   comboStep   = m_deathChar->getComboStep();
-    const bool  isMaxCharge = (m_chargeTime >= m_deathChar->m_maxChargeTime);
+    const int   comboStep   = m_deathCharacter->getComboStep();
+    const bool  isMaxCharge = (m_chargeTime >= m_deathCharacter->m_maxChargeTime);
 
     // Charged-mode shot: only valid as combo starter (step 0), needs min charge time
     const bool isChargedShot = (m_chargeTime >= m_minChargeTime) && (comboStep == 0);
@@ -159,29 +115,29 @@ void DeathChargedAttack::fireAttack()
     float damage;
     if (isChargedShot)
     {
-        const float rawRatio    = m_chargeTime / m_deathChar->m_maxChargeTime;
+        const float rawRatio    = m_chargeTime / m_deathCharacter->m_maxChargeTime;
         const float chargeRatio = rawRatio > 1.0f ? 1.0f : rawRatio;
-        damage = m_deathChar->m_chargedAttackDamage * (1.0f + chargeRatio);
+        damage = m_deathCharacter->m_chargedAttackDamage * (1.0f + chargeRatio);
 
         if (isMaxCharge)
             Debug::log("[COMBO] R2 CARGA MAXIMA  step %d/3  dmg=%.1f", comboStep + 1, damage);
         else
             Debug::log("[COMBO] R2 CARGADO  step %d/3  ratio=%.0f%%  dmg=%.1f",
-                comboStep + 1, (m_chargeTime / m_deathChar->m_maxChargeTime) * 100.0f, damage);
+                comboStep + 1, (m_chargeTime / m_deathCharacter->m_maxChargeTime) * 100.0f, damage);
     }
     else
     {
-        damage = m_deathChar->m_chargedAttackDamage;
+        damage = m_deathCharacter->m_chargedAttackDamage;
         Debug::log("[COMBO] R2  step %d/3  dmg=%.1f", comboStep + 1, damage);
     }
 
-    m_deathChar->dealDamageInArc(damage, m_chargedArcRange, m_chargedArcAngle);
+    m_deathCharacter->dealDamageInArc(damage, m_chargedArcRange, m_chargedArcAngle);
 
     // Max charge (auto-fired at full charge, always step 0) gets longer combo window
     const float window = (isChargedShot && isMaxCharge)
-        ? m_deathChar->m_comboWindowMaxCharge
-        : m_deathChar->m_comboWindowR2;
-    m_deathChar->advanceCombo(true, window);
+        ? m_deathCharacter->m_comboWindowMaxCharge
+        : m_deathCharacter->m_comboWindowR2;
+    m_deathCharacter->advanceCombo(true, window);
 
     const bool isLast = (comboStep >= 2);
     if (isLast)
@@ -240,7 +196,7 @@ void DeathChargedAttack::onAttackWindowUpdate()
 void DeathChargedAttack::onAttackWindowFinished()
 {
     // Between combo hits: keep movement locked while the combo is still alive
-    if (m_movementLockedForCombo && m_deathChar != nullptr && m_deathChar->getComboStep() > 0)
+    if (m_movementLockedForCombo && m_deathCharacter != nullptr && m_deathCharacter->getComboStep() > 0)
     {
         PlayerState* ps = m_character ? m_character->getPlayerState() : nullptr;
         if (ps != nullptr)
@@ -264,7 +220,7 @@ void DeathChargedAttack::releaseComboMoveLock()
 
 void DeathChargedAttack::drawGizmo()
 {
-    if (m_deathChar == nullptr)
+    if (m_deathCharacter == nullptr)
         return;
 
     const Transform* t = GameObjectAPI::getTransform(getOwner());
@@ -319,9 +275,9 @@ void DeathChargedAttack::drawGizmo()
     }
 
     // Charge fill: yellow overlay that grows with charge ratio
-    if (m_isCharging && m_deathChar->m_maxChargeTime > 0.0f)
+    if (m_isCharging && m_deathCharacter->m_maxChargeTime > 0.0f)
     {
-        const float ratio   = m_chargeTime / m_deathChar->m_maxChargeTime;
+        const float ratio   = m_chargeTime / m_deathCharacter->m_maxChargeTime;
         const float clamped = ratio > 1.0f ? 1.0f : ratio;
         const int   fillEnd = static_cast<int>(clamped * static_cast<float>(arcSegs));
 

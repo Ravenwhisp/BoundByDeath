@@ -29,7 +29,7 @@ void DeathBasicAttack::Update()
     // Release movement lock when combo fully ends outside an attack window
     if (m_movementLockedForCombo && m_attackStateTimer <= 0.0f)
     {
-        const bool comboActive = m_deathChar != nullptr && m_deathChar->getComboStep() > 0;
+        const bool comboActive = m_deathCharacter != nullptr && m_deathCharacter->getComboStep() > 0;
         if (!comboActive)
         {
             releaseComboMoveLock();
@@ -45,24 +45,7 @@ void DeathBasicAttack::Update()
 
 bool DeathBasicAttack::canStartSpecificAbility() const
 {
-    //if (m_deathChar == nullptr)
-    //{
-    //    return false;
-    //}
-    //// Can't start a new basic attack if currently in combo cooldown
-    //if (m_deathChar->isInComboCooldown())
-    //{
-    //    return false;
-    //}
-    //// If currently in a combo, can only continue with R1 (not allowed to use R2 or other abilities)
-    //if (m_deathChar->getComboStep() <= 0)
-    //{
-    //    return false;
-    //}
-    //// Not currently in a combo: can only start with R1
-    //return true;
-
-	return m_deathChar != nullptr && !m_deathChar->isInComboCooldown() && !m_character->isUsingAbility();
+	return m_deathCharacter != nullptr && !m_deathCharacter->isInComboCooldown() && !m_character->isUsingAbility();
 }
 
 void DeathBasicAttack::startAbility()
@@ -77,11 +60,11 @@ void DeathBasicAttack::startAbility()
     snapFaceTarget(target);
     m_attackFacingTarget = target;
 
-    const int   comboStep = m_deathChar->getComboStep();
-    const float damage    = m_deathChar->m_basicAttackDamage;
+    const int   comboStep = m_deathCharacter->getComboStep();
+    const float damage    = m_deathCharacter->m_basicAttackDamage;
 
-    m_deathChar->dealDamageBasicAttack(damage, target);
-    m_deathChar->advanceCombo(false);
+    m_deathCharacter->dealDamageBasicAttack(damage, target);
+    m_deathCharacter->advanceCombo(false);
 
     const bool  isFinalHit  = (comboStep >= 2);
     const float lockDuration = isFinalHit ? m_finalHitLockDuration : m_attackLockDuration;
@@ -115,7 +98,7 @@ void DeathBasicAttack::onAttackWindowFinished()
     m_attackFacingTarget = nullptr;
 
     // Between combo hits: keep movement locked while combo is still active
-    if (m_movementLockedForCombo && m_deathChar != nullptr && m_deathChar->getComboStep() > 0)
+    if (m_movementLockedForCombo && m_deathCharacter != nullptr && m_deathCharacter->getComboStep() > 0)
     {
         PlayerState* ps = m_character ? m_character->getPlayerState() : nullptr;
         if (ps != nullptr)
@@ -141,7 +124,7 @@ void DeathBasicAttack::releaseComboMoveLock()
 
 void DeathBasicAttack::drawGizmo()
 {
-    if (m_deathChar == nullptr)
+    if (m_deathCharacter == nullptr)
     {
         return;
     }
@@ -154,9 +137,9 @@ void DeathBasicAttack::drawGizmo()
 
     const Vector3 pos      = TransformAPI::getPosition(t);
     const Vector3 fwd      = TransformAPI::getForward(t);
-    const float   range    = m_deathChar->m_basicAttackRange;
-    const float   hitAngle = m_deathChar->m_basicAttackHitAngle;
-    const float   fill     = m_deathChar->getComboFillRatio();
+    const float   range    = m_deathCharacter->m_basicAttackRange;
+    const float   hitAngle = m_deathCharacter->m_basicAttackHitAngle;
+    const float   fill     = m_deathCharacter->getComboFillRatio();
 
     constexpr float k_degToRad = 3.14159265f / 180.0f;
     const float hitHalfRad     = hitAngle * 0.5f * k_degToRad;
@@ -166,7 +149,7 @@ void DeathBasicAttack::drawGizmo()
     const Vector3 colGrey   = { 0.35f, 0.35f, 0.35f };
     const Vector3 colPurple = { 0.9f,  0.0f,  0.9f  };
     const Vector3 colOrange = { 1.0f,  0.55f, 0.0f  };
-    const Vector3 colFill   = m_deathChar->wasLastHitR2() ? colOrange : colPurple;
+    const Vector3 colFill   = m_deathCharacter->wasLastHitR2() ? colOrange : colPurple;
 
     auto radialDir = [&](float a) -> Vector3
     {
@@ -234,7 +217,7 @@ void DeathBasicAttack::snapFaceTarget(GameObject* target)
         return;
     }
 
-    const float rangeSq = m_deathChar->m_basicAttackRange * m_deathChar->m_basicAttackRange;
+    const float rangeSq = m_deathCharacter->m_basicAttackRange * m_deathCharacter->m_basicAttackRange;
 
     Vector3 myPos     = TransformAPI::getGlobalPosition(myTransform);
     Vector3 targetPos = TransformAPI::getGlobalPosition(targetTransform);
@@ -271,7 +254,7 @@ void DeathBasicAttack::faceTarget(GameObject* target)
     Vector3 dir = targetPos - myPos;
     dir.y = 0.0f;
 
-    const float rangeSq = m_deathChar->m_basicAttackRange * m_deathChar->m_basicAttackRange;
+    const float rangeSq = m_deathCharacter->m_basicAttackRange * m_deathCharacter->m_basicAttackRange;
     if (dir.LengthSquared() > rangeSq)
     {
         return;

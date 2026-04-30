@@ -19,10 +19,10 @@ public:
     ScriptComponentRef<Transform> m_ChargedAttackUI;
 
 protected:
+    void startAbility() override;
+
     void onAttackWindowUpdate() override;
     void onAttackWindowFinished() override;
-
-	void startAbility() override;
 
 private:
     void beginCharge();
