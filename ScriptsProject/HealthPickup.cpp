@@ -39,6 +39,11 @@ void HealthPickup::Update()
 
 }
 void HealthPickup::OnTriggerEnter(GameObject* player){
+    Debug::log("HealthPickup triggered by %s", GameObjectAPI::getName(player));
+     if (m_collected)
+    {
+        return;
+    }
     if (m_collected)
     {
         return;
