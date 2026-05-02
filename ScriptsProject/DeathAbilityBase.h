@@ -12,8 +12,9 @@ public:
     void Start() override;
 
 protected:
-
+    void releaseComboMoveLock();
 
 protected:
     DeathCharacter* m_deathCharacter = nullptr;
+    bool m_movementLockedForCombo = false;
 };

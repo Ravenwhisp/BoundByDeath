@@ -25,11 +25,9 @@ private:
     void startAbility() override;
     void snapFaceTarget(GameObject* target);
     void faceTarget(GameObject* target);
-    void releaseComboMoveLock();
 	void dealDamageToTarget(GameObject* target) const;
 
     GameObject* m_attackFacingTarget    = nullptr;
-    bool        m_movementLockedForCombo = false;
 
 public:
     float m_basicAttackDamage = 20.0f;

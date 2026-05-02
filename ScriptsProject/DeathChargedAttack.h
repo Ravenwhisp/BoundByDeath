@@ -58,10 +58,8 @@ private:
     void dealDamageInArc(float damage, float range, float angle) const;
     void updateAimDirection();
     void snapFaceAimDirection();
-    void releaseComboMoveLock();
 
     float   m_chargeTime             = 0.0f;
     bool    m_isCharging             = false;
-    bool    m_movementLockedForCombo = false;
     Vector3 m_aimDirection           = { 0.0f, 0.0f, 0.0f };
 };
