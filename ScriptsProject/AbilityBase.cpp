@@ -282,3 +282,5 @@ Vector3 AbilityBase::getFallbackFacingDirection() const
     forward.Normalize();
     return forward;
 }
+
+IMPLEMENT_SCRIPT(AbilityBase)

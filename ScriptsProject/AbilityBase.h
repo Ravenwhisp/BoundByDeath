@@ -6,6 +6,9 @@ class CharacterBase;
 
 class AbilityBase : public Script
 {
+
+    DECLARE_SCRIPT(AbilityBase)
+
 public:
     explicit AbilityBase(GameObject* owner);
 
