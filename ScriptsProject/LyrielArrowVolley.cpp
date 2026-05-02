@@ -7,6 +7,8 @@
 #include "LyrielArrowProjectile.h"
 #include "EnemyDamageable.h"
 #include "PlayerState.h"
+#include "PersistingPowerupState.h"
+#include "EnemyShadowMark.h"
 
 #include <cmath>
 
@@ -277,6 +279,17 @@ void LyrielArrowVolley::applyVolleyDamage(const std::vector<GameObject*>& target
         if (damageable != nullptr)
         {
             damageable->takeDamageEnemy(m_volleyDamage, GameObjectAPI::getTransform(getOwner()));
+        }
+
+        if (PersistingPowerupState::isUnlocked(PowerupId::LyrielPowerup1))
+        {
+            Script* markScript = GameObjectAPI::getScript(target, "EnemyShadowMark");
+            EnemyShadowMark* mark = static_cast<EnemyShadowMark*>(markScript);
+
+            if (mark != nullptr && mark->isExploitable())
+            {
+                mark->exploit();
+            }
         }
     }
 }
