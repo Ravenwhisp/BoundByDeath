@@ -3,6 +3,7 @@
 
 #include "CharacterBase.h"
 #include "EnemyDamageable.h"
+#include "EnemyShadowMark.h"
 
 IMPLEMENT_SCRIPT_FIELDS_INHERITED(DeathDash, AbilityDash,
     SERIALIZED_FLOAT(m_dashDistance, "Dash Distance", 0.0f, 20.0f, 0.1f),
@@ -96,6 +97,10 @@ void DeathDash::applyDashDamage()
         if (damageable != nullptr)
         {
             damageable->takeDamageEnemy(m_dashDamage, GameObjectAPI::getTransform(getOwner()));
+
+            Script* markScript = GameObjectAPI::getScript(enemyObj, "EnemyShadowMark");
+            if (markScript != nullptr)
+                static_cast<EnemyShadowMark*>(markScript)->notifyDeathHit();
         }
     }
 }

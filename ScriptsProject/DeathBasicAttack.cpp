@@ -7,6 +7,7 @@
 #include "PlayerRotation.h"
 #include "PlayerState.h"
 #include "EnemyDamageable.h"
+#include "EnemyShadowMark.h"
 
 #include <cmath>
 
@@ -175,6 +176,10 @@ void DeathBasicAttack::dealDamageToTarget(GameObject* target) const
             Debug::log("[BASIC] hit '%s'  dmg=%.1f  hp=%.1f/%.1f",
                 GameObjectAPI::getName(enemy), m_basicAttackDamage,
                 damageable->getCurrentHp(), damageable->getMaxHp());
+
+            Script* markScript = GameObjectAPI::getScript(enemy, "EnemyShadowMark");
+            if (markScript != nullptr)
+                static_cast<EnemyShadowMark*>(markScript)->notifyDeathHit();
         };
 
     // Priority 1: targeted enemy in hit zone

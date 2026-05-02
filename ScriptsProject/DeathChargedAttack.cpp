@@ -5,6 +5,7 @@
 #include "PlayerState.h"
 #include "PlayerAnimationController.h"
 #include "EnemyDamageable.h"
+#include "EnemyShadowMark.h"
 
 #include <cmath>
 
@@ -230,6 +231,10 @@ void DeathChargedAttack::dealDamageInArc(float damage) const
         Debug::log("[ARC] hit '%s'  dmg=%.1f  hp=%.1f/%.1f",
             GameObjectAPI::getName(enemy), damage,
             damageable->getCurrentHp(), damageable->getMaxHp());
+
+        Script* markScript = GameObjectAPI::getScript(enemy, "EnemyShadowMark");
+        if (markScript != nullptr)
+            static_cast<EnemyShadowMark*>(markScript)->notifyDeathHit();
     }
 
     if (scanned == 0)

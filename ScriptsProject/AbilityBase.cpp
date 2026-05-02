@@ -1,8 +1,10 @@
 #include "pch.h"
 #include "AbilityBase.h"
+
 #include "CharacterBase.h"
 #include "PlayerState.h"
 #include "PlayerAnimationController.h"
+#include "UISlider.h"
 
 IMPLEMENT_SCRIPT_FIELDS(AbilityBase,
     SERIALIZED_FLOAT(m_cooldown, "Cooldown", 0.0f, 10.0f, 0.01f),

@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "DeathCharacter.h"
 #include "EnemyDamageable.h"
+#include "EnemyShadowMark.h"
 
 #include <cmath>
 #include <vector>

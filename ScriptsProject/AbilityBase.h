@@ -1,7 +1,6 @@
 #pragma once
 
 #include "ScriptAPI.h"
-#include "UISlider.h"
 
 class CharacterBase;
 
