@@ -1,14 +1,20 @@
 #include "pch.h"
 #include "DeathBasicAttack.h"
+
 #include "DeathCharacter.h"
 #include "PlayerTargetController.h"
 #include "PlayerAnimationController.h"
 #include "PlayerRotation.h"
 #include "PlayerState.h"
+#include "EnemyDamageable.h"
 
 #include <cmath>
 
 IMPLEMENT_SCRIPT_FIELDS_INHERITED(DeathBasicAttack, DeathAbilityBase,
+
+    SERIALIZED_FLOAT(m_basicAttackDamage, "Basic Attack Damage", 0.0f, 200.0f, 1.0f),
+    SERIALIZED_FLOAT(m_basicAttackRange, "Basic Attack Range", 0.5f, 10.0f, 0.1f),
+    SERIALIZED_FLOAT(m_basicAttackHitAngle, "Basic Attack Hit Angle", 5.0f, 180.0f, 5.0f),
     SERIALIZED_FLOAT(m_attackLockDuration, "Attack Lock Duration", 0.05f, 2.0f, 0.05f),
     SERIALIZED_FLOAT(m_finalHitLockDuration, "Final Hit Lock Duration", 0.05f, 3.0f, 0.05f)
 )
@@ -60,10 +66,9 @@ void DeathBasicAttack::startAbility()
     snapFaceTarget(target);
     m_attackFacingTarget = target;
 
-    const int   comboStep = m_deathCharacter->getComboStep();
-    const float damage    = m_deathCharacter->m_basicAttackDamage;
+    const int comboStep = m_deathCharacter->getComboStep();
 
-    m_deathCharacter->dealDamageBasicAttack(damage, target);
+    dealDamageToTarget(target);
     m_deathCharacter->advanceCombo(false);
 
     const bool  isFinalHit  = (comboStep >= 2);
@@ -122,6 +127,108 @@ void DeathBasicAttack::releaseComboMoveLock()
         ps->setState(PlayerStateType::Normal);
 }
 
+void DeathBasicAttack::dealDamageToTarget(GameObject* target) const
+{
+    const Transform* myTransform = GameObjectAPI::getTransform(m_owner);
+    if (myTransform == nullptr)
+    {
+        return;
+    }
+
+    const Vector3 myPos = TransformAPI::getPosition(myTransform);
+    Vector3 myForward = TransformAPI::getForward(myTransform);
+    myForward.y = 0.0f;
+    const float fwdLen = myForward.Length();
+    if (fwdLen > 0.0001f)
+    {
+        myForward /= fwdLen;
+    }
+
+    constexpr float k_degToRad = 3.14159265f / 180.0f;
+    const float halfHitCos = cosf(m_basicAttackHitAngle * 0.5f * k_degToRad);
+    const float rangeSq = m_basicAttackRange * m_basicAttackRange;
+
+    auto isInHitZone = [&](GameObject* enemy) -> bool
+        {
+            if (enemy == nullptr)
+            {
+                return false;
+            }
+            const Transform* eTr = GameObjectAPI::getTransform(enemy);
+            if (eTr == nullptr)
+            {
+                return false;
+            }
+            Vector3 toE = TransformAPI::getPosition(eTr) - myPos;
+            toE.y = 0.0f;
+            if (toE.LengthSquared() > rangeSq)
+            {
+                return false;
+            }
+            if (toE.LengthSquared() > 0.0001f)
+            {
+                Vector3 toENorm = toE;
+                toENorm.Normalize();
+                if (myForward.Dot(toENorm) < halfHitCos)
+                {
+                    return false;
+                }
+            }
+            return true;
+        };
+
+    auto applyDamage = [&](GameObject* enemy)
+        {
+            Script* damScript = GameObjectAPI::getScript(enemy, "EnemyDamageable");
+            if (damScript == nullptr)
+            {
+                return;
+            }
+            EnemyDamageable* damageable = static_cast<EnemyDamageable*>(damScript);
+            damageable->takeDamageEnemy(m_basicAttackDamage, GameObjectAPI::getTransform(getOwner()));
+            Debug::log("[BASIC] hit '%s'  dmg=%.1f  hp=%.1f/%.1f",
+                GameObjectAPI::getName(enemy), m_basicAttackDamage,
+                damageable->getCurrentHp(), damageable->getMaxHp());
+        };
+
+    // Priority 1: targeted enemy in hit zone
+    if (target != nullptr && isInHitZone(target))
+    {
+        applyDamage(target);
+        return;
+    }
+
+    // Priority 2: most-centered enemy in hit zone (no target or target out of zone)
+    float       bestDot = -2.0f;
+    GameObject* best = nullptr;
+    for (GameObject* enemy : SceneAPI::findAllGameObjectsByTag(Tag::ENEMY))
+    {
+        if (!isInHitZone(enemy))
+        {
+            continue;
+        }
+        const Transform* eTr = GameObjectAPI::getTransform(enemy);
+        Vector3 toE = TransformAPI::getPosition(eTr) - myPos;
+        toE.y = 0.0f;
+        toE.Normalize();
+        const float dot = myForward.Dot(toE);
+        if (dot > bestDot)
+        {
+            bestDot = dot;
+            best = enemy;
+        }
+    }
+
+    if (best != nullptr)
+    {
+        applyDamage(best);
+    }
+    else
+    {
+        Debug::log("[BASIC] 0 hits — no enemy in hit zone.");
+    }
+}
+
 void DeathBasicAttack::drawGizmo()
 {
     if (m_deathCharacter == nullptr)
@@ -137,12 +244,10 @@ void DeathBasicAttack::drawGizmo()
 
     const Vector3 pos      = TransformAPI::getPosition(t);
     const Vector3 fwd      = TransformAPI::getForward(t);
-    const float   range    = m_deathCharacter->m_basicAttackRange;
-    const float   hitAngle = m_deathCharacter->m_basicAttackHitAngle;
     const float   fill     = m_deathCharacter->getComboFillRatio();
 
     constexpr float k_degToRad = 3.14159265f / 180.0f;
-    const float hitHalfRad     = hitAngle * 0.5f * k_degToRad;
+    const float hitHalfRad     = m_basicAttackHitAngle * 0.5f * k_degToRad;
 
     const Vector3 posFlat = { pos.x, pos.y, pos.z };
 
@@ -166,24 +271,24 @@ void DeathBasicAttack::drawGizmo()
     {
         const float a0 = circleStep * static_cast<float>(i);
         const float a1 = a0 + circleStep;
-        DebugDrawAPI::drawLine(posFlat + radialDir(a0) * range,
-                               posFlat + radialDir(a1) * range, colGrey);
+        DebugDrawAPI::drawLine(posFlat + radialDir(a0) * m_basicAttackRange,
+                               posFlat + radialDir(a1) * m_basicAttackRange, colGrey);
     }
 
     // Hit zone: narrow arc with edge lines
     const Vector3 hitLeft  = radialDir(-hitHalfRad);
     const Vector3 hitRight = radialDir( hitHalfRad);
-    DebugDrawAPI::drawLine(posFlat, posFlat + hitLeft  * range, colGrey);
-    DebugDrawAPI::drawLine(posFlat, posFlat + hitRight * range, colGrey);
+    DebugDrawAPI::drawLine(posFlat, posFlat + hitLeft  * m_basicAttackRange, colGrey);
+    DebugDrawAPI::drawLine(posFlat, posFlat + hitRight * m_basicAttackRange, colGrey);
 
     const int   arcSegs = 12;
-    const float arcStep = (hitAngle * k_degToRad) / static_cast<float>(arcSegs);
+    const float arcStep = (m_basicAttackHitAngle * k_degToRad) / static_cast<float>(arcSegs);
     for (int i = 0; i < arcSegs; ++i)
     {
         const float a0 = -hitHalfRad + arcStep * static_cast<float>(i);
         const float a1 = a0 + arcStep;
-        DebugDrawAPI::drawLine(posFlat + radialDir(a0) * range,
-                               posFlat + radialDir(a1) * range, colGrey);
+        DebugDrawAPI::drawLine(posFlat + radialDir(a0) * m_basicAttackRange,
+                               posFlat + radialDir(a1) * m_basicAttackRange, colGrey);
     }
 
     // Combo fill: purple (R1 last) or orange (R2 last) on hit zone arc
@@ -196,10 +301,10 @@ void DeathBasicAttack::drawGizmo()
         {
             const float t2 = static_cast<float>(i) / static_cast<float>(fillLines);
             const float a  = -hitHalfRad + t2 * filledAngle;
-            DebugDrawAPI::drawLine(posFlat, posFlat + radialDir(a) * range, colFill);
+            DebugDrawAPI::drawLine(posFlat, posFlat + radialDir(a) * m_basicAttackRange, colFill);
         }
 
-        DebugDrawAPI::drawLine(posFlat, posFlat + hitLeft * range, colFill);
+        DebugDrawAPI::drawLine(posFlat, posFlat + hitLeft * m_basicAttackRange, colFill);
     }
 }
 
@@ -217,7 +322,7 @@ void DeathBasicAttack::snapFaceTarget(GameObject* target)
         return;
     }
 
-    const float rangeSq = m_deathCharacter->m_basicAttackRange * m_deathCharacter->m_basicAttackRange;
+    const float rangeSq = m_basicAttackRange * m_basicAttackRange;
 
     Vector3 myPos     = TransformAPI::getGlobalPosition(myTransform);
     Vector3 targetPos = TransformAPI::getGlobalPosition(targetTransform);
@@ -254,7 +359,7 @@ void DeathBasicAttack::faceTarget(GameObject* target)
     Vector3 dir = targetPos - myPos;
     dir.y = 0.0f;
 
-    const float rangeSq = m_deathCharacter->m_basicAttackRange * m_deathCharacter->m_basicAttackRange;
+    const float rangeSq = m_basicAttackRange * m_basicAttackRange;
     if (dir.LengthSquared() > rangeSq)
     {
         return;

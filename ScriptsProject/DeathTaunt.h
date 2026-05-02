@@ -20,6 +20,13 @@ public:
 
     void drawGizmo() override;
     void onFieldEdited(const ScriptFieldInfo& field) override;
+
+public:
+    float m_tauntDuration = 2.0f;
+    float m_TauntDurationSeconds = 3.0f;
+    float m_TauntRange = 2.5f;
+    float m_TauntHalfAngleDegrees = 35.0f;
+
 protected:
 	void startAbility() override;
 
@@ -42,9 +49,4 @@ private:
     float m_debugConeTimer = 0.0f;
     bool m_isAiming = false;
     Vector3 m_currentAimDirection = Vector3::Zero;
-
-public:
-    float m_TauntDurationSeconds = 3.0f;
-    float m_TauntRange = 2.5f;
-    float m_TauntHalfAngleDegrees = 35.0f;
 };

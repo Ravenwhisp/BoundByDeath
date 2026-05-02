@@ -33,6 +33,10 @@ public:
     ScriptComponentRef<Transform> m_ChargedAttackUI;
 
 public:
+    float m_chargedAttackDamage   = 40.0f;
+    float m_arcRange              = 2.5f;
+    float m_arcAngle              = 120.0f;
+    float m_maxChargeTime         = 2.0f;
     float m_minChargeTime         = 0.5f;
     float m_attackLockDuration    = 0.4f;
     float m_finalHitLockDuration  = 0.8f;
@@ -50,6 +54,8 @@ protected:
 private:
     void startCharging();
     void fireAttack();
+    void dealDamageInArc(float damage) const;
+    void dealDamageInArc(float damage, float range, float angle) const;
     void updateAimDirection();
     void snapFaceAimDirection();
     void releaseComboMoveLock();

@@ -7,6 +7,7 @@
 #include <cmath>
 
 IMPLEMENT_SCRIPT_FIELDS_INHERITED(DeathTaunt, DeathAbilityBase,
+    SERIALIZED_FLOAT(m_tauntDuration, "Taunt Duration", 0.0f, 10.0f, 0.1f),
     SERIALIZED_COMPONENT_REF(m_AbilityUI, "Ability UI", ComponentType::TRANSFORM),
     SERIALIZED_FLOAT(m_TauntDurationSeconds, "Ability Duration", 1.0f, 10.0f, 0.05f),
     SERIALIZED_FLOAT(m_TauntRange, "Cone Range", 1.0f, 10.0f, 0.1f),

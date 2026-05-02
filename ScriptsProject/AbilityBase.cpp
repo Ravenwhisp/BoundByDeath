@@ -15,6 +15,10 @@ AbilityBase::AbilityBase(GameObject* owner)
 {
 }
 
+void AbilityBase::Start()
+{
+}
+
 void AbilityBase::Update()
 {
 	float dt = Time::getDeltaTime();

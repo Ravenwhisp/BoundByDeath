@@ -1,13 +1,19 @@
 #include "pch.h"
 #include "DeathChargedAttack.h"
+
 #include "DeathCharacter.h"
 #include "PlayerState.h"
 #include "PlayerAnimationController.h"
+#include "EnemyDamageable.h"
 
 #include <cmath>
 
 IMPLEMENT_SCRIPT_FIELDS_INHERITED(DeathChargedAttack, DeathAbilityBase,
     SERIALIZED_COMPONENT_REF(m_ChargedAttackUI, "Charged Attack UI", ComponentType::TRANSFORM),
+    SERIALIZED_FLOAT(m_chargedAttackDamage, "Charged Attack Damage", 0.0f, 200.0f, 1.0f),
+    SERIALIZED_FLOAT(m_arcRange, "Arc Range", 0.5f, 10.0f, 0.1f),
+    SERIALIZED_FLOAT(m_arcAngle, "Arc Angle", 10.0f, 360.0f, 5.0f),
+    SERIALIZED_FLOAT(m_maxChargeTime, "Max Charge Time", 0.5f, 5.0f, 0.1f),
     SERIALIZED_FLOAT(m_minChargeTime, "Min Charge Time", 0.0f, 3.0f, 0.05f),
     SERIALIZED_FLOAT(m_attackLockDuration, "Attack Lock Duration", 0.05f, 2.0f, 0.05f),
     SERIALIZED_FLOAT(m_finalHitLockDuration, "Final Hit Lock Duration", 0.05f, 3.0f, 0.05f),
@@ -28,8 +34,6 @@ void DeathChargedAttack::Start()
 void DeathChargedAttack::Update()
 {
     DeathAbilityBase::Update();
-
-    //TODO: if general para el update
 
     // Release combo movement lock once the attack window is done and combo has ended
     if (m_movementLockedForCombo && !m_isCharging && m_attackStateTimer <= 0.0f)
@@ -57,7 +61,7 @@ void DeathChargedAttack::Update()
 			TransformAPI::setRotationEuler(m_ChargedAttackUI.getReferencedComponent(), Vector3(0.0f, targetYawDeg, 0.0f));
         }
 
-        const bool maxReached = (m_chargeTime >= m_deathCharacter->m_maxChargeTime);
+        const bool maxReached = (m_chargeTime >= m_maxChargeTime);
         const bool released   = Input::isRightTriggerReleased(getPlayerIndex());
 
         if (maxReached || released)
@@ -107,7 +111,7 @@ void DeathChargedAttack::fireAttack()
     snapFaceAimDirection();
 
     const int   comboStep   = m_deathCharacter->getComboStep();
-    const bool  isMaxCharge = (m_chargeTime >= m_deathCharacter->m_maxChargeTime);
+    const bool  isMaxCharge = (m_chargeTime >= m_maxChargeTime);
 
     // Charged-mode shot: only valid as combo starter (step 0), needs min charge time
     const bool isChargedShot = (m_chargeTime >= m_minChargeTime) && (comboStep == 0);
@@ -115,23 +119,23 @@ void DeathChargedAttack::fireAttack()
     float damage;
     if (isChargedShot)
     {
-        const float rawRatio    = m_chargeTime / m_deathCharacter->m_maxChargeTime;
+        const float rawRatio    = m_chargeTime / m_maxChargeTime;
         const float chargeRatio = rawRatio > 1.0f ? 1.0f : rawRatio;
-        damage = m_deathCharacter->m_chargedAttackDamage * (1.0f + chargeRatio);
+        damage = m_chargedAttackDamage * (1.0f + chargeRatio);
 
         if (isMaxCharge)
             Debug::log("[COMBO] R2 CARGA MAXIMA  step %d/3  dmg=%.1f", comboStep + 1, damage);
         else
             Debug::log("[COMBO] R2 CARGADO  step %d/3  ratio=%.0f%%  dmg=%.1f",
-                comboStep + 1, (m_chargeTime / m_deathCharacter->m_maxChargeTime) * 100.0f, damage);
+                comboStep + 1, (m_chargeTime / m_maxChargeTime) * 100.0f, damage);
     }
     else
     {
-        damage = m_deathCharacter->m_chargedAttackDamage;
+        damage = m_chargedAttackDamage;
         Debug::log("[COMBO] R2  step %d/3  dmg=%.1f", comboStep + 1, damage);
     }
 
-    m_deathCharacter->dealDamageInArc(damage, m_chargedArcRange, m_chargedArcAngle);
+    dealDamageInArc(damage, m_chargedArcRange, m_chargedArcAngle);
 
     // Max charge (auto-fired at full charge, always step 0) gets longer combo window
     const float window = (isChargedShot && isMaxCharge)
@@ -151,6 +155,102 @@ void DeathChargedAttack::fireAttack()
     // Trigger attack animation and start the post-fire movement lock window
     beginAttackPresentation();
     beginAttackWindow(lockDuration);
+}
+
+void DeathChargedAttack::dealDamageInArc(float damage) const
+{
+    const Transform* myTransform = GameObjectAPI::getTransform(m_owner);
+    if (myTransform == nullptr)
+    {
+        return;
+    }
+
+    Vector3 myPos = TransformAPI::getPosition(myTransform);
+    Vector3 myForward = TransformAPI::getForward(myTransform);
+
+    myForward.y = 0.0f;
+    const float fwdLen = myForward.Length();
+    if (fwdLen > 0.0001f)
+    {
+        myForward /= fwdLen;
+    }
+
+    constexpr float k_degToRad = 3.14159265f / 180.0f;
+    const float     halfAngleCos = cosf(m_arcAngle * 0.5f * k_degToRad);
+    const float     arcRangeSq = m_arcRange * m_arcRange;
+
+    const auto enemies = SceneAPI::findAllGameObjectsByTag(Tag::ENEMY);
+    int scanned = 0;
+    int hit = 0;
+
+    for (GameObject* enemy : enemies)
+    {
+        if (enemy == nullptr)
+        {
+            continue;
+        }
+
+        const Transform* enemyTr = GameObjectAPI::getTransform(enemy);
+        if (enemyTr == nullptr)
+        {
+            continue;
+        }
+
+        scanned++;
+
+        Vector3 toEnemy = TransformAPI::getPosition(enemyTr) - myPos;
+        toEnemy.y = 0.0f;
+
+        const float distSq = toEnemy.LengthSquared();
+        if (distSq > arcRangeSq)
+        {
+            continue;
+        }
+
+        if (m_arcAngle < 360.0f && distSq > 0.0001f)
+        {
+            Vector3 toEnemyNorm = toEnemy;
+            toEnemyNorm.Normalize();
+            if (myForward.Dot(toEnemyNorm) < halfAngleCos)
+            {
+                continue;
+            }
+        }
+
+        Script* damScript = GameObjectAPI::getScript(enemy, "EnemyDamageable");
+        if (damScript == nullptr)
+        {
+            Debug::log("[ARC] '%s' has no EnemyDamageable.", GameObjectAPI::getName(enemy));
+            continue;
+        }
+
+        EnemyDamageable* damageable = static_cast<EnemyDamageable*>(damScript);
+        damageable->takeDamageEnemy(damage, GameObjectAPI::getTransform(getOwner()));
+        hit++;
+        Debug::log("[ARC] hit '%s'  dmg=%.1f  hp=%.1f/%.1f",
+            GameObjectAPI::getName(enemy), damage,
+            damageable->getCurrentHp(), damageable->getMaxHp());
+    }
+
+    if (scanned == 0)
+    {
+        Debug::log("[ARC] no ENEMY tagged objects in scene.");
+    }
+    else if (hit == 0)
+    {
+        Debug::log("[ARC] 0 hits — %d enemies scanned, none in range/angle.", scanned);
+    }
+}
+
+void DeathChargedAttack::dealDamageInArc(float damage, float range, float angle) const //charged attack
+{
+    const float savedRange = m_arcRange;
+    const float savedAngle = m_arcAngle;
+    const_cast<DeathChargedAttack*>(this)->m_arcRange = range;
+    const_cast<DeathChargedAttack*>(this)->m_arcAngle = angle;
+    dealDamageInArc(damage);
+    const_cast<DeathChargedAttack*>(this)->m_arcRange = savedRange;
+    const_cast<DeathChargedAttack*>(this)->m_arcAngle = savedAngle;
 }
 
 void DeathChargedAttack::updateAimDirection()
@@ -275,9 +375,9 @@ void DeathChargedAttack::drawGizmo()
     }
 
     // Charge fill: yellow overlay that grows with charge ratio
-    if (m_isCharging && m_deathCharacter->m_maxChargeTime > 0.0f)
+    if (m_isCharging && m_maxChargeTime > 0.0f)
     {
-        const float ratio   = m_chargeTime / m_deathCharacter->m_maxChargeTime;
+        const float ratio   = m_chargeTime / m_maxChargeTime;
         const float clamped = ratio > 1.0f ? 1.0f : ratio;
         const int   fillEnd = static_cast<int>(clamped * static_cast<float>(arcSegs));
 
