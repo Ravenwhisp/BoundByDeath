@@ -16,7 +16,8 @@ public:
     ScriptFieldList getExposedFields() const override;
 
 private:
-    bool canBeCollectedBy(GameObject* other) const;
+    bool canBeCollectedBy(GameObject* player) const;
+    bool applyPowerup();
 
     void idleAnimation();
 
@@ -28,7 +29,15 @@ private:
         BOTH
     };
 
+    enum PowerUpEffect
+    {
+        LYRIEL_POWERUP_1 = 0,
+        DEATH_POWERUP_1
+    };
+
     int m_targetCharacter = BOTH;
+    int m_powerupEffect = LYRIEL_POWERUP_1;
+
     bool m_collected = false;
 
     // Idle animation

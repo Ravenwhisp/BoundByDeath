@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "PowerupCollectible.h"
 
+#include "PersistingPowerupState.h"
+
 #include <cmath>
 
 static const char* powerupTargetNames[] =
@@ -10,8 +12,15 @@ static const char* powerupTargetNames[] =
     "Both"
 };
 
+static const char* powerupEffectNames[] =
+{
+    "Lyriel Powerup 1",
+    "Death Powerup 1"
+};
+
 IMPLEMENT_SCRIPT_FIELDS(PowerupCollectible,
     SERIALIZED_ENUM_INT(m_targetCharacter, "Target Character", powerupTargetNames, 3),
+    SERIALIZED_ENUM_INT(m_powerupEffect, "Powerup Effect", powerupEffectNames, 2),
     SERIALIZED_FLOAT(m_idleSpeed, "Idle Speed", 0.0f, 10.0f, 0.05f),
     SERIALIZED_FLOAT(m_horizontalAmplitude, "Horizontal Amplitude", 0.0f, 5.0f, 0.05f),
     SERIALIZED_FLOAT(m_verticalAmplitude, "Vertical Amplitude", 0.0f, 5.0f, 0.05f)
@@ -54,6 +63,11 @@ void PowerupCollectible::OnTriggerEnter(GameObject* player)
         return;
     }
 
+    if (!applyPowerup())
+    {
+        return;
+    }
+
     m_collected = true;
 
     GameObjectAPI::removeGameObject(getOwner());
@@ -73,6 +87,25 @@ bool PowerupCollectible::canBeCollectedBy(GameObject* player) const
 
     case BOTH:
         return name == "Lyriel" || name == "Death";
+
+    default:
+        return false;
+    }
+}
+
+bool PowerupCollectible::applyPowerup()
+{
+    switch (m_powerupEffect)
+    {
+    case LYRIEL_POWERUP_1:
+        PersistingPowerupState::unlock(PowerupId::LyrielPowerup1);
+        Debug::log("[PowerupCollectible] Lyriel Powerup 1 unlocked.");
+        return true;
+
+    case DEATH_POWERUP_1:
+        PersistingPowerupState::unlock(PowerupId::DeathPowerup1);
+        Debug::log("[PowerupCollectible] Death Powerup 1 unlocked.");
+        return true;
 
     default:
         return false;
