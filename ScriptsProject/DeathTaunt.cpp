@@ -3,6 +3,8 @@
 #include "DeathCharacter.h"
 #include "EnemyDetectionAggro.h"
 #include "PlayerRotation.h"
+#include "PersistingPowerupState.h"
+#include "EnemyShadowMark.h"
 
 #include <cmath>
 
@@ -235,6 +237,18 @@ void DeathTaunt::applyTauntToEnemiesInCone(const Vector3& ownerForward) const
 
         static_cast<EnemyDetectionAggro*>(script)->applyTaunt(ownerTransform, m_TauntDurationSeconds);
         Debug::log("[DeathTaunt] Taunt applied to '%s' for %.1fs.", GameObjectAPI::getName(enemy), m_TauntDurationSeconds);
+
+        if (PersistingPowerupState::isUnlocked(PowerupId::DeathPowerup1))
+        {
+            Script* markScript = GameObjectAPI::getScript(enemy, "EnemyShadowMark");
+            EnemyShadowMark* shadowMark = static_cast<EnemyShadowMark*>(markScript);
+
+            if (shadowMark != nullptr)
+            {
+                shadowMark->notifyDeathHit();
+            }
+        }
+
         ++taunted;
     }
 
