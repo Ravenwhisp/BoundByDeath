@@ -1,6 +1,10 @@
 #include "pch.h"
 #include "AbilityBase.h"
+
 #include "CharacterBase.h"
+#include "PlayerState.h"
+#include "PlayerAnimationController.h"
+#include "UISlider.h"
 
 IMPLEMENT_SCRIPT_FIELDS(AbilityBase,
     SERIALIZED_FLOAT(m_cooldown, "Cooldown", 0.0f, 10.0f, 0.01f),
@@ -15,22 +19,34 @@ AbilityBase::AbilityBase(GameObject* owner)
 
 void AbilityBase::Start()
 {
-    m_character = findCharacterScript(getOwner());
 }
 
 void AbilityBase::Update()
 {
-    updateCooldown();
+	float dt = Time::getDeltaTime();
+
+    updateCooldown(dt);
+	updateAttackWindow(dt);
 }
 
-void AbilityBase::updateCooldown()
+void AbilityBase::tryAbility()
+{
+    if (!canStartAbility())
+    {
+        return;
+    }
+
+    startAbility();
+}
+
+void AbilityBase::updateCooldown(float dt)
 {
     if (m_cooldownTimer <= 0.0f)
     {
         return;
     }
 
-    m_cooldownTimer -= Time::getDeltaTime();
+    m_cooldownTimer -= dt;
     if (m_cooldownTimer <= 0.0f)
     {
 		Transform* cdUITransform = m_cdUI.getReferencedComponent();
@@ -63,14 +79,30 @@ void AbilityBase::startCooldown()
 	}
 }
 
+void AbilityBase::updateAttackWindow(float dt)
+{
+    if (m_attackStateTimer <= 0.0f)
+    {
+        return;
+    }
+
+    onAttackWindowUpdate();
+
+    m_attackStateTimer -= dt;
+    if (m_attackStateTimer <= 0.0f)
+    {
+        finishAttackWindow();
+    }
+}
+
 bool AbilityBase::canStartAbility() const
 {
-    if (!m_isEnabled)
+    if (m_character == nullptr)
     {
         return false;
     }
-
-    if (m_character == nullptr)
+    
+    if (!m_isEnabled)
     {
         return false;
     }
@@ -78,7 +110,7 @@ bool AbilityBase::canStartAbility() const
     if (!isCooldownReady())
     {
         return false;
-    }
+    } 
 
     if (m_character->isDowned())
     {
@@ -90,10 +122,15 @@ bool AbilityBase::canStartAbility() const
         return false;
     }
 
+    if (!canStartSpecificAbility())
+    {
+        return false;
+    }
+
     return true;
 }
 
-void AbilityBase::setAbilityLocked(bool locked)
+void AbilityBase::setAbilityLocked(bool locked) //innecesario
 {
     if (m_character != nullptr)
     {
@@ -101,7 +138,7 @@ void AbilityBase::setAbilityLocked(bool locked)
     }
 }
 
-int AbilityBase::getPlayerIndex() const
+int AbilityBase::getPlayerIndex() const //innecesario
 {
     if (m_character == nullptr)
     {
@@ -111,29 +148,54 @@ int AbilityBase::getPlayerIndex() const
     return m_character->getPlayerIndex();
 }
 
-CharacterBase* AbilityBase::findCharacterScript(GameObject* owner) const
+void AbilityBase::beginAttackWindow(float lockDuration)
 {
-    if (owner == nullptr)
-    {
-        return nullptr;
-    }
-
-    Script* script = GameObjectAPI::getScript(owner, "LyrielCharacter");
-    if (script != nullptr)
-    {
-        return static_cast<CharacterBase*>(script);
-    }
-
-    script = GameObjectAPI::getScript(owner, "DeathCharacter");
-    if (script != nullptr)
-    {
-        return static_cast<CharacterBase*>(script);
-    }
-
-    return nullptr;
+    m_attackStateTimer = lockDuration;
 }
 
-Vector3 AbilityBase::computeCameraRelativeAimDirection(float deadzoneSq) const
+void AbilityBase::finishAttackWindow()
+{
+    m_attackStateTimer = 0.0f;
+
+    setAbilityLocked(false);
+
+    if (m_character != nullptr)
+    {
+        PlayerState* playerState = m_character->getPlayerState();
+        if (playerState != nullptr && playerState->isAttacking())
+        {
+            playerState->setState(PlayerStateType::Normal);
+        }
+    }
+
+    onAttackWindowFinished();
+}
+
+void AbilityBase::beginAttackPresentation()
+{
+    if (m_character == nullptr)
+    {
+        return;
+    }
+
+    PlayerState* playerState = m_character->getPlayerState();
+    if (playerState != nullptr)
+    {
+        playerState->setState(PlayerStateType::Attacking);
+    }
+    else
+    {
+        Debug::warn("[DeathAbility] PlayerState is NULL � canMove() block will not work!"); //CAMBIAR
+    }
+
+    PlayerAnimationController* animController = m_character->getAnimationController();
+    if (animController != nullptr)
+    {
+        animController->requestAttack();
+    }
+}
+
+Vector3 AbilityBase::computeCameraRelativeAimDirection(float deadzoneSq) const //no me gustan transforms aqui
 {
     const Vector2 lookAxis = Input::getLookAxis(getPlayerIndex());
     const float magSq = lookAxis.x * lookAxis.x + lookAxis.y * lookAxis.y;
@@ -220,3 +282,5 @@ Vector3 AbilityBase::getFallbackFacingDirection() const
     forward.Normalize();
     return forward;
 }
+
+IMPLEMENT_SCRIPT(AbilityBase)

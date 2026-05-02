@@ -39,20 +39,17 @@ void LyrielChargedAttack::Update()
 {
     LyrielAbilityBase::Update();
 
-    if (canStartCharge() && Input::isRightTriggerJustPressed(getPlayerIndex()))
+    if (m_isCharging)
     {
-        beginCharge();
-    }
-
-    if (m_isCharging && Input::isRightTriggerPressed(getPlayerIndex()))
-    {
-        updateCharge();
-    }
-
-    if (m_isCharging && Input::isRightTriggerReleased(getPlayerIndex()))
-    {
-        releaseChargeAndShoot();
-    }
+        if (!Input::isRightTriggerReleased(getPlayerIndex()))
+        {
+            updateCharge();
+        }
+        else
+        {
+            releaseChargeAndShoot();
+        }
+	}
 }
 
 void LyrielChargedAttack::drawGizmo()
@@ -96,9 +93,14 @@ void LyrielChargedAttack::onAttackWindowFinished()
     m_attackFacingDirection = Vector3::Zero;
 }
 
+void LyrielChargedAttack::startAbility()
+{
+    beginCharge();
+}
+
 bool LyrielChargedAttack::canStartCharge() const
 {
-    return canStartAbility();
+    return canStartAbility(); //borrar
 }
 
 bool LyrielChargedAttack::canShoot() const
@@ -362,12 +364,12 @@ void LyrielChargedAttack::applyChargedDamage(const std::vector<GameObject*>& tar
 
 void LyrielChargedAttack::spawnChargedArrow(const Vector3& origin, const Vector3& forward)
 {
-    if (m_lyriel == nullptr)
+    if (m_lyrielCharacter == nullptr)
     {
         return;
     }
 
-    ArrowPool* arrowPool = m_lyriel->getArrowPool();
+    ArrowPool* arrowPool = m_lyrielCharacter->getArrowPool();
     if (arrowPool == nullptr)
     {
         return;

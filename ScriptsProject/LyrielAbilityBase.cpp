@@ -13,46 +13,28 @@ LyrielAbilityBase::LyrielAbilityBase(GameObject* owner)
 
 void LyrielAbilityBase::Start()
 {
-    AbilityBase::Start();
+    m_lyrielCharacter = dynamic_cast<LyrielCharacter*>(GameObjectAPI::getScript(getOwner(), "LyrielCharacter"));
+    m_character = m_lyrielCharacter;
 
-    m_lyriel = dynamic_cast<LyrielCharacter*>(GameObjectAPI::getScript(getOwner(), "LyrielCharacter"));
-    m_character = m_lyriel;
-
-    if (m_lyriel == nullptr)
+    if (m_lyrielCharacter == nullptr)
     {
         Debug::log("[LyrielAbilityBase] LyrielCharacter not found on owner '%s'.", GameObjectAPI::getName(getOwner()));
-    }
-}
-
-void LyrielAbilityBase::Update()
-{
-    AbilityBase::Update();
-
-    if (m_attackStateTimer > 0.0f)
-    {
-        onAttackWindowUpdate();
-
-        m_attackStateTimer -= Time::getDeltaTime();
-        if (m_attackStateTimer <= 0.0f)
-        {
-            finishAttackWindow();
-        }
     }
 }
 
 Transform* LyrielAbilityBase::findArrowSpawnTransform() const
 {
     Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
-    if (ownerTransform == nullptr || m_lyriel == nullptr)
+    if (ownerTransform == nullptr || m_lyrielCharacter == nullptr)
     {
         return nullptr;
     }
 
-    if (!m_lyriel->m_arrowSpawnChildName.empty())
+    if (!m_lyrielCharacter->m_arrowSpawnChildName.empty())
     {
         Transform* spawnTransform = TransformAPI::findChildByName(
             ownerTransform,
-            m_lyriel->m_arrowSpawnChildName.c_str());
+            m_lyrielCharacter->m_arrowSpawnChildName.c_str());
 
         if (spawnTransform != nullptr)
         {
@@ -86,47 +68,4 @@ void LyrielAbilityBase::faceDirection(const Vector3& direction)
 
     flatDirection.Normalize();
     playerRotation->applyFacingFromDirection(getOwner(), flatDirection, Time::getDeltaTime());
-}
-
-void LyrielAbilityBase::beginAttackWindow(float lockDuration)
-{
-    m_attackStateTimer = lockDuration;
-}
-
-void LyrielAbilityBase::finishAttackWindow()
-{
-    m_attackStateTimer = 0.0f;
-
-    setAbilityLocked(false);
-
-    if (m_character != nullptr)
-    {
-        PlayerState* playerState = m_character->getPlayerState();
-        if (playerState != nullptr && playerState->isAttacking())
-        {
-            playerState->setState(PlayerStateType::Normal);
-        }
-    }
-
-    onAttackWindowFinished();
-}
-
-void LyrielAbilityBase::beginAttackPresentation()
-{
-    if (m_character == nullptr)
-    {
-        return;
-    }
-
-    PlayerState* playerState = m_character->getPlayerState();
-    if (playerState != nullptr)
-    {
-        playerState->setState(PlayerStateType::Attacking);
-    }
-
-    PlayerAnimationController* animationController = m_character->getAnimationController();
-    if (animationController != nullptr)
-    {
-        animationController->requestAttack();
-    }
 }

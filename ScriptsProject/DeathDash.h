@@ -12,16 +12,17 @@ public:
     void Start() override;
     ScriptFieldList getExposedFields() const override;
 
-protected:
+public:
+    float m_dashDistance = 5.0f;
+    float m_dashHitWidth = 2.0f;
+    float m_dashDamage   = 20.0f;
 
+protected:
     void onDashStarted() override;
     void onDashEnded() override;
     void onDashUpdate(float dt) override;
 
 private:
-    float m_dashHitWidth = 2.0f;
-    float m_dashDamage = 20.0f;
-
     Vector3 m_dashStartPosition = Vector3::Zero;
     bool    m_dashDamageDealt = false;   // guard: damage fires only once per dash
 

@@ -19,6 +19,8 @@ public:
     ScriptComponentRef<Transform> m_AbilityUI;
 
 protected:
+	void startAbility() override;
+
     void onAttackWindowUpdate() override;
     void onAttackWindowFinished() override;
 
