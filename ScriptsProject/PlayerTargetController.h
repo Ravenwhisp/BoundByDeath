@@ -21,11 +21,11 @@ public:
     GameObject* getCurrentTarget() const { return m_currentTarget; }
 
 private:
-    void updateEnemiesInRange();
+    void updateTargetsInRange();
     void ensureValidCurrentTarget();
     void cycleTarget();
 
-    bool isEnemyInRange(GameObject* enemy) const;
+    bool isTargetInRange(GameObject* target) const;
     int findTargetIndex(GameObject* target) const;
 
 public:
@@ -34,5 +34,5 @@ public:
 private:
     CharacterBase* m_character = nullptr;
     GameObject* m_currentTarget = nullptr;
-    std::vector<GameObject*> m_enemiesInRange;
+    std::vector<GameObject*> m_targetsInRange;
 };

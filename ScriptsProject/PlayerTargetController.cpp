@@ -30,7 +30,7 @@ void PlayerTargetController::Start()
 
 void PlayerTargetController::Update()
 {
-    updateEnemiesInRange();
+    updateTargetsInRange();
     ensureValidCurrentTarget();
 
     if (m_character == nullptr)
@@ -55,7 +55,7 @@ void PlayerTargetController::drawGizmo()
         return;
     }
 
-    const Vector3 ownerPosition = TransformAPI::getPosition(ownerTransform);
+    const Vector3 ownerPosition = TransformAPI::getGlobalPosition(ownerTransform);
 
     const Vector3 green = { 0.0f, 1.0f, 0.0f };
     const Vector3 yellow = { 1.0f, 1.0f, 0.0f };
@@ -67,17 +67,22 @@ void PlayerTargetController::drawGizmo()
         Transform* targetTransform = GameObjectAPI::getTransform(m_currentTarget);
         if (targetTransform != nullptr)
         {
-            const Vector3 targetPosition = TransformAPI::getPosition(targetTransform);
+            const Vector3 targetPosition = TransformAPI::getGlobalPosition(targetTransform);
             drawLine(ownerPosition, targetPosition, yellow, 0, true);
         }
     }
 }
 
-void PlayerTargetController::updateEnemiesInRange()
+void PlayerTargetController::updateTargetsInRange()
 {
-    m_enemiesInRange.clear();
+    m_targetsInRange.clear();
 
     const std::vector<GameObject*> enemies = SceneAPI::findAllGameObjectsByTag(Tag::ENEMY, true);
+    const std::vector<GameObject*> breakables = SceneAPI::findAllGameObjectsByTag(Tag::BREAKABLE, true);
+
+    Debug::log("[TargetController] Found enemies: %d | breakables: %d",
+        static_cast<int>(enemies.size()),
+        static_cast<int>(breakables.size()));
 
     for (GameObject* enemy : enemies)
     {
@@ -86,24 +91,52 @@ void PlayerTargetController::updateEnemiesInRange()
             continue;
         }
 
-        if (isEnemyInRange(enemy))
+        const bool inRange = isTargetInRange(enemy);
+
+        Debug::log("[TargetController] Enemy '%s' in range: %s",
+            GameObjectAPI::getName(enemy),
+            inRange ? "true" : "false");
+
+        if (inRange)
         {
-            m_enemiesInRange.push_back(enemy);
+            m_targetsInRange.push_back(enemy);
         }
     }
+
+    for (GameObject* breakable : breakables)
+    {
+        if (breakable == nullptr)
+        {
+            continue;
+        }
+
+        const bool inRange = isTargetInRange(breakable);
+
+        Debug::log("[TargetController] Breakable '%s' in range: %s",
+            GameObjectAPI::getName(breakable),
+            inRange ? "true" : "false");
+
+        if (inRange)
+        {
+            m_targetsInRange.push_back(breakable);
+        }
+    }
+
+    Debug::log("[TargetController] Total targets in range: %d",
+        static_cast<int>(m_targetsInRange.size()));
 }
 
 void PlayerTargetController::ensureValidCurrentTarget()
 {
     GameObject* previousTarget = m_currentTarget;
 
-    if (m_enemiesInRange.empty())
+    if (m_targetsInRange.empty())
     {
         m_currentTarget = nullptr;
     }
     else if (findTargetIndex(m_currentTarget) == -1)
     {
-        m_currentTarget = m_enemiesInRange[0];
+        m_currentTarget = m_targetsInRange[0];
     }
 
     if (m_currentTarget != previousTarget)
@@ -121,10 +154,10 @@ void PlayerTargetController::ensureValidCurrentTarget()
 
 void PlayerTargetController::cycleTarget()
 {
-    if (m_enemiesInRange.empty())
+    if (m_targetsInRange.empty())
     {
         m_currentTarget = nullptr;
-        Debug::log("No enemies in range");
+        Debug::log("No targets in range");
         return;
     }
 
@@ -132,20 +165,20 @@ void PlayerTargetController::cycleTarget()
 
     if (currentIndex == -1)
     {
-        m_currentTarget = m_enemiesInRange[0];
+        m_currentTarget = m_targetsInRange[0];
     }
     else
     {
-        const int nextIndex = (currentIndex + 1) % static_cast<int>(m_enemiesInRange.size());
-        m_currentTarget = m_enemiesInRange[nextIndex];
+        const int nextIndex = (currentIndex + 1) % static_cast<int>(m_targetsInRange.size());
+        m_currentTarget = m_targetsInRange[nextIndex];
     }
 
     Debug::log("Cycled target: %s", GameObjectAPI::getName(m_currentTarget));
 }
 
-bool PlayerTargetController::isEnemyInRange(GameObject* enemy) const
+bool PlayerTargetController::isTargetInRange(GameObject* target) const
 {
-    if (enemy == nullptr)
+    if (target == nullptr)
     {
         return false;
     }
@@ -153,18 +186,18 @@ bool PlayerTargetController::isEnemyInRange(GameObject* enemy) const
     GameObject* owner = getOwner();
 
     Transform* ownerTransform = GameObjectAPI::getTransform(owner);
-    Transform* enemyTransform = GameObjectAPI::getTransform(enemy);
+    Transform* targetTransform = GameObjectAPI::getTransform(target);
 
-    if (ownerTransform == nullptr || enemyTransform == nullptr)
+    if (ownerTransform == nullptr || targetTransform == nullptr)
     {
         return false;
     }
 
-    const Vector3 ownerPosition = TransformAPI::getPosition(ownerTransform);
-    const Vector3 enemyPosition = TransformAPI::getPosition(enemyTransform);
+    const Vector3 ownerPosition = TransformAPI::getGlobalPosition(ownerTransform);
+    const Vector3 targetPosition = TransformAPI::getGlobalPosition(targetTransform);
 
-    const Vector3 distanceFromEnemy = enemyPosition - ownerPosition;
-    const float distance = distanceFromEnemy.Length();
+    const Vector3 distanceFromTarget = targetPosition - ownerPosition;
+    const float distance = distanceFromTarget.Length();
 
     return distance <= m_targetRange;
 }
@@ -176,9 +209,9 @@ int PlayerTargetController::findTargetIndex(GameObject* target) const
         return -1;
     }
 
-    for (int i = 0; i < static_cast<int>(m_enemiesInRange.size()); ++i)
+    for (int i = 0; i < static_cast<int>(m_targetsInRange.size()); ++i)
     {
-        if (m_enemiesInRange[i] == target)
+        if (m_targetsInRange[i] == target)
         {
             return i;
         }
