@@ -24,17 +24,14 @@ static Damageable* findDamageable(GameObject* gameObject)
 	return damageable;
 }
 
-static const ScriptFieldInfo ATTACKFields[] =
-{
-	{ "Attack Damage", ScriptFieldType::Float, offsetof(EnemyATTACK, m_attackDamage), { 0.0f, 999999.0f, 1.0f } },
-	{ "Attack Cooldown", ScriptFieldType::Float, offsetof(EnemyATTACK, m_attackCooldown), { 0.0f, 10.0f, 0.1f } },
-	{ "Attack Total Duration", ScriptFieldType::Float, offsetof(EnemyATTACK, m_attackTotalDuration), { 0.1f, 5.0f, 0.05f } },
-	{ "Damage Trigger Time", ScriptFieldType::Float, offsetof(EnemyATTACK, m_damageTriggerTime), { 0.0f, 5.0f, 0.05f } },
-	{ "Attack Commit Duration", ScriptFieldType::Float, offsetof(EnemyATTACK, m_attackCommitDuration), { 0.0f, 2.0f, 0.05f } },
-	{ "Debug Enabled", ScriptFieldType::Bool, offsetof(EnemyATTACK, m_debugEnabled) }
-};
-
-IMPLEMENT_SCRIPT_FIELDS(EnemyATTACK, ATTACKFields)
+IMPLEMENT_SCRIPT_FIELDS(EnemyATTACK,
+	SERIALIZED_FLOAT(m_attackDamage, "Attack Damage", 0.0f, 999999.0f, 1.0f),
+	SERIALIZED_FLOAT(m_attackCooldown, "Attack Cooldown", 0.0f, 10.0f, 0.1f),
+  SERIALIZED_FLOAT(m_attackTotalDuration, "Attack Total Duration", 0.1f, 5.0f, 0.05f),
+  SERIALIZED_FLOAT(m_damageTriggerTime, "Damage Trigger Time", 0.0f, 5.0f, 0.05f),
+  SERIALIZED_FLOAT(m_attackCommitDuration, "Attack Commit Duration", 0.0f, 2.0f, 0.05f),
+	SERIALIZED_BOOL(m_debugEnabled, "Debug Enabled")
+)
 
 EnemyATTACK::EnemyATTACK(GameObject* owner) : StateMachineScript(owner)
 {

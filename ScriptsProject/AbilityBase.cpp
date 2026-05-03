@@ -2,6 +2,12 @@
 #include "AbilityBase.h"
 #include "CharacterBase.h"
 
+IMPLEMENT_SCRIPT_FIELDS(AbilityBase,
+    SERIALIZED_FLOAT(m_cooldown, "Cooldown", 0.0f, 10.0f, 0.01f),
+    SERIALIZED_COMPONENT_REF(m_cdUI, "CD UI", ComponentType::TRANSFORM),
+    SERIALIZED_COMPONENT_REF(m_cdBar, "CD Slider", ComponentType::UISLIDER)
+)
+
 AbilityBase::AbilityBase(GameObject* owner)
     : Script(owner)
 {
@@ -25,10 +31,36 @@ void AbilityBase::updateCooldown()
     }
 
     m_cooldownTimer -= Time::getDeltaTime();
-    if (m_cooldownTimer < 0.0f)
+    if (m_cooldownTimer <= 0.0f)
     {
+		Transform* cdUITransform = m_cdUI.getReferencedComponent();
+        if (cdUITransform)
+        {
+            GameObject* cdUIObject = cdUITransform->getOwner();
+            if (cdUIObject)
+            {
+                GameObjectAPI::setActive(cdUIObject, false);
+            }
+		}
         m_cooldownTimer = 0.0f;
+        return;
     }
+	SliderAPI::setFillAmount(m_cdBar.getReferencedComponent(), (m_cooldownTimer / m_cooldown));
+
+}
+
+void AbilityBase::startCooldown()
+{
+    m_cooldownTimer = m_cooldown;
+	Transform* cdUITransform = m_cdUI.getReferencedComponent();
+    if (cdUITransform)
+    {
+        GameObject* cdUIObject = cdUITransform->getOwner();
+        if (cdUIObject)
+        {
+            GameObjectAPI::setActive(cdUIObject, true);
+        }
+	}
 }
 
 bool AbilityBase::canStartAbility() const
@@ -99,4 +131,92 @@ CharacterBase* AbilityBase::findCharacterScript(GameObject* owner) const
     }
 
     return nullptr;
+}
+
+Vector3 AbilityBase::computeCameraRelativeAimDirection(float deadzoneSq) const
+{
+    const Vector2 lookAxis = Input::getLookAxis(getPlayerIndex());
+    const float magSq = lookAxis.x * lookAxis.x + lookAxis.y * lookAxis.y;
+
+    if (magSq < deadzoneSq)
+    {
+        return Vector3::Zero;
+    }
+
+    GameObject* cameraObject = SceneAPI::getDefaultCameraGameObject();
+    if (cameraObject == nullptr)
+    {
+        Vector3 fallbackDirection(lookAxis.x, 0.0f, lookAxis.y);
+
+        if (fallbackDirection.LengthSquared() > 0.0001f)
+        {
+            fallbackDirection.Normalize();
+        }
+
+        return fallbackDirection;
+    }
+
+    Transform* cameraTransform = GameObjectAPI::getTransform(cameraObject);
+    if (cameraTransform == nullptr)
+    {
+        Vector3 fallbackDirection(lookAxis.x, 0.0f, lookAxis.y);
+
+        if (fallbackDirection.LengthSquared() > 0.0001f)
+        {
+            fallbackDirection.Normalize();
+        }
+
+        return fallbackDirection;
+    }
+
+    Vector3 cameraForward = TransformAPI::getForward(cameraTransform);
+    Vector3 cameraRight = TransformAPI::getRight(cameraTransform);
+
+    cameraForward.y = 0.0f;
+    cameraRight.y = 0.0f;
+
+    if (cameraForward.LengthSquared() <= 0.0001f || cameraRight.LengthSquared() <= 0.0001f)
+    {
+        Vector3 fallbackDirection(lookAxis.x, 0.0f, lookAxis.y);
+
+        if (fallbackDirection.LengthSquared() > 0.0001f)
+        {
+            fallbackDirection.Normalize();
+        }
+
+        return fallbackDirection;
+    }
+
+    cameraForward.Normalize();
+    cameraRight.Normalize();
+
+    Vector3 aimDirection = -cameraRight * lookAxis.x - cameraForward * lookAxis.y;
+
+    if (aimDirection.LengthSquared() <= 0.0001f)
+    {
+        return Vector3::Zero;
+    }
+
+    aimDirection.Normalize();
+    return aimDirection;
+}
+
+Vector3 AbilityBase::getFallbackFacingDirection() const
+{
+    Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
+    if (ownerTransform == nullptr)
+    {
+        return Vector3::Zero;
+    }
+
+    Vector3 forward = TransformAPI::getForward(ownerTransform);
+    forward.y = 0.0f;
+
+    if (forward.LengthSquared() <= 0.0001f)
+    {
+        return Vector3::Zero;
+    }
+
+    forward.Normalize();
+    return forward;
 }

@@ -16,6 +16,8 @@ public:
 
     ScriptFieldList getExposedFields() const override;
 
+    ScriptComponentRef<Transform> m_ChargedAttackUI;
+
 protected:
     void onAttackWindowUpdate() override;
     void onAttackWindowFinished() override;
@@ -55,7 +57,6 @@ public:
     float m_maxAttackRange = 10.0f;
     float m_lineHalfWidth = 0.75f;
 
-    float m_attackCooldown = 4.0f;
     float m_attackLockDuration = 0.3f;
 
     float m_arrowSpeed = 20.0f;

@@ -4,6 +4,7 @@
 #include "Tag.h"
 #include "Layer.h"
 #include "ComponentType.h"
+#include "PrefabInstance.h"
 
 #include <vector>
 #include <memory>
@@ -40,6 +41,13 @@ public:
 	void SetTag(Tag newTag) { m_tag = newTag; }
 #pragma endregion
 
+#pragma region Prefab
+	PrefabInstanceInfo& GetPrefabInfo() { return m_prefabInfo; }
+	const PrefabInstanceInfo& GetPrefabInfo() const { return m_prefabInfo; }
+
+	bool IsPrefabInstance() const { return m_prefabInfo.isInstance(); }
+#pragma endregion
+
 #pragma region Components
 	Transform* GetTransform() { return m_transform; }
 	const Transform* GetTransform() const { return m_transform; }
@@ -65,6 +73,7 @@ public:
 #pragma region GameLoop
 	bool init();
 	void update();
+	void lateUpdate();
 	bool cleanUp();
 #pragma endregion
 
@@ -82,6 +91,8 @@ private:
 	bool m_isStatic = false;
 	Layer m_layer = Layer::DEFAULT;
 	Tag m_tag = Tag::DEFAULT;
+
+	PrefabInstanceInfo m_prefabInfo;
 
 	std::vector<std::unique_ptr<Component>> m_components;
 	Transform* m_transform;

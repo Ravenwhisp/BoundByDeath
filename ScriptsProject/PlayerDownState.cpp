@@ -3,16 +3,13 @@
 #include "Damageable.h"
 #include "PlayerState.h"
 
-static const ScriptFieldInfo playerDownStateFields[] =
-{
-    { "Self Revive Time", ScriptFieldType::Float, offsetof(PlayerDownState, m_selfReviveTime), { 0.1f, 999999.0f, 0.1f } },
-    { "Assist Radius", ScriptFieldType::Float, offsetof(PlayerDownState, m_assistRadius), { 0.0f, 999999.0f, 0.1f } },
-    { "Assist Speed Multiplier", ScriptFieldType::Float, offsetof(PlayerDownState, m_assistSpeedMultiplier), { 1.0f, 999999.0f, 0.1f } },
-    { "Revive HP", ScriptFieldType::Float, offsetof(PlayerDownState, m_reviveHp), { 1.0f, 999999.0f, 1.0f } },
-    { "Teammate Transform", ScriptFieldType::ComponentRef, offsetof(PlayerDownState, m_teammateTransform), {}, {}, { ComponentType::TRANSFORM } }
-};
-
-IMPLEMENT_SCRIPT_FIELDS(PlayerDownState, playerDownStateFields)
+IMPLEMENT_SCRIPT_FIELDS(PlayerDownState,
+    SERIALIZED_FLOAT(m_selfReviveTime, "Self Revive Time", 0.1f, 999999.0f, 0.1f),
+    SERIALIZED_FLOAT(m_assistRadius, "Assist Radius", 0.0f, 999999.0f, 0.1f),
+    SERIALIZED_FLOAT(m_assistSpeedMultiplier, "Assist Speed Multiplier", 1.0f, 999999.0f, 0.1f),
+    SERIALIZED_FLOAT(m_reviveHp, "Revive HP", 1.0f, 999999.0f, 1.0f),
+    SERIALIZED_COMPONENT_REF(m_teammateTransform, "Teammate Transform", ComponentType::TRANSFORM)
+)
 
 PlayerDownState::PlayerDownState(GameObject* owner)
     : Script(owner)
@@ -39,6 +36,11 @@ void PlayerDownState::Start()
 
 void PlayerDownState::Update()
 {
+    if (m_reviveBlocked)
+    {
+        return;
+    }
+
     if (!isDowned())
     {
         return;
@@ -84,6 +86,8 @@ void PlayerDownState::enterDownState()
         return;
     }
 
+    m_reviveBlocked = false;
+
     if (m_playerState)
     {
         m_playerState->setState(PlayerStateType::Downed);
@@ -97,6 +101,16 @@ void PlayerDownState::enterDownState()
     }
 
     Debug::log("%s entered down state.", GameObjectAPI::getName(m_owner));
+}
+
+void PlayerDownState::enterDefeatedState()
+{
+    blockRevive();
+
+    if (m_damageable)
+    {
+        m_damageable->kill();
+    }
 }
 
 bool PlayerDownState::isDowned() const
@@ -124,6 +138,12 @@ float PlayerDownState::getReviveProgress() const
     }
 
     return progress;
+}
+
+void PlayerDownState::blockRevive()
+{
+    m_reviveBlocked = true;
+    m_reviveProgress = 0.0f;
 }
 
 Damageable* PlayerDownState::findDamageable() const
@@ -162,11 +182,17 @@ bool PlayerDownState::isTeammateInAssistRange() const
 
 void PlayerDownState::completeRevive()
 {
+    if (m_reviveBlocked)
+    {
+        return;
+    }
+
     m_reviveProgress = 0.0f;
 
     if (m_playerState)
     {
         m_playerState->setState(PlayerStateType::Normal);
+        m_playerState->setUsingAbility(false);
     }
 
     if (m_damageable)

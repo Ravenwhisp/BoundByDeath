@@ -88,26 +88,6 @@ void LyrielAbilityBase::faceDirection(const Vector3& direction)
     playerRotation->applyFacingFromDirection(getOwner(), flatDirection, Time::getDeltaTime());
 }
 
-Vector3 LyrielAbilityBase::getFallbackFacingDirection() const
-{
-    Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
-    if (ownerTransform == nullptr)
-    {
-        return Vector3::Zero;
-    }
-
-    Vector3 forward = TransformAPI::getForward(ownerTransform);
-    forward.y = 0.0f;
-
-    if (forward.LengthSquared() <= 0.0001f)
-    {
-        return Vector3::Zero;
-    }
-
-    forward.Normalize();
-    return forward;
-}
-
 void LyrielAbilityBase::beginAttackWindow(float lockDuration)
 {
     m_attackStateTimer = lockDuration;
@@ -122,7 +102,7 @@ void LyrielAbilityBase::finishAttackWindow()
     if (m_character != nullptr)
     {
         PlayerState* playerState = m_character->getPlayerState();
-        if (playerState != nullptr && playerState->isAttacking())
+        if (playerState != nullptr && playerState->isRecoveringAttack())
         {
             playerState->setState(PlayerStateType::Normal);
         }
@@ -141,7 +121,12 @@ void LyrielAbilityBase::beginAttackPresentation()
     PlayerState* playerState = m_character->getPlayerState();
     if (playerState != nullptr)
     {
-        playerState->setState(PlayerStateType::Attacking);
+        if (playerState->isDowned())
+        {
+            return;
+        }
+
+        playerState->setState(PlayerStateType::AttackRecovery);
     }
 
     PlayerAnimationController* animationController = m_character->getAnimationController();

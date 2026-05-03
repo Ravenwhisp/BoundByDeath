@@ -2,13 +2,10 @@
 #include "ArrowPool.h"
 #include "LyrielArrowProjectile.h"
 
-static const ScriptFieldInfo ArrowPoolFields[] =
-{
-    { "Max Arrows", ScriptFieldType::Int, offsetof(ArrowPool, m_maxArrows), { 1.0f, 20.0f, 1.0f } },
-    { "Arrow Prefab path", ScriptFieldType::String, offsetof(ArrowPool, m_arrowPrefabPath) }
-};
-
-IMPLEMENT_SCRIPT_FIELDS(ArrowPool, ArrowPoolFields)
+IMPLEMENT_SCRIPT_FIELDS(ArrowPool,
+    SERIALIZED_INT(m_maxArrows, "Max Arrows"),
+    SERIALIZED_STRING(m_arrowPrefabPath, "Arrow Prefab path")
+)
 
 ArrowPool::ArrowPool(GameObject* owner)
     : Script(owner)
@@ -51,6 +48,7 @@ bool ArrowPool::createArrow()
     LyrielArrowProjectile* arrow = static_cast<LyrielArrowProjectile*>(script);
 
     arrow->setPool(this);
+    arrow->setArrowOwnerTransform(GameObjectAPI::getTransform(getOwner()));
     arrow->resetProjectile();
 
     m_arrows.push_back(arrow);

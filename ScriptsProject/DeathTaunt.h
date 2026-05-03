@@ -1,10 +1,9 @@
 #pragma once
-
 #include "DeathAbilityBase.h"
 
-// Death's taunt — provokes nearby enemies for a duration (LT / L2).
-// Reads m_tauntDuration from DeathCharacter via m_deathChar.
-// TODO: define taunt mechanic — what does it actually do to enemies?
+class EnemyDetectionAggro;
+class PlayerRotation;
+
 class DeathTaunt : public DeathAbilityBase
 {
     DECLARE_SCRIPT(DeathTaunt)
@@ -17,7 +16,31 @@ public:
 
     ScriptFieldList getExposedFields() const override;
 
+    ScriptComponentRef<Transform> m_AbilityUI;
+
+    void drawGizmo() override;
+    void onFieldEdited(const ScriptFieldInfo& field) override;
+
 private:
-    float m_tauntTimer  = 0.0f;
-    bool  m_isTaunting  = false;
+    void beginAim();
+    void updateAim();
+    void releaseAimAndCast();
+
+    void applyTauntToEnemiesInCone(const Vector3& ownerForward) const;
+    bool isEnemyInsideTauntCone(GameObject* enemy, const Vector3& ownerPosition, const Vector3& ownerForward) const;
+
+    Vector3 computeAimDirection() const;
+    void faceDirection(const Vector3& direction);
+    bool isAimStickValid(const Vector3& direction) const;
+
+    PlayerRotation* m_playerRotation = nullptr;
+
+    float m_debugConeTimer = 0.0f;
+    bool m_isAiming = false;
+    Vector3 m_currentAimDirection = Vector3::Zero;
+
+public:
+    float m_TauntDurationSeconds = 3.0f;
+    float m_TauntRange = 2.5f;
+    float m_TauntHalfAngleDegrees = 35.0f;
 };
