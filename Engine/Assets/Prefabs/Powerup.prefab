@@ -1,0 +1,75 @@
+{
+  "SourcePath": "Assets\\Prefabs\\Powerup.prefab",
+  "Name": "Powerup",
+  "Version": 2,
+  "PrefabUID": 5003652545020253263,
+  "GameObject": {
+    "Name": "Powerup",
+    "Active": true,
+    "Transform": {
+      "position": [
+        8.741972923278809,
+        1.6780552864074707,
+        27.69367027282715
+      ],
+      "rotation": [
+        -0.0,
+        0.0,
+        -0.0,
+        1.0
+      ],
+      "scale": [
+        0.2928979694843292,
+        0.2928979694843292,
+        0.2928979694843292
+      ]
+    },
+    "Components": [
+      {
+        "Type": 1,
+        "Data": {
+          "UID": 10027292566807120757,
+          "ComponentType": 1,
+          "Active": true,
+          "MeshAssetId": "456b8c9d6daeab2978ecb94aa9f05fe4",
+          "SkinAssetId": "",
+          "MaterialAssetId": [
+            "44d72f3cc4b0de88f8aa89c4fa36fe99"
+          ]
+        }
+      },
+      {
+        "Type": 18,
+        "Data": {
+          "UID": 9008005396687450347,
+          "ComponentType": 18,
+          "Active": true,
+          "Shape": 0,
+          "Center": [
+            -0.0000019073486328125,
+            -2.384185791015625e-7,
+            0.000003814697265625
+          ],
+          "Size": [
+            1.5,
+            1.5,
+            1.5
+          ]
+        }
+      },
+      {
+        "Type": 3,
+        "Data": {
+          "UID": 16371899954047818869,
+          "ComponentType": 3,
+          "Active": true,
+          "ScriptName": "PowerupCollectible",
+          "ScriptFields": {
+            "Target Character": 2
+          }
+        }
+      }
+    ],
+    "Children": []
+  }
+}
