@@ -80,10 +80,6 @@ void PlayerTargetController::updateTargetsInRange()
     const std::vector<GameObject*> enemies = SceneAPI::findAllGameObjectsByTag(Tag::ENEMY, true);
     const std::vector<GameObject*> breakables = SceneAPI::findAllGameObjectsByTag(Tag::BREAKABLE, true);
 
-    Debug::log("[TargetController] Found enemies: %d | breakables: %d",
-        static_cast<int>(enemies.size()),
-        static_cast<int>(breakables.size()));
-
     for (GameObject* enemy : enemies)
     {
         if (enemy == nullptr)
@@ -92,10 +88,6 @@ void PlayerTargetController::updateTargetsInRange()
         }
 
         const bool inRange = isTargetInRange(enemy);
-
-        Debug::log("[TargetController] Enemy '%s' in range: %s",
-            GameObjectAPI::getName(enemy),
-            inRange ? "true" : "false");
 
         if (inRange)
         {
@@ -112,18 +104,11 @@ void PlayerTargetController::updateTargetsInRange()
 
         const bool inRange = isTargetInRange(breakable);
 
-        Debug::log("[TargetController] Breakable '%s' in range: %s",
-            GameObjectAPI::getName(breakable),
-            inRange ? "true" : "false");
-
         if (inRange)
         {
             m_targetsInRange.push_back(breakable);
         }
     }
-
-    Debug::log("[TargetController] Total targets in range: %d",
-        static_cast<int>(m_targetsInRange.size()));
 }
 
 void PlayerTargetController::ensureValidCurrentTarget()
