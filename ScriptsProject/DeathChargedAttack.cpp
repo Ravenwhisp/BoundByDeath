@@ -172,6 +172,10 @@ void DeathChargedAttack::updateAimDirection()
     {
         m_aimDirection = aimDirection;
     }
+    else
+    {
+        m_aimDirection = getFallbackFacingDirection();
+    }
 }
 
 void DeathChargedAttack::snapFaceAimDirection()
