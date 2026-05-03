@@ -75,13 +75,12 @@ void EnemyCHASE::OnStateUpdate()
 		if (distanceToTarget <= m_chargeTriggerRange && distanceToTarget > m_enemyController->m_combatRange)
 		{
 			m_enemyController->faceCurrentTarget();
-			m_enemyController->consumeChargeCooldown();
 			AnimationAPI::playState(animation, "Charge");
 			return;
 		}
 	}
 
-	if (m_enemyController->isTargetInCombatRange())
+	if (m_enemyController->isTargetInAttackEnterRange())
 	{
 		m_enemyController->faceCurrentTarget();
 		AnimationAPI::playState(animation, "Attack");

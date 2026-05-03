@@ -34,17 +34,18 @@ void PlayerDamageable::onDamaged(float amount)
 
 void PlayerDamageable::onHpDepleted()
 {
-    if (m_playerAnimationController != nullptr)
-    {
-        m_playerAnimationController->setDowned(true);
-    }
-
     Script* script = GameObjectAPI::getScript(m_owner, "PlayerDownState");
     PlayerDownState* downState = dynamic_cast<PlayerDownState*>(script);
 
     if (downState)
     {
         downState->enterDownState();
+
+        if (m_playerAnimationController != nullptr)
+        {
+            m_playerAnimationController->setDowned(true);
+        }
+
         return;
     }
 

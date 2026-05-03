@@ -107,7 +107,7 @@ void DeathChargedAttack::startCharging()
     // Lock movement immediately — same Attacking state used by the basic attack combo lock
     PlayerState* ps = m_character->getPlayerState();
     if (ps != nullptr)
-        ps->setState(PlayerStateType::Attacking);
+        ps->setState(PlayerStateType::AttackRecovery);
 
     Debug::log("[COMBO] R2 cargando  step=%d/3", m_deathChar->getComboStep() + 1);
 }
@@ -210,8 +210,10 @@ void DeathChargedAttack::onAttackWindowFinished()
     if (m_movementLockedForCombo && m_deathChar != nullptr && m_deathChar->getComboStep() > 0)
     {
         PlayerState* ps = m_character ? m_character->getPlayerState() : nullptr;
-        if (ps != nullptr)
-            ps->setState(PlayerStateType::Attacking);
+        if (ps != nullptr && !ps->isDowned())
+        {
+            ps->setState(PlayerStateType::AttackRecovery);
+        }
     }
 }
 
@@ -219,13 +221,11 @@ void DeathChargedAttack::releaseComboMoveLock()
 {
     m_movementLockedForCombo = false;
 
-    // Another ability may still be holding the lock (e.g. basic attack window still active).
-    // Leave PlayerState alone — that ability's finishAttackWindow will release it.
     if (m_character != nullptr && m_character->isUsingAbility())
         return;
 
     PlayerState* ps = m_character ? m_character->getPlayerState() : nullptr;
-    if (ps != nullptr && ps->isAttacking())
+    if (ps != nullptr && ps->isRecoveringAttack())
         ps->setState(PlayerStateType::Normal);
 }
 

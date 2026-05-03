@@ -4,6 +4,7 @@
 
 class Transform;
 class PlayerState;
+class PlayerDownState;
 
 class DefeatConditionManager : public Script
 {
@@ -20,6 +21,8 @@ public:
 
 private:
     PlayerState* findPlayerStateFromReference(Transform* transform) const;
+    PlayerDownState* findPlayerDownStateFromReference(Transform* transform) const;
+
     void triggerDefeat();
 
 public:
@@ -29,6 +32,9 @@ public:
 private:
     PlayerState* m_player1State = nullptr;
     PlayerState* m_player2State = nullptr;
+
+    PlayerDownState* m_player1DownState = nullptr;
+    PlayerDownState* m_player2DownState = nullptr;
 
     bool m_hasTriggeredDefeat = false;
 

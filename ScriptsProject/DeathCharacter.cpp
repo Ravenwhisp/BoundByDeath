@@ -35,6 +35,13 @@ void DeathCharacter::Start()
 void DeathCharacter::Update()
 {
     CharacterBase::Update();
+
+    if (isDowned())
+    {
+        resetCombo();
+        return;
+    }
+
     tickCombo(Time::getDeltaTime());
 }
 

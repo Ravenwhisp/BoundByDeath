@@ -27,6 +27,9 @@ static Damageable* findDamageable(GameObject* gameObject)
 IMPLEMENT_SCRIPT_FIELDS(EnemyATTACK,
 	SERIALIZED_FLOAT(m_attackDamage, "Attack Damage", 0.0f, 999999.0f, 1.0f),
 	SERIALIZED_FLOAT(m_attackCooldown, "Attack Cooldown", 0.0f, 10.0f, 0.1f),
+  SERIALIZED_FLOAT(m_attackTotalDuration, "Attack Total Duration", 0.1f, 5.0f, 0.05f),
+  SERIALIZED_FLOAT(m_damageTriggerTime, "Damage Trigger Time", 0.0f, 5.0f, 0.05f),
+  SERIALIZED_FLOAT(m_attackCommitDuration, "Attack Commit Duration", 0.0f, 2.0f, 0.05f),
 	SERIALIZED_BOOL(m_debugEnabled, "Debug Enabled")
 )
 
@@ -39,7 +42,18 @@ void EnemyATTACK::OnStateEnter()
 	Script* script = GameObjectAPI::getScript(getOwner(), "EnemyController");
 	m_enemyController = dynamic_cast<EnemyController*>(script);
 
-	m_attackTimer = m_attackCooldown;
+	m_attackTimer = 0.0f;
+	m_attackCommitTimer = 0.0f;
+	m_stateTimer = 0.0f;
+	m_hasAppliedDamage = false;
+
+	if (m_enemyController)
+	{
+		m_enemyController->clearPath();
+		m_enemyController->resetRepathTimer();
+		m_enemyController->updateCurrentTarget();
+		m_enemyController->faceCurrentTarget();
+	}
 
 	if (m_debugEnabled)
 	{
@@ -60,7 +74,30 @@ void EnemyATTACK::OnStateUpdate()
 		return;
 	}
 
+	float dt = Time::getDeltaTime();
+	m_stateTimer += dt;
+
 	m_enemyController->updateCurrentTarget();
+
+	if (m_enemyController->hasValidTarget())
+	{
+		m_enemyController->faceCurrentTarget();
+	}
+
+	if (!m_hasAppliedDamage && m_stateTimer >= m_damageTriggerTime)
+	{
+		if (m_enemyController->hasValidTarget() && m_enemyController->isTargetInAttackExitRange())
+		{
+			performAttack();
+		}
+
+		m_hasAppliedDamage = true;
+	}
+
+	if (m_stateTimer < m_attackTotalDuration)
+	{
+		return;
+	}
 
 	if (!m_enemyController->hasValidTarget())
 	{
@@ -68,23 +105,7 @@ void EnemyATTACK::OnStateUpdate()
 		return;
 	}
 
-	if (!m_enemyController->isTargetInCombatRange())
-	{
-		AnimationAPI::playState(animation, "Chase");
-		return;
-	}
-
-	m_enemyController->faceCurrentTarget();
-
-	m_attackTimer += Time::getDeltaTime();
-
-	if (m_attackTimer >= m_attackCooldown)
-	{
-		performAttack();
-		m_attackTimer = 0.0f;
-		AnimationAPI::playState(animation, "Attack");
-		return;
-	}
+	AnimationAPI::playState(animation, "Recover");
 }
 
 void EnemyATTACK::OnStateExit()
