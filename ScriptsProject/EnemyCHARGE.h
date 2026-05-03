@@ -26,5 +26,7 @@ private:
 public:
 	float m_chargeDuration = 0.5f;
 	float m_chargeSpeed = 6.0f;
+	float m_chargeCooldown = 3.0f;
 	bool m_debugEnabled = true;
+	
 };
