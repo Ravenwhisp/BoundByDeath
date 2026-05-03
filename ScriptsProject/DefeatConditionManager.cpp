@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "DefeatConditionManager.h"
 #include "PlayerState.h"
+#include "PlayerDownState.h"
 
 IMPLEMENT_SCRIPT_FIELDS(DefeatConditionManager,
     SERIALIZED_COMPONENT_REF(m_player1Transform, "Player 1 Transform", ComponentType::TRANSFORM),
@@ -20,6 +21,9 @@ void DefeatConditionManager::Start()
     m_player1State = findPlayerStateFromReference(player1Transform);
     m_player2State = findPlayerStateFromReference(player2Transform);
 
+    m_player1DownState = findPlayerDownStateFromReference(player1Transform);
+    m_player2DownState = findPlayerDownStateFromReference(player2Transform);
+
     if (!m_player1State)
     {
         Debug::warn("DefeatConditionManager: Could not find PlayerState for Player 1.");
@@ -28,6 +32,16 @@ void DefeatConditionManager::Start()
     if (!m_player2State)
     {
         Debug::warn("DefeatConditionManager: Could not find PlayerState for Player 2.");
+    }
+
+    if (!m_player1DownState)
+    {
+        Debug::warn("DefeatConditionManager: Could not find PlayerDownState for Player 1.");
+    }
+
+    if (!m_player2DownState)
+    {
+        Debug::warn("DefeatConditionManager: Could not find PlayerDownState for Player 2.");
     }
 }
 
@@ -43,27 +57,39 @@ void DefeatConditionManager::Update()
         return;
     }
 
+    if (m_defeatCountdownStarted)
+    {
+        m_defeatTimer += Time::getDeltaTime();
+
+        if (m_defeatTimer >= m_defeatDelay)
+        {
+            triggerDefeat();
+        }
+
+        return;
+    }
+
     const bool bothPlayersDowned = m_player1State->isDowned() && m_player2State->isDowned();
 
     if (!bothPlayersDowned)
     {
-        m_defeatCountdownStarted = false;
-        m_defeatTimer = 0.0f;
         return;
     }
 
-    if (!m_defeatCountdownStarted)
+    m_defeatCountdownStarted = true;
+    m_defeatTimer = 0.0f;
+
+    if (m_player1DownState)
     {
-        m_defeatCountdownStarted = true;
-        m_defeatTimer = 0.0f;
+        m_player1DownState->enterDefeatedState();
     }
 
-    m_defeatTimer += Time::getDeltaTime();
-
-    if (m_defeatTimer >= m_defeatDelay)
+    if (m_player2DownState)
     {
-        triggerDefeat();
+        m_player2DownState->enterDefeatedState();
     }
+
+    Debug::log("Both players are downed. Defeat countdown started.");
 }
 
 PlayerState* DefeatConditionManager::findPlayerStateFromReference(Transform* transform) const
@@ -81,6 +107,23 @@ PlayerState* DefeatConditionManager::findPlayerStateFromReference(Transform* tra
 
     Script* script = GameObjectAPI::getScript(player, "PlayerState");
     return dynamic_cast<PlayerState*>(script);
+}
+
+PlayerDownState* DefeatConditionManager::findPlayerDownStateFromReference(Transform* transform) const
+{
+    if (!transform)
+    {
+        return nullptr;
+    }
+
+    GameObject* player = ComponentAPI::getOwner(transform);
+    if (!player)
+    {
+        return nullptr;
+    }
+
+    Script* script = GameObjectAPI::getScript(player, "PlayerDownState");
+    return dynamic_cast<PlayerDownState*>(script);
 }
 
 void DefeatConditionManager::triggerDefeat()
