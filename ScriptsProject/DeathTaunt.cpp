@@ -202,13 +202,9 @@ void DeathTaunt::releaseAimAndCast()
     }
 
     m_currentAimDirection = Vector3::Zero;
-<<<<<<< bug_fixing
-    m_cooldownTimer = m_cooldown;
+    startCooldown();
 
     setAbilityLocked(false);
-=======
-    startCooldown();
->>>>>>> main
 }
 
 void DeathTaunt::applyTauntToEnemiesInCone(const Vector3& ownerForward) const
