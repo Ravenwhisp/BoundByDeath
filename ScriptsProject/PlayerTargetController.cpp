@@ -2,6 +2,9 @@
 #include "PlayerTargetController.h"
 
 #include "CharacterBase.h"
+#include "Damageable.h"
+#include "EnemyDamageable.h"
+#include "BreakableDamageable.h"
 
 IMPLEMENT_SCRIPT_FIELDS(PlayerTargetController,
     SERIALIZED_FLOAT(m_targetRange, "Target Range", 0.0f, 20.0f, 0.05f)
@@ -89,7 +92,7 @@ void PlayerTargetController::updateTargetsInRange()
 
         const bool inRange = isTargetInRange(enemy);
 
-        if (inRange)
+        if (inRange && isTargetAlive(enemy))
         {
             m_targetsInRange.push_back(enemy);
         }
@@ -104,7 +107,7 @@ void PlayerTargetController::updateTargetsInRange()
 
         const bool inRange = isTargetInRange(breakable);
 
-        if (inRange)
+        if (inRange && isTargetAlive(breakable))
         {
             m_targetsInRange.push_back(breakable);
         }
@@ -185,6 +188,40 @@ bool PlayerTargetController::isTargetInRange(GameObject* target) const
     const float distance = distanceFromTarget.Length();
 
     return distance <= m_targetRange;
+}
+
+bool PlayerTargetController::isTargetAlive(GameObject* target) const
+{
+    if (target == nullptr)
+    {
+        return false;
+    }
+
+    Script* enemyDamageableScript = GameObjectAPI::getScript(target, "EnemyDamageable");
+    EnemyDamageable* enemyDamageable = dynamic_cast<EnemyDamageable*>(enemyDamageableScript);
+
+    if (enemyDamageable != nullptr)
+    {
+        return !enemyDamageable->isDead() && enemyDamageable->getCurrentHp() > 0.0f;
+    }
+
+    Script* breakableDamageableScript = GameObjectAPI::getScript(target, "BreakableDamageable");
+    BreakableDamageable* breakableDamageable = dynamic_cast<BreakableDamageable*>(breakableDamageableScript);
+
+    if (breakableDamageable != nullptr)
+    {
+        return !breakableDamageable->isDead() && breakableDamageable->getCurrentHp() > 0.0f;
+    }
+
+    Script* damageableScript = GameObjectAPI::getScript(target, "Damageable");
+    Damageable* damageable = dynamic_cast<Damageable*>(damageableScript);
+
+    if (damageable != nullptr)
+    {
+        return !damageable->isDead() && damageable->getCurrentHp() > 0.0f;
+    }
+
+    return false;
 }
 
 int PlayerTargetController::findTargetIndex(GameObject* target) const

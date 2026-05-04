@@ -26,6 +26,7 @@ private:
     void cycleTarget();
 
     bool isTargetInRange(GameObject* target) const;
+    bool isTargetAlive(GameObject* target) const;
     int findTargetIndex(GameObject* target) const;
 
 public:
