@@ -1,7 +1,7 @@
 ﻿#include "pch.h"
 #include "DeathDash.h"
 
-#include "CharacterBase.h"
+#include "DeathCharacter.h"
 #include "EnemyDamageable.h"
 #include "EnemyShadowMark.h"
 
@@ -17,6 +17,13 @@ DeathDash::DeathDash(GameObject* owner): AbilityDash(owner)
 
 void DeathDash::Start()
 {
+    m_character = dynamic_cast<DeathCharacter*>(GameObjectAPI::getScript(getOwner(), "DeathCharacter"));
+
+    if (m_character == nullptr)
+    {
+        Debug::log("[DeathAbilityBase] DeathCharacter not found on owner '%s'.", GameObjectAPI::getName(getOwner()));
+    }
+
     AbilityDash::Start();
 }
 

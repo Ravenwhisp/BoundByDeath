@@ -23,11 +23,6 @@ void AbilityDash::Start()
 
     m_playerController = findControllerScript(getOwner());
     m_playerMovement = findMovementScript(getOwner());
-
-    if (m_character == nullptr)
-    {
-        Debug::warn("AbilityDash: CharacterBase not found on this GameObject.");
-    }
 }
 
 void AbilityDash::Update()
