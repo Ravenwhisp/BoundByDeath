@@ -1,10 +1,16 @@
 #include "pch.h"
 #include "EnemyDeathHandler.h"
 #include "Damageable.h"
+#include "HealthPickup.h"
+#include <cmath>
 
 IMPLEMENT_SCRIPT_FIELDS(EnemyDeathHandler,
     SERIALIZED_FLOAT(m_destroyDelay, "Destroy Delay", 0.0f, 30.0f, 0.1f),
-    SERIALIZED_STRING(m_deathStateName, "Death State Name")
+    SERIALIZED_STRING(m_deathStateName, "Death State Name"),
+    SERIALIZED_STRING(m_healthPrefabPath, "Health Prefab Path"),
+    SERIALIZED_INT(m_healthDropQuantity, "Health Drop Quantity"),
+    SERIALIZED_FLOAT(m_healthDropAmount, "Health Drop Amount", 0.0f, 100.0f, 1.0f),
+    SERIALIZED_FLOAT(m_dropRadius, "Drop Radius", 0.0f, 5.0f, 0.1f)
 )
 
 EnemyDeathHandler::EnemyDeathHandler(GameObject* owner)
@@ -32,6 +38,7 @@ void EnemyDeathHandler::Update()
 
     if (!m_hasProcessedDeath && m_damageable->isDead())
     {
+        DropHealth();
         processDeath();
     }
 
@@ -94,5 +101,48 @@ void EnemyDeathHandler::destroyEnemyNow()
     GameObjectAPI::removeGameObject(m_owner);
 }
 
+void EnemyDeathHandler::DropHealth()
+{
+    if (m_healthPrefabPath.empty())
+    {
+        return;
+    }
 
+    const Transform* myTransform = GameObjectAPI::getTransform(m_owner);
+    if (myTransform == nullptr)
+    {
+        return;
+    }
+
+    const Vector3 spawnPosition = TransformAPI::getGlobalPosition(myTransform);
+
+    for (int i = 0; i < m_healthDropQuantity; ++i)
+    {
+        
+        float angle = (static_cast<float>(rand()) / RAND_MAX) * 6.283185f;
+
+        
+        float distance = (static_cast<float>(rand()) / RAND_MAX) * m_dropRadius;
+
+       
+        Vector3 offset;
+        offset.x = std::cos(angle) * distance;
+        offset.z = std::sin(angle) * distance;
+        offset.y = 0.0f; 
+
+        Vector3 finalPos = spawnPosition + offset;
+        GameObject* pickup = GameObjectAPI::instantiatePrefab(m_healthPrefabPath.c_str(), finalPos, Vector3::Zero);
+
+        if (pickup == nullptr)
+        {
+            continue;
+        }
+
+        Script* script = GameObjectAPI::getScript(pickup, "HealthPickup");
+        if (script != nullptr)
+        {
+            static_cast<HealthPickup*>(script)->m_healAmount = m_healthDropAmount;
+        }
+    }
+}
 IMPLEMENT_SCRIPT(EnemyDeathHandler)
