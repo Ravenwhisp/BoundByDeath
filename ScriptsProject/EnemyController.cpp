@@ -9,7 +9,8 @@ IMPLEMENT_SCRIPT_FIELDS(EnemyController,
 	SERIALIZED_FLOAT(m_moveSpeed, "Move Speed", 0.0f, 50.0f, 0.1f),
 	SERIALIZED_FLOAT(m_turnSpeed, "Turn Speed", 0.0f, 5.0f, 0.1f),
 	SERIALIZED_FLOAT(m_intervalRepath, "Interval", 0.0f, 50.0f, 0.1f),
-	SERIALIZED_FLOAT(m_chargeCooldown, "Charge Cooldown", 0.0f, 20.0f, 0.1f),
+	SERIALIZED_FLOAT(m_attackEnterRangeBonus, "Attack Enter Range Bonus", 0.0f, 5.0f, 0.05f),
+  SERIALIZED_FLOAT(m_attackExitRangeBonus, "Attack Exit Range Bonus", 0.0f, 5.0f, 0.05f),
 	SERIALIZED_BOOL(m_debugEnabled, "Debug Enabled")
 )
 
@@ -129,6 +130,37 @@ bool EnemyController::isTargetInCombatRange() const
 	difference.y = 0.0f;
 
 	return difference.Length() <= m_combatRange;
+}
+bool EnemyController::isTargetInAttackEnterRange() const
+{
+	if (!m_currentTarget)
+	{
+		return false;
+	}
+
+	Vector3 ownerPosition = m_owner->GetTransform()->getPosition();
+	Vector3 targetPosition = m_currentTarget->getPosition();
+
+	Vector3 difference = ownerPosition - targetPosition;
+	difference.y = 0.0f;
+
+	return difference.Length() <= (m_combatRange + m_attackEnterRangeBonus);
+}
+
+bool EnemyController::isTargetInAttackExitRange() const
+{
+	if (!m_currentTarget)
+	{
+		return false;
+	}
+
+	Vector3 ownerPosition = m_owner->GetTransform()->getPosition();
+	Vector3 targetPosition = m_currentTarget->getPosition();
+
+	Vector3 difference = ownerPosition - targetPosition;
+	difference.y = 0.0f;
+
+	return difference.Length() <= (m_combatRange + m_attackExitRangeBonus);
 }
 
 void EnemyController::clearPath()
@@ -333,9 +365,9 @@ bool EnemyController::isChargeReady() const
 	return m_chargeCooldownTimer <= 0.0f;
 }
 
-void EnemyController::consumeChargeCooldown()
+void EnemyController::consumeChargeCooldown(float cooldownDuration)
 {
-	m_chargeCooldownTimer = m_chargeCooldown;
+	m_chargeCooldownTimer = cooldownDuration;
 }
 
 IMPLEMENT_SCRIPT(EnemyController)

@@ -139,6 +139,7 @@ void DeathTaunt::beginAim()
 {
     Debug::log("[DeathTaunt] Aim started.");
     m_isAiming = true;
+    setAbilityLocked(true);
     m_debugConeTimer = 0.25f;
     m_currentAimDirection = getFallbackFacingDirection();
 
@@ -202,6 +203,8 @@ void DeathTaunt::releaseAimAndCast()
 
     m_currentAimDirection = Vector3::Zero;
     startCooldown();
+
+    setAbilityLocked(false);
 }
 
 void DeathTaunt::applyTauntToEnemiesInCone(const Vector3& ownerForward) const
