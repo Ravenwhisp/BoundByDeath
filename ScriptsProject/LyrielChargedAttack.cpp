@@ -344,19 +344,16 @@ void LyrielChargedAttack::applyChargedDamage(const std::vector<GameObject*>& tar
             continue;
         }
 
-        Script* script = GameObjectAPI::getScript(target, "EnemyDamageable");
-        EnemyDamageable* damageable = static_cast<EnemyDamageable*>(script);
+        EnemyDamageable* damageable = GameObjectAPI::findScript<EnemyDamageable>(target);
 
         if (damageable != nullptr)
         {
             damageable->takeDamageEnemy(damage, GameObjectAPI::getTransform(getOwner()));
 
-            Script* markScript = GameObjectAPI::getScript(target, "EnemyShadowMark");
-            if (markScript != nullptr)
+            EnemyShadowMark* mark = GameObjectAPI::findScript<EnemyShadowMark>(target);
+            if (mark != nullptr && mark->isExploitable())
             {
-                EnemyShadowMark* mark = static_cast<EnemyShadowMark*>(markScript);
-                if (mark->isExploitable())
-                    mark->exploit();
+                mark->exploit();
             }
         }
     }

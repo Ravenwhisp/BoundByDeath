@@ -19,6 +19,12 @@ AbilityBase::AbilityBase(GameObject* owner)
 
 void AbilityBase::Start()
 {
+    m_character = GameObjectAPI::findScript<CharacterBase>(getOwner());
+
+    if (m_character == nullptr)
+    {
+        Debug::warn("[AbilityBase] CharacterBase not found on owner '%s'.", GameObjectAPI::getName(getOwner()));
+    }
 }
 
 void AbilityBase::Update()
