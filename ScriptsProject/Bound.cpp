@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "Bound.h"
 #include "Damageable.h"
+#include "PlayerController.h"
 
 IMPLEMENT_SCRIPT_FIELDS(Bound,
     SERIALIZED_COMPONENT_REF(m_firstTarget, "Player 1 Transform", ComponentType::TRANSFORM),
@@ -40,6 +41,25 @@ Bound::Bound(GameObject* owner) : Script(owner)
 
 }
 
+static PlayerController* resolveController(const ScriptComponentRef<Transform>& ref, const char* label)
+{
+    if (!ref.getReferencedComponent())
+    {
+        return nullptr;
+    }
+
+    GameObject* go = ComponentAPI::getOwner(ref.component);
+    if (!go)
+    {
+        return nullptr;
+    }
+
+    Script* script = GameObjectAPI::getScript(go, "PlayerController");
+    PlayerController* controller = script ? static_cast<PlayerController*>(script) : nullptr;
+
+    return controller;
+}
+
 void Bound::Start()
 {
 
@@ -54,6 +74,10 @@ void Bound::Start()
 
     m_firstDamageable = findDamageable(player1);
     m_secondDamageable = findDamageable(player2);
+
+    m_firstController = resolveController(m_firstTarget, "Player 1");
+    m_secondController = resolveController(m_secondTarget, "Player 2");
+
 
 }
 
@@ -82,6 +106,12 @@ void Bound::Update()
     {
         m_firstDamageable->takeDamage(m_firstDamageable->getCurrentHp());
         m_secondDamageable->takeDamage(m_secondDamageable->getCurrentHp());
+
+        // Players are dead — silence both heartbeats immediately
+        m_hb1.phase = HeartbeatPhase::Idle;
+        m_hb2.phase = HeartbeatPhase::Idle;
+
+        m_previousDistance = distance;
         return;
     }
 
@@ -107,6 +137,105 @@ void Bound::Update()
     }
 
     m_previousDistance = distance;
+
+    const float normDist = (m_distanceInstaKill > 0.0f) ? (distance / m_distanceInstaKill) : 0.0f;
+
+    const float dt = Time::getDeltaTime();
+
+    const int p1Index = m_firstController ? m_firstController->m_playerIndex : 0;
+    const int p2Index = m_secondController ? m_secondController->m_playerIndex : 1;
+
+    tickHeartbeat(m_hb1, normDist, p1Index, dt);
+    tickHeartbeat(m_hb2, normDist, p2Index, dt);
+}
+
+void Bound::tickHeartbeat(PlayerHeartbeatState& hb, float normDist, int playerIndex, float dt)
+{
+    if (normDist <= 0.20f)
+    {
+        hb.phase = HeartbeatPhase::Idle;
+        hb.timer = 0.0f;
+        return;
+    }
+
+    const HeartbeatCycle cycle = HeartbeatCycle::fromSeparation(normDist, hb.seed);
+
+    switch (hb.phase)
+    {
+    case HeartbeatPhase::Idle:
+    {
+        fireLub(cycle.intensity, playerIndex);
+        hb.phase = HeartbeatPhase::Lub;
+        hb.timer = 0.08f;
+        break;
+    }
+
+    case HeartbeatPhase::Lub:
+    {
+        hb.timer -= dt;
+        if (hb.timer <= 0.0f)
+        {
+            hb.phase = HeartbeatPhase::InterBeat;
+            hb.timer = cycle.interBeatSeconds;
+        }
+        break;
+    }
+
+    case HeartbeatPhase::InterBeat:
+    {
+        hb.timer -= dt;
+        if (hb.timer <= 0.0f)
+        {
+            fireDub(cycle.intensity, playerIndex);
+            hb.phase = HeartbeatPhase::Dub;
+            hb.timer = 0.08f;
+        }
+        break;
+    }
+
+    case HeartbeatPhase::Dub:
+    {
+        hb.timer -= dt;
+        if (hb.timer <= 0.0f)
+        {
+            hb.phase = HeartbeatPhase::Diastole;
+            hb.timer = cycle.diastoleSeconds;
+        }
+        break;
+    }
+
+    case HeartbeatPhase::Diastole:
+    {
+        hb.timer -= dt;
+        if (hb.timer <= 0.0f)
+        {
+            ++hb.seed;
+
+            if (normDist > 0.20f)
+            {
+                const HeartbeatCycle nextCycle = HeartbeatCycle::fromSeparation(normDist, hb.seed);
+                fireLub(nextCycle.intensity, playerIndex);
+                hb.phase = HeartbeatPhase::Lub;
+                hb.timer = 0.08f;
+            }
+            else
+            {
+                hb.phase = HeartbeatPhase::Idle;
+            }
+        }
+        break;
+    }
+    }
+}
+
+void Bound::fireLub(float intensity, int playerIndex)
+{
+    HapticAPI::submitEffect(HapticEffectDefinition::makeHeartbeatLub(intensity, HapticEffectDefinition::HeartbeatVariant::Separation), playerIndex);
+}
+
+void Bound::fireDub(float intensity, int playerIndex)
+{
+    HapticAPI::submitEffect(HapticEffectDefinition::makeHeartbeatDub(intensity, HapticEffectDefinition::HeartbeatVariant::Separation), playerIndex);
 }
 
 void Bound::drawGizmo()

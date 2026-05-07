@@ -1,9 +1,27 @@
 #pragma once
 
 #include "ScriptAPI.h"
+#include "HapticEffectDefinition.h"
 
 class Transform;
 class Damageable;
+class PlayerController;
+
+enum class HeartbeatPhase : uint8_t
+{
+    Idle,
+    Lub,
+    InterBeat,
+    Dub,
+    Diastole,
+};
+
+struct PlayerHeartbeatState
+{
+    HeartbeatPhase phase = HeartbeatPhase::Idle;
+    float          timer = 0.0f;
+    unsigned int   seed = 0;
+};
 
 class Bound : public Script
 {
@@ -41,4 +59,17 @@ public:
     float   m_currentRadius = 0.0f;
 
     float m_previousDistance = 0.0f;
+
+private:
+    PlayerController* m_firstController = nullptr;
+    PlayerController* m_secondController = nullptr;
+
+    PlayerHeartbeatState m_hb1;
+    PlayerHeartbeatState m_hb2;
+
+    void tickHeartbeat(PlayerHeartbeatState& hb, float normDist, int playerIndex, float dt);
+
+    void fireLub(float intensity, int playerIndex);
+    void fireDub(float intensity, int playerIndex);
 };
+
