@@ -5,6 +5,7 @@
 IMPLEMENT_SCRIPT_FIELDS(EnemyCHARGE,
 	SERIALIZED_FLOAT(m_chargeDuration, "Charge Duration", 0.0f, 10.0f, 0.1f),
 	SERIALIZED_FLOAT(m_chargeSpeed, "Charge Speed", 0.0f, 50.0f, 0.1f),
+  SERIALIZED_FLOAT(m_chargeCooldown, "Charge Cooldown", 0.0f, 20.0f, 0.1f),
 	SERIALIZED_BOOL(m_debugEnabled, "Debug Enabled")
 )
 
@@ -28,6 +29,7 @@ void EnemyCHARGE::OnStateEnter()
 
 	if (m_enemyController)
 	{
+		m_enemyController->consumeChargeCooldown(m_chargeCooldown);
 		m_enemyController->clearPath();
 		m_enemyController->resetRepathTimer();
 		m_enemyController->updateCurrentTarget();
