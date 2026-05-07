@@ -47,10 +47,10 @@ void EnemyShadowMark::exploit()
     std::vector<GameObject*> players = SceneAPI::findAllGameObjectsByTag(Tag::PLAYER, true);
     for (GameObject* player : players)
     {
-        Script* gaugeScript = GameObjectAPI::getScript(player, "ReaperGauge");
-        if (gaugeScript != nullptr)
+        ReaperGauge* gauge = GameObjectAPI::findScript<ReaperGauge>(player);
+        if (gauge != nullptr)
         {
-            static_cast<ReaperGauge*>(gaugeScript)->onMarkExploited();
+            gauge->onMarkExploited();
             break;
         }
     }
