@@ -42,10 +42,6 @@ private:
 private:
     Vector3 readMoveDirection(const Vector2& moveAxis) const;
 
-    PlayerMovement* findMovementScript(GameObject* owner);
-    PlayerRotation* findRotationScript(GameObject* owner);
-    PlayerState* findStateScript(GameObject* owner);
-
 	AbilityBase* findBasicAttackScript(GameObject* owner);
 	AbilityBase* findChargedAttackScript(GameObject* owner);
 	AbilityBase* findDashScript(GameObject* owner);
