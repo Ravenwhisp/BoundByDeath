@@ -53,7 +53,7 @@ void DeathChargedAttack::Update()
 
         if (m_ChargedAttackUI.getReferencedComponent())
         {
-			m_ChargedAttackUI.getReferencedComponent()->getOwner()->SetActive(true);
+            GameObjectAPI::setActive(m_ChargedAttackUI.getReferencedComponent()->getOwner(), true);
 
 			const float yawRad = std::atan2(m_aimDirection.x, m_aimDirection.z);
 			const float targetYawDeg = yawRad * (180.0f / 3.14159265f);
@@ -75,7 +75,7 @@ void DeathChargedAttack::Update()
 
     else if (m_ChargedAttackUI.getReferencedComponent())
     {
-        m_ChargedAttackUI.getReferencedComponent()->getOwner()->SetActive(false);
+        GameObjectAPI::setActive(m_ChargedAttackUI.getReferencedComponent()->getOwner(), false);
     }
 }
 

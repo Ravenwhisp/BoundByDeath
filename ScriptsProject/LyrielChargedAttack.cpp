@@ -127,7 +127,7 @@ void LyrielChargedAttack::beginCharge()
     }
     if (m_ChargedAttackUI.getReferencedComponent())
     {
-        m_ChargedAttackUI.getReferencedComponent()->getOwner()->SetActive(true);
+        GameObjectAPI::setActive(m_ChargedAttackUI.getReferencedComponent()->getOwner(), true);
     }
 }
 
@@ -166,7 +166,7 @@ void LyrielChargedAttack::releaseChargeAndShoot()
 
     if (m_ChargedAttackUI.getReferencedComponent())
     {
-        m_ChargedAttackUI.getReferencedComponent()->getOwner()->SetActive(false);
+        GameObjectAPI::setActive(m_ChargedAttackUI.getReferencedComponent()->getOwner(), false);
     }
 
     if (!canShoot())

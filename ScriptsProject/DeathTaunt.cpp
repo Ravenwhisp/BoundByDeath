@@ -153,8 +153,8 @@ void DeathTaunt::beginAim()
     faceDirection(m_currentAimDirection);
     if (m_AbilityUI.getReferencedComponent())
     {
-        m_AbilityUI.getReferencedComponent()->getOwner()->SetActive(true);
-	}
+        GameObjectAPI::setActive(m_AbilityUI.getReferencedComponent()->getOwner(), true);
+    }
 }
 
 void DeathTaunt::updateAim()
@@ -183,7 +183,7 @@ void DeathTaunt::releaseAimAndCast()
 
     if (m_AbilityUI.getReferencedComponent())
     {
-        m_AbilityUI.getReferencedComponent()->getOwner()->SetActive(false);
+        GameObjectAPI::setActive(m_AbilityUI.getReferencedComponent()->getOwner(), false);
     }
 
     Vector3 finalDirection = m_currentAimDirection;

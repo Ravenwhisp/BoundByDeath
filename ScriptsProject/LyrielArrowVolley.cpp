@@ -123,8 +123,8 @@ void LyrielArrowVolley::beginAim()
     }
     if (m_AbilityUI.getReferencedComponent())
     {
-        m_AbilityUI.getReferencedComponent()->getOwner()->SetActive(true);
-	}
+        GameObjectAPI::setActive(m_AbilityUI.getReferencedComponent()->getOwner(), true);
+    }
 }
 
 void LyrielArrowVolley::updateAim()
@@ -151,8 +151,8 @@ void LyrielArrowVolley::releaseAimAndCast()
 
     if (m_AbilityUI.getReferencedComponent())
     {
-        m_AbilityUI.getReferencedComponent()->getOwner()->SetActive(false);
-	}
+        GameObjectAPI::setActive(m_AbilityUI.getReferencedComponent()->getOwner(), false);
+    }
 
     if (!canCast())
     {
