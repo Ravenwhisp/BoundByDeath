@@ -7,6 +7,7 @@
 #include <cmath>
 
 IMPLEMENT_SCRIPT_FIELDS_INHERITED(DeathTaunt, DeathAbilityBase,
+    SERIALIZED_FLOAT(m_tauntDuration, "Taunt Duration", 0.0f, 10.0f, 0.1f),
     SERIALIZED_COMPONENT_REF(m_AbilityUI, "Ability UI", ComponentType::TRANSFORM),
     SERIALIZED_FLOAT(m_TauntDurationSeconds, "Ability Duration", 1.0f, 10.0f, 0.05f),
     SERIALIZED_FLOAT(m_TauntRange, "Cone Range", 1.0f, 10.0f, 0.1f),
@@ -39,21 +40,6 @@ void DeathTaunt::Update()
         return;
     }
 
-    if (!m_isAiming && Input::isLeftTriggerJustPressed(getPlayerIndex()))
-    {
-        if (!canStartAbility())
-        {
-            Debug::log("[DeathTaunt] L2 pressed but canStartAbility=false (cooldown=%.2f, usingAbility=%d, downed=%d)",
-                m_cooldownTimer,
-                m_character->isUsingAbility() ? 1 : 0,
-                m_character->isDowned() ? 1 : 0);
-        }
-        else
-        {
-            beginAim();
-        }
-    }
-
     if (m_isAiming)
     {
         if (Input::isLeftTriggerPressed(getPlayerIndex()))
@@ -75,6 +61,16 @@ void DeathTaunt::Update()
             m_debugConeTimer = 0.0f;
         }
     }
+}
+
+bool DeathTaunt::canStartSpecificAbility() const
+{
+    return !m_isAiming;
+}
+
+void DeathTaunt::startAbility()
+{
+	beginAim();
 }
 
 void DeathTaunt::drawGizmo()
