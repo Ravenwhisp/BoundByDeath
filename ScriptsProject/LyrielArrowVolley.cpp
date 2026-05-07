@@ -7,6 +7,8 @@
 #include "LyrielArrowProjectile.h"
 #include "EnemyDamageable.h"
 #include "PlayerState.h"
+#include "PersistingPowerupState.h"
+#include "EnemyShadowMark.h"
 
 #include <cmath>
 
@@ -34,20 +36,22 @@ void LyrielArrowVolley::Update()
 {
     LyrielAbilityBase::Update();
 
-    if (canStartAim() && Input::isLeftTriggerJustPressed(getPlayerIndex()))
+    if(m_isAiming)
     {
-        beginAim();
-    }
+        if (Input::isLeftTriggerPressed(getPlayerIndex()))
+        {
+            updateAim();
+        }
+        if (Input::isLeftTriggerReleased(getPlayerIndex()))
+        {
+            releaseAimAndCast();
+        }
+	}
+}
 
-    if (m_isAiming && Input::isLeftTriggerPressed(getPlayerIndex()))
-    {
-        updateAim();
-    }
-
-    if (m_isAiming && Input::isLeftTriggerReleased(getPlayerIndex()))
-    {
-        releaseAimAndCast();
-    }
+void LyrielArrowVolley::startAbility()
+{
+    beginAim();
 }
 
 void LyrielArrowVolley::drawGizmo()
@@ -119,8 +123,8 @@ void LyrielArrowVolley::beginAim()
     }
     if (m_AbilityUI.getReferencedComponent())
     {
-        m_AbilityUI.getReferencedComponent()->getOwner()->SetActive(true);
-	}
+        GameObjectAPI::setActive(m_AbilityUI.getReferencedComponent()->getOwner(), true);
+    }
 }
 
 void LyrielArrowVolley::updateAim()
@@ -147,8 +151,8 @@ void LyrielArrowVolley::releaseAimAndCast()
 
     if (m_AbilityUI.getReferencedComponent())
     {
-        m_AbilityUI.getReferencedComponent()->getOwner()->SetActive(false);
-	}
+        GameObjectAPI::setActive(m_AbilityUI.getReferencedComponent()->getOwner(), false);
+    }
 
     if (!canCast())
     {
@@ -278,17 +282,28 @@ void LyrielArrowVolley::applyVolleyDamage(const std::vector<GameObject*>& target
         {
             damageable->takeDamageEnemy(m_volleyDamage, GameObjectAPI::getTransform(getOwner()));
         }
+
+        if (PersistingPowerupState::isUnlocked(PowerupId::LyrielPowerup1))
+        {
+            Script* markScript = GameObjectAPI::getScript(target, "EnemyShadowMark");
+            EnemyShadowMark* mark = static_cast<EnemyShadowMark*>(markScript);
+
+            if (mark != nullptr && mark->isExploitable())
+            {
+                mark->exploit();
+            }
+        }
     }
 }
 
 void LyrielArrowVolley::spawnVolleyArrows(const Vector3& origin, const Vector3& forward)
 {
-    if (m_lyriel == nullptr || m_numVisualArrows <= 0)
+    if (m_lyrielCharacter == nullptr || m_numVisualArrows <= 0)
     {
         return;
     }
 
-    ArrowPool* arrowPool = m_lyriel->getArrowPool();
+    ArrowPool* arrowPool = m_lyrielCharacter->getArrowPool();
     if (arrowPool == nullptr)
     {
         return;

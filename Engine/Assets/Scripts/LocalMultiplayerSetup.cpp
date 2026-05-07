@@ -54,6 +54,7 @@ void LocalMultiplayerSetup::chooseConfiguration()
 {
     Transform* kbComp = keyboardGamepadButton.getReferencedComponent();
     Transform* gpComp = twoGamepadButton.getReferencedComponent();
+
     switch (m_setupMode)
     {
     case 0:
@@ -61,8 +62,8 @@ void LocalMultiplayerSetup::chooseConfiguration()
         Input::setPlayerGamepad(1, 0);
         if (kbComp && gpComp)
         {
-            kbComp->getOwner()->SetActive(true);
-            gpComp->getOwner()->SetActive(false);
+            GameObjectAPI::setActive(kbComp->getOwner(), true);
+            GameObjectAPI::setActive(gpComp->getOwner(), false);
         }
         break;
 
@@ -71,8 +72,8 @@ void LocalMultiplayerSetup::chooseConfiguration()
         Input::setPlayerGamepad(1, 1);
         if (kbComp && gpComp)
         {
-            kbComp->getOwner()->SetActive(false);
-            gpComp->getOwner()->SetActive(true);
+            GameObjectAPI::setActive(kbComp->getOwner(), false);
+            GameObjectAPI::setActive(gpComp->getOwner(), true);
         }
         break;
 
@@ -81,8 +82,8 @@ void LocalMultiplayerSetup::chooseConfiguration()
         Input::setPlayerGamepad(1, 0);
         if (kbComp && gpComp)
         {
-            kbComp->getOwner()->SetActive(true);
-            gpComp->getOwner()->SetActive(false);
+            GameObjectAPI::setActive(kbComp->getOwner(), true);
+            GameObjectAPI::setActive(gpComp->getOwner(), false);
         }
         break;
     }
