@@ -179,6 +179,7 @@
     <ClInclude Include="EnemyDamageable.h" />
     <ClInclude Include="EnemyShadowMark.h" />
     <ClInclude Include="PersistingPowerupState.h" />
+    <ClInclude Include="PowerupCollectible.h" />
     <ClInclude Include="ReaperGauge.h" />
     <ClInclude Include="EnemyDeathHandler.h" />
     <ClInclude Include="EnemyDetectionAggro.h" />
@@ -198,7 +199,6 @@
     <ClInclude Include="AbilityDash.h" />
     <ClInclude Include="LyrielDash.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="PowerupCollectible.h" />
     <ClInclude Include="SpikeTrap.h" />
     <ClInclude Include="PlayerAnimationController.h" />
     <ClInclude Include="PlayerDamageable.h" />
@@ -210,6 +210,7 @@
     <ClInclude Include="TargetIndicatorUI.h" />
     <ClInclude Include="UIController.h" />
     <ClInclude Include="UIPause.h" />
+    <ClInclude Include="UISplashScreen.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Engine\Assets\Scripts\CameraFollow.cpp" />
@@ -238,6 +239,7 @@
     <ClCompile Include="EnemyDamageable.cpp" />
     <ClCompile Include="EnemyShadowMark.cpp" />
     <ClCompile Include="PersistingPowerupState.cpp" />
+    <ClCompile Include="PowerupCollectible.cpp" />
     <ClCompile Include="ReaperGauge.cpp" />
     <ClCompile Include="EnemyDeathHandler.cpp" />
     <ClCompile Include="EnemyDetectionAggro.cpp" />
@@ -265,7 +267,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="PowerupCollectible.cpp" />
     <ClCompile Include="SpikeTrap.cpp" />
     <ClCompile Include="PlayerAnimationController.cpp" />
     <ClCompile Include="PlayerDamageable.cpp" />
@@ -277,6 +278,7 @@
     <ClCompile Include="TargetIndicatorUI.cpp" />
     <ClCompile Include="UIController.cpp" />
     <ClCompile Include="UIPause.cpp" />
+    <ClCompile Include="UISplashScreen.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
