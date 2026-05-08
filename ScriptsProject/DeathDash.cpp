@@ -1,11 +1,12 @@
 ﻿#include "pch.h"
 #include "DeathDash.h"
 
-#include "CharacterBase.h"
+#include "DeathCharacter.h"
 #include "EnemyDamageable.h"
 #include "EnemyShadowMark.h"
 
 IMPLEMENT_SCRIPT_FIELDS_INHERITED(DeathDash, AbilityDash,
+    SERIALIZED_FLOAT(m_dashDistance, "Dash Distance", 0.0f, 20.0f, 0.1f),
     SERIALIZED_FLOAT(m_dashHitWidth, "Dash Hit Width", 0.1f, 5.0f, 0.05f),
     SERIALIZED_FLOAT(m_dashDamage, "Dash Damage", 0.0f, 100.0f, 1.0f)
 )
@@ -16,9 +17,15 @@ DeathDash::DeathDash(GameObject* owner): AbilityDash(owner)
 
 void DeathDash::Start()
 {
+    m_character = dynamic_cast<DeathCharacter*>(GameObjectAPI::getScript(getOwner(), "DeathCharacter"));
+
+    if (m_character == nullptr)
+    {
+        Debug::log("[DeathAbilityBase] DeathCharacter not found on owner '%s'.", GameObjectAPI::getName(getOwner()));
+    }
+
     AbilityDash::Start();
 }
-
 
 void DeathDash::onDashStarted()
 {

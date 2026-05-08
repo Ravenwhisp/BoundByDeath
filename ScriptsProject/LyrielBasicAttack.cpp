@@ -27,12 +27,7 @@ void LyrielBasicAttack::Start()
 
 void LyrielBasicAttack::Update()
 {
-    LyrielAbilityBase::Update();
-
-    if (Input::isRightShoulderJustPressed(getPlayerIndex()))
-    {
-        tryAttack();
-    }
+	LyrielAbilityBase::Update();
 }
 
 void LyrielBasicAttack::onAttackWindowUpdate()
@@ -48,18 +43,8 @@ void LyrielBasicAttack::onAttackWindowFinished()
     m_attackFacingTarget = nullptr;
 }
 
-void LyrielBasicAttack::tryAttack()
+void LyrielBasicAttack::startAbility()
 {
-    if (!canStartAbility())
-    {
-        return;
-    }
-
-    if (m_character == nullptr)
-    {
-        return;
-    }
-
     PlayerTargetController* targetController = m_character->getTargetController();
     if (targetController == nullptr)
     {
@@ -95,12 +80,12 @@ void LyrielBasicAttack::tryAttack()
 
 bool LyrielBasicAttack::spawnArrowToTarget(GameObject* target)
 {
-    if (m_lyriel == nullptr || target == nullptr)
+    if (m_lyrielCharacter == nullptr || target == nullptr)
     {
         return false;
     }
 
-    ArrowPool* arrowPool = m_lyriel->getArrowPool();
+    ArrowPool* arrowPool = m_lyrielCharacter->getArrowPool();
     if (arrowPool == nullptr)
     {
         return false;

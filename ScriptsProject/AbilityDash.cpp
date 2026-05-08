@@ -23,21 +23,11 @@ void AbilityDash::Start()
 
     m_playerController = findControllerScript(getOwner());
     m_playerMovement = findMovementScript(getOwner());
-
-    if (m_character == nullptr)
-    {
-        Debug::warn("AbilityDash: CharacterBase not found on this GameObject.");
-    }
 }
 
 void AbilityDash::Update()
 {
     AbilityBase::Update();
-
-    if (m_character == nullptr)
-    {
-        return;
-    }
 
     const float dt = Time::getDeltaTime();
 
@@ -48,15 +38,20 @@ void AbilityDash::Update()
         updateDash(dt);
         return;
     }
-
-    if (Input::isLeftShoulderJustPressed(getPlayerIndex()))
-    {
-        tryStartDash();
-    }
 }
 
 void AbilityDash::drawGizmo()
 {
+}
+
+bool AbilityDash::canStartSpecificAbility() const
+{
+	return canDash() && m_playerController != nullptr && m_playerMovement != nullptr && !m_isDashing;
+}
+
+void AbilityDash::startAbility()
+{
+    startDash();
 }
 
 bool AbilityDash::canDash() const
@@ -68,23 +63,8 @@ void AbilityDash::onDashStarted()
 {
 }
 
-void AbilityDash::tryStartDash()
+void AbilityDash::startDash()
 {
-    if (!canStartAbility())
-    {
-        return;
-    }
-
-    if (!canDash())
-    {
-        return;
-    }
-
-    if (m_playerController == nullptr || m_playerMovement == nullptr)
-    {
-        return;
-    }
-
     m_dashTimer = 0.0f;
     m_isDashing = true;
 

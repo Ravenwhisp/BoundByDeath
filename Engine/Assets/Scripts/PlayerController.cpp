@@ -4,6 +4,7 @@
 #include "PlayerState.h"
 #include "PlayerMovement.h"
 #include "PlayerRotation.h"
+#include "AbilityBase.h"
 
 #include <cmath>
 
@@ -21,15 +22,21 @@ PlayerController::PlayerController(GameObject* owner)
 
 void PlayerController::Start()
 {
-    GameObject* owner = getOwner();
+    GameObject* owner   = getOwner();
 
-    m_playerMovement = findMovementScript(owner);
-    m_playerRotation = findRotationScript(owner);
-    m_playerState = findStateScript(owner);
+    m_playerMovement    = findMovementScript(owner);
+    m_playerRotation    = findRotationScript(owner);
+    m_playerState       = findStateScript(owner);
 
-    m_cameraTransform = SceneAPI::getDefaultCameraGameObject() ?
+    m_basicAttack       = findBasicAttackScript(owner);
+    m_chargedAttack     = findChargedAttackScript(owner);
+    m_dash              = findDashScript(owner);
+    m_specialAbility    = findSpecialAbilityScript(owner);
+
+    m_cameraTransform   = SceneAPI::getDefaultCameraGameObject() ?
         GameObjectAPI::getTransform(SceneAPI::getDefaultCameraGameObject()) :
         nullptr;
+
 }
 
 void PlayerController::Update()
@@ -75,6 +82,27 @@ void PlayerController::Update()
             m_playerMovement->playerMovement(owner, moveDirection * dt);
         }
     }
+
+    if(m_basicAttack && Input::isRightShoulderJustPressed(m_playerIndex))
+    {
+		m_basicAttack->tryAbility();
+    }
+
+    if(m_chargedAttack && Input::isRightTriggerJustPressed(m_playerIndex))
+    {
+		m_chargedAttack->tryAbility();
+	}
+
+    if(m_dash && Input::isLeftShoulderJustPressed(m_playerIndex))
+    {
+		m_dash->tryAbility();
+	}
+
+    if (m_specialAbility && Input::isLeftTriggerJustPressed(m_playerIndex))
+    {
+		m_specialAbility->tryAbility();
+    }
+
 }
 
 Vector3 PlayerController::getMoveDirection() const
@@ -137,6 +165,78 @@ PlayerState* PlayerController::findStateScript(GameObject* owner)
     Debug::warn("PlayerController on '%s' could not find PlayerState on the same GameObject.",
         GameObjectAPI::getName(owner));
     return nullptr;
+}
+
+AbilityBase* PlayerController::findBasicAttackScript(GameObject* owner)
+{
+	Script* basicAttackScript = owner ? GameObjectAPI::getScript(owner, "LyrielBasicAttack") : nullptr;
+    if (basicAttackScript)
+    {
+        return static_cast<AbilityBase*>(basicAttackScript);
+    }
+    
+	basicAttackScript = owner ? GameObjectAPI::getScript(owner, "DeathBasicAttack") : nullptr;
+    if (basicAttackScript)
+    {
+        return static_cast<AbilityBase*>(basicAttackScript);
+	}
+    Debug::warn("PlayerController on '%s' could not find LyrielBasicAttack or DeathBasicAttack on the same GameObject.",
+        GameObjectAPI::getName(owner));
+    return nullptr;
+}
+
+AbilityBase* PlayerController::findChargedAttackScript(GameObject* owner)
+{
+    Script* chargedAttackScript = owner ? GameObjectAPI::getScript(owner, "LyrielChargedAttack") : nullptr;
+    if (chargedAttackScript)
+    {
+        return static_cast<AbilityBase*>(chargedAttackScript);
+    }
+    
+    chargedAttackScript = owner ? GameObjectAPI::getScript(owner, "DeathChargedAttack") : nullptr;
+    if (chargedAttackScript)
+    {
+        return static_cast<AbilityBase*>(chargedAttackScript);
+    }
+    Debug::warn("PlayerController on '%s' could not find LyrielChargedAttack or DeathChargedAttack on the same GameObject.",
+        GameObjectAPI::getName(owner));
+	return nullptr;
+}
+
+AbilityBase* PlayerController::findDashScript(GameObject* owner)
+{
+    Script* dashScript = owner ? GameObjectAPI::getScript(owner, "LyrielDash") : nullptr;
+    if (dashScript)
+    {
+        return static_cast<AbilityBase*>(dashScript);
+    }
+    
+    dashScript = owner ? GameObjectAPI::getScript(owner, "DeathDash") : nullptr;
+    if (dashScript)
+    {
+        return static_cast<AbilityBase*>(dashScript);
+    }
+    Debug::warn("PlayerController on '%s' could not find LyrielDash or DeathDash on the same GameObject.",
+        GameObjectAPI::getName(owner));
+	return nullptr;
+}
+
+AbilityBase* PlayerController::findSpecialAbilityScript(GameObject* owner)
+{
+    Script* specialAbilityScript = owner ? GameObjectAPI::getScript(owner, "LyrielArrowVolley") : nullptr;
+    if (specialAbilityScript)
+    {
+        return static_cast<AbilityBase*>(specialAbilityScript);
+    }
+    
+    specialAbilityScript = owner ? GameObjectAPI::getScript(owner, "DeathTaunt") : nullptr;
+    if (specialAbilityScript)
+    {
+        return static_cast<AbilityBase*>(specialAbilityScript);
+    }
+    Debug::warn("PlayerController on '%s' could not find LyrielArrowVolley or DeathTaunt on the same GameObject.",
+        GameObjectAPI::getName(owner));
+	return nullptr;
 }
 
 IMPLEMENT_SCRIPT(PlayerController)
