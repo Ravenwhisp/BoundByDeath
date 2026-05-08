@@ -8,7 +8,8 @@ IMPLEMENT_SCRIPT_FIELDS(ReaperGauge,
     SERIALIZED_INT(m_numSegments, "Num Segments"),
     SERIALIZED_FLOAT(m_gainPerExploit, "Gain Per Exploit", 0.0f, 100.0f, 1.0f),
     SERIALIZED_FLOAT(m_gracePeriod, "Grace Period", 0.0f, 60.0f, 0.5f),
-    SERIALIZED_FLOAT(m_decayPerSecond, "Decay Per Second", 0.0f, 50.0f, 0.5f)
+    SERIALIZED_FLOAT(m_decayPerSecond, "Decay Per Second", 0.0f, 50.0f, 0.5f),
+	SERIALIZED_COMPONENT_REF(m_reaperGaugeUI, "Reaper Gauge UI", ComponentType::UISLIDER)
 )
 
 ReaperGauge::ReaperGauge(GameObject* owner)
@@ -18,6 +19,8 @@ ReaperGauge::ReaperGauge(GameObject* owner)
 
 void ReaperGauge::Start()
 {
+	m_reaperGaugeSlider = m_reaperGaugeUI.getReferencedComponent();
+    SliderAPI::setFillAmount(m_reaperGaugeSlider, getGaugePercent());
 }
 
 void ReaperGauge::Update()
@@ -32,6 +35,12 @@ void ReaperGauge::Update()
         m_gauge -= m_decayPerSecond * Time::getDeltaTime();
         if (m_gauge < 0.0f)
             m_gauge = 0.0f;
+    }
+
+    if (m_reaperGaugeSlider)
+    {
+		Debug::log("[ReaperGauge] %.1f/%.1f  decayTimer=%.1f", m_gauge, m_maxGauge, m_decayTimer);
+		SliderAPI::setFillAmount(m_reaperGaugeSlider, getGaugePercent());
     }
 }
 

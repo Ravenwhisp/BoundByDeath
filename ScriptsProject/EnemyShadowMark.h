@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ScriptAPI.h"
+#include "Transform2D.h"
 
 class EnemyShadowMark : public Script
 {
@@ -19,11 +20,22 @@ public:
     bool isExploitable() const { return m_phase == 3; }
     void exploit();
     int  getPhase() const { return m_phase; }
+	void updateUI();
 
 public:
     float m_markDuration = 3.0f;
+	float m_markUIScale = 1.0f;
+    ScriptComponentRef<Transform2D> m_canvas;
+    ScriptComponentRef<Transform> m_mark_1;
+    ScriptComponentRef<Transform> m_mark_2;
+    ScriptComponentRef<Transform> m_mark_3;
 
 private:
     int   m_phase = 0;
     float m_timer = 0.0f;
+
+	Transform2D* m_canvasTransform2D = nullptr;
+	GameObject* m_mark1Object = nullptr;
+    GameObject* m_mark2Object = nullptr;
+	GameObject* m_mark3Object = nullptr;
 };

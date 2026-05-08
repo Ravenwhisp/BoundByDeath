@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ScriptAPI.h"
+#include "UISlider.h"
 
 class ReaperGauge : public Script
 {
@@ -27,8 +28,12 @@ public:
     float m_gracePeriod      = 10.0f;
     float m_decayPerSecond   = 2.0f;
 
+    ScriptComponentRef<UISlider> m_reaperGaugeUI;
+
 private:
     float m_gauge       = 0.0f;
     float m_decayTimer  = 0.0f;
     bool  m_everExploited = false;
+
+	UISlider* m_reaperGaugeSlider = nullptr;
 };
