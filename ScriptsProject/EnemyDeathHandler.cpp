@@ -10,7 +10,8 @@ IMPLEMENT_SCRIPT_FIELDS(EnemyDeathHandler,
     SERIALIZED_STRING(m_healthPrefabPath, "Health Prefab Path"),
     SERIALIZED_INT(m_healthDropQuantity, "Health Drop Quantity"),
     SERIALIZED_FLOAT(m_healthDropAmount, "Health Drop Amount", 0.0f, 100.0f, 1.0f),
-    SERIALIZED_FLOAT(m_dropRadius, "Drop Radius", 0.0f, 5.0f, 0.1f)
+    SERIALIZED_FLOAT(m_dropRadius, "Drop Radius", 0.0f, 5.0f, 0.1f),
+    SERIALIZED_FLOAT(m_dropHeight, "Drop Height", 0.0f, 5.0f, 0.1f)
 )
 
 EnemyDeathHandler::EnemyDeathHandler(GameObject* owner)
@@ -130,8 +131,12 @@ void EnemyDeathHandler::DropHealth()
         offset.z = std::sin(angle) * distance;
         offset.y = 0.0f; 
 
-        Vector3 finalPos = spawnPosition + offset;
-        GameObject* pickup = GameObjectAPI::instantiatePrefab(m_healthPrefabPath.c_str(), finalPos, Vector3::Zero);
+        Vector3 finalPos   = spawnPosition + offset;
+        Vector3 arcOrigin  = Vector3(spawnPosition.x, spawnPosition.y + m_dropHeight, spawnPosition.z);
+
+        // Instantiate at the arc origin (enemy center) so the pickup is never
+        // visible at the floor position before Start() runs.
+        GameObject* pickup = GameObjectAPI::instantiatePrefab(m_healthPrefabPath.c_str(), arcOrigin, Vector3::Zero);
 
         if (pickup == nullptr)
         {
@@ -141,7 +146,10 @@ void EnemyDeathHandler::DropHealth()
         Script* script = GameObjectAPI::getScript(pickup, "HealthPickup");
         if (script != nullptr)
         {
-            static_cast<HealthPickup*>(script)->m_healAmount = m_healthDropAmount;
+            HealthPickup* healthPickup         = static_cast<HealthPickup*>(script);
+            healthPickup->m_healAmount         = m_healthDropAmount;
+            healthPickup->m_landingPosition    = finalPos;
+            healthPickup->m_hasCustomSpawnFrom = true;
         }
     }
 }

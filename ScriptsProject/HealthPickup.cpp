@@ -6,10 +6,12 @@
 
 
 IMPLEMENT_SCRIPT_FIELDS(HealthPickup,
-    SERIALIZED_FLOAT(m_healAmount, "Heal Amount",   0.0f, 100.0f, 1.0f),
-    SERIALIZED_FLOAT(m_idleSpeed, "Idle Speed", 0.0f, 10.0f, 0.05f),
-    SERIALIZED_FLOAT(m_horizontalAmplitude, "Horizontal Amplitude", 0.0f, 3.0f, 0.05f),
-    SERIALIZED_FLOAT(m_verticalAmplitude, "Vertical Amplitude", 0.0f, 3.0f, 0.05f),
+    SERIALIZED_FLOAT(m_healAmount, "Heal Amount",         0.0f, 100.0f, 1.0f),
+    SERIALIZED_FLOAT(m_spawnHeight, "Spawn Height",        0.0f,   5.0f, 0.1f),
+    SERIALIZED_FLOAT(m_fallGravity, "Fall Gravity",        0.0f,  20.0f, 0.5f),
+    SERIALIZED_FLOAT(m_idleSpeed, "Idle Speed",          0.0f,  10.0f, 0.05f),
+    SERIALIZED_FLOAT(m_horizontalAmplitude, "Horizontal Amplitude",0.0f,   3.0f, 0.05f),
+    SERIALIZED_FLOAT(m_verticalAmplitude, "Vertical Amplitude",  0.0f,   3.0f, 0.05f),
 )
 
 HealthPickup::HealthPickup(GameObject* owner)
@@ -19,17 +21,44 @@ HealthPickup::HealthPickup(GameObject* owner)
 
 void HealthPickup::Start()
 {
-    m_startPosition = TransformAPI::getGlobalPosition(GameObjectAPI::getTransform(getOwner()));
+    Transform* t        = GameObjectAPI::getTransform(getOwner());
+    m_fallStartPosition = TransformAPI::getGlobalPosition(t);  // already at arc origin
+
+    m_startPosition = m_hasCustomSpawnFrom
+        ? m_landingPosition
+        : Vector3(m_fallStartPosition.x, m_fallStartPosition.y - m_spawnHeight, m_fallStartPosition.z);
+
+    // Precompute constant horizontal velocity so XZ reaches target exactly when Y lands
+    const float fallHeight = m_fallStartPosition.y - m_startPosition.y;
+    if (fallHeight > 0.0f && m_fallGravity > 0.0f)
+    {
+        const float estimatedTime = std::sqrt(2.0f * fallHeight / m_fallGravity);
+        if (estimatedTime > 0.0f)
+        {
+            m_fallHVelocityX = (m_startPosition.x - m_fallStartPosition.x) / estimatedTime;
+            m_fallHVelocityZ = (m_startPosition.z - m_fallStartPosition.z) / estimatedTime;
+        }
+    }
+
+    m_isFalling    = true;
+    m_fallVelocity = 0.0f;
 }
 
 void HealthPickup::Update()
 {
     if (m_collected)
     {
-       return;
+        return;
     }
-    idleAnimation();
 
+    if (m_isFalling)
+    {
+        fallAnimation();
+    }
+    else
+    {
+        idleAnimation();
+    }
 }
 void HealthPickup::OnTriggerEnter(GameObject* player){
     Debug::log("HealthPickup triggered by %s", GameObjectAPI::getName(player));
@@ -62,6 +91,28 @@ void HealthPickup::OnTriggerEnter(GameObject* player){
     GameObjectAPI::removeGameObject(getOwner());
 }
 
+
+void HealthPickup::fallAnimation()
+{
+    const float dt = Time::getDeltaTime();
+    m_fallVelocity += m_fallGravity * dt;
+
+    Transform* t = GameObjectAPI::getTransform(getOwner());
+    Vector3 pos  = TransformAPI::getGlobalPosition(t);
+
+    pos.x += m_fallHVelocityX * dt;
+    pos.z += m_fallHVelocityZ * dt;
+    pos.y -= m_fallVelocity    * dt;
+
+    if (pos.y <= m_startPosition.y)
+    {
+        pos            = m_startPosition;
+        m_isFalling    = false;
+        m_fallVelocity = 0.0f;
+    }
+
+    TransformAPI::setPosition(t, pos);
+}
 
 void HealthPickup::idleAnimation()
 {
