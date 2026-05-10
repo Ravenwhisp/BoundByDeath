@@ -19,6 +19,11 @@ AbilityBase::AbilityBase(GameObject* owner)
 
 void AbilityBase::Start()
 {
+    m_cdBarSlider = m_cdBar.getReferencedComponent();
+    if (m_cdUI.getReferencedComponent())
+    {
+        m_cdGO = m_cdUI.getReferencedComponent()->getOwner();
+    }
 }
 
 void AbilityBase::Update()
@@ -27,6 +32,7 @@ void AbilityBase::Update()
 
     updateCooldown(dt);
 	updateAttackWindow(dt);
+    updateUI();
 }
 
 void AbilityBase::tryAbility()
@@ -47,35 +53,31 @@ void AbilityBase::updateCooldown(float dt)
     }
 
     m_cooldownTimer -= dt;
+}
+
+void AbilityBase::updateUI()
+{
     if (m_cooldownTimer <= 0.0f)
     {
-		Transform* cdUITransform = m_cdUI.getReferencedComponent();
-        if (cdUITransform)
+        if (m_cdGO)
         {
-            GameObject* cdUIObject = cdUITransform->getOwner();
-            if (cdUIObject)
-            {
-                GameObjectAPI::setActive(cdUIObject, false);
-            }
-		}
-        m_cooldownTimer = 0.0f;
+            GameObjectAPI::setActive(m_cdGO, false);
+        }
         return;
     }
-	SliderAPI::setFillAmount(m_cdBar.getReferencedComponent(), (m_cooldownTimer / m_cooldown));
-
+    if (m_cdBarSlider)
+    {
+        SliderAPI::setFillAmount(m_cdBarSlider, (m_cooldownTimer / m_cooldown));
+    }
 }
 
 void AbilityBase::startCooldown()
 {
     m_cooldownTimer = m_cooldown;
-	Transform* cdUITransform = m_cdUI.getReferencedComponent();
-    if (cdUITransform)
+
+    if (m_cdGO)
     {
-        GameObject* cdUIObject = cdUITransform->getOwner();
-        if (cdUIObject)
-        {
-            GameObjectAPI::setActive(cdUIObject, true);
-        }
+        GameObjectAPI::setActive(m_cdGO, true);
 	}
 }
 
