@@ -11,8 +11,7 @@ void BreakableDamageable::Start()
 {
     Damageable::Start();
 
-    Script* breakableScript = GameObjectAPI::getScript(getOwner(), "BreakableObject");
-    m_breakableObject = dynamic_cast<BreakableObject*>(breakableScript);
+	m_breakableObject = GameObjectAPI::findScript<BreakableObject>(getOwner());
 
     if (m_breakableObject == nullptr)
     {
@@ -26,7 +25,7 @@ void BreakableDamageable::onDeath()
 
     if (m_breakableObject != nullptr)
     {
-        m_breakableObject->breakObject();
+        m_breakableObject->onBreak();
     }
 }
 

@@ -2,8 +2,8 @@
 #include "BreakableObject.h"
 
 IMPLEMENT_SCRIPT_FIELDS(BreakableObject,
-    SERIALIZED_COMPONENT_REF(m_normalObjectTransform, "Normal Object", ComponentType::TRANSFORM),
-    SERIALIZED_COMPONENT_REF(m_brokenObjectTransform, "Broken Object", ComponentType::TRANSFORM)
+    SERIALIZED_COMPONENT_REF(m_normalObjectTransformComponent, "Normal Object", ComponentType::TRANSFORM),
+    SERIALIZED_COMPONENT_REF(m_brokenObjectTransformComponent, "Broken Object", ComponentType::TRANSFORM)
 )
 
 BreakableObject::BreakableObject(GameObject* owner)

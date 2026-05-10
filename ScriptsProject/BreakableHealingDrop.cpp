@@ -3,7 +3,7 @@
 
 #include "HealthPickup.h"
 
-IMPLEMENT_SCRIPT_FIELDS(BreakableHealingDrop,
+IMPLEMENT_SCRIPT_FIELDS_INHERITED(BreakableHealingDrop, BreakableObject,
     SERIALIZED_STRING(m_healthPickupPrefabPath, "Health Pickup Prefab Path")
 )
 
