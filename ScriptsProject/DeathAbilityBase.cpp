@@ -11,15 +11,9 @@ DeathAbilityBase::DeathAbilityBase(GameObject* owner)
 
 void DeathAbilityBase::Start()
 {
-    m_deathCharacter = static_cast<DeathCharacter*>(GameObjectAPI::getScript(getOwner(), "DeathCharacter"));
-    m_character = m_deathCharacter;
-
     AbilityBase::Start();
 
-    if (m_deathCharacter == nullptr)
-    {
-        Debug::log("[DeathAbilityBase] DeathCharacter not found on owner '%s'.", GameObjectAPI::getName(getOwner()));
-    }
+    m_deathCharacter = dynamic_cast<DeathCharacter*>(m_character);
 }
 
 void DeathAbilityBase::releaseComboMoveLock()

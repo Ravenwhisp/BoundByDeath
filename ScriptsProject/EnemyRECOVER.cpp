@@ -14,8 +14,7 @@ EnemyRECOVER::EnemyRECOVER(GameObject* owner) : StateMachineScript(owner)
 
 void EnemyRECOVER::OnStateEnter()
 {
-	Script* script = GameObjectAPI::getScript(getOwner(), "EnemyController");
-	m_enemyController = dynamic_cast<EnemyController*>(script);
+	m_enemyController = GameObjectAPI::findScript<EnemyController>(getOwner());
 
 	m_recoverTimer = 0.0f;
 

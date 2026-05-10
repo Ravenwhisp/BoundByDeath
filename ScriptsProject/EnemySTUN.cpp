@@ -16,8 +16,7 @@ void EnemySTUN::OnStateEnter()
 {
 	m_elapsedTime = 0.0f;
 
-	Script* script = GameObjectAPI::getScript(getOwner(), "EnemyController");
-	m_enemyController = dynamic_cast<EnemyController*>(script);
+	m_enemyController = GameObjectAPI::findScript<EnemyController>(getOwner());
 
 	if (m_enemyController)
 	{

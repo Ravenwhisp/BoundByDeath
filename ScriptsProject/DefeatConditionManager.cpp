@@ -94,36 +94,34 @@ void DefeatConditionManager::Update()
 
 PlayerState* DefeatConditionManager::findPlayerStateFromReference(Transform* transform) const
 {
-    if (!transform)
+    if (transform == nullptr)
     {
         return nullptr;
     }
 
     GameObject* player = ComponentAPI::getOwner(transform);
-    if (!player)
+    if (player == nullptr)
     {
         return nullptr;
     }
 
-    Script* script = GameObjectAPI::getScript(player, "PlayerState");
-    return dynamic_cast<PlayerState*>(script);
+    return GameObjectAPI::findScript<PlayerState>(player);
 }
 
 PlayerDownState* DefeatConditionManager::findPlayerDownStateFromReference(Transform* transform) const
 {
-    if (!transform)
+    if (transform == nullptr)
     {
         return nullptr;
     }
 
     GameObject* player = ComponentAPI::getOwner(transform);
-    if (!player)
+    if (player == nullptr)
     {
         return nullptr;
     }
 
-    Script* script = GameObjectAPI::getScript(player, "PlayerDownState");
-    return dynamic_cast<PlayerDownState*>(script);
+    return GameObjectAPI::findScript<PlayerDownState>(player);
 }
 
 void DefeatConditionManager::triggerDefeat()

@@ -13,8 +13,7 @@ void PlayerDamageable::Start()
 {
     Damageable::Start();
 
-    Script* animationScript = GameObjectAPI::getScript(m_owner, "PlayerAnimationController");
-    m_playerAnimationController = dynamic_cast<PlayerAnimationController*>(animationScript);
+    m_playerAnimationController = GameObjectAPI::findScript<PlayerAnimationController>(m_owner);
 
     if (m_playerAnimationController == nullptr)
     {
@@ -34,8 +33,7 @@ void PlayerDamageable::onDamaged(float amount)
 
 void PlayerDamageable::onHpDepleted()
 {
-    Script* script = GameObjectAPI::getScript(m_owner, "PlayerDownState");
-    PlayerDownState* downState = dynamic_cast<PlayerDownState*>(script);
+    PlayerDownState* downState = GameObjectAPI::findScript<PlayerDownState>(m_owner);
 
     if (downState)
     {

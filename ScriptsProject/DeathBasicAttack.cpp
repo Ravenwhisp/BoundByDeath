@@ -166,20 +166,25 @@ void DeathBasicAttack::dealDamageToTarget(GameObject* target) const
 
     auto applyDamage = [&](GameObject* enemy)
         {
-            Script* damScript = GameObjectAPI::getScript(enemy, "EnemyDamageable");
-            if (damScript == nullptr)
+            EnemyDamageable* damageable = GameObjectAPI::findScript<EnemyDamageable>(enemy);
+            if (damageable == nullptr)
             {
                 return;
             }
-            EnemyDamageable* damageable = static_cast<EnemyDamageable*>(damScript);
-            damageable->takeDamageEnemy(m_basicAttackDamage, GameObjectAPI::getTransform(getOwner()));
-            Debug::log("[BASIC] hit '%s'  dmg=%.1f  hp=%.1f/%.1f",
-                GameObjectAPI::getName(enemy), m_basicAttackDamage,
-                damageable->getCurrentHp(), damageable->getMaxHp());
 
-            Script* markScript = GameObjectAPI::getScript(enemy, "EnemyShadowMark");
-            if (markScript != nullptr)
-                static_cast<EnemyShadowMark*>(markScript)->notifyDeathHit();
+            damageable->takeDamageEnemy(m_basicAttackDamage, GameObjectAPI::getTransform(getOwner()));
+
+            Debug::log("[BASIC] hit '%s'  dmg=%.1f  hp=%.1f/%.1f",
+                GameObjectAPI::getName(enemy),
+                m_basicAttackDamage,
+                damageable->getCurrentHp(),
+                damageable->getMaxHp());
+
+            EnemyShadowMark* shadowMark = GameObjectAPI::findScript<EnemyShadowMark>(enemy);
+            if (shadowMark != nullptr)
+            {
+                shadowMark->notifyDeathHit();
+            }
         };
 
     // Priority 1: targeted enemy in hit zone
