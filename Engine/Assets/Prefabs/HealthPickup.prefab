@@ -1,0 +1,89 @@
+{
+  "SourcePath": "Assets/Prefab/HealthPickup.prefab",
+  "Name": "HealthPickup",
+  "Version": 2,
+  "GameObject": {
+    "Name": "Health Pickup",
+    "Active": true,
+    "Tag": "DEFAULT",
+    "Layer": "DEFAULT",
+    "Transform": {
+      "position": [
+        14.854351997375488,
+        0.7155914902687073,
+        -3.667316913604736
+      ],
+      "rotation": [
+        -0.0,
+        0.0,
+        -0.0,
+        1.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    "Components": [
+      {
+        "Type": 3,
+        "Data": {
+          "UID": 14968269942882465686,
+          "ComponentType": 3,
+          "Active": true,
+          "ScriptName": "HealthPickup",
+          "ScriptFields": {
+            "Heal Amount": 25.0,
+            "Detection Radius": 6.199999809265137,
+            "Max Fly Speed": 26.0,
+            "Slow Detection Radius": 12.199999809265137,
+            "Slow Speed": 0.30000001192092896
+          }
+        }
+      }
+    ],
+    "Children": [
+      {
+        "Name": "Sphere",
+        "Active": true,
+        "Tag": "DEFAULT",
+        "Layer": "DEFAULT",
+        "Transform": {
+          "position": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rotation": [
+            -0.0,
+            0.0,
+            -0.0,
+            1.0
+          ],
+          "scale": [
+            0.2928979694843292,
+            0.2928979694843292,
+            0.2928979694843292
+          ]
+        },
+        "Components": [
+          {
+            "Type": 1,
+            "Data": {
+              "UID": 8237267174581714878,
+              "ComponentType": 1,
+              "Active": true,
+              "MeshAssetId": "456b8c9d6daeab2978ecb94aa9f05fe4",
+              "SkinAssetId": "",
+              "MaterialAssetId": [
+                "44d72f3cc4b0de88f8aa89c4fa36fe99"
+              ]
+            }
+          }
+        ],
+        "Children": []
+      }
+    ]
+  }
+}

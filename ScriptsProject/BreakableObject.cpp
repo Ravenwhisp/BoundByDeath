@@ -15,18 +15,18 @@ void BreakableObject::Start()
 {
     m_isBroken = false;
 
-    Transform* normalTransform = m_normalObjectTransform.getReferencedComponent();
-    Transform* brokenTransform = m_brokenObjectTransform.getReferencedComponent();
+    m_normalObjectTransform = m_normalObjectTransformComponent.getReferencedComponent();
+    m_brokenObjectTransform = m_brokenObjectTransformComponent.getReferencedComponent();
 
-    if (normalTransform != nullptr)
+    if (m_normalObjectTransform != nullptr)
     {
-        GameObject* normalObject = ComponentAPI::getOwner(normalTransform);
+        GameObject* normalObject = ComponentAPI::getOwner(m_normalObjectTransform);
         GameObjectAPI::setActive(normalObject, true);
     }
 
-    if (brokenTransform != nullptr)
+    if (m_brokenObjectTransform != nullptr)
     {
-        GameObject* brokenObject = ComponentAPI::getOwner(brokenTransform);
+        GameObject* brokenObject = ComponentAPI::getOwner(m_brokenObjectTransform);
         GameObjectAPI::setActive(brokenObject, false);
     }
 }
@@ -40,18 +40,18 @@ void BreakableObject::breakObject()
 
     m_isBroken = true;
 
-    Transform* normalTransform = m_normalObjectTransform.getReferencedComponent();
-    Transform* brokenTransform = m_brokenObjectTransform.getReferencedComponent();
+    //Transform* normalTransform = m_normalObjectTransformComponent.getReferencedComponent();
+    //Transform* brokenTransform = m_brokenObjectTransformComponent.getReferencedComponent();
 
-    if (normalTransform != nullptr)
+    if (m_normalObjectTransform != nullptr)
     {
-        GameObject* normalObject = ComponentAPI::getOwner(normalTransform);
+        GameObject* normalObject = ComponentAPI::getOwner(m_normalObjectTransform);
         GameObjectAPI::setActive(normalObject, false);
     }
 
-    if (brokenTransform != nullptr)
+    if (m_brokenObjectTransform != nullptr)
     {
-        GameObject* brokenObject = ComponentAPI::getOwner(brokenTransform);
+        GameObject* brokenObject = ComponentAPI::getOwner(m_brokenObjectTransform);
         GameObjectAPI::setActive(brokenObject, true);
     }
 
