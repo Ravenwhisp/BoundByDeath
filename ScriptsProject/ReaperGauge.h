@@ -2,6 +2,7 @@
 
 #include "ScriptAPI.h"
 #include "UISlider.h"
+#include "Transform2D.h"
 
 class ReaperGauge : public Script
 {
@@ -13,6 +14,7 @@ public:
     void Start()     override;
     void Update()    override;
     void drawGizmo() override;
+    void updateUI();
 
     ScriptFieldList getExposedFields() const override;
 
@@ -29,6 +31,11 @@ public:
     float m_decayPerSecond   = 2.0f;
 
     ScriptComponentRef<UISlider> m_reaperGaugeUI;
+	ScriptComponentRef<Transform2D> m_glowUI;
+    ScriptComponentRef<Transform2D> m_blinkAlphaUI;
+
+	float m_blinkSpeed = 5.0f;
+    float m_blinkAlpha = 0.25f;
 
 private:
     float m_gauge       = 0.0f;
@@ -36,4 +43,6 @@ private:
     bool  m_everExploited = false;
 
 	UISlider* m_reaperGaugeSlider = nullptr;
+	Transform2D* m_glowTransform = nullptr;
+	Transform2D* m_blinkAlphaTransform = nullptr;
 };
