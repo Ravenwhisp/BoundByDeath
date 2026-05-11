@@ -3,16 +3,13 @@
 
 #include <cmath>
 
-static const ScriptFieldInfo ReaperGaugeFields[] =
-{
-    { "Max Gauge",         ScriptFieldType::Float, offsetof(ReaperGauge, m_maxGauge),       { 1.0f,  500.0f, 1.0f  } },
-    { "Num Segments",      ScriptFieldType::Int,   offsetof(ReaperGauge, m_numSegments),    { 1.0f,   20.0f, 1.0f  } },
-    { "Gain Per Exploit",  ScriptFieldType::Float, offsetof(ReaperGauge, m_gainPerExploit), { 0.0f,  100.0f, 1.0f  } },
-    { "Grace Period",      ScriptFieldType::Float, offsetof(ReaperGauge, m_gracePeriod),    { 0.0f,   60.0f, 0.5f  } },
-    { "Decay Per Second",  ScriptFieldType::Float, offsetof(ReaperGauge, m_decayPerSecond), { 0.0f,   50.0f, 0.5f  } },
-};
-
-IMPLEMENT_SCRIPT_FIELDS(ReaperGauge, ReaperGaugeFields)
+IMPLEMENT_SCRIPT_FIELDS(ReaperGauge,
+    SERIALIZED_FLOAT(m_maxGauge, "Max Gauge", 1.0f, 500.0f, 1.0f),
+    SERIALIZED_INT(m_numSegments, "Num Segments"),
+    SERIALIZED_FLOAT(m_gainPerExploit, "Gain Per Exploit", 0.0f, 100.0f, 1.0f),
+    SERIALIZED_FLOAT(m_gracePeriod, "Grace Period", 0.0f, 60.0f, 0.5f),
+    SERIALIZED_FLOAT(m_decayPerSecond, "Decay Per Second", 0.0f, 50.0f, 0.5f)
+)
 
 ReaperGauge::ReaperGauge(GameObject* owner)
     : Script(owner)

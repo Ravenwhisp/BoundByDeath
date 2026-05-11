@@ -2,14 +2,11 @@
 #include "EnemyCHASE.h"
 #include "EnemyController.h"
 
-static const ScriptFieldInfo CHASEFields[] =
-{
-	{ "Use Charge", ScriptFieldType::Bool, offsetof(EnemyCHASE, m_useCharge) },
-	{ "Charge Trigger Range", ScriptFieldType::Float, offsetof(EnemyCHASE, m_chargeTriggerRange), { 0.0f, 50.0f, 0.1f } },
-	{ "Debug Enabled", ScriptFieldType::Bool, offsetof(EnemyCHASE, m_debugEnabled) }
-};
-
-IMPLEMENT_SCRIPT_FIELDS(EnemyCHASE, CHASEFields)
+IMPLEMENT_SCRIPT_FIELDS(EnemyCHASE,
+	SERIALIZED_BOOL(m_useCharge, "Use Charge"),
+	SERIALIZED_FLOAT(m_chargeTriggerRange, "Charge Trigger Range", 0.0f, 50.0f, 0.1f),
+	SERIALIZED_BOOL(m_debugEnabled, "Debug Enabled")
+)
 
 EnemyCHASE::EnemyCHASE(GameObject* owner) : StateMachineScript(owner)
 {
@@ -17,8 +14,7 @@ EnemyCHASE::EnemyCHASE(GameObject* owner) : StateMachineScript(owner)
 
 void EnemyCHASE::OnStateEnter()
 {
-	Script* script = GameObjectAPI::getScript(getOwner(), "EnemyController");
-	m_enemyController = dynamic_cast<EnemyController*>(script);
+	m_enemyController = GameObjectAPI::findScript<EnemyController>(getOwner());
 
 	if (!m_enemyController)
 	{
@@ -78,13 +74,12 @@ void EnemyCHASE::OnStateUpdate()
 		if (distanceToTarget <= m_chargeTriggerRange && distanceToTarget > m_enemyController->m_combatRange)
 		{
 			m_enemyController->faceCurrentTarget();
-			m_enemyController->consumeChargeCooldown();
 			AnimationAPI::playState(animation, "Charge");
 			return;
 		}
 	}
 
-	if (m_enemyController->isTargetInCombatRange())
+	if (m_enemyController->isTargetInAttackEnterRange())
 	{
 		m_enemyController->faceCurrentTarget();
 		AnimationAPI::playState(animation, "Attack");

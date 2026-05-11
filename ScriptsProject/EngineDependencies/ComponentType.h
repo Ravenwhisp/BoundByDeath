@@ -18,7 +18,9 @@
     X(EXIT_APPLICATION)     \
     X(NAVMESH_WALK)         \
     X(ANIMATION)            \
-    X(UISLIDER)
+    X(UISLIDER)             \
+    X(TRIGGER)              \
+    X(NAVMODIFIER_VOLUME)
 
 enum class ComponentType
 {

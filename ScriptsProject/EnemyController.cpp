@@ -4,37 +4,15 @@
 #include "Damageable.h"
 #include <cmath>
 
-static const ScriptFieldInfo EnemyControllerFields[] =
-{
-	{ "Combat Range", ScriptFieldType::Float, offsetof(EnemyController, m_combatRange), { 0.0f, 50.0f, 0.1f } },
-	{ "Move Speed", ScriptFieldType::Float, offsetof(EnemyController, m_moveSpeed), { 0.0f, 50.0f, 0.1f } },
-	{ "Turn Speed", ScriptFieldType::Float, offsetof(EnemyController, m_turnSpeed), { 0.0f, 5.0f, 0.1f } },
-	{ "Interval", ScriptFieldType::Float, offsetof(EnemyController, m_intervalRepath), { 0.0f, 50.0f, 0.1f } },
-	{ "Charge Cooldown", ScriptFieldType::Float, offsetof(EnemyController, m_chargeCooldown), { 0.0f, 20.0f, 0.1f } },
-	{ "Debug Enabled", ScriptFieldType::Bool, offsetof(EnemyController, m_debugEnabled) }
-};
-static Damageable* findDamageableOnTarget(GameObject* gameObject)
-{
-	if (!gameObject)
-	{
-		return nullptr;
-	}
-
-	Script* script = GameObjectAPI::getScript(gameObject, "PlayerDamageable");
-	Damageable* damageable = dynamic_cast<Damageable*>(script);
-
-	if (damageable)
-	{
-		return damageable;
-	}
-
-	script = GameObjectAPI::getScript(gameObject, "Damageable");
-	damageable = dynamic_cast<Damageable*>(script);
-
-	return damageable;
-}
-
-IMPLEMENT_SCRIPT_FIELDS(EnemyController, EnemyControllerFields)
+IMPLEMENT_SCRIPT_FIELDS(EnemyController,
+	SERIALIZED_FLOAT(m_combatRange, "Combat Range", 0.0f, 50.0f, 0.1f),
+	SERIALIZED_FLOAT(m_moveSpeed, "Move Speed", 0.0f, 50.0f, 0.1f),
+	SERIALIZED_FLOAT(m_turnSpeed, "Turn Speed", 0.0f, 5.0f, 0.1f),
+	SERIALIZED_FLOAT(m_intervalRepath, "Interval", 0.0f, 50.0f, 0.1f),
+	SERIALIZED_FLOAT(m_attackEnterRangeBonus, "Attack Enter Range Bonus", 0.0f, 5.0f, 0.05f),
+  SERIALIZED_FLOAT(m_attackExitRangeBonus, "Attack Exit Range Bonus", 0.0f, 5.0f, 0.05f),
+	SERIALIZED_BOOL(m_debugEnabled, "Debug Enabled")
+)
 
 EnemyController::EnemyController(GameObject* owner)
     : Script(owner)
@@ -44,8 +22,7 @@ EnemyController::EnemyController(GameObject* owner)
 void EnemyController::Start()
 {
 
-	Script* script = GameObjectAPI::getScript(m_owner, "EnemyDetectionAggro");
-	m_enemyDetectionAggro = dynamic_cast<EnemyDetectionAggro*>(script);
+	m_enemyDetectionAggro = GameObjectAPI::findScript<EnemyDetectionAggro>(getOwner());
 
 	if (!m_enemyDetectionAggro)
 	{
@@ -91,7 +68,7 @@ bool EnemyController::hasValidTarget() const
 		return false;
 	}
 
-	Damageable* damageable = findDamageableOnTarget(targetObject);
+	Damageable* damageable = GameObjectAPI::findScript<Damageable>(targetObject);
 
 	if (damageable && damageable->isDead())
 	{
@@ -104,8 +81,7 @@ void EnemyController::updateCurrentTarget()
 {
 	if (!m_enemyDetectionAggro)
 	{
-		Script* script = GameObjectAPI::getScript(m_owner, "EnemyDetectionAggro");
-		m_enemyDetectionAggro = dynamic_cast<EnemyDetectionAggro*>(script);
+		m_enemyDetectionAggro = GameObjectAPI::findScript<EnemyDetectionAggro>(getOwner());
 	}
 
 	if (!m_enemyDetectionAggro)
@@ -131,6 +107,37 @@ bool EnemyController::isTargetInCombatRange() const
 	difference.y = 0.0f;
 
 	return difference.Length() <= m_combatRange;
+}
+bool EnemyController::isTargetInAttackEnterRange() const
+{
+	if (!m_currentTarget)
+	{
+		return false;
+	}
+
+	Vector3 ownerPosition = m_owner->GetTransform()->getPosition();
+	Vector3 targetPosition = m_currentTarget->getPosition();
+
+	Vector3 difference = ownerPosition - targetPosition;
+	difference.y = 0.0f;
+
+	return difference.Length() <= (m_combatRange + m_attackEnterRangeBonus);
+}
+
+bool EnemyController::isTargetInAttackExitRange() const
+{
+	if (!m_currentTarget)
+	{
+		return false;
+	}
+
+	Vector3 ownerPosition = m_owner->GetTransform()->getPosition();
+	Vector3 targetPosition = m_currentTarget->getPosition();
+
+	Vector3 difference = ownerPosition - targetPosition;
+	difference.y = 0.0f;
+
+	return difference.Length() <= (m_combatRange + m_attackExitRangeBonus);
 }
 
 void EnemyController::clearPath()
@@ -335,9 +342,9 @@ bool EnemyController::isChargeReady() const
 	return m_chargeCooldownTimer <= 0.0f;
 }
 
-void EnemyController::consumeChargeCooldown()
+void EnemyController::consumeChargeCooldown(float cooldownDuration)
 {
-	m_chargeCooldownTimer = m_chargeCooldown;
+	m_chargeCooldownTimer = cooldownDuration;
 }
 
 IMPLEMENT_SCRIPT(EnemyController)

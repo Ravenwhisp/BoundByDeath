@@ -2,12 +2,9 @@
 #include "EnemyIDLE.h"
 #include "EnemyController.h"
 
-static const ScriptFieldInfo IDLEFields[] =
-{
-	{ "Debug Enabled", ScriptFieldType::Bool, offsetof(EnemyIDLE, m_debugEnabled) }
-};
-
-IMPLEMENT_SCRIPT_FIELDS(EnemyIDLE, IDLEFields)
+IMPLEMENT_SCRIPT_FIELDS(EnemyIDLE,
+	SERIALIZED_BOOL(m_debugEnabled, "Debug Enabled")
+)
 
 EnemyIDLE::EnemyIDLE(GameObject* owner) : StateMachineScript(owner)
 {
@@ -15,8 +12,7 @@ EnemyIDLE::EnemyIDLE(GameObject* owner) : StateMachineScript(owner)
 
 void EnemyIDLE::OnStateEnter()
 {
-	Script* script = GameObjectAPI::getScript(getOwner(), "EnemyController");
-	m_enemyController = dynamic_cast<EnemyController*>(script);
+	m_enemyController = GameObjectAPI::findScript<EnemyController>(getOwner());
 
 	if (!m_enemyController)
 	{

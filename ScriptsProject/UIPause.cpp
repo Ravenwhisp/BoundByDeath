@@ -1,13 +1,10 @@
 #include "pch.h"
 #include "UIPause.h"
 
-static const ScriptFieldInfo UIPauseFields[] =
-{
-    { "Pause Panel", ScriptFieldType::ComponentRef, offsetof(UIPause, m_pausePanel), {}, {}, { ComponentType::TRANSFORM } },
-    { "Controls Panel", ScriptFieldType::ComponentRef, offsetof(UIPause, m_controlsPanel), {}, {}, { ComponentType::TRANSFORM } }
-};
-
-IMPLEMENT_SCRIPT_FIELDS(UIPause, UIPauseFields)
+IMPLEMENT_SCRIPT_FIELDS(UIPause,
+    SERIALIZED_COMPONENT_REF(m_pausePanel, "Pause Panel", ComponentType::TRANSFORM),
+    SERIALIZED_COMPONENT_REF(m_controlsPanel, "Controls Panel", ComponentType::TRANSFORM)
+)
 
 static const ScriptMethodInfo UIPauseMethods[] =
 {

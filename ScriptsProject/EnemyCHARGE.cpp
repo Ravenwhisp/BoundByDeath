@@ -2,14 +2,12 @@
 #include "EnemyCHARGE.h"
 #include "EnemyController.h"
 
-static const ScriptFieldInfo CHARGEFields[] =
-{
-	{ "Charge Duration", ScriptFieldType::Float, offsetof(EnemyCHARGE, m_chargeDuration), { 0.0f, 10.0f, 0.1f } },
-	{ "Charge Speed", ScriptFieldType::Float, offsetof(EnemyCHARGE, m_chargeSpeed), { 0.0f, 50.0f, 0.1f } },
-	{ "Debug Enabled", ScriptFieldType::Bool, offsetof(EnemyCHARGE, m_debugEnabled) }
-};
-
-IMPLEMENT_SCRIPT_FIELDS(EnemyCHARGE, CHARGEFields)
+IMPLEMENT_SCRIPT_FIELDS(EnemyCHARGE,
+	SERIALIZED_FLOAT(m_chargeDuration, "Charge Duration", 0.0f, 10.0f, 0.1f),
+	SERIALIZED_FLOAT(m_chargeSpeed, "Charge Speed", 0.0f, 50.0f, 0.1f),
+  SERIALIZED_FLOAT(m_chargeCooldown, "Charge Cooldown", 0.0f, 20.0f, 0.1f),
+	SERIALIZED_BOOL(m_debugEnabled, "Debug Enabled")
+)
 
 EnemyCHARGE::EnemyCHARGE(GameObject* owner)
 	: StateMachineScript(owner)
@@ -20,8 +18,7 @@ void EnemyCHARGE::OnStateEnter()
 {
 	m_elapsedTime = 0.0f;
 
-	Script* script = GameObjectAPI::getScript(getOwner(), "EnemyController");
-	m_enemyController = dynamic_cast<EnemyController*>(script);
+	m_enemyController = GameObjectAPI::findScript<EnemyController>(getOwner());
 
 	Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
 	if (!ownerTransform)
@@ -31,6 +28,7 @@ void EnemyCHARGE::OnStateEnter()
 
 	if (m_enemyController)
 	{
+		m_enemyController->consumeChargeCooldown(m_chargeCooldown);
 		m_enemyController->clearPath();
 		m_enemyController->resetRepathTimer();
 		m_enemyController->updateCurrentTarget();

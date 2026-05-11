@@ -1,18 +1,12 @@
 #include "pch.h"
 #include "EnemyShadowMark.h"
 #include "ReaperGauge.h"
-#include "LyrielDash.h"
-#include "LyrielArrowVolley.h"
 
 #include <cmath>
 
-static const ScriptFieldInfo EnemyShadowMarkFields[] =
-{
-    { "Mark Duration",             ScriptFieldType::Float, offsetof(EnemyShadowMark, m_markDuration),            { 0.5f, 10.0f, 0.1f  } },
-    { "Volley Cooldown Reduction", ScriptFieldType::Float, offsetof(EnemyShadowMark, m_volleyCooldownReduction), { 0.0f,  1.0f, 0.05f } },
-};
-
-IMPLEMENT_SCRIPT_FIELDS(EnemyShadowMark, EnemyShadowMarkFields)
+IMPLEMENT_SCRIPT_FIELDS(EnemyShadowMark, 
+    SERIALIZED_FLOAT(m_markDuration, "Mark Duration", 0.5f, 10.0f, 0.1f)
+)
 
 EnemyShadowMark::EnemyShadowMark(GameObject* owner)
     : Script(owner)
@@ -50,31 +44,13 @@ void EnemyShadowMark::exploit()
 {
     Debug::log("[ShadowMark] Mark exploited at phase %d!", m_phase);
 
-    // Notify ReaperGauge on the GameController
-    std::vector<GameObject*> defaultObjects = SceneAPI::findAllGameObjectsByTag(Tag::DEFAULT, true);
-    for (GameObject* go : defaultObjects)
-    {
-        Script* gaugeScript = GameObjectAPI::getScript(go, "ReaperGauge");
-        if (gaugeScript != nullptr)
-        {
-            static_cast<ReaperGauge*>(gaugeScript)->onMarkExploited();
-            break;
-        }
-    }
-
-    // Reward Lyriel: find her GO (the one that has LyrielDash) and apply both rewards
     std::vector<GameObject*> players = SceneAPI::findAllGameObjectsByTag(Tag::PLAYER, true);
     for (GameObject* player : players)
     {
-        Script* dashScript = GameObjectAPI::getScript(player, "LyrielDash");
-        if (dashScript != nullptr)
+        ReaperGauge* gauge = GameObjectAPI::findScript<ReaperGauge>(player);
+        if (gauge != nullptr)
         {
-            static_cast<LyrielDash*>(dashScript)->recoverCharge();
-
-            Script* volleyScript = GameObjectAPI::getScript(player, "LyrielArrowVolley");
-            if (volleyScript != nullptr)
-                static_cast<LyrielArrowVolley*>(volleyScript)->reduceCooldown(m_volleyCooldownReduction);
-
+            gauge->onMarkExploited();
             break;
         }
     }

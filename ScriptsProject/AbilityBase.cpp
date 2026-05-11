@@ -1,6 +1,16 @@
 #include "pch.h"
 #include "AbilityBase.h"
+
 #include "CharacterBase.h"
+#include "PlayerState.h"
+#include "PlayerAnimationController.h"
+#include "UISlider.h"
+
+IMPLEMENT_SCRIPT_FIELDS(AbilityBase,
+    SERIALIZED_FLOAT(m_cooldown, "Cooldown", 0.0f, 10.0f, 0.01f),
+    SERIALIZED_COMPONENT_REF(m_cdUI, "CD UI", ComponentType::TRANSFORM),
+    SERIALIZED_COMPONENT_REF(m_cdBar, "CD Slider", ComponentType::UISLIDER)
+)
 
 AbilityBase::AbilityBase(GameObject* owner)
     : Script(owner)
@@ -9,36 +19,96 @@ AbilityBase::AbilityBase(GameObject* owner)
 
 void AbilityBase::Start()
 {
-    m_character = findCharacterScript(getOwner());
+    m_character = GameObjectAPI::findScript<CharacterBase>(getOwner());
+
+    if (m_character == nullptr)
+    {
+        Debug::warn("[AbilityBase] CharacterBase not found on owner '%s'.", GameObjectAPI::getName(getOwner()));
+    }
 }
 
 void AbilityBase::Update()
 {
-    updateCooldown();
+	float dt = Time::getDeltaTime();
+
+    updateCooldown(dt);
+	updateAttackWindow(dt);
 }
 
-void AbilityBase::updateCooldown()
+void AbilityBase::tryAbility()
+{
+    if (!canStartAbility())
+    {
+        return;
+    }
+
+    startAbility();
+}
+
+void AbilityBase::updateCooldown(float dt)
 {
     if (m_cooldownTimer <= 0.0f)
     {
         return;
     }
 
-    m_cooldownTimer -= Time::getDeltaTime();
-    if (m_cooldownTimer < 0.0f)
+    m_cooldownTimer -= dt;
+    if (m_cooldownTimer <= 0.0f)
     {
+		Transform* cdUITransform = m_cdUI.getReferencedComponent();
+        if (cdUITransform)
+        {
+            GameObject* cdUIObject = cdUITransform->getOwner();
+            if (cdUIObject)
+            {
+                GameObjectAPI::setActive(cdUIObject, false);
+            }
+		}
         m_cooldownTimer = 0.0f;
+        return;
+    }
+	SliderAPI::setFillAmount(m_cdBar.getReferencedComponent(), (m_cooldownTimer / m_cooldown));
+
+}
+
+void AbilityBase::startCooldown()
+{
+    m_cooldownTimer = m_cooldown;
+	Transform* cdUITransform = m_cdUI.getReferencedComponent();
+    if (cdUITransform)
+    {
+        GameObject* cdUIObject = cdUITransform->getOwner();
+        if (cdUIObject)
+        {
+            GameObjectAPI::setActive(cdUIObject, true);
+        }
+	}
+}
+
+void AbilityBase::updateAttackWindow(float dt)
+{
+    if (m_attackStateTimer <= 0.0f)
+    {
+        return;
+    }
+
+    onAttackWindowUpdate();
+
+    m_attackStateTimer -= dt;
+    if (m_attackStateTimer <= 0.0f)
+    {
+        finishAttackWindow();
     }
 }
 
 bool AbilityBase::canStartAbility() const
 {
-    if (!m_isEnabled)
+    if (m_character == nullptr)
     {
         return false;
     }
-
-    if (m_character == nullptr)
+    
+    if (!m_isEnabled)
     {
         return false;
     }
@@ -46,7 +116,7 @@ bool AbilityBase::canStartAbility() const
     if (!isCooldownReady())
     {
         return false;
-    }
+    } 
 
     if (m_character->isDowned())
     {
@@ -58,10 +128,15 @@ bool AbilityBase::canStartAbility() const
         return false;
     }
 
+    if (!canStartSpecificAbility())
+    {
+        return false;
+    }
+
     return true;
 }
 
-void AbilityBase::setAbilityLocked(bool locked)
+void AbilityBase::setAbilityLocked(bool locked) //innecesario
 {
     if (m_character != nullptr)
     {
@@ -69,7 +144,7 @@ void AbilityBase::setAbilityLocked(bool locked)
     }
 }
 
-int AbilityBase::getPlayerIndex() const
+int AbilityBase::getPlayerIndex() const //innecesario
 {
     if (m_character == nullptr)
     {
@@ -79,29 +154,55 @@ int AbilityBase::getPlayerIndex() const
     return m_character->getPlayerIndex();
 }
 
-CharacterBase* AbilityBase::findCharacterScript(GameObject* owner) const
+void AbilityBase::beginAttackWindow(float lockDuration)
 {
-    if (owner == nullptr)
-    {
-        return nullptr;
-    }
-
-    Script* script = GameObjectAPI::getScript(owner, "LyrielCharacter");
-    if (script != nullptr)
-    {
-        return static_cast<CharacterBase*>(script);
-    }
-
-    script = GameObjectAPI::getScript(owner, "DeathCharacter");
-    if (script != nullptr)
-    {
-        return static_cast<CharacterBase*>(script);
-    }
-
-    return nullptr;
+    m_attackStateTimer = lockDuration;
 }
 
-Vector3 AbilityBase::computeCameraRelativeAimDirection(float deadzoneSq) const
+void AbilityBase::finishAttackWindow()
+{
+    m_attackStateTimer = 0.0f;
+
+    setAbilityLocked(false);
+
+    if (m_character != nullptr)
+    {
+        PlayerState* playerState = m_character->getPlayerState();
+        if (playerState != nullptr && playerState->isRecoveringAttack())
+        {
+            playerState->setState(PlayerStateType::Normal);
+        }
+    }
+
+    onAttackWindowFinished();
+}
+
+void AbilityBase::beginAttackPresentation()
+{
+    if (m_character == nullptr)
+    {
+        return;
+    }
+
+    PlayerState* playerState = m_character->getPlayerState();
+    if (playerState != nullptr)
+    {
+        if (playerState->isDowned())
+        {
+            return;
+        }
+
+        playerState->setState(PlayerStateType::AttackRecovery);
+    }
+
+    PlayerAnimationController* animController = m_character->getAnimationController();
+    if (animController != nullptr)
+    {
+        animController->requestAttack();
+    }
+}
+
+Vector3 AbilityBase::computeCameraRelativeAimDirection(float deadzoneSq) const //no me gustan transforms aqui
 {
     const Vector2 lookAxis = Input::getLookAxis(getPlayerIndex());
     const float magSq = lookAxis.x * lookAxis.x + lookAxis.y * lookAxis.y;
@@ -158,7 +259,7 @@ Vector3 AbilityBase::computeCameraRelativeAimDirection(float deadzoneSq) const
     cameraForward.Normalize();
     cameraRight.Normalize();
 
-    Vector3 aimDirection = cameraRight * lookAxis.x + cameraForward * lookAxis.y;
+    Vector3 aimDirection = -cameraRight * lookAxis.x - cameraForward * lookAxis.y;
 
     if (aimDirection.LengthSquared() <= 0.0001f)
     {
@@ -168,3 +269,25 @@ Vector3 AbilityBase::computeCameraRelativeAimDirection(float deadzoneSq) const
     aimDirection.Normalize();
     return aimDirection;
 }
+
+Vector3 AbilityBase::getFallbackFacingDirection() const
+{
+    Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
+    if (ownerTransform == nullptr)
+    {
+        return Vector3::Zero;
+    }
+
+    Vector3 forward = TransformAPI::getForward(ownerTransform);
+    forward.y = 0.0f;
+
+    if (forward.LengthSquared() <= 0.0001f)
+    {
+        return Vector3::Zero;
+    }
+
+    forward.Normalize();
+    return forward;
+}
+
+IMPLEMENT_SCRIPT(AbilityBase)
