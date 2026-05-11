@@ -13,7 +13,7 @@ public:
 
     void Start() override;
     void Update() override;
-	void OnTriggerEnter(GameObject* gameObject) override; //esto es cuando el pickup llega al jugador. debera haber otro trigger para xuclar el pickup
+	void OnTriggerEnter(GameObject* player) override; //esto es cuando el pickup llega al jugador. debera haber otro trigger para xuclar el pickup
 
 	void drawGizmo() override;
 
@@ -32,5 +32,9 @@ private:
 
 private:
 	std::vector<GameObject*> playerObjects;
+
+	float m_startHeight = 0.0f;
+	float m_lockOnTimer = 0.0f;
+	bool m_isLockedOnPlayer = false;
 
 };

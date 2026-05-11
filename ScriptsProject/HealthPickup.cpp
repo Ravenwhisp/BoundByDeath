@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "HealthPickup.h"
 
+#include "Damageable.h"
+
 IMPLEMENT_SCRIPT_FIELDS(HealthPickup, 
 	SERIALIZED_FLOAT(m_healAmount, "Heal Amount", 0.0f, 100.0f, 1.0f),
 	SERIALIZED_FLOAT(m_detectionRadius, "Detection Radius", 0.0f, 100.0f, 0.1f),
@@ -43,12 +45,24 @@ void HealthPickup::Update()
 	}
 }
 
-void HealthPickup::OnTriggerEnter(GameObject* gameObject)
+void HealthPickup::OnTriggerEnter(GameObject* player)
 {
-	//curar
+	if (!player || GameObjectAPI::getTag(player) != Tag::PLAYER)
+	{
+		return;
+	}
 
+	for(int i = 0; i < playerObjects.size(); ++i)
+	{
+		Damageable* damageable = GameObjectAPI::findScript<Damageable>(playerObjects[i]);
+		if (damageable != nullptr)
+		{
+			damageable->heal(m_healAmount);
+		}
+		GameObjectAPI::removeGameObject(getOwner());
+	}
 
-	Pickup::OnTriggerEnter(gameObject);
+	Pickup::OnTriggerEnter(player);
 }
 
 void HealthPickup::drawGizmo()
@@ -65,28 +79,39 @@ void HealthPickup::moveTowardsClosestPlayer(const GameObject* closestPlayer, con
 	Vector3 directionToPlayer = playerPosition - pickupPosition;
 	const float distanceToPlayer = directionToPlayer.Length();
 
-	if (distanceToPlayer <= m_slowDetectionRadius)
+	if (!m_isLockedOnPlayer && distanceToPlayer <= m_detectionRadius)
+	{
+		m_isLockedOnPlayer = true;
+		m_startHeight = pickupPosition.y;
+	}
+
+	if (m_isLockedOnPlayer || distanceToPlayer <= m_slowDetectionRadius)
 	{
 		float speed = m_slowSpeed;
-		float verticalVelocity = 0.0f;
+		float nextY = pickupPosition.y;
 
-		if (distanceToPlayer <= m_detectionRadius)
+		if (m_isLockedOnPlayer)
 		{
-			float closenessFactor = 1.0f - (distanceToPlayer / m_detectionRadius);
-			speed = Vector3::Lerp(Vector3(m_slowSpeed, 0, 0), Vector3(m_maxFlySpeed, 0, 0), closenessFactor * closenessFactor).x;
+			m_lockOnTimer += dt * 2.0f;
+			float progress = (std::min)(1.0f, m_lockOnTimer);
 
-			float targetY = playerPosition.y + 1.0f * closenessFactor;
-			verticalVelocity = (targetY - pickupPosition.y) * 2.0f;
+			speed = m_slowSpeed + (progress * progress * (m_maxFlySpeed - m_slowSpeed));
+
+			float targetHeightAtChest = playerPosition.y + 0.5f;
+			float expFactor = progress * progress;
+			float desiredY = m_startHeight + (targetHeightAtChest - m_startHeight) * expFactor;
+
+			nextY = (pickupPosition.y * 0.8f) + (desiredY * 0.2f);
 		}
 
-		Vector3 directionCopy = directionToPlayer;
-		directionCopy.Normalize();
+		Vector3 dirHorizontal = directionToPlayer;
+		dirHorizontal.y = 0;
+		dirHorizontal.Normalize();
 
-		Vector3 velocity = directionCopy * speed;
-		velocity.y = verticalVelocity;
+		Vector3 newPosition = pickupPosition + (dirHorizontal * speed * dt);
+		newPosition.y = nextY;
 
 		Transform* transform = GameObjectAPI::getTransform(getOwner());
-		Vector3 newPosition = pickupPosition + velocity * dt;
 		TransformAPI::setPosition(transform, newPosition);
 	}
 }

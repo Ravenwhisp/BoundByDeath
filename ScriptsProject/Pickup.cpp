@@ -20,7 +20,7 @@ void Pickup::OnTriggerEnter(GameObject* gameObject)
 {
 	m_collected = true;
 
-    //se destruye
+    GameObjectAPI::removeGameObject(getOwner());
 }
 
 IMPLEMENT_SCRIPT(Pickup)
