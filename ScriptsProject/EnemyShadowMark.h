@@ -24,7 +24,8 @@ public:
 
 public:
     float m_markDuration = 3.0f;
-	float m_markUIScale = 1.0f;
+	float m_markUITargetScale = 1.0f;
+	float m_markUIHeightOffset = 1.0f;
     ScriptComponentRef<Transform2D> m_canvas;
     ScriptComponentRef<Transform> m_mark_1;
     ScriptComponentRef<Transform> m_mark_2;
@@ -38,4 +39,5 @@ private:
 	GameObject* m_mark1Object = nullptr;
     GameObject* m_mark2Object = nullptr;
 	GameObject* m_mark3Object = nullptr;
+	float m_startScale = 1.0f;
 };

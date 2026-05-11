@@ -6,7 +6,8 @@
 
 IMPLEMENT_SCRIPT_FIELDS(EnemyShadowMark, 
     SERIALIZED_FLOAT(m_markDuration, "Mark Duration", 0.5f, 10.0f, 0.1f),
-	SERIALIZED_FLOAT(m_markUIScale, "Mark UI Scale", 0.5f, 0.5f, 0.5f),
+	SERIALIZED_FLOAT(m_markUITargetScale, "Mark UI Scale", 0.1f, 5.0f, 0.2f),
+	SERIALIZED_FLOAT(m_markUIHeightOffset, "Mark UI Height", 0.1f, 50.0f, 20.0f),
 	SERIALIZED_COMPONENT_REF(m_canvas, "Canvas Transform", ComponentType::TRANSFORM2D),
 	SERIALIZED_COMPONENT_REF(m_mark_1, "Mark Phase 1", ComponentType::TRANSFORM),
 	SERIALIZED_COMPONENT_REF(m_mark_2, "Mark Phase 2", ComponentType::TRANSFORM),
@@ -21,6 +22,10 @@ EnemyShadowMark::EnemyShadowMark(GameObject* owner)
 void EnemyShadowMark::Start()
 {
 	m_canvasTransform2D = m_canvas.getReferencedComponent();
+    if (m_canvasTransform2D)
+    {
+		m_startScale = Transform2DAPI::getScale(m_canvasTransform2D).x;
+	}
 	m_mark1Object = m_mark_1.getReferencedComponent() ? ComponentAPI::getOwner(m_mark_1.getReferencedComponent()) : nullptr;
 	m_mark2Object = m_mark_2.getReferencedComponent() ? ComponentAPI::getOwner(m_mark_2.getReferencedComponent()) : nullptr;
 	m_mark3Object = m_mark_3.getReferencedComponent() ? ComponentAPI::getOwner(m_mark_3.getReferencedComponent()) : nullptr;
@@ -29,26 +34,18 @@ void EnemyShadowMark::Start()
 
 void EnemyShadowMark::Update()
 {
+    updateUI();
+
     if (m_phase == 0)
-        return;
-
-    if (m_canvasTransform2D)
     {
-		const float t = (m_markDuration - m_timer) / m_markDuration;
-		const float easedTimer = MathAPI::evaluateEasing(MathAPI::EasingType::EaseOutCubic, t);
-		Transform2DAPI::setPosition(m_canvasTransform2D, { 0.0f, 1.0f + easedTimer * 0.7f });
-
-		const float pingpongT = MathAPI::pingPong(easedTimer);
-		const float scale = 1.0f + pingpongT * 0.5f;
-		Transform2DAPI::setScale(m_canvasTransform2D, { scale * m_markUIScale, scale * m_markUIScale });
-	}
+        return;
+    }
 
     m_timer -= Time::getDeltaTime();
     if (m_timer <= 0.0f)
     {
         m_phase = 0;
         m_timer = 0.0f;
-        updateUI();
         Debug::log("[ShadowMark] Mark expired.");
     }
 }
@@ -58,7 +55,6 @@ void EnemyShadowMark::notifyDeathHit()
     if (m_phase < 3)
     {
         m_phase++;
-        updateUI();
     }
 
     m_timer = m_markDuration;
@@ -86,9 +82,34 @@ void EnemyShadowMark::exploit()
 
 void EnemyShadowMark::updateUI()
 {
-    if (m_mark1Object) GameObjectAPI::setActive(m_mark1Object, m_phase == 1);
-    if (m_mark2Object) GameObjectAPI::setActive(m_mark2Object, m_phase == 2);
-	if (m_mark3Object) GameObjectAPI::setActive(m_mark3Object, m_phase == 3);
+    if (m_mark1Object) 
+    {
+        GameObjectAPI::setActive(m_mark1Object, m_phase == 1);
+    }
+    if (m_mark2Object)
+    {
+        GameObjectAPI::setActive(m_mark2Object, m_phase == 2);
+    }
+    if (m_mark3Object)
+    {
+        GameObjectAPI::setActive(m_mark3Object, m_phase == 3);
+    }
+    
+	if (m_timer <= 0.0f)
+    {
+        return;
+    }
+
+    if (m_canvasTransform2D)
+    {
+        const float t = (m_markDuration - m_timer) / m_markDuration;
+        const float easedTimerPos = MathAPI::evaluateEasing(MathAPI::EasingType::EaseOutCubic, t);
+        Transform2DAPI::setPosition(m_canvasTransform2D, { 0.0f, easedTimerPos * m_markUIHeightOffset });
+
+        const float easedTimerScale = MathAPI::evaluateEasing(MathAPI::EasingType::EaseInSine, t);
+		const float scale = m_startScale + (m_markUITargetScale - m_startScale) * easedTimerScale;
+        Transform2DAPI::setScale(m_canvasTransform2D, { scale, scale });
+    }
 }
 
 void EnemyShadowMark::drawGizmo()

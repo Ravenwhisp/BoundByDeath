@@ -79,7 +79,6 @@ void ReaperGauge::updateUI()
 {
     if (m_reaperGaugeSlider)
     {
-        Debug::log("[ReaperGauge] %.1f/%.1f  decayTimer=%.1f", m_gauge, m_maxGauge, m_decayTimer);
         SliderAPI::setFillAmount(m_reaperGaugeSlider, getGaugePercent());
     }
 
