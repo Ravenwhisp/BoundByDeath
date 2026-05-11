@@ -73,7 +73,11 @@ void PlayerController::Update()
 
     const float dt = Time::getDeltaTime();
 
-    if (m_playerState && !m_playerState->canMove())
+    const bool downed = m_playerState && m_playerState->isDowned();
+    const bool canMove = m_playerState ? m_playerState->canMove() : true;
+
+    // While downed, no input is processed at all (revive flow handles its own input).
+    if (downed)
     {
         if (m_playerMovement)
         {
@@ -84,26 +88,35 @@ void PlayerController::Update()
 
     if (m_playerMovement)
     {
-        const Vector2 moveAxis = Input::getMoveAxis(m_playerIndex);
-
-        Vector3 moveDirection = readMoveDirection(moveAxis);
-        const bool isMoving = moveDirection.x != 0.0f || moveDirection.y != 0.0f || moveDirection.z != 0.0f;
-        m_playerMovement->setMoving(isMoving);
-
-        if (isMoving)
+        if (!canMove)
         {
-            if (m_playerRotation)
-            {
-                Vector3 horizontalDir(moveDirection.x, 0.0f, moveDirection.z);
-                if (horizontalDir.x != 0.0f || horizontalDir.z != 0.0f)
-                {
-                    horizontalDir.Normalize();
-                    m_playerRotation->applyFacingFromDirection(owner, horizontalDir, dt);
-                }
-            }
+            // Locked in an attack recovery: no movement, but ability inputs still flow
+            // through so the buffer in AbilityBase can queue the next combo step.
+            m_playerMovement->setMoving(false);
+        }
+        else
+        {
+            const Vector2 moveAxis = Input::getMoveAxis(m_playerIndex);
 
-            moveDirection.Normalize();
-            m_playerMovement->playerMovement(owner, moveDirection * dt);
+            Vector3 moveDirection = readMoveDirection(moveAxis);
+            const bool isMoving = moveDirection.x != 0.0f || moveDirection.y != 0.0f || moveDirection.z != 0.0f;
+            m_playerMovement->setMoving(isMoving);
+
+            if (isMoving)
+            {
+                if (m_playerRotation)
+                {
+                    Vector3 horizontalDir(moveDirection.x, 0.0f, moveDirection.z);
+                    if (horizontalDir.x != 0.0f || horizontalDir.z != 0.0f)
+                    {
+                        horizontalDir.Normalize();
+                        m_playerRotation->applyFacingFromDirection(owner, horizontalDir, dt);
+                    }
+                }
+
+                moveDirection.Normalize();
+                m_playerMovement->playerMovement(owner, moveDirection * dt);
+            }
         }
     }
 

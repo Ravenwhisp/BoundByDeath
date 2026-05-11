@@ -71,6 +71,31 @@ void AbilityBase::updateCooldown(float dt)
 
 }
 
+void AbilityBase::reduceCooldown(float fraction)
+{
+    if (m_cooldownTimer <= 0.0f || fraction <= 0.0f || m_cooldown <= 0.0f)
+        return;
+
+    m_cooldownTimer -= fraction * m_cooldown;
+
+    if (m_cooldownTimer <= 0.0f)
+    {
+        m_cooldownTimer = 0.0f;
+        Transform* cdUITransform = m_cdUI.getReferencedComponent();
+        if (cdUITransform)
+        {
+            GameObject* cdUIObject = cdUITransform->getOwner();
+            if (cdUIObject)
+            {
+                GameObjectAPI::setActive(cdUIObject, false);
+            }
+        }
+        return;
+    }
+
+    SliderAPI::setFillAmount(m_cdBar.getReferencedComponent(), (m_cooldownTimer / m_cooldown));
+}
+
 void AbilityBase::startCooldown()
 {
     m_cooldownTimer = m_cooldown;
@@ -107,7 +132,7 @@ bool AbilityBase::canStartAbility() const
     {
         return false;
     }
-    
+
     if (!m_isEnabled)
     {
         return false;
@@ -116,7 +141,7 @@ bool AbilityBase::canStartAbility() const
     if (!isCooldownReady())
     {
         return false;
-    } 
+    }
 
     if (m_character->isDowned())
     {

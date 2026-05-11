@@ -69,6 +69,14 @@ void ReaperGauge::onMarkExploited()
         Debug::log("[ReaperGauge] GAUGE FULL! Shadow Execution is now available.");
 }
 
+void ReaperGauge::consume()
+{
+    m_gauge      = 0.0f;
+    m_decayTimer = 0.0f;
+    m_decaying   = false;
+    Debug::log("[ReaperGauge] Gauge consumed by Shadow Execution.");
+}
+
 float ReaperGauge::getGaugePercent() const
 {
     if (m_maxGauge <= 0.0f)

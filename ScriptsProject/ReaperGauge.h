@@ -16,6 +16,7 @@ public:
     ScriptFieldList getExposedFields() const override;
 
     void  onMarkExploited();
+    void  consume();
     float getGauge()        const { return m_gauge; }
     float getGaugePercent() const;
     int   getCurrentSegments() const;

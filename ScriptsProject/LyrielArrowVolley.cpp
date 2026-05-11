@@ -32,17 +32,6 @@ void LyrielArrowVolley::Start()
     LyrielAbilityBase::Start();
 }
 
-void LyrielArrowVolley::reduceCooldown(float percent)
-{
-    const float reduction = m_volleyCooldown * percent;
-    m_cooldownTimer -= reduction;
-    if (m_cooldownTimer < 0.0f)
-        m_cooldownTimer = 0.0f;
-
-    Debug::log("[LyrielArrowVolley] Exploit reward: cooldown -%.0f%% (-%.1fs). Remaining: %.1fs",
-        percent * 100.0f, reduction, m_cooldownTimer);
-}
-
 void LyrielArrowVolley::Update()
 {
     LyrielAbilityBase::Update();
@@ -300,6 +289,8 @@ void LyrielArrowVolley::applyVolleyDamage(const std::vector<GameObject*>& target
             if (mark != nullptr && mark->isExploitable())
             {
                 mark->exploit();
+                if (m_lyrielCharacter != nullptr)
+                    m_lyrielCharacter->onMarkExploited();
             }
         }
     }
