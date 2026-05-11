@@ -227,21 +227,19 @@ void DeathTaunt::applyTauntToEnemiesInCone(const Vector3& ownerForward) const
             continue;
         }
 
-        Script* script = GameObjectAPI::getScript(enemy, "EnemyDetectionAggro");
-        if (script == nullptr)
+        EnemyDetectionAggro* enemyAggro = GameObjectAPI::findScript<EnemyDetectionAggro>(enemy);
+        if (enemyAggro == nullptr)
         {
             Debug::log("[DeathTaunt] Enemy '%s' in cone but no EnemyDetectionAggro.", GameObjectAPI::getName(enemy));
             continue;
         }
 
-        static_cast<EnemyDetectionAggro*>(script)->applyTaunt(ownerTransform, m_TauntDurationSeconds);
+        enemyAggro->applyTaunt(ownerTransform, m_TauntDurationSeconds);
         Debug::log("[DeathTaunt] Taunt applied to '%s' for %.1fs.", GameObjectAPI::getName(enemy), m_TauntDurationSeconds);
 
         if (PersistingPowerupState::isUnlocked(PowerupId::DeathPowerup1))
         {
-            Script* markScript = GameObjectAPI::getScript(enemy, "EnemyShadowMark");
-            EnemyShadowMark* shadowMark = static_cast<EnemyShadowMark*>(markScript);
-
+            EnemyShadowMark* shadowMark = GameObjectAPI::findScript<EnemyShadowMark>(enemy);
             if (shadowMark != nullptr)
             {
                 shadowMark->notifyDeathHit();

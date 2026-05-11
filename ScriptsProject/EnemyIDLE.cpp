@@ -12,8 +12,7 @@ EnemyIDLE::EnemyIDLE(GameObject* owner) : StateMachineScript(owner)
 
 void EnemyIDLE::OnStateEnter()
 {
-	Script* script = GameObjectAPI::getScript(getOwner(), "EnemyController");
-	m_enemyController = dynamic_cast<EnemyController*>(script);
+	m_enemyController = GameObjectAPI::findScript<EnemyController>(getOwner());
 
 	if (!m_enemyController)
 	{
