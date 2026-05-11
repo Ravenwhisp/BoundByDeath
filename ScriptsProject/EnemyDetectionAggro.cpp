@@ -11,38 +11,21 @@ IMPLEMENT_SCRIPT_FIELDS(EnemyDetectionAggro,
 	SERIALIZED_COMPONENT_REF(m_player2Transform, "Player 2 Transform", ComponentType::TRANSFORM)
 )
 
-static Damageable* findDamageableOnTarget(Transform* targetTransform)
+static bool isDeadTarget(Transform* targetTransform)
 {
-	if (!targetTransform)
+	if (targetTransform == nullptr)
 	{
-		return nullptr;
+		return false;
 	}
 
 	GameObject* targetObject = ComponentAPI::getOwner(targetTransform);
-	if (!targetObject)
+	if (targetObject == nullptr)
 	{
-		return nullptr;
+		return false;
 	}
 
-	Script* script = GameObjectAPI::getScript(targetObject, "PlayerDamageable");
-	Damageable* damageable = dynamic_cast<Damageable*>(script);
-
-	if (damageable)
-	{
-		return damageable;
-	}
-
-	script = GameObjectAPI::getScript(targetObject, "Damageable");
-	damageable = dynamic_cast<Damageable*>(script);
-
-	return damageable;
-}
-
-static bool isDeadTarget(Transform* targetTransform)
-{
-	Damageable* damageable = findDamageableOnTarget(targetTransform);
-
-	if (!damageable)
+	Damageable* damageable = GameObjectAPI::findScript<Damageable>(targetObject);
+	if (damageable == nullptr)
 	{
 		return false;
 	}
@@ -515,13 +498,8 @@ bool EnemyDetectionAggro::isTransformAlive(Transform* target) const
 		return false;
 	}
 
-	Script* script = GameObjectAPI::getScript(targetOwner, "Damageable");
-	if (script == nullptr)
-	{
-		script = GameObjectAPI::getScript(targetOwner, "DeathCharacter");
-	}
+	Damageable* damageable = GameObjectAPI::findScript<Damageable>(targetOwner);
 
-	Damageable* damageable = static_cast<Damageable*>(script);
 	return damageable == nullptr || !damageable->isDead();
 }
 

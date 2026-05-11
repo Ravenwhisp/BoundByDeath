@@ -13,13 +13,9 @@ LyrielAbilityBase::LyrielAbilityBase(GameObject* owner)
 
 void LyrielAbilityBase::Start()
 {
-    m_lyrielCharacter = dynamic_cast<LyrielCharacter*>(GameObjectAPI::getScript(getOwner(), "LyrielCharacter"));
-    m_character = m_lyrielCharacter;
+    AbilityBase::Start();
 
-    if (m_lyrielCharacter == nullptr)
-    {
-        Debug::log("[LyrielAbilityBase] LyrielCharacter not found on owner '%s'.", GameObjectAPI::getName(getOwner()));
-    }
+    m_lyrielCharacter = dynamic_cast<LyrielCharacter*>(m_character);
 }
 
 Transform* LyrielAbilityBase::findArrowSpawnTransform() const

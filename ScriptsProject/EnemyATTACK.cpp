@@ -3,27 +3,6 @@
 #include "EnemyController.h"
 #include "Damageable.h"
 
-static Damageable* findDamageable(GameObject* gameObject)
-{
-	if (!gameObject)
-	{
-		return nullptr;
-	}
-
-	Script* script = GameObjectAPI::getScript(gameObject, "PlayerDamageable");
-	Damageable* damageable = dynamic_cast<Damageable*>(script);
-
-	if (damageable)
-	{
-		return damageable;
-	}
-
-	script = GameObjectAPI::getScript(gameObject, "Damageable");
-	damageable = dynamic_cast<Damageable*>(script);
-
-	return damageable;
-}
-
 IMPLEMENT_SCRIPT_FIELDS(EnemyATTACK,
 	SERIALIZED_FLOAT(m_attackDamage, "Attack Damage", 0.0f, 999999.0f, 1.0f),
 	SERIALIZED_FLOAT(m_attackCooldown, "Attack Cooldown", 0.0f, 10.0f, 0.1f),
@@ -39,8 +18,7 @@ EnemyATTACK::EnemyATTACK(GameObject* owner) : StateMachineScript(owner)
 
 void EnemyATTACK::OnStateEnter()
 {
-	Script* script = GameObjectAPI::getScript(getOwner(), "EnemyController");
-	m_enemyController = dynamic_cast<EnemyController*>(script);
+	m_enemyController = GameObjectAPI::findScript<EnemyController>(getOwner());
 
 	m_attackTimer = 0.0f;
 	m_attackCommitTimer = 0.0f;
@@ -143,12 +121,12 @@ void EnemyATTACK::performAttack()
 		return;
 	}
 
-	Damageable* damageable = findDamageable(targetObject);
+	Damageable* damageable = GameObjectAPI::findScript<Damageable>(targetObject);
 	if (!damageable)
 	{
 		if (m_debugEnabled)
 		{
-			Debug::warn("[EnemyATTACK] No PlayerDamageable or Damageable found on '%s'.", GameObjectAPI::getName(targetObject));
+			Debug::warn("[EnemyATTACK] No Damageable found on '%s'.", GameObjectAPI::getName(targetObject));
 		}
 		return;
 	}

@@ -17,14 +17,12 @@ DeathDash::DeathDash(GameObject* owner): AbilityDash(owner)
 
 void DeathDash::Start()
 {
-    m_character = dynamic_cast<DeathCharacter*>(GameObjectAPI::getScript(getOwner(), "DeathCharacter"));
+    AbilityDash::Start();
 
     if (m_character == nullptr)
     {
-        Debug::log("[DeathAbilityBase] DeathCharacter not found on owner '%s'.", GameObjectAPI::getName(getOwner()));
+        Debug::log("[DeathDash] DeathCharacter not found on owner '%s'.", GameObjectAPI::getName(getOwner()));
     }
-
-    AbilityDash::Start();
 }
 
 void DeathDash::onDashStarted()
@@ -98,16 +96,17 @@ void DeathDash::applyDashDamage()
             continue;
         }
 
-        Script* script = GameObjectAPI::getScript(enemyObj, "EnemyDamageable");
-        EnemyDamageable* damageable = dynamic_cast<EnemyDamageable*>(script);
+        EnemyDamageable* damageable = GameObjectAPI::findScript<EnemyDamageable>(enemyObj);
 
         if (damageable != nullptr)
         {
             damageable->takeDamageEnemy(m_dashDamage, GameObjectAPI::getTransform(getOwner()));
 
-            Script* markScript = GameObjectAPI::getScript(enemyObj, "EnemyShadowMark");
-            if (markScript != nullptr)
-                static_cast<EnemyShadowMark*>(markScript)->notifyDeathHit();
+            EnemyShadowMark* shadowMark = GameObjectAPI::findScript<EnemyShadowMark>(enemyObj);
+            if (shadowMark != nullptr)
+            {
+                shadowMark->notifyDeathHit();
+            }
         }
     }
 }

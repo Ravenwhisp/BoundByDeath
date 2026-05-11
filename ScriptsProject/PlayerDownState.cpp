@@ -18,15 +18,14 @@ PlayerDownState::PlayerDownState(GameObject* owner)
 
 void PlayerDownState::Start()
 {
-    m_damageable = findDamageable();
+    m_damageable = GameObjectAPI::findScript<Damageable>(getOwner());
 
     if (!m_damageable)
     {
         Debug::warn("PlayerDownState on '%s' could not find a Damageable on the same GameObject.", GameObjectAPI::getName(m_owner));
     }
 
-    Script* stateScript = GameObjectAPI::getScript(m_owner, "PlayerState");
-    m_playerState = dynamic_cast<PlayerState*>(stateScript);
+    m_playerState = GameObjectAPI::findScript<PlayerState>(getOwner());
 
     if (!m_playerState)
     {
@@ -144,22 +143,6 @@ void PlayerDownState::blockRevive()
 {
     m_reviveBlocked = true;
     m_reviveProgress = 0.0f;
-}
-
-Damageable* PlayerDownState::findDamageable() const
-{
-    Script* script = GameObjectAPI::getScript(m_owner, "PlayerDamageable");
-    Damageable* damageable = dynamic_cast<Damageable*>(script);
-
-    if (damageable)
-    {
-        return damageable;
-    }
-
-    script = GameObjectAPI::getScript(m_owner, "Damageable");
-    damageable = dynamic_cast<Damageable*>(script);
-
-    return damageable;
 }
 
 bool PlayerDownState::isTeammateInAssistRange() const
