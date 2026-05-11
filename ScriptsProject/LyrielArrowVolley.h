@@ -16,6 +16,8 @@ public:
 
     ScriptFieldList getExposedFields() const override;
 
+    void reduceCooldown(float percent);
+
 protected:
     void onAttackWindowUpdate() override;
     void onAttackWindowFinished() override;

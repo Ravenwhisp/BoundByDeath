@@ -21,7 +21,8 @@ public:
     int  getPhase() const { return m_phase; }
 
 public:
-    float m_markDuration = 3.0f;
+    float m_markDuration              = 3.0f;
+    float m_volleyCooldownReduction   = 0.20f;  // % of base cooldown removed per exploit
 
 private:
     int   m_phase = 0;

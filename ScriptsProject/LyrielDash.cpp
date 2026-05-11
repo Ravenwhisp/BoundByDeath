@@ -32,9 +32,13 @@ void LyrielDash::recoverCharge()
         ++m_charges;
 
         if (m_charges == MAX_DASH_CHARGES)
-        {
             m_chargeRecoveryTimer = 0.0f;
-        }
+
+        Debug::log("[LyrielDash] Exploit reward: dash recovered. Charges: %d/%d", m_charges, MAX_DASH_CHARGES);
+    }
+    else
+    {
+        Debug::log("[LyrielDash] Exploit reward: dashes already full (%d/%d).", m_charges, MAX_DASH_CHARGES);
     }
 }
 
