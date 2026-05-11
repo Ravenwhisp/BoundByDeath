@@ -99,19 +99,16 @@ void LyrielArrowProjectile::applyImpactDamage()
         return;
     }
 
-    Script* script = GameObjectAPI::getScript(m_target, "EnemyDamageable");
-    EnemyDamageable* damageable = dynamic_cast<EnemyDamageable*>(script);
+    EnemyDamageable* damageable = GameObjectAPI::findScript<EnemyDamageable>(m_target);
 
     if (damageable != nullptr)
     {
         damageable->takeDamageEnemy(m_damage, m_arrowOwner);
 
-        Script* markScript = GameObjectAPI::getScript(m_target, "EnemyShadowMark");
-        if (markScript != nullptr)
+        EnemyShadowMark* mark = GameObjectAPI::findScript<EnemyShadowMark>(m_target);
+        if (mark != nullptr && mark->isExploitable())
         {
-            EnemyShadowMark* mark = static_cast<EnemyShadowMark*>(markScript);
-            if (mark->isExploitable())
-                mark->exploit();
+            mark->exploit();
         }
     }
 

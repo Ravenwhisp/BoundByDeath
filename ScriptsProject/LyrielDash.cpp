@@ -15,16 +15,14 @@ LyrielDash::LyrielDash(GameObject* owner)
 
 void LyrielDash::Start()
 {
-    m_character = dynamic_cast<LyrielCharacter*>(GameObjectAPI::getScript(getOwner(), "LyrielCharacter"));
+    AbilityDash::Start();
 
     if (m_character == nullptr)
     {
-        Debug::log("[LyrielAbilityBase] LyrielCharacter not found on owner '%s'.", GameObjectAPI::getName(getOwner()));
+        Debug::log("[LyrielDash] CharacterBase not found on owner '%s'.", GameObjectAPI::getName(getOwner()));
     }
-    
-    m_currentCharges = m_maxCharges;
 
-    AbilityDash::Start();
+    m_currentCharges = m_maxCharges;
 }
 
 void LyrielDash::recoverCharge()

@@ -27,8 +27,6 @@ public:
     void blockRevive();
 
 private:
-    Damageable* findDamageable() const;
-
     bool isTeammateInAssistRange() const;
     void completeRevive();
 

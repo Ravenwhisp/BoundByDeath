@@ -123,8 +123,7 @@ void SpikeTrap::damagePlayer(GameObject* player)
     // Skip if this player was already damaged
     if (damagedPlayers.count(player)) return;
 
-    Script* damageableScript = GameObjectAPI::getScript(player, "PlayerDamageable");
-    PlayerDamageable* damageable = dynamic_cast<PlayerDamageable*>(damageableScript);
+    PlayerDamageable* damageable = GameObjectAPI::findScript<PlayerDamageable>(player);
     if (damageable)
     {
         damageable->takeDamage(trapDamage);
