@@ -5,11 +5,10 @@
 static const char* navAgentProfileNames[] =
 {
     "PlayerNormal",
-    "PlayerSpectral",
-    "EnemyGround"
+    "PlayerSpectral"
 };
 
-constexpr int navAgentProfileCount = 3;
+constexpr int navAgentProfileCount = 2;
 
 IMPLEMENT_SCRIPT_FIELDS(PlayerMovement,
     SERIALIZED_ENUM_INT(m_playerType, "Player Type", navAgentProfileNames, navAgentProfileCount),
