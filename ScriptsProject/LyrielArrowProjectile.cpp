@@ -112,8 +112,7 @@ void LyrielArrowProjectile::applyImpactDamage()
         }
     }
 
-    Script* breakableScript = GameObjectAPI::getScript(m_target, "BreakableDamageable");
-    BreakableDamageable* breakableDamageable = dynamic_cast<BreakableDamageable*>(breakableScript);
+	BreakableDamageable* breakableDamageable = GameObjectAPI::findScript<BreakableDamageable>(m_target);
 
     if (breakableDamageable != nullptr)
     {

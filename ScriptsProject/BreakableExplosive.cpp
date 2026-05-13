@@ -21,6 +21,14 @@ void BreakableExplosive::Update()
 {
 }
 
+void BreakableExplosive::drawGizmo()
+{
+	DebugDrawAPI::drawCircle(TransformAPI::getPosition(GameObjectAPI::getTransform(getOwner())), 
+        Vector3::UnitY,
+		Vector3(1.0f, 0.0f, 0.0f),
+        m_explosionRadius);
+}
+
 void BreakableExplosive::onBreak()
 {
 	Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
@@ -54,6 +62,8 @@ void BreakableExplosive::onBreak()
         }
 		damageableScript->takeDamage(m_explosionDamage);
 	}
+
+    Debug::log("[BreakableExplosive] '%s' exploded dealing %.1f damage in radius %.1f.", GameObjectAPI::getName(getOwner()), m_explosionDamage, m_explosionRadius);
 
     BreakableObject::breakObject();
 }
