@@ -2,7 +2,8 @@
 #include "CrystalShadowMark.h"
 
 IMPLEMENT_SCRIPT_FIELDS(CrystalShadowMark,
-    SERIALIZED_COMPONENT_REF(m_puzzleManager, "PuzzleManager", ComponentType::TRANSFORM)
+    SERIALIZED_COMPONENT_REF(m_puzzleManager, "PuzzleManager", ComponentType::TRANSFORM),
+	SERIALIZED_INT(m_puzzleID, "Puzzle ID")
 )
 
 CrystalShadowMark::CrystalShadowMark(GameObject* owner) : Script(owner) {}
@@ -29,7 +30,7 @@ void CrystalShadowMark::onMarkExploided()
     PuzzleManagerLVL1* manager = GameObjectAPI::findScript<PuzzleManagerLVL1>(managerObject);
     if (manager != nullptr)
     {
-        manager->onCrystalsActivated();
+        manager->onCrystalsActivated(m_puzzleID);
     }  
     else
     {

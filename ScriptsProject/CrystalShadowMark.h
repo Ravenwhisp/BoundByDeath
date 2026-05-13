@@ -20,6 +20,8 @@ public:
 
     ScriptComponentRef<Transform> m_puzzleManager;
 
+	int m_puzzleID = 0;
+
 private:
 
     EnemyShadowMark* m_shadowMark = nullptr;

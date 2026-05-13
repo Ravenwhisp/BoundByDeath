@@ -6,28 +6,31 @@ class PuzzleManagerLVL1 : public Script
 {
     DECLARE_SCRIPT(MyScript)
 
+struct PuzzleData
+{
+	int crystalsActivated = 0;
+	int totalCrystals = 0;
+	bool puzzleSolved = false;
+};
+
 public:
     explicit PuzzleManagerLVL1(GameObject* owner);
 
     void Start() override;
     void Update() override;
 
-	ScriptComponentRef<Transform> m_crystal1;
-	ScriptComponentRef<Transform> m_crystal2;
-
 	ScriptComponentRef<Transform> m_door1;
 
 	void puzzle1Solved();
 
-	void onCrystalsActivated();
+	void onCrystalsActivated(int puzzleID);
 
 private:
 
-	int m_crystalsActivated = 0;
+	bool isPuzzleSolved(int puzzleId) const;
+	void onPuzzleSolved(int puzzleId);
 
-	static constexpr int k_totalCrystals = 2;
-
-	bool isPuzzle1Solved() const;
+	std::unordered_map<int, PuzzleData> m_puzzles;
 
     ScriptFieldList getExposedFields() const override;
 };
