@@ -161,7 +161,7 @@ void AbilityDash::calculateDashMovement(float dt)
         
         if (m_playerMovement)
         {
-            m_playerMovement->playerDashMovement(getOwner(), delta);
+            m_playerMovement->playerDashMovement(getOwner(), delta, true);
             return;
         }
     }
