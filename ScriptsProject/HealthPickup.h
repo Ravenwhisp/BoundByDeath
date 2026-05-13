@@ -2,39 +2,42 @@
 
 #include "ScriptAPI.h"
 
-#include "Pickup.h"
-
-class HealthPickup : public Pickup
+class HealthPickup : public Script
 {
     DECLARE_SCRIPT(HealthPickup)
 
 public:
     explicit HealthPickup(GameObject* owner);
 
-    void Start() override;
+    void Start()  override;
     void Update() override;
-	void OnTriggerEnter(GameObject* player) override; //esto es cuando el pickup llega al jugador. debera haber otro trigger para xuclar el pickup
-
-	void drawGizmo() override;
+    void OnTriggerEnter(GameObject* player) override;
 
     ScriptFieldList getExposedFields() const override;
-    
+
+private:
+    void idleAnimation();
+    void fallAnimation();
+
 public:
-	float m_healAmount = 25.0f;
-	float m_detectionRadius = 8.0f;
-	float m_maxFlySpeed = 30.0f;
-	float m_slowDetectionRadius = 20.0f; //radio para que se acerque muuuuy lentamente al player mas cercano. a partir de m_detectionRadius, ira acelerando
-	float m_slowSpeed = 0.5f; //velocidad a la que se mueve hacia el player cuando esta dentro de m_slowDetectionRadius pero fuera de m_detectionRadius
+    float   m_healAmount            = 10.0f;
+    float   m_spawnHeight           = 1.5f;   // fallback height when no custom spawn-from
+    float   m_fallGravity           = 8.0f;
+    Vector3 m_landingPosition      = Vector3::Zero;  // target floor position, set by spawner
+    bool    m_hasCustomSpawnFrom   = false;
 
 private:
-	void moveTowardsClosestPlayer(const GameObject* closestPlayer, const float dt); //funcion para detectar al player mas cercano y moverse hacia el. se llama cada update, pero solo hace algo si el player esta dentro de m_slowDetectionRadius
-	float getDistanceToClosestPlayer(const Vector3& position, GameObject*& closestPlayer) const;
+    bool    m_collected             = false;
+    bool    m_isFalling             = true;
+    float   m_fallVelocity          = 0.0f;
+    float   m_fallHVelocityX        = 0.0f;
+    float   m_fallHVelocityZ        = 0.0f;
 
-private:
-	std::vector<GameObject*> playerObjects;
+    Vector3 m_startPosition         = Vector3::Zero;  // landing target
+    Vector3 m_fallStartPosition     = Vector3::Zero;  // where the arc begins
 
-	float m_startHeight = 0.0f;
-	float m_lockOnTimer = 0.0f;
-	bool m_isLockedOnPlayer = false;
-
+    float m_idleTimer           = 0.0f;
+    float m_idleSpeed           = 0.2f;
+    float m_horizontalAmplitude = 0.1f;
+    float m_verticalAmplitude   = 0.2f;
 };

@@ -1,149 +1,132 @@
 #include "pch.h"
 #include "HealthPickup.h"
+#include "PlayerDamageable.h"
 
-#include "Damageable.h"
+#include <cmath>
 
-IMPLEMENT_SCRIPT_FIELDS(HealthPickup, 
-	SERIALIZED_FLOAT(m_healAmount, "Heal Amount", 0.0f, 100.0f, 1.0f),
-	SERIALIZED_FLOAT(m_detectionRadius, "Detection Radius", 0.0f, 100.0f, 0.1f),
-	SERIALIZED_FLOAT(m_maxFlySpeed, "Max Fly Speed", 0.0f, 50.0f, 0.1f),
-	SERIALIZED_FLOAT(m_slowDetectionRadius, "Slow Detection Radius", 0.0f, 100.0f, 0.1f),
-	SERIALIZED_FLOAT(m_slowSpeed, "Slow Speed", 0.0f, 5.0f, 0.1f)
-    )
+
+IMPLEMENT_SCRIPT_FIELDS(HealthPickup,
+    SERIALIZED_FLOAT(m_healAmount, "Heal Amount",         0.0f, 100.0f, 1.0f),
+    SERIALIZED_FLOAT(m_spawnHeight, "Spawn Height",        0.0f,   5.0f, 0.1f),
+    SERIALIZED_FLOAT(m_fallGravity, "Fall Gravity",        0.0f,  20.0f, 0.5f),
+    SERIALIZED_FLOAT(m_idleSpeed, "Idle Speed",          0.0f,  10.0f, 0.05f),
+    SERIALIZED_FLOAT(m_horizontalAmplitude, "Horizontal Amplitude",0.0f,   3.0f, 0.05f),
+    SERIALIZED_FLOAT(m_verticalAmplitude, "Vertical Amplitude",  0.0f,   3.0f, 0.05f),
+)
 
 HealthPickup::HealthPickup(GameObject* owner)
-    : Pickup(owner)
+    : Script(owner)
 {
 }
 
 void HealthPickup::Start()
 {
-	playerObjects = SceneAPI::findAllGameObjectsByTag(Tag::PLAYER);
+    Transform* t        = GameObjectAPI::getTransform(getOwner());
+    m_fallStartPosition = TransformAPI::getGlobalPosition(t);  // already at arc origin
+
+    m_startPosition = m_hasCustomSpawnFrom
+        ? m_landingPosition
+        : Vector3(m_fallStartPosition.x, m_fallStartPosition.y - m_spawnHeight, m_fallStartPosition.z);
+
+    // Precompute constant horizontal velocity so XZ reaches target exactly when Y lands
+    const float fallHeight = m_fallStartPosition.y - m_startPosition.y;
+    if (fallHeight > 0.0f && m_fallGravity > 0.0f)
+    {
+        const float estimatedTime = std::sqrt(2.0f * fallHeight / m_fallGravity);
+        if (estimatedTime > 0.0f)
+        {
+            m_fallHVelocityX = (m_startPosition.x - m_fallStartPosition.x) / estimatedTime;
+            m_fallHVelocityZ = (m_startPosition.z - m_fallStartPosition.z) / estimatedTime;
+        }
+    }
+
+    m_isFalling    = true;
+    m_fallVelocity = 0.0f;
 }
 
 void HealthPickup::Update()
 {
-	if (m_collected)
-	{
-		return;
-	}
+    if (m_collected)
+    {
+        return;
+    }
 
-	const float dt = Time::getDeltaTime();
+    if (m_isFalling)
+    {
+        fallAnimation();
+    }
+    else
+    {
+        idleAnimation();
+    }
+}
+void HealthPickup::OnTriggerEnter(GameObject* player){
+    Debug::log("HealthPickup triggered by %s", GameObjectAPI::getName(player));
+     if (m_collected)
+    {
+        return;
+    }
 
-	const Vector3 position = TransformAPI::getPosition(GameObjectAPI::getTransform(getOwner()));
-	GameObject* closestPlayer = nullptr;
-	const float distance = getDistanceToClosestPlayer(position, closestPlayer);
+    if (!player || GameObjectAPI::getTag(player) != Tag::PLAYER)
+    {
+        return;
+    }
+    Debug::log("Player %s entered health pickup trigger", GameObjectAPI::getName(player));
+    PlayerDamageable* damageable = static_cast<PlayerDamageable*>(GameObjectAPI::getScript(player, "PlayerDamageable"));
 
-	if(distance > m_slowDetectionRadius * m_slowDetectionRadius)
-	{
-		return;
-	}
+    if (!damageable || damageable->isDead())
+    {
+        return;
+    }
 
-	if (closestPlayer != nullptr)
-	{
-		moveTowardsClosestPlayer(closestPlayer, dt);
-	}
+    if (damageable->getCurrentHp() >= damageable->getMaxHp())
+    {
+        return;
+    }
+    Debug::log("Player %s can collect health pickup, healing for %f", GameObjectAPI::getName(player), m_healAmount);
+    m_collected = true;
+
+    damageable->heal(m_healAmount);
+
+    GameObjectAPI::removeGameObject(getOwner());
 }
 
-void HealthPickup::OnTriggerEnter(GameObject* player)
+
+void HealthPickup::fallAnimation()
 {
-	if (!player || GameObjectAPI::getTag(player) != Tag::PLAYER)
-	{
-		return;
-	}
+    const float dt = Time::getDeltaTime();
+    m_fallVelocity += m_fallGravity * dt;
 
-	for(int i = 0; i < playerObjects.size(); ++i)
-	{
-		Damageable* damageable = GameObjectAPI::findScript<Damageable>(playerObjects[i]);
-		if (damageable != nullptr)
-		{
-			damageable->heal(m_healAmount);
-		}
-		GameObjectAPI::removeGameObject(getOwner());
-	}
+    Transform* t = GameObjectAPI::getTransform(getOwner());
+    Vector3 pos  = TransformAPI::getGlobalPosition(t);
 
-	Pickup::OnTriggerEnter(player);
+    pos.x += m_fallHVelocityX * dt;
+    pos.z += m_fallHVelocityZ * dt;
+    pos.y -= m_fallVelocity    * dt;
+
+    if (pos.y <= m_startPosition.y)
+    {
+        pos            = m_startPosition;
+        m_isFalling    = false;
+        m_fallVelocity = 0.0f;
+    }
+
+    TransformAPI::setPosition(t, pos);
 }
 
-void HealthPickup::drawGizmo()
+void HealthPickup::idleAnimation()
 {
-	DebugDrawAPI::drawCircle(TransformAPI::getPosition(GameObjectAPI::getTransform(getOwner())), Vector3::UnitY, { 1.0f, 0.0f, 1.0f }, m_detectionRadius);
-	DebugDrawAPI::drawCircle(TransformAPI::getPosition(GameObjectAPI::getTransform(getOwner())), Vector3::UnitY, { 1.0f, 1.0f, 0.0f }, m_slowDetectionRadius);
+    m_idleTimer += Time::getDeltaTime();
+
+    const float t = m_idleTimer * m_idleSpeed;
+
+    Vector3 position = m_startPosition;
+
+    position.z += std::sin(t) * m_horizontalAmplitude;
+    position.y += std::sin(t * 2.0f) * m_verticalAmplitude;
+
+    TransformAPI::setPosition(GameObjectAPI::getTransform(getOwner()), position);
 }
 
-void HealthPickup::moveTowardsClosestPlayer(const GameObject* closestPlayer, const float dt)
-{
-	const Vector3 pickupPosition = TransformAPI::getPosition(GameObjectAPI::getTransform(getOwner()));
-	const Vector3 playerPosition = TransformAPI::getPosition(GameObjectAPI::getTransform(closestPlayer));
-
-	Vector3 directionToPlayer = playerPosition - pickupPosition;
-	const float distanceToPlayer = directionToPlayer.Length();
-
-	if (!m_isLockedOnPlayer && distanceToPlayer <= m_detectionRadius)
-	{
-		m_isLockedOnPlayer = true;
-		m_startHeight = pickupPosition.y;
-	}
-
-	if (m_isLockedOnPlayer || distanceToPlayer <= m_slowDetectionRadius)
-	{
-		float speed = m_slowSpeed;
-		float nextY = pickupPosition.y;
-
-		if (m_isLockedOnPlayer)
-		{
-			m_lockOnTimer += dt * 2.0f;
-			float progress = (std::min)(1.0f, m_lockOnTimer);
-
-			speed = m_slowSpeed + (progress * progress * (m_maxFlySpeed - m_slowSpeed));
-
-			float targetHeightAtChest = playerPosition.y + 0.5f;
-			float expFactor = progress * progress;
-			float desiredY = m_startHeight + (targetHeightAtChest - m_startHeight) * expFactor;
-
-			nextY = (pickupPosition.y * 0.8f) + (desiredY * 0.2f);
-		}
-
-		Vector3 dirHorizontal = directionToPlayer;
-		dirHorizontal.y = 0;
-		dirHorizontal.Normalize();
-
-		Vector3 newPosition = pickupPosition + (dirHorizontal * speed * dt);
-		newPosition.y = nextY;
-
-		Transform* transform = GameObjectAPI::getTransform(getOwner());
-		TransformAPI::setPosition(transform, newPosition);
-	}
-}
-
-float HealthPickup::getDistanceToClosestPlayer(const Vector3& position, GameObject*& closestPlayer) const
-{
-	float result = 0.f;
-
-	for (int i = 0; i < playerObjects.size(); ++i)
-	{
-		if (playerObjects[i] == nullptr)
-		{
-			continue;
-		}
-		Vector3 playerPosition = TransformAPI::getPosition(GameObjectAPI::getTransform(playerObjects[i]));
-		if (i == 0)
-		{
-			result = Vector3::DistanceSquared(position, playerPosition);
-			closestPlayer = playerObjects[i];
-		}
-		else
-		{
-			float distanceSq = Vector3::DistanceSquared(position, playerPosition);
-			if (distanceSq < result)
-			{
-				result = distanceSq;
-				closestPlayer = playerObjects[i];
-			}
-		}
-	}
-
-	return result;
-}
 
 IMPLEMENT_SCRIPT(HealthPickup)
