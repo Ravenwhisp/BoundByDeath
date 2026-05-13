@@ -73,8 +73,10 @@ void LyrielDash::onDashUpdate(float dt)
 bool LyrielDash::validateDashTarget()
 {
     Vector3 currentPosition = TransformAPI::getPosition(getOwner()->GetTransform());
+    m_debugDashStart = currentPosition; // Debugging
 
     Vector3 candidateEnd = currentPosition + m_dashDirection * m_dashDistance;
+    m_debugDashCandidateEnd = candidateEnd; // Debugging
 
     Vector3 sampledPosition;
     Vector3 searchExtents = Vector3(1.0f, 2.0f, 1.0f);
@@ -83,15 +85,35 @@ bool LyrielDash::validateDashTarget()
     {
         m_dashTargetPosition = sampledPosition;
         m_hasDashTarget = true;
-        Debug::log("Dash target set: %s | Position: %.2f %.2f %.2f",
-            m_hasDashTarget ? "true" : "false",
-            m_dashTargetPosition.x,
-            m_dashTargetPosition.y,
-            m_dashTargetPosition.z);
+        m_debugDashSampleEnd = sampledPosition; // Debugging
+        m_debugLastDashValid = true; // Debugging
+
         return true;
     }
 
+    m_debugLastDashValid = false; // Debugging
     return false;
+}
+
+void LyrielDash::drawGizmo()
+{
+    const Vector3 white = { 1.0f, 1.0f, 1.0f };
+    const Vector3 yellow = { 1.0f, 1.0f, 0.0f };
+    const Vector3 cyan = { 0.0f, 1.0f, 1.0f };
+    const Vector3 red = { 1.0f, 0.0f, 0.0f };
+    const Vector3 up = { 0.0f, 1.0f, 0.0f };
+
+    DebugDrawAPI::drawArrow(m_debugDashStart, m_debugDashCandidateEnd, white, 0.25f);
+    DebugDrawAPI::drawCircle(m_debugDashCandidateEnd, up, yellow, 0.45f);
+
+    if (m_debugLastDashValid)
+    {
+        DebugDrawAPI::drawCircle(m_debugDashSampleEnd, up, cyan, 0.35f);
+    }
+    else
+    {
+        DebugDrawAPI::drawCircle(m_debugDashCandidateEnd, up, red, 0.55f);
+    }
 }
 
 IMPLEMENT_SCRIPT(LyrielDash)
