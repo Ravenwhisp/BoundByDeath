@@ -44,6 +44,10 @@ void EnemyIDLE::OnStateUpdate()
 	{
 		return;
 	}
+	if (m_enemyController->tryInterruptWithReactiveState(animation))
+	{
+		return;
+	}
 
 	m_enemyController->updateCurrentTarget();
 

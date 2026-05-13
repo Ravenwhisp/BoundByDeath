@@ -76,6 +76,10 @@ void EnemyATTACK::OnStateUpdate()
 	{
 		return;
 	}
+	if (m_enemyController->tryInterruptWithReactiveState(animation))
+	{
+		return;
+	}
 
 	float dt = Time::getDeltaTime();
 	m_stateTimer += dt;

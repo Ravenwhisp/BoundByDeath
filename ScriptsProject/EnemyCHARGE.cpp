@@ -68,6 +68,10 @@ void EnemyCHARGE::OnStateUpdate()
 	{
 		return;
 	}
+	if (m_enemyController->tryInterruptWithReactiveState(animation))
+	{
+		return;
+	}
 
 	Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
 	if (!ownerTransform)

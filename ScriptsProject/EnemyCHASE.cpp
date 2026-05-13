@@ -53,6 +53,10 @@ void EnemyCHASE::OnStateUpdate()
 	{
 		return;
 	}
+	if (m_enemyController->tryInterruptWithReactiveState(animation))
+	{
+		return;
+	}
 
 	m_enemyController->tickChargeCooldown(Time::getDeltaTime());
 	m_enemyController->updateCurrentTarget();

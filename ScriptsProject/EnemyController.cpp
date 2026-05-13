@@ -12,6 +12,7 @@ static const ScriptFieldInfo EnemyControllerFields[] =
 	{ "Interval", ScriptFieldType::Float, offsetof(EnemyController, m_intervalRepath), { 0.0f, 50.0f, 0.1f } },
 	{ "Attack Enter Range Bonus", ScriptFieldType::Float, offsetof(EnemyController, m_attackEnterRangeBonus), { 0.0f, 5.0f, 0.05f } },
     { "Attack Exit Range Bonus", ScriptFieldType::Float, offsetof(EnemyController, m_attackExitRangeBonus), { 0.0f, 5.0f, 0.05f } },
+	{ "Hit Reaction Cooldown", ScriptFieldType::Float, offsetof(EnemyController, m_hitReactionCooldown), { 0.0f, 5.0f, 0.05f } },
 	{ "Debug Enabled", ScriptFieldType::Bool, offsetof(EnemyController, m_debugEnabled) }
 };
 static Damageable* findDamageableOnTarget(GameObject* gameObject)
@@ -52,6 +53,11 @@ void EnemyController::Start()
 	{
 		Debug::error("EnemyDetectionAggro script not found!");
 	}
+}
+
+void EnemyController::Update()
+{
+	tickHitReactionCooldown(Time::getDeltaTime());
 }
 
 void EnemyController::drawGizmo()
@@ -370,6 +376,90 @@ bool EnemyController::isChargeReady() const
 void EnemyController::consumeChargeCooldown(float cooldownDuration)
 {
 	m_chargeCooldownTimer = cooldownDuration;
+}
+void EnemyController::tickHitReactionCooldown(float dt)
+{
+	if (m_hitReactionCooldownTimer > 0.0f)
+	{
+		m_hitReactionCooldownTimer -= dt;
+
+		if (m_hitReactionCooldownTimer < 0.0f)
+		{
+			m_hitReactionCooldownTimer = 0.0f;
+		}
+	}
+}
+
+bool EnemyController::canTriggerHitReaction() const
+{
+	return m_hitReactionCooldownTimer <= 0.0f;
+}
+
+void EnemyController::startHitReactionCooldown()
+{
+	m_hitReactionCooldownTimer = m_hitReactionCooldown;
+}
+
+void EnemyController::requestDamageTaken()
+{
+	if (!m_pendingStun)
+	{
+		m_pendingDamageTaken = true;
+	}
+}
+
+void EnemyController::requestStun()
+{
+	m_pendingStun = true;
+	m_pendingDamageTaken = false;
+}
+
+bool EnemyController::hasPendingDamageTaken() const
+{
+	return m_pendingDamageTaken;
+}
+
+bool EnemyController::hasPendingStun() const
+{
+	return m_pendingStun;
+}
+
+void EnemyController::consumeDamageTaken()
+{
+	m_pendingDamageTaken = false;
+}
+
+void EnemyController::consumeStun()
+{
+	m_pendingStun = false;
+}
+
+bool EnemyController::tryInterruptWithReactiveState(AnimationComponent* animation)
+{
+	if (!animation)
+	{
+		return false;
+	}
+
+	if (m_pendingStun)
+	{
+		consumeStun();
+		clearPath();
+		resetRepathTimer();
+		AnimationAPI::playState(animation, "Stun");
+		return true;
+	}
+
+	if (m_pendingDamageTaken)
+	{
+		consumeDamageTaken();
+		clearPath();
+		resetRepathTimer();
+		AnimationAPI::playState(animation, "DamageTaken");
+		return true;
+	}
+
+	return false;
 }
 
 IMPLEMENT_SCRIPT(EnemyController)

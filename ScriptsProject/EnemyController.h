@@ -12,6 +12,7 @@ public:
     explicit EnemyController(GameObject* owner);
 
     void Start() override;
+    void Update() override;
     void drawGizmo() override;
 
     ScriptFieldList getExposedFields() const override;
@@ -21,9 +22,11 @@ public:
     float m_moveSpeed = 1.0f;
     float m_turnSpeed = 2.0f;
     float m_intervalRepath = 0.4f;
+    float m_hitReactionCooldown = 0.35f;
     bool m_debugEnabled = true;
     float m_attackEnterRangeBonus = 0.45f;
     float m_attackExitRangeBonus = 0.80f;
+
 
     bool isTargetInAttackEnterRange() const;
     bool isTargetInAttackExitRange() const;
@@ -38,6 +41,9 @@ private:
     size_t m_currentIndex = 0;
     size_t m_maxPathPoints = 32;
     Vector3 m_searchExtents = Vector3(5.0f, 5.0f, 5.0f);
+    float m_hitReactionCooldownTimer = 0.0f;
+    bool m_pendingDamageTaken = false;
+    bool m_pendingStun = false;
     const float RADIANS_TO_DEGREES = 180.0f / 3.14159265f;
 
 public:
@@ -55,6 +61,20 @@ public:
     void tickChargeCooldown(float dt);
     bool isChargeReady() const;
     void consumeChargeCooldown(float cooldownDuration);
+    void tickHitReactionCooldown(float dt);
+    bool canTriggerHitReaction() const;
+    void startHitReactionCooldown();
+
+    void requestDamageTaken();
+    void requestStun();
+
+    bool hasPendingDamageTaken() const;
+    bool hasPendingStun() const;
+
+    void consumeDamageTaken();
+    void consumeStun();
+
+    bool tryInterruptWithReactiveState(AnimationComponent* animation);
 
 private:
     Vector3 getChasePosition() const;

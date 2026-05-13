@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Damageable.h"
+#include "EnemyController.h"
 
 static const ScriptFieldInfo damageableFields[] =
 {
@@ -144,6 +145,27 @@ void Damageable::clampHp()
 void Damageable::onDamaged(float amount)
 {
     Debug::log("%s took %.2f damage. HP: %.2f / %.2f", GameObjectAPI::getName(m_owner), amount, m_currentHp, m_maxHp);
+
+    if (m_currentHp <= 0.0f)
+    {
+        return;
+    }
+
+    Script* script = GameObjectAPI::getScript(m_owner, "EnemyController");
+    EnemyController* enemyController = dynamic_cast<EnemyController*>(script);
+
+    if (!enemyController)
+    {
+        return;
+    }
+
+    if (!enemyController->canTriggerHitReaction())
+    {
+        return;
+    }
+
+    enemyController->startHitReactionCooldown();
+    enemyController->requestDamageTaken();
 }
 
 void Damageable::onHealed(float amount)
