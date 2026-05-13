@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "EnemyShadowMark.h"
 #include "ReaperGauge.h"
+#include "CrystalShadowMark.h"
 
 #include <cmath>
 
@@ -53,6 +54,12 @@ void EnemyShadowMark::exploit()
             gauge->onMarkExploited();
             break;
         }
+    }
+
+	CrystalShadowMark* crystalMark = GameObjectAPI::findScript<CrystalShadowMark>(getOwner());
+    if (crystalMark != nullptr)
+    {
+		crystalMark->onMarkExploided();
     }
 
     m_phase = 0;

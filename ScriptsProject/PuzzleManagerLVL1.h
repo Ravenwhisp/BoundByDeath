@@ -19,7 +19,13 @@ public:
 
 	void puzzle1Solved();
 
+	void onCrystalsActivated();
+
 private:
+
+	int m_crystalsActivated = 0;
+
+	static constexpr int k_totalCrystals = 2;
 
 	bool isPuzzle1Solved() const;
 

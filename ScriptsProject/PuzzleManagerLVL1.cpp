@@ -27,9 +27,19 @@ void PuzzleManagerLVL1::puzzle1Solved()
 	TransformAPI::setRotationEuler(m_door1.getReferencedComponent(), Vector3(0.0f, 90.0f, 0.0f));
 }
 
+void PuzzleManagerLVL1::onCrystalsActivated()
+{
+	m_crystalsActivated++;
+	Debug::log("Crystal activated! Total activated: %d/%d", m_crystalsActivated, k_totalCrystals);
+	if (isPuzzle1Solved())
+	{
+		puzzle1Solved();
+	}
+}
+
 bool PuzzleManagerLVL1::isPuzzle1Solved() const
 {
-	
+	return m_crystalsActivated >= k_totalCrystals;
 }
 
 IMPLEMENT_SCRIPT(PuzzleManagerLVL1)
