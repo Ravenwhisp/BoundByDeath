@@ -1,0 +1,159 @@
+{
+  "SourcePath": "Assets\\Prefabs\\Target.prefab",
+  "Name": "Target",
+  "Version": 2,
+  "PrefabUID": 15568164227557559727,
+  "GameObject": {
+    "Name": "Target",
+    "Active": true,
+    "Transform": {
+      "position": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    "Components": [
+      {
+        "Type": 3,
+        "Data": {
+          "UID": 15634537201134125175,
+          "ComponentType": 3,
+          "Active": true,
+          "ScriptName": "TargetIndicatorUI",
+          "ScriptFields": {
+            "Player Transform": 5162519706045733575,
+            "Indicator Visual Transform": 17301908510871838861,
+            "Position Offset": [
+              0.0,
+              0.05000000074505806,
+              0.0
+            ],
+            "Follow Sharpness": 20.0
+          }
+        }
+      }
+    ],
+    "Children": [
+      {
+        "Name": "Canvas",
+        "Active": true,
+        "Transform": {
+          "position": [
+            1.6399009227752686,
+            0.05000000074505806,
+            -3.581796646118164
+          ],
+          "rotation": [
+            0.7071068286895752,
+            0.0,
+            -0.0,
+            0.7071067690849304
+          ],
+          "scale": [
+            2.0,
+            2.0,
+            1.0
+          ]
+        },
+        "Components": [
+          {
+            "Type": 6,
+            "Data": {
+              "UID": 6408429692978902871,
+              "ComponentType": 6,
+              "Active": true,
+              "RenderMode": 1,
+              "ZTest": true
+            }
+          }
+        ],
+        "Children": [
+          {
+            "Name": "TargetSprite",
+            "Active": true,
+            "Transform": {
+              "position": [
+                0.0,
+                0.0,
+                1.1920928955078125e-7
+              ],
+              "rotation": [
+                0.0,
+                0.0,
+                -0.0,
+                1.0
+              ],
+              "scale": [
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            "Components": [
+              {
+                "Type": 5,
+                "Data": {
+                  "UID": 18216382996764740886,
+                  "ComponentType": 5,
+                  "Active": true,
+                  "Position": [
+                    0.0,
+                    0.0
+                  ],
+                  "Scale": [
+                    1.0,
+                    1.0
+                  ],
+                  "Pivot": [
+                    0.5,
+                    0.5
+                  ],
+                  "AnchorMin": [
+                    0.5,
+                    0.5
+                  ],
+                  "AnchorMax": [
+                    0.5,
+                    0.5
+                  ],
+                  "BaseSize": [
+                    100.0,
+                    100.0
+                  ],
+                  "StretchMode": 0,
+                  "SizingMode": 0,
+                  "AspectRatio": 1.0
+                }
+              },
+              {
+                "Type": 7,
+                "Data": {
+                  "UID": 3085457503656244638,
+                  "ComponentType": 7,
+                  "Active": true,
+                  "TextureAssetId": "0ff59fa623b7b5e8ce39fcc9b871dcd9",
+                  "FillAmount": 1.0,
+                  "FillMethod": 0,
+                  "FillOrigin": 0
+                }
+              }
+            ],
+            "Children": []
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -2,13 +2,10 @@
 #include "Damageable.h"
 #include "EnemyController.h"
 
-static const ScriptFieldInfo damageableFields[] =
-{
-    { "Max HP", ScriptFieldType::Float, offsetof(Damageable, m_maxHp), { 0.0f, 999999.0f, 1.0f } },
-    { "Health Slider", ScriptFieldType::ComponentRef, offsetof(Damageable, m_healthBar), {}, {},{ ComponentType::UISLIDER } },
-};
-
-IMPLEMENT_SCRIPT_FIELDS(Damageable, damageableFields)
+IMPLEMENT_SCRIPT_FIELDS(Damageable,
+    SERIALIZED_FLOAT(m_maxHp, "Max HP", 0.0f, 999999.0f, 1.0f),
+    SERIALIZED_COMPONENT_REF(m_healthBar, "Health Slider", ComponentType::UISLIDER)
+)
 
 Damageable::Damageable(GameObject* owner)
     : Script(owner)
@@ -24,6 +21,8 @@ void Damageable::Start()
     m_currentHp = m_maxHp;
     clampHp();
     m_isDead = (m_currentHp <= 0.0f);
+
+    updateHealthBar();
 }
 
 void Damageable::takeDamage(float amount)
@@ -48,11 +47,7 @@ void Damageable::takeDamage(float amount)
 
     onDamaged(amount);
 
-	UISlider* healthBar = m_healthBar.getReferencedComponent();
-    if (healthBar)
-    {
-		SliderAPI::setFillAmount(healthBar, getHpPercent());
-	}
+    updateHealthBar();
 
     if (m_currentHp <= 0.0f)
     {
@@ -76,6 +71,8 @@ void Damageable::heal(float amount)
     clampHp();
 
     onHealed(amount);
+
+    updateHealthBar();
 }
 
 void Damageable::kill()
@@ -87,6 +84,8 @@ void Damageable::kill()
 
     m_currentHp = 0.0f;
     m_isDead = true;
+
+    updateHealthBar();
 
     onDeath();
 }
@@ -102,15 +101,17 @@ void Damageable::revive(float hp)
     else
     {
         m_currentHp = hp;
-        clampHp();
-
-        if (m_currentHp <= 0.0f && m_maxHp > 0.0f)
-        {
-            m_currentHp = m_maxHp;
-        }
     }
 
     clampHp();
+
+    if (m_currentHp <= 0.0f && m_maxHp > 0.0f)
+    {
+        m_currentHp = m_maxHp;
+    }
+
+    updateHealthBar();
+
     onRevive();
 }
 
@@ -139,6 +140,15 @@ void Damageable::clampHp()
     if (m_currentHp > m_maxHp)
     {
         m_currentHp = m_maxHp;
+    }
+}
+
+void Damageable::updateHealthBar()
+{
+    UISlider* healthBar = m_healthBar.getReferencedComponent();
+    if (healthBar)
+    {
+        SliderAPI::setFillAmount(healthBar, getHpPercent());
     }
 }
 

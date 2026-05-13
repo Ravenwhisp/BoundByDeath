@@ -15,7 +15,6 @@ public:
 protected:
     Transform* findArrowSpawnTransform() const;
     void faceDirection(const Vector3& direction);
-    Vector3 getFallbackFacingDirection() const;
 
     void beginAttackWindow(float lockDuration);
     void finishAttackWindow();

@@ -7,12 +7,11 @@ static const char* setupModeNames[] =
     "Two Gamepads"
 };
 
-static const ScriptFieldInfo localMultiplayerSetupFields[] =
-{
-    { "Setup Mode", ScriptFieldType::EnumInt, offsetof(LocalMultiplayerSetup, m_setupMode), {}, { setupModeNames, 2 } },
-    { "Keyboard + Gamepad Button", ScriptFieldType::ComponentRef, offsetof(LocalMultiplayerSetup, keyboardGamepadButton), {}, {}, { ComponentType::TRANSFORM } },
-	{ "Two Gamepads Button", ScriptFieldType::ComponentRef, offsetof(LocalMultiplayerSetup, twoGamepadButton), {}, {}, { ComponentType::TRANSFORM } }
-};
+IMPLEMENT_SCRIPT_FIELDS(LocalMultiplayerSetup,
+    SERIALIZED_ENUM_INT(m_setupMode, "Setup Mode", setupModeNames, 2),
+    SERIALIZED_COMPONENT_REF(keyboardGamepadButton, "Keyboard + Gamepad Button", ComponentType::TRANSFORM),
+    SERIALIZED_COMPONENT_REF(twoGamepadButton, "Two Gamepads Button", ComponentType::TRANSFORM)
+)
 
 static const ScriptMethodInfo UIControllerMethods[] =
 {
@@ -28,11 +27,6 @@ LocalMultiplayerSetup::LocalMultiplayerSetup(GameObject* owner)
 void LocalMultiplayerSetup::Start()
 {
     chooseConfiguration();
-}
-
-ScriptFieldList LocalMultiplayerSetup::getExposedFields() const
-{
-    return { localMultiplayerSetupFields, sizeof(localMultiplayerSetupFields) / sizeof(ScriptFieldInfo) };
 }
 
 ScriptMethodList LocalMultiplayerSetup::getExposedMethods() const
