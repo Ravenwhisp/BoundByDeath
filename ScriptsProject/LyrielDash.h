@@ -18,6 +18,7 @@ protected:
     bool canDash() const override;
     void onDashStarted() override;
     void onDashUpdate(float dt) override;
+    bool validateDashTarget() override;
 
 private:
     float m_chargeRechargeTime = 3.0f;

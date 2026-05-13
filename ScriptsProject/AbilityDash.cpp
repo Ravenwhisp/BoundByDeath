@@ -76,10 +76,7 @@ void AbilityDash::onDashStarted()
 void AbilityDash::startDash()
 {
     m_dashTimer = 0.0f;
-    m_isDashing = true;
-
-    setAbilityLocked(true);
-    startCooldown();
+    m_hasDashTarget = false;
 
     Vector3 moveDirection = m_playerController->getMoveDirection();
 
@@ -105,6 +102,14 @@ void AbilityDash::startDash()
     {
         m_dashDirection.Normalize();
     }
+
+    if (!validateDashTarget())
+        return;
+
+    m_isDashing = true;
+
+    setAbilityLocked(true);
+    startCooldown();
 
     onDashStarted();
 }

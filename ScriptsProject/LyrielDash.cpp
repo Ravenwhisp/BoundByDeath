@@ -70,4 +70,28 @@ void LyrielDash::onDashUpdate(float dt)
     }
 }
 
+bool LyrielDash::validateDashTarget()
+{
+    Vector3 currentPosition = TransformAPI::getPosition(getOwner()->GetTransform());
+
+    Vector3 candidateEnd = currentPosition + m_dashDirection * m_dashDistance;
+
+    Vector3 sampledPosition;
+    Vector3 searchExtents = Vector3(1.0f, 2.0f, 1.0f);
+
+    if (NavigationAPI::samplePosition(candidateEnd, sampledPosition, searchExtents, NavAgentProfile::PlayerNormal))
+    {
+        m_dashTargetPosition = sampledPosition;
+        m_hasDashTarget = true;
+        Debug::log("Dash target set: %s | Position: %.2f %.2f %.2f",
+            m_hasDashTarget ? "true" : "false",
+            m_dashTargetPosition.x,
+            m_dashTargetPosition.y,
+            m_dashTargetPosition.z);
+        return true;
+    }
+
+    return false;
+}
+
 IMPLEMENT_SCRIPT(LyrielDash)
