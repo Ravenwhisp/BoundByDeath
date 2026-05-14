@@ -9,6 +9,11 @@ PlayerDamageable::PlayerDamageable(GameObject* owner)
 {
 }
 
+IMPLEMENT_SCRIPT_FIELDS(PlayerDamageable,
+    SERIALIZED_FLOAT(m_hapticIntensity, "Heartbeat Intensity", 100.0f, 0.0f, 0.01f),
+    SERIALIZED_FLOAT(m_heartbeatThreshold, "Heartbeat Threshold", 0.5f, 0.25f, 0.0f)
+)
+
 void PlayerDamageable::Start()
 {
     Damageable::Start();
@@ -18,6 +23,63 @@ void PlayerDamageable::Start()
     if (m_playerAnimationController == nullptr)
     {
         Debug::warn("%s has PlayerDamageable but no PlayerAnimationController.", GameObjectAPI::getName(m_owner));
+    }
+
+    HapticAPI::registerEffect(HapticEffectDefinition::makeHeartbeatLub(1.0f, HapticEffectDefinition::HeartbeatVariant::Health));
+    HapticAPI::registerEffect(HapticEffectDefinition::makeHeartbeatDub(1.0f, HapticEffectDefinition::HeartbeatVariant::Health));
+}
+
+void PlayerDamageable::fireLub()
+{
+    const float danger = 1.0f - getHpPercent();
+    const HeartbeatCycle cycle = HeartbeatCycle::fromHealth(getHpPercent());
+
+    HapticAPI::playAtScale("HeartbeatLub_Health", danger * m_hapticIntensity, 0);
+
+    m_dubScale = danger * m_hapticIntensity;
+    m_dubTimer = cycle.interBeatSeconds;
+    m_lubTimer = -1.0f;
+}
+
+void PlayerDamageable::Update()
+{
+    const float dt = Time::getDeltaTime();
+
+    if (getHpPercent() >= m_heartbeatThreshold && !m_dyingBeat)
+    {
+        m_dubTimer = -1.0f;
+        m_lubTimer = -1.0f;
+        return;
+    }
+
+    if (m_dubTimer < 0.0f && m_lubTimer < 0.0f && !isDead())
+        fireLub();
+
+    if (m_dubTimer >= 0.0f)
+    {
+        m_dubTimer -= dt;
+        if (m_dubTimer < 0.0f)
+        {
+            HapticAPI::playAtScale("HeartbeatDub_Separation", m_dubScale * m_hapticIntensity, 0);
+
+            if (m_dyingBeat)
+            {
+                m_dyingBeat = false;
+                m_dubTimer = -1.0f;
+                m_lubTimer = -1.0f;
+                return;
+            }
+
+            const HeartbeatCycle cycle = HeartbeatCycle::fromHealth(getHpPercent());
+            m_lubTimer = cycle.diastoleSeconds;
+        }
+    }
+
+    if (m_lubTimer >= 0.0f)
+    {
+        m_lubTimer -= dt;
+        if (m_lubTimer < 0.0f)
+            fireLub();
     }
 }
 
@@ -59,6 +121,9 @@ void PlayerDamageable::onDeath()
     {
         m_playerAnimationController->setDead(true);
     }
+
+    m_dyingBeat = true;
+    fireLub();
 }
 
 void PlayerDamageable::onRevive()
@@ -70,6 +135,11 @@ void PlayerDamageable::onRevive()
         m_playerAnimationController->setDead(false);
         m_playerAnimationController->setDowned(false);
     }
+
+    m_dubTimer = -1.0f;
+    m_lubTimer = -1.0f;
+    m_dubScale = 0.0f;
+    m_dyingBeat = false;
 }
 
 IMPLEMENT_SCRIPT(PlayerDamageable)

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ScriptAPI.h"
+#include "HapticEffectDefinition.h"
 
 class Transform;
 class Damageable;
@@ -41,4 +42,13 @@ public:
     float   m_currentRadius = 0.0f;
 
     float m_previousDistance = 0.0f;
+
+    float m_hapticIntensity = 1.0f;
+    float m_separationHapticHpGate = 0.5f;
+private:
+    void fireLub(float t);
+
+    float m_dubTimer = -1.0f;
+    float m_lubTimer = -1.0f;
+    float m_dubScale = 0.0f;
 };
