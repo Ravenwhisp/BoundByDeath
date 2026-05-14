@@ -302,8 +302,12 @@
     </ClInclude>
     <ClInclude Include="PowerupCollectible.h" />
     <ClInclude Include="PersistingPowerupState.h" />
-    <ClInclude Include="PuzzleManagerLVL1.h" />
-    <ClInclude Include="CrystalShadowMark.h" />
+    <ClInclude Include="PuzzleManagerLVL1.h" >
+      <Filter>Interaction/Gameplay\Puzzles</Filter>
+    </ClInclude>
+    <ClInclude Include="CrystalShadowMark.h" >
+      <Filter>Interaction/Gameplay\Puzzles</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
@@ -534,7 +538,11 @@
     </ClCompile>
     <ClCompile Include="PowerupCollectible.cpp" />
     <ClCompile Include="PersistingPowerupState.cpp" />
-    <ClCompile Include="PuzzleManagerLVL1.cpp" />
-    <ClCompile Include="CrystalShadowMark.cpp" />
+    <ClCompile Include="PuzzleManagerLVL1.cpp" >
+      <Filter>Interaction/Gameplay\Puzzles</Filter>
+    </ClCompile>
+    <ClCompile Include="CrystalShadowMark.cpp" >
+      <Filter>Interaction/Gameplay\Puzzles</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
