@@ -24,6 +24,7 @@ public:
 	void puzzle1Solved();
 
 	void onCrystalsActivated(int puzzleID);
+	void onCrystalsDeactivated(int puzzleID);
 
 private:
 

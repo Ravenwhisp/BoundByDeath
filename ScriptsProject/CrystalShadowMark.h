@@ -22,10 +22,14 @@ public:
 
 	int m_puzzleID = 0;
 
+	float m_activeTime = 5.0f;
+
 private:
 
     EnemyShadowMark* m_shadowMark = nullptr;
     bool m_activated = false;
+
+	float m_activationTimer = 0.0f;
 
 ScriptFieldList getExposedFields() const override;
 };

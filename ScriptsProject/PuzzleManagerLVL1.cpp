@@ -75,4 +75,22 @@ void PuzzleManagerLVL1::onPuzzleSolved(int puzzleID)
 	}
 }
 
+void PuzzleManagerLVL1::onCrystalsDeactivated(int puzzleID)
+{
+	if(m_puzzles.find(puzzleID) == m_puzzles.end())
+	{
+		Debug::log("Invalid puzzle ID: %d", puzzleID);
+		return;
+	}
+
+	PuzzleData& puzzle = m_puzzles[puzzleID];
+	if(puzzle.puzzleSolved)
+	{
+		Debug::log("Puzzle %d already solved, ignoring crystal deactivation.", puzzleID);
+		return;
+	}
+	puzzle.crystalsActivated--;
+	Debug::log("Crystal deactivated! Total activated: %d/%d", puzzle.crystalsActivated, puzzle.totalCrystals);
+}
+
 IMPLEMENT_SCRIPT(PuzzleManagerLVL1)
