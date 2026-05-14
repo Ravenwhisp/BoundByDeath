@@ -29,6 +29,7 @@ public:
     bool isMoving() const { return m_isMoving; }
 
 public:
+    int m_playerType = static_cast<int>(NavAgentProfile::PlayerNormal);
     float m_moveSpeed = 3.5f;
 
     bool m_constrainToNavMesh = true;
