@@ -17,6 +17,8 @@ public:
 
     ScriptFieldList getExposedFields() const override;
 
+    void setupDrop(float healAmount, const Vector3& landingPosition);
+
 public:
     float   m_healAmount            = 10.0f;
     float   m_spawnHeight           = 1.5f;   // fallback height when no custom spawn-from

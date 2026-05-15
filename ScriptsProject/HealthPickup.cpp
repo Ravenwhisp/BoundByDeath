@@ -93,6 +93,12 @@ void HealthPickup::OnTriggerEnter(GameObject* player)
     Pickup::OnTriggerEnter(player);
 }
 
+void HealthPickup::setupDrop(float healAmount, const Vector3& landingPosition)
+{
+    m_healAmount = healAmount;
+    m_landingPosition = landingPosition;
+    m_hasCustomSpawnFrom = true;
+}
 
 void HealthPickup::fallAnimation()
 {

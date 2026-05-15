@@ -1,10 +1,14 @@
 #include "pch.h"
 #include "BreakableHealingDrop.h"
 
-#include "HealthPickup.h"
+#include "HealthDropSpawner.h"
 
 IMPLEMENT_SCRIPT_FIELDS_INHERITED(BreakableHealingDrop, BreakableObject,
-    SERIALIZED_STRING(m_healthPickupPrefabPath, "Health Pickup Prefab Path")
+    SERIALIZED_STRING(m_healthPickupPrefabPath, "Health Pickup Prefab Path"),
+    SERIALIZED_FLOAT(m_healthDropAmount, "Health Drop Amount", 0.0f, 100.0f, 1.0f),
+    SERIALIZED_FLOAT(m_dropRadius, "Drop Radius", 0.0f, 5.0f, 0.1f),
+    SERIALIZED_FLOAT(m_dropHeight, "Drop Height", 0.0f, 5.0f, 0.1f),
+    SERIALIZED_INT(m_healthDropQuantity, "Health Drop Quantity")
 )
 
 BreakableHealingDrop::BreakableHealingDrop(GameObject* owner)
@@ -29,9 +33,13 @@ void BreakableHealingDrop::onBreak()
         return;
     }
 
-    GameObjectAPI::instantiatePrefab(m_healthPickupPrefabPath.c_str(), 
-        TransformAPI::getPosition(GameObjectAPI::getTransform(getOwner())), 
-        Vector3::Zero);
+    Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
+    const Vector3 breakablePosition = TransformAPI::getGlobalPosition(ownerTransform);
+
+    for (int i = 0; i < m_healthDropQuantity; ++i)
+    {
+        HealthDropSpawner::drop(m_healthPickupPrefabPath.c_str(), breakablePosition, m_healthDropAmount, m_dropRadius, m_dropHeight);
+    }
 
     BreakableObject::breakObject();
 }
