@@ -1,27 +1,26 @@
 {
-  "SourcePath": "Assets\\Models\\Weapons\\Arrow\\LyrielArrow.prefab",
+  "SourcePath": "Assets/Models/Weapons/Arrow/LyrielArrow.prefab",
   "Name": "LyrielArrow",
   "Version": 2,
-  "PrefabUID": 12828865033240439489,
-  "VariantOf": "Assets\\Models\\Weapons\\Arrow\\LyrielArrow_1.prefab",
   "GameObject": {
     "Name": "LyrielArrow",
     "Active": true,
+    "Tag": "DEFAULT",
+    "Layer": "DEFAULT",
     "PrefabLink": {
-      "SourcePath": "Assets\\Models\\Weapons\\Arrow\\LyrielArrow_1.prefab",
-      "AssetUID": "",
-      "PrefabUID": 12828865033240439489
+      "SourcePath": "Assets/Models/Weapons/Arrow/LyrielArrow.prefab",
+      "AssetUID": "c721b3591f44277f41b38694315b3ae2"
     },
     "Transform": {
       "position": [
         0.0,
-        1.525867223739624,
+        1.5260000228881836,
         0.0
       ],
       "rotation": [
-        -0.0,
         0.0,
-        -0.0,
+        0.0,
+        0.0,
         1.0
       ],
       "scale": [
@@ -32,31 +31,61 @@
     },
     "Components": [
       {
-        "Type": 1,
-        "Data": {
-          "UID": 703590741713038131,
-          "ComponentType": 1,
-          "Active": true,
-          "MeshAssetId": "0fa61c47c4c18da10c84e7781a678bcb",
-          "SkinAssetId": "",
-          "MaterialAssetId": [
-            "1e9fe1cf30fbac300ee7f855a97a2489"
-          ]
-        }
-      },
-      {
         "Type": 3,
         "Data": {
-          "UID": 18141806718599249716,
+          "UID": 10651136726819130313,
           "ComponentType": 3,
           "Active": true,
           "ScriptName": "LyrielArrowProjectile",
-          "ScriptFields": {
-            "Arrow Owner Transform": 1405533363151494369
-          }
+          "ScriptFields": {}
         }
       }
     ],
-    "Children": []
+    "Children": [
+      {
+        "Name": "LyrielArrow",
+        "Active": true,
+        "Tag": "DEFAULT",
+        "Layer": "DEFAULT",
+        "PrefabLink": {
+          "SourcePath": "Assets\\Models\\Weapons\\Arrow\\LyrielArrow.prefab",
+          "AssetUID": "c721b3591f44277f41b38694315b3ae2"
+        },
+        "Transform": {
+          "position": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rotation": [
+            -0.0,
+            0.0,
+            -0.0,
+            1.0
+          ],
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "Components": [
+          {
+            "Type": 1,
+            "Data": {
+              "UID": 1554173921836793803,
+              "ComponentType": 1,
+              "Active": true,
+              "MeshAssetId": "0fa61c47c4c18da10c84e7781a678bcb",
+              "SkinAssetId": "",
+              "MaterialAssetId": [
+                "1e9fe1cf30fbac300ee7f855a97a2489"
+              ]
+            }
+          }
+        ],
+        "Children": []
+      }
+    ]
   }
 }
