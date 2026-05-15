@@ -112,6 +112,9 @@ void ArthurDetectionAggro::updateAggroState()
 		m_currentTargetTransform = nullptr;
 		m_isAggro = false;
 		m_canSeeTarget = false;
+		m_currentTargetLockTimer = 0.0f;
+		m_tauntTargetTransform = nullptr;
+		m_tauntTimer = 0.0f;
 		return;
 	}
 
@@ -388,7 +391,17 @@ void ArthurDetectionAggro::clearTaunt(Transform* playerTransform)
 		return;
 	}
 
-	Transform* fallbackTarget = selectClosestDetectedPlayer();
+	Transform* fallbackTarget = nullptr;
+
+	if (m_phase == ArthurBossPhase::Phase1)
+	{
+		fallbackTarget = getLyrielTransform();
+	}
+	else
+	{
+		fallbackTarget = selectClosestDetectedPlayer();
+	}
+
 	if (fallbackTarget != nullptr)
 	{
 		m_currentTargetTransform = fallbackTarget;
@@ -408,16 +421,43 @@ void ArthurDetectionAggro::clearTaunt(Transform* playerTransform)
 void ArthurDetectionAggro::setPhase(ArthurBossPhase phase)
 {
 	m_phase = phase;
+
+	m_currentTargetLockTimer = 0.0f;
+
+	if (phase == ArthurBossPhase::Phase2)
+	{
+		m_currentTargetTransform = selectClosestDetectedPlayer();
+	}
 }
 
 void ArthurDetectionAggro::startEncounter()
 {
 	m_encounterStarted = true;
+
+	m_phase = ArthurBossPhase::Phase1;
+
+	m_isAggro = false;
+	m_canSeeTarget = false;
+
+	m_currentTargetTransform = nullptr;
+	m_currentTargetLockTimer = 0.0f;
+
+	m_tauntTargetTransform = nullptr;
+	m_tauntTimer = 0.0f;
 }
 
 void ArthurDetectionAggro::stopEncounter()
 {
 	m_encounterStarted = false;
+
+	m_isAggro = false;
+	m_canSeeTarget = false;
+
+	m_currentTargetTransform = nullptr;
+	m_currentTargetLockTimer = 0.0f;
+
+	m_tauntTargetTransform = nullptr;
+	m_tauntTimer = 0.0f;
 }
 
 Transform* ArthurDetectionAggro::getOwnerTransform() const
