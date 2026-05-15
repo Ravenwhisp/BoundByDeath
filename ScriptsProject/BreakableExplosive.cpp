@@ -2,7 +2,7 @@
 #include "BreakableExplosive.h"
 #include "Damageable.h"
 
-IMPLEMENT_SCRIPT_FIELDS(BreakableExplosive, 
+IMPLEMENT_SCRIPT_FIELDS_INHERITED(BreakableExplosive, BreakableObject,
     SERIALIZED_FLOAT(m_explosionRadius, "Explosion Radius", 0.0f, 20.0f, 0.1f),
     SERIALIZED_FLOAT(m_explosionDamage, "Explosion Damage", 0.0f, 100.0f, 1.0f)
 )
