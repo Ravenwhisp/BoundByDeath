@@ -121,7 +121,7 @@ void ShadowExecution::beginExecution()
     const Vector3 lyrielPos = TransformAPI::getPosition(lyrielTransform);
 
     m_center         = (deathPos + lyrielPos) * 0.5f;
-    m_maxRadius      = Vector3::Distance(deathPos, lyrielPos);
+    m_maxRadius      = Vector3::Distance(deathPos, lyrielPos) * 0.5f;
     m_currentRadius  = 0.0f;
     m_executionTimer = 0.0f;
     m_p0Timer        = 0.0f;
