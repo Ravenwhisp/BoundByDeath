@@ -4,11 +4,12 @@
 #include "DeathCharacter.h" 
 
 IMPLEMENT_SCRIPT_FIELDS(ArthurDetectionAggro,
+	SERIALIZED_BOOL(m_encounterStarted, "Start Encounter"),
 	SERIALIZED_FLOAT(m_detectionRadius, "Detection Radius", 0.0f, 50.0f, 0.1f),
 	SERIALIZED_FLOAT(m_targetLockDuration, "Target Lock Duration", 0.0f, 10.0f, 0.1f),
 	SERIALIZED_BOOL(m_debugEnabled, "Debug Enabled"),
-	SERIALIZED_COMPONENT_REF(m_player1Transform, "Player 1 Transform", ComponentType::TRANSFORM),
-	SERIALIZED_COMPONENT_REF(m_player2Transform, "Player 2 Transform", ComponentType::TRANSFORM)
+	SERIALIZED_COMPONENT_REF(m_lyrielTransform, "Lyriel Transform", ComponentType::TRANSFORM),
+	SERIALIZED_COMPONENT_REF(m_deathTransform, "Death Transform", ComponentType::TRANSFORM)
 )
 
 static bool isDeadTarget(Transform* targetTransform)
@@ -106,6 +107,14 @@ void ArthurDetectionAggro::updateAggroState()
 {
 	updateAggroEntries();
 
+	if (!m_encounterStarted)
+	{
+		m_currentTargetTransform = nullptr;
+		m_isAggro = false;
+		m_canSeeTarget = false;
+		return;
+	}
+
 	if (m_currentTargetTransform && isDeadTarget(m_currentTargetTransform))
 	{
 		m_currentTargetTransform = nullptr;
@@ -157,8 +166,8 @@ void ArthurDetectionAggro::updateAggroState()
 	const bool currentTargetStillDetected =
 		isValidAliveTarget(m_currentTargetTransform) &&
 		(
-			(m_currentTargetTransform == m_player1Aggro.targetTransform && m_player1Aggro.isInDetectionRange) ||
-			(m_currentTargetTransform == m_player2Aggro.targetTransform && m_player2Aggro.isInDetectionRange)
+			(m_currentTargetTransform == m_LyrielAggro.targetTransform && m_LyrielAggro.isInDetectionRange) ||
+			(m_currentTargetTransform == m_DeathAggro.targetTransform && m_DeathAggro.isInDetectionRange)
 			);
 
 	if (currentTargetStillDetected)
@@ -181,10 +190,10 @@ void ArthurDetectionAggro::updateAggroState()
 			m_lastKnownTargetPosition = TransformAPI::getPosition(m_currentTargetTransform);
 		}
 
-		const bool player1Aggroing = isPlayer1Aggroing();
-		const bool player2Aggroing = isPlayer2Aggroing();
+		const bool lyrielAggroing = isLyrielAggroing();
+		const bool deathAggroing = isDeathAggroing();
 
-		if (player1Aggroing || player2Aggroing)
+		if (lyrielAggroing || deathAggroing)
 		{
 			startTargetLock();
 		}
@@ -197,17 +206,17 @@ void ArthurDetectionAggro::updateAggroState()
 
 void ArthurDetectionAggro::updateAggroEntries()
 {
-	Transform* player1 = getPlayer1Transform();
-	Transform* player2 = getPlayer2Transform();
+	Transform* player1 = getLyrielTransform();
+	Transform* player2 = getDeathTransform();
 
-	m_player1Aggro.targetTransform = player1;
-	m_player2Aggro.targetTransform = player2;
+	m_LyrielAggro.targetTransform = player1;
+	m_DeathAggro.targetTransform = player2;
 
-	m_player1Aggro.isInDetectionRange = isPlayer1InDetectionRange();
-	m_player2Aggro.isInDetectionRange = isPlayer2InDetectionRange();
+	m_LyrielAggro.isInDetectionRange = isLyrielInDetectionRange();
+	m_DeathAggro.isInDetectionRange = isDeathInDetectionRange();
 
-	m_player1Aggro.distanceToEnemy = getDistanceToPlayer1();
-	m_player2Aggro.distanceToEnemy = getDistanceToPlayer2();
+	m_LyrielAggro.distanceToEnemy = getDistanceToLyriel();
+	m_DeathAggro.distanceToEnemy = getDistanceToDeath();
 }
 
 bool ArthurDetectionAggro::isTargetLockActive() const
@@ -255,28 +264,28 @@ bool ArthurDetectionAggro::isTaunted() const
 
 Transform* ArthurDetectionAggro::selectClosestDetectedPlayer() const
 {
-	const bool player1InRange = m_player1Aggro.isInDetectionRange && isValidAliveTarget(m_player1Aggro.targetTransform);
-	const bool player2InRange = m_player2Aggro.isInDetectionRange && isValidAliveTarget(m_player2Aggro.targetTransform);
+	const bool lyrielInRange = m_LyrielAggro.isInDetectionRange && isValidAliveTarget(m_LyrielAggro.targetTransform);
+	const bool deathInRange = m_DeathAggro.isInDetectionRange && isValidAliveTarget(m_DeathAggro.targetTransform);
 
-	if (player1InRange && !player2InRange)
+	if (lyrielInRange && !deathInRange)
 	{
-		return m_player1Aggro.targetTransform;
+		return m_LyrielAggro.targetTransform;
 	}
 
-	if (!player1InRange && player2InRange)
+	if (!lyrielInRange && deathInRange)
 	{
-		return m_player2Aggro.targetTransform;
+		return m_DeathAggro.targetTransform;
 	}
 
-	if (player1InRange && player2InRange)
+	if (lyrielInRange && deathInRange)
 	{
-		if (m_player1Aggro.distanceToEnemy < m_player2Aggro.distanceToEnemy)
+		if (m_LyrielAggro.distanceToEnemy < m_DeathAggro.distanceToEnemy)
 		{
-			return m_player1Aggro.targetTransform;
+			return m_LyrielAggro.targetTransform;
 		}
 		else
 		{
-			return m_player2Aggro.targetTransform;
+			return m_DeathAggro.targetTransform;
 		}
 	}
 
@@ -285,28 +294,28 @@ Transform* ArthurDetectionAggro::selectClosestDetectedPlayer() const
 
 Transform* ArthurDetectionAggro::selectReevaluatedTarget() const
 {
-	const bool player1Aggroing = isPlayer1Aggroing() && isValidAliveTarget(m_player1Aggro.targetTransform);
-	const bool player2Aggroing = isPlayer2Aggroing() && isValidAliveTarget(m_player2Aggro.targetTransform);
+	const bool lyrielAggroing = isLyrielAggroing() && isValidAliveTarget(m_LyrielAggro.targetTransform);
+	const bool deathAggroing = isDeathAggroing() && isValidAliveTarget(m_DeathAggro.targetTransform);
 
-	if (player1Aggroing && !player2Aggroing)
+	if (lyrielAggroing && !deathAggroing)
 	{
-		return m_player1Aggro.targetTransform;
+		return m_LyrielAggro.targetTransform;
 	}
 
-	if (!player1Aggroing && player2Aggroing)
+	if (!lyrielAggroing && deathAggroing)
 	{
-		return m_player2Aggro.targetTransform;
+		return m_DeathAggro.targetTransform;
 	}
 
-	if (player1Aggroing && player2Aggroing)
+	if (lyrielAggroing && deathAggroing)
 	{
-		if (m_player1Aggro.distanceToEnemy < m_player2Aggro.distanceToEnemy)
+		if (m_LyrielAggro.distanceToEnemy < m_DeathAggro.distanceToEnemy)
 		{
-			return m_player1Aggro.targetTransform;
+			return m_LyrielAggro.targetTransform;
 		}
 		else
 		{
-			return m_player2Aggro.targetTransform;
+			return m_DeathAggro.targetTransform;
 		}
 	}
 
@@ -401,6 +410,16 @@ void ArthurDetectionAggro::setPhase(ArthurBossPhase phase)
 	m_phase = phase;
 }
 
+void ArthurDetectionAggro::startEncounter()
+{
+	m_encounterStarted = true;
+}
+
+void ArthurDetectionAggro::stopEncounter()
+{
+	m_encounterStarted = false;
+}
+
 Transform* ArthurDetectionAggro::getOwnerTransform() const
 {
 	return GameObjectAPI::getTransform(getOwner());
@@ -446,7 +465,7 @@ Vector3 ArthurDetectionAggro::getDeathPosition() const
 		return Vector3(0.0f, 0.0f, 0.0f);
 	}
 
-	return TransformAPI::getPosition(player2Transform);
+	return TransformAPI::getPosition(deathTransform);
 }
 
 float ArthurDetectionAggro::getDistanceToLyriel() const
@@ -483,22 +502,22 @@ bool ArthurDetectionAggro::isDeathInDetectionRange() const
 
 bool ArthurDetectionAggro::isLyrielAggroing() const
 {
-	if (!m_player1Aggro.targetTransform)
+	if (!m_LyrielAggro.targetTransform)
 	{
 		return false;
 	}
 
-	return (m_currentTime - m_player1Aggro.lastAttackTime) <= m_recentAttackMemory;
+	return (m_currentTime - m_LyrielAggro.lastAttackTime) <= m_recentAttackMemory;
 }
 
 bool ArthurDetectionAggro::isDeathAggroing() const
 {
-	if (!m_player2Aggro.targetTransform)
+	if (!m_DeathAggro.targetTransform)
 	{
 		return false;
 	}
 
-	return (m_currentTime - m_player2Aggro.lastAttackTime) <= m_recentAttackMemory;
+	return (m_currentTime - m_DeathAggro.lastAttackTime) <= m_recentAttackMemory;
 }
 
 bool ArthurDetectionAggro::isTransformAlive(Transform* target) const
@@ -523,11 +542,11 @@ ArthurDetectionAggro::AggroEntry* ArthurDetectionAggro::getAggroEntry(Transform*
 {
 	if (target == getLyrielTransform())
 	{
-		return &m_player1Aggro;
+		return &m_LyrielAggro;
 	}
 	if (target == getDeathTransform())
 	{
-		return &m_player2Aggro;
+		return &m_DeathAggro;
 	}
 	return nullptr;
 }
@@ -536,11 +555,11 @@ const ArthurDetectionAggro::AggroEntry* ArthurDetectionAggro::getAggroEntry(Tran
 {
 	if (target == getLyrielTransform())
 	{
-		return &m_player1Aggro;
+		return &m_LyrielAggro;
 	}
 	if (target == getDeathTransform())
 	{
-		return &m_player2Aggro;
+		return &m_DeathAggro;
 	}
 	return nullptr;
 }

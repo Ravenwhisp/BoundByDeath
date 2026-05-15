@@ -51,9 +51,12 @@ public:
 	void setPhase(ArthurBossPhase phase);
 	ArthurBossPhase getPhase() const { return m_phase; }
 
+	void startEncounter(); // called in controller
+	void stopEncounter(); // called in controller
+
 private:
-	AggroEntry m_player1Aggro;
-	AggroEntry m_player2Aggro;
+	AggroEntry m_LyrielAggro;
+	AggroEntry m_DeathAggro;
 
 	Transform* m_currentTargetTransform = nullptr;
 	bool m_isAggro = false;
@@ -67,6 +70,7 @@ private:
 	float m_recentAttackMemory = 3.0f;
 
 	ArthurBossPhase m_phase = ArthurBossPhase::Phase1;
+	bool m_encounterStarted = false;
 
 private:
 	void enterAggro(Transform* target);
