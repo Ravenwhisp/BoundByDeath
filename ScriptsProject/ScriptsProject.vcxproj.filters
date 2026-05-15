@@ -73,6 +73,12 @@
     <Filter Include="Interaction/Gameplay\Traps">
       <UniqueIdentifier>{29f49c70-b8aa-4257-97d8-dc2e18fdd700}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Bosses">
+      <UniqueIdentifier>{65e6379b-4292-4467-8f25-42a74b90200b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Bosses\Arthur">
+      <UniqueIdentifier>{7aba194a-6bf2-4455-9cb9-742767236777}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -301,6 +307,11 @@
       <Filter>Interaction/Gameplay\Traps</Filter>
     </ClInclude>
     <ClInclude Include="PowerupCollectible.h" />
+    <ClInclude Include="PersistingPowerupState.h" />
+    <ClInclude Include="HealthPickup.h" />
+    <ClInclude Include="ArthurDetectionAggro.h">
+      <Filter>Bosses\Arthur</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
@@ -530,5 +541,10 @@
       <Filter>Interaction/Gameplay\Traps</Filter>
     </ClCompile>
     <ClCompile Include="PowerupCollectible.cpp" />
+    <ClCompile Include="PersistingPowerupState.cpp" />
+    <ClCompile Include="HealthPickup.cpp" />
+    <ClCompile Include="ArthurDetectionAggro.cpp">
+      <Filter>Bosses\Arthur</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
