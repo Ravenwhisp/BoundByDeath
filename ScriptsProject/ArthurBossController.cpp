@@ -56,6 +56,34 @@ void ArthurBossController::drawGizmo()
 	}
 }
 
+void ArthurBossController::Update()
+{
+	updateCurrentTarget();
+
+	if (!hasValidTarget())
+	{
+		clearPath();
+		return;
+	}
+
+	if (isTargetInCombatRange())
+	{
+		clearPath();
+		faceCurrentTarget();
+		return;
+	}
+
+	addToRepathTimer(Time::getDeltaTime());
+
+	if (!m_hasPath || shouldRepath())
+	{
+		buildPathToTarget();
+		resetRepathTimer();
+	}
+
+	followPath();
+}
+
 bool ArthurBossController::hasValidTarget() const
 {
 	if (!m_arthurDetectionAggro)
@@ -108,7 +136,7 @@ bool ArthurBossController::isTargetInCombatRange() const
 	}
 
 	Vector3 ownerPosition = getOwner()->GetTransform()->getPosition();
-	Vector3 targetPosition = getOwner()->GetTransform()->getPosition();
+	Vector3 targetPosition = m_currentTarget->getPosition();
 
 	Vector3 difference = ownerPosition - targetPosition;
 	difference.y = 0.0f;
@@ -159,24 +187,131 @@ bool ArthurBossController::buildPathToTarget()
 
 void ArthurBossController::followPath()
 {
-	//todo
+	if (!m_hasPath)
+	{
+		return;
+	}
+
+	if (m_currentIndex >= m_path.size())
+	{
+		clearPath();
+		return;
+	}
+
+	Vector3 currentPosition = getOwner()->GetTransform()->getPosition();
+	Vector3 targetPoint = m_path[m_currentIndex];
+	Vector3 direction = targetPoint - currentPosition;
+
+	float distance = direction.Length();
+
+	if (distance < 0.1f)
+	{
+		m_currentIndex++;
+		if (m_currentIndex >= m_path.size())
+		{
+			clearPath();
+			return;
+		}
+		return;
+	}
+
+	direction.Normalize();
+	rotateTowardsDirection(direction);
+	float dt = Time::getDeltaTime();
+
+	currentPosition += direction * m_moveSpeed * dt;
+
+	TransformAPI::setPosition(getOwner()->GetTransform(), currentPosition);
 }
 
 Vector3 ArthurBossController::getChasePosition() const
 {
-	// todo
-	Vector3 chasePosition;
+	if (!m_currentTarget)
+	{
+		return getOwner()->GetTransform()->getPosition();
+	}
+
+	Vector3 ownerPos = getOwner()->GetTransform()->getPosition();
+	Vector3 targetPos = m_currentTarget->getPosition();
+	Vector3 direction = targetPos - ownerPos;
+
+	float distance = direction.Length();
+
+	if (distance < 0.001f)
+	{
+		return targetPos;
+	}
+
+	direction.Normalize();
+
+	Vector3 chasePosition = targetPos - direction * (m_combatRange - 0.1f);
+
 	return chasePosition;
 }
 
 void ArthurBossController::rotateTowardsDirection(const Vector3& direction)
 {
-	// todo
+	Vector3 desiredDirection = direction;
+	desiredDirection.y = 0.0f;
+
+	if (desiredDirection.LengthSquared() < 0.0001f)
+	{
+		return;
+	}
+
+	Vector3 currentForward = TransformAPI::getForward(getOwner()->GetTransform());
+	currentForward.y = 0.0f;
+
+	if (currentForward.LengthSquared() < 0.0001f)
+	{
+		return;
+	}
+
+	desiredDirection.Normalize();
+	currentForward.Normalize();
+
+	float dot = currentForward.Dot(desiredDirection);
+
+	if (dot > 1.0f) dot = 1.0f;
+	if (dot < -1.0f) dot = -1.0f;
+
+	float angle = std::acos(dot);
+
+	Vector3 cross = currentForward.Cross(desiredDirection);
+
+	float sign = (cross.y > 0) ? 1.0f : -1.0f;
+
+	Vector3 currentEulerRotation = TransformAPI::getEulerDegrees(getOwner()->GetTransform());
+	float maxStep = (m_turnSpeed * 100) * Time::getDeltaTime();
+
+	float step = 0.0f;
+	float angleDeg = angle * RADIANS_TO_DEGREES;
+
+	if (angleDeg > maxStep)
+	{
+		step = maxStep * sign;
+	}
+	else
+	{
+		step = angleDeg * sign;
+	}
+
+	currentEulerRotation.y += step;
+	TransformAPI::setRotationEuler(getOwner()->GetTransform(), currentEulerRotation);
 }
 
 void ArthurBossController::faceCurrentTarget()
 {
-	// todo
+	if (!m_currentTarget)
+	{
+		return;
+	}
+
+	Vector3 ownerPos = getOwner()->GetTransform()->getPosition();
+	Vector3 targetPos = m_currentTarget->getPosition();
+	Vector3 direction = targetPos - ownerPos;
+
+	rotateTowardsDirection(direction);
 }
 
 void ArthurBossController::resetRepathTimer()

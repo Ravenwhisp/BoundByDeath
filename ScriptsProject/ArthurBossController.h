@@ -13,6 +13,7 @@ public:
 
 	void Start() override;
 	void drawGizmo() override;
+	void Update() override; // for Debug-testing only
 
 	ScriptFieldList getExposedFields() const override;
 
