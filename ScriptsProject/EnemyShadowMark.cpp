@@ -44,19 +44,24 @@ void EnemyShadowMark::exploit()
 {
     Debug::log("[ShadowMark] Mark exploited at phase %d!", m_phase);
 
-    std::vector<GameObject*> players = SceneAPI::findAllGameObjectsByTag(Tag::PLAYER, true);
-    for (GameObject* player : players)
-    {
-        ReaperGauge* gauge = GameObjectAPI::findScript<ReaperGauge>(player);
-        if (gauge != nullptr)
-        {
-            gauge->onMarkExploited();
-            break;
-        }
-    }
+    if (m_reaperGauge == nullptr)
+        m_reaperGauge = findReaperGauge();
+
+    if (m_reaperGauge != nullptr)
+        m_reaperGauge->onMarkExploited();
+    else
+        Debug::warn("[ShadowMark] ReaperGauge not found on any GameObject. Make sure GameController has a ReaperGauge script.");
 
     m_phase = 0;
     m_timer = 0.0f;
+}
+
+ReaperGauge* EnemyShadowMark::findReaperGauge()
+{
+    const std::vector<GameObject*> holders = SceneAPI::findAllGameObjectsWithScript<ReaperGauge>();
+    if (holders.empty())
+        return nullptr;
+    return GameObjectAPI::findScript<ReaperGauge>(holders[0]);
 }
 
 void EnemyShadowMark::drawGizmo()

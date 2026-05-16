@@ -29,9 +29,23 @@ void ReaperGauge::Update()
 
     if (m_decayTimer > m_gracePeriod)
     {
+        const bool wasAboveZero = m_gauge > 0.0f;
+
+        if (!m_decaying)
+        {
+            m_decaying = true;
+            Debug::log("[ReaperGauge] Grace period ended. Gauge decaying: %.1f/%.1f", m_gauge, m_maxGauge);
+        }
+
         m_gauge -= m_decayPerSecond * Time::getDeltaTime();
         if (m_gauge < 0.0f)
             m_gauge = 0.0f;
+
+        if (wasAboveZero && m_gauge <= 0.0f)
+        {
+            m_decaying = false;
+            Debug::log("[ReaperGauge] Gauge empty. Shadow Execution NOT available.");
+        }
     }
 }
 
@@ -39,12 +53,28 @@ void ReaperGauge::onMarkExploited()
 {
     m_everExploited = true;
     m_decayTimer    = 0.0f;
+    m_decaying      = false;
+
+    const bool wasFull = isFull();
 
     m_gauge += m_gainPerExploit;
     if (m_gauge > m_maxGauge)
         m_gauge = m_maxGauge;
 
-    Debug::log("[ReaperGauge] +%.1f  gauge=%.1f/%.1f", m_gainPerExploit, m_gauge, m_maxGauge);
+    Debug::log("[ReaperGauge] Mark exploited! +%.1f%%  =>  %.1f%%  (%d/%d segments)",
+        (m_gainPerExploit / m_maxGauge) * 100.0f, getGaugePercent() * 100.0f,
+        getCurrentSegments(), m_numSegments);
+
+    if (!wasFull && isFull())
+        Debug::log("[ReaperGauge] GAUGE FULL! Shadow Execution is now available.");
+}
+
+void ReaperGauge::consume()
+{
+    m_gauge      = 0.0f;
+    m_decayTimer = 0.0f;
+    m_decaying   = false;
+    Debug::log("[ReaperGauge] Gauge consumed by Shadow Execution.");
 }
 
 float ReaperGauge::getGaugePercent() const

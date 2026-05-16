@@ -289,6 +289,8 @@ void LyrielArrowVolley::applyVolleyDamage(const std::vector<GameObject*>& target
             if (mark != nullptr && mark->isExploitable())
             {
                 mark->exploit();
+                if (m_lyrielCharacter != nullptr)
+                    m_lyrielCharacter->onMarkExploited();
             }
         }
     }

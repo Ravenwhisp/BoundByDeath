@@ -2,6 +2,8 @@
 
 #include "ScriptAPI.h"
 
+class ReaperGauge;
+
 class EnemyShadowMark : public Script
 {
     DECLARE_SCRIPT(EnemyShadowMark)
@@ -21,9 +23,13 @@ public:
     int  getPhase() const { return m_phase; }
 
 public:
-    float m_markDuration = 3.0f;
+    float m_markDuration              = 3.0f;
+    float m_volleyCooldownReduction   = 0.20f;  // % of base cooldown removed per exploit
 
 private:
-    int   m_phase = 0;
-    float m_timer = 0.0f;
+    ReaperGauge* findReaperGauge();
+
+    int          m_phase        = 0;
+    float        m_timer        = 0.0f;
+    ReaperGauge* m_reaperGauge  = nullptr;
 };

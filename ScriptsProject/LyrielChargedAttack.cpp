@@ -354,6 +354,8 @@ void LyrielChargedAttack::applyChargedDamage(const std::vector<GameObject*>& tar
             if (mark != nullptr && mark->isExploitable())
             {
                 mark->exploit();
+                if (m_lyrielCharacter != nullptr)
+                    m_lyrielCharacter->onMarkExploited();
             }
         }
     }

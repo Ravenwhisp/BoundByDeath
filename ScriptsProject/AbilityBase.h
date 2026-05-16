@@ -21,6 +21,10 @@ public:
 
     void tryAbility();
 
+    // Reduces the current cooldown timer by (fraction * baseCooldown).
+    // Clamps to 0. Hides the CD UI if it reaches 0.
+    void reduceCooldown(float fraction);
+
 protected:
 	virtual void startAbility() {}
 
