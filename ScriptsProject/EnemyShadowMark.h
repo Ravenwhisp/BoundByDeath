@@ -3,6 +3,8 @@
 #include "ScriptAPI.h"
 #include "Transform2D.h"
 
+class ReaperGauge;
+
 class EnemyShadowMark : public Script
 {
     DECLARE_SCRIPT(EnemyShadowMark)
@@ -23,21 +25,29 @@ public:
 	void updateUI();
 
 public:
-    float m_markDuration = 3.0f;
-	float m_markUITargetScale = 1.0f;
+    float m_markDuration              = 3.0f;
+    float m_markUITargetScale = 1.0f;
 	float m_markUIHeightOffset = 1.0f;
     ScriptComponentRef<Transform2D> m_canvas;
     ScriptComponentRef<Transform> m_mark_1;
     ScriptComponentRef<Transform> m_mark_2;
     ScriptComponentRef<Transform> m_mark_3;
+    
+    float m_volleyCooldownReduction   = 0.20f;  // % of base cooldown removed per exploit
 
 private:
-    int   m_phase = 0;
-    float m_timer = 0.0f;
+    ReaperGauge* findReaperGauge();
 
-	Transform2D* m_canvasTransform2D = nullptr;
+private:
+    int          m_phase        = 0;
+    float        m_timer        = 0.0f;
+    ReaperGauge* m_reaperGauge  = nullptr;
+
+    Transform2D* m_canvasTransform2D = nullptr;
 	GameObject* m_mark1Object = nullptr;
     GameObject* m_mark2Object = nullptr;
 	GameObject* m_mark3Object = nullptr;
 	float m_startScale = 1.0f;
+
 };
+

@@ -52,7 +52,7 @@ void DeathBasicAttack::Update()
 
 bool DeathBasicAttack::canStartSpecificAbility() const
 {
-	return m_deathCharacter != nullptr && !m_deathCharacter->isInComboCooldown() && !m_character->isUsingAbility();
+    return m_deathCharacter != nullptr && !m_deathCharacter->isInComboCooldown();
 }
 
 void DeathBasicAttack::startAbility()
