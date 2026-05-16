@@ -2,15 +2,20 @@
   "SourcePath": "Assets\\Prefabs\\Enemy Paladin.prefab",
   "Name": "Enemy Paladin",
   "Version": 2,
-  "PrefabUID": 8051473612611936679,
   "GameObject": {
     "Name": "Enemy Paladin",
     "Active": true,
+    "Tag": "ENEMY",
+    "Layer": "DEFAULT",
+    "PrefabLink": {
+      "SourcePath": "Assets\\Prefabs\\Enemy Paladin.prefab",
+      "AssetUID": "bc3998703dec59f54f4b3966767680f1"
+    },
     "Transform": {
       "position": [
-        10.077900886535645,
+        -6.1620001792907715,
         1.4470961093902588,
-        -12.08343505859375
+        -14.53600025177002
       ],
       "rotation": [
         -0.0,
@@ -28,7 +33,7 @@
       {
         "Type": 3,
         "Data": {
-          "UID": 13267660193352532754,
+          "UID": 2468373384701043083,
           "ComponentType": 3,
           "Active": true,
           "ScriptName": "EnemyDetectionAggro",
@@ -44,7 +49,7 @@
       {
         "Type": 3,
         "Data": {
-          "UID": 452001643328350430,
+          "UID": 5350731246383242338,
           "ComponentType": 3,
           "Active": true,
           "ScriptName": "EnemyController",
@@ -53,7 +58,8 @@
             "Move Speed": 2.0,
             "Turn Speed": 4.0,
             "Interval": 0.4000000059604645,
-            "Charge Cooldown": 3.0,
+            "Attack Enter Range Bonus": 0.44999998807907104,
+            "Attack Exit Range Bonus": 0.800000011920929,
             "Debug Enabled": true
           }
         }
@@ -61,7 +67,7 @@
       {
         "Type": 16,
         "Data": {
-          "UID": 4444515409464233,
+          "UID": 10553283296518093563,
           "ComponentType": 16,
           "Active": true,
           "StateMachineUID": "c01ac77712cfe52087a3c76efc6d1670",
@@ -73,20 +79,22 @@
       {
         "Type": 3,
         "Data": {
-          "UID": 9766471943382395926,
+          "UID": 16493288337830329905,
           "ComponentType": 3,
           "Active": true,
           "ScriptName": "EnemyDamageable",
           "ScriptFields": {
             "Max HP": 100.0,
-            "Health Slider": 1422938727249067227
+            "Health Slider": 17184011064330393132,
+            "Health Slider 2": 0,
+            "UI Update Time (Slider 2)": 1.0
           }
         }
       },
       {
         "Type": 3,
         "Data": {
-          "UID": 3005544742890147711,
+          "UID": 4827446533753009942,
           "ComponentType": 3,
           "Active": true,
           "ScriptName": "EnemyDeathHandler",
@@ -95,12 +103,31 @@
             "Death State Name": "Paladin_Death"
           }
         }
+      },
+      {
+        "Type": 3,
+        "Data": {
+          "UID": 15803529646421186622,
+          "ComponentType": 3,
+          "Active": true,
+          "ScriptName": "EnemyShadowMark",
+          "ScriptFields": {
+            "Mark Duration": 3.0,
+            "Mark UI Scale": 1.0,
+            "Canvas Transform": 3309586234882477881,
+            "Mark Phase 1": 1414635466676348109,
+            "Mark Phase 2": 9138655293775270191,
+            "Mark Phase 3": 523696909802675641
+          }
+        }
       }
     ],
     "Children": [
       {
         "Name": "bones",
         "Active": true,
+        "Tag": "DEFAULT",
+        "Layer": "DEFAULT",
         "Transform": {
           "position": [
             0.0,
@@ -124,6 +151,8 @@
           {
             "Name": "bip_pelvis",
             "Active": true,
+            "Tag": "DEFAULT",
+            "Layer": "DEFAULT",
             "Transform": {
               "position": [
                 0.11340415477752686,
@@ -147,6 +176,8 @@
               {
                 "Name": "bip_spine_0",
                 "Active": true,
+                "Tag": "DEFAULT",
+                "Layer": "DEFAULT",
                 "Transform": {
                   "position": [
                     -2.6645351995433716e-17,
@@ -170,6 +201,8 @@
                   {
                     "Name": "bip_spine_2",
                     "Active": true,
+                    "Tag": "DEFAULT",
+                    "Layer": "DEFAULT",
                     "Transform": {
                       "position": [
                         1.7763567996955808e-17,
@@ -193,6 +226,8 @@
                       {
                         "Name": "bip_neck",
                         "Active": true,
+                        "Tag": "DEFAULT",
+                        "Layer": "DEFAULT",
                         "Transform": {
                           "position": [
                             0.0,
@@ -216,6 +251,8 @@
                           {
                             "Name": "bip_head",
                             "Active": true,
+                            "Tag": "DEFAULT",
+                            "Layer": "DEFAULT",
                             "Transform": {
                               "position": [
                                 1.7763567996955808e-17,
@@ -242,6 +279,8 @@
                       {
                         "Name": "bip_collar_L",
                         "Active": true,
+                        "Tag": "DEFAULT",
+                        "Layer": "DEFAULT",
                         "Transform": {
                           "position": [
                             0.06782735884189606,
@@ -265,6 +304,8 @@
                           {
                             "Name": "bip_upperArm_L",
                             "Active": true,
+                            "Tag": "DEFAULT",
+                            "Layer": "DEFAULT",
                             "Transform": {
                               "position": [
                                 0.09359555691480637,
@@ -288,6 +329,8 @@
                               {
                                 "Name": "bip_lowerArm_L",
                                 "Active": true,
+                                "Tag": "DEFAULT",
+                                "Layer": "DEFAULT",
                                 "Transform": {
                                   "position": [
                                     0.1868543028831482,
@@ -311,6 +354,8 @@
                                   {
                                     "Name": "bip_hand_L",
                                     "Active": true,
+                                    "Tag": "DEFAULT",
+                                    "Layer": "DEFAULT",
                                     "Transform": {
                                       "position": [
                                         0.2029263824224472,
@@ -334,6 +379,8 @@
                                       {
                                         "Name": "bip_thumb_0_L",
                                         "Active": true,
+                                        "Tag": "DEFAULT",
+                                        "Layer": "DEFAULT",
                                         "Transform": {
                                           "position": [
                                             0.01783352717757225,
@@ -358,6 +405,8 @@
                                       {
                                         "Name": "bip_finger_L5",
                                         "Active": true,
+                                        "Tag": "DEFAULT",
+                                        "Layer": "DEFAULT",
                                         "Transform": {
                                           "position": [
                                             0.08014736324548721,
@@ -381,6 +430,8 @@
                                           {
                                             "Name": "bip_finger_L6",
                                             "Active": true,
+                                            "Tag": "DEFAULT",
+                                            "Layer": "DEFAULT",
                                             "Transform": {
                                               "position": [
                                                 0.05100847780704498,
@@ -407,6 +458,8 @@
                                       {
                                         "Name": "wp_L",
                                         "Active": true,
+                                        "Tag": "DEFAULT",
+                                        "Layer": "DEFAULT",
                                         "Transform": {
                                           "position": [
                                             -0.054065849632024765,
@@ -437,6 +490,8 @@
                           {
                             "Name": "naplech_L",
                             "Active": true,
+                            "Tag": "DEFAULT",
+                            "Layer": "DEFAULT",
                             "Transform": {
                               "position": [
                                 0.11636289209127426,
@@ -463,6 +518,8 @@
                       {
                         "Name": "bip_collar_R",
                         "Active": true,
+                        "Tag": "DEFAULT",
+                        "Layer": "DEFAULT",
                         "Transform": {
                           "position": [
                             -0.06782739609479904,
@@ -486,6 +543,8 @@
                           {
                             "Name": "bip_upperArm_R",
                             "Active": true,
+                            "Tag": "DEFAULT",
+                            "Layer": "DEFAULT",
                             "Transform": {
                               "position": [
                                 -0.09359560161828996,
@@ -509,6 +568,8 @@
                               {
                                 "Name": "bip_lowerArm_R",
                                 "Active": true,
+                                "Tag": "DEFAULT",
+                                "Layer": "DEFAULT",
                                 "Transform": {
                                   "position": [
                                     -0.1868547797203064,
@@ -532,6 +593,8 @@
                                   {
                                     "Name": "bip_hand_R",
                                     "Active": true,
+                                    "Tag": "DEFAULT",
+                                    "Layer": "DEFAULT",
                                     "Transform": {
                                       "position": [
                                         -0.20292632281780243,
@@ -555,6 +618,8 @@
                                       {
                                         "Name": "bip_thumb_0_R",
                                         "Active": true,
+                                        "Tag": "DEFAULT",
+                                        "Layer": "DEFAULT",
                                         "Transform": {
                                           "position": [
                                             -0.017833469435572624,
@@ -579,6 +644,8 @@
                                       {
                                         "Name": "bip_finger_R5",
                                         "Active": true,
+                                        "Tag": "DEFAULT",
+                                        "Layer": "DEFAULT",
                                         "Transform": {
                                           "position": [
                                             -0.0801466628909111,
@@ -602,6 +669,8 @@
                                           {
                                             "Name": "bip_finger_R6",
                                             "Active": true,
+                                            "Tag": "DEFAULT",
+                                            "Layer": "DEFAULT",
                                             "Transform": {
                                               "position": [
                                                 -0.051009081304073334,
@@ -628,6 +697,8 @@
                                       {
                                         "Name": "wp_R",
                                         "Active": true,
+                                        "Tag": "DEFAULT",
+                                        "Layer": "DEFAULT",
                                         "Transform": {
                                           "position": [
                                             -0.07572850584983826,
@@ -658,6 +729,8 @@
                           {
                             "Name": "naplech_R",
                             "Active": true,
+                            "Tag": "DEFAULT",
+                            "Layer": "DEFAULT",
                             "Transform": {
                               "position": [
                                 -0.13193874061107635,
@@ -688,6 +761,8 @@
               {
                 "Name": "bip_hip_L",
                 "Active": true,
+                "Tag": "DEFAULT",
+                "Layer": "DEFAULT",
                 "Transform": {
                   "position": [
                     0.08156491070985794,
@@ -711,6 +786,8 @@
                   {
                     "Name": "bip_knee_L",
                     "Active": true,
+                    "Tag": "DEFAULT",
+                    "Layer": "DEFAULT",
                     "Transform": {
                       "position": [
                         -8.881783998477905e-18,
@@ -734,6 +811,8 @@
                       {
                         "Name": "bip_foot_L",
                         "Active": true,
+                        "Tag": "DEFAULT",
+                        "Layer": "DEFAULT",
                         "Transform": {
                           "position": [
                             -8.881783998477905e-18,
@@ -757,6 +836,8 @@
                           {
                             "Name": "bip_toe_L",
                             "Active": true,
+                            "Tag": "DEFAULT",
+                            "Layer": "DEFAULT",
                             "Transform": {
                               "position": [
                                 5.3290703990867426e-17,
@@ -787,6 +868,8 @@
               {
                 "Name": "bip_hip_R",
                 "Active": true,
+                "Tag": "DEFAULT",
+                "Layer": "DEFAULT",
                 "Transform": {
                   "position": [
                     -0.08156490325927734,
@@ -810,6 +893,8 @@
                   {
                     "Name": "bip_knee_R",
                     "Active": true,
+                    "Tag": "DEFAULT",
+                    "Layer": "DEFAULT",
                     "Transform": {
                       "position": [
                         3.5527135993911615e-17,
@@ -833,6 +918,8 @@
                       {
                         "Name": "bip_foot_R",
                         "Active": true,
+                        "Tag": "DEFAULT",
+                        "Layer": "DEFAULT",
                         "Transform": {
                           "position": [
                             0.0,
@@ -856,6 +943,8 @@
                           {
                             "Name": "bip_toe_R",
                             "Active": true,
+                            "Tag": "DEFAULT",
+                            "Layer": "DEFAULT",
                             "Transform": {
                               "position": [
                                 3.5527135993911615e-17,
@@ -890,6 +979,8 @@
       {
         "Name": "Paladin",
         "Active": true,
+        "Tag": "DEFAULT",
+        "Layer": "DEFAULT",
         "Transform": {
           "position": [
             0.0,
@@ -912,7 +1003,7 @@
           {
             "Type": 1,
             "Data": {
-              "UID": 8172600856951568829,
+              "UID": 6946585906362331311,
               "ComponentType": 1,
               "Active": true,
               "MeshAssetId": "3abbe891a715bbd5d59775f6687ad7ae",
@@ -928,6 +1019,8 @@
       {
         "Name": "New Canvas",
         "Active": true,
+        "Tag": "DEFAULT",
+        "Layer": "DEFAULT",
         "Transform": {
           "position": [
             0.0,
@@ -950,7 +1043,7 @@
           {
             "Type": 6,
             "Data": {
-              "UID": 5896138679168629506,
+              "UID": 13301090269136366869,
               "ComponentType": 6,
               "Active": true,
               "RenderMode": 2,
@@ -962,6 +1055,8 @@
           {
             "Name": "Background",
             "Active": true,
+            "Tag": "DEFAULT",
+            "Layer": "DEFAULT",
             "Transform": {
               "position": [
                 0.0,
@@ -984,7 +1079,7 @@
               {
                 "Type": 5,
                 "Data": {
-                  "UID": 16503073044099449143,
+                  "UID": 16497055084213376464,
                   "ComponentType": 5,
                   "Active": true,
                   "Position": [
@@ -1013,13 +1108,14 @@
                   ],
                   "StretchMode": 0,
                   "SizingMode": 0,
-                  "AspectRatio": 1.0
+                  "AspectRatio": 1.0,
+                  "Alpha": 1.0
                 }
               },
               {
                 "Type": 7,
                 "Data": {
-                  "UID": 11395921080827038146,
+                  "UID": 17171271078435310333,
                   "ComponentType": 7,
                   "Active": true,
                   "TextureAssetId": "2d5f24fa27461cdba4e38a08f027dbfa",
@@ -1033,6 +1129,8 @@
               {
                 "Name": "Slider",
                 "Active": true,
+                "Tag": "DEFAULT",
+                "Layer": "DEFAULT",
                 "Transform": {
                   "position": [
                     0.0,
@@ -1055,7 +1153,7 @@
                   {
                     "Type": 5,
                     "Data": {
-                      "UID": 6862957058872012179,
+                      "UID": 12289395963678368506,
                       "ComponentType": 5,
                       "Active": true,
                       "Position": [
@@ -1084,13 +1182,14 @@
                       ],
                       "StretchMode": 0,
                       "SizingMode": 0,
-                      "AspectRatio": 1.0
+                      "AspectRatio": 1.0,
+                      "Alpha": 1.0
                     }
                   },
                   {
                     "Type": 7,
                     "Data": {
-                      "UID": 12031566021441611320,
+                      "UID": 2774844340596756448,
                       "ComponentType": 7,
                       "Active": true,
                       "TextureAssetId": "70ac6644b69e35b4c1e2a2e364921877",
@@ -1102,7 +1201,7 @@
                   {
                     "Type": 17,
                     "Data": {
-                      "UID": 1422938727249067227,
+                      "UID": 17184011064330393132,
                       "ComponentType": 17,
                       "Active": true,
                       "TargetGraphicUID": 12031566021441611320,
@@ -1115,6 +1214,305 @@
                 "Children": []
               }
             ]
+          }
+        ]
+      },
+      {
+        "Name": "Shadow Mark",
+        "Active": true,
+        "Tag": "DEFAULT",
+        "Layer": "DEFAULT",
+        "Transform": {
+          "position": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "rotation": [
+            -0.0,
+            0.0,
+            -0.0,
+            1.0
+          ],
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "Components": [
+          {
+            "Type": 6,
+            "Data": {
+              "UID": 2899615135901150834,
+              "ComponentType": 6,
+              "Active": true,
+              "RenderMode": 2,
+              "ZTest": true
+            }
+          },
+          {
+            "Type": 5,
+            "Data": {
+              "UID": 5067068097706945891,
+              "ComponentType": 5,
+              "Active": true,
+              "Position": [
+                0.0,
+                0.0
+              ],
+              "Scale": [
+                1.0,
+                1.0
+              ],
+              "Pivot": [
+                0.5,
+                0.0
+              ],
+              "AnchorMin": [
+                0.5,
+                0.0
+              ],
+              "AnchorMax": [
+                0.5,
+                0.0
+              ],
+              "BaseSize": [
+                100.0,
+                100.0
+              ],
+              "StretchMode": 0,
+              "SizingMode": 0,
+              "AspectRatio": 1.0,
+              "Alpha": 1.0
+            }
+          }
+        ],
+        "Children": [
+          {
+            "Name": "Shadow Mark 1",
+            "Active": true,
+            "Tag": "DEFAULT",
+            "Layer": "DEFAULT",
+            "Transform": {
+              "position": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "rotation": [
+                -0.0,
+                0.0,
+                -0.0,
+                1.0
+              ],
+              "scale": [
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            "Components": [
+              {
+                "Type": 5,
+                "Data": {
+                  "UID": 11318142457074766779,
+                  "ComponentType": 5,
+                  "Active": true,
+                  "Position": [
+                    0.0,
+                    0.0
+                  ],
+                  "Scale": [
+                    0.30000001192092896,
+                    0.30000001192092896
+                  ],
+                  "Pivot": [
+                    0.5,
+                    0.0
+                  ],
+                  "AnchorMin": [
+                    0.5,
+                    0.0
+                  ],
+                  "AnchorMax": [
+                    0.5,
+                    0.0
+                  ],
+                  "BaseSize": [
+                    278.0,
+                    281.0
+                  ],
+                  "StretchMode": 0,
+                  "SizingMode": 0,
+                  "AspectRatio": 1.0,
+                  "Alpha": 1.0
+                }
+              },
+              {
+                "Type": 7,
+                "Data": {
+                  "UID": 16684557592672401275,
+                  "ComponentType": 7,
+                  "Active": true,
+                  "TextureAssetId": "9731a5449532a98339bf0ad6301c0343",
+                  "FillAmount": 1.0,
+                  "FillMethod": 0,
+                  "FillOrigin": 0
+                }
+              }
+            ],
+            "Children": []
+          },
+          {
+            "Name": "Shadow Mark 2",
+            "Active": true,
+            "Tag": "DEFAULT",
+            "Layer": "DEFAULT",
+            "Transform": {
+              "position": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "rotation": [
+                -0.0,
+                0.0,
+                -0.0,
+                1.0
+              ],
+              "scale": [
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            "Components": [
+              {
+                "Type": 5,
+                "Data": {
+                  "UID": 9862181835366688876,
+                  "ComponentType": 5,
+                  "Active": true,
+                  "Position": [
+                    0.0,
+                    0.0
+                  ],
+                  "Scale": [
+                    0.30000001192092896,
+                    0.30000001192092896
+                  ],
+                  "Pivot": [
+                    0.5,
+                    0.0
+                  ],
+                  "AnchorMin": [
+                    0.5,
+                    0.0
+                  ],
+                  "AnchorMax": [
+                    0.5,
+                    0.0
+                  ],
+                  "BaseSize": [
+                    332.0,
+                    435.0
+                  ],
+                  "StretchMode": 0,
+                  "SizingMode": 0,
+                  "AspectRatio": 1.0,
+                  "Alpha": 1.0
+                }
+              },
+              {
+                "Type": 7,
+                "Data": {
+                  "UID": 4865635468596373662,
+                  "ComponentType": 7,
+                  "Active": true,
+                  "TextureAssetId": "e8fc4d50dd7e73cdb26b45de7b908e9c",
+                  "FillAmount": 1.0,
+                  "FillMethod": 0,
+                  "FillOrigin": 0
+                }
+              }
+            ],
+            "Children": []
+          },
+          {
+            "Name": "Shadow Mark 3",
+            "Active": true,
+            "Tag": "DEFAULT",
+            "Layer": "DEFAULT",
+            "Transform": {
+              "position": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "rotation": [
+                -0.0,
+                0.0,
+                -0.0,
+                1.0
+              ],
+              "scale": [
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            "Components": [
+              {
+                "Type": 5,
+                "Data": {
+                  "UID": 6148811265987235115,
+                  "ComponentType": 5,
+                  "Active": true,
+                  "Position": [
+                    0.0,
+                    0.0
+                  ],
+                  "Scale": [
+                    0.30000001192092896,
+                    0.30000001192092896
+                  ],
+                  "Pivot": [
+                    0.5,
+                    0.0
+                  ],
+                  "AnchorMin": [
+                    0.5,
+                    0.0
+                  ],
+                  "AnchorMax": [
+                    0.5,
+                    0.0
+                  ],
+                  "BaseSize": [
+                    329.0,
+                    610.0
+                  ],
+                  "StretchMode": 0,
+                  "SizingMode": 0,
+                  "AspectRatio": 1.0,
+                  "Alpha": 1.0
+                }
+              },
+              {
+                "Type": 7,
+                "Data": {
+                  "UID": 13074374294028680298,
+                  "ComponentType": 7,
+                  "Active": true,
+                  "TextureAssetId": "a005b980a27cf4a2f4401c40401d64a6",
+                  "FillAmount": 1.0,
+                  "FillMethod": 0,
+                  "FillOrigin": 0
+                }
+              }
+            ],
+            "Children": []
           }
         ]
       }
