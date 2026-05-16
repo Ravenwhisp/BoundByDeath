@@ -17,7 +17,7 @@ public:
 
     void notifyDeathHit();
     bool isExploitable() const { return m_phase == 3; }
-    void exploit();
+    virtual void exploit();
     int  getPhase() const { return m_phase; }
 
 public:

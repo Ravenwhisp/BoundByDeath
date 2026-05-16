@@ -3,7 +3,7 @@
 #include "EnemyShadowMark.h"
 #include "PuzzleManagerLVL1.h"
 
-class CrystalShadowMark : public Script
+class CrystalShadowMark : public EnemyShadowMark
 {
     DECLARE_SCRIPT(CrystalShadowMark)
 public:
@@ -12,9 +12,7 @@ public:
     void Start()  override;
     void Update() override;
 
-    
-
-    void onMarkExploided();
+    void exploit();
 
     bool isActivated() const { return m_activated; }
 
@@ -26,10 +24,12 @@ public:
 
 private:
 
-    EnemyShadowMark* m_shadowMark = nullptr;
     bool m_activated = false;
 
 	float m_activationTimer = 0.0f;
+
+	GameObject* managerObject = nullptr;
+	PuzzleManagerLVL1* managerScript = nullptr;
 
 ScriptFieldList getExposedFields() const override;
 };

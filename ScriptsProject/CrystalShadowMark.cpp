@@ -7,13 +7,21 @@ IMPLEMENT_SCRIPT_FIELDS(CrystalShadowMark,
 	SERIALIZED_FLOAT(m_activeTime, "Active Time", 0.0f, 10.0f, 0.1f)
 )
 
-CrystalShadowMark::CrystalShadowMark(GameObject* owner) : Script(owner) {}
+CrystalShadowMark::CrystalShadowMark(GameObject* owner) : EnemyShadowMark(owner) {}
 
 void CrystalShadowMark::Start()
 {
-    m_shadowMark = GameObjectAPI::findScript<EnemyShadowMark>(getOwner());
-    if (m_shadowMark == nullptr)
-        Debug::log("[CrystalMark] WARNING: No EnemyShadowMark found on this crystal!");
+    managerObject = ComponentAPI::getOwner(m_puzzleManager.getReferencedComponent());
+    if(managerObject == nullptr)
+    {
+        Debug::log("[CrystalMark] ERROR: PuzzleManager reference is invalid!");
+        return;
+	}
+	managerScript = GameObjectAPI::findScript<PuzzleManagerLVL1>(managerObject);
+    if (managerScript == nullptr)
+    {
+        Debug::log("[CrystalMark] ERROR: PuzzleManager script not found on referenced object!");
+    }
 }
 
 void CrystalShadowMark::Update() 
@@ -27,11 +35,9 @@ void CrystalShadowMark::Update()
         m_activated = false;
         m_activationTimer = 0.0f;
 
-        GameObject* managerObject = ComponentAPI::getOwner(m_puzzleManager.getReferencedComponent());
-        PuzzleManagerLVL1* manager = GameObjectAPI::findScript<PuzzleManagerLVL1>(managerObject);
-        if (manager != nullptr)
+        if (managerScript != nullptr)
         {
-            manager->onCrystalsDeactivated(m_puzzleID);
+            managerScript->onCrystalsDeactivated(m_puzzleID);
         }
         else
         {
@@ -40,23 +46,18 @@ void CrystalShadowMark::Update()
     }
 }
 
-void CrystalShadowMark::onMarkExploided()
+void CrystalShadowMark::exploit()
 {
-    if (m_activated) return;
+    EnemyShadowMark::exploit(); 
 
-    m_activated = true;
-    Debug::log("[CrystalMark] Crystal activated!");
-
-	GameObject* managerObject = ComponentAPI::getOwner(m_puzzleManager.getReferencedComponent());
-    PuzzleManagerLVL1* manager = GameObjectAPI::findScript<PuzzleManagerLVL1>(managerObject);
-    if (manager != nullptr)
+    if (managerScript != nullptr)
     {
-        manager->onCrystalsActivated(m_puzzleID);
-    }  
+        managerScript->onCrystalsActivated(m_puzzleID);
+    }
     else
     {
-        Debug::log("[CrystalMark] WARNING: PuzzleManagerLVL1 not found!");
-    }    
+		Debug::log("[CrystalMark] WARNING: PuzzleManagerLVL1 not found!");
+    }
 }
 
 IMPLEMENT_SCRIPT(CrystalShadowMark)
