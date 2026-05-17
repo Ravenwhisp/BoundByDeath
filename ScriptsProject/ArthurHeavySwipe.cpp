@@ -38,6 +38,7 @@ void ArthurHeavySwipe::OnStateEnter()
     }
 
     m_arthurController->clearPath();
+    m_arthurController->updateCurrentTarget();
     m_arthurController->faceCurrentTarget();
 
     Debug::log("[ArthurHeavySwipe] ENTER");
