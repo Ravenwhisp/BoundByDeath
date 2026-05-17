@@ -21,8 +21,18 @@ void AbilityDash::Start()
 {
     AbilityBase::Start();
 
-    m_playerController = findControllerScript(getOwner());
-    m_playerMovement = findMovementScript(getOwner());
+    m_playerController = GameObjectAPI::findScript<PlayerController>(getOwner());
+    m_playerMovement = GameObjectAPI::findScript<PlayerMovement>(getOwner());
+
+    if (m_playerController == nullptr)
+    {
+        Debug::warn("AbilityDash: PlayerController not found on this GameObject.");
+    }
+
+    if (m_playerMovement == nullptr)
+    {
+        Debug::warn("AbilityDash: PlayerMovement not found on this GameObject.");
+    }
 }
 
 void AbilityDash::Update()
@@ -66,10 +76,7 @@ void AbilityDash::onDashStarted()
 void AbilityDash::startDash()
 {
     m_dashTimer = 0.0f;
-    m_isDashing = true;
-
-    setAbilityLocked(true);
-    startCooldown();
+    m_hasDashTarget = false;
 
     Vector3 moveDirection = m_playerController->getMoveDirection();
 
@@ -95,6 +102,16 @@ void AbilityDash::startDash()
     {
         m_dashDirection.Normalize();
     }
+
+    if (!validateDashTarget())
+        return;
+
+    m_dashStartPosition = TransformAPI::getPosition(getOwner()->GetTransform());
+
+    m_isDashing = true;
+
+    setAbilityLocked(true);
+    startCooldown();
 
     onDashStarted();
 }
@@ -130,6 +147,25 @@ void AbilityDash::calculateDashMovement(float dt)
     float t = m_dashTimer / m_dashDuration;
     t = (t < 0.0f) ? 0.0f : (t > 1.0f ? 1.0f : t);
 
+    if (m_hasDashTarget)
+    {
+        Vector3 currentPosition = TransformAPI::getPosition(getOwner()->GetTransform());
+
+        Vector3 desiredPosition = Vector3::Lerp(
+            m_dashStartPosition,
+            m_dashTargetPosition,
+            t
+        );
+
+        Vector3 delta = desiredPosition - currentPosition;
+        
+        if (m_playerMovement)
+        {
+            m_playerMovement->playerDashMovement(getOwner(), delta, true);
+            return;
+        }
+    }
+
     const float curveSpeed = 0.5f * PI * cos(t * PI * 0.5f);
     const float currentSpeed = (m_dashDistance / m_dashDuration) * curveSpeed;
 
@@ -139,29 +175,5 @@ void AbilityDash::calculateDashMovement(float dt)
     {
         m_playerMovement->playerDashMovement(getOwner(), velocity * dt);
     }
-}
-
-PlayerController* AbilityDash::findControllerScript(GameObject* owner) const
-{
-    Script* script = GameObjectAPI::getScript(owner, "PlayerController");
-    if (script == nullptr)
-    {
-        Debug::warn("AbilityDash: PlayerController not found on this GameObject.");
-        return nullptr;
-    }
-
-    return static_cast<PlayerController*>(script);
-}
-
-PlayerMovement* AbilityDash::findMovementScript(GameObject* owner) const
-{
-    Script* script = GameObjectAPI::getScript(owner, "PlayerMovement");
-    if (script == nullptr)
-    {
-        Debug::warn("AbilityDash: PlayerMovement not found on this GameObject.");
-        return nullptr;
-    }
-
-    return static_cast<PlayerMovement*>(script);
 }
 

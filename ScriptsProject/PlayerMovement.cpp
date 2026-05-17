@@ -2,7 +2,16 @@
 #include "PlayerMovement.h"
 #include "PlayerAnimationController.h"
 
+static const char* navAgentProfileNames[] =
+{
+    "PlayerNormal",
+    "PlayerSpectral"
+};
+
+constexpr int navAgentProfileCount = 2;
+
 IMPLEMENT_SCRIPT_FIELDS(PlayerMovement,
+    SERIALIZED_ENUM_INT(m_playerType, "Player Type", navAgentProfileNames, navAgentProfileCount),
     SERIALIZED_FLOAT(m_moveSpeed, "Move Speed", 0.0f, 50.0f, 0.05f),
     SERIALIZED_BOOL(m_constrainToNavMesh, "Constrain To NavMesh"),
     SERIALIZED_VEC3(m_navExtents, "Nav Extents")
@@ -15,7 +24,12 @@ PlayerMovement::PlayerMovement(GameObject* owner)
 
 void PlayerMovement::Start()
 {
-    m_playerAnimationController = findAnimationController();
+    m_playerAnimationController = GameObjectAPI::findScript<PlayerAnimationController>(getOwner());
+
+    if (m_playerAnimationController == nullptr)
+    {
+        Debug::warn("PlayerMovement on '%s' could not find PlayerAnimationController on the same GameObject.", GameObjectAPI::getName(getOwner()));
+    }
 }
 
 void PlayerMovement::Update()
@@ -57,22 +71,10 @@ void PlayerMovement::applyTranslation(Transform* transform, const Vector3& curre
     }
 
     Vector3 constrainedPos;
-    if (NavigationAPI::moveAlongSurface(currentPos, desiredPos, constrainedPos, m_navExtents))
+    if (NavigationAPI::moveAlongSurface(currentPos, desiredPos, constrainedPos, m_navExtents, static_cast<NavAgentProfile>(m_playerType)))
     {
         TransformAPI::setPosition(transform, constrainedPos);
     }
-}
-
-PlayerAnimationController* PlayerMovement::findAnimationController()
-{
-    Script* animationScript = m_owner ? GameObjectAPI::getScript(m_owner, "PlayerAnimationController") : nullptr;
-    if (animationScript)
-    {
-        return static_cast<PlayerAnimationController*>(animationScript);
-    }
-
-    Debug::warn("PlayerMovement on '%s' could not find PlayerAnimationController on the same GameObject.", GameObjectAPI::getName(m_owner));
-    return nullptr;
 }
 
 IMPLEMENT_SCRIPT(PlayerMovement)

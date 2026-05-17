@@ -4,36 +4,25 @@
 #include "Damageable.h"
 #include <cmath>
 
+static const char* navAgentProfileNames[] =
+{
+	"PlayerNormal",
+	"PlayerSpectral",
+	"EnemyGround"
+};
+
+constexpr int navAgentProfileCount = 3;
+
 IMPLEMENT_SCRIPT_FIELDS(EnemyController,
+	SERIALIZED_ENUM_INT(m_enemyType, "Enemy Type", navAgentProfileNames, navAgentProfileCount),
 	SERIALIZED_FLOAT(m_combatRange, "Combat Range", 0.0f, 50.0f, 0.1f),
 	SERIALIZED_FLOAT(m_moveSpeed, "Move Speed", 0.0f, 50.0f, 0.1f),
 	SERIALIZED_FLOAT(m_turnSpeed, "Turn Speed", 0.0f, 5.0f, 0.1f),
 	SERIALIZED_FLOAT(m_intervalRepath, "Interval", 0.0f, 50.0f, 0.1f),
 	SERIALIZED_FLOAT(m_attackEnterRangeBonus, "Attack Enter Range Bonus", 0.0f, 5.0f, 0.05f),
-  SERIALIZED_FLOAT(m_attackExitRangeBonus, "Attack Exit Range Bonus", 0.0f, 5.0f, 0.05f),
+	SERIALIZED_FLOAT(m_attackExitRangeBonus, "Attack Exit Range Bonus", 0.0f, 5.0f, 0.05f),
 	SERIALIZED_BOOL(m_debugEnabled, "Debug Enabled")
 )
-
-static Damageable* findDamageableOnTarget(GameObject* gameObject)
-{
-	if (!gameObject)
-	{
-		return nullptr;
-	}
-
-	Script* script = GameObjectAPI::getScript(gameObject, "PlayerDamageable");
-	Damageable* damageable = dynamic_cast<Damageable*>(script);
-
-	if (damageable)
-	{
-		return damageable;
-	}
-
-	script = GameObjectAPI::getScript(gameObject, "Damageable");
-	damageable = dynamic_cast<Damageable*>(script);
-
-	return damageable;
-}
 
 EnemyController::EnemyController(GameObject* owner)
     : Script(owner)
@@ -43,8 +32,7 @@ EnemyController::EnemyController(GameObject* owner)
 void EnemyController::Start()
 {
 
-	Script* script = GameObjectAPI::getScript(m_owner, "EnemyDetectionAggro");
-	m_enemyDetectionAggro = dynamic_cast<EnemyDetectionAggro*>(script);
+	m_enemyDetectionAggro = GameObjectAPI::findScript<EnemyDetectionAggro>(getOwner());
 
 	if (!m_enemyDetectionAggro)
 	{
@@ -90,7 +78,7 @@ bool EnemyController::hasValidTarget() const
 		return false;
 	}
 
-	Damageable* damageable = findDamageableOnTarget(targetObject);
+	Damageable* damageable = GameObjectAPI::findScript<Damageable>(targetObject);
 
 	if (damageable && damageable->isDead())
 	{
@@ -103,8 +91,7 @@ void EnemyController::updateCurrentTarget()
 {
 	if (!m_enemyDetectionAggro)
 	{
-		Script* script = GameObjectAPI::getScript(m_owner, "EnemyDetectionAggro");
-		m_enemyDetectionAggro = dynamic_cast<EnemyDetectionAggro*>(script);
+		m_enemyDetectionAggro = GameObjectAPI::findScript<EnemyDetectionAggro>(getOwner());
 	}
 
 	if (!m_enemyDetectionAggro)
@@ -183,7 +170,7 @@ bool EnemyController::buildPathToTarget()
 	std::vector<Vector3> tempPath;
 	tempPath.resize(m_maxPathPoints);
 
-	int pointCount = NavigationAPI::findStraightPath(start, end, tempPath.data(), m_maxPathPoints, m_searchExtents);
+	int pointCount = NavigationAPI::findStraightPath(start, end, tempPath.data(), m_maxPathPoints, m_searchExtents, static_cast<NavAgentProfile>(m_enemyType));
 
 	if (pointCount > 0)
 	{

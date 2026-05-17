@@ -11,6 +11,7 @@
 #include "Tag.h"
 #include "SimpleMath.h"
 #include "KeyCode.h"
+#include "NavMeshTypes.h"
 
 using DirectX::SimpleMath::Vector3;
 using DirectX::SimpleMath::Vector2;
@@ -136,6 +137,13 @@ namespace SceneAPI
     ENGINE_API std::vector<GameObject*> findAllGameObjectsByComponent(ComponentType componentType, bool onlyActive = true);
     ENGINE_API std::vector<GameObject*> findAllGameObjectsByTag(Tag tag, bool onlyActive = true);
 
+	ENGINE_API std::vector<GameObject*> getAllGameObjectsInScene(bool onlyActive = true);
+
+    template<typename T>
+    std::vector<GameObject*> findAllGameObjectsWithScript();
+
+	ENGINE_API std::vector<GameObject*> getObjectsInCircularArea(const Vector2& center, const float radius, bool onlyActive = true);
+
     ENGINE_API GameObject* getDefaultCameraGameObject();
     ENGINE_API void setDefaultCameraByGameObject(GameObject* gameObject);
 
@@ -217,12 +225,12 @@ namespace Debug
 namespace NavigationAPI
 {
     ENGINE_API bool hasNavMesh();
-    ENGINE_API bool samplePosition(const Vector3& inputPosition, Vector3& outSampledPosition, const Vector3& searchExtents);
-    ENGINE_API bool moveAlongSurface(const Vector3& startPosition, const Vector3& targetPosition, Vector3& outResultPosition, const Vector3& searchExtents);
-    ENGINE_API int findStraightPath(const Vector3& startPosition, const Vector3& endPosition, Vector3* outputPoints, int maxPoints, const Vector3& searchExtents);
-    ENGINE_API bool canReachTarget(const Vector3& startPosition, const Vector3& endPosition, const Vector3& searchExtents);
+    ENGINE_API bool samplePosition(const Vector3& inputPosition, Vector3& outSampledPosition, const Vector3& searchExtents, NavAgentProfile profile = NavAgentProfile::PlayerNormal);
+    ENGINE_API bool moveAlongSurface(const Vector3& startPosition, const Vector3& targetPosition, Vector3& outResultPosition, const Vector3& searchExtents, NavAgentProfile profile = NavAgentProfile::PlayerNormal);
+    ENGINE_API int findStraightPath(const Vector3& startPosition, const Vector3& endPosition, Vector3* outputPoints, int maxPoints, const Vector3& searchExtents, NavAgentProfile profile = NavAgentProfile::PlayerNormal);
+    ENGINE_API bool canReachTarget(const Vector3& startPosition, const Vector3& endPosition, const Vector3& searchExtents, NavAgentProfile profile = NavAgentProfile::PlayerNormal);
     ENGINE_API float getPathLength(const Vector3* pathPoints, int pointCount);
-    ENGINE_API bool findRandomReachablePointAround(const Vector3& centerPosition, float radius, Vector3& outPoint, const Vector3& searchExtents, int maxAttempts);
+    ENGINE_API bool findRandomReachablePointAround(const Vector3& centerPosition, float radius, Vector3& outPoint, const Vector3& searchExtents, int maxAttempts, NavAgentProfile profile = NavAgentProfile::PlayerNormal);
 }
 
 namespace MathAPI
@@ -306,6 +314,7 @@ namespace HapticAPI
     ENGINE_API void stopEffect(uint32_t handle, int player = 0);
     ENGINE_API void stopAll(int player = 0);
     ENGINE_API bool isPlaying(int player = 0);
+    ENGINE_API uint32_t submitEffect(const HapticEffectDefinition& def, int player = 0);
     ENGINE_API uint32_t submitImpact(float intensity, float duration, int player = 0);
     ENGINE_API uint32_t submitRumble(float left, float right, float duration, int player = 0);
     ENGINE_API uint32_t submitExplosion(float intensity, float duration, int player = 0);

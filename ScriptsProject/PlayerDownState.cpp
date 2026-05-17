@@ -8,7 +8,8 @@ IMPLEMENT_SCRIPT_FIELDS(PlayerDownState,
     SERIALIZED_FLOAT(m_assistRadius, "Assist Radius", 0.0f, 999999.0f, 0.1f),
     SERIALIZED_FLOAT(m_assistSpeedMultiplier, "Assist Speed Multiplier", 1.0f, 999999.0f, 0.1f),
     SERIALIZED_FLOAT(m_reviveHp, "Revive HP", 1.0f, 999999.0f, 1.0f),
-    SERIALIZED_COMPONENT_REF(m_teammateTransform, "Teammate Transform", ComponentType::TRANSFORM)
+    SERIALIZED_COMPONENT_REF(m_teammateTransform, "Teammate Transform", ComponentType::TRANSFORM),
+	SERIALIZED_COMPONENT_REF(m_downedSprite, "Downed Sprite Transform", ComponentType::TRANSFORM)
 )
 
 PlayerDownState::PlayerDownState(GameObject* owner)
@@ -18,19 +19,23 @@ PlayerDownState::PlayerDownState(GameObject* owner)
 
 void PlayerDownState::Start()
 {
-    m_damageable = findDamageable();
+    m_damageable = GameObjectAPI::findScript<Damageable>(getOwner());
 
     if (!m_damageable)
     {
         Debug::warn("PlayerDownState on '%s' could not find a Damageable on the same GameObject.", GameObjectAPI::getName(m_owner));
     }
 
-    Script* stateScript = GameObjectAPI::getScript(m_owner, "PlayerState");
-    m_playerState = dynamic_cast<PlayerState*>(stateScript);
+    m_playerState = GameObjectAPI::findScript<PlayerState>(getOwner());
 
     if (!m_playerState)
     {
         Debug::warn("PlayerDownState on '%s' could not find PlayerState on the same GameObject.", GameObjectAPI::getName(m_owner));
+    }
+
+    if (m_downedSprite.getReferencedComponent())
+    {
+        m_downedSpriteGO = m_downedSprite.getReferencedComponent()->getOwner();
     }
 }
 
@@ -100,6 +105,11 @@ void PlayerDownState::enterDownState()
         m_damageable->setInvulnerable(true);
     }
 
+    if (m_downedSpriteGO)
+    {
+        GameObjectAPI::setActive(m_downedSpriteGO, true);
+	}
+
     Debug::log("%s entered down state.", GameObjectAPI::getName(m_owner));
 }
 
@@ -146,22 +156,6 @@ void PlayerDownState::blockRevive()
     m_reviveProgress = 0.0f;
 }
 
-Damageable* PlayerDownState::findDamageable() const
-{
-    Script* script = GameObjectAPI::getScript(m_owner, "PlayerDamageable");
-    Damageable* damageable = dynamic_cast<Damageable*>(script);
-
-    if (damageable)
-    {
-        return damageable;
-    }
-
-    script = GameObjectAPI::getScript(m_owner, "Damageable");
-    damageable = dynamic_cast<Damageable*>(script);
-
-    return damageable;
-}
-
 bool PlayerDownState::isTeammateInAssistRange() const
 {
     Transform* ownTransform = GameObjectAPI::getTransform(m_owner);
@@ -199,6 +193,11 @@ void PlayerDownState::completeRevive()
     {
         m_damageable->setInvulnerable(false);
         m_damageable->revive(m_reviveHp);
+    }
+
+    if (m_downedSpriteGO)
+    {
+        GameObjectAPI::setActive(m_downedSpriteGO, false);
     }
 
     Debug::log("%s completed revive from down state.", GameObjectAPI::getName(m_owner));

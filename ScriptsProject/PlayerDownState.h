@@ -27,8 +27,6 @@ public:
     void blockRevive();
 
 private:
-    Damageable* findDamageable() const;
-
     bool isTeammateInAssistRange() const;
     void completeRevive();
 
@@ -39,6 +37,9 @@ public:
     float m_reviveHp = 50.0f;
 
     ScriptComponentRef<Transform> m_teammateTransform;
+
+    ScriptComponentRef<Transform> m_downedSprite;
+    GameObject* m_downedSpriteGO = nullptr;
 
 private:
     PlayerState* m_playerState = nullptr;

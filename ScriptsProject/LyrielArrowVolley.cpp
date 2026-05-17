@@ -275,8 +275,7 @@ void LyrielArrowVolley::applyVolleyDamage(const std::vector<GameObject*>& target
             continue;
         }
 
-        Script* script = GameObjectAPI::getScript(target, "EnemyDamageable");
-        EnemyDamageable* damageable = static_cast<EnemyDamageable*>(script);
+        EnemyDamageable* damageable = GameObjectAPI::findScript<EnemyDamageable>(target);
 
         if (damageable != nullptr)
         {
@@ -285,12 +284,13 @@ void LyrielArrowVolley::applyVolleyDamage(const std::vector<GameObject*>& target
 
         if (PersistingPowerupState::isUnlocked(PowerupId::LyrielPowerup1))
         {
-            Script* markScript = GameObjectAPI::getScript(target, "EnemyShadowMark");
-            EnemyShadowMark* mark = static_cast<EnemyShadowMark*>(markScript);
+            EnemyShadowMark* mark = GameObjectAPI::findScript<EnemyShadowMark>(target);
 
             if (mark != nullptr && mark->isExploitable())
             {
                 mark->exploit();
+                if (m_lyrielCharacter != nullptr)
+                    m_lyrielCharacter->onMarkExploited();
             }
         }
     }

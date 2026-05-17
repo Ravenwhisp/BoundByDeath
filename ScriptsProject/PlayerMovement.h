@@ -20,15 +20,25 @@ public:
     { 
         moveInternal(owner, timeStep * m_moveSpeed); 
     }
-	inline void playerDashMovement(GameObject* owner, const Vector3& displacement) const 
+	inline void playerDashMovement(GameObject* owner, const Vector3& displacement, bool ignoreNavMesh = false) 
     { 
+        if (!ignoreNavMesh)
+        {
+            moveInternal(owner, displacement);
+            return;
+        }
+
+        const bool previousConstraint = m_constrainToNavMesh;
+        m_constrainToNavMesh = false;
         moveInternal(owner, displacement);
+        m_constrainToNavMesh = previousConstraint;
     }
 
     void setMoving(bool isMoving);
     bool isMoving() const { return m_isMoving; }
 
 public:
+    int m_playerType = static_cast<int>(NavAgentProfile::PlayerNormal);
     float m_moveSpeed = 3.5f;
 
     bool m_constrainToNavMesh = true;
@@ -37,7 +47,6 @@ public:
 private:
     void moveInternal(GameObject* owner, const Vector3& desiredPos) const;
     void applyTranslation(Transform* transform, const Vector3& currentPos, const Vector3& desiredPos) const;
-    PlayerAnimationController* findAnimationController();
 
 private:
     bool m_isMoving = false;

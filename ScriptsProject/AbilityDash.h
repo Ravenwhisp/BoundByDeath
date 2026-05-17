@@ -24,15 +24,13 @@ protected:
     virtual void onDashStarted();
     virtual void onDashUpdate(float dt) {}
     virtual void onDashEnded() {}
+    virtual bool validateDashTarget() { return true; }
 
 private:
     void startDash();
     void updateDash(float dt);
     void stopDash();
     void calculateDashMovement(float dt);
-
-    PlayerController* findControllerScript(GameObject* owner) const;
-    PlayerMovement* findMovementScript(GameObject* owner) const;
 
 protected:
     PlayerController* m_playerController = nullptr;
@@ -45,4 +43,8 @@ protected:
     bool m_isDashing = false;
 
     Vector3 m_dashDirection = Vector3::Zero;
+
+    Vector3 m_dashTargetPosition = Vector3::Zero;
+    Vector3 m_dashStartPosition = Vector3::Zero;
+    bool m_hasDashTarget = false;
 };

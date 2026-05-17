@@ -86,7 +86,7 @@ void DeathChargedAttack::startAbility()
 
 bool DeathChargedAttack::canStartSpecificAbility() const
 {
-	return m_deathCharacter != nullptr && m_attackStateTimer <= 0.0f && !m_deathCharacter->isInComboCooldown() && m_deathCharacter->canUseR2InCombo() && !m_deathCharacter->isUsingAbility();
+    return m_deathCharacter != nullptr && !m_deathCharacter->isInComboCooldown() && m_deathCharacter->canUseR2InCombo();
 }
 
 void DeathChargedAttack::startCharging()
@@ -218,23 +218,25 @@ void DeathChargedAttack::dealDamageInArc(float damage) const
             }
         }
 
-        Script* damScript = GameObjectAPI::getScript(enemy, "EnemyDamageable");
-        if (damScript == nullptr)
+        EnemyDamageable* damageable = GameObjectAPI::findScript<EnemyDamageable>(enemy);
+        if (damageable == nullptr)
         {
             Debug::log("[ARC] '%s' has no EnemyDamageable.", GameObjectAPI::getName(enemy));
             continue;
         }
 
-        EnemyDamageable* damageable = static_cast<EnemyDamageable*>(damScript);
         damageable->takeDamageEnemy(damage, GameObjectAPI::getTransform(getOwner()));
         hit++;
+
         Debug::log("[ARC] hit '%s'  dmg=%.1f  hp=%.1f/%.1f",
             GameObjectAPI::getName(enemy), damage,
             damageable->getCurrentHp(), damageable->getMaxHp());
 
-        Script* markScript = GameObjectAPI::getScript(enemy, "EnemyShadowMark");
-        if (markScript != nullptr)
-            static_cast<EnemyShadowMark*>(markScript)->notifyDeathHit();
+        EnemyShadowMark* shadowMark = GameObjectAPI::findScript<EnemyShadowMark>(enemy);
+        if (shadowMark != nullptr)
+        {
+            shadowMark->notifyDeathHit();
+        }
     }
 
     if (scanned == 0)
