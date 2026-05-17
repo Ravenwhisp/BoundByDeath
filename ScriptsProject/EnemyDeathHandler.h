@@ -31,8 +31,9 @@ public:
     float m_healthDropAmount = 10.0f;
     float m_dropRadius       = 2.0f;
     float m_dropHeight       = 1.0f;  // Y offset from floor to enemy center (arc spawn point)
-
-private:
+    
+    bool m_canProcessDeath = true;
+protected:
     Damageable* m_damageable = nullptr;
     bool m_hasProcessedDeath = false;
     bool m_waitingToDestroy = false;

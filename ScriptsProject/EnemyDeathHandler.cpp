@@ -38,6 +38,9 @@ void EnemyDeathHandler::Update()
 
     if (!m_hasProcessedDeath && m_damageable->isDead())
     {
+        if (!m_canProcessDeath)
+            return;
+
         DropHealth();
         processDeath();
     }
