@@ -1,0 +1,155 @@
+{
+    "name": "Bear_StateMachine",
+    "defaultState": "Bear_CHASE",
+    "clips": [
+        {
+            "name": "Bear_stand",
+            "animationUID": {
+                "uid": 12950460726583917666,
+                "libId": "329da2c93abc651e986516be757ed07c"
+            },
+            "loop": true
+        },
+        {
+            "name": "Bear_idle",
+            "animationUID": {
+                "uid": 13408700155962206730,
+                "libId": "ba4547440c12dfb2800e5818ceebc9b8"
+            },
+            "loop": true
+        },
+        {
+            "name": "Bear_attack",
+            "animationUID": {
+                "uid": 14973854340516438937,
+                "libId": "aa3b68eb5806829a1b0d050578e385cd"
+            },
+            "loop": true
+        },
+        {
+            "name": "Bear_walk",
+            "animationUID": {
+                "uid": 10449942996158667634,
+                "libId": "d9e02ed6685aa3531a6cf58794468f47"
+            },
+            "loop": true
+        },
+        {
+            "name": "Bear_death",
+            "animationUID": {
+                "uid": 12872365504509799009,
+                "libId": "475456e3fdb836c384eb7f5cb1a3e523"
+            },
+            "loop": true
+        },
+        {
+            "name": "Bear_hit",
+            "animationUID": {
+                "uid": 11968390018694115058,
+                "libId": "02bd7d246fd40f85b3f65236c0fb34ac"
+            },
+            "loop": true
+        },
+        {
+            "name": "Bear_Tpose",
+            "animationUID": {
+                "uid": 1025501592641869981,
+                "libId": "58cdd76bd3b0b0dc3c1ccf40e1e3ff07"
+            },
+            "loop": true
+        }
+    ],
+    "states": [
+        {
+            "name": "Bear_IDLE",
+            "clipName": "Bear_stand",
+            "speed": 1.0,
+            "behaviourScriptName": "",
+            "behaviourFieldsJson": "",
+            "overrideLoop": false,
+            "loop": true
+        },
+        {
+            "name": "Bear_EARTH_HAMMER",
+            "clipName": "Bear_idle",
+            "speed": 1.0,
+            "behaviourScriptName": "",
+            "behaviourFieldsJson": "",
+            "overrideLoop": false,
+            "loop": true
+        },
+        {
+            "name": "Bear_HEAVY_SWIPE",
+            "clipName": "Bear_attack",
+            "speed": 1.0,
+            "behaviourScriptName": "",
+            "behaviourFieldsJson": "",
+            "overrideLoop": false,
+            "loop": true
+        },
+        {
+            "name": "Bear_CHASE",
+            "clipName": "Bear_walk",
+            "speed": 1.0,
+            "behaviourScriptName": "",
+            "behaviourFieldsJson": "",
+            "overrideLoop": false,
+            "loop": true
+        },
+        {
+            "name": "Bear_death",
+            "clipName": "Bear_death",
+            "speed": 1.0,
+            "behaviourScriptName": "",
+            "behaviourFieldsJson": "",
+            "overrideLoop": false,
+            "loop": true
+        },
+        {
+            "name": "Bear_hit",
+            "clipName": "Bear_hit",
+            "speed": 1.0,
+            "behaviourScriptName": "",
+            "behaviourFieldsJson": "",
+            "overrideLoop": false,
+            "loop": true
+        },
+        {
+            "name": "Bear_Tpose",
+            "clipName": "Bear_Tpose",
+            "speed": 1.0,
+            "behaviourScriptName": "",
+            "behaviourFieldsJson": "",
+            "overrideLoop": false,
+            "loop": true
+        },
+        {
+            "name": "Bear_CHARGING_SLAM",
+            "clipName": "Bear_walk",
+            "speed": 1.0,
+            "behaviourScriptName": "",
+            "behaviourFieldsJson": "",
+            "overrideLoop": false,
+            "loop": true
+        },
+        {
+            "name": "Bear_SIDE_SWEEP",
+            "clipName": "Bear_hit",
+            "speed": 1.0,
+            "behaviourScriptName": "",
+            "behaviourFieldsJson": "",
+            "overrideLoop": false,
+            "loop": true
+        },
+        {
+            "name": "Bear_RECOVERY",
+            "clipName": "Bear_Tpose",
+            "speed": 1.0,
+            "behaviourScriptName": "",
+            "behaviourFieldsJson": "",
+            "overrideLoop": false,
+            "loop": true
+        }
+    ],
+    "transitions": []
+}
