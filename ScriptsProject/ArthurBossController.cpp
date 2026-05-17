@@ -58,7 +58,10 @@ void ArthurBossController::drawGizmo()
 
 void ArthurBossController::Update()
 {
-	updateCurrentTarget();
+	// The "moving" logic should be in the Chase state, like this once we are attacking we stop moving and each state controlls itself.
+	// For now i will comment it, and once you (Mihail) do the chase state you move whatever you need.
+
+	/*updateCurrentTarget();
 
 	if (!hasValidTarget())
 	{
@@ -81,7 +84,7 @@ void ArthurBossController::Update()
 		resetRepathTimer();
 	}
 
-	followPath();
+	followPath();*/
 }
 
 bool ArthurBossController::hasValidTarget() const
@@ -300,6 +303,36 @@ void ArthurBossController::rotateTowardsDirection(const Vector3& direction)
 	TransformAPI::setRotationEuler(getOwner()->GetTransform(), currentEulerRotation);
 }
 
+
+
+Transform* ArthurBossController::getNonFocusTarget() const
+{
+	if (!m_arthurDetectionAggro)
+	{
+		return nullptr;
+	}
+
+	if (!m_currentTarget)
+	{
+		return nullptr;
+	}
+
+	Transform* lyrielTransform = m_arthurDetectionAggro->getLyrielTransform();
+	Transform* deathTransform = m_arthurDetectionAggro->getDeathTransform();
+
+	if (m_currentTarget == lyrielTransform)
+	{
+		return deathTransform;
+	}
+
+	if (m_currentTarget == deathTransform)
+	{
+		return lyrielTransform;
+	}
+
+	return nullptr;
+}
+
 void ArthurBossController::faceCurrentTarget()
 {
 	if (!m_currentTarget)
@@ -312,6 +345,11 @@ void ArthurBossController::faceCurrentTarget()
 	Vector3 direction = targetPos - ownerPos;
 
 	rotateTowardsDirection(direction);
+}
+
+void ArthurBossController::setRecoveryDuration(float recoveryDuration)
+{
+	m_recoveryDuration = recoveryDuration;
 }
 
 void ArthurBossController::resetRepathTimer()

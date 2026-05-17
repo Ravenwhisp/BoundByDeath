@@ -48,6 +48,9 @@ public:
 	Transform* getCurrentTarget() const { return m_currentTargetTransform; }
 	Vector3 getLastKnownTargetPosition() const { return m_lastKnownTargetPosition; }
 
+	Transform* getLyrielTransform() const;
+	Transform* getDeathTransform() const;
+
 	void setPhase(ArthurBossPhase phase);
 	ArthurBossPhase getPhase() const { return m_phase; }
 
@@ -88,8 +91,6 @@ private:
 
 private:
 	Transform* getOwnerTransform() const;
-	Transform* getLyrielTransform() const;
-	Transform* getDeathTransform() const;
 
 	Vector3 getOwnerPosition() const;
 	Vector3 getLyrielPosition() const;

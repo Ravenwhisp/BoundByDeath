@@ -1,6 +1,6 @@
 {
     "name": "Bear_StateMachine",
-    "defaultState": "Bear_CHASE",
+    "defaultState": "Bear_HEAVY_SWIPE",
     "clips": [
         {
             "name": "Bear_stand",
@@ -82,10 +82,10 @@
             "name": "Bear_HEAVY_SWIPE",
             "clipName": "Bear_attack",
             "speed": 1.0,
-            "behaviourScriptName": "",
-            "behaviourFieldsJson": "",
-            "overrideLoop": false,
-            "loop": true
+            "behaviourScriptName": "ArthurHeavySwipe",
+            "behaviourFieldsJson": "{\"Damage\":10.0,\"Attack Range\":3.0,\"Attack Half Angle Degrees\":60.0,\"Total Duration\":1.5,\"Hit 1 Time\":0.44999998807907104,\"Hit 2 Time\":0.949999988079071,\"Hit 3 Time\":1.350000023841858,\"Recovery Duration\":0.75,\"Debug Enabled\":true}",
+            "overrideLoop": true,
+            "loop": false
         },
         {
             "name": "Bear_CHASE",
@@ -151,5 +151,12 @@
             "loop": true
         }
     ],
-    "transitions": []
+    "transitions": [
+        {
+            "sourceStateName": "Bear_HEAVY_SWIPE",
+            "targetStateName": "Bear_RECOVERY",
+            "triggerName": "ToRecover",
+            "blendTimeSeconds": 0.25
+        }
+    ]
 }
