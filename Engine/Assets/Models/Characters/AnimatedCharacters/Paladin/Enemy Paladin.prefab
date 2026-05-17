@@ -2,21 +2,20 @@
   "SourcePath": "Assets\\Models\\Characters\\AnimatedCharacters\\Paladin\\Enemy Paladin.prefab",
   "Name": "Enemy Paladin",
   "Version": 2,
-  "PrefabUID": 3873864643607226109,
-  "VariantOf": "Assets\\Models\\Characters\\AnimatedCharacters\\Paladin\\Paladin.gltf",
   "GameObject": {
     "Name": "Enemy Paladin",
     "Active": true,
+    "Tag": "ENEMY",
+    "Layer": "DEFAULT",
     "PrefabLink": {
-      "SourcePath": "Assets\\Models\\Characters\\AnimatedCharacters\\Paladin\\Paladin.gltf",
-      "AssetUID": "2b87e74b54a6fe99b53779b7771bd60a",
-      "PrefabUID": 3506673915017831461
+      "SourcePath": "Assets\\Models\\Characters\\AnimatedCharacters\\Paladin\\Enemy Paladin.prefab",
+      "AssetUID": 14979702683499113102
     },
     "Transform": {
       "position": [
-        6.283069610595703,
-        0.0,
-        -3.7896533012390137
+        10.077900886535645,
+        1.4470961093902588,
+        -12.08343505859375
       ],
       "rotation": [
         -0.0,
@@ -34,38 +33,98 @@
       {
         "Type": 3,
         "Data": {
-          "UID": 9338183764478007423,
+          "UID": 8368929961665707827,
           "ComponentType": 3,
           "Active": true,
-          "ScriptName": "Damageable",
+          "ScriptName": "EnemyDetectionAggro",
           "ScriptFields": {
-            "Max HP": 100.0
+            "Detection Radius": 14.0,
+            "Target Lock Duration": 5.0,
+            "Debug Enabled": true,
+            "Player 1 Transform": 743245849143440901,
+            "Player 2 Transform": 16858939129400802547
           }
         }
       },
       {
         "Type": 3,
         "Data": {
-          "UID": 13034570644050630903,
+          "UID": 11157509095188117560,
           "ComponentType": 3,
           "Active": true,
-          "ScriptName": "EnemyDeathHandler",
+          "ScriptName": "EnemyController",
           "ScriptFields": {
-            "Destroy Delay": 5.0,
-            "Death State Name": "Paladin_Death"
+            "Enemy Type": 2,
+            "Combat Range": 1.2000000476837158,
+            "Move Speed": 2.0,
+            "Turn Speed": 4.0,
+            "Interval": 0.4000000059604645,
+            "Attack Enter Range Bonus": 0.44999998807907104,
+            "Attack Exit Range Bonus": 0.800000011920929,
+            "Debug Enabled": true
           }
         }
       },
       {
-        "Type": 16,
+        "Type": 3,
         "Data": {
-          "UID": 11586239806536333011,
-          "ComponentType": 16,
+          "UID": 8649393709814296531,
+          "ComponentType": 3,
           "Active": true,
-          "StateMachineUID": "d650f6628e921dcd36b9b959aee7f3f4",
+          "ScriptName": "EnemyDamageable",
+          "ScriptFields": {
+            "Max HP": 100.0,
+            "Health Slider": 1422938727249067227
+          }
+        }
+      },
+      {
+        "Type": 3,
+        "Data": {
+          "UID": 16014959075256591611,
+          "ComponentType": 3,
+          "Active": true,
+          "ScriptName": "EnemyDeathHandler",
+          "ScriptFields": {
+            "Destroy Delay": 4.0,
+            "Death State Name": "Paladin_Death",
+            "Health Prefab Path": "Assets/Prefabs/HealthPlaceholder.prefab",
+            "Health Drop Quantity": 1,
+            "Health Drop Amount": 10.0,
+            "Drop Radius": 2.0,
+            "Drop Height": 1.0
+          }
+        }
+      },
+      {
+        "Type": 13,
+        "Data": {
+          "UID": 15227829311901038376,
+          "ComponentType": 13,
+          "Active": true,
+          "StateMachineUID": {
+            "uid": 11588540065910136440,
+            "libId": "dd9904de2bb2cb58b145284f1da9c980"
+          },
+          "AnimationSourceUID": {
+            "uid": 0,
+            "libId": ""
+          },
           "PlayOnStart": true,
           "ApplyScale": false,
           "ForceWorldAfterApply": true
+        }
+      },
+      {
+        "Type": 3,
+        "Data": {
+          "UID": 14236918089657512610,
+          "ComponentType": 3,
+          "Active": true,
+          "ScriptName": "EnemyShadowMark",
+          "ScriptFields": {
+            "Mark Duration": 3.0
+          }
         }
       }
     ],
@@ -73,6 +132,8 @@
       {
         "Name": "bones",
         "Active": true,
+        "Tag": "DEFAULT",
+        "Layer": "DEFAULT",
         "Transform": {
           "position": [
             0.0,
@@ -96,6 +157,8 @@
           {
             "Name": "bip_pelvis",
             "Active": true,
+            "Tag": "DEFAULT",
+            "Layer": "DEFAULT",
             "Transform": {
               "position": [
                 0.11340415477752686,
@@ -119,6 +182,8 @@
               {
                 "Name": "bip_spine_0",
                 "Active": true,
+                "Tag": "DEFAULT",
+                "Layer": "DEFAULT",
                 "Transform": {
                   "position": [
                     -2.6645351995433716e-17,
@@ -142,6 +207,8 @@
                   {
                     "Name": "bip_spine_2",
                     "Active": true,
+                    "Tag": "DEFAULT",
+                    "Layer": "DEFAULT",
                     "Transform": {
                       "position": [
                         1.7763567996955808e-17,
@@ -165,6 +232,8 @@
                       {
                         "Name": "bip_neck",
                         "Active": true,
+                        "Tag": "DEFAULT",
+                        "Layer": "DEFAULT",
                         "Transform": {
                           "position": [
                             0.0,
@@ -188,6 +257,8 @@
                           {
                             "Name": "bip_head",
                             "Active": true,
+                            "Tag": "DEFAULT",
+                            "Layer": "DEFAULT",
                             "Transform": {
                               "position": [
                                 1.7763567996955808e-17,
@@ -214,6 +285,8 @@
                       {
                         "Name": "bip_collar_L",
                         "Active": true,
+                        "Tag": "DEFAULT",
+                        "Layer": "DEFAULT",
                         "Transform": {
                           "position": [
                             0.06782735884189606,
@@ -237,6 +310,8 @@
                           {
                             "Name": "bip_upperArm_L",
                             "Active": true,
+                            "Tag": "DEFAULT",
+                            "Layer": "DEFAULT",
                             "Transform": {
                               "position": [
                                 0.09359555691480637,
@@ -260,6 +335,8 @@
                               {
                                 "Name": "bip_lowerArm_L",
                                 "Active": true,
+                                "Tag": "DEFAULT",
+                                "Layer": "DEFAULT",
                                 "Transform": {
                                   "position": [
                                     0.1868543028831482,
@@ -283,6 +360,8 @@
                                   {
                                     "Name": "bip_hand_L",
                                     "Active": true,
+                                    "Tag": "DEFAULT",
+                                    "Layer": "DEFAULT",
                                     "Transform": {
                                       "position": [
                                         0.2029263824224472,
@@ -306,6 +385,8 @@
                                       {
                                         "Name": "bip_thumb_0_L",
                                         "Active": true,
+                                        "Tag": "DEFAULT",
+                                        "Layer": "DEFAULT",
                                         "Transform": {
                                           "position": [
                                             0.01783352717757225,
@@ -330,6 +411,8 @@
                                       {
                                         "Name": "bip_finger_L5",
                                         "Active": true,
+                                        "Tag": "DEFAULT",
+                                        "Layer": "DEFAULT",
                                         "Transform": {
                                           "position": [
                                             0.08014736324548721,
@@ -353,6 +436,8 @@
                                           {
                                             "Name": "bip_finger_L6",
                                             "Active": true,
+                                            "Tag": "DEFAULT",
+                                            "Layer": "DEFAULT",
                                             "Transform": {
                                               "position": [
                                                 0.05100847780704498,
@@ -379,6 +464,8 @@
                                       {
                                         "Name": "wp_L",
                                         "Active": true,
+                                        "Tag": "DEFAULT",
+                                        "Layer": "DEFAULT",
                                         "Transform": {
                                           "position": [
                                             -0.054065849632024765,
@@ -409,6 +496,8 @@
                           {
                             "Name": "naplech_L",
                             "Active": true,
+                            "Tag": "DEFAULT",
+                            "Layer": "DEFAULT",
                             "Transform": {
                               "position": [
                                 0.11636289209127426,
@@ -435,6 +524,8 @@
                       {
                         "Name": "bip_collar_R",
                         "Active": true,
+                        "Tag": "DEFAULT",
+                        "Layer": "DEFAULT",
                         "Transform": {
                           "position": [
                             -0.06782739609479904,
@@ -458,6 +549,8 @@
                           {
                             "Name": "bip_upperArm_R",
                             "Active": true,
+                            "Tag": "DEFAULT",
+                            "Layer": "DEFAULT",
                             "Transform": {
                               "position": [
                                 -0.09359560161828996,
@@ -481,6 +574,8 @@
                               {
                                 "Name": "bip_lowerArm_R",
                                 "Active": true,
+                                "Tag": "DEFAULT",
+                                "Layer": "DEFAULT",
                                 "Transform": {
                                   "position": [
                                     -0.1868547797203064,
@@ -504,6 +599,8 @@
                                   {
                                     "Name": "bip_hand_R",
                                     "Active": true,
+                                    "Tag": "DEFAULT",
+                                    "Layer": "DEFAULT",
                                     "Transform": {
                                       "position": [
                                         -0.20292632281780243,
@@ -527,6 +624,8 @@
                                       {
                                         "Name": "bip_thumb_0_R",
                                         "Active": true,
+                                        "Tag": "DEFAULT",
+                                        "Layer": "DEFAULT",
                                         "Transform": {
                                           "position": [
                                             -0.017833469435572624,
@@ -551,6 +650,8 @@
                                       {
                                         "Name": "bip_finger_R5",
                                         "Active": true,
+                                        "Tag": "DEFAULT",
+                                        "Layer": "DEFAULT",
                                         "Transform": {
                                           "position": [
                                             -0.0801466628909111,
@@ -574,6 +675,8 @@
                                           {
                                             "Name": "bip_finger_R6",
                                             "Active": true,
+                                            "Tag": "DEFAULT",
+                                            "Layer": "DEFAULT",
                                             "Transform": {
                                               "position": [
                                                 -0.051009081304073334,
@@ -600,6 +703,8 @@
                                       {
                                         "Name": "wp_R",
                                         "Active": true,
+                                        "Tag": "DEFAULT",
+                                        "Layer": "DEFAULT",
                                         "Transform": {
                                           "position": [
                                             -0.07572850584983826,
@@ -630,6 +735,8 @@
                           {
                             "Name": "naplech_R",
                             "Active": true,
+                            "Tag": "DEFAULT",
+                            "Layer": "DEFAULT",
                             "Transform": {
                               "position": [
                                 -0.13193874061107635,
@@ -660,6 +767,8 @@
               {
                 "Name": "bip_hip_L",
                 "Active": true,
+                "Tag": "DEFAULT",
+                "Layer": "DEFAULT",
                 "Transform": {
                   "position": [
                     0.08156491070985794,
@@ -683,6 +792,8 @@
                   {
                     "Name": "bip_knee_L",
                     "Active": true,
+                    "Tag": "DEFAULT",
+                    "Layer": "DEFAULT",
                     "Transform": {
                       "position": [
                         -8.881783998477905e-18,
@@ -706,6 +817,8 @@
                       {
                         "Name": "bip_foot_L",
                         "Active": true,
+                        "Tag": "DEFAULT",
+                        "Layer": "DEFAULT",
                         "Transform": {
                           "position": [
                             -8.881783998477905e-18,
@@ -729,6 +842,8 @@
                           {
                             "Name": "bip_toe_L",
                             "Active": true,
+                            "Tag": "DEFAULT",
+                            "Layer": "DEFAULT",
                             "Transform": {
                               "position": [
                                 5.3290703990867426e-17,
@@ -759,6 +874,8 @@
               {
                 "Name": "bip_hip_R",
                 "Active": true,
+                "Tag": "DEFAULT",
+                "Layer": "DEFAULT",
                 "Transform": {
                   "position": [
                     -0.08156490325927734,
@@ -782,6 +899,8 @@
                   {
                     "Name": "bip_knee_R",
                     "Active": true,
+                    "Tag": "DEFAULT",
+                    "Layer": "DEFAULT",
                     "Transform": {
                       "position": [
                         3.5527135993911615e-17,
@@ -805,6 +924,8 @@
                       {
                         "Name": "bip_foot_R",
                         "Active": true,
+                        "Tag": "DEFAULT",
+                        "Layer": "DEFAULT",
                         "Transform": {
                           "position": [
                             0.0,
@@ -828,6 +949,8 @@
                           {
                             "Name": "bip_toe_R",
                             "Active": true,
+                            "Tag": "DEFAULT",
+                            "Layer": "DEFAULT",
                             "Transform": {
                               "position": [
                                 3.5527135993911615e-17,
@@ -860,8 +983,205 @@
         ]
       },
       {
+        "Name": "New Canvas",
+        "Active": true,
+        "Tag": "DEFAULT",
+        "Layer": "DEFAULT",
+        "Transform": {
+          "position": [
+            0.0,
+            1.2999999523162842,
+            0.0
+          ],
+          "rotation": [
+            -0.0,
+            0.0,
+            -0.0,
+            1.0
+          ],
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "Components": [
+          {
+            "Type": 6,
+            "Data": {
+              "UID": 8359746295699988173,
+              "ComponentType": 6,
+              "Active": true,
+              "RenderMode": 2,
+              "ZTest": true
+            }
+          }
+        ],
+        "Children": [
+          {
+            "Name": "Background",
+            "Active": true,
+            "Tag": "DEFAULT",
+            "Layer": "DEFAULT",
+            "Transform": {
+              "position": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "rotation": [
+                -0.0,
+                0.0,
+                -0.0,
+                1.0
+              ],
+              "scale": [
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            "Components": [
+              {
+                "Type": 5,
+                "Data": {
+                  "UID": 370833971610645098,
+                  "ComponentType": 5,
+                  "Active": true,
+                  "Position": [
+                    0.0,
+                    0.0
+                  ],
+                  "Scale": [
+                    1.0,
+                    1.0
+                  ],
+                  "Pivot": [
+                    0.5,
+                    0.5
+                  ],
+                  "AnchorMin": [
+                    0.0,
+                    0.0
+                  ],
+                  "AnchorMax": [
+                    0.0,
+                    0.0
+                  ],
+                  "BaseSize": [
+                    189.0,
+                    25.0
+                  ],
+                  "StretchMode": 0,
+                  "SizingMode": 0,
+                  "AspectRatio": 1.0,
+                  "Alpha": 1.0
+                }
+              },
+              {
+                "Type": 7,
+                "Data": {
+                  "UID": 1659583111752717786,
+                  "ComponentType": 7,
+                  "Active": true,
+                  "TextureAssetId": {
+                    "uid": 0,
+                    "libId": ""
+                  },
+                  "FillAmount": 1.0,
+                  "FillMethod": 0,
+                  "FillOrigin": 0
+                }
+              }
+            ],
+            "Children": [
+              {
+                "Name": "Slider",
+                "Active": true,
+                "Tag": "DEFAULT",
+                "Layer": "DEFAULT",
+                "Transform": {
+                  "position": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0,
+                    1.0
+                  ],
+                  "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ]
+                },
+                "Components": [
+                  {
+                    "Type": 5,
+                    "Data": {
+                      "UID": 2859673322967911960,
+                      "ComponentType": 5,
+                      "Active": true,
+                      "Position": [
+                        0.0,
+                        0.0
+                      ],
+                      "Scale": [
+                        1.0,
+                        1.0
+                      ],
+                      "Pivot": [
+                        0.5,
+                        0.5
+                      ],
+                      "AnchorMin": [
+                        0.5,
+                        0.5
+                      ],
+                      "AnchorMax": [
+                        0.5,
+                        0.5
+                      ],
+                      "BaseSize": [
+                        189.0,
+                        25.0
+                      ],
+                      "StretchMode": 0,
+                      "SizingMode": 0,
+                      "AspectRatio": 1.0,
+                      "Alpha": 1.0
+                    }
+                  },
+                  {
+                    "Type": 7,
+                    "Data": {
+                      "UID": 11200729202078420256,
+                      "ComponentType": 7,
+                      "Active": true,
+                      "TextureAssetId": {
+                        "uid": 0,
+                        "libId": ""
+                      },
+                      "FillAmount": 1.0,
+                      "FillMethod": 0,
+                      "FillOrigin": 0
+                    }
+                  }
+                ],
+                "Children": []
+              }
+            ]
+          }
+        ]
+      },
+      {
         "Name": "Paladin",
         "Active": true,
+        "Tag": "DEFAULT",
+        "Layer": "DEFAULT",
         "Transform": {
           "position": [
             0.0,
@@ -869,9 +1189,9 @@
             0.0
           ],
           "rotation": [
+            -0.0,
             0.0,
-            0.0,
-            0.0,
+            -0.0,
             1.0
           ],
           "scale": [
@@ -884,13 +1204,22 @@
           {
             "Type": 1,
             "Data": {
-              "UID": 11891516884635179903,
+              "UID": 13139259895763390762,
               "ComponentType": 1,
               "Active": true,
-              "MeshAssetId": "3abbe891a715bbd5d59775f6687ad7ae",
-              "SkinAssetId": "464dfc20b1ef5040e1c5b75a53aad840",
+              "MeshAssetId": {
+                "uid": 6555910244077164144,
+                "libId": "5cf7e613a915887267ae6b86f8b3b125"
+              },
+              "SkinAssetId": {
+                "uid": 3439490537757966537,
+                "libId": "dc4d1ed50d40fd248d03a05ff7ea5783"
+              },
               "MaterialAssetId": [
-                "6f811cf91e663705dbf886616e1b62c4"
+                {
+                  "uid": 3959442199544834904,
+                  "libId": "6203352cb3b758b2777ab3942c38647a"
+                }
               ]
             }
           }
