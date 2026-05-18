@@ -119,9 +119,6 @@
     <ClInclude Include="..\Engine\Assets\Scripts\LocalMultiplayerSetup.h">
       <Filter>Systems</Filter>
     </ClInclude>
-    <ClInclude Include="GameController.h">
-      <Filter>Systems</Filter>
-    </ClInclude>
     <ClInclude Include="LevelCheats.h">
       <Filter>Systems</Filter>
     </ClInclude>
@@ -295,11 +292,11 @@
     </ClInclude>
     <ClInclude Include="PowerupCollectible.h" />
     <ClInclude Include="PersistingPowerupState.h" />
-    <ClInclude Include="PuzzleManagerLVL1.h" >
-      <Filter>Interaction/Gameplay\Puzzles</Filter>
-    </ClInclude>
-    <ClInclude Include="CrystalShadowMark.h" >
-      <Filter>Interaction/Gameplay\Puzzles</Filter>
+    <ClInclude Include="CrystalShadowMark.h" />
+    <ClInclude Include="PuzzleManagerLVL1.h" />
+    <ClInclude Include="HealthPickup.h" />
+    <ClInclude Include="HapticTester.h">
+      <Filter>Tests</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -361,9 +358,6 @@
       <Filter>Player\Transform</Filter>
     </ClCompile>
     <ClCompile Include="..\Engine\Assets\Scripts\LocalMultiplayerSetup.cpp">
-      <Filter>Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="GameController.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
     <ClCompile Include="LevelCheats.cpp">
@@ -539,11 +533,11 @@
     </ClCompile>
     <ClCompile Include="PowerupCollectible.cpp" />
     <ClCompile Include="PersistingPowerupState.cpp" />
-    <ClCompile Include="PuzzleManagerLVL1.cpp" >
-      <Filter>Interaction/Gameplay\Puzzles</Filter>
-    </ClCompile>
-    <ClCompile Include="CrystalShadowMark.cpp" >
-      <Filter>Interaction/Gameplay\Puzzles</Filter>
+    <ClCompile Include="CrystalShadowMark.cpp" />
+    <ClCompile Include="PuzzleManagerLVL1.cpp" />
+    <ClCompile Include="HealthPickup.cpp" />
+    <ClCompile Include="HapticTester.cpp">
+      <Filter>Tests</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
