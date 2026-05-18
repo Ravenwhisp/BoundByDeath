@@ -58,21 +58,6 @@
     <Filter Include="UI">
       <UniqueIdentifier>{e135fa5e-751a-4bac-acd9-1ede1f2173ca}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Player\Characters">
-      <UniqueIdentifier>{18003957-5065-4adc-b44d-b287c568bfc1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Player\Characters\Lyriel">
-      <UniqueIdentifier>{1dd13501-33d1-47a1-bae7-c0a21d148ac5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Player\Characters\Death">
-      <UniqueIdentifier>{c05ea1a6-3703-4a10-a84a-609d150244ed}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Interaction/Gameplay\Puzzles">
-      <UniqueIdentifier>{5258ec66-1d97-4672-a686-3d60947602f0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Interaction/Gameplay\Traps">
-      <UniqueIdentifier>{29f49c70-b8aa-4257-97d8-dc2e18fdd700}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -93,6 +78,12 @@
       <Filter>Interaction/Gameplay</Filter>
     </ClInclude>
     <ClInclude Include="SpikeTrap.h">
+      <Filter>Interaction/Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="PowerupCollectible.h">
+      <Filter>Interaction/Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="PersistingPowerupState.h">
       <Filter>Interaction/Gameplay</Filter>
     </ClInclude>
     <ClInclude Include="..\Engine\Assets\Scripts\PlayerController.h">
@@ -128,6 +119,9 @@
     <ClInclude Include="..\Engine\Assets\Scripts\LocalMultiplayerSetup.h">
       <Filter>Systems</Filter>
     </ClInclude>
+    <ClInclude Include="GameController.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
     <ClInclude Include="LevelCheats.h">
       <Filter>Systems</Filter>
     </ClInclude>
@@ -141,6 +135,9 @@
       <Filter>Combat</Filter>
     </ClInclude>
     <ClInclude Include="EnemyShadowMark.h">
+      <Filter>Combat</Filter>
+    </ClInclude>
+    <ClInclude Include="ShadowExecution.h">
       <Filter>Combat</Filter>
     </ClInclude>
     <ClInclude Include="ReaperGauge.h">
@@ -181,9 +178,6 @@
     </ClInclude>
     <ClInclude Include="AbilityBase.h">
       <Filter>Character</Filter>
-    </ClInclude>
-    <ClInclude Include="EnemySTUN.h">
-      <Filter>Enemies</Filter>
     </ClInclude>
     <ClInclude Include="AbilityDash.h">
       <Filter>Character</Filter>
@@ -230,7 +224,6 @@
     <ClInclude Include="LyrielDash.h">
       <Filter>Character\Lyriel\Abilities</Filter>
     </ClInclude>
-    <ClInclude Include="SpikeTrap.h" />
     <ClInclude Include="UIController.h">
       <Filter>UI</Filter>
     </ClInclude>
@@ -302,13 +295,17 @@
     </ClInclude>
     <ClInclude Include="PowerupCollectible.h" />
     <ClInclude Include="PersistingPowerupState.h" />
-    <ClInclude Include="HapticTester.h">
-      <Filter>Tests</Filter>
+    <ClInclude Include="PuzzleManagerLVL1.h" >
+      <Filter>Interaction/Gameplay\Puzzles</Filter>
+    </ClInclude>
+    <ClInclude Include="CrystalShadowMark.h" >
+      <Filter>Interaction/Gameplay\Puzzles</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="pch.cpp" />
+    <ClCompile Include="EngineDependencies\SimpleMath.cpp" />
     <ClCompile Include="..\Engine\Assets\Scripts\CameraFollow.cpp">
       <Filter>Camera</Filter>
     </ClCompile>
@@ -325,6 +322,12 @@
       <Filter>Interaction/Gameplay</Filter>
     </ClCompile>
     <ClCompile Include="SpikeTrap.cpp">
+      <Filter>Interaction/Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="PowerupCollectible.cpp">
+      <Filter>Interaction/Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="PersistingPowerupState.cpp">
       <Filter>Interaction/Gameplay</Filter>
     </ClCompile>
     <ClCompile Include="..\Engine\Assets\Scripts\PlayerController.cpp">
@@ -360,6 +363,9 @@
     <ClCompile Include="..\Engine\Assets\Scripts\LocalMultiplayerSetup.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
+    <ClCompile Include="GameController.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
     <ClCompile Include="LevelCheats.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
@@ -373,6 +379,9 @@
       <Filter>Combat</Filter>
     </ClCompile>
     <ClCompile Include="EnemyShadowMark.cpp">
+      <Filter>Combat</Filter>
+    </ClCompile>
+    <ClCompile Include="ShadowExecution.cpp">
       <Filter>Combat</Filter>
     </ClCompile>
     <ClCompile Include="ReaperGauge.cpp">
@@ -408,15 +417,11 @@
     <ClCompile Include="EnemyCHASE.cpp">
       <Filter>Enemies\States</Filter>
     </ClCompile>
-    <ClCompile Include="EngineDependencies\SimpleMath.cpp" />
     <ClCompile Include="CharacterBase.cpp">
       <Filter>Character</Filter>
     </ClCompile>
     <ClCompile Include="AbilityBase.cpp">
       <Filter>Character</Filter>
-    </ClCompile>
-    <ClCompile Include="EnemySTUN.cpp">
-      <Filter>Enemies</Filter>
     </ClCompile>
     <ClCompile Include="AbilityDash.cpp">
       <Filter>Character</Filter>
@@ -463,7 +468,6 @@
     <ClCompile Include="LyrielDash.cpp">
       <Filter>Character\Lyriel\Abilities</Filter>
     </ClCompile>
-    <ClCompile Include="SpikeTrap.cpp" />
     <ClCompile Include="UIController.cpp">
       <Filter>UI</Filter>
     </ClCompile>
@@ -535,8 +539,11 @@
     </ClCompile>
     <ClCompile Include="PowerupCollectible.cpp" />
     <ClCompile Include="PersistingPowerupState.cpp" />
-    <ClCompile Include="HapticTester.cpp">
-      <Filter>Tests</Filter>
+    <ClCompile Include="PuzzleManagerLVL1.cpp" >
+      <Filter>Interaction/Gameplay\Puzzles</Filter>
+    </ClCompile>
+    <ClCompile Include="CrystalShadowMark.cpp" >
+      <Filter>Interaction/Gameplay\Puzzles</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
