@@ -192,6 +192,8 @@ void ShadowExecution::applyAoEDamage()
         const float maxHp     = damageable->getMaxHp();
         const float hpPercent = damageable->getHpPercent();
 
+        damageable->m_isGaugeExecution = true;
+
         if (hpPercent <= m_instaKillThreshold)
         {
             damageable->kill();
@@ -205,6 +207,8 @@ void ShadowExecution::applyAoEDamage()
             Debug::log("[ShadowExecution] Enemy '%s' took %.1f damage (%.0f%% of max HP).",
                 GameObjectAPI::getName(enemy), damage, m_standardDamage * 100.0f);
         }
+
+        damageable->m_isGaugeExecution = false;
 
         m_hitEnemies.push_back(enemy);
     }
