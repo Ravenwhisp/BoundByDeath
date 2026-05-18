@@ -3,9 +3,7 @@
 
 #include "ArthurBossController.h"
 #include "ArthurAttackConfig.h"
-#include "Damageable.h"
-
-#include <cmath>
+#include "ArthurAttackExecutor.h"
 
 ArthurEarthHammer::ArthurEarthHammer(GameObject* owner)
     : StateMachineScript(owner)
@@ -16,6 +14,7 @@ void ArthurEarthHammer::OnStateEnter()
 {
     m_arthurController = GameObjectAPI::findScript<ArthurBossController>(getOwner());
     m_attackConfig = GameObjectAPI::findScript<ArthurAttackConfig>(getOwner());
+    m_attackExecutor = GameObjectAPI::findScript<ArthurAttackExecutor>(getOwner());
 
     m_stateTimer = 0.0f;
     m_hasAppliedImpact = false;
@@ -32,6 +31,12 @@ void ArthurEarthHammer::OnStateEnter()
         return;
     }
 
+    if (!m_attackExecutor)
+    {
+        Debug::error("[ArthurEarthHammer] ArthurAttackExecutor not found.");
+        return;
+    }
+
     m_arthurController->clearPath();
     m_arthurController->updateCurrentTarget();
     m_arthurController->faceCurrentTarget();
@@ -41,7 +46,7 @@ void ArthurEarthHammer::OnStateEnter()
 
 void ArthurEarthHammer::OnStateUpdate()
 {
-    if (!m_arthurController || !m_attackConfig)
+    if (!m_arthurController || !m_attackConfig || !m_attackExecutor)
     {
         return;
     }
@@ -68,90 +73,22 @@ void ArthurEarthHammer::OnStateExit()
 
 void ArthurEarthHammer::applyImpact()
 {
-    if (!m_arthurController)
+    if (!m_attackExecutor || !m_attackConfig)
     {
         return;
-    }
-
-    // Temporary refresh while testing without final Chase logic.
-    m_arthurController->updateCurrentTarget();
-
-    Transform* focusTarget = m_arthurController->getFocusTarget();
-    Transform* nonFocusTarget = m_arthurController->getNonFocusTarget();
-
-    tryDamageTarget(focusTarget);
-    tryDamageTarget(nonFocusTarget);
-}
-
-void ArthurEarthHammer::tryDamageTarget(Transform* targetTransform)
-{
-    if (!m_attackConfig)
-    {
-        return;
-    }
-
-    if (!targetTransform)
-    {
-        return;
-    }
-
-    GameObject* targetObject = ComponentAPI::getOwner(targetTransform);
-    if (!targetObject)
-    {
-        return;
-    }
-
-    if (!isTargetInsideRadius(targetTransform))
-    {
-        return;
-    }
-
-    Damageable* damageable = GameObjectAPI::findScript<Damageable>(targetObject);
-    if (!damageable)
-    {
-        return;
-    }
-
-    if (damageable->isDead())
-    {
-        return;
-    }
-
-    damageable->takeDamage(m_attackConfig->m_earthHammerDamage);
-
-    Debug::log("[ArthurEarthHammer] Damaged '%s' for %.2f.", GameObjectAPI::getName(targetObject), m_attackConfig->m_earthHammerDamage);
-
-    // Still need to apply stun to the players hit in the end
-}
-
-bool ArthurEarthHammer::isTargetInsideRadius(Transform* targetTransform) const
-{
-    if (!m_attackConfig)
-    {
-        return false;
-    }
-
-    if (!targetTransform)
-    {
-        return false;
     }
 
     Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
     if (!ownerTransform)
     {
-        return false;
+        return;
     }
 
-    Vector3 ownerPosition = TransformAPI::getGlobalPosition(ownerTransform);
-    Vector3 targetPosition = TransformAPI::getGlobalPosition(targetTransform);
+    Vector3 center = TransformAPI::getGlobalPosition(ownerTransform);
 
-    Vector3 difference = targetPosition - ownerPosition;
-    difference.y = 0.0f;
+    m_attackExecutor->applyDamageInRadius(center, m_attackConfig->m_earthHammerRadius, m_attackConfig->m_earthHammerDamage, "EarthHammer");
 
-    float distanceSquared = difference.LengthSquared();
-    float radiusSquared = m_attackConfig->m_earthHammerRadius * m_attackConfig->m_earthHammerRadius;
-
-    return distanceSquared <= radiusSquared;
+    // Still need to apply stun to the players hit in the end.
 }
 
 void ArthurEarthHammer::goToRecover()

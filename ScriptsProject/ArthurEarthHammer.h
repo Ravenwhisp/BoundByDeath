@@ -5,6 +5,7 @@
 
 class ArthurBossController;
 class ArthurAttackConfig;
+class ArthurAttackExecutor;
 
 class ArthurEarthHammer : public StateMachineScript
 {
@@ -19,13 +20,12 @@ public:
 
 private:
     void applyImpact();
-    void tryDamageTarget(Transform* targetTransform);
-    bool isTargetInsideRadius(Transform* targetTransform) const;
     void goToRecover();
 
 private:
     ArthurBossController* m_arthurController = nullptr;
     ArthurAttackConfig* m_attackConfig = nullptr;
+    ArthurAttackExecutor* m_attackExecutor = nullptr;
 
     float m_stateTimer = 0.0f;
 

@@ -36,6 +36,7 @@ public:
 
     // Charging Slam
 
+
     // Earth Hammer
     float m_earthHammerDamage = 20.0f;
     float m_earthHammerRadius = 5.0f;

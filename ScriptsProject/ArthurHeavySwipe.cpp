@@ -3,11 +3,7 @@
 
 #include "ArthurBossController.h"
 #include "ArthurAttackConfig.h"
-
-#include "Damageable.h"
-
-#include <cmath>
-#include <string>
+#include "ArthurAttackExecutor.h"
 
 ArthurHeavySwipe::ArthurHeavySwipe(GameObject* owner)
     : StateMachineScript(owner)
@@ -18,6 +14,7 @@ void ArthurHeavySwipe::OnStateEnter()
 {
     m_arthurController = GameObjectAPI::findScript<ArthurBossController>(getOwner());
     m_attackConfig = GameObjectAPI::findScript<ArthurAttackConfig>(getOwner());
+    m_attackExecutor = GameObjectAPI::findScript<ArthurAttackExecutor>(getOwner());
 
     m_stateTimer = 0.0f;
 
@@ -37,6 +34,12 @@ void ArthurHeavySwipe::OnStateEnter()
         return;
     }
 
+    if (!m_attackExecutor)
+    {
+        Debug::error("[ArthurHeavySwipe] ArthurAttackExecutor not found.");
+        return;
+    }
+
     m_arthurController->clearPath();
     m_arthurController->updateCurrentTarget();
     m_arthurController->faceCurrentTarget();
@@ -46,7 +49,7 @@ void ArthurHeavySwipe::OnStateEnter()
 
 void ArthurHeavySwipe::OnStateUpdate()
 {
-    if (!m_arthurController || !m_attackConfig)
+    if (!m_arthurController || !m_attackConfig || !m_attackExecutor)
     {
         return;
     }
@@ -85,116 +88,23 @@ void ArthurHeavySwipe::OnStateExit()
 
 void ArthurHeavySwipe::tryApplyHit(int hitIndex)
 {
-    if (!m_arthurController)
+    if (!m_attackConfig || !m_attackExecutor)
     {
         return;
-    }
-
-    Transform* focusTarget = m_arthurController->getFocusTarget();
-    Transform* nonFocusTarget = m_arthurController->getNonFocusTarget();
-
-    tryDamageTarget(focusTarget, hitIndex);
-    tryDamageTarget(nonFocusTarget, hitIndex);
-}
-
-void ArthurHeavySwipe::tryDamageTarget(Transform* targetTransform, int hitIndex)
-{
-    if (!m_attackConfig)
-    {
-        return;
-    }
-
-    if (!targetTransform)
-    {
-        return;
-    }
-
-    if (!isTargetInsideHitCone(targetTransform))
-    {
-        return;
-    }
-
-    GameObject* targetObject = ComponentAPI::getOwner(targetTransform);
-    if (!targetObject)
-    {
-        return;
-    }
-
-    Damageable* damageable = GameObjectAPI::findScript<Damageable>(targetObject);
-    if (!damageable)
-    {
-        return;
-    }
-
-    if (damageable->isDead())
-    {
-        return;
-    }
-
-    damageable->takeDamage(m_attackConfig->m_heavySwipeDamage);
-
-    Debug::log("[ArthurHeavySwipe] Hit %d damaged '%s' for %.2f.", hitIndex, GameObjectAPI::getName(targetObject), m_attackConfig->m_heavySwipeDamage);
-}
-
-bool ArthurHeavySwipe::isTargetInsideHitCone(Transform* targetTransform) const
-{
-    if (!targetTransform)
-    {
-        return false;
     }
 
     Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
     if (!ownerTransform)
     {
-        return false;
+        return;
     }
 
-    Vector3 ownerPosition = TransformAPI::getGlobalPosition(ownerTransform);
-    Vector3 targetPosition = TransformAPI::getGlobalPosition(targetTransform);
-
-    Vector3 toTarget = targetPosition - ownerPosition;
-    toTarget.y = 0.0f;
-
-    float distanceSquared = toTarget.LengthSquared();
-    float rangeSquared = m_attackConfig->m_heavySwipeRange * m_attackConfig->m_heavySwipeRange;
-
-    if (distanceSquared > rangeSquared)
-    {
-        return false;
-    }
-
-    if (distanceSquared < 0.0001f)
-    {
-        return true;
-    }
-
-    toTarget.Normalize();
-
+    Vector3 center = TransformAPI::getGlobalPosition(ownerTransform);
     Vector3 forward = TransformAPI::getForward(ownerTransform);
-    forward.y = 0.0f;
 
-    if (forward.LengthSquared() < 0.0001f)
-    {
-        return false;
-    }
+    m_attackExecutor->applyDamageInCone(center, forward, m_attackConfig->m_heavySwipeRange, m_attackConfig->m_heavySwipeHalfAngleDegrees, m_attackConfig->m_heavySwipeDamage, "HeavySwipe");
 
-    forward.Normalize();
-
-    float dot = forward.Dot(toTarget);
-
-    if (dot > 1.0f)
-    {
-        dot = 1.0f;
-    }
-    else if (dot < -1.0f)
-    {
-        dot = -1.0f;
-    }
-
-    constexpr float degreesToRadians = 3.14159265f / 180.0f;
-    float minDot = std::cos(m_attackConfig->m_heavySwipeHalfAngleDegrees * degreesToRadians);
-
-    return dot >= minDot;
+    Debug::log("[ArthurHeavySwipe] Hit %d applied.", hitIndex);
 }
 
 void ArthurHeavySwipe::goToRecover()
