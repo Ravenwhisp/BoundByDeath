@@ -1,6 +1,6 @@
 {
     "name": "Bear_StateMachine",
-    "defaultState": "Bear_HEAVY_SWIPE",
+    "defaultState": "Bear_EARTH_HAMMER",
     "clips": [
         {
             "name": "Bear_stand",
@@ -72,11 +72,11 @@
         {
             "name": "Bear_EARTH_HAMMER",
             "clipName": "Bear_idle",
-            "speed": 1.0,
-            "behaviourScriptName": "",
+            "speed": 1.5,
+            "behaviourScriptName": "ArthurEarthHammer",
             "behaviourFieldsJson": "",
-            "overrideLoop": false,
-            "loop": true
+            "overrideLoop": true,
+            "loop": false
         },
         {
             "name": "Bear_HEAVY_SWIPE",
@@ -154,6 +154,12 @@
     "transitions": [
         {
             "sourceStateName": "Bear_HEAVY_SWIPE",
+            "targetStateName": "Bear_RECOVERY",
+            "triggerName": "ToRecover",
+            "blendTimeSeconds": 0.25
+        },
+        {
+            "sourceStateName": "Bear_EARTH_HAMMER",
             "targetStateName": "Bear_RECOVERY",
             "triggerName": "ToRecover",
             "blendTimeSeconds": 0.25

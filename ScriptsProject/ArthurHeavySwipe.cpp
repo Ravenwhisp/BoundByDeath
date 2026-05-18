@@ -99,6 +99,11 @@ void ArthurHeavySwipe::tryApplyHit(int hitIndex)
 
 void ArthurHeavySwipe::tryDamageTarget(Transform* targetTransform, int hitIndex)
 {
+    if (!m_attackConfig)
+    {
+        return;
+    }
+
     if (!targetTransform)
     {
         return;
@@ -118,8 +123,6 @@ void ArthurHeavySwipe::tryDamageTarget(Transform* targetTransform, int hitIndex)
     Damageable* damageable = GameObjectAPI::findScript<Damageable>(targetObject);
     if (!damageable)
     {
-        Debug::warn("[ArthurHeavySwipe] Hit %d found target '%s', but it has no Damageable.", hitIndex, GameObjectAPI::getName(targetObject));
-
         return;
     }
 
@@ -196,6 +199,11 @@ bool ArthurHeavySwipe::isTargetInsideHitCone(Transform* targetTransform) const
 
 void ArthurHeavySwipe::goToRecover()
 {
+    if (!m_attackConfig)
+    {
+        return;
+    }
+
     AnimationComponent* animation = AnimationAPI::getAnimationComponent(getOwner());
     if (!animation)
     {
