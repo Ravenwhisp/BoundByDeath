@@ -119,9 +119,6 @@
     <ClInclude Include="..\Engine\Assets\Scripts\LocalMultiplayerSetup.h">
       <Filter>Systems</Filter>
     </ClInclude>
-    <ClInclude Include="GameController.h">
-      <Filter>Systems</Filter>
-    </ClInclude>
     <ClInclude Include="LevelCheats.h">
       <Filter>Systems</Filter>
     </ClInclude>
@@ -150,6 +147,9 @@
       <Filter>Enemies</Filter>
     </ClInclude>
     <ClInclude Include="EnemyDeathHandler.h">
+      <Filter>Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="LinkedDeathEnemyHandler.h">
       <Filter>Enemies</Filter>
     </ClInclude>
     <ClInclude Include="EnemyController.h">
@@ -295,12 +295,10 @@
     </ClInclude>
     <ClInclude Include="PowerupCollectible.h" />
     <ClInclude Include="PersistingPowerupState.h" />
-    <ClInclude Include="PuzzleManagerLVL1.h" >
-      <Filter>Interaction/Gameplay\Puzzles</Filter>
-    </ClInclude>
-    <ClInclude Include="CrystalShadowMark.h" >
-      <Filter>Interaction/Gameplay\Puzzles</Filter>
-    </ClInclude>
+    <ClInclude Include="CrystalShadowMark.h" />
+    <ClInclude Include="BarrierEnemyDamageable.h" />
+    <ClInclude Include="PuzzleManagerLVL1.h" />
+    <ClInclude Include="HealthPickup.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
@@ -363,9 +361,6 @@
     <ClCompile Include="..\Engine\Assets\Scripts\LocalMultiplayerSetup.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
-    <ClCompile Include="GameController.cpp">
-      <Filter>Systems</Filter>
-    </ClCompile>
     <ClCompile Include="LevelCheats.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
@@ -394,6 +389,9 @@
       <Filter>Enemies</Filter>
     </ClCompile>
     <ClCompile Include="EnemyDeathHandler.cpp">
+      <Filter>Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="LinkedDeathEnemyHandler.cpp">
       <Filter>Enemies</Filter>
     </ClCompile>
     <ClCompile Include="EnemyController.cpp">
@@ -539,11 +537,9 @@
     </ClCompile>
     <ClCompile Include="PowerupCollectible.cpp" />
     <ClCompile Include="PersistingPowerupState.cpp" />
-    <ClCompile Include="PuzzleManagerLVL1.cpp" >
-      <Filter>Interaction/Gameplay\Puzzles</Filter>
-    </ClCompile>
-    <ClCompile Include="CrystalShadowMark.cpp" >
-      <Filter>Interaction/Gameplay\Puzzles</Filter>
-    </ClCompile>
+    <ClCompile Include="CrystalShadowMark.cpp" />
+    <ClCompile Include="BarrierEnemyDamageable.cpp" />
+    <ClCompile Include="PuzzleManagerLVL1.cpp" />
+    <ClCompile Include="HealthPickup.cpp" />
   </ItemGroup>
 </Project>

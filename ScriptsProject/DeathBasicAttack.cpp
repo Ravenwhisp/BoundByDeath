@@ -172,7 +172,7 @@ void DeathBasicAttack::dealDamageToTarget(GameObject* target) const
                 return;
             }
 
-            damageable->takeDamageEnemy(m_basicAttackDamage, GameObjectAPI::getTransform(getOwner()));
+            damageable->takeDamageEnemy(m_basicAttackDamage, GameObjectAPI::getTransform(getOwner()), EnemyAttackType::DeathBasic);
 
             Debug::log("[BASIC] hit '%s'  dmg=%.1f  hp=%.1f/%.1f",
                 GameObjectAPI::getName(enemy),

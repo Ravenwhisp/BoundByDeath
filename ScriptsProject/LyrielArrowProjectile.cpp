@@ -103,7 +103,7 @@ void LyrielArrowProjectile::applyImpactDamage()
 
     if (damageable != nullptr)
     {
-        damageable->takeDamageEnemy(m_damage, m_arrowOwner);
+        damageable->takeDamageEnemy(m_damage, m_arrowOwner, EnemyAttackType::LyrielArrow);
 
         EnemyShadowMark* mark = GameObjectAPI::findScript<EnemyShadowMark>(m_target);
         if (mark != nullptr && mark->isExploitable())

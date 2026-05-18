@@ -38,4 +38,11 @@ protected:
     bool m_hasProcessedDeath = false;
     bool m_waitingToDestroy = false;
     float m_deathTimer = 0.0f;
+
+protected:
+    virtual bool canStartDeathProcessing() const;
+    virtual void onDeathProcessingBlocked(float dt);
+    virtual void onDeathProcessed();
+    virtual void onDeathStateReset();
+    void resetDeathState();
 };
