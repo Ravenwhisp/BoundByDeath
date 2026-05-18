@@ -73,8 +73,7 @@ void ArthurEarthHammer::applyImpact()
         return;
     }
 
-    // Temporary refresh while testing without final Chase state.
-    // Once Chase guarantees a valid target before entering attacks, we can decide if this stays.
+    // Temporary refresh while testing without final Chase logic.
     m_arthurController->updateCurrentTarget();
 
     Transform* focusTarget = m_arthurController->getFocusTarget();

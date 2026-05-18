@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "ArthurBossController.h"
 #include "ArthurDetectionAggro.h"
+#include "ArthurAttackConfig.h"
 #include "Damageable.h"
 #include <cmath>
 
@@ -34,6 +35,13 @@ void ArthurBossController::Start()
 	if (!m_arthurDetectionAggro)
 	{
 		Debug::error("ArthurDetectionAggro script not found!");
+	}
+
+	m_attackConfig = GameObjectAPI::findScript<ArthurAttackConfig>(getOwner());
+
+	if (!m_attackConfig)
+	{
+		Debug::error("ArthurAttackConfig script not found!");
 	}
 }
 
@@ -303,8 +311,6 @@ void ArthurBossController::rotateTowardsDirection(const Vector3& direction)
 	TransformAPI::setRotationEuler(getOwner()->GetTransform(), currentEulerRotation);
 }
 
-
-
 Transform* ArthurBossController::getNonFocusTarget() const
 {
 	if (!m_arthurDetectionAggro)
@@ -350,6 +356,158 @@ void ArthurBossController::faceCurrentTarget()
 void ArthurBossController::setRecoveryDuration(float recoveryDuration)
 {
 	m_recoveryDuration = recoveryDuration;
+}
+
+bool ArthurBossController::isTargetInsideSideSweepZone(Transform* targetTransform, int side) const
+{
+	if (!m_attackConfig)
+	{
+		return false;
+	}
+
+	if (!targetTransform)
+	{
+		return false;
+	}
+
+	Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
+	if (!ownerTransform)
+	{
+		return false;
+	}
+
+	Vector3 ownerPosition = TransformAPI::getGlobalPosition(ownerTransform);
+	Vector3 targetPosition = TransformAPI::getGlobalPosition(targetTransform);
+
+	Vector3 toTarget = targetPosition - ownerPosition;
+	toTarget.y = 0.0f;
+
+	float distanceSquared = toTarget.LengthSquared();
+	float rangeSquared = m_attackConfig->m_sideSweepRange * m_attackConfig->m_sideSweepRange;
+
+	if (distanceSquared > rangeSquared)
+	{
+		return false;
+	}
+
+	if (distanceSquared < 0.0001f)
+	{
+		return true;
+	}
+
+	toTarget.Normalize();
+
+	Vector3 sweepDirection = getSideSweepDirection(side);
+	if (sweepDirection.LengthSquared() < 0.0001f)
+	{
+		return false;
+	}
+
+	sweepDirection.Normalize();
+
+	float dot = sweepDirection.Dot(toTarget);
+
+	if (dot > 1.0f)
+	{
+		dot = 1.0f;
+	}
+	else if (dot < -1.0f)
+	{
+		dot = -1.0f;
+	}
+
+	constexpr float degreesToRadians = 3.14159265f / 180.0f;
+	float minDot = std::cos(m_attackConfig->m_sideSweepHalfAngleDegrees * degreesToRadians);
+
+	return dot >= minDot;
+}
+
+Vector3 ArthurBossController::getSideSweepDirection(int side) const
+{
+	Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
+	if (!ownerTransform)
+	{
+		return Vector3(0.0f, 0.0f, 0.0f);
+	}
+
+	Vector3 forward = TransformAPI::getForward(ownerTransform);
+	forward.y = 0.0f;
+
+	if (forward.LengthSquared() < 0.0001f)
+	{
+		return Vector3(0.0f, 0.0f, 0.0f);
+	}
+
+	forward.Normalize();
+
+	constexpr float halfPi = 3.14159265f * 0.5f;
+
+	return rotateAroundY(forward, halfPi * static_cast<float>(side));
+}
+
+Vector3 ArthurBossController::rotateAroundY(const Vector3& vector, float radians) const
+{
+	const float cosAngle = std::cos(radians);
+	const float sinAngle = std::sin(radians);
+
+	return Vector3(vector.x * cosAngle + vector.z * sinAngle,vector.y, -vector.x * sinAngle + vector.z * cosAngle);
+}
+
+bool ArthurBossController::trySelectSideSweepSide()
+{
+	if (!m_arthurDetectionAggro)
+	{
+		m_arthurDetectionAggro = GameObjectAPI::findScript<ArthurDetectionAggro>(getOwner());
+	}
+
+	if (!m_arthurDetectionAggro || !m_attackConfig)
+	{
+		return false;
+	}
+
+	Transform* lyrielTransform = m_arthurDetectionAggro->getLyrielTransform();
+	Transform* deathTransform = m_arthurDetectionAggro->getDeathTransform();
+
+	const bool lyrielInLeft = isTargetInsideSideSweepZone(lyrielTransform, -1);
+	const bool lyrielInRight = isTargetInsideSideSweepZone(lyrielTransform, 1);
+
+	const bool deathInLeft = isTargetInsideSideSweepZone(deathTransform, -1);
+	const bool deathInRight = isTargetInsideSideSweepZone(deathTransform, 1);
+
+	const bool anyPlayerInLeft = lyrielInLeft || deathInLeft;
+	const bool anyPlayerInRight = lyrielInRight || deathInRight;
+
+	if (anyPlayerInLeft && !anyPlayerInRight)
+	{
+		m_selectedSideSweepSide = -1;
+		return true;
+	}
+
+	if (anyPlayerInRight && !anyPlayerInLeft)
+	{
+		m_selectedSideSweepSide = 1;
+		return true;
+	}
+
+	if (anyPlayerInLeft && anyPlayerInRight)
+	{
+		// If both sides have a valid target choose the focus target side.
+		updateCurrentTarget();
+
+		if (isTargetInsideSideSweepZone(m_currentTarget, -1))
+		{
+			m_selectedSideSweepSide = -1;
+			return true;
+		}
+
+		if (isTargetInsideSideSweepZone(m_currentTarget, 1))
+		{
+			m_selectedSideSweepSide = 1;
+			return true;
+		}
+	}
+
+	return false;
 }
 
 void ArthurBossController::resetRepathTimer()

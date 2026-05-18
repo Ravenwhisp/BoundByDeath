@@ -3,6 +3,7 @@
 #include "ScriptAPI.h"
 
 class ArthurDetectionAggro;
+class ArthurAttackConfig;
 
 class ArthurBossController : public Script
 {
@@ -27,6 +28,7 @@ public:
 
 private:
 	ArthurDetectionAggro* m_arthurDetectionAggro = nullptr;
+	ArthurAttackConfig* m_attackConfig = nullptr;
 	Transform* m_currentTarget = nullptr;
 
 	float m_repathTimer = 0.0f;
@@ -38,6 +40,8 @@ private:
 	const float RADIANS_TO_DEGREES = 180.0f / 3.14159265f;
 
 	float m_recoveryDuration = 0.75f;
+
+	int m_selectedSideSweepSide = 1;
 
 public:
 	bool hasValidTarget() const;
@@ -54,6 +58,11 @@ public:
 	void setRecoveryDuration(float recoveryDuration);
 	float getRecoveryDuration() const { return m_recoveryDuration; }
 
+	//Needed to tell Side Sweep attack which side is the attack. We also use these in ArthurSideSweep
+	bool isTargetInsideSideSweepZone(Transform* targetTransform, int side) const;
+	bool trySelectSideSweepSide(); //This one will be used when deciding to enter SideSweep state
+	int getSelectedSideSweepSide() const { return m_selectedSideSweepSide; }
+
 
 	//Movement/path helpers
 	void clearPath();
@@ -66,4 +75,8 @@ public:
 private:
 	Vector3 getChasePosition() const;
 	void rotateTowardsDirection(const Vector3& direction);
+
+	// Needed to detect if a player is on the area to use Side Sweep
+	Vector3 getSideSweepDirection(int side) const;
+	Vector3 rotateAroundY(const Vector3& vector, float radians) const;
 };
