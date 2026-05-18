@@ -7,6 +7,7 @@
 IMPLEMENT_SCRIPT_FIELDS(ArthurAttackDebugDraw,
     SERIALIZED_BOOL(m_debugEnabled, "Debug Enabled"),
     SERIALIZED_BOOL(m_drawHeavySwipe, "Draw Heavy Swipe"),
+    SERIALIZED_BOOL(m_drawEarthHammer, "Draw Earth Hammer"),
     SERIALIZED_FLOAT(m_heightOffset, "Height Offset", 0.0f, 5.0f, 0.05f)
 )
 
@@ -46,6 +47,11 @@ void ArthurAttackDebugDraw::drawGizmo()
     {
         drawHeavySwipeCone();
     }
+
+    if (m_drawEarthHammer)
+    {
+        drawEarthHammerRadius();
+    }
 }
 
 void ArthurAttackDebugDraw::drawHeavySwipeCone() const
@@ -77,7 +83,7 @@ void ArthurAttackDebugDraw::drawHeavySwipeCone() const
     const float range = m_attackConfig->m_heavySwipeRange;
     const float halfAngleRadians = m_attackConfig->m_heavySwipeHalfAngleDegrees * degreesToRadians;
 
-    const Vector3 heavySwipeColor = { 1.0f, 0.75f, 0.0f };
+    const Vector3 heavySwipeColor = { 0.6f, 0.0f, 1.0f };
 
     Vector3 leftDirection = rotateAroundY(forward, -halfAngleRadians);
     Vector3 rightDirection = rotateAroundY(forward, halfAngleRadians);
@@ -105,6 +111,22 @@ void ArthurAttackDebugDraw::drawHeavySwipeCone() const
 
         previousPoint = currentPoint;
     }
+}
+
+void ArthurAttackDebugDraw::drawEarthHammerRadius() const
+{
+    Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
+    if (!ownerTransform)
+    {
+        return;
+    }
+
+    Vector3 ownerPosition = TransformAPI::getGlobalPosition(ownerTransform);
+    ownerPosition.y += m_heightOffset;
+
+    const Vector3 earthHammerColor = { 0.6f, 0.0f, 1.0f };
+
+    DebugDrawAPI::drawCircle(ownerPosition, Vector3(0.0f, 1.0f, 0.0f), earthHammerColor, m_attackConfig->m_earthHammerRadius, 48.0f, 0, true);
 }
 
 Vector3 ArthurAttackDebugDraw::rotateAroundY(const Vector3& vector, float radians) const
