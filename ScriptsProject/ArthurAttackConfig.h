@@ -25,6 +25,14 @@ public:
     float m_heavySwipeRecoveryDuration = 0.75f;
 
     // Side Sweep
+    float m_sideSweepDamage = 12.0f;
+    float m_sideSweepRange = 4.0f;
+    float m_sideSweepHalfAngleDegrees = 55.0f;
+
+    float m_sideSweepHitTime = 0.35f;
+    float m_sideSweepTotalDuration = 0.7f;
+
+    float m_sideSweepRecoveryDuration = 0.5f;
 
     // Charging Slam
 
