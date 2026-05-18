@@ -79,6 +79,12 @@
     <Filter Include="Bosses\Arthur">
       <UniqueIdentifier>{7aba194a-6bf2-4455-9cb9-742767236777}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Enemies\Arthur">
+      <UniqueIdentifier>{4f70e375-e641-46b1-8fc4-77b2d8034816}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Enemies\Arthur\Attacks">
+      <UniqueIdentifier>{9c76ffc7-6ef2-4ccf-b1c3-0a0f0c637147}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -140,9 +146,6 @@
     <ClInclude Include="..\Engine\Assets\Scripts\LocalMultiplayerSetup.h">
       <Filter>Systems</Filter>
     </ClInclude>
-    <ClInclude Include="GameController.h">
-      <Filter>Systems</Filter>
-    </ClInclude>
     <ClInclude Include="LevelCheats.h">
       <Filter>Systems</Filter>
     </ClInclude>
@@ -176,16 +179,7 @@
     <ClInclude Include="EnemyController.h">
       <Filter>Enemies</Filter>
     </ClInclude>
-    <ClInclude Include="EnemyATTACK.h">
-      <Filter>Enemies</Filter>
-    </ClInclude>
-    <ClInclude Include="EnemyRECOVER.h">
-      <Filter>Enemies</Filter>
-    </ClInclude>
     <ClInclude Include="EnemySTUN.h">
-      <Filter>Enemies</Filter>
-    </ClInclude>
-    <ClInclude Include="EnemyCHARGE.h">
       <Filter>Enemies</Filter>
     </ClInclude>
     <ClInclude Include="EnemyIDLE.h">
@@ -316,10 +310,10 @@
     </ClInclude>
     <ClInclude Include="PowerupCollectible.h" />
     <ClInclude Include="PersistingPowerupState.h" />
-    <ClInclude Include="PuzzleManagerLVL1.h" >
+    <ClInclude Include="PuzzleManagerLVL1.h">
       <Filter>Interaction/Gameplay\Puzzles</Filter>
     </ClInclude>
-    <ClInclude Include="CrystalShadowMark.h" >
+    <ClInclude Include="CrystalShadowMark.h">
       <Filter>Interaction/Gameplay\Puzzles</Filter>
     </ClInclude>
     <ClInclude Include="HealthPickup.h" />
@@ -328,6 +322,24 @@
     </ClInclude>
     <ClInclude Include="ArthurBossController.h">
       <Filter>Bosses\Arthur</Filter>
+    </ClInclude>
+    <ClInclude Include="ArthurHeavySwipe.h">
+      <Filter>Enemies\Arthur\Attacks</Filter>
+    </ClInclude>
+    <ClInclude Include="ArthurAttackConfig.h">
+      <Filter>Enemies\Arthur</Filter>
+    </ClInclude>
+    <ClInclude Include="ArthurAttackDebugDraw.h">
+      <Filter>Enemies\Arthur</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyATTACK.h">
+      <Filter>Enemies\States</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyCHARGE.h">
+      <Filter>Enemies\States</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyRECOVER.h">
+      <Filter>Enemies\States</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -391,9 +403,6 @@
     <ClCompile Include="..\Engine\Assets\Scripts\LocalMultiplayerSetup.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
-    <ClCompile Include="GameController.cpp">
-      <Filter>Systems</Filter>
-    </ClCompile>
     <ClCompile Include="LevelCheats.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
@@ -427,16 +436,7 @@
     <ClCompile Include="EnemyController.cpp">
       <Filter>Enemies</Filter>
     </ClCompile>
-    <ClCompile Include="EnemyATTACK.cpp">
-      <Filter>Enemies</Filter>
-    </ClCompile>
-    <ClCompile Include="EnemyRECOVER.cpp">
-      <Filter>Enemies</Filter>
-    </ClCompile>
     <ClCompile Include="EnemySTUN.cpp">
-      <Filter>Enemies</Filter>
-    </ClCompile>
-    <ClCompile Include="EnemyCHARGE.cpp">
       <Filter>Enemies</Filter>
     </ClCompile>
     <ClCompile Include="EnemyIDLE.cpp">
@@ -567,10 +567,10 @@
     </ClCompile>
     <ClCompile Include="PowerupCollectible.cpp" />
     <ClCompile Include="PersistingPowerupState.cpp" />
-    <ClCompile Include="PuzzleManagerLVL1.cpp" >
+    <ClCompile Include="PuzzleManagerLVL1.cpp">
       <Filter>Interaction/Gameplay\Puzzles</Filter>
     </ClCompile>
-    <ClCompile Include="CrystalShadowMark.cpp" >
+    <ClCompile Include="CrystalShadowMark.cpp">
       <Filter>Interaction/Gameplay\Puzzles</Filter>
     </ClCompile>
     <ClCompile Include="HealthPickup.cpp" />
@@ -579,6 +579,24 @@
     </ClCompile>
     <ClCompile Include="ArthurBossController.cpp">
       <Filter>Bosses\Arthur</Filter>
+    </ClCompile>
+    <ClCompile Include="ArthurHeavySwipe.cpp">
+      <Filter>Enemies\Arthur\Attacks</Filter>
+    </ClCompile>
+    <ClCompile Include="ArthurAttackConfig.cpp">
+      <Filter>Enemies\Arthur</Filter>
+    </ClCompile>
+    <ClCompile Include="ArthurAttackDebugDraw.cpp">
+      <Filter>Enemies\Arthur</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyATTACK.cpp">
+      <Filter>Enemies\States</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyCHARGE.cpp">
+      <Filter>Enemies\States</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyRECOVER.cpp">
+      <Filter>Enemies\States</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
