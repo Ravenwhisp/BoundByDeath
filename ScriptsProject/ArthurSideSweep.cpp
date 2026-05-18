@@ -54,7 +54,7 @@ void ArthurSideSweep::OnStateUpdate()
 
     m_stateTimer += Time::getDeltaTime();
 
-    if (!m_hasAppliedHit && m_stateTimer >= m_attackConfig->m_sideSweepHitTime)
+    if (!m_hasAppliedHit && m_stateTimer >= m_attackConfig->m_sideSweepChargingDuration)
     {
         applyHit();
         m_hasAppliedHit = true;

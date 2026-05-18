@@ -56,19 +56,19 @@ void ArthurHeavySwipe::OnStateUpdate()
 
     m_stateTimer += Time::getDeltaTime();
 
-    if (!m_hit1Applied && m_stateTimer >= m_attackConfig->m_heavySwipeHit1Time)
+    if (!m_hit1Applied && m_stateTimer >= m_attackConfig->m_heavySwipeHit1ChargingDuration)
     {
         tryApplyHit(1);
         m_hit1Applied = true;
     }
 
-    if (!m_hit2Applied && m_stateTimer >= m_attackConfig->m_heavySwipeHit2Time)
+    if (!m_hit2Applied && m_stateTimer >= m_attackConfig->m_heavySwipeHit2ChargingDuration)
     {
         tryApplyHit(2);
         m_hit2Applied = true;
     }
 
-    if (!m_hit3Applied && m_stateTimer >= m_attackConfig->m_heavySwipeHit3Time)
+    if (!m_hit3Applied && m_stateTimer >= m_attackConfig->m_heavySwipeHit3ChargingDuration)
     {
         tryApplyHit(3);
         m_hit3Applied = true;
