@@ -7,6 +7,8 @@
 IMPLEMENT_SCRIPT_FIELDS(ArthurAttackDebugDraw,
     SERIALIZED_BOOL(m_debugEnabled, "Debug Enabled"),
     SERIALIZED_BOOL(m_drawHeavySwipe, "Draw Heavy Swipe"),
+    SERIALIZED_BOOL(m_drawSideSweepRight, "Draw Side Sweep Right"),
+    SERIALIZED_BOOL(m_drawSideSweepLeft, "Draw Side Sweep Left"),
     SERIALIZED_BOOL(m_drawEarthHammer, "Draw Earth Hammer"),
     SERIALIZED_FLOAT(m_heightOffset, "Height Offset", 0.0f, 5.0f, 0.05f)
 )
@@ -46,6 +48,16 @@ void ArthurAttackDebugDraw::drawGizmo()
     if (m_drawHeavySwipe)
     {
         drawHeavySwipeCone();
+    }
+
+    if (m_drawSideSweepLeft)
+    {
+        drawSideSweepCone(1);
+    }
+
+    if (m_drawSideSweepRight)
+    {
+        drawSideSweepCone(-1);
     }
 
     if (m_drawEarthHammer)
@@ -127,6 +139,66 @@ void ArthurAttackDebugDraw::drawEarthHammerRadius() const
     const Vector3 earthHammerColor = { 0.6f, 0.0f, 1.0f };
 
     DebugDrawAPI::drawCircle(ownerPosition, Vector3(0.0f, 1.0f, 0.0f), earthHammerColor, m_attackConfig->m_earthHammerRadius, 48.0f, 0, true);
+}
+
+void ArthurAttackDebugDraw::drawSideSweepCone(int side) const
+{
+    Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
+    if (!ownerTransform)
+    {
+        return;
+    }
+
+    Vector3 ownerPosition = TransformAPI::getGlobalPosition(ownerTransform);
+    ownerPosition.y += m_heightOffset;
+
+    Vector3 forward = TransformAPI::getForward(ownerTransform);
+    forward.y = 0.0f;
+
+    if (forward.LengthSquared() < 0.0001f)
+    {
+        return;
+    }
+
+    forward.Normalize();
+
+    constexpr float halfPi = 3.14159265f * 0.5f;
+    constexpr float degreesToRadians = 3.14159265f / 180.0f;
+
+    Vector3 sideDirection = rotateAroundY(forward, halfPi * static_cast<float>(side));
+    sideDirection.Normalize();
+
+    const float range = m_attackConfig->m_sideSweepRange;
+    const float halfAngleRadians = m_attackConfig->m_sideSweepHalfAngleDegrees * degreesToRadians;
+
+    const Vector3 sideSweepColor = { 0.6f, 0.0f, 1.0f };
+
+    Vector3 leftDirection = rotateAroundY(sideDirection, -halfAngleRadians);
+    Vector3 rightDirection = rotateAroundY(sideDirection, halfAngleRadians);
+
+    Vector3 leftPoint = ownerPosition + leftDirection * range;
+    Vector3 rightPoint = ownerPosition + rightDirection * range;
+    Vector3 centerPoint = ownerPosition + sideDirection * range;
+
+    DebugDrawAPI::drawLine(ownerPosition, leftPoint, sideSweepColor, 0, true);
+    DebugDrawAPI::drawLine(ownerPosition, rightPoint, sideSweepColor, 0, true);
+    DebugDrawAPI::drawLine(ownerPosition, centerPoint, sideSweepColor, 0, true);
+
+    const int arcSegments = 24;
+    Vector3 previousPoint = leftPoint;
+
+    for (int i = 1; i <= arcSegments; ++i)
+    {
+        float t = static_cast<float>(i) / static_cast<float>(arcSegments);
+        float angle = -halfAngleRadians + (halfAngleRadians * 2.0f * t);
+
+        Vector3 direction = rotateAroundY(sideDirection, angle);
+        Vector3 currentPoint = ownerPosition + direction * range;
+
+        DebugDrawAPI::drawLine(previousPoint, currentPoint, sideSweepColor, 0, true);
+
+        previousPoint = currentPoint;
+    }
 }
 
 Vector3 ArthurAttackDebugDraw::rotateAroundY(const Vector3& vector, float radians) const

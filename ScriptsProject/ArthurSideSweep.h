@@ -31,6 +31,6 @@ private:
 
     bool m_hasAppliedHit = false;
 
-    // -1 = left side, +1 = right side.
+    // -1 = right side, +1 = left side.
     int m_sweepSide = 1;
 };

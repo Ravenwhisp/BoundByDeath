@@ -1,6 +1,6 @@
 {
     "name": "Bear_StateMachine",
-    "defaultState": "Bear_HEAVY_SWIPE",
+    "defaultState": "Bear_SIDE_SWEEP",
     "clips": [
         {
             "name": "Bear_stand",
@@ -136,10 +136,10 @@
             "name": "Bear_SIDE_SWEEP",
             "clipName": "Bear_hit",
             "speed": 1.0,
-            "behaviourScriptName": "",
+            "behaviourScriptName": "ArthurSideSweep",
             "behaviourFieldsJson": "",
-            "overrideLoop": false,
-            "loop": true
+            "overrideLoop": true,
+            "loop": false
         },
         {
             "name": "Bear_RECOVERY",
@@ -160,6 +160,12 @@
         },
         {
             "sourceStateName": "Bear_EARTH_HAMMER",
+            "targetStateName": "Bear_RECOVERY",
+            "triggerName": "ToRecover",
+            "blendTimeSeconds": 0.25
+        },
+        {
+            "sourceStateName": "Bear_SIDE_SWEEP",
             "targetStateName": "Bear_RECOVERY",
             "triggerName": "ToRecover",
             "blendTimeSeconds": 0.25

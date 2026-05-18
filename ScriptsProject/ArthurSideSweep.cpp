@@ -36,10 +36,6 @@ void ArthurSideSweep::OnStateEnter()
     m_arthurController->clearPath();
     m_arthurController->updateCurrentTarget();
 
-    // This is here just to test, this should be called and determined just prior to entering the Side Sweep state
-    m_arthurController->trySelectSideSweepSide();
-    //
-
     m_sweepSide = m_arthurController->getSelectedSideSweepSide();
 
     Debug::log("[ArthurSideSweep] ENTER");
@@ -81,6 +77,11 @@ void ArthurSideSweep::applyHit()
 
     // Temporary refresh while testing without final Chase logic.
     m_arthurController->updateCurrentTarget();
+
+    // This is here just to test, this should be called and determined just prior to entering the Side Sweep state
+    m_arthurController->trySelectSideSweepSide();
+    m_sweepSide = m_arthurController->getSelectedSideSweepSide();
+    // The three lines abovee will be removed
 
     Transform* focusTarget = m_arthurController->getFocusTarget();
     Transform* nonFocusTarget = m_arthurController->getNonFocusTarget();
