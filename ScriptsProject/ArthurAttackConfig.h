@@ -12,6 +12,7 @@ public:
     ScriptFieldList getExposedFields() const override;
 
 public:
+    // Heavy Swipe
     float m_heavySwipeDamage = 10.0f;
     float m_heavySwipeRange = 3.0f;
     float m_heavySwipeHalfAngleDegrees = 60.0f;
@@ -22,4 +23,17 @@ public:
     float m_heavySwipeHit3Time = 1.35f;
 
     float m_heavySwipeRecoveryDuration = 0.75f;
+
+    // Side Sweep
+
+    // Charging Slam
+
+    // Earth Hammer
+    float m_earthHammerDamage = 20.0f;
+    float m_earthHammerRadius = 5.0f;
+
+    float m_earthHammerTotalDuration = 2.2f;
+    float m_earthHammerImpactTime = 2.0f;
+
+    float m_earthHammerRecoveryDuration = 1.0f;
 };
