@@ -154,6 +154,22 @@ bool ArthurBossController::isTargetInCombatRange() const
 	return difference.Length() <= m_combatRange;
 }
 
+float ArthurBossController::getDistanceToCurrentTarget() const
+{
+	if (!m_currentTarget)
+	{
+		return FLT_MAX; // max value
+	}
+
+	Vector3 ownerPosition = getOwner()->GetTransform()->getPosition();
+	Vector3 targetPosition = m_currentTarget->getPosition();
+
+	Vector3 difference = ownerPosition - targetPosition;
+	difference.y = 0.0f;
+
+	return difference.Length();
+}
+
 ArthurBossPhase ArthurBossController::getPhase() const
 {
 	if (!m_arthurDetectionAggro)

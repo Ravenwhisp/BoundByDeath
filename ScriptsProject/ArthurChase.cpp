@@ -69,27 +69,38 @@ void ArthurChase::OnStateUpdate()
 	}
 
 	// Phase check
-	// attack checks + state transitions
-
 	if (m_arthurController->getPhase() == ArthurBossPhase::Phase1)
 	{
-		if (m_arthurController->isTargetInCombatRange())
+
+		// Attack checks + State transitions
+
+		// Side Sweep
+		if (m_arthurController->trySelectSideSweepSide())
+		{
+			m_arthurController->clearPath();
+			//m_arthurController->faceCurrentTarget();
+
+			AnimationAPI::sendTrigger(animation, "ToSideSweep");
+			return;
+		}
+
+		float targetDistance = m_arthurController->getDistanceToCurrentTarget();
+
+		// Heavy Swipe
+		if (targetDistance <= m_arthurAttackConfig->m_heavySwipeRange)
 		{
 			m_arthurController->clearPath();
 			m_arthurController->faceCurrentTarget();
+
+			AnimationAPI::sendTrigger(animation, "ToHeavySwipe");
 			return;
 		}
+
 	}
 	//else if (m_arthurController->getPhase() == ArthurBossPhase::Phase2)
 	//{
 
 	//}
-
-	/*if (m_arthurController->trySelectSideSweepSide())
-	{
-		AnimationAPI::sendTrigger(animation, "ToSideSweep");
-		return;
-	}*/
 
 	m_arthurController->addToRepathTimer(Time::getDeltaTime());
 
