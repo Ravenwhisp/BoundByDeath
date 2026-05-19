@@ -65,7 +65,14 @@ void ArthurChargingSlam::OnStateUpdate()
 
     m_stateTimer += Time::getDeltaTime();
 
-    if (!m_hasStartedDash && m_stateTimer >= m_attackConfig->m_chargingSlamChargingDuration)
+    float chargingDuration = m_attackConfig->m_chargingSlamChargingDuration;
+
+    /*if (m_arthurController->isPhase2())
+    {
+        chargingDuration = m_attackConfig->m_chargingSlamPhase2ChargingDuration;
+    }*/
+
+    if (!m_hasStartedDash && m_stateTimer >= chargingDuration)
     {
         startDash();
     }
@@ -155,7 +162,15 @@ void ArthurChargingSlam::updateDash()
     toDestination.y = 0.0f;
 
     const float remainingDistance = toDestination.Length();
-    const float stepDistance = m_attackConfig->m_chargingSlamDashSpeed * Time::getDeltaTime();
+
+    float dashSpeed = m_attackConfig->m_chargingSlamDashSpeed;
+
+    /*if (m_arthurController->isPhase2())
+    {
+        dashSpeed = m_attackConfig->m_chargingSlamPhase2DashSpeed;
+    }*/
+
+    const float stepDistance = dashSpeed * Time::getDeltaTime();
 
     if (remainingDistance <= 0.05f)
     {
