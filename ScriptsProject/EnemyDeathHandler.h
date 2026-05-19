@@ -20,6 +20,8 @@ private:
     void playDeathAnimation();
     void startDestroyCountdown(float delay);
     void destroyEnemyNow();
+
+protected:
     void processDeath();
     void DropHealth();
 
