@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "ArthurDetectionAggro.h"
+#include "ArthurBossController.h"
 #include "Damageable.h"
 #include "DeathCharacter.h" 
 
@@ -43,6 +44,13 @@ ArthurDetectionAggro::ArthurDetectionAggro(GameObject* owner) : Script(owner) {}
 
 void ArthurDetectionAggro::Start()
 {
+	m_arthurBossController = GameObjectAPI::findScript<ArthurBossController>(getOwner());
+
+	if (!m_arthurBossController)
+	{
+		Debug::error("[ArthurDetectionAggro] ArthurBossController not found.");
+		return;
+	}
 }
 
 void ArthurDetectionAggro::Update()
@@ -142,17 +150,35 @@ void ArthurDetectionAggro::updateAggroState()
 		}
 	}
 
-	if (m_phase == ArthurBossPhase::Phase1)
+	if (!m_arthurBossController)
+	{
+		return;
+	}
+
+	// Phase 1
+	if (m_arthurBossController && m_arthurBossController->getPhase() == ArthurBossPhase::Phase1)
 	{
 		Transform* lyrielTarget = getLyrielTransform();
 
 		if (isTransformAlive(lyrielTarget))
 		{
-			enterAggro(lyrielTarget);
+			if (m_currentTargetTransform != lyrielTarget)
+			{
+				enterAggro(lyrielTarget);
+			}
+
 			return;
 		}
+
+		// if Lyriel is dead
+		m_currentTargetTransform = nullptr;
+		m_isAggro = false;
+		m_canSeeTarget = false;
+		m_currentTargetLockTimer = 0.0f;
+		return;
 	}
 
+	// This is Phase 2 logic
 	if (!m_isAggro)
 	{
 		Transform* initialTarget = selectClosestDetectedPlayer();
@@ -381,6 +407,11 @@ void ArthurDetectionAggro::clearTaunt(Transform* playerTransform)
 		return;
 	}
 
+	if (!m_arthurBossController)
+	{
+		return;
+	}
+
 	const bool wasCurrentTarget = (m_currentTargetTransform == m_tauntTargetTransform);
 
 	m_tauntTargetTransform = nullptr;
@@ -393,7 +424,7 @@ void ArthurDetectionAggro::clearTaunt(Transform* playerTransform)
 
 	Transform* fallbackTarget = nullptr;
 
-	if (m_phase == ArthurBossPhase::Phase1)
+	if (m_arthurBossController->getPhase() == ArthurBossPhase::Phase1)
 	{
 		fallbackTarget = getLyrielTransform();
 	}
@@ -418,23 +449,9 @@ void ArthurDetectionAggro::clearTaunt(Transform* playerTransform)
 	}
 }
 
-void ArthurDetectionAggro::setPhase(ArthurBossPhase phase)
-{
-	m_phase = phase;
-
-	m_currentTargetLockTimer = 0.0f;
-
-	if (phase == ArthurBossPhase::Phase2)
-	{
-		m_currentTargetTransform = selectClosestDetectedPlayer();
-	}
-}
-
 void ArthurDetectionAggro::startEncounter()
 {
 	m_encounterStarted = true;
-
-	m_phase = ArthurBossPhase::Phase1;
 
 	m_isAggro = false;
 	m_canSeeTarget = false;

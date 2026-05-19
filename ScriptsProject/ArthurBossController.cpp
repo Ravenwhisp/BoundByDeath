@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "ArthurBossController.h"
+#include "ArthurDetectionAggro.h"
 #include "ArthurAttackConfig.h"
 #include "Damageable.h"
 #include <cmath>
@@ -170,14 +171,9 @@ float ArthurBossController::getDistanceToCurrentTarget() const
 	return difference.Length();
 }
 
-ArthurBossPhase ArthurBossController::getPhase() const
+void ArthurBossController::setPhase(ArthurBossPhase phase)
 {
-	if (!m_arthurDetectionAggro)
-	{
-		return ArthurBossPhase::Phase1;
-	}
-
-	return m_arthurDetectionAggro->getPhase();
+	m_phase = phase;
 }
 
 void ArthurBossController::clearPath()

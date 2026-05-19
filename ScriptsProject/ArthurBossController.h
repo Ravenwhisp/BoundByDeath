@@ -1,9 +1,15 @@
 #pragma once
 
 #include "ScriptAPI.h"
-#include "ArthurDetectionAggro.h"
 
+class ArthurDetectionAggro;
 class ArthurAttackConfig;
+
+enum class ArthurBossPhase
+{
+	Phase1,
+	Phase2
+};
 
 class ArthurBossController : public Script
 {
@@ -31,6 +37,8 @@ private:
 	ArthurAttackConfig* m_attackConfig = nullptr;
 	Transform* m_currentTarget = nullptr;
 
+	ArthurBossPhase m_phase = ArthurBossPhase::Phase1;
+
 	float m_repathTimer = 0.0f;
 	std::vector<Vector3> m_path;
 	bool m_hasPath = false;
@@ -51,7 +59,9 @@ public:
 	Transform* getCurrentTarget() const { return m_currentTarget; }
 
 	// Phase helpers
-	ArthurBossPhase getPhase() const;
+	void setPhase(ArthurBossPhase phase);
+	ArthurBossPhase getPhase() const { return m_phase; }
+	bool isPhase2() const { return m_phase == ArthurBossPhase::Phase2; }
 
 	//Attack/state helpers
 	Transform* getFocusTarget() const { return m_currentTarget; }
