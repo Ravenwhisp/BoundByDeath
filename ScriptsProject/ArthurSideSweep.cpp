@@ -3,10 +3,7 @@
 
 #include "ArthurBossController.h"
 #include "ArthurAttackConfig.h"
-#include "Damageable.h"
-
-#include <cmath>
-
+#include "ArthurAttackExecutor.h"
 
 ArthurSideSweep::ArthurSideSweep(GameObject* owner)
     : StateMachineScript(owner)
@@ -17,6 +14,7 @@ void ArthurSideSweep::OnStateEnter()
 {
     m_arthurController = GameObjectAPI::findScript<ArthurBossController>(getOwner());
     m_attackConfig = GameObjectAPI::findScript<ArthurAttackConfig>(getOwner());
+    m_attackExecutor = GameObjectAPI::findScript<ArthurAttackExecutor>(getOwner());
 
     m_stateTimer = 0.0f;
     m_hasAppliedHit = false;
@@ -33,6 +31,12 @@ void ArthurSideSweep::OnStateEnter()
         return;
     }
 
+    if (!m_attackExecutor)
+    {
+        Debug::error("[ArthurSideSweep] ArthurAttackExecutor not found.");
+        return;
+    }
+
     m_arthurController->clearPath();
     m_arthurController->updateCurrentTarget();
 
@@ -43,14 +47,14 @@ void ArthurSideSweep::OnStateEnter()
 
 void ArthurSideSweep::OnStateUpdate()
 {
-    if (!m_arthurController || !m_attackConfig)
+    if (!m_arthurController || !m_attackConfig || !m_attackExecutor)
     {
         return;
     }
 
     m_stateTimer += Time::getDeltaTime();
 
-    if (!m_hasAppliedHit && m_stateTimer >= m_attackConfig->m_sideSweepHitTime)
+    if (!m_hasAppliedHit && m_stateTimer >= m_attackConfig->m_sideSweepChargingDuration)
     {
         applyHit();
         m_hasAppliedHit = true;
@@ -70,63 +74,31 @@ void ArthurSideSweep::OnStateExit()
 
 void ArthurSideSweep::applyHit()
 {
-    if (!m_arthurController)
+    if (!m_arthurController || !m_attackConfig || !m_attackExecutor)
     {
         return;
     }
 
     // Temporary refresh while testing without final Chase logic.
-    m_arthurController->updateCurrentTarget();
+     m_arthurController->updateCurrentTarget();
 
     // This is here just to test, this should be called and determined just prior to entering the Side Sweep state
     m_arthurController->trySelectSideSweepSide();
     m_sweepSide = m_arthurController->getSelectedSideSweepSide();
     // The three lines abovee will be removed
 
-    Transform* focusTarget = m_arthurController->getFocusTarget();
-    Transform* nonFocusTarget = m_arthurController->getNonFocusTarget();
-
-    tryDamageTarget(focusTarget);
-    tryDamageTarget(nonFocusTarget);
-}
-
-void ArthurSideSweep::tryDamageTarget(Transform* targetTransform)
-{
-    if (!m_arthurController || !m_attackConfig)
+    Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
+    if (!ownerTransform)
     {
         return;
     }
 
-    if (!targetTransform)
-    {
-        return;
-    }
+    Vector3 center = TransformAPI::getGlobalPosition(ownerTransform);
+    Vector3 sweepDirection = m_arthurController->getSideSweepDirection(m_sweepSide);
 
-    GameObject* targetObject = ComponentAPI::getOwner(targetTransform);
-    if (!targetObject)
-    {
-        return;
-    }
+    m_attackExecutor->applyDamageInCone(center, sweepDirection, m_attackConfig->m_sideSweepRange, m_attackConfig->m_sideSweepHalfAngleDegrees, m_attackConfig->m_sideSweepDamage, "SideSweep");
 
-    if (!m_arthurController->isTargetInsideSideSweepZone(targetTransform, m_sweepSide))
-    {
-        return;
-    }
-
-    Damageable* damageable = GameObjectAPI::findScript<Damageable>(targetObject);
-    if (!damageable)
-    {
-        return;
-    }
-
-    if (damageable->isDead())
-    {
-        return;
-    }
-
-    damageable->takeDamage(m_attackConfig->m_sideSweepDamage);
-
-    Debug::log("[ArthurSideSweep] Damaged '%s' for %.2f.", GameObjectAPI::getName(targetObject), m_attackConfig->m_sideSweepDamage);
+    Debug::log("[ArthurSideSweep] Hit applied. Side: %d", m_sweepSide);
 }
 
 void ArthurSideSweep::goToRecover()

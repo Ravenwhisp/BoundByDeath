@@ -5,6 +5,7 @@
 
 class ArthurBossController;
 class ArthurAttackConfig;
+class ArthurAttackExecutor;
 
 class ArthurHeavySwipe : public StateMachineScript
 {
@@ -19,13 +20,12 @@ public:
 
 private:
     void tryApplyHit(int hitIndex);
-    void tryDamageTarget(Transform* targetTransform, int hitIndex);
-    bool isTargetInsideHitCone(Transform* targetTransform) const;
     void goToRecover();
 
 private:
     ArthurBossController* m_arthurController = nullptr;
     ArthurAttackConfig* m_attackConfig = nullptr;
+    ArthurAttackExecutor* m_attackExecutor = nullptr;
 
     float m_stateTimer = 0.0f;
 

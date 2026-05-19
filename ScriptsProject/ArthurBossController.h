@@ -60,6 +60,7 @@ public:
 
 	//Needed to tell Side Sweep attack which side is the attack. We also use these in ArthurSideSweep
 	bool isTargetInsideSideSweepZone(Transform* targetTransform, int side) const;
+	Vector3 getSideSweepDirection(int side) const;
 	bool trySelectSideSweepSide(); //This one will be used when deciding to enter SideSweep state
 	int getSelectedSideSweepSide() const { return m_selectedSideSweepSide; }
 
@@ -77,6 +78,5 @@ private:
 	void rotateTowardsDirection(const Vector3& direction);
 
 	// Needed to detect if a player is on the area to use Side Sweep
-	Vector3 getSideSweepDirection(int side) const;
 	Vector3 rotateAroundY(const Vector3& vector, float radians) const;
 };

@@ -5,6 +5,7 @@
 
 class ArthurBossController;
 class ArthurAttackConfig;
+class ArthurAttackExecutor;
 
 class ArthurSideSweep : public StateMachineScript
 {
@@ -19,13 +20,12 @@ public:
 
 private:
     void applyHit();
-    void tryDamageTarget(Transform* targetTransform);
-
     void goToRecover();
 
 private:
     ArthurBossController* m_arthurController = nullptr;
     ArthurAttackConfig* m_attackConfig = nullptr;
+    ArthurAttackExecutor* m_attackExecutor = nullptr;
 
     float m_stateTimer = 0.0f;
 
