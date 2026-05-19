@@ -20,7 +20,7 @@ static const char* barrierAttackTypeNames[] =
 
 constexpr int barrierAttackTypeCount = 9;
 
-IMPLEMENT_SCRIPT_FIELDS(BarrierEnemyDamageable,
+IMPLEMENT_SCRIPT_FIELDS_INHERITED(BarrierEnemyDamageable, EnemyDamageable, 
     SERIALIZED_STRING(m_barrierPercentagesStr, "Barrier Thresholds (%)"),
     SERIALIZED_ENUM_INT(m_requiredAttackType, "Barrier Break Attack", barrierAttackTypeNames, barrierAttackTypeCount),
     SERIALIZED_BOOL(m_shadowExecutionBreaksBarriers, "Shadow Execution Breaks Barriers")
@@ -161,8 +161,7 @@ void BarrierEnemyDamageable::applyHit(const EnemyHitContext& hit)
         return;
     }
 
-    EnemyDamageable::applyHit(hit);
-
+    // Break barriers BEFORE applying damage so kill() sees them as broken
     for (size_t i = 0; i < m_barriers.size(); ++i)
     {
         if (m_barriers[i].broken)
@@ -171,11 +170,21 @@ void BarrierEnemyDamageable::applyHit(const EnemyHitContext& hit)
         }
 
         const float barrierHp = m_maxHp * m_barriers[i].hpPercent;
-        if (m_currentHp <= barrierHp && hpBefore > barrierHp)
+        if (hpAfter <= barrierHp && hpBefore >= barrierHp)
         {
-            breakBarrierAtIndex(i, hpBefore, m_currentHp);
+            m_barriers[i].broken = true;
+            m_nextBarrierIndex = i + 1;
+
+            Debug::log("[Barrier] %s broke barrier at %.0f%% HP (%s, HP: %.1f -> %.1f)",
+                GameObjectAPI::getName(m_owner),
+                m_barriers[i].hpPercent * 100.0f,
+                barrierAttackTypeNames[static_cast<int>(m_requiredAttackType)],
+                hpBefore,
+                hpAfter);
         }
     }
+
+    EnemyDamageable::applyHit(hit);
 }
 
 void BarrierEnemyDamageable::kill()
