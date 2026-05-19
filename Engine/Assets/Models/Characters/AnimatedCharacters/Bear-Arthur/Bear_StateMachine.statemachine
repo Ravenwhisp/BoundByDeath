@@ -145,7 +145,7 @@
             "name": "Bear_RECOVERY",
             "clipName": "Bear_Tpose",
             "speed": 1.0,
-            "behaviourScriptName": "",
+            "behaviourScriptName": "ArthurRecover",
             "behaviourFieldsJson": "",
             "overrideLoop": false,
             "loop": true
@@ -186,6 +186,12 @@
             "sourceStateName": "Bear_CHASE",
             "targetStateName": "Bear_SIDE_SWEEP",
             "triggerName": "ToSideSweep",
+            "blendTimeSeconds": 0.25
+        },
+        {
+            "sourceStateName": "Bear_RECOVERY",
+            "targetStateName": "Bear_CHASE",
+            "triggerName": "ToChase",
             "blendTimeSeconds": 0.25
         }
     ]
