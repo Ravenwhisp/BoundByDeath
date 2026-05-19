@@ -22,6 +22,7 @@ public:
     bool m_drawSideSweepLeft = true;
     bool m_drawSideSweepRight = true;
     bool m_drawEarthHammer = true;
+    bool m_drawChargingSlam = true;
 
     float m_heightOffset = 0.15f;
 
@@ -32,6 +33,7 @@ private:
     void drawHeavySwipeCone() const;
     void drawSideSweepCone(int side) const;
     void drawEarthHammerRadius() const;
+    void drawChargingSlamPreview() const;
 
     Vector3 rotateAroundY(const Vector3& vector, float radians) const;
 };

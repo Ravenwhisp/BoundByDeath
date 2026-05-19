@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "ArthurAttackDebugDraw.h"
 #include "ArthurAttackConfig.h"
+#include "ArthurBossController.h"
 
 #include <cmath>
 
@@ -10,6 +11,7 @@ IMPLEMENT_SCRIPT_FIELDS(ArthurAttackDebugDraw,
     SERIALIZED_BOOL(m_drawSideSweepRight, "Draw Side Sweep Right"),
     SERIALIZED_BOOL(m_drawSideSweepLeft, "Draw Side Sweep Left"),
     SERIALIZED_BOOL(m_drawEarthHammer, "Draw Earth Hammer"),
+    SERIALIZED_BOOL(m_drawChargingSlam, "Draw Charging Slam"),
     SERIALIZED_FLOAT(m_heightOffset, "Height Offset", 0.0f, 5.0f, 0.05f)
 )
 
@@ -63,6 +65,11 @@ void ArthurAttackDebugDraw::drawGizmo()
     if (m_drawEarthHammer)
     {
         drawEarthHammerRadius();
+    }
+
+    if (m_drawChargingSlam)
+    {
+        drawChargingSlamPreview();
     }
 }
 
@@ -199,6 +206,64 @@ void ArthurAttackDebugDraw::drawSideSweepCone(int side) const
 
         previousPoint = currentPoint;
     }
+}
+
+void ArthurAttackDebugDraw::drawChargingSlamPreview() const
+{
+    if (!m_attackConfig)
+    {
+        return;
+    }
+
+    Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
+    if (!ownerTransform)
+    {
+        return;
+    }
+
+    Vector3 startPosition = TransformAPI::getGlobalPosition(ownerTransform);
+    startPosition.y += m_heightOffset;
+
+    // This preview uses the current focus target.
+    // It is not the locked runtime position, but it is enough to visualize the intended charge.
+    ArthurBossController* arthurController = GameObjectAPI::findScript<ArthurBossController>(getOwner());
+    if (!arthurController)
+    {
+        return;
+    }
+
+    Transform* targetTransform = arthurController->getFocusTarget();
+    if (!targetTransform)
+    {
+        return;
+    }
+
+    Vector3 endPosition = TransformAPI::getGlobalPosition(targetTransform);
+    endPosition.y = startPosition.y;
+
+    const Vector3 purple = { 0.6f, 0.0f, 1.0f };
+
+    DebugDrawAPI::drawLine(startPosition, endPosition, purple, 0, true);
+
+    DebugDrawAPI::drawCircle(
+        startPosition,
+        Vector3(0.0f, 1.0f, 0.0f),
+        purple,
+        m_attackConfig->m_chargingSlamDashHitRadius,
+        24.0f,
+        0,
+        true
+    );
+
+    DebugDrawAPI::drawCircle(
+        endPosition,
+        Vector3(0.0f, 1.0f, 0.0f),
+        purple,
+        m_attackConfig->m_chargingSlamImpactRadius,
+        48.0f,
+        0,
+        true
+    );
 }
 
 Vector3 ArthurAttackDebugDraw::rotateAroundY(const Vector3& vector, float radians) const
