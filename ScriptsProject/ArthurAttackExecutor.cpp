@@ -49,17 +49,17 @@ void ArthurAttackExecutor::applyDamageInCone(const Vector3& center, const Vector
     tryDamageTargetInCone(deathTransform, center, direction, range, halfAngleDegrees, damage, sourceName);
 }
 
-void ArthurAttackExecutor::tryDamageTargetInRadius(Transform* targetTransform, const Vector3& center, float radius, float damage, const char* sourceName)
+bool ArthurAttackExecutor::tryDamageTargetInRadius(Transform* targetTransform, const Vector3& center, float radius, float damage, const char* sourceName)
 {
     if (!targetTransform)
     {
-        return;
+        return false;
     }
 
     GameObject* targetObject = ComponentAPI::getOwner(targetTransform);
     if (!targetObject)
     {
-        return;
+        return false;
     }
 
     Vector3 targetPosition = TransformAPI::getGlobalPosition(targetTransform);
@@ -72,23 +72,23 @@ void ArthurAttackExecutor::tryDamageTargetInRadius(Transform* targetTransform, c
 
     if (distanceSquared > radiusSquared)
     {
-        return;
+        return false;
     }
 
-    applyDamageToTarget(targetTransform, damage, sourceName);
+    return applyDamageToTarget(targetTransform, damage, sourceName);
 }
 
-void ArthurAttackExecutor::tryDamageTargetInCone(Transform* targetTransform, const Vector3& center, const Vector3& direction, float range, float halfAngleDegrees, float damage, const char* sourceName)
+bool ArthurAttackExecutor::tryDamageTargetInCone(Transform* targetTransform, const Vector3& center, const Vector3& direction, float range, float halfAngleDegrees, float damage, const char* sourceName)
 {
     if (!targetTransform)
     {
-        return;
+        return false;
     }
 
     GameObject* targetObject = ComponentAPI::getOwner(targetTransform);
     if (!targetObject)
     {
-        return;
+        return false;
     }
 
     Vector3 targetPosition = TransformAPI::getGlobalPosition(targetTransform);
@@ -101,13 +101,12 @@ void ArthurAttackExecutor::tryDamageTargetInCone(Transform* targetTransform, con
 
     if (distanceSquared > rangeSquared)
     {
-        return;
+        return false;
     }
 
     if (distanceSquared < 0.0001f)
     {
-        applyDamageToTarget(targetTransform, damage, sourceName);
-        return;
+        return applyDamageToTarget(targetTransform, damage, sourceName);
     }
 
     Vector3 flatDirection = direction;
@@ -115,7 +114,7 @@ void ArthurAttackExecutor::tryDamageTargetInCone(Transform* targetTransform, con
 
     if (flatDirection.LengthSquared() < 0.0001f)
     {
-        return;
+        return false;
     }
 
     toTarget.Normalize();
@@ -137,39 +136,40 @@ void ArthurAttackExecutor::tryDamageTargetInCone(Transform* targetTransform, con
 
     if (dot < minDot)
     {
-        return;
+        return false;
     }
 
-    applyDamageToTarget(targetTransform, damage, sourceName);
+    return applyDamageToTarget(targetTransform, damage, sourceName);
 }
 
-void ArthurAttackExecutor::applyDamageToTarget(Transform* targetTransform, float damage, const char* sourceName)
+bool ArthurAttackExecutor::applyDamageToTarget(Transform* targetTransform, float damage, const char* sourceName)
 {
     if (!targetTransform)
     {
-        return;
+        return false;
     }
 
     GameObject* targetObject = ComponentAPI::getOwner(targetTransform);
     if (!targetObject)
     {
-        return;
+        return false;
     }
 
     Damageable* damageable = GameObjectAPI::findScript<Damageable>(targetObject);
     if (!damageable)
     {
-        return;
+        return false;
     }
 
     if (damageable->isDead())
     {
-        return;
+        return false;
     }
 
     damageable->takeDamage(damage);
 
     Debug::log("[ArthurAttackExecutor] %s damaged '%s' for %.2f.", sourceName, GameObjectAPI::getName(targetObject), damage);
+    return true;
 }
 
 IMPLEMENT_SCRIPT(ArthurAttackExecutor)

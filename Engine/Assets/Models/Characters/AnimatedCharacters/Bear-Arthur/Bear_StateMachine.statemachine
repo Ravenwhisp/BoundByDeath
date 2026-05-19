@@ -1,6 +1,6 @@
 {
     "name": "Bear_StateMachine",
-    "defaultState": "Bear_HEAVY_SWIPE",
+    "defaultState": "Bear_CHARGING_SLAM",
     "clips": [
         {
             "name": "Bear_stand",
@@ -127,9 +127,9 @@
             "name": "Bear_CHARGING_SLAM",
             "clipName": "Bear_walk",
             "speed": 1.0,
-            "behaviourScriptName": "",
+            "behaviourScriptName": "ArthurChargingSlam",
             "behaviourFieldsJson": "",
-            "overrideLoop": false,
+            "overrideLoop": true,
             "loop": true
         },
         {
@@ -143,7 +143,7 @@
         },
         {
             "name": "Bear_RECOVERY",
-            "clipName": "Bear_Tpose",
+            "clipName": "Bear_stand",
             "speed": 1.0,
             "behaviourScriptName": "",
             "behaviourFieldsJson": "",
@@ -166,6 +166,12 @@
         },
         {
             "sourceStateName": "Bear_SIDE_SWEEP",
+            "targetStateName": "Bear_RECOVERY",
+            "triggerName": "ToRecover",
+            "blendTimeSeconds": 0.25
+        },
+        {
+            "sourceStateName": "Bear_CHARGING_SLAM",
             "targetStateName": "Bear_RECOVERY",
             "triggerName": "ToRecover",
             "blendTimeSeconds": 0.25
