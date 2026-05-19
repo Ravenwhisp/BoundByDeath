@@ -53,7 +53,7 @@ void ArthurEarthHammer::OnStateUpdate()
 
     m_stateTimer += Time::getDeltaTime();
 
-    if (!m_hasAppliedImpact && m_stateTimer >= m_attackConfig->m_earthHammerChargingDuration)
+    if (!m_hasAppliedImpact && m_stateTimer >= m_attackConfig->m_earthHammerHitTime)
     {
         applyImpact();
         m_hasAppliedImpact = true;

@@ -18,9 +18,9 @@ public:
     float m_heavySwipeHalfAngleDegrees = 60.0f;
 
     float m_heavySwipeTotalDuration = 1.5f;
-    float m_heavySwipeHit1ChargingDuration = 0.45f;
-    float m_heavySwipeHit2ChargingDuration = 0.95f;
-    float m_heavySwipeHit3ChargingDuration = 1.35f;
+    float m_heavySwipeHit1Time = 0.45f;
+    float m_heavySwipeHit2Time = 0.95f;
+    float m_heavySwipeHit3Time = 1.35f;
 
     float m_heavySwipeRecoveryDuration = 0.75f;
 
@@ -35,12 +35,12 @@ public:
     float m_sideSweepRange = 4.0f;
     float m_sideSweepHalfAngleDegrees = 55.0f;
 
-    float m_sideSweepChargingDuration = 0.35f;
+    float m_sideSweepHitTime = 0.35f;
     float m_sideSweepTotalDuration = 0.7f;
 
     float m_sideSweepRecoveryDuration = 0.5f;
 
-    float m_sideSweepPhase2ChargingDuration = 0.20f;
+    float m_sideSweepPhase2HitTime = 0.20f;
     float m_sideSweepPhase2TotalDuration = 0.55f;
     float m_sideSweepPhase2RecoveryDuration = 0.35f;
 
@@ -48,7 +48,7 @@ public:
     float m_chargingSlamDashDamage = 12.0f;
     float m_chargingSlamFinalAreaImpactDamage = 25.0f;
 
-    float m_chargingSlamChargingDuration = 1.0f;
+    float m_chargingSlamHitTime = 1.0f;
     float m_chargingSlamDashSpeed = 8.0f;
 
     float m_chargingSlamDashHitRadius = 1.2f;
@@ -57,7 +57,7 @@ public:
     float m_chargingSlamTotalDuration = 2.2f;
     float m_chargingSlamRecoveryDuration = 0.75f;
 
-    float m_chargingSlamPhase2ChargingDuration = 0.5f;
+    float m_chargingSlamPhase2HitTime = 0.5f;
     float m_chargingSlamPhase2DashSpeed = 10.0f;
 
     // Earth Hammer
@@ -65,7 +65,7 @@ public:
     float m_earthHammerRadius = 5.0f;
 
     float m_earthHammerTotalDuration = 2.2f;
-    float m_earthHammerChargingDuration = 2.0f;
+    float m_earthHammerHitTime = 2.0f;
 
     float m_earthHammerRecoveryDuration = 1.0f;
 

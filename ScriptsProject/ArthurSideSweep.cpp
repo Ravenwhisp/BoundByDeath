@@ -54,12 +54,12 @@ void ArthurSideSweep::OnStateUpdate()
 
     m_stateTimer += Time::getDeltaTime();
 
-    float hitTime = m_attackConfig->m_sideSweepChargingDuration;
+    float hitTime = m_attackConfig->m_sideSweepHitTime;
     float totalDuration = m_attackConfig->m_sideSweepTotalDuration;
 
     /*if (m_arthurController->isPhase2())
     {
-        hitTime = m_attackConfig->m_sideSweepPhase2ChargingDuration;
+        hitTime = m_attackConfig->m_sideSweepPhase2HitTime;
         totalDuration = m_attackConfig->m_sideSweepPhase2TotalDuration;
     }*/
 

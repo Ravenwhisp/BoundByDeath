@@ -65,11 +65,11 @@ void ArthurChargingSlam::OnStateUpdate()
 
     m_stateTimer += Time::getDeltaTime();
 
-    float chargingDuration = m_attackConfig->m_chargingSlamChargingDuration;
+    float chargingDuration = m_attackConfig->m_chargingSlamHitTime;
 
     /*if (m_arthurController->isPhase2())
     {
-        chargingDuration = m_attackConfig->m_chargingSlamPhase2ChargingDuration;
+        chargingDuration = m_attackConfig->m_chargingSlamPhase2HitTime;
     }*/
 
     if (!m_hasStartedDash && m_stateTimer >= chargingDuration)

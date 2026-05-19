@@ -32,4 +32,10 @@ private:
     bool m_hit1Applied = false;
     bool m_hit2Applied = false;
     bool m_hit3Applied = false;
+    bool m_hit4Applied = false;
+
+    float m_previousAnimationSpeed = 1.0f;
+
+    float m_phase1AnimationSpeed = 2.0f;
+    float m_phase2AnimationSpeed = 2.5f;
 };
