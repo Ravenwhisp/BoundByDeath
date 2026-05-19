@@ -1,6 +1,6 @@
 {
     "name": "Bear_StateMachine",
-    "defaultState": "Bear_SIDE_SWEEP",
+    "defaultState": "Bear_IDLE",
     "clips": [
         {
             "name": "Bear_stand",
@@ -168,6 +168,18 @@
             "sourceStateName": "Bear_SIDE_SWEEP",
             "targetStateName": "Bear_RECOVERY",
             "triggerName": "ToRecover",
+            "blendTimeSeconds": 0.25
+        },
+        {
+            "sourceStateName": "Bear_CHASE",
+            "targetStateName": "Bear_SIDE_SWEEP",
+            "triggerName": "ToSideSweep",
+            "blendTimeSeconds": 0.25
+        },
+        {
+            "sourceStateName": "Bear_IDLE",
+            "targetStateName": "Bear_CHASE",
+            "triggerName": "ToChase",
             "blendTimeSeconds": 0.25
         }
     ]

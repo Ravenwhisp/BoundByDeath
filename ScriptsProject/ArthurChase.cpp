@@ -41,8 +41,22 @@ void ArthurChase::OnStateEnter()
 void ArthurChase::OnStateUpdate()
 {
 
-	if (!m_arthurController || !m_arthurAttackConfig)
+	if (!m_arthurController)
 	{
+		Debug::error("[ArthurChase] ArthurBossController not found.");
+		return;
+	}
+
+	if (!m_arthurAttackConfig)
+	{
+		Debug::error("[ArthurChase] ArthurAttackConfig not found.");
+		return;
+	}
+
+	AnimationComponent* animation = AnimationAPI::getAnimationComponent(getOwner());
+	if (!animation)
+	{
+		Debug::error("[ArthurChase] Animation Component not found.");
 		return;
 	}
 
@@ -64,7 +78,11 @@ void ArthurChase::OnStateUpdate()
 	}
 
 	// attack checks + state transitions
-
+	if (m_arthurController->trySelectSideSweepSide())
+	{
+		AnimationAPI::sendTrigger(animation, "ToSideSweep");
+		return;
+	}
 
 	m_arthurController->followPath();
 }
