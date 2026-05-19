@@ -54,13 +54,22 @@ void ArthurSideSweep::OnStateUpdate()
 
     m_stateTimer += Time::getDeltaTime();
 
-    if (!m_hasAppliedHit && m_stateTimer >= m_attackConfig->m_sideSweepChargingDuration)
+    float hitTime = m_attackConfig->m_sideSweepChargingDuration;
+    float totalDuration = m_attackConfig->m_sideSweepTotalDuration;
+
+    /*if (m_arthurController->isPhase2())
+    {
+        hitTime = m_attackConfig->m_sideSweepPhase2ChargingDuration;
+        totalDuration = m_attackConfig->m_sideSweepPhase2TotalDuration;
+    }*/
+
+    if (!m_hasAppliedHit && m_stateTimer >= hitTime)
     {
         applyHit();
         m_hasAppliedHit = true;
     }
 
-    if (m_stateTimer >= m_attackConfig->m_sideSweepTotalDuration)
+    if (m_stateTimer >= totalDuration)
     {
         goToRecover();
         return;
@@ -116,7 +125,14 @@ void ArthurSideSweep::goToRecover()
 
     if (m_arthurController)
     {
-        m_arthurController->setRecoveryDuration(m_attackConfig->m_sideSweepRecoveryDuration);
+        float recoveryDuration = m_attackConfig->m_sideSweepRecoveryDuration;
+
+        /*if (m_arthurController->isPhase2())
+        {
+            recoveryDuration = m_attackConfig->m_sideSweepPhase2RecoveryDuration;
+        }*/
+
+        m_arthurController->setRecoveryDuration(recoveryDuration);
     }
 
     Debug::log("[ArthurSideSweep] Going to Recover.");
