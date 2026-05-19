@@ -160,6 +160,11 @@ void ArthurDetectionAggro::updateAggroState()
 	{
 		Transform* lyrielTarget = getLyrielTransform();
 
+		Debug::log(
+			"[ArthurAggro] Current target dead: %d",
+			isDeadTarget(m_currentTargetTransform)
+		); // Need to remove that after issue is resolved
+
 		if (isTransformAlive(lyrielTarget))
 		{
 			if (m_currentTargetTransform != lyrielTarget)
@@ -170,7 +175,7 @@ void ArthurDetectionAggro::updateAggroState()
 			return;
 		}
 
-		// if Lyriel is dead
+		// if Lyriel is dead - reset current target
 		m_currentTargetTransform = nullptr;
 		m_isAggro = false;
 		m_canSeeTarget = false;
