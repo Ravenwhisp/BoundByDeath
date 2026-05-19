@@ -86,7 +86,16 @@ void ArthurEarthHammer::applyImpact()
 
     Vector3 center = TransformAPI::getGlobalPosition(ownerTransform);
 
-    m_attackExecutor->applyDamageInRadius(center, m_attackConfig->m_earthHammerRadius, m_attackConfig->m_earthHammerDamage, "EarthHammer");
+    //const bool isPhase2 = m_arthurController->isPhase2();
+
+    float damage = m_attackConfig->m_earthHammerDamage;
+
+    /*if (isPhase2)
+    {
+        damage = m_attackConfig->m_earthHammerPhase2Damage;
+    }*/
+
+    m_attackExecutor->applyDamageInRadius(center, m_attackConfig->m_earthHammerRadius, damage, "EarthHammer");
 
     // Still need to apply stun to the players hit in the end.
 }
