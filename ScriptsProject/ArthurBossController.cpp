@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "ArthurBossController.h"
-#include "ArthurDetectionAggro.h"
 #include "ArthurAttackConfig.h"
 #include "Damageable.h"
 #include <cmath>
@@ -153,6 +152,16 @@ bool ArthurBossController::isTargetInCombatRange() const
 	difference.y = 0.0f;
 
 	return difference.Length() <= m_combatRange;
+}
+
+ArthurBossPhase ArthurBossController::getPhase() const
+{
+	if (!m_arthurDetectionAggro)
+	{
+		return ArthurBossPhase::Phase1;
+	}
+
+	return m_arthurDetectionAggro->getPhase();
 }
 
 void ArthurBossController::clearPath()

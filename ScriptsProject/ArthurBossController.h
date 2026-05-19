@@ -1,8 +1,8 @@
 #pragma once
 
 #include "ScriptAPI.h"
+#include "ArthurDetectionAggro.h"
 
-class ArthurDetectionAggro;
 class ArthurAttackConfig;
 
 class ArthurBossController : public Script
@@ -48,6 +48,9 @@ public:
 	void updateCurrentTarget();
 	bool isTargetInCombatRange() const;
 	Transform* getCurrentTarget() const { return m_currentTarget; }
+
+	// Phase helpers
+	ArthurBossPhase getPhase() const;
 
 	//Attack/state helpers
 	Transform* getFocusTarget() const { return m_currentTarget; }

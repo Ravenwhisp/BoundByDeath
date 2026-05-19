@@ -1,6 +1,6 @@
 {
     "name": "Bear_StateMachine",
-    "defaultState": "Bear_HEAVY_SWIPE",
+    "defaultState": "Bear_IDLE",
     "clips": [
         {
             "name": "Bear_stand",
@@ -64,7 +64,7 @@
             "name": "Bear_IDLE",
             "clipName": "Bear_stand",
             "speed": 1.0,
-            "behaviourScriptName": "",
+            "behaviourScriptName": "ArthurIdle",
             "behaviourFieldsJson": "",
             "overrideLoop": false,
             "loop": true
@@ -91,7 +91,7 @@
             "name": "Bear_CHASE",
             "clipName": "Bear_walk",
             "speed": 1.0,
-            "behaviourScriptName": "",
+            "behaviourScriptName": "ArthurChase",
             "behaviourFieldsJson": "",
             "overrideLoop": false,
             "loop": true
@@ -168,6 +168,12 @@
             "sourceStateName": "Bear_SIDE_SWEEP",
             "targetStateName": "Bear_RECOVERY",
             "triggerName": "ToRecover",
+            "blendTimeSeconds": 0.25
+        },
+        {
+            "sourceStateName": "Bear_IDLE",
+            "targetStateName": "Bear_CHASE",
+            "triggerName": "ToChase",
             "blendTimeSeconds": 0.25
         }
     ]

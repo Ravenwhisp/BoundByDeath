@@ -65,9 +65,31 @@ void ArthurChase::OnStateUpdate()
 	if (!m_arthurController->hasValidTarget())
 	{
 		m_arthurController->clearPath();
-		// go to idle state HERE
 		return;
 	}
+
+	// Phase check
+	// attack checks + state transitions
+
+	if (m_arthurController->getPhase() == ArthurBossPhase::Phase1)
+	{
+		if (m_arthurController->isTargetInCombatRange())
+		{
+			m_arthurController->clearPath();
+			m_arthurController->faceCurrentTarget();
+			return;
+		}
+	}
+	//else if (m_arthurController->getPhase() == ArthurBossPhase::Phase2)
+	//{
+
+	//}
+
+	/*if (m_arthurController->trySelectSideSweepSide())
+	{
+		AnimationAPI::sendTrigger(animation, "ToSideSweep");
+		return;
+	}*/
 
 	m_arthurController->addToRepathTimer(Time::getDeltaTime());
 
@@ -75,13 +97,6 @@ void ArthurChase::OnStateUpdate()
 	{
 		m_arthurController->buildPathToTarget();
 		m_arthurController->resetRepathTimer();
-	}
-
-	// attack checks + state transitions
-	if (m_arthurController->trySelectSideSweepSide())
-	{
-		AnimationAPI::sendTrigger(animation, "ToSideSweep");
-		return;
 	}
 
 	m_arthurController->followPath();
