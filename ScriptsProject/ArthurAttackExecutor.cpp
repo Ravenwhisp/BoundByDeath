@@ -4,6 +4,7 @@
 #include "ArthurDetectionAggro.h"
 #include "Damageable.h"
 #include "PlayerStunState.h"
+#include "PlayerState.h"
 
 #include <cmath>
 
@@ -188,7 +189,8 @@ bool ArthurAttackExecutor::applyDamageToTarget(Transform* targetTransform, float
         return false;
     }
 
-    if (damageable->isDead())
+    PlayerState* playerState = GameObjectAPI::findScript<PlayerState>(targetObject);
+    if (playerState && playerState->isDowned())
     {
         return false;
     }
