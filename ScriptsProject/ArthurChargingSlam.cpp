@@ -67,10 +67,10 @@ void ArthurChargingSlam::OnStateUpdate()
 
     float chargingDuration = m_attackConfig->m_chargingSlamHitTime;
 
-    /*if (m_arthurController->isPhase2())
+    if (m_arthurController->isPhase2())
     {
         chargingDuration = m_attackConfig->m_chargingSlamPhase2HitTime;
-    }*/
+    }
 
     if (!m_hasStartedDash && m_stateTimer >= chargingDuration)
     {
@@ -130,13 +130,6 @@ void ArthurChargingSlam::lockTargetPosition()
 
 void ArthurChargingSlam::startDash()
 {
-    //This is here while there is no chase also, after will be removed
-    m_arthurController->updateCurrentTarget();
-    m_arthurController->faceCurrentTarget();
-
-    lockTargetPosition();
-    //
-
     m_hasStartedDash = true;
 
     if (m_dashDirection.LengthSquared() < 0.0001f)
@@ -165,10 +158,10 @@ void ArthurChargingSlam::updateDash()
 
     float dashSpeed = m_attackConfig->m_chargingSlamDashSpeed;
 
-    /*if (m_arthurController->isPhase2())
+    if (m_arthurController->isPhase2())
     {
         dashSpeed = m_attackConfig->m_chargingSlamPhase2DashSpeed;
-    }*/
+    }
 
     const float stepDistance = dashSpeed * Time::getDeltaTime();
 

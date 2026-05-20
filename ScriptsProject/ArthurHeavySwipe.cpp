@@ -23,10 +23,10 @@ void ArthurHeavySwipe::OnStateEnter()
 
         float animationSpeed = m_phase1AnimationSpeed;
 
-        /*if (m_arthurController->isPhase2())
+        if (m_arthurController->isPhase2())
         {
             animationSpeed = m_phase2AnimationSpeed;
-        }*/
+        }
 
         AnimationAPI::setSpeedMultiplier(animation, animationSpeed);
     }
@@ -72,18 +72,18 @@ void ArthurHeavySwipe::OnStateUpdate()
 
     m_stateTimer += Time::getDeltaTime();
 
-    //const bool isPhase2 = m_arthurController->isPhase2();
+    const bool isPhase2 = m_arthurController->isPhase2();
 
     float hit1Time = m_attackConfig->m_heavySwipeHit1Time;
     float hit2Time = m_attackConfig->m_heavySwipeHit2Time;
     float hit3Time = m_attackConfig->m_heavySwipeHit3Time;
 
-    /*if (isPhase2)
+    if (isPhase2)
     {
         hit1Time = m_attackConfig->m_heavySwipePhase2Hit1Time;
         hit2Time = m_attackConfig->m_heavySwipePhase2Hit2Time;
         hit3Time = m_attackConfig->m_heavySwipePhase2Hit3Time;
-    }*/
+    }
 
     if (!m_hit1Applied && m_stateTimer >= hit1Time)
     {
@@ -103,11 +103,11 @@ void ArthurHeavySwipe::OnStateUpdate()
         m_hit3Applied = true;
     }
 
-    /*if (isPhase2 && !m_hit4Applied && m_stateTimer >= m_attackConfig->m_heavySwipePhase2Hit4Time)
+    if (isPhase2 && !m_hit4Applied && m_stateTimer >= m_attackConfig->m_heavySwipePhase2Hit4Time)
     {
         tryApplyHit(4);
         m_hit4Applied = true;
-    }*/
+    }
 
     if (m_stateTimer >= m_attackConfig->m_heavySwipeTotalDuration)
     {
@@ -165,10 +165,10 @@ void ArthurHeavySwipe::goToRecover()
     {
         float recoveryDuration = m_attackConfig->m_heavySwipeRecoveryDuration;
 
-        /*if (m_arthurController->isPhase2())
+        if (m_arthurController->isPhase2())
         {
             recoveryDuration = m_attackConfig->m_heavySwipePhase2RecoveryDuration;
-        }*/
+        }
 
         m_arthurController->setRecoveryDuration(recoveryDuration);
     }

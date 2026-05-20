@@ -86,16 +86,16 @@ void ArthurEarthHammer::applyImpact()
 
     Vector3 center = TransformAPI::getGlobalPosition(ownerTransform);
 
-    //const bool isPhase2 = m_arthurController->isPhase2();
+    const bool isPhase2 = m_arthurController->isPhase2();
 
     float damage = m_attackConfig->m_earthHammerDamage;
     float stunDuration = m_attackConfig->m_earthHammerStunDuration;
 
-    /*if (isPhase2)
+    if (isPhase2)
     {
         damage = m_attackConfig->m_earthHammerPhase2Damage;
         stunDuration = m_attackConfig->m_earthHammerPhase2StunDuration;
-    }*/
+    }
 
     m_attackExecutor->applyDamageAndStunInRadius(center, m_attackConfig->m_earthHammerRadius, damage, stunDuration, "EarthHammer");
 }
