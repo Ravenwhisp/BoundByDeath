@@ -110,14 +110,7 @@ bool ArthurBossController::hasValidTarget() const
 		return false;
 	}
 
-	GameObject* targetObject = ComponentAPI::getOwner(targetTransform);
-	if (!targetObject)
-	{
-		return false;
-	}
-
-	Damageable* damageable = GameObjectAPI::findScript<Damageable>(targetObject);
-	if (damageable && damageable->isDead())
+	if (m_arthurDetectionAggro->isDowned(targetTransform))
 	{
 		return false;
 	}
@@ -465,8 +458,7 @@ bool ArthurBossController::isTargetInChargingSlamRange() const
 	
 	float distance = getDistanceToCurrentTarget();
 
-	// check if distance >= minrange && distance <= maxrange
-	return false;
+	return distance >= m_attackConfig->m_chargingSlamMinRange && distance <= m_attackConfig->m_chargingSlamMaxRange;
 }
 
 bool ArthurBossController::isTargetInsideSideSweepZone(Transform* targetTransform, int side) const
