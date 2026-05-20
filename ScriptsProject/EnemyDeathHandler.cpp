@@ -36,8 +36,19 @@ void EnemyDeathHandler::Update()
         return;
     }
 
+    if (!m_damageable->isDead() && (m_hasProcessedDeath || m_waitingToDestroy))
+    {
+        resetDeathState();
+    }
+
     if (!m_hasProcessedDeath && m_damageable->isDead())
     {
+        if (!canStartDeathProcessing())
+        {
+            onDeathProcessingBlocked(Time::getDeltaTime());
+            return;
+        }
+
         DropHealth();
         processDeath();
     }
@@ -64,6 +75,7 @@ void EnemyDeathHandler::processDeath()
 
     playDeathAnimation();
     startDestroyCountdown(m_destroyDelay);
+    onDeathProcessed();
 }
 
 void EnemyDeathHandler::playDeathAnimation()
@@ -152,4 +164,31 @@ void EnemyDeathHandler::DropHealth()
         }
     }
 }
+
+bool EnemyDeathHandler::canStartDeathProcessing() const
+{
+    return m_canProcessDeath;
+}
+
+void EnemyDeathHandler::onDeathProcessingBlocked(float dt)
+{
+    (void)dt;
+}
+
+void EnemyDeathHandler::onDeathProcessed()
+{
+}
+
+void EnemyDeathHandler::onDeathStateReset()
+{
+}
+
+void EnemyDeathHandler::resetDeathState()
+{
+    m_hasProcessedDeath = false;
+    m_waitingToDestroy = false;
+    m_deathTimer = 0.0f;
+    onDeathStateReset();
+}
+
 IMPLEMENT_SCRIPT(EnemyDeathHandler)

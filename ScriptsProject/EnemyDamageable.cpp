@@ -38,16 +38,26 @@ void EnemyDamageable::onDamaged(float amount)
 	m_enemyDetectionAggro->notifyPlayerAttackedEnemy(m_damageSource);
 }
 
-void EnemyDamageable::takeDamageEnemy(float amount, Transform* playerTransform)
+void EnemyDamageable::applyHit(const EnemyHitContext& hit)
 {
-	if (playerTransform)
+	if (hit.attacker)
 	{
-		m_damageSource = playerTransform;
+		m_damageSource = hit.attacker;
 	}
 
-	Damageable::takeDamage(amount);
+	Damageable::takeDamage(hit.damage);
 
 	m_damageSource = nullptr;
+}
+
+void EnemyDamageable::takeDamageEnemy(float amount, Transform* playerTransform, EnemyAttackType attackType)
+{
+	EnemyHitContext hit;
+	hit.damage = amount;
+	hit.attacker = playerTransform;
+	hit.attackType = attackType;
+
+	applyHit(hit);
 }
 
 IMPLEMENT_SCRIPT(EnemyDamageable)

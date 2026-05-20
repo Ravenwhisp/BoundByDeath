@@ -349,7 +349,7 @@ void LyrielChargedAttack::applyChargedDamage(const std::vector<GameObject*>& tar
 
         if (damageable != nullptr)
         {
-            damageable->takeDamageEnemy(damage, GameObjectAPI::getTransform(getOwner()));
+            damageable->takeDamageEnemy(damage, GameObjectAPI::getTransform(getOwner()), EnemyAttackType::LyrielCharged);
 
             EnemyShadowMark* mark = GameObjectAPI::findScript<EnemyShadowMark>(target);
             if (mark != nullptr && mark->isExploitable())
