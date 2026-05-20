@@ -47,7 +47,7 @@ void EnemySTUN::OnStateUpdate()
 
     if (!m_enemyController)
     {
-        AnimationAPI::playState(animation, "Idle");
+        AnimationAPI::playState(animation, "Paladin_Idle");
         return;
     }
 
@@ -55,18 +55,18 @@ void EnemySTUN::OnStateUpdate()
 
     if (!m_enemyController->hasValidTarget())
     {
-        AnimationAPI::playState(animation, "Idle");
+        AnimationAPI::playState(animation, "Paladin_Idle");
         return;
     }
 
     if (m_enemyController->isTargetInCombatRange())
     {
         m_enemyController->faceCurrentTarget();
-        AnimationAPI::playState(animation, "Attack");
+        AnimationAPI::playState(animation, "Paladin_Attack");
         return;
     }
 
-    AnimationAPI::playState(animation, "Chase");
+    AnimationAPI::playState(animation, "Paladin_Walk");
 }
 
 void EnemySTUN::OnStateExit()

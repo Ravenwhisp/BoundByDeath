@@ -6,7 +6,6 @@
 #include "PlayerAnimationController.h"
 #include "EnemyDamageable.h"
 #include "EnemyShadowMark.h"
-#include "EnemySTUN.h"
 
 #include <cmath>
 
@@ -239,17 +238,12 @@ void DeathChargedAttack::dealDamageInArc(float damage) const
             shadowMark->notifyDeathHit();
         }
 
-        EnemySTUN* stunScript = GameObjectAPI::findScript<EnemySTUN>(enemy);
         AnimationComponent* enemyAnimation = AnimationAPI::getAnimationComponent(enemy);
 
-        if (stunScript != nullptr && enemyAnimation != nullptr)
+        if (enemyAnimation != nullptr)
         {
-            AnimationAPI::playState(enemyAnimation, "Stun");
-            Debug::log("[STUN] '%s' switched to Stun.", GameObjectAPI::getName(enemy));
-        }
-        else if (stunScript == nullptr)
-        {
-            Debug::warn("[STUN] '%s' has no EnemySTUN script.", GameObjectAPI::getName(enemy));
+            AnimationAPI::playState(enemyAnimation, "Paladin_Stun");
+            Debug::log("[STUN] '%s' switched to Paladin_Stun.", GameObjectAPI::getName(enemy));
         }
         else
         {
