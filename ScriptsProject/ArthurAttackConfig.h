@@ -57,6 +57,8 @@ public:
     float m_chargingSlamTotalDuration = 2.2f;
     float m_chargingSlamRecoveryDuration = 0.75f;
 
+    float m_chargingSlamImpactStunDuration = 1.0f;
+
     float m_chargingSlamPhase2HitTime = 0.5f;
     float m_chargingSlamPhase2DashSpeed = 10.0f;
 
@@ -69,5 +71,8 @@ public:
 
     float m_earthHammerRecoveryDuration = 1.0f;
 
+    float m_earthHammerStunDuration = 1.25f;
+
     float m_earthHammerPhase2Damage = 25.0f;
+    float m_earthHammerPhase2StunDuration = 1.75f;
 };
