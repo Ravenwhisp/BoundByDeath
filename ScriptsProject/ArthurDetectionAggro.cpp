@@ -66,14 +66,11 @@ void ArthurDetectionAggro::updateAggroState()
 		if (lyrielTarget && !isDowned(lyrielTarget))
 		{
 			enterAggro(lyrielTarget);
-			Debug::log("[ArthurAggro] Phase1 forcing Lyriel");
 			return;
 		}
 
 		if (deathTarget && !isDowned(deathTarget) && isDowned(lyrielTarget))
 		{
-			Debug::log("[ArthurAggro] Phase1 forcing Death");
-
 			enterAggro(deathTarget);
 			return;
 		}

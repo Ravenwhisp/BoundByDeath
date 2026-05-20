@@ -147,18 +147,30 @@ void ArthurBossController::setPhase(ArthurBossPhase phase)
 
 void ArthurBossController::updateBossPhase()
 {
-	if (!isPhase2())
+	if (isPhase2())
 	{
-		Damageable* damageable = GameObjectAPI::findScript<Damageable>(getOwner());
-		if (!damageable)
-		{
-			return;
-		}
+		return;
+	}
 
-		if (damageable->getCurrentHp() <= damageable->getMaxHp() * 0.5f)
-		{
-			setPhase(ArthurBossPhase::Phase2);
-		}
+	if (!m_arthurDetectionAggro || !m_arthurDetectionAggro->isAggro())
+	{
+		return;
+	}
+
+	Damageable* damageable = GameObjectAPI::findScript<Damageable>(getOwner());
+	if (!damageable)
+	{
+		return;
+	}
+
+	if (damageable->getMaxHp() <= 0.0f)
+	{
+		return;
+	}
+
+	if (damageable->getCurrentHp() <= damageable->getMaxHp() * 0.5f)
+	{
+		setPhase(ArthurBossPhase::Phase2);
 	}
 }
 
