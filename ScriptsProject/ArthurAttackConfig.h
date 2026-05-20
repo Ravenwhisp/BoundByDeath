@@ -66,6 +66,9 @@ public:
     float m_chargingSlamPhase2HitTime = 0.5f;
     float m_chargingSlamPhase2DashSpeed = 10.0f;
 
+    float m_chargingSlamMinRange = 5.0f;
+    float m_chargingSlamMaxRange = 8.0f;
+
     // Earth Hammer
     float m_earthHammerDamage = 20.0f;
     float m_earthHammerRadius = 5.0f;
