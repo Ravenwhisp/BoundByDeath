@@ -37,5 +37,5 @@ private:
     float m_previousAnimationSpeed = 1.0f;
 
     float m_phase1AnimationSpeed = 2.0f;
-    float m_phase2AnimationSpeed = 2.5f;
+    float m_phase2AnimationSpeed = 2.7f;
 };
