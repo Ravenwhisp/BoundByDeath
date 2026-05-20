@@ -11,6 +11,7 @@ IMPLEMENT_SCRIPT_FIELDS(ArthurAttackConfig,
     SERIALIZED_FLOAT(m_heavySwipeHit2ChargingDuration, "Heavy Swipe Hit 2 Charging Duration", 0.0f, 10.0f, 0.05f),
     SERIALIZED_FLOAT(m_heavySwipeHit3ChargingDuration, "Heavy Swipe Hit 3 Charging Duration", 0.0f, 10.0f, 0.05f),
     SERIALIZED_FLOAT(m_heavySwipeRecoveryDuration, "Heavy Swipe Recovery Duration", 0.0f, 10.0f, 0.05f),
+    //SERIALIZED_FLOAT(m_heavySwipeCooldown, "Heavy Swipe Cooldown", 0.0f, 10.0f, 0.1f),
     // Side Sweep
     SERIALIZED_FLOAT(m_sideSweepDamage, "Side Sweep Damage", 0.0f, 9999.0f, 1.0f),
     SERIALIZED_FLOAT(m_sideSweepRange, "Side Sweep Range", 0.0f, 30.0f, 0.1f),
@@ -18,6 +19,7 @@ IMPLEMENT_SCRIPT_FIELDS(ArthurAttackConfig,
     SERIALIZED_FLOAT(m_sideSweepChargingDuration, "Side Sweep Charging Duration", 0.0f, 10.0f, 0.05f),
     SERIALIZED_FLOAT(m_sideSweepTotalDuration, "Side Sweep Total Duration", 0.1f, 10.0f, 0.05f),
     SERIALIZED_FLOAT(m_sideSweepRecoveryDuration, "Side Sweep Recovery Duration", 0.0f, 10.0f, 0.05f),
+    SERIALIZED_FLOAT(m_sideSweepCooldown, "Side Sweep Cooldown", 0.0f, 10.0f, 0.1f),
     // Charging Slam
     SERIALIZED_FLOAT(m_chargingSlamDashDamage, "Charging Slam Dash Damage", 0.0f, 9999.0f, 1.0f),
     SERIALIZED_FLOAT(m_chargingSlamFinalAreaImpactDamage, "Charging Slam Final Area Impact Damage", 0.0f, 9999.0f, 1.0f),
@@ -27,12 +29,14 @@ IMPLEMENT_SCRIPT_FIELDS(ArthurAttackConfig,
     SERIALIZED_FLOAT(m_chargingSlamImpactRadius, "Charging Slam Impact Radius", 0.0f, 20.0f, 0.1f),
     SERIALIZED_FLOAT(m_chargingSlamTotalDuration, "Charging Slam Total Duration", 0.1f, 10.0f, 0.05f),
     SERIALIZED_FLOAT(m_chargingSlamRecoveryDuration, "Charging Slam Recovery Duration", 0.0f, 10.0f, 0.05f),
+    SERIALIZED_FLOAT(m_chargingSlamCooldown, "Charging Slam Cooldown", 0.0f, 10.0f, 0.1f),
     // Earth Hammer
     SERIALIZED_FLOAT(m_earthHammerDamage, "Earth Hammer Damage", 0.0f, 9999.0f, 1.0f),
     SERIALIZED_FLOAT(m_earthHammerRadius, "Earth Hammer Radius", 0.0f, 30.0f, 0.1f),
     SERIALIZED_FLOAT(m_earthHammerTotalDuration, "Earth Hammer Total Duration", 0.1f, 10.0f, 0.05f),
     SERIALIZED_FLOAT(m_earthHammerChargingDuration, "Earth Hammer Charging Duration", 0.0f, 10.0f, 0.05f),
-    SERIALIZED_FLOAT(m_earthHammerRecoveryDuration, "Earth Hammer Recovery Duration", 0.0f, 10.0f, 0.05f)
+    SERIALIZED_FLOAT(m_earthHammerRecoveryDuration, "Earth Hammer Recovery Duration", 0.0f, 10.0f, 0.05f),
+    SERIALIZED_FLOAT(m_earthHammerCooldown, "Earth Hammer Cooldown", 0.0f, 10.0f, 0.1f)
 )
 
 ArthurAttackConfig::ArthurAttackConfig(GameObject* owner)

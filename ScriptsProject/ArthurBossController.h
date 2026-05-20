@@ -51,6 +51,11 @@ private:
 
 	int m_selectedSideSweepSide = 1;
 
+	// Attack Cooldown
+	float m_chargingSlamCooldownTimer = 0.0f;
+	float m_sideSweepCooldownTimer = 0.0f;
+	float m_earthHammerCooldownTimer = 0.0f;
+
 public:
 	bool hasValidTarget() const;
 	void updateCurrentTarget();
@@ -63,6 +68,17 @@ public:
 	ArthurBossPhase getPhase() const { return m_phase; }
 	bool isPhase2() const { return m_phase == ArthurBossPhase::Phase2; }
 
+	// Attack Cooldown Helpers
+	void updateAttackCooldowns(float dt);
+
+	bool isChargingSlamReady() const { return m_chargingSlamCooldownTimer <= 0.0f; }
+	bool isSideSweepReady() const { return m_sideSweepCooldownTimer <= 0.0f; }
+	bool isEarthHammerReady() const { return m_earthHammerCooldownTimer <= 0.0f; }
+
+	void consumeChargingSlamCooldown();
+	void consumeSideSweepCooldown();
+	void consumeEarthHammerCooldown();
+
 	//Attack/state helpers
 	Transform* getFocusTarget() const { return m_currentTarget; }
 	Transform* getNonFocusTarget() const;
@@ -71,6 +87,9 @@ public:
 
 	void setRecoveryDuration(float recoveryDuration);
 	float getRecoveryDuration() const { return m_recoveryDuration; }
+
+	bool areBothPlayersInEarthHammerRange() const;
+	bool isTargetInChargingSlamRange() const;
 
 	//Needed to tell Side Sweep attack which side is the attack. We also use these in ArthurSideSweep
 	bool isTargetInsideSideSweepZone(Transform* targetTransform, int side) const;

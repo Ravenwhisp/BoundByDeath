@@ -24,6 +24,8 @@ public:
 
     float m_heavySwipeRecoveryDuration = 0.75f;
 
+    //float m_heavySwipeCooldown = 2.0f;
+
     // Side Sweep
     float m_sideSweepDamage = 12.0f;
     float m_sideSweepRange = 4.0f;
@@ -33,6 +35,8 @@ public:
     float m_sideSweepTotalDuration = 0.7f;
 
     float m_sideSweepRecoveryDuration = 0.5f;
+
+    float m_sideSweepCooldown = 2.0f;
 
     // Charging Slam
     float m_chargingSlamDashDamage = 12.0f;
@@ -47,6 +51,8 @@ public:
     float m_chargingSlamTotalDuration = 2.2f;
     float m_chargingSlamRecoveryDuration = 0.75f;
 
+    float m_chargingSlamCooldown = 2.0f;
+
     // Earth Hammer
     float m_earthHammerDamage = 20.0f;
     float m_earthHammerRadius = 5.0f;
@@ -55,4 +61,6 @@ public:
     float m_earthHammerChargingDuration = 2.0f;
 
     float m_earthHammerRecoveryDuration = 1.0f;
+
+    float m_earthHammerCooldown = 2.0f;
 };

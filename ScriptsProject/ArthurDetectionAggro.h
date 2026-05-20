@@ -43,6 +43,8 @@ public:
 	bool canSeeTarget() const { return m_canSeeTarget; }
 	Transform* getCurrentTarget() const { return m_currentTargetTransform; }
 	Vector3 getLastKnownTargetPosition() const { return m_lastKnownTargetPosition; }
+	bool isDowned(Transform* target) const;
+
 
 	Transform* getLyrielTransform() const;
 	Transform* getDeathTransform() const;
@@ -98,7 +100,6 @@ private:
 
 	bool isLyrielAggroing() const;
 	bool isDeathAggroing() const;
-	bool isDowned(Transform* target) const;
 
 	AggroEntry* getAggroEntry(Transform* target);
 	const AggroEntry* getAggroEntry(Transform* target) const;

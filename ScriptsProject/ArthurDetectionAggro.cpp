@@ -134,11 +134,6 @@ void ArthurDetectionAggro::updateAggroState()
 		Transform* lyrielTarget = getLyrielTransform();
 		Transform* deathTarget = getDeathTransform();
 
-		Debug::log(
-			"[ArthurAggro] Lyriel dead: %d",
-			isDowned(m_currentTargetTransform)
-		); // Need to remove that after issue is resolved
-
 		if (!isDowned(lyrielTarget))
 		{
 			if (m_currentTargetTransform != lyrielTarget)

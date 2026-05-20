@@ -60,6 +60,8 @@ void ArthurChase::OnStateUpdate()
 		return;
 	}
 
+	// Check target
+
 	m_arthurController->updateCurrentTarget();
 
 	if (!m_arthurController->hasValidTarget())
@@ -68,40 +70,46 @@ void ArthurChase::OnStateUpdate()
 		return;
 	}
 
-	// Phase check
-	if (m_arthurController->getPhase() == ArthurBossPhase::Phase1)
+	// Attack checks + State transitions
+
+	// Earth Hammer
+	if (m_arthurController->areBothPlayersInEarthHammerRange() && m_arthurController->isEarthHammerReady()) // also need to check if both players are in range
 	{
-
-		// Attack checks + State transitions
-
-		// Side Sweep
-		if (m_arthurController->trySelectSideSweepSide())
-		{
-			m_arthurController->clearPath();
-			//m_arthurController->faceCurrentTarget();
-
-			AnimationAPI::sendTrigger(animation, "ToSideSweep");
-			return;
-		}
-
-		float targetDistance = m_arthurController->getDistanceToCurrentTarget();
-
-		// Heavy Swipe
-		if (targetDistance <= m_arthurAttackConfig->m_heavySwipeRange)
-		{
-			m_arthurController->clearPath();
-			m_arthurController->faceCurrentTarget();
-
-			AnimationAPI::sendTrigger(animation, "ToHeavySwipe");
-			return;
-		}
-
+		m_arthurController->consumeEarthHammerCooldown();
+		m_arthurController->clearPath();
+		AnimationAPI::sendTrigger(animation, "ToEarthHammer");
+		return;
 	}
-	//else if (m_arthurController->getPhase() == ArthurBossPhase::Phase2)
-	//{
 
-	//}
+	// Side Sweep
+	if (m_arthurController->trySelectSideSweepSide() && m_arthurController->isSideSweepReady())
+	{
+		m_arthurController->clearPath();
+		m_arthurController->consumeSideSweepCooldown();
+		AnimationAPI::sendTrigger(animation, "ToSideSweep");
+		return;
+	}
 
+	// Charging Slam
+	if (m_arthurController->isTargetInChargingSlamRange() && m_arthurController->isChargingSlamReady())
+	{
+		m_arthurController->consumeChargingSlamCooldown();
+		m_arthurController->clearPath();
+		m_arthurController->faceCurrentTarget();
+		AnimationAPI::sendTrigger(animation, "ToChargingSlam");
+		return;
+	}
+
+	// Heavy Swipe
+	if (m_arthurController->getDistanceToCurrentTarget() <= m_arthurAttackConfig->m_heavySwipeRange)
+	{
+		m_arthurController->clearPath();
+		m_arthurController->faceCurrentTarget();
+		AnimationAPI::sendTrigger(animation, "ToHeavySwipe");
+		return;
+	}
+
+	// Movement logic
 	m_arthurController->addToRepathTimer(Time::getDeltaTime());
 
 	if (m_arthurController->shouldRepath())
