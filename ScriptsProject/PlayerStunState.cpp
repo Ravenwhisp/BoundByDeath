@@ -67,6 +67,8 @@ void PlayerStunState::enterStun(float durationSeconds)
         return;
     }
 
+    m_stunTimer = durationSeconds;
+
     m_playerState->setState(PlayerStateType::Stunned);
     m_playerState->setUsingAbility(false);
 

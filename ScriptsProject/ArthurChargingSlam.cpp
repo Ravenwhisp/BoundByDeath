@@ -233,11 +233,9 @@ void ArthurChargingSlam::applyImpact()
         return;
     }
 
-    m_attackExecutor->applyDamageInRadius(m_lockedTargetPosition, m_attackConfig->m_chargingSlamImpactRadius, m_attackConfig->m_chargingSlamFinalAreaImpactDamage, "ChargingSlamImpact");
+    m_attackExecutor->applyDamageAndStunInRadius(m_lockedTargetPosition, m_attackConfig->m_chargingSlamImpactRadius, m_attackConfig->m_chargingSlamFinalAreaImpactDamage, m_attackConfig->m_chargingSlamImpactStunDuration, "ChargingSlamImpact");
 
     Debug::log("[ArthurChargingSlam] Impact applied.");
-
-    // Need to apply stun to players here
 }
 
 void ArthurChargingSlam::goToRecover()

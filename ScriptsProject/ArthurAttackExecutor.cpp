@@ -3,6 +3,7 @@
 
 #include "ArthurDetectionAggro.h"
 #include "Damageable.h"
+#include "PlayerStunState.h"
 
 #include <cmath>
 
@@ -33,6 +34,20 @@ void ArthurAttackExecutor::applyDamageInRadius(const Vector3& center, float radi
 
     tryDamageTargetInRadius(lyrielTransform, center, radius, damage, sourceName);
     tryDamageTargetInRadius(deathTransform, center, radius, damage, sourceName);
+}
+
+void ArthurAttackExecutor::applyDamageAndStunInRadius(const Vector3& center, float radius, float damage, float stunDuration, const char* sourceName)
+{
+    if (!m_arthurDetectionAggro)
+    {
+        return;
+    }
+
+    Transform* lyrielTransform = m_arthurDetectionAggro->getLyrielTransform();
+    Transform* deathTransform = m_arthurDetectionAggro->getDeathTransform();
+
+    tryDamageAndStunTargetInRadius(lyrielTransform, center, radius, damage, stunDuration, sourceName);
+    tryDamageAndStunTargetInRadius(deathTransform, center, radius, damage, stunDuration, sourceName);
 }
 
 void ArthurAttackExecutor::applyDamageInCone(const Vector3& center, const Vector3& direction, float range, float halfAngleDegrees, float damage, const char* sourceName)
@@ -76,6 +91,18 @@ bool ArthurAttackExecutor::tryDamageTargetInRadius(Transform* targetTransform, c
     }
 
     return applyDamageToTarget(targetTransform, damage, sourceName);
+}
+
+void ArthurAttackExecutor::tryDamageAndStunTargetInRadius(Transform* targetTransform, const Vector3& center, float radius, float damage, float stunDuration, const char* sourceName)
+{
+    const bool damaged = tryDamageTargetInRadius(targetTransform, center, radius, damage, sourceName);
+
+    if (!damaged)
+    {
+        return;
+    }
+
+    applyStunToTarget(targetTransform, stunDuration, sourceName);
 }
 
 bool ArthurAttackExecutor::tryDamageTargetInCone(Transform* targetTransform, const Vector3& center, const Vector3& direction, float range, float halfAngleDegrees, float damage, const char* sourceName)
@@ -170,6 +197,35 @@ bool ArthurAttackExecutor::applyDamageToTarget(Transform* targetTransform, float
 
     Debug::log("[ArthurAttackExecutor] %s damaged '%s' for %.2f.", sourceName, GameObjectAPI::getName(targetObject), damage);
     return true;
+}
+
+void ArthurAttackExecutor::applyStunToTarget(Transform* targetTransform, float stunDuration, const char* sourceName)
+{
+    if (!targetTransform)
+    {
+        return;
+    }
+
+    if (stunDuration <= 0.0f)
+    {
+        return;
+    }
+
+    GameObject* targetObject = ComponentAPI::getOwner(targetTransform);
+    if (!targetObject)
+    {
+        return;
+    }
+
+    PlayerStunState* stunState = GameObjectAPI::findScript<PlayerStunState>(targetObject);
+    if (!stunState)
+    {
+        return;
+    }
+
+    stunState->enterStun(stunDuration);
+
+    Debug::log("[ArthurAttackExecutor] %s stunned '%s' for %.2f seconds.", sourceName, GameObjectAPI::getName(targetObject), stunDuration);
 }
 
 IMPLEMENT_SCRIPT(ArthurAttackExecutor)

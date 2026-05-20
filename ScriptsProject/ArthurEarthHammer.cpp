@@ -73,7 +73,7 @@ void ArthurEarthHammer::OnStateExit()
 
 void ArthurEarthHammer::applyImpact()
 {
-    if (!m_attackExecutor || !m_attackConfig)
+    if (!m_arthurController || !m_attackExecutor || !m_attackConfig)
     {
         return;
     }
@@ -89,15 +89,15 @@ void ArthurEarthHammer::applyImpact()
     //const bool isPhase2 = m_arthurController->isPhase2();
 
     float damage = m_attackConfig->m_earthHammerDamage;
+    float stunDuration = m_attackConfig->m_earthHammerStunDuration;
 
     /*if (isPhase2)
     {
         damage = m_attackConfig->m_earthHammerPhase2Damage;
+        stunDuration = m_attackConfig->m_earthHammerPhase2StunDuration;
     }*/
 
-    m_attackExecutor->applyDamageInRadius(center, m_attackConfig->m_earthHammerRadius, damage, "EarthHammer");
-
-    // Still need to apply stun to the players hit in the end.
+    m_attackExecutor->applyDamageAndStunInRadius(center, m_attackConfig->m_earthHammerRadius, damage, stunDuration, "EarthHammer");
 }
 
 void ArthurEarthHammer::goToRecover()
