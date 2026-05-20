@@ -57,11 +57,11 @@ void ArthurSideSweep::OnStateUpdate()
     float hitTime = m_attackConfig->m_sideSweepHitTime;
     float totalDuration = m_attackConfig->m_sideSweepTotalDuration;
 
-    /*if (m_arthurController->isPhase2())
+    if (m_arthurController->isPhase2())
     {
         hitTime = m_attackConfig->m_sideSweepPhase2HitTime;
         totalDuration = m_attackConfig->m_sideSweepPhase2TotalDuration;
-    }*/
+    }
 
     if (!m_hasAppliedHit && m_stateTimer >= hitTime)
     {
@@ -87,14 +87,6 @@ void ArthurSideSweep::applyHit()
     {
         return;
     }
-
-    // Temporary refresh while testing without final Chase logic.
-     m_arthurController->updateCurrentTarget();
-
-    // This is here just to test, this should be called and determined just prior to entering the Side Sweep state
-    m_arthurController->trySelectSideSweepSide();
-    m_sweepSide = m_arthurController->getSelectedSideSweepSide();
-    // The three lines abovee will be removed
 
     Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
     if (!ownerTransform)
@@ -127,10 +119,10 @@ void ArthurSideSweep::goToRecover()
     {
         float recoveryDuration = m_attackConfig->m_sideSweepRecoveryDuration;
 
-        /*if (m_arthurController->isPhase2())
+        if (m_arthurController->isPhase2())
         {
             recoveryDuration = m_attackConfig->m_sideSweepPhase2RecoveryDuration;
-        }*/
+        }
 
         m_arthurController->setRecoveryDuration(recoveryDuration);
     }
