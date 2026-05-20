@@ -2,11 +2,7 @@
 
 #include "ScriptAPI.h"
 
-enum class ArthurBossPhase
-{
-	Phase1,
-	Phase2
-};
+class ArthurBossController;
 
 class ArthurDetectionAggro : public Script
 {
@@ -47,12 +43,11 @@ public:
 	bool canSeeTarget() const { return m_canSeeTarget; }
 	Transform* getCurrentTarget() const { return m_currentTargetTransform; }
 	Vector3 getLastKnownTargetPosition() const { return m_lastKnownTargetPosition; }
+	bool isDowned(Transform* target) const;
+
 
 	Transform* getLyrielTransform() const;
 	Transform* getDeathTransform() const;
-
-	void setPhase(ArthurBossPhase phase);
-	ArthurBossPhase getPhase() const { return m_phase; }
 
 	void startEncounter(); // called in controller
 	void stopEncounter(); // called in controller
@@ -60,6 +55,8 @@ public:
 private:
 	AggroEntry m_LyrielAggro;
 	AggroEntry m_DeathAggro;
+
+	ArthurBossController* m_arthurBossController = nullptr;
 
 	Transform* m_currentTargetTransform = nullptr;
 	bool m_isAggro = false;
@@ -72,7 +69,6 @@ private:
 	float m_currentTime = 0.0f;
 	float m_recentAttackMemory = 3.0f;
 
-	ArthurBossPhase m_phase = ArthurBossPhase::Phase1;
 	bool m_encounterStarted = false;
 
 private:
@@ -104,7 +100,6 @@ private:
 
 	bool isLyrielAggroing() const;
 	bool isDeathAggroing() const;
-	bool isTransformAlive(Transform* target) const;
 
 	AggroEntry* getAggroEntry(Transform* target);
 	const AggroEntry* getAggroEntry(Transform* target) const;

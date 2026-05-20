@@ -23,6 +23,7 @@ IMPLEMENT_SCRIPT_FIELDS(ArthurAttackConfig,
     SERIALIZED_FLOAT(m_sideSweepHitTime, "Side Sweep Hit Time", 0.0f, 10.0f, 0.05f),
     SERIALIZED_FLOAT(m_sideSweepTotalDuration, "Side Sweep Total Duration", 0.1f, 10.0f, 0.05f),
     SERIALIZED_FLOAT(m_sideSweepRecoveryDuration, "Side Sweep Recovery Duration", 0.0f, 10.0f, 0.05f),
+    SERIALIZED_FLOAT(m_sideSweepCooldown, "Side Sweep Cooldown", 0.0f, 10.0f, 0.1f),
     SERIALIZED_FLOAT(m_sideSweepPhase2HitTime, "Side Sweep Phase 2 Hit Time", 0.0f, 10.0f, 0.05f),
     SERIALIZED_FLOAT(m_sideSweepPhase2TotalDuration, "Side Sweep Phase 2 Total Duration", 0.1f, 10.0f, 0.05f),
     SERIALIZED_FLOAT(m_sideSweepPhase2RecoveryDuration, "Side Sweep Phase 2 Recovery Duration", 0.0f, 10.0f, 0.05f),
@@ -36,6 +37,7 @@ IMPLEMENT_SCRIPT_FIELDS(ArthurAttackConfig,
     SERIALIZED_FLOAT(m_chargingSlamTotalDuration, "Charging Slam Total Duration", 0.1f, 10.0f, 0.05f),
     SERIALIZED_FLOAT(m_chargingSlamRecoveryDuration, "Charging Slam Recovery Duration", 0.0f, 10.0f, 0.05f),
     SERIALIZED_FLOAT(m_chargingSlamImpactStunDuration, "Charging Slam Impact Stun Duration", 0.0f, 10.0f, 0.05f),
+    SERIALIZED_FLOAT(m_chargingSlamCooldown, "Charging Slam Cooldown", 0.0f, 10.0f, 0.1f),
     SERIALIZED_FLOAT(m_chargingSlamPhase2HitTime, "Charging Slam Phase 2 Hit Time", 0.0f, 10.0f, 0.05f),
     SERIALIZED_FLOAT(m_chargingSlamPhase2DashSpeed, "Charging Slam Phase 2 Dash Speed", 0.0f, 50.0f, 0.1f),
     // Earth Hammer
@@ -45,6 +47,7 @@ IMPLEMENT_SCRIPT_FIELDS(ArthurAttackConfig,
     SERIALIZED_FLOAT(m_earthHammerHitTime, "Earth Hammer Hit Time", 0.0f, 10.0f, 0.05f),
     SERIALIZED_FLOAT(m_earthHammerRecoveryDuration, "Earth Hammer Recovery Duration", 0.0f, 10.0f, 0.05f),
     SERIALIZED_FLOAT(m_earthHammerStunDuration, "Earth Hammer Stun Duration", 0.0f, 10.0f, 0.05f),
+    SERIALIZED_FLOAT(m_earthHammerCooldown, "Earth Hammer Cooldown", 0.0f, 10.0f, 0.1f)
     SERIALIZED_FLOAT(m_earthHammerPhase2Damage, "Earth Hammer Phase 2 Damage", 0.0f, 9999.0f, 1.0f),
     SERIALIZED_FLOAT(m_earthHammerPhase2StunDuration, "Earth Hammer Phase 2 Stun Duration", 0.0f, 10.0f, 0.05f)
 )

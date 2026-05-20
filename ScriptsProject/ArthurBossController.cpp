@@ -93,6 +93,8 @@ void ArthurBossController::Update()
 	}
 
 	followPath();*/
+
+	updateAttackCooldowns(Time::getDeltaTime());
 }
 
 bool ArthurBossController::hasValidTarget() const
@@ -153,6 +155,71 @@ bool ArthurBossController::isTargetInCombatRange() const
 	difference.y = 0.0f;
 
 	return difference.Length() <= m_combatRange;
+}
+
+float ArthurBossController::getDistanceToCurrentTarget() const
+{
+	if (!m_currentTarget)
+	{
+		return FLT_MAX; // max value
+	}
+
+	Vector3 ownerPosition = getOwner()->GetTransform()->getPosition();
+	Vector3 targetPosition = m_currentTarget->getPosition();
+
+	Vector3 difference = ownerPosition - targetPosition;
+	difference.y = 0.0f;
+
+	return difference.Length();
+}
+
+void ArthurBossController::setPhase(ArthurBossPhase phase)
+{
+	m_phase = phase;
+}
+
+void ArthurBossController::updateAttackCooldowns(float dt)
+{
+	m_chargingSlamCooldownTimer -= dt;
+	m_sideSweepCooldownTimer -= dt;
+	m_earthHammerCooldownTimer -= dt;
+
+	if (m_chargingSlamCooldownTimer <= 0.0f) m_chargingSlamCooldownTimer = 0.0f;
+	if (m_sideSweepCooldownTimer <= 0.0f) m_sideSweepCooldownTimer = 0.0f;
+	if (m_earthHammerCooldownTimer <= 0.0f) m_earthHammerCooldownTimer = 0.0f;
+}
+
+void ArthurBossController::consumeChargingSlamCooldown()
+{
+	if (!m_attackConfig)
+	{
+		Debug::error("[ArthurBossController] AtrhurAttackConfig not found.");
+		return;
+	}
+
+	m_chargingSlamCooldownTimer = m_attackConfig->m_chargingSlamCooldown;
+}
+
+void ArthurBossController::consumeSideSweepCooldown()
+{
+	if (!m_attackConfig)
+	{
+		Debug::error("[ArthurBossController] AtrhurAttackConfig not found.");
+		return;
+	}
+
+	m_sideSweepCooldownTimer = m_attackConfig->m_sideSweepCooldown;
+}
+
+void ArthurBossController::consumeEarthHammerCooldown()
+{
+	if (!m_attackConfig)
+	{
+		Debug::error("[ArthurBossController] AtrhurAttackConfig not found.");
+		return;
+	}
+
+	m_earthHammerCooldownTimer = m_attackConfig->m_earthHammerCooldown;
 }
 
 void ArthurBossController::clearPath()
@@ -356,6 +423,50 @@ void ArthurBossController::faceCurrentTarget()
 void ArthurBossController::setRecoveryDuration(float recoveryDuration)
 {
 	m_recoveryDuration = recoveryDuration;
+}
+
+bool ArthurBossController::areBothPlayersInEarthHammerRange() const
+{
+	if (!m_attackConfig || !m_arthurDetectionAggro)
+	{
+		return false;
+	}
+
+	Transform* lyriel = m_arthurDetectionAggro->getLyrielTransform();
+	Transform* death = m_arthurDetectionAggro->getDeathTransform();
+
+	if (!lyriel || !death)
+	{
+		return false;
+	}
+
+	if (m_arthurDetectionAggro->isDowned(lyriel) || m_arthurDetectionAggro->isDowned(death))
+	{
+		return false;
+	}
+
+	Vector3 ownerPosition = TransformAPI::getGlobalPosition(GameObjectAPI::getTransform(getOwner()));
+	Vector3 lyrielPosition = TransformAPI::getGlobalPosition(lyriel);
+	Vector3 deathPosition = TransformAPI::getGlobalPosition(death);
+
+	float earthHammerRange = m_attackConfig->m_earthHammerRadius;
+	float lyrielDistance = (lyrielPosition - ownerPosition).Length();
+	float deathDistance = (deathPosition - ownerPosition).Length();
+
+	return lyrielDistance <= earthHammerRange && deathDistance <= earthHammerRange;
+}
+
+bool ArthurBossController::isTargetInChargingSlamRange() const
+{
+	if (!m_attackConfig)
+	{
+		return false;
+	}
+	
+	float distance = getDistanceToCurrentTarget();
+
+	// check if distance >= minrange && distance <= maxrange
+	return false;
 }
 
 bool ArthurBossController::isTargetInsideSideSweepZone(Transform* targetTransform, int side) const

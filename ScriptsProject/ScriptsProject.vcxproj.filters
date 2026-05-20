@@ -85,6 +85,9 @@
     <Filter Include="Enemies\Arthur\Attacks">
       <UniqueIdentifier>{9c76ffc7-6ef2-4ccf-b1c3-0a0f0c637147}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Enemies\Arthur\States">
+      <UniqueIdentifier>{10e43235-b0ea-4590-a473-24e5c1676a4f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -355,6 +358,15 @@
     </ClInclude>
     <ClInclude Include="PlayerStunState.h">
       <Filter>Player\States</Filter>
+    </ClInclude>
+    <ClInclude Include="ArthurIdle.h">
+      <Filter>Enemies\Arthur\States</Filter>
+    </ClInclude>
+    <ClInclude Include="ArthurChase.h">
+      <Filter>Enemies\Arthur\States</Filter>
+    </ClInclude>
+    <ClInclude Include="ArthurRecover.h">
+      <Filter>Enemies\Arthur\States</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -627,6 +639,15 @@
     </ClCompile>
     <ClCompile Include="PlayerStunState.cpp">
       <Filter>Player\States</Filter>
+    </ClCompile>
+    <ClCompile Include="ArthurChase.cpp">
+      <Filter>Enemies\Arthur\States</Filter>
+    </ClCompile>
+    <ClCompile Include="ArthurIdle.cpp">
+      <Filter>Enemies\Arthur\States</Filter>
+    </ClCompile>
+    <ClCompile Include="ArthurRecover.cpp">
+      <Filter>Enemies\Arthur\States</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
