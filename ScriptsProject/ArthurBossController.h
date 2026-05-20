@@ -91,6 +91,7 @@ public:
 
 	bool areBothPlayersInEarthHammerRange() const;
 	bool isTargetInChargingSlamRange() const;
+	bool isCurrentTargetInsideHeavySwipeArea(float range, float halfAngleDegrees) const;
 
 	//Needed to tell Side Sweep attack which side is the attack. We also use these in ArthurSideSweep
 	bool isTargetInsideSideSweepZone(Transform* targetTransform, int side) const;

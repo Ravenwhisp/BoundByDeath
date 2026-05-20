@@ -66,7 +66,6 @@ void ArthurBossController::drawGizmo()
 
 void ArthurBossController::Update()
 {
-
 	updateAttackCooldowns(Time::getDeltaTime());
 
 	updateBossPhase();
@@ -451,6 +450,50 @@ bool ArthurBossController::isTargetInChargingSlamRange() const
 	float distance = getDistanceToCurrentTarget();
 
 	return distance >= m_attackConfig->m_chargingSlamMinRange && distance <= m_attackConfig->m_chargingSlamMaxRange;
+}
+
+bool ArthurBossController::isCurrentTargetInsideHeavySwipeArea(float range, float halfAngleDegrees) const
+{
+	if (!m_currentTarget)
+	{
+		return false;
+	}
+
+	Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
+
+	if (!ownerTransform)
+	{
+		return false;
+	}
+
+	Vector3 ownerPosition = TransformAPI::getGlobalPosition(ownerTransform);
+	Vector3 targetPosition = TransformAPI::getGlobalPosition(m_currentTarget);
+	Vector3 toTarget = targetPosition - ownerPosition;
+
+	toTarget.y = 0.0f;
+
+	float distance = toTarget.Length();
+
+	if (distance > range)
+	{
+		return false;
+	}
+
+	if (distance <= 0.001f)
+	{
+		return true;
+	}
+
+	toTarget.Normalize();
+
+	Vector3 forward = TransformAPI::getForward(ownerTransform);
+
+	float dot = forward.Dot(toTarget);
+
+	float angleRadians = acosf(dot);
+	float angleDegreesToTarget = angleRadians * RADIANS_TO_DEGREES;
+
+	return angleDegreesToTarget <= halfAngleDegrees;
 }
 
 bool ArthurBossController::isTargetInsideSideSweepZone(Transform* targetTransform, int side) const

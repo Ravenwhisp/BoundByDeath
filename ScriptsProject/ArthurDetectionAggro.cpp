@@ -4,16 +4,14 @@
 #include "PlayerState.h"
 #include "DeathCharacter.h" 
 
-IMPLEMENT_SCRIPT_FIELDS(ArthurDetectionAggro,
-	SERIALIZED_BOOL(m_encounterStarted, "Start Encounter"),
-	SERIALIZED_FLOAT(m_detectionRadius, "Detection Radius", 0.0f, 50.0f, 0.1f),
-	SERIALIZED_FLOAT(m_targetLockDuration, "Target Lock Duration", 0.0f, 10.0f, 0.1f),
-	SERIALIZED_BOOL(m_debugEnabled, "Debug Enabled"),
-	SERIALIZED_COMPONENT_REF(m_lyrielTransform, "Lyriel Transform", ComponentType::TRANSFORM),
-	SERIALIZED_COMPONENT_REF(m_deathTransform, "Death Transform", ComponentType::TRANSFORM)
+IMPLEMENT_SCRIPT_FIELDS_INHERITED(ArthurDetectionAggro, EnemyDetectionAggro,
+	SERIALIZED_BOOL(m_encounterStarted, "Start Encounter")
 )
 
-ArthurDetectionAggro::ArthurDetectionAggro(GameObject* owner) : Script(owner) {}
+ArthurDetectionAggro::ArthurDetectionAggro(GameObject* owner)
+	: EnemyDetectionAggro(owner)
+{
+}
 
 void ArthurDetectionAggro::Start()
 {
@@ -26,86 +24,20 @@ void ArthurDetectionAggro::Start()
 	}
 }
 
-void ArthurDetectionAggro::Update()
-{
-	m_currentTime += Time::getDeltaTime();
-
-	updateTargetLockTimer();
-	updateTauntTimer();
-	updateAggroState();
-}
-
-void ArthurDetectionAggro::drawGizmo()
-{
-	if (!m_debugEnabled)
-	{
-		return;
-	}
-
-	const Vector3 white = { 1.0f, 1.0f, 1.0f };
-	const Vector3 red = { 1.0f, 0.0f, 0.0f };
-	const Vector3 yellow = { 1.0f, 1.0f, 0.0f };
-	const Vector3 cyan = { 0.0f, 1.0f, 1.0f };
-
-	Vector3 debugPosition = getOwnerPosition() + Vector3(0.0f, 0.2f, 0.0f);
-
-	DebugDrawAPI::drawCircle(debugPosition, Vector3(0.0f, 1.0f, 0.0f), white, m_detectionRadius, 24.0f, 0, true);
-
-	if (m_currentTargetTransform)
-	{
-		Vector3 targetPosition = TransformAPI::getPosition(m_currentTargetTransform);
-		if (m_canSeeTarget)
-		{
-			DebugDrawAPI::drawLine(debugPosition, targetPosition, red, 0, true);
-		}
-		else
-		{
-			DebugDrawAPI::drawLine(debugPosition, targetPosition, yellow, 0, true);
-		}
-	}
-
-	if (m_isAggro && !m_canSeeTarget)
-	{
-		DebugDrawAPI::drawCross(m_lastKnownTargetPosition, 0.35f, 0, true);
-		DebugDrawAPI::drawPoint(m_lastKnownTargetPosition, cyan, 4.0f, 0, true);
-	}
-}
-
-void ArthurDetectionAggro::enterAggro(Transform* target)
-{
-	if (!target)
-	{
-		return;
-	}
-
-	m_isAggro = true;
-	m_canSeeTarget = true;
-	m_currentTargetTransform = target;
-	m_lastKnownTargetPosition = TransformAPI::getPosition(target);
-}
-
 void ArthurDetectionAggro::updateAggroState()
 {
-	updateAggroEntries();
-
 	if (!m_encounterStarted)
 	{
-		m_currentTargetTransform = nullptr;
-		m_isAggro = false;
-		m_canSeeTarget = false;
-		m_currentTargetLockTimer = 0.0f;
-		m_tauntTargetTransform = nullptr;
-		m_tauntTimer = 0.0f;
+		resetAggro();
 		return;
 	}
 
-	if (m_currentTargetTransform && isDowned(m_currentTargetTransform))
+	if (!m_arthurBossController)
 	{
-		m_currentTargetTransform = nullptr;
-		m_isAggro = false;
-		m_canSeeTarget = false;
-		m_currentTargetLockTimer = 0.0f;
+		return;
 	}
+
+	updateAggroEntries();
 
 	if (isTaunted())
 	{
@@ -115,493 +47,57 @@ void ArthurDetectionAggro::updateAggroState()
 		}
 		else
 		{
-			m_isAggro = true;
-			m_canSeeTarget = true;
-			m_currentTargetTransform = m_tauntTargetTransform;
-			m_lastKnownTargetPosition = TransformAPI::getPosition(m_tauntTargetTransform);
+			enterAggro(m_tauntTargetTransform);
 			return;
 		}
 	}
 
-	if (!m_arthurBossController)
-	{
-		return;
-	}
+	if (m_arthurBossController->getPhase() == ArthurBossPhase::Phase1)
+		Debug::log("[ArthurAggro] Phase1");
+	else if (m_arthurBossController->getPhase() == ArthurBossPhase::Phase2)
+		Debug::log("[ArthurAggro] Phase2");
 
 	// Phase 1
-	if (m_arthurBossController && m_arthurBossController->getPhase() == ArthurBossPhase::Phase1)
+	if (m_arthurBossController->getPhase() == ArthurBossPhase::Phase1)
 	{
 		Transform* lyrielTarget = getLyrielTransform();
 		Transform* deathTarget = getDeathTransform();
 
-		if (!isDowned(lyrielTarget))
+		if (lyrielTarget && !isDowned(lyrielTarget))
 		{
-			if (m_currentTargetTransform != lyrielTarget)
-			{
-				enterAggro(lyrielTarget);
-			}
-
+			enterAggro(lyrielTarget);
+			Debug::log("[ArthurAggro] Phase1 forcing Lyriel");
 			return;
 		}
 
-		if (!isDowned(deathTarget))
+		if (deathTarget && !isDowned(deathTarget) && isDowned(lyrielTarget))
 		{
-			if (m_currentTargetTransform != deathTarget)
-			{
-				enterAggro(deathTarget);
-			}
+			Debug::log("[ArthurAggro] Phase1 forcing Death");
 
+			enterAggro(deathTarget);
 			return;
 		}
 
-		m_currentTargetTransform = nullptr;
-		m_isAggro = false;
-		m_canSeeTarget = false;
-		m_currentTargetLockTimer = 0.0f;
+		resetAggro();
 		return;
 	}
 
 	// This is Phase 2 logic
-	if (!m_isAggro)
-	{
-		Transform* initialTarget = selectClosestDetectedPlayer();
-
-		if (initialTarget)
-		{
-			enterAggro(initialTarget);
-			m_currentTargetLockTimer = 0.0f;
-		}
-
-		return;
-	}
-
-	const bool currentTargetStillDetected =
-		!isDowned(m_currentTargetTransform) &&
-		(
-			(m_currentTargetTransform == m_LyrielAggro.targetTransform && m_LyrielAggro.isInDetectionRange) ||
-			(m_currentTargetTransform == m_DeathAggro.targetTransform && m_DeathAggro.isInDetectionRange)
-			);
-
-	if (currentTargetStillDetected)
-	{
-		m_canSeeTarget = true;
-		m_lastKnownTargetPosition = TransformAPI::getPosition(m_currentTargetTransform);
-	}
-	else
-	{
-		m_canSeeTarget = false;
-	}
-
-	if (!isTargetLockActive())
-	{
-		Transform* reevaluatedTarget = selectReevaluatedTarget();
-
-		if (reevaluatedTarget && reevaluatedTarget != m_currentTargetTransform)
-		{
-			m_currentTargetTransform = reevaluatedTarget;
-			m_lastKnownTargetPosition = TransformAPI::getPosition(m_currentTargetTransform);
-		}
-
-		const bool lyrielAggroing = isLyrielAggroing();
-		const bool deathAggroing = isDeathAggroing();
-
-		if (lyrielAggroing || deathAggroing)
-		{
-			startTargetLock();
-		}
-		else
-		{
-			m_currentTargetLockTimer = 0.0f;
-		}
-	}
-}
-
-void ArthurDetectionAggro::updateAggroEntries()
-{
-	Transform* player1 = getLyrielTransform();
-	Transform* player2 = getDeathTransform();
-
-	m_LyrielAggro.targetTransform = player1;
-	m_DeathAggro.targetTransform = player2;
-
-	m_LyrielAggro.isInDetectionRange = isLyrielInDetectionRange();
-	m_DeathAggro.isInDetectionRange = isDeathInDetectionRange();
-
-	m_LyrielAggro.distanceToEnemy = getDistanceToLyriel();
-	m_DeathAggro.distanceToEnemy = getDistanceToDeath();
-}
-
-bool ArthurDetectionAggro::isTargetLockActive() const
-{
-	return m_currentTargetLockTimer > 0.0f;
-}
-
-void ArthurDetectionAggro::startTargetLock()
-{
-	m_currentTargetLockTimer = m_targetLockDuration;
-}
-
-void ArthurDetectionAggro::updateTargetLockTimer()
-{
-	if (isTargetLockActive())
-	{
-		m_currentTargetLockTimer -= Time::getDeltaTime();
-
-		if (m_currentTargetLockTimer < 0.0f)
-		{
-			m_currentTargetLockTimer = 0.0f;
-		}
-	}
-}
-
-void ArthurDetectionAggro::updateTauntTimer()
-{
-	if (!isTaunted())
-	{
-		return;
-	}
-
-	m_tauntTimer -= Time::getDeltaTime();
-
-	if (m_tauntTimer <= 0.0f)
-	{
-		clearTaunt(m_tauntTargetTransform);
-	}
-}
-
-bool ArthurDetectionAggro::isTaunted() const
-{
-	return m_tauntTargetTransform != nullptr && m_tauntTimer > 0.0f;
-}
-
-Transform* ArthurDetectionAggro::selectClosestDetectedPlayer() const
-{
-	const bool lyrielInRange = m_LyrielAggro.isInDetectionRange && !isDowned(m_LyrielAggro.targetTransform);
-	const bool deathInRange = m_DeathAggro.isInDetectionRange && !isDowned(m_DeathAggro.targetTransform);
-
-	if (lyrielInRange && !deathInRange)
-	{
-		return m_LyrielAggro.targetTransform;
-	}
-
-	if (!lyrielInRange && deathInRange)
-	{
-		return m_DeathAggro.targetTransform;
-	}
-
-	if (lyrielInRange && deathInRange)
-	{
-		if (m_LyrielAggro.distanceToEnemy < m_DeathAggro.distanceToEnemy)
-		{
-			return m_LyrielAggro.targetTransform;
-		}
-		else
-		{
-			return m_DeathAggro.targetTransform;
-		}
-	}
-
-	return nullptr;
-}
-
-Transform* ArthurDetectionAggro::selectReevaluatedTarget() const
-{
-	const bool lyrielAggroing = isLyrielAggroing() && !isDowned(m_LyrielAggro.targetTransform);
-	const bool deathAggroing = isDeathAggroing() && !isDowned(m_DeathAggro.targetTransform);
-
-	if (lyrielAggroing && !deathAggroing)
-	{
-		return m_LyrielAggro.targetTransform;
-	}
-
-	if (!lyrielAggroing && deathAggroing)
-	{
-		return m_DeathAggro.targetTransform;
-	}
-
-	if (lyrielAggroing && deathAggroing)
-	{
-		if (m_LyrielAggro.distanceToEnemy < m_DeathAggro.distanceToEnemy)
-		{
-			return m_LyrielAggro.targetTransform;
-		}
-		else
-		{
-			return m_DeathAggro.targetTransform;
-		}
-	}
-
-	if (!isDowned(m_currentTargetTransform))
-	{
-		return m_currentTargetTransform;
-	}
-
-	return selectClosestDetectedPlayer();
-}
-
-void ArthurDetectionAggro::notifyPlayerAttackedEnemy(Transform* playerTransform)
-{
-	if (isDowned(playerTransform))
-	{
-		return;
-	}
-
-	AggroEntry* entry = getAggroEntry(playerTransform);
-
-	if (!entry)
-	{
-		return;
-	}
-
-	entry->lastAttackTime = m_currentTime;
-
-	if (!m_isAggro)
-	{
-		enterAggro(playerTransform);
-		startTargetLock();
-	}
-}
-
-void ArthurDetectionAggro::applyTaunt(Transform* playerTransform, float durationSeconds)
-{
-	if (playerTransform == nullptr || durationSeconds <= 0.0f)
-	{
-		return;
-	}
-
-	m_tauntTargetTransform = playerTransform;
-	m_tauntTimer = durationSeconds;
-	m_currentTargetLockTimer = 0.0f;
-	enterAggro(playerTransform);
-
-	// While taunted, range is ignored and line-of-sight is intentionally skipped.
-	// TODO: Require wall checks / line-of-sight before applying the taunt effect.
-	AggroEntry* entry = getAggroEntry(playerTransform);
-	if (entry != nullptr)
-	{
-		entry->lastAttackTime = m_currentTime;
-	}
-}
-
-void ArthurDetectionAggro::clearTaunt(Transform* playerTransform)
-{
-	if (playerTransform != nullptr && playerTransform != m_tauntTargetTransform)
-	{
-		return;
-	}
-
-	if (!m_arthurBossController)
-	{
-		return;
-	}
-
-	const bool wasCurrentTarget = (m_currentTargetTransform == m_tauntTargetTransform);
-
-	m_tauntTargetTransform = nullptr;
-	m_tauntTimer = 0.0f;
-
-	if (!wasCurrentTarget)
-	{
-		return;
-	}
-
-	Transform* fallbackTarget = nullptr;
-
-	if (m_arthurBossController->getPhase() == ArthurBossPhase::Phase1)
-	{
-		fallbackTarget = getLyrielTransform();
-	}
-	else
-	{
-		fallbackTarget = selectClosestDetectedPlayer();
-	}
-
-	if (fallbackTarget != nullptr)
-	{
-		m_currentTargetTransform = fallbackTarget;
-		m_lastKnownTargetPosition = TransformAPI::getPosition(fallbackTarget);
-		m_canSeeTarget = true;
-		m_isAggro = true;
-	}
-	else
-	{
-		m_currentTargetTransform = nullptr;
-		m_canSeeTarget = false;
-		m_isAggro = false;
-		m_currentTargetLockTimer = 0.0f;
-	}
+	EnemyDetectionAggro::updateAggroState();
 }
 
 void ArthurDetectionAggro::startEncounter()
 {
 	m_encounterStarted = true;
 
-	m_isAggro = false;
-	m_canSeeTarget = false;
-
-	m_currentTargetTransform = nullptr;
-	m_currentTargetLockTimer = 0.0f;
-
-	m_tauntTargetTransform = nullptr;
-	m_tauntTimer = 0.0f;
+	resetAggro();
 }
 
 void ArthurDetectionAggro::stopEncounter()
 {
 	m_encounterStarted = false;
 
-	m_isAggro = false;
-	m_canSeeTarget = false;
-
-	m_currentTargetTransform = nullptr;
-	m_currentTargetLockTimer = 0.0f;
-
-	m_tauntTargetTransform = nullptr;
-	m_tauntTimer = 0.0f;
-}
-
-Transform* ArthurDetectionAggro::getOwnerTransform() const
-{
-	return GameObjectAPI::getTransform(getOwner());
-}
-
-Transform* ArthurDetectionAggro::getLyrielTransform() const
-{
-	return m_lyrielTransform.getReferencedComponent();
-}
-
-Transform* ArthurDetectionAggro::getDeathTransform() const
-{
-	return m_deathTransform.getReferencedComponent();
-}
-
-Vector3 ArthurDetectionAggro::getOwnerPosition() const
-{
-	Transform* ownerTransform = getOwnerTransform();
-	if (!ownerTransform)
-	{
-		return Vector3(0.0f, 0.0f, 0.0f);
-	}
-
-	return TransformAPI::getPosition(ownerTransform);
-}
-
-Vector3 ArthurDetectionAggro::getLyrielPosition() const
-{
-	Transform* lyrielTransform = getLyrielTransform();
-	if (!lyrielTransform)
-	{
-		return Vector3(0.0f, 0.0f, 0.0f);
-	}
-
-	return TransformAPI::getPosition(lyrielTransform);
-}
-
-Vector3 ArthurDetectionAggro::getDeathPosition() const
-{
-	Transform* deathTransform = getDeathTransform();
-	if (!deathTransform)
-	{
-		return Vector3(0.0f, 0.0f, 0.0f);
-	}
-
-	return TransformAPI::getPosition(deathTransform);
-}
-
-float ArthurDetectionAggro::getDistanceToLyriel() const
-{
-	Vector3 difference = getLyrielPosition() - getOwnerPosition();
-	return difference.Length();
-}
-
-float ArthurDetectionAggro::getDistanceToDeath() const
-{
-	Vector3 difference = getDeathPosition() - getOwnerPosition();
-	return difference.Length();
-}
-
-bool ArthurDetectionAggro::isLyrielInDetectionRange() const
-{
-	if (!getLyrielTransform())
-	{
-		return false;
-	}
-
-	return getDistanceToLyriel() <= m_detectionRadius;
-}
-
-bool ArthurDetectionAggro::isDeathInDetectionRange() const
-{
-	if (!getDeathTransform())
-	{
-		return false;
-	}
-
-	return getDistanceToDeath() <= m_detectionRadius;
-}
-
-bool ArthurDetectionAggro::isLyrielAggroing() const
-{
-	if (!m_LyrielAggro.targetTransform)
-	{
-		return false;
-	}
-
-	return (m_currentTime - m_LyrielAggro.lastAttackTime) <= m_recentAttackMemory;
-}
-
-bool ArthurDetectionAggro::isDeathAggroing() const
-{
-	if (!m_DeathAggro.targetTransform)
-	{
-		return false;
-	}
-
-	return (m_currentTime - m_DeathAggro.lastAttackTime) <= m_recentAttackMemory;
-}
-
-bool ArthurDetectionAggro::isDowned(Transform* target) const
-{
-	if (target == nullptr)
-	{
-		return false;
-	}
-
-	GameObject* targetOwner = ComponentAPI::getOwner(target);
-	if (targetOwner == nullptr)
-	{
-		return false;
-	}
-
-	PlayerState* state = GameObjectAPI::findScript<PlayerState>(targetOwner);
-
-	return state == nullptr || state->isDowned();
-}
-
-ArthurDetectionAggro::AggroEntry* ArthurDetectionAggro::getAggroEntry(Transform* target)
-{
-	if (target == getLyrielTransform())
-	{
-		return &m_LyrielAggro;
-	}
-	if (target == getDeathTransform())
-	{
-		return &m_DeathAggro;
-	}
-	return nullptr;
-}
-
-const ArthurDetectionAggro::AggroEntry* ArthurDetectionAggro::getAggroEntry(Transform* target) const
-{
-	if (target == getLyrielTransform())
-	{
-		return &m_LyrielAggro;
-	}
-	if (target == getDeathTransform())
-	{
-		return &m_DeathAggro;
-	}
-	return nullptr;
+	resetAggro();
 }
 
 IMPLEMENT_SCRIPT(ArthurDetectionAggro)
