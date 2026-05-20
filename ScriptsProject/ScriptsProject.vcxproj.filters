@@ -58,6 +58,24 @@
     <Filter Include="UI">
       <UniqueIdentifier>{e135fa5e-751a-4bac-acd9-1ede1f2173ca}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Player\Characters">
+      <UniqueIdentifier>{18003957-5065-4adc-b44d-b287c568bfc1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Player\Characters\Lyriel">
+      <UniqueIdentifier>{1dd13501-33d1-47a1-bae7-c0a21d148ac5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Player\Characters\Death">
+      <UniqueIdentifier>{c05ea1a6-3703-4a10-a84a-609d150244ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Interaction/Gameplay\Puzzles">
+      <UniqueIdentifier>{5258ec66-1d97-4672-a686-3d60947602f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Interaction/Gameplay\Traps">
+      <UniqueIdentifier>{29f49c70-b8aa-4257-97d8-dc2e18fdd700}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Interaction/Gameplay\HealthDrop">
+      <UniqueIdentifier>{d8de068a-39f8-435a-ad86-ecaf9ed6e761}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -295,6 +313,28 @@
     </ClInclude>
     <ClInclude Include="PowerupCollectible.h" />
     <ClInclude Include="PersistingPowerupState.h" />
+    <ClInclude Include="BreakableDamageable.h">
+      <Filter>Combat</Filter>
+    </ClInclude>
+    <ClInclude Include="BreakableExplosive.h">
+      <Filter>Combat</Filter>
+    </ClInclude>
+    <ClInclude Include="BreakableHealingDrop.h">
+      <Filter>Interaction/Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="BreakableObject.h">
+      <Filter>Interaction/Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="Pickup.h">
+      <Filter>Interaction/Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="HealthPickup.h" />
+    <ClInclude Include="HealthPickup.h">
+      <Filter>Interaction/Gameplay\HealthDrop</Filter>
+    </ClInclude>
+    <ClInclude Include="HealthDropSpawner.h">
+      <Filter>Interaction/Gameplay\HealthDrop</Filter>
+    </ClInclude>
     <ClInclude Include="PuzzleManagerLVL1.h" >
       <Filter>Interaction/Gameplay\Puzzles</Filter>
     </ClInclude>
@@ -539,6 +579,28 @@
     </ClCompile>
     <ClCompile Include="PowerupCollectible.cpp" />
     <ClCompile Include="PersistingPowerupState.cpp" />
+    <ClCompile Include="BreakableDamageable.cpp">
+      <Filter>Combat</Filter>
+    </ClCompile>
+    <ClCompile Include="BreakableExplosive.cpp">
+      <Filter>Combat</Filter>
+    </ClCompile>
+    <ClCompile Include="BreakableHealingDrop.cpp">
+      <Filter>Interaction/Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="BreakableObject.cpp">
+      <Filter>Interaction/Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="Pickup.cpp">
+      <Filter>Interaction/Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="HealthPickup.cpp" />
+    <ClCompile Include="HealthPickup.cpp">
+      <Filter>Interaction/Gameplay\HealthDrop</Filter>
+    </ClCompile>
+    <ClCompile Include="HealthDropSpawner.cpp">
+      <Filter>Interaction/Gameplay\HealthDrop</Filter>
+    </ClCompile>
     <ClCompile Include="PuzzleManagerLVL1.cpp" >
       <Filter>Interaction/Gameplay\Puzzles</Filter>
     </ClCompile>

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -163,6 +163,10 @@
     <ClInclude Include="AbilityBase.h" />
     <ClInclude Include="ArrowPool.h" />
     <ClInclude Include="Bound.h" />
+    <ClInclude Include="BreakableDamageable.h" />
+    <ClInclude Include="BreakableExplosive.h" />
+    <ClInclude Include="BreakableHealingDrop.h" />
+    <ClInclude Include="BreakableObject.h" />
     <ClInclude Include="CharacterBase.h" />
     <ClInclude Include="CrystalShadowMark.h" />
     <ClInclude Include="Damageable.h" />
@@ -179,7 +183,9 @@
     <ClInclude Include="EnemyCHASE.h" />
     <ClInclude Include="EnemyDamageable.h" />
     <ClInclude Include="EnemyShadowMark.h" />
+    <ClInclude Include="HealthDropSpawner.h" />
     <ClInclude Include="PersistingPowerupState.h" />
+    <ClInclude Include="Pickup.h" />
     <ClInclude Include="PuzzleManagerLVL1.h" />
     <ClInclude Include="ReaperGauge.h" />
     <ClInclude Include="ShadowExecution.h" />
@@ -225,6 +231,10 @@
     <ClCompile Include="AbilityBase.cpp" />
     <ClCompile Include="ArrowPool.cpp" />
     <ClCompile Include="Bound.cpp" />
+    <ClCompile Include="BreakableDamageable.cpp" />
+    <ClCompile Include="BreakableExplosive.cpp" />
+    <ClCompile Include="BreakableHealingDrop.cpp" />
+    <ClCompile Include="BreakableObject.cpp" />
     <ClCompile Include="CharacterBase.cpp" />
     <ClCompile Include="CrystalShadowMark.cpp" />
     <ClCompile Include="Damageable.cpp" />
@@ -242,7 +252,9 @@
     <ClCompile Include="EnemyCHASE.cpp" />
     <ClCompile Include="EnemyDamageable.cpp" />
     <ClCompile Include="EnemyShadowMark.cpp" />
+    <ClCompile Include="HealthDropSpawner.cpp" />
     <ClCompile Include="PersistingPowerupState.cpp" />
+    <ClCompile Include="Pickup.cpp" />
     <ClCompile Include="PuzzleManagerLVL1.cpp" />
     <ClCompile Include="ReaperGauge.cpp" />
     <ClCompile Include="ShadowExecution.cpp" />

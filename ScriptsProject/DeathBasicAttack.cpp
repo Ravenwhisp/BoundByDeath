@@ -8,6 +8,7 @@
 #include "PlayerState.h"
 #include "EnemyDamageable.h"
 #include "EnemyShadowMark.h"
+#include "BreakableDamageable.h"
 
 #include <cmath>
 
@@ -169,6 +170,12 @@ void DeathBasicAttack::dealDamageToTarget(GameObject* target) const
             EnemyDamageable* damageable = GameObjectAPI::findScript<EnemyDamageable>(enemy);
             if (damageable == nullptr)
             {
+                BreakableDamageable* breakableDamageable = GameObjectAPI::findScript<BreakableDamageable>(enemy);
+                if(breakableDamageable == nullptr)
+                {
+                    return;
+                }
+                breakableDamageable->takeDamage(m_basicAttackDamage);
                 return;
             }
 
