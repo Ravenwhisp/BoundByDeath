@@ -87,7 +87,7 @@ void DeathChargedAttack::startAbility()
 
 bool DeathChargedAttack::canStartSpecificAbility() const
 {
-	return m_deathCharacter != nullptr && m_attackStateTimer <= 0.0f && !m_deathCharacter->isInComboCooldown() && m_deathCharacter->canUseR2InCombo() && !m_deathCharacter->isUsingAbility();
+    return m_deathCharacter != nullptr && !m_deathCharacter->isInComboCooldown() && m_deathCharacter->canUseR2InCombo();
 }
 
 void DeathChargedAttack::startCharging()
