@@ -47,7 +47,7 @@ IMPLEMENT_SCRIPT_FIELDS(ArthurAttackConfig,
     SERIALIZED_FLOAT(m_earthHammerHitTime, "Earth Hammer Hit Time", 0.0f, 10.0f, 0.05f),
     SERIALIZED_FLOAT(m_earthHammerRecoveryDuration, "Earth Hammer Recovery Duration", 0.0f, 10.0f, 0.05f),
     SERIALIZED_FLOAT(m_earthHammerStunDuration, "Earth Hammer Stun Duration", 0.0f, 10.0f, 0.05f),
-    SERIALIZED_FLOAT(m_earthHammerCooldown, "Earth Hammer Cooldown", 0.0f, 10.0f, 0.1f)
+    SERIALIZED_FLOAT(m_earthHammerCooldown, "Earth Hammer Cooldown", 0.0f, 10.0f, 0.1f),
     SERIALIZED_FLOAT(m_earthHammerPhase2Damage, "Earth Hammer Phase 2 Damage", 0.0f, 9999.0f, 1.0f),
     SERIALIZED_FLOAT(m_earthHammerPhase2StunDuration, "Earth Hammer Phase 2 Stun Duration", 0.0f, 10.0f, 0.05f)
 )
