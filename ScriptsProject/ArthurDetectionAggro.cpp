@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "ArthurDetectionAggro.h"
 #include "ArthurBossController.h"
-#include "Damageable.h"
+#include "PlayerState.h"
 #include "DeathCharacter.h" 
 
 IMPLEMENT_SCRIPT_FIELDS(ArthurDetectionAggro,
@@ -12,33 +12,6 @@ IMPLEMENT_SCRIPT_FIELDS(ArthurDetectionAggro,
 	SERIALIZED_COMPONENT_REF(m_lyrielTransform, "Lyriel Transform", ComponentType::TRANSFORM),
 	SERIALIZED_COMPONENT_REF(m_deathTransform, "Death Transform", ComponentType::TRANSFORM)
 )
-
-static bool isDeadTarget(Transform* targetTransform)
-{
-	if (targetTransform == nullptr)
-	{
-		return false;
-	}
-
-	GameObject* targetObject = ComponentAPI::getOwner(targetTransform);
-	if (targetObject == nullptr)
-	{
-		return false;
-	}
-
-	Damageable* damageable = GameObjectAPI::findScript<Damageable>(targetObject);
-	if (damageable == nullptr)
-	{
-		return false;
-	}
-
-	return damageable->isDead();
-}
-
-static bool isValidAliveTarget(Transform* targetTransform)
-{
-	return targetTransform && !isDeadTarget(targetTransform);
-}
 
 ArthurDetectionAggro::ArthurDetectionAggro(GameObject* owner) : Script(owner) {}
 
@@ -126,7 +99,7 @@ void ArthurDetectionAggro::updateAggroState()
 		return;
 	}
 
-	if (m_currentTargetTransform && isDeadTarget(m_currentTargetTransform))
+	if (m_currentTargetTransform && isDowned(m_currentTargetTransform))
 	{
 		m_currentTargetTransform = nullptr;
 		m_isAggro = false;
@@ -136,7 +109,7 @@ void ArthurDetectionAggro::updateAggroState()
 
 	if (isTaunted())
 	{
-		if (!isTransformAlive(m_tauntTargetTransform))
+		if (isDowned(m_tauntTargetTransform))
 		{
 			clearTaunt(m_tauntTargetTransform);
 		}
@@ -159,13 +132,14 @@ void ArthurDetectionAggro::updateAggroState()
 	if (m_arthurBossController && m_arthurBossController->getPhase() == ArthurBossPhase::Phase1)
 	{
 		Transform* lyrielTarget = getLyrielTransform();
+		Transform* deathTarget = getDeathTransform();
 
 		Debug::log(
-			"[ArthurAggro] Current target dead: %d",
-			isDeadTarget(m_currentTargetTransform)
+			"[ArthurAggro] Lyriel dead: %d",
+			isDowned(m_currentTargetTransform)
 		); // Need to remove that after issue is resolved
 
-		if (isTransformAlive(lyrielTarget))
+		if (!isDowned(lyrielTarget))
 		{
 			if (m_currentTargetTransform != lyrielTarget)
 			{
@@ -175,7 +149,16 @@ void ArthurDetectionAggro::updateAggroState()
 			return;
 		}
 
-		// if Lyriel is dead - reset current target
+		if (!isDowned(deathTarget))
+		{
+			if (m_currentTargetTransform != deathTarget)
+			{
+				enterAggro(deathTarget);
+			}
+
+			return;
+		}
+
 		m_currentTargetTransform = nullptr;
 		m_isAggro = false;
 		m_canSeeTarget = false;
@@ -198,7 +181,7 @@ void ArthurDetectionAggro::updateAggroState()
 	}
 
 	const bool currentTargetStillDetected =
-		isValidAliveTarget(m_currentTargetTransform) &&
+		!isDowned(m_currentTargetTransform) &&
 		(
 			(m_currentTargetTransform == m_LyrielAggro.targetTransform && m_LyrielAggro.isInDetectionRange) ||
 			(m_currentTargetTransform == m_DeathAggro.targetTransform && m_DeathAggro.isInDetectionRange)
@@ -298,8 +281,8 @@ bool ArthurDetectionAggro::isTaunted() const
 
 Transform* ArthurDetectionAggro::selectClosestDetectedPlayer() const
 {
-	const bool lyrielInRange = m_LyrielAggro.isInDetectionRange && isValidAliveTarget(m_LyrielAggro.targetTransform);
-	const bool deathInRange = m_DeathAggro.isInDetectionRange && isValidAliveTarget(m_DeathAggro.targetTransform);
+	const bool lyrielInRange = m_LyrielAggro.isInDetectionRange && !isDowned(m_LyrielAggro.targetTransform);
+	const bool deathInRange = m_DeathAggro.isInDetectionRange && !isDowned(m_DeathAggro.targetTransform);
 
 	if (lyrielInRange && !deathInRange)
 	{
@@ -328,8 +311,8 @@ Transform* ArthurDetectionAggro::selectClosestDetectedPlayer() const
 
 Transform* ArthurDetectionAggro::selectReevaluatedTarget() const
 {
-	const bool lyrielAggroing = isLyrielAggroing() && isValidAliveTarget(m_LyrielAggro.targetTransform);
-	const bool deathAggroing = isDeathAggroing() && isValidAliveTarget(m_DeathAggro.targetTransform);
+	const bool lyrielAggroing = isLyrielAggroing() && !isDowned(m_LyrielAggro.targetTransform);
+	const bool deathAggroing = isDeathAggroing() && !isDowned(m_DeathAggro.targetTransform);
 
 	if (lyrielAggroing && !deathAggroing)
 	{
@@ -353,7 +336,7 @@ Transform* ArthurDetectionAggro::selectReevaluatedTarget() const
 		}
 	}
 
-	if (isValidAliveTarget(m_currentTargetTransform))
+	if (!isDowned(m_currentTargetTransform))
 	{
 		return m_currentTargetTransform;
 	}
@@ -363,7 +346,7 @@ Transform* ArthurDetectionAggro::selectReevaluatedTarget() const
 
 void ArthurDetectionAggro::notifyPlayerAttackedEnemy(Transform* playerTransform)
 {
-	if (!isValidAliveTarget(playerTransform))
+	if (isDowned(playerTransform))
 	{
 		return;
 	}
@@ -582,7 +565,7 @@ bool ArthurDetectionAggro::isDeathAggroing() const
 	return (m_currentTime - m_DeathAggro.lastAttackTime) <= m_recentAttackMemory;
 }
 
-bool ArthurDetectionAggro::isTransformAlive(Transform* target) const
+bool ArthurDetectionAggro::isDowned(Transform* target) const
 {
 	if (target == nullptr)
 	{
@@ -595,9 +578,9 @@ bool ArthurDetectionAggro::isTransformAlive(Transform* target) const
 		return false;
 	}
 
-	Damageable* damageable = GameObjectAPI::findScript<Damageable>(targetOwner);
+	PlayerState* state = GameObjectAPI::findScript<PlayerState>(targetOwner);
 
-	return damageable == nullptr || !damageable->isDead();
+	return state == nullptr || state->isDowned();
 }
 
 ArthurDetectionAggro::AggroEntry* ArthurDetectionAggro::getAggroEntry(Transform* target)

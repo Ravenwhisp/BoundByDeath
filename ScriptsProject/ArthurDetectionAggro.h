@@ -98,7 +98,7 @@ private:
 
 	bool isLyrielAggroing() const;
 	bool isDeathAggroing() const;
-	bool isTransformAlive(Transform* target) const;
+	bool isDowned(Transform* target) const;
 
 	AggroEntry* getAggroEntry(Transform* target);
 	const AggroEntry* getAggroEntry(Transform* target) const;
