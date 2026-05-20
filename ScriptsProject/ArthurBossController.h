@@ -67,6 +67,7 @@ public:
 	void setPhase(ArthurBossPhase phase);
 	ArthurBossPhase getPhase() const { return m_phase; }
 	bool isPhase2() const { return m_phase == ArthurBossPhase::Phase2; }
+	void updateBossPhase();
 
 	// Attack Cooldown Helpers
 	void updateAttackCooldowns(float dt);

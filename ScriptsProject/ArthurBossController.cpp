@@ -66,35 +66,10 @@ void ArthurBossController::drawGizmo()
 
 void ArthurBossController::Update()
 {
-	// The "moving" logic should be in the Chase state, like this once we are attacking we stop moving and each state controlls itself.
-	// For now i will comment it, and once you (Mihail) do the chase state you move whatever you need.
-
-	/*updateCurrentTarget();
-
-	if (!hasValidTarget())
-	{
-		clearPath();
-		return;
-	}
-
-	if (isTargetInCombatRange())
-	{
-		clearPath();
-		faceCurrentTarget();
-		return;
-	}
-
-	addToRepathTimer(Time::getDeltaTime());
-
-	if (!m_hasPath || shouldRepath())
-	{
-		buildPathToTarget();
-		resetRepathTimer();
-	}
-
-	followPath();*/
 
 	updateAttackCooldowns(Time::getDeltaTime());
+
+	updateBossPhase();
 }
 
 bool ArthurBossController::hasValidTarget() const
@@ -169,6 +144,23 @@ float ArthurBossController::getDistanceToCurrentTarget() const
 void ArthurBossController::setPhase(ArthurBossPhase phase)
 {
 	m_phase = phase;
+}
+
+void ArthurBossController::updateBossPhase()
+{
+	if (!isPhase2())
+	{
+		Damageable* damageable = GameObjectAPI::findScript<Damageable>(getOwner());
+		if (!damageable)
+		{
+			return;
+		}
+
+		if (damageable->getCurrentHp() <= damageable->getMaxHp() * 0.5f)
+		{
+			setPhase(ArthurBossPhase::Phase2);
+		}
+	}
 }
 
 void ArthurBossController::updateAttackCooldowns(float dt)
