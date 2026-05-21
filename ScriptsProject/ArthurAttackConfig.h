@@ -91,6 +91,16 @@ public:
 	UISlider* m_chargingSlamUIBordersSliderComponent = nullptr;
     UISlider* m_chargingSlamUIShadowSliderComponent = nullptr;
 
+	ScriptComponentRef<Transform> m_chargingSlamImpactUICanvas;
+	ScriptComponentRef<Transform2D> m_chargingSlamImpactUIContainer;
+    ScriptComponentRef<Transform2D> m_chargingSlamImpactUICenter;
+    ScriptComponentRef<Transform2D> m_chargingSlamImpactUIGlow;
+
+	Transform* m_chargingSlamImpactUICanvasTransform = nullptr;
+	Transform2D* m_chargingSlamImpactUIContainerTransform2D = nullptr;
+	Transform2D* m_chargingSlamImpactUICenterTransform2D = nullptr;
+	Transform2D* m_chargingSlamImpactUIGlowTransform2D = nullptr;
+
     // Earth Hammer
     float m_earthHammerDamage = 20.0f;
     float m_earthHammerRadius = 5.0f;
