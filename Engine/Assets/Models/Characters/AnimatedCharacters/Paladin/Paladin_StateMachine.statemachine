@@ -109,8 +109,8 @@
             "name": "Paladin_Death",
             "clipName": "Paladin_Death",
             "speed": 1.0,
-            "behaviourScriptName": "",
-            "behaviourFieldsJson": "",
+            "behaviourScriptName": "EnemyDeathState",
+            "behaviourFieldsJson": "{\"Destroy Delay\":2.0,\"Should Drop Health\":true,\"Health Prefab Path\":\"Assets/Prefabs/HealthPlaceholder.prefab\",\"Health Drop Quantity\":1,\"Drop Heal Amount\":10.0,\"Drop Radius\":2.0,\"Drop Height\":1.0}",
             "overrideLoop": true,
             "loop": false
         },
@@ -133,5 +133,12 @@
             "loop": true
         }
     ],
-    "transitions": []
+    "transitions": [
+        {
+            "sourceStateName": "Idle",
+            "targetStateName": "Paladin_Death",
+            "triggerName": "ToDeath",
+            "blendTimeSeconds": 0.25
+        }
+    ]
 }
