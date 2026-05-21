@@ -1,6 +1,8 @@
 #pragma once
 
 #include "ScriptAPI.h"
+#include "Transform2D.h"
+#include "UISlider.h"
 
 class ArthurAttackConfig : public Script
 {
@@ -8,6 +10,8 @@ class ArthurAttackConfig : public Script
 
 public:
     explicit ArthurAttackConfig(GameObject* owner);
+
+    void Start() override;
 
     ScriptFieldList getExposedFields() const override;
 
@@ -68,6 +72,24 @@ public:
 
     float m_chargingSlamMinRange = 5.0f;
     float m_chargingSlamMaxRange = 8.0f;
+
+    ScriptComponentRef<Transform> m_chargingSlamUICanvas;
+    ScriptComponentRef<Transform2D> m_chargingSlamUIContainer;
+	ScriptComponentRef<Transform2D> m_chargingSlamUIBackground;
+    ScriptComponentRef<Transform2D> m_chargingSlamUIBorders;
+    ScriptComponentRef<Transform2D> m_chargingSlamUIShadow;
+    ScriptComponentRef<Transform2D> m_chargingSlamUISpikes;
+    ScriptComponentRef<UISlider> m_chargingSlamUIBordersSlider;
+    ScriptComponentRef<UISlider> m_chargingSlamUIShadowSlider;
+
+    Transform* m_chargingSlamUICanvasTransform = nullptr;
+	Transform2D* m_chargingSlamUIContainerTransform2D = nullptr;
+    Transform2D* m_chargingSlamUIBackgroundTransform2D = nullptr;
+    Transform2D* m_chargingSlamUIBordersTransform2D = nullptr;
+    Transform2D* m_chargingSlamUIShadowTransform2D = nullptr;
+	Transform2D* m_chargingSlamUISpikesTransform2D = nullptr;
+	UISlider* m_chargingSlamUIBordersSliderComponent = nullptr;
+    UISlider* m_chargingSlamUIShadowSliderComponent = nullptr;
 
     // Earth Hammer
     float m_earthHammerDamage = 20.0f;

@@ -5,6 +5,8 @@
 #include "ArthurAttackConfig.h"
 #include "ArthurAttackExecutor.h"
 
+#include "Transform2D.h"
+
 ArthurChargingSlam::ArthurChargingSlam(GameObject* owner)
     : StateMachineScript(owner)
 {
@@ -53,6 +55,40 @@ void ArthurChargingSlam::OnStateEnter()
 
     lockTargetPosition();
 
+    m_isFadingUI = false;
+    m_uiFadeOutTimer = 0.0f;
+
+	GameObjectAPI::setActive(m_attackConfig->m_chargingSlamUICanvasTransform->getOwner(), true);
+
+    SliderAPI::setFillAmount(
+        m_attackConfig->m_chargingSlamUIBordersSliderComponent,
+        0.0f);
+
+    SliderAPI::setFillAmount(
+        m_attackConfig->m_chargingSlamUIShadowSliderComponent,
+        0.0f);
+
+    Transform2DAPI::setAlpha(
+        m_attackConfig->m_chargingSlamUIBackgroundTransform2D,
+        0.0f);
+
+    Transform2DAPI::setAlpha(
+        m_attackConfig->m_chargingSlamUIShadowTransform2D,
+        0.0f);
+
+    Transform2DAPI::setAlpha(
+        m_attackConfig->m_chargingSlamUISpikesTransform2D,
+        0.0f);
+
+    Transform2DAPI::setAlpha(
+        m_attackConfig->m_chargingSlamUIBordersTransform2D,
+        1.0f);
+	const float distance = Vector3::Distance(m_startPosition, m_lockedTargetPosition);
+    if (m_attackConfig->m_chargingSlamUIContainerTransform2D)
+    {
+        m_attackConfig->m_chargingSlamUIContainerTransform2D->setBaseSize(Vector2(m_attackConfig->m_chargingSlamUIContainerTransform2D->getBaseSize().x, distance * 100.f));
+    }
+
     Debug::log("[ArthurChargingSlam] ENTER");
 }
 
@@ -93,10 +129,17 @@ void ArthurChargingSlam::OnStateUpdate()
         goToRecover();
         return;
     }
+
+    if (m_attackConfig->m_chargingSlamUICanvasTransform && m_attackConfig->m_chargingSlamUICanvasTransform->getOwner()->GetActive())
+    {
+        updateUI();
+	}
 }
 
 void ArthurChargingSlam::OnStateExit()
 {
+    GameObjectAPI::setActive(m_attackConfig->m_chargingSlamUICanvasTransform->getOwner(), false);
+
     Debug::log("[ArthurChargingSlam] EXIT");
 }
 
@@ -226,6 +269,9 @@ void ArthurChargingSlam::applyImpact()
         return;
     }
 
+    m_isFadingUI = true;
+    m_uiFadeOutTimer = 0.0f;
+
     m_attackExecutor->applyDamageAndStunInRadius(m_lockedTargetPosition, m_attackConfig->m_chargingSlamImpactRadius, m_attackConfig->m_chargingSlamFinalAreaImpactDamage, m_attackConfig->m_chargingSlamImpactStunDuration, "ChargingSlamImpact");
 
     Debug::log("[ArthurChargingSlam] Impact applied.");
@@ -252,6 +298,155 @@ void ArthurChargingSlam::goToRecover()
     Debug::log("[ArthurChargingSlam] Going to Recover.");
 
     AnimationAPI::sendTrigger(animation, "ToRecover");
+}
+void ArthurChargingSlam::updateUI()
+{
+    if (!m_attackConfig)
+    {
+        return;
+    }
+
+    const float deltaTime = Time::getDeltaTime();
+
+	Transform2D* container = m_attackConfig->m_chargingSlamUIContainerTransform2D;
+    Transform2D* borders = m_attackConfig->m_chargingSlamUIBordersTransform2D;
+    Transform2D* shadow = m_attackConfig->m_chargingSlamUIShadowTransform2D;
+    Transform2D* background = m_attackConfig->m_chargingSlamUIBackgroundTransform2D;
+    Transform2D* spikes = m_attackConfig->m_chargingSlamUISpikesTransform2D;
+
+    UISlider* bordersSlider = m_attackConfig->m_chargingSlamUIBordersSliderComponent;
+    UISlider* shadowSlider = m_attackConfig->m_chargingSlamUIShadowSliderComponent;
+
+    if (!container || !borders || !shadow || !background || !spikes ||
+        !bordersSlider || !shadowSlider)
+    {
+        return;
+    }
+
+    // CHARGING PHASE
+
+    if (!m_hasStartedDash)
+    {
+        float chargeDuration = m_attackConfig->m_chargingSlamHitTime;
+
+        if (m_arthurController->isPhase2())
+        {
+            chargeDuration = m_attackConfig->m_chargingSlamPhase2HitTime;
+        }
+
+        const float t = std::clamp(m_stateTimer / chargeDuration, 0.0f, 1.0f);
+
+        const float bordersFill =
+            MathAPI::evaluateEasing(
+                MathAPI::EasingType::EaseOutQuad,
+                t);
+
+        SliderAPI::setFillAmount(bordersSlider, bordersFill);
+
+        Transform2DAPI::setAlpha(shadow, t);
+
+        SliderAPI::setFillAmount(shadowSlider, t);
+
+        const float backgroundAlpha =
+            MathAPI::evaluateEasing(
+                MathAPI::EasingType::EaseInQuad,
+                t);
+
+        Transform2DAPI::setAlpha(background, backgroundAlpha);
+
+        Transform2DAPI::setAlpha(spikes, t);
+
+        SliderAPI::setFillOrigin(
+            bordersSlider,
+            FillOrigin::VerticalTop);
+
+        SliderAPI::setFillOrigin(
+            shadowSlider,
+            FillOrigin::VerticalTop);
+
+        return;
+    }
+
+    // DASH PHASE
+
+    if (m_hasStartedDash && !m_isFadingUI)
+    {
+        SliderAPI::setFillOrigin(
+            bordersSlider,
+            FillOrigin::VerticalBottom);
+
+        SliderAPI::setFillOrigin(
+            shadowSlider,
+            FillOrigin::VerticalBottom);
+
+        Transform* ownerTransform =
+            GameObjectAPI::getTransform(getOwner());
+
+        if (!ownerTransform)
+        {
+            return;
+        }
+
+        Vector3 currentPosition =
+            TransformAPI::getGlobalPosition(ownerTransform);
+
+        const float totalDistance =
+            Vector3::Distance(
+                m_startPosition,
+                m_lockedTargetPosition);
+
+        const float remainingDistance =
+            Vector3::Distance(
+                currentPosition,
+                m_lockedTargetPosition);
+
+        float dashT = 1.0f;
+
+        if (totalDistance > 0.001f)
+        {
+            dashT = remainingDistance / totalDistance;
+        }
+
+        dashT = std::clamp(dashT, 0.0f, 1.0f);
+
+        SliderAPI::setFillAmount(bordersSlider, dashT);
+        SliderAPI::setFillAmount(shadowSlider, dashT);
+		Transform2DAPI::setPivot(container, Vector2(0.5f, dashT));
+		Transform2DAPI::setAnchorMin(container, Vector2(0.5f, dashT));
+
+        return;
+    }
+
+	// FADE OUT UI
+
+    if (m_isFadingUI)
+    {
+        const float fadeDuration = 0.35f;
+
+        m_uiFadeOutTimer += deltaTime;
+
+        float t =
+            std::clamp(
+                m_uiFadeOutTimer / fadeDuration,
+                0.0f,
+                1.0f);
+
+        t = MathAPI::evaluateEasing(
+            MathAPI::EasingType::EaseOutQuad,
+            t);
+
+        const float alpha = 1.0f - t;
+
+        Transform2DAPI::setAlpha(borders, alpha);
+        Transform2DAPI::setAlpha(shadow, alpha);
+        Transform2DAPI::setAlpha(background, alpha);
+        Transform2DAPI::setAlpha(spikes, alpha);
+
+        if (t >= 1.0f)
+        {
+            GameObjectAPI::setActive(m_attackConfig->m_chargingSlamUICanvasTransform->getOwner(), false);
+        }
+    }
 }
 
 IMPLEMENT_SCRIPT(ArthurChargingSlam)

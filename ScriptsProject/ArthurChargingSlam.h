@@ -30,6 +30,8 @@ private:
 
     void goToRecover();
 
+    void updateUI();
+
 private:
     ArthurBossController* m_arthurController = nullptr;
     ArthurAttackConfig* m_attackConfig = nullptr;
@@ -47,4 +49,7 @@ private:
 
     bool m_hasDamagedFocusDuringDash = false;
     bool m_hasDamagedNonFocusDuringDash = false;
+
+    float m_uiFadeOutTimer = 0.0f;
+    bool m_isFadingUI = false;
 };
