@@ -1,9 +1,7 @@
 #include "pch.h"
 #include "EnemyChaseState.h"
 
-IMPLEMENT_SCRIPT_FIELDS(EnemyChaseState,
-    SERIALIZED_BOOL(m_debugEnabled, "Debug Enabled")
-)
+#include "RangedEnemyController.h"
 
 EnemyChaseState::EnemyChaseState(GameObject* owner)
     : StateMachineScript(owner)
@@ -12,8 +10,11 @@ EnemyChaseState::EnemyChaseState(GameObject* owner)
 
 void EnemyChaseState::OnStateEnter()
 {
-    if (!m_debugEnabled)
+    m_archerController = GameObjectAPI::findScript<RangedEnemyController>(getOwner());
+
+    if (!m_archerController)
     {
+        Debug::error("[EnemyChaseState] RangedEnemyController not found.");
         return;
     }
 
@@ -22,13 +23,7 @@ void EnemyChaseState::OnStateEnter()
 
 void EnemyChaseState::OnStateUpdate()
 {
-    RangedEnemyController* controller = getRangedEnemyController();
-    if (!controller)
-    {
-        return;
-    }
-
-    if (controller->TrySendDeathTrigger())
+    if (!m_archerController)
     {
         return;
     }
@@ -39,46 +34,37 @@ void EnemyChaseState::OnStateUpdate()
         return;
     }
 
-    if (!controller->HasTarget() || controller->IsTargetLost())
+    if (!m_archerController->hasTarget())
     {
         AnimationAPI::sendTrigger(animation, "Idle");
 
-        if (m_debugEnabled)
-        {
-            Debug::log("[EnemyChaseState] Idle trigger sent");
-        }
+        Debug::log("[EnemyChaseState] Idle trigger sent");
 
         return;
     }
 
-    if (controller->IsTargetInAttackRange())
+    if (m_archerController->isTargetInAttackRange())
     {
         AnimationAPI::sendTrigger(animation, "Attack");
 
-        if (m_debugEnabled)
-        {
-            Debug::log("[EnemyChaseState] Attack trigger sent");
-        }
+        Debug::log("[EnemyChaseState] Attack trigger sent");
 
         return;
     }
 
-    controller->MoveTowardsTarget();
+    m_archerController->moveTowardsTarget();
 }
 
 void EnemyChaseState::OnStateExit()
 {
-    if (!m_debugEnabled)
+    Debug::log("[EnemyChaseState] EXIT");
+
+    if (!m_archerController)
     {
         return;
     }
 
-    Debug::log("[EnemyChaseState] EXIT");
-}
-
-RangedEnemyController* EnemyChaseState::getRangedEnemyController() const
-{
-    return GameObjectAPI::findScript<RangedEnemyController>(getOwner());
+    m_archerController->clearPath();
 }
 
 IMPLEMENT_SCRIPT(EnemyChaseState)

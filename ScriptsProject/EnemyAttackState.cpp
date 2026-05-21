@@ -1,9 +1,7 @@
 #include "pch.h"
 #include "EnemyAttackState.h"
 
-IMPLEMENT_SCRIPT_FIELDS(EnemyAttackState,
-    SERIALIZED_BOOL(m_debugEnabled, "Debug Enabled")
-)
+#include "RangedEnemyController.h"
 
 EnemyAttackState::EnemyAttackState(GameObject* owner)
     : StateMachineScript(owner)
@@ -12,8 +10,11 @@ EnemyAttackState::EnemyAttackState(GameObject* owner)
 
 void EnemyAttackState::OnStateEnter()
 {
-    if (!m_debugEnabled)
+    m_archerController = GameObjectAPI::findScript<RangedEnemyController>(getOwner());
+
+    if (!m_archerController)
     {
+        Debug::error("[EnemyAttackState] RangedEnemyController not found.");
         return;
     }
 
@@ -22,13 +23,7 @@ void EnemyAttackState::OnStateEnter()
 
 void EnemyAttackState::OnStateUpdate()
 {
-    RangedEnemyController* controller = getRangedEnemyController();
-    if (!controller)
-    {
-        return;
-    }
-
-    if (controller->TrySendDeathTrigger())
+    if (!m_archerController)
     {
         return;
     }
@@ -39,42 +34,30 @@ void EnemyAttackState::OnStateUpdate()
         return;
     }
 
-    if (!controller->HasTarget())
+    if (!m_archerController->hasTarget())
     {
-        AnimationAPI::sendTrigger(animation, "Chase");
+        AnimationAPI::sendTrigger(animation, "Idle");
 
-        if (m_debugEnabled)
-        {
-            Debug::log("[EnemyAttackState] Chase trigger sent (no target)");
-        }
+        Debug::log("[EnemyAttackState] Idle trigger sent");
 
         return;
     }
 
-    if (!controller->IsTargetInAttackRange())
+    if (!m_archerController->isTargetInAttackRange())
     {
         AnimationAPI::sendTrigger(animation, "Chase");
 
-        if (m_debugEnabled)
-        {
-            Debug::log("[EnemyAttackState] Chase trigger sent (target out of range)");
-        }
+        Debug::log("[EnemyAttackState] Chase trigger sent");
+
+        return;
     }
+
+    // Basic attack logic will go here next.
 }
 
 void EnemyAttackState::OnStateExit()
 {
-    if (!m_debugEnabled)
-    {
-        return;
-    }
-
     Debug::log("[EnemyAttackState] EXIT");
-}
-
-RangedEnemyController* EnemyAttackState::getRangedEnemyController() const
-{
-    return GameObjectAPI::findScript<RangedEnemyController>(getOwner());
 }
 
 IMPLEMENT_SCRIPT(EnemyAttackState)

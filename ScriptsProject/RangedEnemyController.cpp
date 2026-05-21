@@ -1,16 +1,15 @@
 #include "pch.h"
 #include "RangedEnemyController.h"
 
+#include "EnemyDetectionAggro.h"
+#include "ArcherAttackConfig.h"
+
 #include <cfloat>
 #include <cmath>
 #include <algorithm>
 
 IMPLEMENT_SCRIPT_FIELDS(RangedEnemyController,
-    SERIALIZED_FLOAT(m_maxHealth, "Max Health", 1.0f, 10000.0f, 1.0f),
-    SERIALIZED_FLOAT(m_health, "Health", 0.0f, 10000.0f, 1.0f),
-    SERIALIZED_FLOAT(m_detectionRadius, "Detection Radius", 0.0f, 100.0f, 0.1f),
     SERIALIZED_FLOAT(m_attackRadius, "Attack Radius", 0.0f, 100.0f, 0.1f),
-    SERIALIZED_FLOAT(m_loseRadius, "Lose Radius", 0.0f, 200.0f, 0.1f),
     SERIALIZED_FLOAT(m_moveSpeed, "Move Speed", 0.0f, 20.0f, 0.1f),
     SERIALIZED_FLOAT(m_pathPointReachDistance, "Path Point Reach Distance", 0.01f, 5.0f, 0.01f),
     SERIALIZED_FLOAT(m_repathInterval, "Repath Interval", 0.05f, 5.0f, 0.05f),
@@ -24,53 +23,58 @@ RangedEnemyController::RangedEnemyController(GameObject* owner) : Script(owner)
 
 void RangedEnemyController::Start()
 {
+    m_enemyDetectionAggro = GameObjectAPI::findScript<EnemyDetectionAggro>(getOwner());
+    m_attackConfig = GameObjectAPI::findScript<ArcherAttackConfig>(getOwner());
+
+    if (!m_enemyDetectionAggro)
+    {
+        Debug::warn("[RangedEnemyController] EnemyDetectionAggro not found on '%s'.", GameObjectAPI::getName(getOwner()));
+    }
+
+    if (!m_attackConfig)
+    {
+        Debug::warn("[RangedEnemyController] ArcherAttackConfig not found on '%s'.", GameObjectAPI::getName(getOwner()));
+    }
+
     m_target = nullptr;
     m_repathTimer = 0.0f;
     m_lastTargetPosition = Vector3::Zero;
-    m_isDead = false;
-    m_deathTransitionRequested = false;
 
-    m_health = (std::clamp)(m_health, 0.0f, m_maxHealth);
-    m_health = std::clamp(m_health, 0.0f, m_maxHealth);
-
-    if (m_health <= 0.0f)
-    {
-        m_health = m_maxHealth;
-    }
-    ClearPath();
+    clearPath();
 }
 
 void RangedEnemyController::Update()
 {
-    if (m_isDead)
-    {
-        ClearPath();
-        return;
-    }
-
-    GameObject* newTarget = findPlayer();
-
-    if (newTarget != m_target)
-    {
-        m_target = newTarget;
-        ClearPath();
-    }
+    updateCurrentTarget();
 
     m_repathTimer += Time::getDeltaTime();
-
 }
 
-GameObject* RangedEnemyController::GetTarget() const
+void RangedEnemyController::updateCurrentTarget()
 {
-    return m_target;
+    if (!m_enemyDetectionAggro)
+    {
+        m_enemyDetectionAggro = GameObjectAPI::findScript<EnemyDetectionAggro>(getOwner());
+    }
+
+    Transform* previousTarget = m_target;
+
+    if (!m_enemyDetectionAggro)
+    {
+        m_target = nullptr;
+    }
+    else
+    {
+        m_target = m_enemyDetectionAggro->getCurrentTarget();
+    }
+
+    if (m_target != previousTarget)
+    {
+        clearPath();
+    }
 }
 
-bool RangedEnemyController::HasTarget() const
-{
-    return m_target != nullptr;
-}
-
-float RangedEnemyController::GetDistanceToTarget() const
+float RangedEnemyController::getDistanceToTarget() const
 {
     if (!m_target)
     {
@@ -78,15 +82,13 @@ float RangedEnemyController::GetDistanceToTarget() const
     }
 
     Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
-    Transform* targetTransform = GameObjectAPI::getTransform(m_target);
-
-    if (!ownerTransform || !targetTransform)
+    if (!ownerTransform)
     {
         return FLT_MAX;
     }
 
     Vector3 ownerPosition = TransformAPI::getPosition(ownerTransform);
-    Vector3 targetPosition = TransformAPI::getPosition(targetTransform);
+    Vector3 targetPosition = TransformAPI::getPosition(m_target);
 
     Vector3 delta = targetPosition - ownerPosition;
     delta.y = 0.0f;
@@ -94,47 +96,21 @@ float RangedEnemyController::GetDistanceToTarget() const
     return delta.Length();
 }
 
-bool RangedEnemyController::IsTargetDetected() const
+bool RangedEnemyController::isTargetInAttackRange() const
 {
     if (!m_target)
     {
         return false;
     }
 
-    return GetDistanceToTarget() <= m_detectionRadius;
+    return getDistanceToTarget() <= m_attackRadius;
 }
 
-bool RangedEnemyController::IsTargetInAttackRange() const
+bool RangedEnemyController::moveTowardsTarget()
 {
     if (!m_target)
     {
-        return false;
-    }
-
-    return GetDistanceToTarget() <= m_attackRadius;
-}
-
-bool RangedEnemyController::IsTargetLost() const
-{
-    if (!m_target)
-    {
-        return true;
-    }
-
-    return GetDistanceToTarget() >= m_loseRadius;
-}
-
-bool RangedEnemyController::MoveTowardsTarget()
-{
-    if (m_isDead)
-    {
-        ClearPath();
-        return false;
-    }
-
-    if (!m_target)
-    {
-        ClearPath();
+        clearPath();
         return false;
     }
 
@@ -144,18 +120,16 @@ bool RangedEnemyController::MoveTowardsTarget()
     }
 
     Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
-    Transform* targetTransform = GameObjectAPI::getTransform(m_target);
-
-    if (!ownerTransform || !targetTransform)
+    if (!ownerTransform)
     {
         return false;
     }
 
     Vector3 ownerPosition = TransformAPI::getPosition(ownerTransform);
-    Vector3 targetPosition = TransformAPI::getPosition(targetTransform);
+    Vector3 targetPosition = TransformAPI::getPosition(m_target);
     targetPosition.y = 0.0f;
 
-    bool shouldRepath = !m_hasPath || (m_repathTimer >= m_repathInterval);
+    bool shouldRepath = !m_hasPath || m_repathTimer >= m_repathInterval;
 
     if (m_hasPath)
     {
@@ -170,7 +144,7 @@ bool RangedEnemyController::MoveTowardsTarget()
 
     if (shouldRepath)
     {
-        if (!RebuildPathToTarget())
+        if (!rebuildPathToTarget())
         {
             return false;
         }
@@ -197,7 +171,7 @@ bool RangedEnemyController::MoveTowardsTarget()
 
         if (m_currentPathIndex >= m_path.size())
         {
-            ClearPath();
+            clearPath();
             return false;
         }
 
@@ -220,167 +194,27 @@ bool RangedEnemyController::MoveTowardsTarget()
     Vector3 nextPosition;
     if (!NavigationAPI::moveAlongSurface(ownerPosition, desiredStepTarget, nextPosition, Vector3(5.0f, 5.0f, 5.0f)))
     {
-        ClearPath();
+        clearPath();
         return false;
     }
 
     TransformAPI::setPosition(ownerTransform, nextPosition);
+
     Vector3 actualStep = nextPosition - ownerPosition;
     actualStep.y = 0.0f;
 
-    if (actualStep.LengthSquared() > 0.00001f)
-    {
-        Vector3 moveDir = actualStep;
-        moveDir.y = 0.0f;
-
-        if (moveDir.LengthSquared() > 0.00001f)
-        {
-            moveDir.Normalize();
-
-            Vector3 currentEuler = TransformAPI::getEulerDegrees(ownerTransform);
-
-            const float desiredYawRadians = std::atan2(moveDir.x, moveDir.z);
-            float desiredYawDegrees = DirectX::XMConvertToDegrees(desiredYawRadians);
-
-            float currentYawDegrees = currentEuler.y;
-            float deltaYaw = desiredYawDegrees - currentYawDegrees;
-
-            while (deltaYaw > 180.0f) deltaYaw -= 360.0f;
-            while (deltaYaw < -180.0f) deltaYaw += 360.0f;
-
-            const float maxStep = m_turnSpeedDegrees * Time::getDeltaTime();
-
-            if (deltaYaw > maxStep) deltaYaw = maxStep;
-            if (deltaYaw < -maxStep) deltaYaw = -maxStep;
-
-            currentEuler.y += deltaYaw;
-            TransformAPI::setRotationEuler(ownerTransform, currentEuler);
-        }
-    }
-
     if (actualStep.LengthSquared() <= 0.00001f)
     {
-        ClearPath();
+        clearPath();
         return false;
     }
+
+    rotateTowardsDirection(actualStep);
 
     return true;
 }
 
-float RangedEnemyController::GetHealth() const
-{
-    return m_health;
-}
-
-float RangedEnemyController::GetMaxHealth() const
-{
-    return m_maxHealth;
-}
-
-bool RangedEnemyController::IsAlive() const
-{
-    return !m_isDead;
-}
-
-void RangedEnemyController::ApplyDamage(float damage)
-{
-    if (m_isDead)
-    {
-        return;
-    }
-
-    if (damage <= 0.0f)
-    {
-        return;
-    }
-
-    m_health -= damage;
-    if (m_health < 0.0f)
-    {
-        m_health = 0.0f;
-    }
-
-    if (m_debugEnabled)
-    {
-        Debug::log("[RangedEnemyController] Damage received: %.2f | Health: %.2f / %.2f",
-            damage, m_health, m_maxHealth);
-    }
-
-    if (m_health <= 0.0f)
-    {
-        Kill();
-    }
-}
-
-void RangedEnemyController::Kill()
-{
-    if (m_isDead)
-    {
-        return;
-    }
-
-    m_isDead = true;
-    m_health = 0.0f;
-    ClearPath();
-
-    if (m_debugEnabled)
-    {
-        Debug::log("[RangedEnemyController] Enemy dead");
-    }
-}
-
-bool RangedEnemyController::IsDead() const
-{
-    return m_isDead;
-}
-
-bool RangedEnemyController::TrySendDeathTrigger()
-{
-    if (!m_isDead)
-    {
-        return false;
-    }
-
-    if (m_deathTransitionRequested)
-    {
-        return false;
-    }
-
-    AnimationComponent* animation = AnimationAPI::getAnimationComponent(getOwner());
-    if (!animation)
-    {
-        return false;
-    }
-
-    const bool sent = AnimationAPI::sendTrigger(animation, "Die");
-    if (!sent)
-    {
-        return false;
-    }
-
-    m_deathTransitionRequested = true;
-
-    if (m_debugEnabled)
-    {
-        Debug::log("[RangedEnemyController] Die trigger sent");
-    }
-
-    return true;
-}
-
-GameObject* RangedEnemyController::findPlayer() const
-{
-    const std::vector<GameObject*> players = SceneAPI::findAllGameObjectsByTag(Tag::PLAYER);
-
-    if (players.empty())
-    {
-        return nullptr;
-    }
-
-    return players.front();
-}
-
-bool RangedEnemyController::RebuildPathToTarget()
+bool RangedEnemyController::rebuildPathToTarget()
 {
     if (!m_target)
     {
@@ -388,15 +222,13 @@ bool RangedEnemyController::RebuildPathToTarget()
     }
 
     Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
-    Transform* targetTransform = GameObjectAPI::getTransform(m_target);
-
-    if (!ownerTransform || !targetTransform)
+    if (!ownerTransform)
     {
         return false;
     }
 
     const Vector3 ownerPosition = TransformAPI::getPosition(ownerTransform);
-    const Vector3 targetPosition = TransformAPI::getPosition(targetTransform);
+    const Vector3 targetPosition = TransformAPI::getPosition(m_target);
 
     constexpr int MAX_PATH_POINTS = 128;
     Vector3 pathPoints[MAX_PATH_POINTS];
@@ -406,27 +238,78 @@ bool RangedEnemyController::RebuildPathToTarget()
         targetPosition,
         pathPoints,
         MAX_PATH_POINTS,
-        Vector3(5.0f, 5.0f, 5.0f));
+        Vector3(5.0f, 5.0f, 5.0f)
+    );
 
     if (pointCount < 2)
     {
         return false;
     }
 
-    std::vector<Vector3> newPath(pathPoints, pathPoints + pointCount);
-   
-    m_path = std::move(newPath);
+    m_path = std::vector<Vector3>(pathPoints, pathPoints + pointCount);
     m_currentPathIndex = 1;
     m_hasPath = true;
 
     return true;
 }
 
-void RangedEnemyController::ClearPath()
+void RangedEnemyController::clearPath()
 {
     m_path.clear();
     m_currentPathIndex = 0;
     m_hasPath = false;
+}
+
+void RangedEnemyController::rotateTowardsDirection(const Vector3& direction)
+{
+    Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
+    if (!ownerTransform)
+    {
+        return;
+    }
+
+    Vector3 moveDir = direction;
+    moveDir.y = 0.0f;
+
+    if (moveDir.LengthSquared() <= 0.00001f)
+    {
+        return;
+    }
+
+    moveDir.Normalize();
+
+    Vector3 currentEuler = TransformAPI::getEulerDegrees(ownerTransform);
+
+    const float desiredYawRadians = std::atan2(moveDir.x, moveDir.z);
+    float desiredYawDegrees = DirectX::XMConvertToDegrees(desiredYawRadians);
+
+    float currentYawDegrees = currentEuler.y;
+    float deltaYaw = desiredYawDegrees - currentYawDegrees;
+
+    while (deltaYaw > 180.0f)
+    {
+        deltaYaw -= 360.0f;
+    }
+
+    while (deltaYaw < -180.0f)
+    {
+        deltaYaw += 360.0f;
+    }
+
+    const float maxStep = m_turnSpeedDegrees * Time::getDeltaTime();
+
+    if (deltaYaw > maxStep)
+    {
+        deltaYaw = maxStep;
+    }
+
+    if (deltaYaw < -maxStep)
+    {
+        deltaYaw = -maxStep;
+    }
+
+    currentEuler.y += deltaYaw;
+    TransformAPI::setRotationEuler(ownerTransform, currentEuler);
 }
 
 IMPLEMENT_SCRIPT(RangedEnemyController)

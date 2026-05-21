@@ -15,11 +15,6 @@ public:
     void OnStateUpdate() override;
     void OnStateExit() override;
 
-    ScriptFieldList getExposedFields() const override;
-
 private:
-    RangedEnemyController* getRangedEnemyController() const;
-
-public:
-    bool m_debugEnabled = true;
+    RangedEnemyController* m_archerController = nullptr;
 };
