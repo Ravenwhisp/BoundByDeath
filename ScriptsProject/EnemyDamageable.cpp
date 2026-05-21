@@ -38,7 +38,7 @@ void EnemyDamageable::onDamaged(float amount)
 	m_enemyDetectionAggro->notifyPlayerAttackedEnemy(m_damageSource);
 }
 
-void EnemyDamageable::applyHit(const EnemyHitContext& hit)
+void EnemyDamageable::takeDamageEnemy(const EnemyHitContext& hit)
 {
 	if (hit.attacker)
 	{
@@ -57,7 +57,7 @@ void EnemyDamageable::takeDamageEnemy(float amount, Transform* playerTransform, 
 	hit.attacker = playerTransform;
 	hit.attackType = attackType;
 
-	applyHit(hit);
+	takeDamageEnemy(hit);
 }
 
 IMPLEMENT_SCRIPT(EnemyDamageable)

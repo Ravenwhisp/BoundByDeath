@@ -3,7 +3,6 @@
 
 #include <sstream>
 #include <algorithm>
-#include <cmath>
 
 static const char* barrierAttackTypeNames[] =
 {
@@ -20,7 +19,7 @@ static const char* barrierAttackTypeNames[] =
 
 constexpr int barrierAttackTypeCount = 9;
 
-IMPLEMENT_SCRIPT_FIELDS_INHERITED(BarrierEnemyDamageable, EnemyDamageable, 
+IMPLEMENT_SCRIPT_FIELDS_INHERITED(BarrierEnemyDamageable, EnemyDamageable,
     SERIALIZED_STRING(m_barrierPercentagesStr, "Barrier Thresholds (%)"),
     SERIALIZED_ENUM_INT(m_requiredAttackType, "Barrier Break Attack", barrierAttackTypeNames, barrierAttackTypeCount),
     SERIALIZED_BOOL(m_shadowExecutionBreaksBarriers, "Shadow Execution Breaks Barriers")
@@ -88,8 +87,7 @@ void BarrierEnemyDamageable::takeDamage(float amount)
     EnemyHitContext hit;
     hit.damage = amount;
     hit.attackType = EnemyAttackType::Environment;
-
-    applyHit(hit);
+    takeDamageEnemy(hit);
 }
 
 bool BarrierEnemyDamageable::canBreakBarrier(EnemyAttackType attackType) const
@@ -102,25 +100,7 @@ bool BarrierEnemyDamageable::canBreakBarrier(EnemyAttackType attackType) const
     return attackType == static_cast<EnemyAttackType>(m_requiredAttackType);
 }
 
-void BarrierEnemyDamageable::breakBarrierAtIndex(size_t barrierIndex, float hpBefore, float hpAfter)
-{
-    if (barrierIndex >= m_barriers.size())
-    {
-        return;
-    }
-
-    m_barriers[barrierIndex].broken = true;
-    m_nextBarrierIndex = barrierIndex + 1;
-
-    Debug::log("[Barrier] %s broke barrier at %.0f%% HP (%s, HP: %.1f -> %.1f)",
-        GameObjectAPI::getName(m_owner),
-        m_barriers[barrierIndex].hpPercent * 100.0f,
-        barrierAttackTypeNames[static_cast<int>(m_requiredAttackType)],
-        hpBefore,
-        hpAfter);
-}
-
-void BarrierEnemyDamageable::applyHit(const EnemyHitContext& hit)
+void BarrierEnemyDamageable::takeDamageEnemy(const EnemyHitContext& hit)
 {
     if (m_isDead || m_invulnerable || hit.damage <= 0.0f)
     {
@@ -131,7 +111,7 @@ void BarrierEnemyDamageable::applyHit(const EnemyHitContext& hit)
 
     if (nextBarrierHp <= 0.0f)
     {
-        EnemyDamageable::applyHit(hit);
+        EnemyDamageable::takeDamageEnemy(hit);
         return;
     }
 
@@ -140,7 +120,7 @@ void BarrierEnemyDamageable::applyHit(const EnemyHitContext& hit)
 
     if (hpAfter >= nextBarrierHp)
     {
-        EnemyDamageable::applyHit(hit);
+        EnemyDamageable::takeDamageEnemy(hit);
         return;
     }
 
@@ -151,7 +131,7 @@ void BarrierEnemyDamageable::applyHit(const EnemyHitContext& hit)
         {
             EnemyHitContext limitedHit = hit;
             limitedHit.damage = allowedDamage;
-            EnemyDamageable::applyHit(limitedHit);
+            EnemyDamageable::takeDamageEnemy(limitedHit);
         }
 
         Debug::log("[Barrier] %s blocked hit at %.0f%% HP. Required attack: %s",
@@ -161,7 +141,6 @@ void BarrierEnemyDamageable::applyHit(const EnemyHitContext& hit)
         return;
     }
 
-    // Break barriers BEFORE applying damage so kill() sees them as broken
     for (size_t i = 0; i < m_barriers.size(); ++i)
     {
         if (m_barriers[i].broken)
@@ -184,7 +163,7 @@ void BarrierEnemyDamageable::applyHit(const EnemyHitContext& hit)
         }
     }
 
-    EnemyDamageable::applyHit(hit);
+    EnemyDamageable::takeDamageEnemy(hit);
 }
 
 void BarrierEnemyDamageable::kill()

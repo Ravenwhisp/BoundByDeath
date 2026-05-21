@@ -32,8 +32,8 @@ class EnemyDamageable : public Damageable
 		explicit EnemyDamageable(GameObject* owner);
 
 		void Start() override;
+		virtual void takeDamageEnemy(const EnemyHitContext& hit);
 		void takeDamageEnemy(float amount, Transform* playerTransform, EnemyAttackType attackType = EnemyAttackType::None);
-		virtual void applyHit(const EnemyHitContext& hit);
 
 	protected:
 		void onDamaged(float amount) override;

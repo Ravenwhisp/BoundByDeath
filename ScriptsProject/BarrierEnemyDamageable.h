@@ -15,7 +15,7 @@ public:
     ScriptFieldList getExposedFields() const override;
 
     void takeDamage(float amount) override;
-    void applyHit(const EnemyHitContext& hit) override;
+    void takeDamageEnemy(const EnemyHitContext& hit) override;
     void kill() override;
 
     bool hasActiveBarriers() const { return m_nextBarrierIndex < m_barriers.size(); }
@@ -36,7 +36,6 @@ private:
     void parseBarrierConfig();
     float getNextBarrierAbsoluteHp() const;
     bool canBreakBarrier(EnemyAttackType attackType) const;
-    void breakBarrierAtIndex(size_t barrierIndex, float hpBefore, float hpAfter);
 
     std::vector<Barrier> m_barriers;
     size_t m_nextBarrierIndex = 0;
