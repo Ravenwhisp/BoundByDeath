@@ -116,4 +116,18 @@ public:
 
     float m_earthHammerPhase2Damage = 25.0f;
     float m_earthHammerPhase2StunDuration = 1.75f;
+
+	ScriptComponentRef<Transform> m_earthHammerUICanvas;
+	ScriptComponentRef<Transform2D> m_earthHammerUIContainer;
+    ScriptComponentRef<Transform2D> m_earthHammerUIInner;
+    ScriptComponentRef<Transform2D> m_earthHammerUISpikes;
+	ScriptComponentRef<Transform2D> m_earthHammerUIGlow;
+    ScriptComponentRef<Transform2D> m_earthHammerUIRing;
+
+	Transform* m_earthHammerUICanvasTransform = nullptr;
+	Transform2D* m_earthHammerUIContainerTransform2D = nullptr;
+    Transform2D* m_earthHammerUIInnerTransform2D = nullptr;
+	Transform2D* m_earthHammerUISpikesTransform2D = nullptr;
+    Transform2D* m_earthHammerUIGlowTransform2D = nullptr;
+	Transform2D* m_earthHammerUIRingTransform2D = nullptr;
 };

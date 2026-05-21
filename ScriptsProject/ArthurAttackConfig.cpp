@@ -63,7 +63,14 @@ IMPLEMENT_SCRIPT_FIELDS(ArthurAttackConfig,
     SERIALIZED_FLOAT(m_earthHammerStunDuration, "Earth Hammer Stun Duration", 0.0f, 10.0f, 0.05f),
     SERIALIZED_FLOAT(m_earthHammerCooldown, "Earth Hammer Cooldown", 0.0f, 10.0f, 0.1f),
     SERIALIZED_FLOAT(m_earthHammerPhase2Damage, "Earth Hammer Phase 2 Damage", 0.0f, 9999.0f, 1.0f),
-    SERIALIZED_FLOAT(m_earthHammerPhase2StunDuration, "Earth Hammer Phase 2 Stun Duration", 0.0f, 10.0f, 0.05f)
+    SERIALIZED_FLOAT(m_earthHammerPhase2StunDuration, "Earth Hammer Phase 2 Stun Duration", 0.0f, 10.0f, 0.05f),
+	SERIALIZED_COMPONENT_REF(m_earthHammerUICanvas, "Earth Hammer UI Canvas", ComponentType::TRANSFORM),
+	SERIALIZED_COMPONENT_REF(m_earthHammerUIContainer, "Earth Hammer UI Container", ComponentType::TRANSFORM2D),
+	SERIALIZED_COMPONENT_REF(m_earthHammerUIInner, "Earth Hammer UI Inner", ComponentType::TRANSFORM2D),
+	SERIALIZED_COMPONENT_REF(m_earthHammerUISpikes, "Earth Hammer UI Spikes", ComponentType::TRANSFORM2D),
+	SERIALIZED_COMPONENT_REF(m_earthHammerUIGlow, "Earth Hammer UI Glow", ComponentType::TRANSFORM2D),
+	SERIALIZED_COMPONENT_REF(m_earthHammerUIRing, "Earth Hammer UI Ring", ComponentType::TRANSFORM2D)
+
 )
 
 ArthurAttackConfig::ArthurAttackConfig(GameObject* owner)
@@ -73,6 +80,7 @@ ArthurAttackConfig::ArthurAttackConfig(GameObject* owner)
 
 void ArthurAttackConfig::Start()
 {
+	// Charging Slam UI
 	m_chargingSlamUICanvasTransform = m_chargingSlamUICanvas.getReferencedComponent();
     m_chargingSlamUIContainerTransform2D = m_chargingSlamUIContainer.getReferencedComponent();
 	m_chargingSlamUIBackgroundTransform2D = m_chargingSlamUIBackground.getReferencedComponent();
@@ -88,6 +96,15 @@ void ArthurAttackConfig::Start()
     m_chargingSlamImpactUICenterTransform2D = m_chargingSlamImpactUICenter.getReferencedComponent();
     m_chargingSlamImpactUIGlowTransform2D = m_chargingSlamImpactUIGlow.getReferencedComponent();
     GameObjectAPI::setActive(m_chargingSlamImpactUICanvasTransform->getOwner(), false);
+
+	// Earth Hammer UI
+    m_earthHammerUICanvasTransform = m_earthHammerUICanvas.getReferencedComponent();
+	m_earthHammerUIContainerTransform2D = m_earthHammerUIContainer.getReferencedComponent();
+    m_earthHammerUIInnerTransform2D = m_earthHammerUIInner.getReferencedComponent();
+    m_earthHammerUISpikesTransform2D = m_earthHammerUISpikes.getReferencedComponent();
+    m_earthHammerUIGlowTransform2D = m_earthHammerUIGlow.getReferencedComponent();
+    m_earthHammerUIRingTransform2D = m_earthHammerUIRing.getReferencedComponent();
+    GameObjectAPI::setActive(m_earthHammerUICanvasTransform->getOwner(), false);
 }
 
 IMPLEMENT_SCRIPT(ArthurAttackConfig)
