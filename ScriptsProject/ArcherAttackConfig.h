@@ -25,7 +25,7 @@ public:
     float m_arrowBarrageRadius = 2.5f;
     float m_arrowBarrageThrowTime = 0.35f;
     float m_arrowBarrageLandDelay = 1.0f;
-    float m_arrowBarrageTotalDuration = 1.4f;
+    float m_arrowBarrageTotalDuration = 1.7f;
     float m_arrowBarrageCooldown = 5.0f;
 
     // Somersault

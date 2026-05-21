@@ -5,6 +5,7 @@
 
 class RangedEnemyController;
 class ArcherAttackConfig;
+class EnemyAttackExecutor;
 
 class ArcherArrowBarrageState : public StateMachineScript
 {
@@ -20,12 +21,12 @@ public:
 private:
     void lockImpactPosition();
     void applyImpact();
-    void tryDamageTarget(Transform* targetTransform);
     void finishArrowBarrage();
 
 private:
     RangedEnemyController* m_archerController = nullptr;
     ArcherAttackConfig* m_attackConfig = nullptr;
+    EnemyAttackExecutor* m_attackExecutor = nullptr;
 
     Vector3 m_impactPosition = Vector3(0.0f, 0.0f, 0.0f);
 
