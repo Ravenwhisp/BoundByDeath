@@ -482,6 +482,15 @@ bool EnemyDetectionAggro::isDowned(Transform* target) const
 	return state == nullptr || state->isDowned();
 }
 
+bool EnemyDetectionAggro::hasAnyTargetInDetectionRange()
+{
+	updateAggroEntries();
+
+	return
+		(m_lyrielAggro.isInDetectionRange && !isDowned(m_lyrielAggro.targetTransform)) ||
+		(m_deathAggro.isInDetectionRange && !isDowned(m_deathAggro.targetTransform));
+}
+
 EnemyDetectionAggro::AggroEntry* EnemyDetectionAggro::getAggroEntry(Transform* target)
 {
 	if (target == getLyrielTransform())

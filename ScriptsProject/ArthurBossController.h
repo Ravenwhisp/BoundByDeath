@@ -39,6 +39,8 @@ private:
 
 	ArthurBossPhase m_phase = ArthurBossPhase::Phase1;
 
+	bool m_hasStartedEncounter = false;
+
 	float m_repathTimer = 0.0f;
 	std::vector<Vector3> m_path;
 	bool m_hasPath = false;
