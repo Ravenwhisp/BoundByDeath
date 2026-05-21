@@ -27,6 +27,7 @@ public:
     bool isTargetInAttackRange() const;
 
     bool moveTowardsTarget();
+    void faceTarget();
     void clearPath();
 
 private:

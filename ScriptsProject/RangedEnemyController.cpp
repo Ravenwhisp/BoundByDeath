@@ -212,6 +212,33 @@ bool RangedEnemyController::moveTowardsTarget()
     return true;
 }
 
+void RangedEnemyController::faceTarget()
+{
+    if (!m_target)
+    {
+        return;
+    }
+
+    Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
+    if (!ownerTransform)
+    {
+        return;
+    }
+
+    Vector3 ownerPosition = TransformAPI::getPosition(ownerTransform);
+    Vector3 targetPosition = TransformAPI::getPosition(m_target);
+
+    Vector3 direction = targetPosition - ownerPosition;
+    direction.y = 0.0f;
+
+    if (direction.LengthSquared() <= 0.00001f)
+    {
+        return;
+    }
+
+    rotateTowardsDirection(direction);
+}
+
 bool RangedEnemyController::rebuildPathToTarget()
 {
     if (!m_target)

@@ -53,6 +53,8 @@ void EnemyAttackState::OnStateUpdate()
         return;
     }
 
+    m_archerController->faceTarget();
+
     m_stateTimer += Time::getDeltaTime();
 
     if (!m_hasAppliedDamage && m_stateTimer >= m_attackConfig->m_basicAttackWindupTime)
