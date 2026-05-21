@@ -103,10 +103,18 @@ void ArthurChase::OnStateUpdate()
 	// Heavy Swipe
 	if (m_arthurController->getDistanceToCurrentTarget() <= m_arthurAttackConfig->m_heavySwipeRange)
 	{
+		if (m_arthurController->isCurrentTargetInsideHeavySwipeArea(
+			m_arthurAttackConfig->m_heavySwipeRange,
+			m_arthurAttackConfig->m_heavySwipeHalfAngleDegrees))
+		{
+			m_arthurController->clearPath();
+			m_arthurController->faceCurrentTarget();
+			AnimationAPI::sendTrigger(animation, "ToHeavySwipe");
+			return;
+		}
+
 		m_arthurController->clearPath();
 		m_arthurController->faceCurrentTarget();
-		AnimationAPI::sendTrigger(animation, "ToHeavySwipe");
-		return;
 	}
 
 	// Movement logic
