@@ -1,12 +1,9 @@
 #include "pch.h"
 #include "EnemyChaseState.h"
 
-static const ScriptFieldInfo CHASEFields[] =
-{
-    { "Debug Enabled", ScriptFieldType::Bool, offsetof(EnemyChaseState, m_debugEnabled) }
-};
-
-IMPLEMENT_SCRIPT_FIELDS(EnemyChaseState, CHASEFields)
+IMPLEMENT_SCRIPT_FIELDS(EnemyChaseState,
+    SERIALIZED_BOOL(m_debugEnabled, "Debug Enabled")
+)
 
 EnemyChaseState::EnemyChaseState(GameObject* owner)
     : StateMachineScript(owner)
@@ -81,8 +78,7 @@ void EnemyChaseState::OnStateExit()
 
 RangedEnemyController* EnemyChaseState::getRangedEnemyController() const
 {
-    Script* script = GameObjectAPI::getScript(getOwner(), "RangedEnemyController");
-    return dynamic_cast<RangedEnemyController*>(script);
+    return GameObjectAPI::findScript<RangedEnemyController>(getOwner());
 }
 
 IMPLEMENT_SCRIPT(EnemyChaseState)

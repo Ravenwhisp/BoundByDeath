@@ -478,8 +478,12 @@ bool EnemyDetectionAggro::isDowned(Transform* target) const
 	}
 
 	PlayerState* state = GameObjectAPI::findScript<PlayerState>(targetOwner);
+	if (!state)
+	{
+		return false;
+	}
 
-	return state == nullptr || state->isDowned();
+	return state->isDowned();
 }
 
 EnemyDetectionAggro::AggroEntry* EnemyDetectionAggro::getAggroEntry(Transform* target)

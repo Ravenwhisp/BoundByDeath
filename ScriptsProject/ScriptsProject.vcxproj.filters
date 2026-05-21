@@ -88,6 +88,15 @@
     <Filter Include="Enemies\Arthur\States">
       <UniqueIdentifier>{10e43235-b0ea-4590-a473-24e5c1676a4f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Enemies\Archer">
+      <UniqueIdentifier>{3e7ea8a6-7ef4-49db-9f2a-bb5ede53a53d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Enemies\Archer\Attacks">
+      <UniqueIdentifier>{2204dc11-e1ba-4159-ada6-1141768039b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Enemies\Archer\States">
+      <UniqueIdentifier>{f68d01a4-01d5-4bd7-97e1-24d97173d687}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -367,6 +376,24 @@
     </ClInclude>
     <ClInclude Include="ArthurRecover.h">
       <Filter>Enemies\Arthur\States</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyDeathState.h">
+      <Filter>Enemies\Archer</Filter>
+    </ClInclude>
+    <ClInclude Include="RangedEnemyController.h">
+      <Filter>Enemies\Archer</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyAttackState.h">
+      <Filter>Enemies\Archer\Attacks</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyChaseState.h">
+      <Filter>Enemies\Archer\States</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyIdleState.h">
+      <Filter>Enemies\Archer\States</Filter>
+    </ClInclude>
+    <ClInclude Include="ArcherAttackConfig.h">
+      <Filter>Enemies\Archer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -648,6 +675,24 @@
     </ClCompile>
     <ClCompile Include="ArthurRecover.cpp">
       <Filter>Enemies\Arthur\States</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyDeathState.cpp">
+      <Filter>Enemies\Archer</Filter>
+    </ClCompile>
+    <ClCompile Include="RangedEnemyController.cpp">
+      <Filter>Enemies\Archer</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyAttackState.cpp">
+      <Filter>Enemies\Archer\Attacks</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyChaseState.cpp">
+      <Filter>Enemies\Archer\States</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyIdleState.cpp">
+      <Filter>Enemies\Archer\States</Filter>
+    </ClCompile>
+    <ClCompile Include="ArcherAttackConfig.cpp">
+      <Filter>Enemies\Archer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

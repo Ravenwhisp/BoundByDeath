@@ -1,15 +1,12 @@
 #include "pch.h"
 #include "EnemyDeathState.h"
 
-static const ScriptFieldInfo DEATHFields[] =
-{
-    { "Fallback Destroy Delay", ScriptFieldType::Float, offsetof(EnemyDeathState, m_fallbackDestroyDelay), { 0.0f, 10.0f, 0.1f } },
-    { "Use Animation Duration", ScriptFieldType::Bool, offsetof(EnemyDeathState, m_useAnimationDuration) },
-    { "Extra Destroy Delay", ScriptFieldType::Float, offsetof(EnemyDeathState, m_extraDestroyDelay), { 0.0f, 5.0f, 0.05f } },
-    { "Debug Enabled", ScriptFieldType::Bool, offsetof(EnemyDeathState, m_debugEnabled) }
-};
-
-IMPLEMENT_SCRIPT_FIELDS(EnemyDeathState, DEATHFields)
+IMPLEMENT_SCRIPT_FIELDS(EnemyDeathState,
+    SERIALIZED_FLOAT(m_fallbackDestroyDelay, "Fallback Destroy Delay", 0.0f, 10.0f, 0.1f),
+    SERIALIZED_BOOL(m_useAnimationDuration, "Use Animation Duration"),
+    SERIALIZED_FLOAT(m_extraDestroyDelay, "Extra Destroy Delay", 0.0f, 5.0f, 0.05f),
+    SERIALIZED_BOOL(m_debugEnabled, "Debug Enabled")
+)
 
 EnemyDeathState::EnemyDeathState(GameObject* owner)
     : StateMachineScript(owner)

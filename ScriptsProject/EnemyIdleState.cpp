@@ -1,12 +1,9 @@
 #include "pch.h"
 #include "EnemyIdleState.h"
 
-static const ScriptFieldInfo IDLEFields[] =
-{
-    { "Debug Enabled", ScriptFieldType::Bool, offsetof(EnemyIdleState, m_debugEnabled) }
-};
-
-IMPLEMENT_SCRIPT_FIELDS(EnemyIdleState, IDLEFields)
+IMPLEMENT_SCRIPT_FIELDS(EnemyIdleState,
+    SERIALIZED_BOOL(m_debugEnabled, "Debug Enabled")
+)
 
 EnemyIdleState::EnemyIdleState(GameObject* owner)
     : StateMachineScript(owner)
@@ -68,8 +65,7 @@ void EnemyIdleState::OnStateExit()
 
 RangedEnemyController* EnemyIdleState::getRangedEnemyController() const
 {
-    Script* script = GameObjectAPI::getScript(getOwner(), "RangedEnemyController");
-    return dynamic_cast<RangedEnemyController*>(script);
+    return GameObjectAPI::findScript<RangedEnemyController>(getOwner());
 }
 
 IMPLEMENT_SCRIPT(EnemyIdleState)

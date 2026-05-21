@@ -1,12 +1,9 @@
 #include "pch.h"
 #include "EnemyAttackState.h"
 
-static const ScriptFieldInfo ATTACKFields[] =
-{
-    { "Debug Enabled", ScriptFieldType::Bool, offsetof(EnemyAttackState, m_debugEnabled) }
-};
-
-IMPLEMENT_SCRIPT_FIELDS(EnemyAttackState, ATTACKFields)
+IMPLEMENT_SCRIPT_FIELDS(EnemyAttackState,
+    SERIALIZED_BOOL(m_debugEnabled, "Debug Enabled")
+)
 
 EnemyAttackState::EnemyAttackState(GameObject* owner)
     : StateMachineScript(owner)
@@ -77,8 +74,7 @@ void EnemyAttackState::OnStateExit()
 
 RangedEnemyController* EnemyAttackState::getRangedEnemyController() const
 {
-    Script* script = GameObjectAPI::getScript(getOwner(), "RangedEnemyController");
-    return dynamic_cast<RangedEnemyController*>(script);
+    return GameObjectAPI::findScript<RangedEnemyController>(getOwner());
 }
 
 IMPLEMENT_SCRIPT(EnemyAttackState)

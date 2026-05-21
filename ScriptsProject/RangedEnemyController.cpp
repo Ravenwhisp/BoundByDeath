@@ -5,22 +5,18 @@
 #include <cmath>
 #include <algorithm>
 
-static const ScriptFieldInfo RangedEnemyControllerFields[] =
-{
-    { "Max Health", ScriptFieldType::Float, offsetof(RangedEnemyController, m_maxHealth), { 1.0f, 10000.0f, 1.0f } },
-    { "Health", ScriptFieldType::Float, offsetof(RangedEnemyController, m_health), { 0.0f, 10000.0f, 1.0f } },
-    { "Detection Radius", ScriptFieldType::Float, offsetof(RangedEnemyController, m_detectionRadius), { 0.0f, 100.0f, 0.1f } },
-    { "Attack Radius", ScriptFieldType::Float, offsetof(RangedEnemyController, m_attackRadius), { 0.0f, 100.0f, 0.1f } },
-    { "Lose Radius", ScriptFieldType::Float, offsetof(RangedEnemyController, m_loseRadius), { 0.0f, 200.0f, 0.1f } },
-    { "Move Speed", ScriptFieldType::Float, offsetof(RangedEnemyController, m_moveSpeed), { 0.0f, 20.0f, 0.1f } },
-
-    { "Path Point Reach Distance", ScriptFieldType::Float, offsetof(RangedEnemyController, m_pathPointReachDistance), { 0.01f, 5.0f, 0.01f } },
-    { "Repath Interval", ScriptFieldType::Float, offsetof(RangedEnemyController, m_repathInterval), { 0.05f, 5.0f, 0.05f } },
-    { "Turn Speed Degrees", ScriptFieldType::Float, offsetof(RangedEnemyController, m_turnSpeedDegrees), { 0.0f, 1080.0f, 1.0f } },
-    { "Debug Enabled", ScriptFieldType::Bool, offsetof(RangedEnemyController, m_debugEnabled) }
-};
-
-IMPLEMENT_SCRIPT_FIELDS(RangedEnemyController, RangedEnemyControllerFields)
+IMPLEMENT_SCRIPT_FIELDS(RangedEnemyController,
+    SERIALIZED_FLOAT(m_maxHealth, "Max Health", 1.0f, 10000.0f, 1.0f),
+    SERIALIZED_FLOAT(m_health, "Health", 0.0f, 10000.0f, 1.0f),
+    SERIALIZED_FLOAT(m_detectionRadius, "Detection Radius", 0.0f, 100.0f, 0.1f),
+    SERIALIZED_FLOAT(m_attackRadius, "Attack Radius", 0.0f, 100.0f, 0.1f),
+    SERIALIZED_FLOAT(m_loseRadius, "Lose Radius", 0.0f, 200.0f, 0.1f),
+    SERIALIZED_FLOAT(m_moveSpeed, "Move Speed", 0.0f, 20.0f, 0.1f),
+    SERIALIZED_FLOAT(m_pathPointReachDistance, "Path Point Reach Distance", 0.01f, 5.0f, 0.01f),
+    SERIALIZED_FLOAT(m_repathInterval, "Repath Interval", 0.05f, 5.0f, 0.05f),
+    SERIALIZED_FLOAT(m_turnSpeedDegrees, "Turn Speed Degrees", 0.0f, 1080.0f, 1.0f),
+    SERIALIZED_BOOL(m_debugEnabled, "Debug Enabled")
+)
 
 RangedEnemyController::RangedEnemyController(GameObject* owner) : Script(owner)
 {
