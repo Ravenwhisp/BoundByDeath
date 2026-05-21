@@ -23,6 +23,11 @@ void EnemyIdleState::OnStateEnter()
 
 void EnemyIdleState::OnStateUpdate()
 {
+    if (!m_archerController)
+    {
+        return;
+    }
+
     if (!m_archerController->hasTarget())
     {
         return;
@@ -34,7 +39,7 @@ void EnemyIdleState::OnStateUpdate()
         return;
     }
 
-    AnimationAPI::sendTrigger(animation, "Chase");
+    AnimationAPI::sendTrigger(animation, "ToChase");
 
     Debug::log("[EnemyIdleState] Chase trigger sent");
 }

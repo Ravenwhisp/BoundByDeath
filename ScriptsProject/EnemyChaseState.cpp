@@ -36,7 +36,7 @@ void EnemyChaseState::OnStateUpdate()
 
     if (!m_archerController->hasTarget())
     {
-        AnimationAPI::sendTrigger(animation, "Idle");
+        AnimationAPI::sendTrigger(animation, "ToIdle");
 
         Debug::log("[EnemyChaseState] Idle trigger sent");
 
@@ -45,7 +45,7 @@ void EnemyChaseState::OnStateUpdate()
 
     if (m_archerController->isTargetInAttackRange())
     {
-        AnimationAPI::sendTrigger(animation, "Attack");
+        AnimationAPI::sendTrigger(animation, "ToAttack");
 
         Debug::log("[EnemyChaseState] Attack trigger sent");
 

@@ -75,8 +75,8 @@
             "speed": 1.0,
             "behaviourScriptName": "",
             "behaviourFieldsJson": "",
-            "overrideLoop": false,
-            "loop": true
+            "overrideLoop": true,
+            "loop": false
         },
         {
             "name": "RECOVER",
@@ -91,9 +91,9 @@
             "name": "CHASE",
             "clipName": "Archer_Walk",
             "speed": 1.0,
-            "behaviourScriptName": "",
+            "behaviourScriptName": "EnemyChaseState",
             "behaviourFieldsJson": "",
-            "overrideLoop": false,
+            "overrideLoop": true,
             "loop": true
         },
         {
@@ -137,109 +137,31 @@
         {
             "sourceStateName": "IDLE",
             "targetStateName": "CHASE",
-            "triggerName": "chase",
+            "triggerName": "ToChase",
             "blendTimeSeconds": 0.25
         },
         {
             "sourceStateName": "CHASE",
             "targetStateName": "IDLE",
-            "triggerName": "idle",
+            "triggerName": "ToIdle",
             "blendTimeSeconds": 0.25
         },
         {
             "sourceStateName": "CHASE",
             "targetStateName": "BASIC_ATTACK",
-            "triggerName": "attack",
+            "triggerName": "ToAttack",
             "blendTimeSeconds": 0.25
         },
         {
             "sourceStateName": "BASIC_ATTACK",
-            "targetStateName": "RECOVER",
-            "triggerName": "recover",
+            "targetStateName": "IDLE",
+            "triggerName": "ToIdle",
             "blendTimeSeconds": 0.25
         },
         {
-            "sourceStateName": "RECOVER",
-            "targetStateName": "BASIC_ATTACK",
-            "triggerName": "attack",
-            "blendTimeSeconds": 0.25
-        },
-        {
-            "sourceStateName": "RECOVER",
+            "sourceStateName": "BASIC_ATTACK",
             "targetStateName": "CHASE",
-            "triggerName": "chase",
-            "blendTimeSeconds": 0.25
-        },
-        {
-            "sourceStateName": "IDLE",
-            "targetStateName": "STUNT",
-            "triggerName": "stun",
-            "blendTimeSeconds": 0.25
-        },
-        {
-            "sourceStateName": "CHASE",
-            "targetStateName": "STUNT",
-            "triggerName": "stun",
-            "blendTimeSeconds": 0.25
-        },
-        {
-            "sourceStateName": "BASIC_ATTACK",
-            "targetStateName": "STUNT",
-            "triggerName": "stun",
-            "blendTimeSeconds": 0.25
-        },
-        {
-            "sourceStateName": "RECOVER",
-            "targetStateName": "STUNT",
-            "triggerName": "stun",
-            "blendTimeSeconds": 0.25
-        },
-        {
-            "sourceStateName": "CHASE",
-            "targetStateName": "ARROWBARRAGE",
-            "triggerName": "arrow",
-            "blendTimeSeconds": 0.25
-        },
-        {
-            "sourceStateName": "ARROWBARRAGE",
-            "targetStateName": "CHASE",
-            "triggerName": "chase",
-            "blendTimeSeconds": 0.25
-        },
-        {
-            "sourceStateName": "IDLE",
-            "targetStateName": "DEATH",
-            "triggerName": "die",
-            "blendTimeSeconds": 0.25
-        },
-        {
-            "sourceStateName": "CHASE",
-            "targetStateName": "DEATH",
-            "triggerName": "die",
-            "blendTimeSeconds": 0.25
-        },
-        {
-            "sourceStateName": "STUNT",
-            "targetStateName": "DEATH",
-            "triggerName": "die",
-            "blendTimeSeconds": 0.25
-        },
-        {
-            "sourceStateName": "ARROWBARRAGE",
-            "targetStateName": "DEATH",
-            "triggerName": "die",
-            "blendTimeSeconds": 0.25
-        },
-        {
-            "sourceStateName": "BASIC_ATTACK",
-            "targetStateName": "DEATH",
-            "triggerName": "die",
-            "blendTimeSeconds": 0.25
-        },
-        {
-            "sourceStateName": "RECOVER",
-            "targetStateName": "DEATH",
-            "triggerName": "die",
+            "triggerName": "ToChase",
             "blendTimeSeconds": 0.25
         }
     ]
