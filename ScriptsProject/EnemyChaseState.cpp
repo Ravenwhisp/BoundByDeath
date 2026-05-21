@@ -43,6 +43,13 @@ void EnemyChaseState::OnStateUpdate()
         return;
     }
 
+    if (m_archerController->playerInSomersaultRange() && m_archerController->isSomersaultReady())
+    {
+        AnimationAPI::sendTrigger(animation, "ToSomersault");
+        Debug::log("[EnemyChaseState] Somersault trigger sent");
+        return;
+    }
+
     if (m_archerController->isTargetInAttackRange())
     {
         AnimationAPI::sendTrigger(animation, "ToAttack");

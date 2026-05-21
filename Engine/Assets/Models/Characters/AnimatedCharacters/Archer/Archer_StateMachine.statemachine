@@ -125,11 +125,11 @@
         },
         {
             "name": "SOMERSAULT",
-            "clipName": "Archer_Attack_2",
+            "clipName": "Archer_Idle_long",
             "speed": 2.0,
-            "behaviourScriptName": "",
+            "behaviourScriptName": "ArcherSomersaultState",
             "behaviourFieldsJson": "",
-            "overrideLoop": false,
+            "overrideLoop": true,
             "loop": true
         }
     ],
@@ -160,6 +160,18 @@
         },
         {
             "sourceStateName": "BASIC_ATTACK",
+            "targetStateName": "CHASE",
+            "triggerName": "ToChase",
+            "blendTimeSeconds": 0.25
+        },
+        {
+            "sourceStateName": "CHASE",
+            "targetStateName": "SOMERSAULT",
+            "triggerName": "ToSomersault",
+            "blendTimeSeconds": 0.25
+        },
+        {
+            "sourceStateName": "SOMERSAULT",
             "targetStateName": "CHASE",
             "triggerName": "ToChase",
             "blendTimeSeconds": 0.25

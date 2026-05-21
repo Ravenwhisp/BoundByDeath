@@ -43,9 +43,12 @@ void RangedEnemyController::Start()
 
 void RangedEnemyController::Update()
 {
-    updateCurrentTarget();
+    const float dt = Time::getDeltaTime();
 
-    m_repathTimer += Time::getDeltaTime();
+    updateCurrentTarget();
+    updateSomersaultCooldown(dt);
+
+    m_repathTimer += dt;
 }
 
 void RangedEnemyController::updateCurrentTarget()
@@ -335,6 +338,163 @@ void RangedEnemyController::rotateTowardsDirection(const Vector3& direction)
 
     currentEuler.y += deltaYaw;
     TransformAPI::setRotationEuler(ownerTransform, currentEuler);
+}
+
+bool RangedEnemyController::playerInSomersaultRange() const
+{
+    if (!m_enemyDetectionAggro || !m_attackConfig)
+    {
+        return false;
+    }
+
+    Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
+    if (!ownerTransform)
+    {
+        return false;
+    }
+
+    Vector3 ownerPosition = TransformAPI::getPosition(ownerTransform);
+
+    Transform* playerTransforms[] =
+    {
+        m_enemyDetectionAggro->getLyrielTransform(),
+        m_enemyDetectionAggro->getDeathTransform()
+    };
+
+    const float triggerRangeSquared = m_attackConfig->m_somersaultTriggerRange * m_attackConfig->m_somersaultTriggerRange;
+
+    for (Transform* playerTransform : playerTransforms)
+    {
+        if (!playerTransform)
+        {
+            continue;
+        }
+
+        if (m_enemyDetectionAggro->isDowned(playerTransform))
+        {
+            continue;
+        }
+
+        Vector3 playerPosition = TransformAPI::getPosition(playerTransform);
+
+        Vector3 difference = playerPosition - ownerPosition;
+        difference.y = 0.0f;
+
+        if (difference.LengthSquared() <= triggerRangeSquared)
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+bool RangedEnemyController::isSomersaultReady() const
+{
+    return m_somersaultCooldownTimer <= 0.0f;
+}
+
+void RangedEnemyController::consumeSomersaultCooldown()
+{
+    if (!m_attackConfig)
+    {
+        return;
+    }
+
+    m_somersaultCooldownTimer = m_attackConfig->m_somersaultCooldown;
+}
+
+void RangedEnemyController::updateSomersaultCooldown(float dt)
+{
+    if (m_somersaultCooldownTimer <= 0.0f)
+    {
+        return;
+    }
+
+    m_somersaultCooldownTimer -= dt;
+
+    if (m_somersaultCooldownTimer < 0.0f)
+    {
+        m_somersaultCooldownTimer = 0.0f;
+    }
+}
+
+Vector3 RangedEnemyController::getDirectionAwayFromClosestPlayer() const
+{
+    if (!m_enemyDetectionAggro)
+    {
+        return Vector3(0.0f, 0.0f, -1.0f);
+    }
+
+    Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
+    Vector3 ownerPosition = TransformAPI::getPosition(ownerTransform);
+
+    Transform* lyrielTransform = m_enemyDetectionAggro->getLyrielTransform();
+    Transform* deathTransform = m_enemyDetectionAggro->getDeathTransform();
+
+    Transform* closestTransform = nullptr;
+    float closestDistanceSquared = FLT_MAX;
+
+    Transform* playerTransforms[] =
+    {
+        lyrielTransform,
+        deathTransform
+    };
+
+    for (Transform* playerTransform : playerTransforms)
+    {
+        if (m_enemyDetectionAggro->isDowned(playerTransform))
+        {
+            continue;
+        }
+
+        Vector3 playerPosition = TransformAPI::getPosition(playerTransform);
+        Vector3 difference = ownerPosition - playerPosition;
+        difference.y = 0.0f;
+
+        const float distanceSquared = difference.LengthSquared();
+
+        if (distanceSquared < closestDistanceSquared)
+        {
+            closestDistanceSquared = distanceSquared;
+            closestTransform = playerTransform;
+        }
+    }
+
+    if (!closestTransform)
+    {
+        Vector3 backward = TransformAPI::getForward(ownerTransform) * -1.0f;
+        backward.y = 0.0f;
+
+        if (backward.LengthSquared() <= 0.00001f)
+        {
+            return Vector3(0.0f, 0.0f, -1.0f);
+        }
+
+        backward.Normalize();
+        return backward;
+    }
+
+    Vector3 closestPosition = TransformAPI::getPosition(closestTransform);
+    Vector3 escapeDirection = ownerPosition - closestPosition;
+    escapeDirection.y = 0.0f;
+
+    if (escapeDirection.LengthSquared() <= 0.00001f)
+    {
+        Vector3 backward = TransformAPI::getForward(ownerTransform) * -1.0f;
+        backward.y = 0.0f;
+
+        if (backward.LengthSquared() <= 0.00001f)
+        {
+            return Vector3(0.0f, 0.0f, -1.0f);
+        }
+
+        backward.Normalize();
+        return backward;
+    }
+
+    escapeDirection.Normalize();
+    return escapeDirection;
 }
 
 IMPLEMENT_SCRIPT(RangedEnemyController)

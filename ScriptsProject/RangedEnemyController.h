@@ -30,6 +30,15 @@ public:
     void faceTarget();
     void clearPath();
 
+    // Somersault helpers
+    bool playerInSomersaultRange() const;
+
+    bool isSomersaultReady() const;
+    void consumeSomersaultCooldown();
+    void updateSomersaultCooldown(float dt);
+
+    Vector3 getDirectionAwayFromClosestPlayer() const;
+
 private:
     bool rebuildPathToTarget();
     void rotateTowardsDirection(const Vector3& direction);
@@ -51,4 +60,6 @@ private:
     bool m_hasPath = false;
     float m_repathTimer = 0.0f;
     Vector3 m_lastTargetPosition = Vector3::Zero;
+
+    float m_somersaultCooldownTimer = 0.0f;
 };
