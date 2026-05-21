@@ -9,12 +9,10 @@
 #include <algorithm>
 
 IMPLEMENT_SCRIPT_FIELDS(RangedEnemyController,
-    SERIALIZED_FLOAT(m_attackRadius, "Attack Radius", 0.0f, 100.0f, 0.1f),
     SERIALIZED_FLOAT(m_moveSpeed, "Move Speed", 0.0f, 20.0f, 0.1f),
     SERIALIZED_FLOAT(m_pathPointReachDistance, "Path Point Reach Distance", 0.01f, 5.0f, 0.01f),
     SERIALIZED_FLOAT(m_repathInterval, "Repath Interval", 0.05f, 5.0f, 0.05f),
-    SERIALIZED_FLOAT(m_turnSpeedDegrees, "Turn Speed Degrees", 0.0f, 1080.0f, 1.0f),
-    SERIALIZED_BOOL(m_debugEnabled, "Debug Enabled")
+    SERIALIZED_FLOAT(m_turnSpeedDegrees, "Turn Speed Degrees", 0.0f, 1080.0f, 1.0f)
 )
 
 RangedEnemyController::RangedEnemyController(GameObject* owner) : Script(owner)
@@ -98,12 +96,12 @@ float RangedEnemyController::getDistanceToTarget() const
 
 bool RangedEnemyController::isTargetInAttackRange() const
 {
-    if (!m_target)
+    if (!m_target || !m_attackConfig)
     {
         return false;
     }
 
-    return getDistanceToTarget() <= m_attackRadius;
+    return getDistanceToTarget() <= m_attackConfig->m_basicAttackRange;
 }
 
 bool RangedEnemyController::moveTowardsTarget()

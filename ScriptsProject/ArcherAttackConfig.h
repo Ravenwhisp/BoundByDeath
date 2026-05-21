@@ -13,6 +13,7 @@ public:
 
 public:
     // Basic attack
+    float m_basicAttackRange = 4.0f;
     float m_basicAttackDamage = 10.0f;
     float m_basicAttackWindupTime = 0.35f;
     float m_basicAttackTotalDuration = 0.8f;

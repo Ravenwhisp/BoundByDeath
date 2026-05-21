@@ -34,14 +34,10 @@ private:
     void rotateTowardsDirection(const Vector3& direction);
 
 public:
-    float m_attackRadius = 2.5f;
-
     float m_moveSpeed = 3.5f;
     float m_pathPointReachDistance = 0.25f;
     float m_repathInterval = 0.5f;
     float m_turnSpeedDegrees = 360.0f;
-
-    bool m_debugEnabled = true;
 
 private:
     EnemyDetectionAggro* m_enemyDetectionAggro = nullptr;

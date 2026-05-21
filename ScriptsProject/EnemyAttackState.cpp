@@ -18,7 +18,6 @@ void EnemyAttackState::OnStateEnter()
     m_attackConfig = GameObjectAPI::findScript<ArcherAttackConfig>(getOwner());
 
     m_stateTimer = 0.0f;
-    m_cooldownTimer = 0.0f;
     m_hasAppliedDamage = false;
 
     if (!m_archerController)
@@ -40,7 +39,7 @@ void EnemyAttackState::OnStateEnter()
 
 void EnemyAttackState::OnStateUpdate()
 {
-    if (!m_archerController)
+    if (!m_archerController || !m_attackConfig)
     {
         return;
     }
@@ -69,21 +68,7 @@ void EnemyAttackState::OnStateUpdate()
         return;
     }
 
-    const float dt = Time::getDeltaTime();
-
-    if (m_cooldownTimer > 0.0f)
-    {
-        m_cooldownTimer -= dt;
-
-        if (m_cooldownTimer < 0.0f)
-        {
-            m_cooldownTimer = 0.0f;
-        }
-
-        return;
-    }
-
-    m_stateTimer += dt;
+    m_stateTimer += Time::getDeltaTime();
 
     if (!m_hasAppliedDamage && m_stateTimer >= m_attackConfig->m_basicAttackWindupTime)
     {
@@ -93,28 +78,15 @@ void EnemyAttackState::OnStateUpdate()
 
     if (m_stateTimer >= m_attackConfig->m_basicAttackTotalDuration)
     {
-        resetAttackCycle();
+        AnimationAPI::sendTrigger(animation, "ToChase");
+        Debug::log("[EnemyAttackState] Attack finished, Chase trigger sent");
+        return;
     }
 }
 
 void EnemyAttackState::OnStateExit()
 {
     Debug::log("[EnemyAttackState] EXIT");
-}
-
-void EnemyAttackState::resetAttackCycle()
-{
-    m_stateTimer = 0.0f;
-    m_hasAppliedDamage = false;
-
-    if (m_attackConfig)
-    {
-        m_cooldownTimer = m_attackConfig->m_basicAttackCooldown;
-    }
-    else
-    {
-        m_cooldownTimer = 0.0f;
-    }
 }
 
 void EnemyAttackState::performAttack()

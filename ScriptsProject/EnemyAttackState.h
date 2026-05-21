@@ -18,7 +18,6 @@ public:
     void OnStateExit() override;
 
 private:
-    void resetAttackCycle();
     void performAttack();
     void tryDamageTarget(Transform* targetTransform);
 
@@ -27,7 +26,5 @@ private:
     ArcherAttackConfig* m_attackConfig = nullptr;
 
     float m_stateTimer = 0.0f;
-    float m_cooldownTimer = 0.0f;
-
     bool m_hasAppliedDamage = false;
 };
