@@ -18,12 +18,13 @@ public:
     void OnStateExit() override;
 
 private:
-    void performAttack();
     void tryDamageTarget(Transform* targetTransform);
 
 private:
     RangedEnemyController* m_archerController = nullptr;
     ArcherAttackConfig* m_attackConfig = nullptr;
+
+    Transform* m_committedTarget = nullptr;
 
     float m_stateTimer = 0.0f;
     bool m_hasAppliedDamage = false;

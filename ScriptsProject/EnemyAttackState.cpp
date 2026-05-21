@@ -19,6 +19,7 @@ void EnemyAttackState::OnStateEnter()
 
     m_stateTimer = 0.0f;
     m_hasAppliedDamage = false;
+    m_committedTarget = nullptr;
 
     if (!m_archerController)
     {
@@ -33,6 +34,8 @@ void EnemyAttackState::OnStateEnter()
     }
 
     m_archerController->clearPath();
+    m_archerController->updateCurrentTarget();
+    m_committedTarget = m_archerController->getTarget();
 
     Debug::log("[EnemyAttackState] ENTER");
 }
@@ -50,36 +53,29 @@ void EnemyAttackState::OnStateUpdate()
         return;
     }
 
-    if (!m_archerController->hasTarget())
-    {
-        AnimationAPI::sendTrigger(animation, "ToIdle");
-
-        Debug::log("[EnemyAttackState] Idle trigger sent");
-
-        return;
-    }
-
-    if (!m_archerController->isTargetInAttackRange())
-    {
-        AnimationAPI::sendTrigger(animation, "ToChase");
-
-        Debug::log("[EnemyAttackState] Chase trigger sent");
-
-        return;
-    }
-
     m_stateTimer += Time::getDeltaTime();
 
     if (!m_hasAppliedDamage && m_stateTimer >= m_attackConfig->m_basicAttackWindupTime)
     {
-        performAttack();
+        tryDamageTarget(m_committedTarget);
         m_hasAppliedDamage = true;
     }
 
     if (m_stateTimer >= m_attackConfig->m_basicAttackTotalDuration)
     {
-        AnimationAPI::sendTrigger(animation, "ToChase");
-        Debug::log("[EnemyAttackState] Attack finished, Chase trigger sent");
+        m_archerController->updateCurrentTarget();
+
+        if (!m_archerController->hasTarget())
+        {
+            AnimationAPI::sendTrigger(animation, "ToIdle");
+            Debug::log("[EnemyAttackState] Attack finished, Idle trigger sent");
+        }
+        else
+        {
+            AnimationAPI::sendTrigger(animation, "ToChase");
+            Debug::log("[EnemyAttackState] Attack finished, Chase trigger sent");
+        }
+
         return;
     }
 }
@@ -87,17 +83,6 @@ void EnemyAttackState::OnStateUpdate()
 void EnemyAttackState::OnStateExit()
 {
     Debug::log("[EnemyAttackState] EXIT");
-}
-
-void EnemyAttackState::performAttack()
-{
-    if (!m_archerController)
-    {
-        return;
-    }
-
-    Transform* targetTransform = m_archerController->getTarget();
-    tryDamageTarget(targetTransform);
 }
 
 void EnemyAttackState::tryDamageTarget(Transform* targetTransform)
