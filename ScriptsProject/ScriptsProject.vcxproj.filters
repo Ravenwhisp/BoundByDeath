@@ -58,6 +58,36 @@
     <Filter Include="UI">
       <UniqueIdentifier>{e135fa5e-751a-4bac-acd9-1ede1f2173ca}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Player\Characters">
+      <UniqueIdentifier>{18003957-5065-4adc-b44d-b287c568bfc1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Player\Characters\Lyriel">
+      <UniqueIdentifier>{1dd13501-33d1-47a1-bae7-c0a21d148ac5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Player\Characters\Death">
+      <UniqueIdentifier>{c05ea1a6-3703-4a10-a84a-609d150244ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Interaction/Gameplay\Puzzles">
+      <UniqueIdentifier>{5258ec66-1d97-4672-a686-3d60947602f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Interaction/Gameplay\Traps">
+      <UniqueIdentifier>{29f49c70-b8aa-4257-97d8-dc2e18fdd700}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Bosses">
+      <UniqueIdentifier>{65e6379b-4292-4467-8f25-42a74b90200b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Bosses\Arthur">
+      <UniqueIdentifier>{7aba194a-6bf2-4455-9cb9-742767236777}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Enemies\Arthur">
+      <UniqueIdentifier>{4f70e375-e641-46b1-8fc4-77b2d8034816}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Enemies\Arthur\Attacks">
+      <UniqueIdentifier>{9c76ffc7-6ef2-4ccf-b1c3-0a0f0c637147}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Enemies\Arthur\States">
+      <UniqueIdentifier>{10e43235-b0ea-4590-a473-24e5c1676a4f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -119,9 +149,6 @@
     <ClInclude Include="..\Engine\Assets\Scripts\LocalMultiplayerSetup.h">
       <Filter>Systems</Filter>
     </ClInclude>
-    <ClInclude Include="GameController.h">
-      <Filter>Systems</Filter>
-    </ClInclude>
     <ClInclude Include="LevelCheats.h">
       <Filter>Systems</Filter>
     </ClInclude>
@@ -155,16 +182,7 @@
     <ClInclude Include="EnemyController.h">
       <Filter>Enemies</Filter>
     </ClInclude>
-    <ClInclude Include="EnemyATTACK.h">
-      <Filter>Enemies</Filter>
-    </ClInclude>
-    <ClInclude Include="EnemyRECOVER.h">
-      <Filter>Enemies</Filter>
-    </ClInclude>
     <ClInclude Include="EnemySTUN.h">
-      <Filter>Enemies</Filter>
-    </ClInclude>
-    <ClInclude Include="EnemyCHARGE.h">
       <Filter>Enemies</Filter>
     </ClInclude>
     <ClInclude Include="EnemyIDLE.h">
@@ -295,11 +313,60 @@
     </ClInclude>
     <ClInclude Include="PowerupCollectible.h" />
     <ClInclude Include="PersistingPowerupState.h" />
-    <ClInclude Include="PuzzleManagerLVL1.h" >
+    <ClInclude Include="PuzzleManagerLVL1.h">
       <Filter>Interaction/Gameplay\Puzzles</Filter>
     </ClInclude>
-    <ClInclude Include="CrystalShadowMark.h" >
+    <ClInclude Include="CrystalShadowMark.h">
       <Filter>Interaction/Gameplay\Puzzles</Filter>
+    </ClInclude>
+    <ClInclude Include="HealthPickup.h" />
+    <ClInclude Include="ArthurDetectionAggro.h">
+      <Filter>Bosses\Arthur</Filter>
+    </ClInclude>
+    <ClInclude Include="ArthurBossController.h">
+      <Filter>Bosses\Arthur</Filter>
+    </ClInclude>
+    <ClInclude Include="ArthurHeavySwipe.h">
+      <Filter>Enemies\Arthur\Attacks</Filter>
+    </ClInclude>
+    <ClInclude Include="ArthurAttackConfig.h">
+      <Filter>Enemies\Arthur</Filter>
+    </ClInclude>
+    <ClInclude Include="ArthurAttackDebugDraw.h">
+      <Filter>Enemies\Arthur</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyATTACK.h">
+      <Filter>Enemies\States</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyCHARGE.h">
+      <Filter>Enemies\States</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyRECOVER.h">
+      <Filter>Enemies\States</Filter>
+    </ClInclude>
+    <ClInclude Include="ArthurEarthHammer.h">
+      <Filter>Enemies\Arthur\Attacks</Filter>
+    </ClInclude>
+    <ClInclude Include="ArthurSideSweep.h">
+      <Filter>Enemies\Arthur\Attacks</Filter>
+    </ClInclude>
+    <ClInclude Include="ArthurAttackExecutor.h">
+      <Filter>Enemies\Arthur</Filter>
+    </ClInclude>
+    <ClInclude Include="ArthurChargingSlam.h">
+      <Filter>Enemies\Arthur\Attacks</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerStunState.h">
+      <Filter>Player\States</Filter>
+    </ClInclude>
+    <ClInclude Include="ArthurIdle.h">
+      <Filter>Enemies\Arthur\States</Filter>
+    </ClInclude>
+    <ClInclude Include="ArthurChase.h">
+      <Filter>Enemies\Arthur\States</Filter>
+    </ClInclude>
+    <ClInclude Include="ArthurRecover.h">
+      <Filter>Enemies\Arthur\States</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -363,9 +430,6 @@
     <ClCompile Include="..\Engine\Assets\Scripts\LocalMultiplayerSetup.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
-    <ClCompile Include="GameController.cpp">
-      <Filter>Systems</Filter>
-    </ClCompile>
     <ClCompile Include="LevelCheats.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
@@ -399,16 +463,7 @@
     <ClCompile Include="EnemyController.cpp">
       <Filter>Enemies</Filter>
     </ClCompile>
-    <ClCompile Include="EnemyATTACK.cpp">
-      <Filter>Enemies</Filter>
-    </ClCompile>
-    <ClCompile Include="EnemyRECOVER.cpp">
-      <Filter>Enemies</Filter>
-    </ClCompile>
     <ClCompile Include="EnemySTUN.cpp">
-      <Filter>Enemies</Filter>
-    </ClCompile>
-    <ClCompile Include="EnemyCHARGE.cpp">
       <Filter>Enemies</Filter>
     </ClCompile>
     <ClCompile Include="EnemyIDLE.cpp">
@@ -539,11 +594,60 @@
     </ClCompile>
     <ClCompile Include="PowerupCollectible.cpp" />
     <ClCompile Include="PersistingPowerupState.cpp" />
-    <ClCompile Include="PuzzleManagerLVL1.cpp" >
+    <ClCompile Include="PuzzleManagerLVL1.cpp">
       <Filter>Interaction/Gameplay\Puzzles</Filter>
     </ClCompile>
-    <ClCompile Include="CrystalShadowMark.cpp" >
+    <ClCompile Include="CrystalShadowMark.cpp">
       <Filter>Interaction/Gameplay\Puzzles</Filter>
+    </ClCompile>
+    <ClCompile Include="HealthPickup.cpp" />
+    <ClCompile Include="ArthurDetectionAggro.cpp">
+      <Filter>Bosses\Arthur</Filter>
+    </ClCompile>
+    <ClCompile Include="ArthurBossController.cpp">
+      <Filter>Bosses\Arthur</Filter>
+    </ClCompile>
+    <ClCompile Include="ArthurHeavySwipe.cpp">
+      <Filter>Enemies\Arthur\Attacks</Filter>
+    </ClCompile>
+    <ClCompile Include="ArthurAttackConfig.cpp">
+      <Filter>Enemies\Arthur</Filter>
+    </ClCompile>
+    <ClCompile Include="ArthurAttackDebugDraw.cpp">
+      <Filter>Enemies\Arthur</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyATTACK.cpp">
+      <Filter>Enemies\States</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyCHARGE.cpp">
+      <Filter>Enemies\States</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyRECOVER.cpp">
+      <Filter>Enemies\States</Filter>
+    </ClCompile>
+    <ClCompile Include="ArthurEarthHammer.cpp">
+      <Filter>Enemies\Arthur\Attacks</Filter>
+    </ClCompile>
+    <ClCompile Include="ArthurSideSweep.cpp">
+      <Filter>Enemies\Arthur\Attacks</Filter>
+    </ClCompile>
+    <ClCompile Include="ArthurAttackExecutor.cpp">
+      <Filter>Enemies\Arthur</Filter>
+    </ClCompile>
+    <ClCompile Include="ArthurChargingSlam.cpp">
+      <Filter>Enemies\Arthur\Attacks</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerStunState.cpp">
+      <Filter>Player\States</Filter>
+    </ClCompile>
+    <ClCompile Include="ArthurChase.cpp">
+      <Filter>Enemies\Arthur\States</Filter>
+    </ClCompile>
+    <ClCompile Include="ArthurIdle.cpp">
+      <Filter>Enemies\Arthur\States</Filter>
+    </ClCompile>
+    <ClCompile Include="ArthurRecover.cpp">
+      <Filter>Enemies\Arthur\States</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

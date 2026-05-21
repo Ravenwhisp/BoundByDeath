@@ -1,6 +1,6 @@
 {
     "name": "Paladin_StateMachine",
-    "defaultState": "Paladin_Idle",
+    "defaultState": "Idle",
     "clips": [
         {
             "name": "Paladin_Tpose",
@@ -70,7 +70,7 @@
             "loop": true
         },
         {
-            "name": "Paladin_Idle",
+            "name": "Idle",
             "clipName": "Paladin_Idle",
             "speed": 1.0,
             "behaviourScriptName": "EnemyIDLE",
@@ -79,31 +79,31 @@
             "loop": true
         },
         {
-            "name": "Paladin_Idle_long",
+            "name": "Recover",
             "clipName": "Paladin_Idle_long",
             "speed": 1.0,
-            "behaviourScriptName": "EnemyRECOVERY",
-            "behaviourFieldsJson": "",
+            "behaviourScriptName": "EnemyRECOVER",
+            "behaviourFieldsJson": "{\"Recover Duration\":0.6000000238418579,\"Go To Stun After Recover\":false,\"Debug Enabled\":true}",
             "overrideLoop": false,
             "loop": true
         },
         {
-            "name": "Paladin_Attack",
+            "name": "Attack",
             "clipName": "Paladin_Attack",
             "speed": 1.0,
-            "behaviourScriptName": "",
-            "behaviourFieldsJson": "",
-            "overrideLoop": false,
-            "loop": true
+            "behaviourScriptName": "EnemyATTACK",
+            "behaviourFieldsJson": "{\"Attack Damage\":10.0,\"Attack Cooldown\":1.7000000476837158,\"Attack Total Duration\":1.649999976158142,\"Damage Trigger Time\":0.25,\"Attack Commit Duration\":0.3499999940395355,\"Debug Enabled\":true}",
+            "overrideLoop": true,
+            "loop": false
         },
         {
-            "name": "Paladin_Damage",
+            "name": "Stun",
             "clipName": "Paladin_Damage",
             "speed": 1.0,
-            "behaviourScriptName": "",
-            "behaviourFieldsJson": "",
-            "overrideLoop": false,
-            "loop": true
+            "behaviourScriptName": "EnemySTUN",
+            "behaviourFieldsJson": "{\"Stun Duration\":1.0,\"Debug Enabled\":true}",
+            "overrideLoop": true,
+            "loop": false
         },
         {
             "name": "Paladin_Death",
@@ -111,15 +111,24 @@
             "speed": 1.0,
             "behaviourScriptName": "",
             "behaviourFieldsJson": "",
+            "overrideLoop": true,
+            "loop": false
+        },
+        {
+            "name": "Charge",
+            "clipName": "Paladin_Walk",
+            "speed": 1.0,
+            "behaviourScriptName": "EnemyCHARGE",
+            "behaviourFieldsJson": "{\"Charge Duration\":0.5,\"Charge Speed\":6.0,\"Charge Cooldown\":3.0,\"Debug Enabled\":true}",
             "overrideLoop": false,
             "loop": true
         },
         {
-            "name": "Paladin_Walk",
+            "name": "Chase",
             "clipName": "Paladin_Walk",
             "speed": 1.0,
-            "behaviourScriptName": "",
-            "behaviourFieldsJson": "",
+            "behaviourScriptName": "EnemyCHASE",
+            "behaviourFieldsJson": "{\"Use Charge\":true,\"Charge Trigger Range\":4.0,\"Debug Enabled\":true}",
             "overrideLoop": false,
             "loop": true
         }
