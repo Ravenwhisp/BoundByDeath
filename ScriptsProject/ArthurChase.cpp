@@ -67,6 +67,7 @@ void ArthurChase::OnStateUpdate()
 	if (!m_arthurController->hasValidTarget())
 	{
 		m_arthurController->clearPath();
+		AnimationAPI::sendTrigger(animation, "ToIdle");
 		return;
 	}
 
