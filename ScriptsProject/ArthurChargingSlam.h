@@ -5,7 +5,7 @@
 
 class ArthurBossController;
 class ArthurAttackConfig;
-class ArthurAttackExecutor;
+class EnemyAttackExecutor;
 
 class ArthurChargingSlam : public StateMachineScript
 {
@@ -33,7 +33,7 @@ private:
 private:
     ArthurBossController* m_arthurController = nullptr;
     ArthurAttackConfig* m_attackConfig = nullptr;
-    ArthurAttackExecutor* m_attackExecutor = nullptr;
+    EnemyAttackExecutor* m_attackExecutor = nullptr;
 
     float m_stateTimer = 0.0f;
 

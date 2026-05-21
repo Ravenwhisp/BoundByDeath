@@ -47,6 +47,7 @@ void RangedEnemyController::Update()
 
     updateCurrentTarget();
     updateSomersaultCooldown(dt);
+    updateArrowBarrageCooldown(dt);
 
     m_repathTimer += dt;
 }
@@ -495,6 +496,46 @@ Vector3 RangedEnemyController::getDirectionAwayFromClosestPlayer() const
 
     escapeDirection.Normalize();
     return escapeDirection;
+}
+
+bool RangedEnemyController::isArrowBarrageReady() const
+{
+    return m_arrowBarrageCooldownTimer <= 0.0f;
+}
+
+void RangedEnemyController::consumeArrowBarrageCooldown()
+{
+    if (!m_attackConfig)
+    {
+        return;
+    }
+
+    m_arrowBarrageCooldownTimer = m_attackConfig->m_arrowBarrageCooldown;
+}
+
+void RangedEnemyController::updateArrowBarrageCooldown(float dt)
+{
+    if (m_arrowBarrageCooldownTimer <= 0.0f)
+    {
+        return;
+    }
+
+    m_arrowBarrageCooldownTimer -= dt;
+
+    if (m_arrowBarrageCooldownTimer < 0.0f)
+    {
+        m_arrowBarrageCooldownTimer = 0.0f;
+    }
+}
+
+bool RangedEnemyController::isTargetInArrowBarrageRange() const
+{
+    if (!m_target || !m_attackConfig)
+    {
+        return false;
+    }
+
+    return getDistanceToTarget() <= m_attackConfig->m_arrowBarrageRange;
 }
 
 IMPLEMENT_SCRIPT(RangedEnemyController)

@@ -50,6 +50,13 @@ void EnemyChaseState::OnStateUpdate()
         return;
     }
 
+    if (m_archerController->isTargetInArrowBarrageRange()  && m_archerController->isArrowBarrageReady())
+    {
+        AnimationAPI::sendTrigger(animation, "ToArrowBarrage");
+        Debug::log("[EnemyChaseState] Arrow Barrage trigger sent");
+        return;
+    }
+
     if (m_archerController->isTargetInAttackRange())
     {
         AnimationAPI::sendTrigger(animation, "ToAttack");

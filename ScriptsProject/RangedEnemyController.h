@@ -39,6 +39,13 @@ public:
 
     Vector3 getDirectionAwayFromClosestPlayer() const;
 
+    // Arrow Barrage helpers
+    bool isArrowBarrageReady() const;
+    void consumeArrowBarrageCooldown();
+    void updateArrowBarrageCooldown(float dt);
+
+    bool isTargetInArrowBarrageRange() const;
+
 private:
     bool rebuildPathToTarget();
     void rotateTowardsDirection(const Vector3& direction);
@@ -62,4 +69,5 @@ private:
     Vector3 m_lastTargetPosition = Vector3::Zero;
 
     float m_somersaultCooldownTimer = 0.0f;
+    float m_arrowBarrageCooldownTimer = 0.0f;
 };

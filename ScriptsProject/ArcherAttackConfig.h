@@ -20,10 +20,12 @@ public:
     float m_basicAttackCooldown = 1.2f;
 
     // Arrow Barrage
+    float m_arrowBarrageRange = 7.0f;
     float m_arrowBarrageDamage = 15.0f;
     float m_arrowBarrageRadius = 2.5f;
-    float m_arrowBarrageCastTime = 0.8f;
-    float m_arrowBarrageTotalDuration = 1.2f;
+    float m_arrowBarrageThrowTime = 0.35f;
+    float m_arrowBarrageLandDelay = 1.0f;
+    float m_arrowBarrageTotalDuration = 1.4f;
     float m_arrowBarrageCooldown = 5.0f;
 
     // Somersault

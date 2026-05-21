@@ -1,71 +1,71 @@
 #include "pch.h"
-#include "ArthurAttackExecutor.h"
+#include "EnemyAttackExecutor.h"
 
-#include "ArthurDetectionAggro.h"
+#include "EnemyDetectionAggro.h"
 #include "Damageable.h"
 #include "PlayerStunState.h"
 #include "PlayerState.h"
 
 #include <cmath>
 
-ArthurAttackExecutor::ArthurAttackExecutor(GameObject* owner)
+EnemyAttackExecutor::EnemyAttackExecutor(GameObject* owner)
     : Script(owner)
 {
 }
 
-void ArthurAttackExecutor::Start()
+void EnemyAttackExecutor::Start()
 {
-    m_arthurDetectionAggro = GameObjectAPI::findScript<ArthurDetectionAggro>(getOwner());
+    m_enemyDetectionAggro = GameObjectAPI::findScript<EnemyDetectionAggro>(getOwner());
 
-    if (!m_arthurDetectionAggro)
+    if (!m_enemyDetectionAggro)
     {
-        Debug::error("[ArthurAttackExecutor] ArthurDetectionAggro script not found");
+        Debug::error("[EnemyAttackExecutor] EnemyDetectionAggro script not found");
     }
 }
 
-void ArthurAttackExecutor::applyDamageInRadius(const Vector3& center, float radius, float damage, const char* sourceName)
+void EnemyAttackExecutor::applyDamageInRadius(const Vector3& center, float radius, float damage, const char* sourceName)
 {
-    if (!m_arthurDetectionAggro)
+    if (!m_enemyDetectionAggro)
     {
         return;
     }
 
-    Transform* lyrielTransform = m_arthurDetectionAggro->getLyrielTransform();
-    Transform* deathTransform = m_arthurDetectionAggro->getDeathTransform();
+    Transform* lyrielTransform = m_enemyDetectionAggro->getLyrielTransform();
+    Transform* deathTransform = m_enemyDetectionAggro->getDeathTransform();
 
     tryDamageTargetInRadius(lyrielTransform, center, radius, damage, sourceName);
     tryDamageTargetInRadius(deathTransform, center, radius, damage, sourceName);
 }
 
-void ArthurAttackExecutor::applyDamageAndStunInRadius(const Vector3& center, float radius, float damage, float stunDuration, const char* sourceName)
+void EnemyAttackExecutor::applyDamageAndStunInRadius(const Vector3& center, float radius, float damage, float stunDuration, const char* sourceName)
 {
-    if (!m_arthurDetectionAggro)
+    if (!m_enemyDetectionAggro)
     {
         return;
     }
 
-    Transform* lyrielTransform = m_arthurDetectionAggro->getLyrielTransform();
-    Transform* deathTransform = m_arthurDetectionAggro->getDeathTransform();
+    Transform* lyrielTransform = m_enemyDetectionAggro->getLyrielTransform();
+    Transform* deathTransform = m_enemyDetectionAggro->getDeathTransform();
 
     tryDamageAndStunTargetInRadius(lyrielTransform, center, radius, damage, stunDuration, sourceName);
     tryDamageAndStunTargetInRadius(deathTransform, center, radius, damage, stunDuration, sourceName);
 }
 
-void ArthurAttackExecutor::applyDamageInCone(const Vector3& center, const Vector3& direction, float range, float halfAngleDegrees, float damage, const char* sourceName)
+void EnemyAttackExecutor::applyDamageInCone(const Vector3& center, const Vector3& direction, float range, float halfAngleDegrees, float damage, const char* sourceName)
 {
-    if (!m_arthurDetectionAggro)
+    if (!m_enemyDetectionAggro)
     {
         return;
     }
 
-    Transform* lyrielTransform = m_arthurDetectionAggro->getLyrielTransform();
-    Transform* deathTransform = m_arthurDetectionAggro->getDeathTransform();
+    Transform* lyrielTransform = m_enemyDetectionAggro->getLyrielTransform();
+    Transform* deathTransform = m_enemyDetectionAggro->getDeathTransform();
 
     tryDamageTargetInCone(lyrielTransform, center, direction, range, halfAngleDegrees, damage, sourceName);
     tryDamageTargetInCone(deathTransform, center, direction, range, halfAngleDegrees, damage, sourceName);
 }
 
-bool ArthurAttackExecutor::tryDamageTargetInRadius(Transform* targetTransform, const Vector3& center, float radius, float damage, const char* sourceName)
+bool EnemyAttackExecutor::tryDamageTargetInRadius(Transform* targetTransform, const Vector3& center, float radius, float damage, const char* sourceName)
 {
     if (!targetTransform)
     {
@@ -94,7 +94,7 @@ bool ArthurAttackExecutor::tryDamageTargetInRadius(Transform* targetTransform, c
     return applyDamageToTarget(targetTransform, damage, sourceName);
 }
 
-void ArthurAttackExecutor::tryDamageAndStunTargetInRadius(Transform* targetTransform, const Vector3& center, float radius, float damage, float stunDuration, const char* sourceName)
+void EnemyAttackExecutor::tryDamageAndStunTargetInRadius(Transform* targetTransform, const Vector3& center, float radius, float damage, float stunDuration, const char* sourceName)
 {
     const bool damaged = tryDamageTargetInRadius(targetTransform, center, radius, damage, sourceName);
 
@@ -106,7 +106,7 @@ void ArthurAttackExecutor::tryDamageAndStunTargetInRadius(Transform* targetTrans
     applyStunToTarget(targetTransform, stunDuration, sourceName);
 }
 
-bool ArthurAttackExecutor::tryDamageTargetInCone(Transform* targetTransform, const Vector3& center, const Vector3& direction, float range, float halfAngleDegrees, float damage, const char* sourceName)
+bool EnemyAttackExecutor::tryDamageTargetInCone(Transform* targetTransform, const Vector3& center, const Vector3& direction, float range, float halfAngleDegrees, float damage, const char* sourceName)
 {
     if (!targetTransform)
     {
@@ -170,7 +170,7 @@ bool ArthurAttackExecutor::tryDamageTargetInCone(Transform* targetTransform, con
     return applyDamageToTarget(targetTransform, damage, sourceName);
 }
 
-bool ArthurAttackExecutor::applyDamageToTarget(Transform* targetTransform, float damage, const char* sourceName)
+bool EnemyAttackExecutor::applyDamageToTarget(Transform* targetTransform, float damage, const char* sourceName)
 {
     if (!targetTransform)
     {
@@ -197,11 +197,11 @@ bool ArthurAttackExecutor::applyDamageToTarget(Transform* targetTransform, float
 
     damageable->takeDamage(damage);
 
-    Debug::log("[ArthurAttackExecutor] %s damaged '%s' for %.2f.", sourceName, GameObjectAPI::getName(targetObject), damage);
+    Debug::log("[EnemyAttackExecutor] %s damaged '%s' for %.2f.", sourceName, GameObjectAPI::getName(targetObject), damage);
     return true;
 }
 
-void ArthurAttackExecutor::applyStunToTarget(Transform* targetTransform, float stunDuration, const char* sourceName)
+void EnemyAttackExecutor::applyStunToTarget(Transform* targetTransform, float stunDuration, const char* sourceName)
 {
     if (!targetTransform)
     {
@@ -227,7 +227,7 @@ void ArthurAttackExecutor::applyStunToTarget(Transform* targetTransform, float s
 
     stunState->enterStun(stunDuration);
 
-    Debug::log("[ArthurAttackExecutor] %s stunned '%s' for %.2f seconds.", sourceName, GameObjectAPI::getName(targetObject), stunDuration);
+    Debug::log("[EnemyAttackExecutor] %s stunned '%s' for %.2f seconds.", sourceName, GameObjectAPI::getName(targetObject), stunDuration);
 }
 
-IMPLEMENT_SCRIPT(ArthurAttackExecutor)
+IMPLEMENT_SCRIPT(EnemyAttackExecutor)

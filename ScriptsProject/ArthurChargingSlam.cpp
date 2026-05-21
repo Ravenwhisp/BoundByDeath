@@ -3,7 +3,7 @@
 
 #include "ArthurBossController.h"
 #include "ArthurAttackConfig.h"
-#include "ArthurAttackExecutor.h"
+#include "EnemyAttackExecutor.h"
 
 ArthurChargingSlam::ArthurChargingSlam(GameObject* owner)
     : StateMachineScript(owner)
@@ -14,7 +14,7 @@ void ArthurChargingSlam::OnStateEnter()
 {
     m_arthurController = GameObjectAPI::findScript<ArthurBossController>(getOwner());
     m_attackConfig = GameObjectAPI::findScript<ArthurAttackConfig>(getOwner());
-    m_attackExecutor = GameObjectAPI::findScript<ArthurAttackExecutor>(getOwner());
+    m_attackExecutor = GameObjectAPI::findScript<EnemyAttackExecutor>(getOwner());
 
     m_stateTimer = 0.0f;
 
@@ -43,7 +43,7 @@ void ArthurChargingSlam::OnStateEnter()
 
     if (!m_attackExecutor)
     {
-        Debug::error("[ArthurChargingSlam] ArthurAttackExecutor not found.");
+        Debug::error("[ArthurChargingSlam] EnemyAttackExecutor not found.");
         return;
     }
 

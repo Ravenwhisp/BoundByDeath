@@ -3,7 +3,7 @@
 
 #include "ArthurBossController.h"
 #include "ArthurAttackConfig.h"
-#include "ArthurAttackExecutor.h"
+#include "EnemyAttackExecutor.h"
 
 ArthurSideSweep::ArthurSideSweep(GameObject* owner)
     : StateMachineScript(owner)
@@ -14,7 +14,7 @@ void ArthurSideSweep::OnStateEnter()
 {
     m_arthurController = GameObjectAPI::findScript<ArthurBossController>(getOwner());
     m_attackConfig = GameObjectAPI::findScript<ArthurAttackConfig>(getOwner());
-    m_attackExecutor = GameObjectAPI::findScript<ArthurAttackExecutor>(getOwner());
+    m_attackExecutor = GameObjectAPI::findScript<EnemyAttackExecutor>(getOwner());
 
     m_stateTimer = 0.0f;
     m_hasAppliedHit = false;
@@ -33,7 +33,7 @@ void ArthurSideSweep::OnStateEnter()
 
     if (!m_attackExecutor)
     {
-        Debug::error("[ArthurSideSweep] ArthurAttackExecutor not found.");
+        Debug::error("[ArthurSideSweep] EnemyAttackExecutor not found.");
         return;
     }
 
