@@ -56,6 +56,7 @@ public:
     void tickChargeCooldown(float dt);
     bool isChargeReady() const;
     void consumeChargeCooldown(float cooldownDuration);
+    bool isDead() const;
 
 private:
     Vector3 getChasePosition() const;

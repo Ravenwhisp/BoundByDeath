@@ -44,6 +44,7 @@ public:
 	Vector3 getLastKnownTargetPosition() const { return m_lastKnownTargetPosition; }
 
 	bool isDowned(Transform* target) const;
+	bool hasAnyTargetInDetectionRange();
 
 	Transform* getLyrielTransform() const;
 	Transform* getDeathTransform() const;

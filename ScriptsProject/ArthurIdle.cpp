@@ -39,6 +39,13 @@ void ArthurIdle::OnStateUpdate()
 		return;
 	}
 
+	if (m_arthurController->isDead())
+	{
+		m_arthurController->clearPath();
+		AnimationAPI::sendTrigger(animation, "ToDeath");
+		return;
+	}
+
 	m_arthurController->updateCurrentTarget();
 
 	if (!m_arthurController->hasValidTarget())

@@ -4,10 +4,6 @@
 #include "PlayerState.h"
 #include "DeathCharacter.h" 
 
-IMPLEMENT_SCRIPT_FIELDS_INHERITED(ArthurDetectionAggro, EnemyDetectionAggro,
-	SERIALIZED_BOOL(m_encounterStarted, "Start Encounter")
-)
-
 ArthurDetectionAggro::ArthurDetectionAggro(GameObject* owner)
 	: EnemyDetectionAggro(owner)
 {
@@ -51,11 +47,6 @@ void ArthurDetectionAggro::updateAggroState()
 			return;
 		}
 	}
-
-	if (m_arthurBossController->getPhase() == ArthurBossPhase::Phase1)
-		Debug::log("[ArthurAggro] Phase1");
-	else if (m_arthurBossController->getPhase() == ArthurBossPhase::Phase2)
-		Debug::log("[ArthurAggro] Phase2");
 
 	// Phase 1
 	if (m_arthurBossController->getPhase() == ArthurBossPhase::Phase1)

@@ -100,8 +100,8 @@
             "name": "Bear_death",
             "clipName": "Bear_death",
             "speed": 1.0,
-            "behaviourScriptName": "",
-            "behaviourFieldsJson": "",
+            "behaviourScriptName": "EnemyDeathState",
+            "behaviourFieldsJson": "{\"Destroy Delay\":2.0,\"Should Drop Health\":false,\"Health Prefab Path\":\"\",\"Health Drop Quantity\":1,\"Drop Heal Amount\":10.0,\"Drop Radius\":2.0,\"Drop Height\":1.0}",
             "overrideLoop": false,
             "loop": true
         },
@@ -210,6 +210,60 @@
             "sourceStateName": "Bear_RECOVERY",
             "targetStateName": "Bear_CHASE",
             "triggerName": "ToChase",
+            "blendTimeSeconds": 0.25
+        },
+        {
+            "sourceStateName": "Bear_CHASE",
+            "targetStateName": "Bear_IDLE",
+            "triggerName": "ToIdle",
+            "blendTimeSeconds": 0.25
+        },
+        {
+            "sourceStateName": "Bear_RECOVERY",
+            "targetStateName": "Bear_IDLE",
+            "triggerName": "ToIdle",
+            "blendTimeSeconds": 0.25
+        },
+        {
+            "sourceStateName": "Bear_IDLE",
+            "targetStateName": "Bear_death",
+            "triggerName": "ToDeath",
+            "blendTimeSeconds": 0.25
+        },
+        {
+            "sourceStateName": "Bear_CHASE",
+            "targetStateName": "Bear_death",
+            "triggerName": "ToDeath",
+            "blendTimeSeconds": 0.25
+        },
+        {
+            "sourceStateName": "Bear_RECOVERY",
+            "targetStateName": "Bear_death",
+            "triggerName": "ToDeath",
+            "blendTimeSeconds": 0.25
+        },
+        {
+            "sourceStateName": "Bear_EARTH_HAMMER",
+            "targetStateName": "Bear_death",
+            "triggerName": "ToDeath",
+            "blendTimeSeconds": 0.25
+        },
+        {
+            "sourceStateName": "Bear_HEAVY_SWIPE",
+            "targetStateName": "Bear_death",
+            "triggerName": "ToDeath",
+            "blendTimeSeconds": 0.25
+        },
+        {
+            "sourceStateName": "Bear_SIDE_SWEEP",
+            "targetStateName": "Bear_death",
+            "triggerName": "ToDeath",
+            "blendTimeSeconds": 0.25
+        },
+        {
+            "sourceStateName": "Bear_CHARGING_SLAM",
+            "targetStateName": "Bear_death",
+            "triggerName": "ToDeath",
             "blendTimeSeconds": 0.25
         }
     ]

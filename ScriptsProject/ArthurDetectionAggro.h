@@ -13,8 +13,6 @@ public:
 
 	void Start() override;
 
-	ScriptFieldList getExposedFields() const override;
-
 public:
 	void startEncounter(); // called in controller
 	void stopEncounter(); // called in controller
