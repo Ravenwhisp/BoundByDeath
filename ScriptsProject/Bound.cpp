@@ -77,9 +77,6 @@ void Bound::Update()
     {
         const float range = m_distanceInstaKill - m_minDistance;
 
-        // Normalized factor [0..1] using raw math
-        float t = (distance - m_minDistance) / range;
-
         // Manual clamp
         float t = (distance - m_minDistance) / range;
         if (t < 0.0f) t = 0.0f;
