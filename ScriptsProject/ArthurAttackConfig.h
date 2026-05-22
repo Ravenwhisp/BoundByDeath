@@ -34,6 +34,22 @@ public:
     float m_heavySwipePhase2Hit4Time = 1.20f;
     float m_heavySwipePhase2RecoveryDuration = 0.45f;
 
+    ScriptComponentRef<Transform> m_heavySwipeUICanvas;
+    ScriptComponentRef<Transform2D> m_heavySwipeUIContainer;
+    ScriptComponentRef<Transform2D> m_heavySwipeUIBackground;
+    ScriptComponentRef<Transform2D> m_heavySwipeUIBorder;
+    ScriptComponentRef<Transform2D> m_heavySwipeUIGlow;
+    ScriptComponentRef<Transform2D> m_heavySwipeUIRightClaw;
+    ScriptComponentRef<Transform2D> m_heavySwipeUILeftClaw;
+
+	Transform* m_heavySwipeUICanvasTransform = nullptr;
+	Transform2D* m_heavySwipeUIContainerTransform2D = nullptr;
+	Transform2D* m_heavySwipeUIBackgroundTransform2D = nullptr;
+	Transform2D* m_heavySwipeUIBorderTransform2D = nullptr;
+	Transform2D* m_heavySwipeUIGlowTransform2D = nullptr;
+	Transform2D* m_heavySwipeUIRightClawTransform2D = nullptr;
+	Transform2D* m_heavySwipeUILeftClawTransform2D = nullptr;
+
     // Side Sweep
     float m_sideSweepDamage = 12.0f;
     float m_sideSweepRange = 4.0f;
@@ -49,6 +65,16 @@ public:
     float m_sideSweepPhase2HitTime = 0.20f;
     float m_sideSweepPhase2TotalDuration = 0.55f;
     float m_sideSweepPhase2RecoveryDuration = 0.35f;
+
+    ScriptComponentRef<Transform> m_sideSweepUICanvas;
+    ScriptComponentRef<Transform2D> m_sideSweepUIContainer;
+    ScriptComponentRef<Transform2D> m_sideSweepUIBackground;
+    ScriptComponentRef<Transform2D> m_sideSweepUIShadow;
+
+    Transform* m_sideSweepUICanvasTransform = nullptr;
+    Transform2D* m_sideSweepUIContainerTransform2D = nullptr;
+    Transform2D* m_sideSweepUIBackgroundTransform2D = nullptr;
+    Transform2D* m_sideSweepUIShadowTransform2D = nullptr;
 
     // Charging Slam
     float m_chargingSlamDashDamage = 12.0f;

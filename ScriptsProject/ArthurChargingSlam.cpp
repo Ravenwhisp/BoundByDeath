@@ -299,6 +299,8 @@ void ArthurChargingSlam::setupUI()
     Transform2DAPI::setAlpha(m_attackConfig->m_chargingSlamUIShadowTransform2D, 0.0f);
     Transform2DAPI::setAlpha(m_attackConfig->m_chargingSlamUISpikesTransform2D, 0.0f);
     Transform2DAPI::setAlpha(m_attackConfig->m_chargingSlamUIContainerTransform2D, 1.0f);
+    Transform2DAPI::setPivot(container, Vector2(0.5f, 1.0f));
+    Transform2DAPI::setAnchorMin(container, Vector2(0.5f, 1.0f));
 
     const float distance = Vector3::Distance(m_startPosition, m_lockedTargetPosition);
     m_attackConfig->m_chargingSlamUIContainerTransform2D->setBaseSize(Vector2(m_attackConfig->m_chargingSlamUIContainerTransform2D->getBaseSize().x, distance * 100.f));
@@ -436,7 +438,7 @@ void ArthurChargingSlam::updateUI()
     {
         m_impactUITimer += deltaTime;
         const float duration = 0.45f;
-        float t = std::clamp(m_impactUITimer / duration, 0.0f, 1.0f);
+        const float t = std::clamp(m_impactUITimer / duration, 0.0f, 1.0f);
 
         float centerAlpha = 1.0f - MathAPI::evaluateEasing(MathAPI::EasingType::EaseOutQuad, t);
         Transform2DAPI::setAlpha(impactCenter, centerAlpha);
@@ -485,7 +487,7 @@ void ArthurChargingSlam::updateUI()
         const float fadeDuration = 0.35f;
         float t = std::clamp(m_impactUIFadeTimer / fadeDuration, 0.0f, 1.0f);
         t = MathAPI::evaluateEasing(MathAPI::EasingType::EaseInQuad, t);
-        float alpha = 1.0f - t;
+        const float alpha = 1.0f - t;
         Transform2DAPI::setAlpha(impactContainer, alpha);
 
         if (t >= 1.0f)

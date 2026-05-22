@@ -60,6 +60,8 @@ void ArthurHeavySwipe::OnStateEnter()
     m_arthurController->updateCurrentTarget();
     m_arthurController->faceCurrentTarget();
 
+    setupUI();
+
     Debug::log("[ArthurHeavySwipe] ENTER");
 }
 
@@ -71,6 +73,8 @@ void ArthurHeavySwipe::OnStateUpdate()
     }
 
     m_stateTimer += Time::getDeltaTime();
+
+    updateUI();
 
     const bool isPhase2 = m_arthurController->isPhase2();
 
@@ -122,6 +126,11 @@ void ArthurHeavySwipe::OnStateExit()
     if (animation)
     {
         AnimationAPI::setSpeedMultiplier(animation, m_previousAnimationSpeed);
+    }
+
+	if (m_attackConfig)
+    {
+        GameObjectAPI::setActive(m_attackConfig->m_heavySwipeUICanvasTransform->getOwner(), false);
     }
 
     Debug::log("[ArthurHeavySwipe] EXIT");
@@ -176,6 +185,119 @@ void ArthurHeavySwipe::goToRecover()
     Debug::log("[ArthurHeavySwipe] Going to Recover.");
 
     AnimationAPI::sendTrigger(animation, "ToRecover");
+}
+
+void ArthurHeavySwipe::setupUI()
+{
+    if (!m_attackConfig)
+    {
+        return;
+    }
+
+    Transform2D* container = m_attackConfig->m_heavySwipeUIContainerTransform2D;
+    Transform2D* background = m_attackConfig->m_heavySwipeUIBackgroundTransform2D;
+    Transform2D* border = m_attackConfig->m_heavySwipeUIBorderTransform2D;
+    Transform2D* glow = m_attackConfig->m_heavySwipeUIGlowTransform2D;
+    Transform2D* rightClaw = m_attackConfig->m_heavySwipeUIRightClawTransform2D;
+    Transform2D* leftClaw = m_attackConfig->m_heavySwipeUILeftClawTransform2D;
+
+    if (!container || !background || !border || !glow || !rightClaw || !leftClaw)
+    {
+        return;
+    }
+
+    GameObjectAPI::setActive(m_attackConfig->m_heavySwipeUICanvasTransform->getOwner(), true);
+    
+    Transform2DAPI::setAlpha(m_attackConfig->m_heavySwipeUIContainerTransform2D, 0.0f);
+    Transform2DAPI::setAlpha(m_attackConfig->m_heavySwipeUIBackgroundTransform2D, 1.0f);
+    Transform2DAPI::setAlpha(m_attackConfig->m_heavySwipeUIBorderTransform2D, 1.0f);
+    Transform2DAPI::setAlpha(m_attackConfig->m_heavySwipeUIGlowTransform2D, 0.0f);
+    Transform2DAPI::setAlpha(m_attackConfig->m_heavySwipeUIRightClawTransform2D, 0.0f);
+	Transform2DAPI::setAlpha(m_attackConfig->m_heavySwipeUILeftClawTransform2D, 0.0f);
+}
+
+void ArthurHeavySwipe::updateUI()
+{
+    if (!m_attackConfig)
+    {
+        return;
+    }
+
+	Transform2D* container = m_attackConfig->m_heavySwipeUIContainerTransform2D;
+	Transform2D* background = m_attackConfig->m_heavySwipeUIBackgroundTransform2D;
+	Transform2D* border = m_attackConfig->m_heavySwipeUIBorderTransform2D;
+	Transform2D* glow = m_attackConfig->m_heavySwipeUIGlowTransform2D;
+	Transform2D* rightClaw = m_attackConfig->m_heavySwipeUIRightClawTransform2D;
+	Transform2D* leftClaw = m_attackConfig->m_heavySwipeUILeftClawTransform2D;
+
+    if (!container || !background || !border || !glow || !rightClaw || !leftClaw)
+    {
+        return;
+    }
+
+    const bool isPhase2 = m_arthurController->isPhase2();
+    float hit1Time = m_attackConfig->m_heavySwipeHit1Time;
+    float hit2Time = m_attackConfig->m_heavySwipeHit2Time;
+    float hit3Time = m_attackConfig->m_heavySwipeHit3Time;
+
+    if (isPhase2)
+    {
+        hit1Time = m_attackConfig->m_heavySwipePhase2Hit1Time;
+        hit2Time = m_attackConfig->m_heavySwipePhase2Hit2Time;
+        hit3Time = m_attackConfig->m_heavySwipePhase2Hit3Time;
+    }
+
+
+    if (m_stateTimer < hit1Time)
+    {
+        // Charging
+		const float t = std::clamp(m_stateTimer / hit1Time, 0.0f, 1.0f);
+		Transform2DAPI::setAlpha(container, t);
+    }
+    else if (m_stateTimer < hit2Time)
+    {
+        // Attack 1
+        const float t = (m_stateTimer - hit1Time) / (hit2Time - hit1Time);
+        applyHitEffects(t, glow, border, leftClaw);
+    }
+    else if (m_stateTimer < hit3Time)
+    {
+        // Attack 2
+        const float t = (m_stateTimer - hit2Time) / (hit3Time - hit2Time);
+        applyHitEffects(t, glow, border, rightClaw);
+    }
+    else if (isPhase2 && m_stateTimer < m_attackConfig->m_heavySwipePhase2Hit4Time)
+    {
+        // Attack 3
+        const float t = (m_stateTimer - hit3Time) / (m_attackConfig->m_heavySwipePhase2Hit4Time - hit3Time);
+		applyHitEffects(t, glow, border, leftClaw);
+    }
+    else if (m_stateTimer <= m_attackConfig->m_heavySwipeTotalDuration)
+    {
+		const float lastHitTime = isPhase2 ? m_attackConfig->m_heavySwipePhase2Hit4Time : hit3Time;
+        const float t = (m_stateTimer - lastHitTime) / (m_attackConfig->m_heavySwipeTotalDuration - lastHitTime);
+        applyHitEffects(t, glow, border, isPhase2 ? rightClaw : leftClaw);
+		const float alpha = MathAPI::moveTowards(t, 1.0f, 0.3f);
+        Transform2DAPI::setAlpha(container, alpha);
+        return;
+    }
+
+}
+void ArthurHeavySwipe::applyHitEffects(float t, Transform2D* glow, Transform2D* border, Transform2D* claw)
+{
+    const float glowAlpha = MathAPI::pingPong(t);
+    Transform2DAPI::setAlpha(glow, glowAlpha);
+
+    const float borderScale =
+        MathAPI::evaluateEasing(MathAPI::EasingType::EaseOutQuad, std::clamp(t, 0.1f, 1.0f))
+        * m_attackConfig->m_heavySwipeRange;
+
+    Transform2DAPI::setScale(border, Vector2(borderScale, borderScale));
+
+    const float anchorValue = MathAPI::lerp(0.5f, 1.0f, t);
+
+	Transform2DAPI::setAlpha(claw, t);
+    Transform2DAPI::setAnchorMin(claw, Vector2(0.5f, anchorValue));
 }
 
 IMPLEMENT_SCRIPT(ArthurHeavySwipe)

@@ -72,7 +72,10 @@ void ArthurEarthHammer::OnStateUpdate()
 
 void ArthurEarthHammer::OnStateExit()
 {
-	GameObjectAPI::setActive(m_attackConfig->m_earthHammerUICanvasTransform->getOwner(), false);
+    if (m_attackConfig)
+    {
+        GameObjectAPI::setActive(m_attackConfig->m_earthHammerUICanvasTransform->getOwner(), false);
+	}
 
     Debug::log("[ArthurEarthHammer] EXIT");
 }
@@ -165,17 +168,17 @@ void ArthurEarthHammer::updateUI()
         return;
     }
 
-    float hitTime = m_attackConfig->m_earthHammerHitTime;
-    float totalTime = m_attackConfig->m_earthHammerTotalDuration;
+    const float hitTime = m_attackConfig->m_earthHammerHitTime;
+    const float totalTime = m_attackConfig->m_earthHammerTotalDuration;
 
     // CHARGE PHASE
 
     if (!m_hasAppliedImpact)
     {
 		Debug::log("Updating Charge UI. Timer: %.2f", m_stateTimer);
-        float t = std::clamp(m_stateTimer / hitTime, 0.0f, 1.0f);
+        const float t = std::clamp(m_stateTimer / hitTime, 0.0f, 1.0f);
         
-        float ringAlpha = MathAPI::evaluateEasing(MathAPI::EasingType::EaseOutQuad, t);
+        const float ringAlpha = MathAPI::evaluateEasing(MathAPI::EasingType::EaseOutQuad, t);
         Transform2DAPI::setAlpha(container, ringAlpha);
 
         m_innerScale = 0.1f + (t * 0.9f);
@@ -197,13 +200,13 @@ void ArthurEarthHammer::updateUI()
     m_impactUITimer += dt;
 
     const float impactDuration = m_attackConfig->m_earthHammerRecoveryDuration;
-    float t = std::clamp(m_impactUITimer / impactDuration, 0.0f, 1.0f);
+    const float t = std::clamp(m_impactUITimer / impactDuration, 0.0f, 1.0f);
 
 
-    float containerAlpha = 1.0f - MathAPI::evaluateEasing(MathAPI::EasingType::EaseInCubic, t);
+    const float containerAlpha = 1.0f - MathAPI::evaluateEasing(MathAPI::EasingType::EaseInCubic, t);
     Transform2DAPI::setAlpha(container, containerAlpha);
 
-    float glowAlpha = 1.0f - MathAPI::evaluateEasing(MathAPI::EasingType::EaseOutQuad, t);
+    const float glowAlpha = 1.0f - MathAPI::evaluateEasing(MathAPI::EasingType::EaseOutQuad, t);
     Transform2DAPI::setAlpha(glow, glowAlpha);
     Transform2DAPI::setAlpha(spikes, glowAlpha);
 }

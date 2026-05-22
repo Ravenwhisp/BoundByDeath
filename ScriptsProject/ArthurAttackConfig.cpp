@@ -16,6 +16,13 @@ IMPLEMENT_SCRIPT_FIELDS(ArthurAttackConfig,
     SERIALIZED_FLOAT(m_heavySwipePhase2Hit3Time, "Heavy Swipe Phase 2 Hit 3 Time", 0.0f, 10.0f, 0.05f),
     SERIALIZED_FLOAT(m_heavySwipePhase2Hit4Time, "Heavy Swipe Phase 2 Hit 4 Time", 0.0f, 10.0f, 0.05f),
     SERIALIZED_FLOAT(m_heavySwipePhase2RecoveryDuration, "Heavy Swipe Phase 2 Recovery Duration", 0.0f, 10.0f, 0.05f),
+	SERIALIZED_COMPONENT_REF(m_heavySwipeUICanvas, "Heavy Swipe UI Canvas", ComponentType::TRANSFORM),
+	SERIALIZED_COMPONENT_REF(m_heavySwipeUIContainer, "Heavy Swipe UI Container", ComponentType::TRANSFORM2D),
+	SERIALIZED_COMPONENT_REF(m_heavySwipeUIBackground, "Heavy Swipe UI Background", ComponentType::TRANSFORM2D),
+	SERIALIZED_COMPONENT_REF(m_heavySwipeUIBorder, "Heavy Swipe UI Border", ComponentType::TRANSFORM2D),
+	SERIALIZED_COMPONENT_REF(m_heavySwipeUIGlow, "Heavy Swipe UI Glow", ComponentType::TRANSFORM2D),
+	SERIALIZED_COMPONENT_REF(m_heavySwipeUIRightClaw, "Heavy Swipe UI Right Claw", ComponentType::TRANSFORM2D),
+	SERIALIZED_COMPONENT_REF(m_heavySwipeUILeftClaw, "Heavy Swipe UI Left Claw", ComponentType::TRANSFORM2D),
     // Side Sweep
     SERIALIZED_FLOAT(m_sideSweepDamage, "Side Sweep Damage", 0.0f, 9999.0f, 1.0f),
     SERIALIZED_FLOAT(m_sideSweepRange, "Side Sweep Range", 0.0f, 30.0f, 0.1f),
@@ -27,6 +34,10 @@ IMPLEMENT_SCRIPT_FIELDS(ArthurAttackConfig,
     SERIALIZED_FLOAT(m_sideSweepPhase2HitTime, "Side Sweep Phase 2 Hit Time", 0.0f, 10.0f, 0.05f),
     SERIALIZED_FLOAT(m_sideSweepPhase2TotalDuration, "Side Sweep Phase 2 Total Duration", 0.1f, 10.0f, 0.05f),
     SERIALIZED_FLOAT(m_sideSweepPhase2RecoveryDuration, "Side Sweep Phase 2 Recovery Duration", 0.0f, 10.0f, 0.05f),
+	SERIALIZED_COMPONENT_REF(m_sideSweepUICanvas, "Side Sweep UI Canvas", ComponentType::TRANSFORM),
+	SERIALIZED_COMPONENT_REF(m_sideSweepUIContainer, "Side Sweep UI Container", ComponentType::TRANSFORM2D),
+	SERIALIZED_COMPONENT_REF(m_sideSweepUIBackground, "Side Sweep UI Background", ComponentType::TRANSFORM2D),
+	SERIALIZED_COMPONENT_REF(m_sideSweepUIShadow, "Side Sweep UI Shadow", ComponentType::TRANSFORM2D),
     // Charging Slam
     SERIALIZED_FLOAT(m_chargingSlamDashDamage, "Charging Slam Dash Damage", 0.0f, 9999.0f, 1.0f),
     SERIALIZED_FLOAT(m_chargingSlamFinalAreaImpactDamage, "Charging Slam Final Area Impact Damage", 0.0f, 9999.0f, 1.0f),
@@ -80,6 +91,29 @@ ArthurAttackConfig::ArthurAttackConfig(GameObject* owner)
 
 void ArthurAttackConfig::Start()
 {
+	// Heavy Swipe UI
+	m_heavySwipeUICanvasTransform = m_heavySwipeUICanvas.getReferencedComponent();
+	m_heavySwipeUIContainerTransform2D = m_heavySwipeUIContainer.getReferencedComponent();
+	m_heavySwipeUIBackgroundTransform2D = m_heavySwipeUIBackground.getReferencedComponent();
+	m_heavySwipeUIBorderTransform2D = m_heavySwipeUIBorder.getReferencedComponent();
+	m_heavySwipeUIGlowTransform2D = m_heavySwipeUIGlow.getReferencedComponent();
+	m_heavySwipeUIRightClawTransform2D = m_heavySwipeUIRightClaw.getReferencedComponent();
+    m_heavySwipeUILeftClawTransform2D = m_heavySwipeUILeftClaw.getReferencedComponent();
+    if (m_heavySwipeUICanvasTransform)
+    {
+        GameObjectAPI::setActive(m_heavySwipeUICanvasTransform->getOwner(), false);
+    }
+
+	// Side Sweep UI
+	m_sideSweepUICanvasTransform = m_sideSweepUICanvas.getReferencedComponent();
+	m_sideSweepUIContainerTransform2D = m_sideSweepUIContainer.getReferencedComponent();
+	m_sideSweepUIBackgroundTransform2D = m_sideSweepUIBackground.getReferencedComponent();
+	m_sideSweepUIShadowTransform2D = m_sideSweepUIShadow.getReferencedComponent();
+    if (m_sideSweepUICanvasTransform)
+    {
+        GameObjectAPI::setActive(m_sideSweepUICanvasTransform->getOwner(), false);
+    }
+
 	// Charging Slam UI
 	m_chargingSlamUICanvasTransform = m_chargingSlamUICanvas.getReferencedComponent();
     m_chargingSlamUIContainerTransform2D = m_chargingSlamUIContainer.getReferencedComponent();
@@ -89,13 +123,19 @@ void ArthurAttackConfig::Start()
 	m_chargingSlamUISpikesTransform2D = m_chargingSlamUISpikes.getReferencedComponent();
 	m_chargingSlamUIBordersSliderComponent = m_chargingSlamUIBordersSlider.getReferencedComponent();
 	m_chargingSlamUIShadowSliderComponent = m_chargingSlamUIShadowSlider.getReferencedComponent();
-    GameObjectAPI::setActive(m_chargingSlamUICanvasTransform->getOwner(), false);
+    if (m_chargingSlamUICanvasTransform)
+    {
+        GameObjectAPI::setActive(m_chargingSlamUICanvasTransform->getOwner(), false);
+    }
 
     m_chargingSlamImpactUICanvasTransform = m_chargingSlamImpactUICanvas.getReferencedComponent();
     m_chargingSlamImpactUIContainerTransform2D = m_chargingSlamImpactUIContainer.getReferencedComponent();
     m_chargingSlamImpactUICenterTransform2D = m_chargingSlamImpactUICenter.getReferencedComponent();
     m_chargingSlamImpactUIGlowTransform2D = m_chargingSlamImpactUIGlow.getReferencedComponent();
-    GameObjectAPI::setActive(m_chargingSlamImpactUICanvasTransform->getOwner(), false);
+    if (m_chargingSlamImpactUICanvasTransform)
+    {
+        GameObjectAPI::setActive(m_chargingSlamImpactUICanvasTransform->getOwner(), false);
+    }
 
 	// Earth Hammer UI
     m_earthHammerUICanvasTransform = m_earthHammerUICanvas.getReferencedComponent();
@@ -104,7 +144,10 @@ void ArthurAttackConfig::Start()
     m_earthHammerUISpikesTransform2D = m_earthHammerUISpikes.getReferencedComponent();
     m_earthHammerUIGlowTransform2D = m_earthHammerUIGlow.getReferencedComponent();
     m_earthHammerUIRingTransform2D = m_earthHammerUIRing.getReferencedComponent();
-    GameObjectAPI::setActive(m_earthHammerUICanvasTransform->getOwner(), false);
+    if (m_earthHammerUICanvasTransform)
+    {
+        GameObjectAPI::setActive(m_earthHammerUICanvasTransform->getOwner(), false);
+    }
 }
 
 IMPLEMENT_SCRIPT(ArthurAttackConfig)
