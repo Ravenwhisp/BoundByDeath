@@ -159,6 +159,39 @@ bool ArthurBossController::isDead() const
 	return false;
 }
 
+bool ArthurBossController::trySendDeathTrigger(AnimationComponent* animation)
+{
+	if (m_deathTriggerSent)
+	{
+		return false;
+	}
+
+	if (!isDead())
+	{
+		return false;
+	}
+
+	if (!animation)
+	{
+		return false;
+	}
+
+	clearPath();
+
+	const bool sent = AnimationAPI::sendTrigger(animation, "ToDeath");
+
+	if (!sent)
+	{
+		return false;
+	}
+
+	m_deathTriggerSent = true;
+
+	Debug::log("[ArthurBossController] ToDeath trigger sent.");
+
+	return true;
+}
+
 void ArthurBossController::setPhase(ArthurBossPhase phase)
 {
 	m_phase = phase;

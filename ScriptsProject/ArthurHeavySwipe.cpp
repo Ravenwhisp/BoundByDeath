@@ -15,21 +15,7 @@ void ArthurHeavySwipe::OnStateEnter()
     m_arthurController = GameObjectAPI::findScript<ArthurBossController>(getOwner());
     m_attackConfig = GameObjectAPI::findScript<ArthurAttackConfig>(getOwner());
     m_attackExecutor = GameObjectAPI::findScript<EnemyAttackExecutor>(getOwner());
-
-    AnimationComponent* animation = AnimationAPI::getAnimationComponent(getOwner());
-    if (animation)
-    {
-        m_previousAnimationSpeed = AnimationAPI::getSpeedMultiplier(animation);
-
-        float animationSpeed = m_phase1AnimationSpeed;
-
-        if (m_arthurController->isPhase2())
-        {
-            animationSpeed = m_phase2AnimationSpeed;
-        }
-
-        AnimationAPI::setSpeedMultiplier(animation, animationSpeed);
-    }
+    m_animation = AnimationAPI::getAnimationComponent(getOwner());
 
     m_stateTimer = 0.0f;
 
@@ -56,6 +42,23 @@ void ArthurHeavySwipe::OnStateEnter()
         return;
     }
 
+    if (!m_animation)
+    {
+        Debug::error("[ArthurHeavySwipe] AnimationComponent not found.");
+        return;
+    }
+
+    m_previousAnimationSpeed = AnimationAPI::getSpeedMultiplier(m_animation);
+
+    float animationSpeed = m_phase1AnimationSpeed;
+
+    if (m_arthurController->isPhase2())
+    {
+        animationSpeed = m_phase2AnimationSpeed;
+    }
+
+    AnimationAPI::setSpeedMultiplier(m_animation, animationSpeed);
+
     m_arthurController->clearPath();
     m_arthurController->updateCurrentTarget();
     m_arthurController->faceCurrentTarget();
@@ -65,21 +68,13 @@ void ArthurHeavySwipe::OnStateEnter()
 
 void ArthurHeavySwipe::OnStateUpdate()
 {
-    if (!m_arthurController || !m_attackConfig || !m_attackExecutor)
+    if (!m_arthurController || !m_attackConfig || !m_attackExecutor || !m_animation)
     {
         return;
     }
 
-    AnimationComponent* animation = AnimationAPI::getAnimationComponent(getOwner());
-    if (!animation)
+    if (m_arthurController->trySendDeathTrigger(m_animation))
     {
-        return;
-    }
-
-    if (m_arthurController->isDead())
-    {
-        m_arthurController->clearPath();
-        AnimationAPI::sendTrigger(animation, "ToDeath");
         return;
     }
 
@@ -163,13 +158,7 @@ void ArthurHeavySwipe::tryApplyHit(int hitIndex)
 
 void ArthurHeavySwipe::goToRecover()
 {
-    if (!m_attackConfig)
-    {
-        return;
-    }
-
-    AnimationComponent* animation = AnimationAPI::getAnimationComponent(getOwner());
-    if (!animation)
+    if (!m_attackConfig || !m_animation)
     {
         return;
     }
@@ -188,7 +177,7 @@ void ArthurHeavySwipe::goToRecover()
 
     Debug::log("[ArthurHeavySwipe] Going to Recover.");
 
-    AnimationAPI::sendTrigger(animation, "ToRecover");
+    AnimationAPI::sendTrigger(m_animation, "ToRecover");
 }
 
 IMPLEMENT_SCRIPT(ArthurHeavySwipe)
