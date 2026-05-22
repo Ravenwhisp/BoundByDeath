@@ -88,6 +88,9 @@
     <Filter Include="Enemies\Arthur\States">
       <UniqueIdentifier>{10e43235-b0ea-4590-a473-24e5c1676a4f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Interaction/Gameplay\HealthDrop">
+      <UniqueIdentifier>{d8de068a-39f8-435a-ad86-ecaf9ed6e761}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -174,9 +177,6 @@
       <Filter>Enemies</Filter>
     </ClInclude>
     <ClInclude Include="EnemyDetectionAggro.h">
-      <Filter>Enemies</Filter>
-    </ClInclude>
-    <ClInclude Include="EnemyDeathHandler.h">
       <Filter>Enemies</Filter>
     </ClInclude>
     <ClInclude Include="EnemyController.h">
@@ -313,7 +313,30 @@
     </ClInclude>
     <ClInclude Include="PowerupCollectible.h" />
     <ClInclude Include="PersistingPowerupState.h" />
-    <ClInclude Include="PuzzleManagerLVL1.h">
+
+    <ClInclude Include="BreakableDamageable.h">
+      <Filter>Combat</Filter>
+    </ClInclude>
+    <ClInclude Include="BreakableExplosive.h">
+      <Filter>Combat</Filter>
+    </ClInclude>
+    <ClInclude Include="BreakableHealingDrop.h">
+      <Filter>Interaction/Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="BreakableObject.h">
+      <Filter>Interaction/Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="Pickup.h">
+      <Filter>Interaction/Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="HealthPickup.h" />
+    <ClInclude Include="HealthPickup.h">
+      <Filter>Interaction/Gameplay\HealthDrop</Filter>
+    </ClInclude>
+    <ClInclude Include="HealthDropSpawner.h">
+      <Filter>Interaction/Gameplay\HealthDrop</Filter>
+    </ClInclude>
+    <ClInclude Include="PuzzleManagerLVL1.h" >
       <Filter>Interaction/Gameplay\Puzzles</Filter>
     </ClInclude>
     <ClInclude Include="CrystalShadowMark.h">
@@ -367,6 +390,9 @@
     </ClInclude>
     <ClInclude Include="ArthurRecover.h">
       <Filter>Enemies\Arthur\States</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyDeathState.h">
+      <Filter>Enemies\States</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -455,9 +481,6 @@
       <Filter>Enemies</Filter>
     </ClCompile>
     <ClCompile Include="EnemyDetectionAggro.cpp">
-      <Filter>Enemies</Filter>
-    </ClCompile>
-    <ClCompile Include="EnemyDeathHandler.cpp">
       <Filter>Enemies</Filter>
     </ClCompile>
     <ClCompile Include="EnemyController.cpp">
@@ -594,7 +617,29 @@
     </ClCompile>
     <ClCompile Include="PowerupCollectible.cpp" />
     <ClCompile Include="PersistingPowerupState.cpp" />
-    <ClCompile Include="PuzzleManagerLVL1.cpp">
+    <ClCompile Include="BreakableDamageable.cpp">
+      <Filter>Combat</Filter>
+    </ClCompile>
+    <ClCompile Include="BreakableExplosive.cpp">
+      <Filter>Combat</Filter>
+    </ClCompile>
+    <ClCompile Include="BreakableHealingDrop.cpp">
+      <Filter>Interaction/Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="BreakableObject.cpp">
+      <Filter>Interaction/Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="Pickup.cpp">
+      <Filter>Interaction/Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="HealthPickup.cpp" />
+    <ClCompile Include="HealthPickup.cpp">
+      <Filter>Interaction/Gameplay\HealthDrop</Filter>
+    </ClCompile>
+    <ClCompile Include="HealthDropSpawner.cpp">
+      <Filter>Interaction/Gameplay\HealthDrop</Filter>
+    </ClCompile>
+    <ClCompile Include="PuzzleManagerLVL1.cpp" >
       <Filter>Interaction/Gameplay\Puzzles</Filter>
     </ClCompile>
     <ClCompile Include="CrystalShadowMark.cpp">
@@ -648,6 +693,9 @@
     </ClCompile>
     <ClCompile Include="ArthurRecover.cpp">
       <Filter>Enemies\Arthur\States</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyDeathState.cpp">
+      <Filter>Enemies\States</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

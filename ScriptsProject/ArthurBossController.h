@@ -39,6 +39,8 @@ private:
 
 	ArthurBossPhase m_phase = ArthurBossPhase::Phase1;
 
+	bool m_hasStartedEncounter = false;
+
 	float m_repathTimer = 0.0f;
 	std::vector<Vector3> m_path;
 	bool m_hasPath = false;
@@ -62,6 +64,7 @@ public:
 	bool isTargetInCombatRange() const;
 	float getDistanceToCurrentTarget() const; // Get the distance between target and boss and compare with the different attack ranges
 	Transform* getCurrentTarget() const { return m_currentTarget; }
+	bool isDead() const;
 
 	// Phase helpers
 	void setPhase(ArthurBossPhase phase);

@@ -52,6 +52,19 @@ void ArthurSideSweep::OnStateUpdate()
         return;
     }
 
+    AnimationComponent* animation = AnimationAPI::getAnimationComponent(getOwner());
+    if (!animation)
+    {
+        return;
+    }
+
+    if (m_arthurController->isDead())
+    {
+        m_arthurController->clearPath();
+        AnimationAPI::sendTrigger(animation, "ToDeath");
+        return;
+    }
+
     m_stateTimer += Time::getDeltaTime();
 
     float hitTime = m_attackConfig->m_sideSweepHitTime;

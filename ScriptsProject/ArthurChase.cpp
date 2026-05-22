@@ -60,6 +60,13 @@ void ArthurChase::OnStateUpdate()
 		return;
 	}
 
+	if (m_arthurController->isDead())
+	{
+		m_arthurController->clearPath();
+		AnimationAPI::sendTrigger(animation, "ToDeath");
+		return;
+	}
+
 	// Check target
 
 	m_arthurController->updateCurrentTarget();
@@ -67,6 +74,7 @@ void ArthurChase::OnStateUpdate()
 	if (!m_arthurController->hasValidTarget())
 	{
 		m_arthurController->clearPath();
+		AnimationAPI::sendTrigger(animation, "ToIdle");
 		return;
 	}
 

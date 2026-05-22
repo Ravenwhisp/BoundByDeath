@@ -66,6 +66,13 @@ void ArthurBossController::drawGizmo()
 
 void ArthurBossController::Update()
 {
+
+	if (!m_hasStartedEncounter && m_arthurDetectionAggro && m_arthurDetectionAggro->hasAnyTargetInDetectionRange())
+	{
+		m_arthurDetectionAggro->startEncounter();
+		m_hasStartedEncounter = true;
+	}
+
 	updateAttackCooldowns(Time::getDeltaTime());
 
 	updateBossPhase();
@@ -138,6 +145,18 @@ float ArthurBossController::getDistanceToCurrentTarget() const
 	difference.y = 0.0f;
 
 	return difference.Length();
+}
+
+bool ArthurBossController::isDead() const
+{
+	Damageable* damageable = GameObjectAPI::findScript<Damageable>(getOwner());
+
+	if (damageable && damageable->isDead())
+	{
+		return true;
+	}
+
+	return false;
 }
 
 void ArthurBossController::setPhase(ArthurBossPhase phase)
