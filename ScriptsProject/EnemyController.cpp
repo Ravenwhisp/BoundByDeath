@@ -357,4 +357,16 @@ void EnemyController::consumeChargeCooldown(float cooldownDuration)
 	m_chargeCooldownTimer = cooldownDuration;
 }
 
+bool EnemyController::isDead() const
+{
+	Damageable* damageable = GameObjectAPI::findScript<Damageable>(getOwner());
+
+	if (damageable && damageable->isDead())
+	{
+		return true;
+	}
+
+	return false;
+}
+
 IMPLEMENT_SCRIPT(EnemyController)
