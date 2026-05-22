@@ -64,6 +64,7 @@ public:
 	bool isTargetInCombatRange() const;
 	float getDistanceToCurrentTarget() const; // Get the distance between target and boss and compare with the different attack ranges
 	Transform* getCurrentTarget() const { return m_currentTarget; }
+	bool isDead() const;
 
 	// Phase helpers
 	void setPhase(ArthurBossPhase phase);

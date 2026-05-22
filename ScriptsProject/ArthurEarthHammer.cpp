@@ -51,6 +51,19 @@ void ArthurEarthHammer::OnStateUpdate()
         return;
     }
 
+    AnimationComponent* animation = AnimationAPI::getAnimationComponent(getOwner());
+    if (!animation)
+    {
+        return;
+    }
+
+    if (m_arthurController->isDead())
+    {
+        m_arthurController->clearPath();
+        AnimationAPI::sendTrigger(animation, "ToDeath");
+        return;
+    }
+
     m_stateTimer += Time::getDeltaTime();
 
     if (!m_hasAppliedImpact && m_stateTimer >= m_attackConfig->m_earthHammerHitTime)

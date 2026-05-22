@@ -147,6 +147,18 @@ float ArthurBossController::getDistanceToCurrentTarget() const
 	return difference.Length();
 }
 
+bool ArthurBossController::isDead() const
+{
+	Damageable* damageable = GameObjectAPI::findScript<Damageable>(getOwner());
+
+	if (damageable && damageable->isDead())
+	{
+		return true;
+	}
+
+	return false;
+}
+
 void ArthurBossController::setPhase(ArthurBossPhase phase)
 {
 	m_phase = phase;
