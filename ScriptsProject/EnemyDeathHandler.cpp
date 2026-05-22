@@ -1,8 +1,7 @@
 #include "pch.h"
 #include "EnemyDeathHandler.h"
 #include "Damageable.h"
-#include "HealthPickup.h"
-#include <cmath>
+#include "HealthDropSpawner.h"
 
 IMPLEMENT_SCRIPT_FIELDS(EnemyDeathHandler,
     SERIALIZED_FLOAT(m_destroyDelay, "Destroy Delay", 0.0f, 30.0f, 0.1f),
@@ -118,38 +117,7 @@ void EnemyDeathHandler::DropHealth()
 
     for (int i = 0; i < m_healthDropQuantity; ++i)
     {
-        
-        float angle = (static_cast<float>(rand()) / RAND_MAX) * 6.283185f;
-
-        
-        float distance = (static_cast<float>(rand()) / RAND_MAX) * m_dropRadius;
-
-       
-        Vector3 offset;
-        offset.x = std::cos(angle) * distance;
-        offset.z = std::sin(angle) * distance;
-        offset.y = 0.0f; 
-
-        Vector3 finalPos   = spawnPosition + offset;
-        Vector3 arcOrigin  = Vector3(spawnPosition.x, spawnPosition.y + m_dropHeight, spawnPosition.z);
-
-        // Instantiate at the arc origin (enemy center) so the pickup is never
-        // visible at the floor position before Start() runs.
-        GameObject* pickup = GameObjectAPI::instantiatePrefab(m_healthPrefabPath.c_str(), arcOrigin, Vector3::Zero);
-
-        if (pickup == nullptr)
-        {
-            continue;
-        }
-
-        Script* script = GameObjectAPI::getScript(pickup, "HealthPickup");
-        if (script != nullptr)
-        {
-            HealthPickup* healthPickup         = static_cast<HealthPickup*>(script);
-            healthPickup->m_healAmount         = m_healthDropAmount;
-            healthPickup->m_landingPosition    = finalPos;
-            healthPickup->m_hasCustomSpawnFrom = true;
-        }
+        HealthDropSpawner::drop(m_healthPrefabPath.c_str(), spawnPosition, m_healthDropAmount, m_dropRadius, m_dropHeight);
     }
 }
 IMPLEMENT_SCRIPT(EnemyDeathHandler)
