@@ -2,6 +2,7 @@
 #include "LyrielArrowProjectile.h"
 #include "ArrowPool.h"
 #include "EnemyDamageable.h"
+#include "BreakableDamageable.h"
 #include "EnemyShadowMark.h"
 #include "LyrielCharacter.h"
 
@@ -121,6 +122,14 @@ void LyrielArrowProjectile::applyImpactDamage()
                 }
             }
         }
+    }
+
+	BreakableDamageable* breakableDamageable = GameObjectAPI::findScript<BreakableDamageable>(m_target);
+
+    if (breakableDamageable != nullptr)
+    {
+        breakableDamageable->takeDamage(m_damage);
+        return;
     }
 }
 
