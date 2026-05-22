@@ -6,6 +6,7 @@
 class RangedEnemyController;
 class ArcherAttackConfig;
 class EnemyAttackExecutor;
+class AnimationComponent;
 
 class ArcherArrowBarrageState : public StateMachineScript
 {
@@ -27,6 +28,8 @@ private:
     RangedEnemyController* m_archerController = nullptr;
     ArcherAttackConfig* m_attackConfig = nullptr;
     EnemyAttackExecutor* m_attackExecutor = nullptr;
+    AnimationComponent* m_animation = nullptr;
+
 
     Vector3 m_impactPosition = Vector3(0.0f, 0.0f, 0.0f);
 

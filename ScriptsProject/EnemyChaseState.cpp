@@ -11,10 +11,17 @@ EnemyChaseState::EnemyChaseState(GameObject* owner)
 void EnemyChaseState::OnStateEnter()
 {
     m_archerController = GameObjectAPI::findScript<RangedEnemyController>(getOwner());
+    m_animation = AnimationAPI::getAnimationComponent(getOwner());
 
     if (!m_archerController)
     {
         Debug::error("[EnemyChaseState] RangedEnemyController not found.");
+        return;
+    }
+
+    if (!m_animation)
+    {
+        Debug::error("[EnemyChaseState] AnimationComponent not found.");
         return;
     }
 
@@ -23,20 +30,19 @@ void EnemyChaseState::OnStateEnter()
 
 void EnemyChaseState::OnStateUpdate()
 {
-    if (!m_archerController)
+    if (!m_archerController || !m_animation)
     {
         return;
     }
 
-    AnimationComponent* animation = AnimationAPI::getAnimationComponent(getOwner());
-    if (!animation)
+    if (m_archerController->trySendDeathTrigger(m_animation))
     {
         return;
     }
 
     if (!m_archerController->hasTarget())
     {
-        AnimationAPI::sendTrigger(animation, "ToIdle");
+        AnimationAPI::sendTrigger(m_animation, "ToIdle");
 
         Debug::log("[EnemyChaseState] Idle trigger sent");
 
@@ -45,21 +51,21 @@ void EnemyChaseState::OnStateUpdate()
 
     if (m_archerController->playerInSomersaultRange() && m_archerController->isSomersaultReady())
     {
-        AnimationAPI::sendTrigger(animation, "ToSomersault");
+        AnimationAPI::sendTrigger(m_animation, "ToSomersault");
         Debug::log("[EnemyChaseState] Somersault trigger sent");
         return;
     }
 
     if (m_archerController->isTargetInArrowBarrageRange()  && m_archerController->isArrowBarrageReady())
     {
-        AnimationAPI::sendTrigger(animation, "ToArrowBarrage");
+        AnimationAPI::sendTrigger(m_animation, "ToArrowBarrage");
         Debug::log("[EnemyChaseState] Arrow Barrage trigger sent");
         return;
     }
 
     if (m_archerController->isTargetInAttackRange())
     {
-        AnimationAPI::sendTrigger(animation, "ToAttack");
+        AnimationAPI::sendTrigger(m_animation, "ToAttack");
 
         Debug::log("[EnemyChaseState] Attack trigger sent");
 

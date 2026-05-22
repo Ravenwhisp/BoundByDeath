@@ -16,6 +16,7 @@ void EnemyAttackState::OnStateEnter()
 {
     m_archerController = GameObjectAPI::findScript<RangedEnemyController>(getOwner());
     m_attackConfig = GameObjectAPI::findScript<ArcherAttackConfig>(getOwner());
+    m_animation = AnimationAPI::getAnimationComponent(getOwner());
 
     m_stateTimer = 0.0f;
     m_hasAppliedDamage = false;
@@ -33,6 +34,12 @@ void EnemyAttackState::OnStateEnter()
         return;
     }
 
+    if (!m_animation)
+    {
+        Debug::error("[EnemyAttackState] AnimationComponent not found.");
+        return;
+    }
+
     m_archerController->clearPath();
     m_archerController->updateCurrentTarget();
     m_committedTarget = m_archerController->getTarget();
@@ -42,13 +49,12 @@ void EnemyAttackState::OnStateEnter()
 
 void EnemyAttackState::OnStateUpdate()
 {
-    if (!m_archerController || !m_attackConfig)
+    if (!m_archerController || !m_attackConfig || !m_animation)
     {
         return;
     }
 
-    AnimationComponent* animation = AnimationAPI::getAnimationComponent(getOwner());
-    if (!animation)
+    if (m_archerController->trySendDeathTrigger(m_animation))
     {
         return;
     }
@@ -69,12 +75,12 @@ void EnemyAttackState::OnStateUpdate()
 
         if (!m_archerController->hasTarget())
         {
-            AnimationAPI::sendTrigger(animation, "ToIdle");
+            AnimationAPI::sendTrigger(m_animation, "ToIdle");
             Debug::log("[EnemyAttackState] Attack finished, Idle trigger sent");
         }
         else
         {
-            AnimationAPI::sendTrigger(animation, "ToChase");
+            AnimationAPI::sendTrigger(m_animation, "ToChase");
             Debug::log("[EnemyAttackState] Attack finished, Chase trigger sent");
         }
 

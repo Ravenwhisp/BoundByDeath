@@ -5,6 +5,7 @@
 
 class RangedEnemyController;
 class ArcherAttackConfig;
+class AnimationComponent;
 
 class ArcherSomersaultState : public StateMachineScript
 {
@@ -24,6 +25,7 @@ private:
 private:
     RangedEnemyController* m_archerController = nullptr;
     ArcherAttackConfig* m_attackConfig = nullptr;
+    AnimationComponent* m_animation = nullptr;
 
     Vector3 m_escapeDirection = Vector3(0.0f, 0.0f, 0.0f);
 

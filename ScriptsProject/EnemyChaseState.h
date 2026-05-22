@@ -2,7 +2,9 @@
 
 #include "ScriptAPI.h"
 #include "StateMachineScript.h"
-#include "RangedEnemyController.h"
+
+class RangedEnemyController;
+class AnimationComponent;
 
 class EnemyChaseState : public StateMachineScript
 {
@@ -17,4 +19,5 @@ public:
 
 private:
     RangedEnemyController* m_archerController = nullptr;
+    AnimationComponent* m_animation = nullptr;
 };

@@ -5,6 +5,7 @@
 
 class RangedEnemyController;
 class ArcherAttackConfig;
+class AnimationComponent;
 
 class EnemyAttackState : public StateMachineScript
 {
@@ -23,6 +24,7 @@ private:
 private:
     RangedEnemyController* m_archerController = nullptr;
     ArcherAttackConfig* m_attackConfig = nullptr;
+    AnimationComponent* m_animation = nullptr;
 
     Transform* m_committedTarget = nullptr;
 

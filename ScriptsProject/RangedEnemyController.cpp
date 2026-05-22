@@ -4,6 +4,8 @@
 #include "EnemyDetectionAggro.h"
 #include "ArcherAttackConfig.h"
 
+#include "Damageable.h"
+
 #include <cfloat>
 #include <cmath>
 #include <algorithm>
@@ -37,6 +39,7 @@ void RangedEnemyController::Start()
     m_target = nullptr;
     m_repathTimer = 0.0f;
     m_lastTargetPosition = Vector3::Zero;
+    m_deathTriggerSent = false;
 
     clearPath();
 }
@@ -287,6 +290,51 @@ void RangedEnemyController::clearPath()
     m_path.clear();
     m_currentPathIndex = 0;
     m_hasPath = false;
+}
+
+bool RangedEnemyController::isDead() const
+{
+    Damageable* damageable = GameObjectAPI::findScript<Damageable>(getOwner());
+
+    if (damageable && damageable->isDead())
+    {
+        return true;
+    }
+
+    return false;
+}
+
+bool RangedEnemyController::trySendDeathTrigger(AnimationComponent* animation)
+{
+    if (m_deathTriggerSent)
+    {
+        return false;
+    }
+
+    if (!isDead())
+    {
+        return false;
+    }
+
+    if (!animation)
+    {
+        return false;
+    }
+
+    clearPath();
+
+    const bool sent = AnimationAPI::sendTrigger(animation, "ToDeath");
+
+    if (!sent)
+    {
+        return false;
+    }
+
+    m_deathTriggerSent = true;
+
+    Debug::log("[RangedEnemyController] ToDeath trigger sent.");
+
+    return true;
 }
 
 void RangedEnemyController::rotateTowardsDirection(const Vector3& direction)

@@ -13,6 +13,7 @@ void ArcherSomersaultState::OnStateEnter()
 {
     m_archerController = GameObjectAPI::findScript<RangedEnemyController>(getOwner());
     m_attackConfig = GameObjectAPI::findScript<ArcherAttackConfig>(getOwner());
+    m_animation = AnimationAPI::getAnimationComponent(getOwner());
 
     m_stateTimer = 0.0f;
     m_escapeDirection = Vector3(0.0f, 0.0f, 0.0f);
@@ -28,6 +29,11 @@ void ArcherSomersaultState::OnStateEnter()
         Debug::error("[ArcherSomersaultState] ArcherAttackConfig not found.");
         return;
     }
+    if (!m_animation)
+    {
+        Debug::error("[ArcherSomersaultState] AnimationComponent not found.");
+        return;
+    }
 
     m_archerController->clearPath();
 
@@ -38,7 +44,12 @@ void ArcherSomersaultState::OnStateEnter()
 
 void ArcherSomersaultState::OnStateUpdate()
 {
-    if (!m_archerController || !m_attackConfig)
+    if (!m_archerController || !m_attackConfig || !m_animation)
+    {
+        return;
+    }
+
+    if (m_archerController->trySendDeathTrigger(m_animation))
     {
         return;
     }
@@ -94,20 +105,14 @@ void ArcherSomersaultState::moveSomersault()
 
 void ArcherSomersaultState::finishSomersault()
 {
-    if (!m_archerController)
+    if (!m_archerController || !m_animation)
     {
         return;
     }
 
     m_archerController->consumeSomersaultCooldown();
 
-    AnimationComponent* animation = AnimationAPI::getAnimationComponent(getOwner());
-    if (!animation)
-    {
-        return;
-    }
-
-    AnimationAPI::sendTrigger(animation, "ToChase");
+    AnimationAPI::sendTrigger(m_animation, "ToChase");
 
     Debug::log("[ArcherSomersaultState] Finished, Chase trigger sent");
 }

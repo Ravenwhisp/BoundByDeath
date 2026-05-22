@@ -92,7 +92,7 @@
             "clipName": "Archer_Walk",
             "speed": 1.0,
             "behaviourScriptName": "EnemyChaseState",
-            "behaviourFieldsJson": "",
+            "behaviourFieldsJson": "{}",
             "overrideLoop": true,
             "loop": true
         },
@@ -100,8 +100,8 @@
             "name": "DEATH",
             "clipName": "Archer_Death",
             "speed": 1.0,
-            "behaviourScriptName": "",
-            "behaviourFieldsJson": "",
+            "behaviourScriptName": "EnemyDeathState",
+            "behaviourFieldsJson": "{\"Destroy Delay\":2.0,\"Should Drop Health\":true,\"Health Prefab Path\":\"Assets/Prefabs/HealthPlaceholder.prefab\",\"Health Drop Quantity\":1,\"Drop Heal Amount\":10.0,\"Drop Radius\":2.0,\"Drop Height\":1.0}",
             "overrideLoop": true,
             "loop": false
         },
@@ -116,12 +116,12 @@
         },
         {
             "name": "ARROWBARRAGE",
-            "clipName": "",
+            "clipName": "Archer_Attack_2",
             "speed": 1.0,
-            "behaviourScriptName": "",
+            "behaviourScriptName": "ArcherArrowBarrageState",
             "behaviourFieldsJson": "",
-            "overrideLoop": false,
-            "loop": true
+            "overrideLoop": true,
+            "loop": false
         },
         {
             "name": "SOMERSAULT",
@@ -186,6 +186,36 @@
             "sourceStateName": "ARROWBARRAGE",
             "targetStateName": "CHASE",
             "triggerName": "ToChase",
+            "blendTimeSeconds": 0.25
+        },
+        {
+            "sourceStateName": "IDLE",
+            "targetStateName": "DEATH",
+            "triggerName": "ToDeath",
+            "blendTimeSeconds": 0.25
+        },
+        {
+            "sourceStateName": "CHASE",
+            "targetStateName": "DEATH",
+            "triggerName": "ToDeath",
+            "blendTimeSeconds": 0.25
+        },
+        {
+            "sourceStateName": "SOMERSAULT",
+            "targetStateName": "DEATH",
+            "triggerName": "ToDeath",
+            "blendTimeSeconds": 0.25
+        },
+        {
+            "sourceStateName": "ARROWBARRAGE",
+            "targetStateName": "DEATH",
+            "triggerName": "ToDeath",
+            "blendTimeSeconds": 0.25
+        },
+        {
+            "sourceStateName": "BASIC_ATTACK",
+            "targetStateName": "DEATH",
+            "triggerName": "ToDeath",
             "blendTimeSeconds": 0.25
         }
     ]

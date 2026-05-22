@@ -15,6 +15,7 @@ void ArcherArrowBarrageState::OnStateEnter()
     m_archerController = GameObjectAPI::findScript<RangedEnemyController>(getOwner());
     m_attackConfig = GameObjectAPI::findScript<ArcherAttackConfig>(getOwner());
     m_attackExecutor = GameObjectAPI::findScript<EnemyAttackExecutor>(getOwner());
+    m_animation = AnimationAPI::getAnimationComponent(getOwner());
 
     m_stateTimer = 0.0f;
     m_impactPosition = Vector3(0.0f, 0.0f, 0.0f);
@@ -40,6 +41,12 @@ void ArcherArrowBarrageState::OnStateEnter()
         return;
     }
 
+    if (!m_animation)
+    {
+        Debug::error("[ArcherArrowBarrageState] AnimationComponent not found.");
+        return;
+    }
+
     m_archerController->clearPath();
     m_archerController->updateCurrentTarget();
 
@@ -48,7 +55,12 @@ void ArcherArrowBarrageState::OnStateEnter()
 
 void ArcherArrowBarrageState::OnStateUpdate()
 {
-    if (!m_archerController || !m_attackConfig || !m_attackExecutor)
+    if (!m_archerController || !m_attackConfig || !m_attackExecutor || !m_animation)
+    {
+        return;
+    }
+
+    if (m_archerController->trySendDeathTrigger(m_animation))
     {
         return;
     }
@@ -111,18 +123,14 @@ void ArcherArrowBarrageState::applyImpact()
 
 void ArcherArrowBarrageState::finishArrowBarrage()
 {
-    if (m_archerController)
-    {
-        m_archerController->consumeArrowBarrageCooldown();
-    }
-
-    AnimationComponent* animation = AnimationAPI::getAnimationComponent(getOwner());
-    if (!animation)
+    if (!m_archerController || !m_animation)
     {
         return;
     }
 
-    AnimationAPI::sendTrigger(animation, "ToChase");
+    m_archerController->consumeArrowBarrageCooldown();
+
+    AnimationAPI::sendTrigger(m_animation, "ToChase");
 
     Debug::log("[ArcherArrowBarrageState] Finished, Chase trigger sent");
 }

@@ -30,6 +30,9 @@ public:
     void faceTarget();
     void clearPath();
 
+    bool isDead() const;
+    bool trySendDeathTrigger(AnimationComponent* animation);
+
     // Somersault helpers
     bool playerInSomersaultRange() const;
 
@@ -67,6 +70,8 @@ private:
     bool m_hasPath = false;
     float m_repathTimer = 0.0f;
     Vector3 m_lastTargetPosition = Vector3::Zero;
+
+    bool m_deathTriggerSent = false;
 
     float m_somersaultCooldownTimer = 0.0f;
     float m_arrowBarrageCooldownTimer = 0.0f;
