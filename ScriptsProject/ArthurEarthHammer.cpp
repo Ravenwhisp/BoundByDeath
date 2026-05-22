@@ -188,7 +188,6 @@ void ArthurEarthHammer::updateUI()
 
     if (!m_hasAppliedImpact)
     {
-		Debug::log("Updating Charge UI. Timer: %.2f", m_stateTimer);
         const float t = std::clamp(m_stateTimer / hitTime, 0.0f, 1.0f);
         
         const float ringAlpha = MathAPI::evaluateEasing(MathAPI::EasingType::EaseOutQuad, t);

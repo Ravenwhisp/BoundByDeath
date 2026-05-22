@@ -22,6 +22,9 @@ private:
     void applyHit();
     void goToRecover();
 
+	void setupUI();
+	void updateUI();
+
 private:
     ArthurBossController* m_arthurController = nullptr;
     ArthurAttackConfig* m_attackConfig = nullptr;
