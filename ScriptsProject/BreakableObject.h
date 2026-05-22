@@ -12,14 +12,9 @@ public:
     explicit BreakableObject(GameObject* owner);
 
     void Start() override;
-    ScriptFieldList getExposedFields() const override;
 
     virtual void onBreak() { breakObject(); }
     bool isBroken() const { return m_isBroken; }
-
-public:
-    ScriptComponentRef<Transform> m_normalObjectTransformComponent;
-    ScriptComponentRef<Transform> m_brokenObjectTransformComponent;
 
 protected:
 	Transform* m_normalObjectTransform = nullptr;

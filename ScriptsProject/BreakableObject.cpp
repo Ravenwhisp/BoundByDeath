@@ -1,11 +1,6 @@
 #include "pch.h"
 #include "BreakableObject.h"
 
-IMPLEMENT_SCRIPT_FIELDS(BreakableObject,
-    SERIALIZED_COMPONENT_REF(m_normalObjectTransformComponent, "Normal Object", ComponentType::TRANSFORM),
-    SERIALIZED_COMPONENT_REF(m_brokenObjectTransformComponent, "Broken Object", ComponentType::TRANSFORM)
-)
-
 BreakableObject::BreakableObject(GameObject* owner)
     : Script(owner)
 {
@@ -15,8 +10,20 @@ void BreakableObject::Start()
 {
     m_isBroken = false;
 
-    m_normalObjectTransform = m_normalObjectTransformComponent.getReferencedComponent();
-    m_brokenObjectTransform = m_brokenObjectTransformComponent.getReferencedComponent();
+    Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
+
+    m_normalObjectTransform = TransformAPI::findChildByName(ownerTransform, "Normal");
+    m_brokenObjectTransform = TransformAPI::findChildByName(ownerTransform, "Broken");
+
+    if (m_normalObjectTransform == nullptr)
+    {
+        Debug::warn("[BreakableObject] '%s' could not find child object named 'Normal'.", GameObjectAPI::getName(getOwner()));
+    }
+
+    if (m_brokenObjectTransform == nullptr)
+    {
+        Debug::warn("[BreakableObject] '%s' could not find child object named 'Broken'.", GameObjectAPI::getName(getOwner()));
+    }
 
     if (m_normalObjectTransform != nullptr)
     {
@@ -39,9 +46,6 @@ void BreakableObject::breakObject()
     }
 
     m_isBroken = true;
-
-    //Transform* normalTransform = m_normalObjectTransformComponent.getReferencedComponent();
-    //Transform* brokenTransform = m_brokenObjectTransformComponent.getReferencedComponent();
 
     if (m_normalObjectTransform != nullptr)
     {
