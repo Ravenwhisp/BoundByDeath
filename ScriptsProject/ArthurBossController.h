@@ -117,4 +117,26 @@ private:
 
 	// Needed to detect if a player is on the area to use Side Sweep
 	Vector3 rotateAroundY(const Vector3& vector, float radians) const;
+
+public:
+	void updateHealthUI();
+	void setupHealthUI();
+	void showHealthUI(bool show);
+	void updateHealthUIPhase();
+
+	float m_healthBarDuration = 3.0f;
+
+private:
+	ScriptComponentRef<Transform> m_healthBarCanvas;
+	ScriptComponentRef<Transform2D> m_healthBarContainer;
+	ScriptComponentRef<Transform2D> m_healthBarPhase2;
+
+	Transform* m_healthBarCanvasTransform = nullptr;
+	Transform2D* m_healthBarContainerTransform2D = nullptr;
+	Transform2D* m_healthBarPhase2Transform2D = nullptr;
+
+	float m_healthBarTimer = 0.0f;
+	bool m_healthBarVisible = false;
+	float m_healthBarPhase2Timer = 0.0f;
+	bool m_healthBarPhase2Visible = false;
 };
