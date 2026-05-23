@@ -17,9 +17,8 @@ enum class EnemyAttackType
 	Environment
 };
 
-struct EnemyHitContext
+struct EnemyHitContext : public HitContext
 {
-	float damage = 0.0f;
 	Transform* attacker = nullptr;
 	EnemyAttackType attackType = EnemyAttackType::None;
 };
@@ -32,8 +31,7 @@ class EnemyDamageable : public Damageable
 		explicit EnemyDamageable(GameObject* owner);
 
 		void Start() override;
-		virtual void takeDamageEnemy(const EnemyHitContext& hit);
-		void takeDamageEnemy(float amount, Transform* playerTransform, EnemyAttackType attackType = EnemyAttackType::None);
+		void takeDamage(const HitContext& ctx) override;
 
 	protected:
 		void onDamaged(float amount) override;

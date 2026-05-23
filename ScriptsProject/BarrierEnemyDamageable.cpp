@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "BarrierEnemyDamageable.h"
-
+#include "Transform2D.h"
 #include <sstream>
 #include <algorithm>
 
@@ -22,7 +22,10 @@ constexpr int barrierAttackTypeCount = 9;
 IMPLEMENT_SCRIPT_FIELDS_INHERITED(BarrierEnemyDamageable, EnemyDamageable,
     SERIALIZED_STRING(m_barrierPercentagesStr, "Barrier Thresholds (%)"),
     SERIALIZED_ENUM_INT(m_requiredAttackType, "Barrier Break Attack", barrierAttackTypeNames, barrierAttackTypeCount),
-    SERIALIZED_BOOL(m_shadowExecutionBreaksBarriers, "Shadow Execution Breaks Barriers")
+    SERIALIZED_BOOL(m_shadowExecutionBreaksBarriers, "Shadow Execution Breaks Barriers"),
+    SERIALIZED_STRING(m_barrierPrefabPath, "Barrier UI Prefab Path"),
+    SERIALIZED_FLOAT(m_minPos, "Barrier Min Pos (0% HP)", -1000.0f, 1000.0f, 1.0f),
+    SERIALIZED_FLOAT(m_maxPos, "Barrier Max Pos (100% HP)", -1000.0f, 1000.0f, 1.0f)
 )
 
 BarrierEnemyDamageable::BarrierEnemyDamageable(GameObject* owner)
@@ -34,6 +37,7 @@ void BarrierEnemyDamageable::Start()
 {
     EnemyDamageable::Start();
     parseBarrierConfig();
+    instantiateBarrierUIs();
 }
 
 void BarrierEnemyDamageable::parseBarrierConfig()
@@ -70,6 +74,66 @@ void BarrierEnemyDamageable::parseBarrierConfig()
         m_barrierPercentagesStr.c_str());
 }
 
+void BarrierEnemyDamageable::instantiateBarrierUIs()
+{
+    m_barrierUIs.clear();
+
+    if (m_barrierPrefabPath.empty())
+        return;
+
+    Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
+    Transform* healthBarTransform = TransformAPI::findChildByName(ownerTransform, "HealthBar");
+    if (!healthBarTransform)
+    {
+        Debug::warn("[Barrier] %s - HealthBar not found in hierarchy.", GameObjectAPI::getName(m_owner));
+        return;
+    }
+
+    GameObject* healthBarObject = ComponentAPI::getOwner(healthBarTransform);
+
+    for (const Barrier& barrier : m_barriers)
+    {
+        GameObject* uiObject = GameObjectAPI::instantiatePrefab(
+            m_barrierPrefabPath.c_str(),
+            Vector3::Zero,
+            Vector3::Zero,
+            healthBarObject);
+
+        if (!uiObject)
+        {
+            Debug::warn("[Barrier] %s - Failed to instantiate barrier UI.", GameObjectAPI::getName(m_owner));
+            continue;
+        }
+
+        TransformAPI::setPosition(GameObjectAPI::getTransform(uiObject), Vector3::Zero);
+
+        Transform2D* transform2D = static_cast<Transform2D*>(GameObjectAPI::getComponent(uiObject, ComponentType::TRANSFORM2D));
+        if (transform2D)
+        {
+            float x = m_maxPos + (1.0f - barrier.hpPercent) * (m_minPos - m_maxPos);
+            Transform2DAPI::setPosition(transform2D, { x, 0.0f });
+        }
+
+        BarrierUI ui;
+        ui.gameObject = uiObject;
+        ui.hpPercent = barrier.hpPercent;
+        m_barrierUIs.push_back(ui);
+    }
+}
+
+void BarrierEnemyDamageable::destroyBrokenBarrierUI(size_t index)
+{
+    if (index >= m_barrierUIs.size())
+        return;
+
+    BarrierUI& ui = m_barrierUIs[index];
+    if (ui.gameObject)
+    {
+        GameObjectAPI::removeGameObject(ui.gameObject);
+        ui.gameObject = nullptr;
+    }
+}
+
 float BarrierEnemyDamageable::getNextBarrierAbsoluteHp() const
 {
     for (size_t i = 0; i < m_barriers.size(); ++i)
@@ -87,7 +151,7 @@ void BarrierEnemyDamageable::takeDamage(float amount)
     EnemyHitContext hit;
     hit.damage = amount;
     hit.attackType = EnemyAttackType::Environment;
-    takeDamageEnemy(hit);
+    takeDamage(hit);
 }
 
 bool BarrierEnemyDamageable::canBreakBarrier(EnemyAttackType attackType) const
@@ -100,8 +164,10 @@ bool BarrierEnemyDamageable::canBreakBarrier(EnemyAttackType attackType) const
     return attackType == static_cast<EnemyAttackType>(m_requiredAttackType);
 }
 
-void BarrierEnemyDamageable::takeDamageEnemy(const EnemyHitContext& hit)
+void BarrierEnemyDamageable::takeDamage(const HitContext& ctx)
 {
+    const EnemyHitContext& hit = static_cast<const EnemyHitContext&>(ctx);
+
     if (m_isDead || m_invulnerable || hit.damage <= 0.0f)
     {
         return;
@@ -111,7 +177,7 @@ void BarrierEnemyDamageable::takeDamageEnemy(const EnemyHitContext& hit)
 
     if (nextBarrierHp <= 0.0f)
     {
-        EnemyDamageable::takeDamageEnemy(hit);
+        EnemyDamageable::takeDamage(hit);
         return;
     }
 
@@ -120,7 +186,7 @@ void BarrierEnemyDamageable::takeDamageEnemy(const EnemyHitContext& hit)
 
     if (hpAfter >= nextBarrierHp)
     {
-        EnemyDamageable::takeDamageEnemy(hit);
+        EnemyDamageable::takeDamage(hit);
         return;
     }
 
@@ -131,7 +197,7 @@ void BarrierEnemyDamageable::takeDamageEnemy(const EnemyHitContext& hit)
         {
             EnemyHitContext limitedHit = hit;
             limitedHit.damage = allowedDamage;
-            EnemyDamageable::takeDamageEnemy(limitedHit);
+            EnemyDamageable::takeDamage(limitedHit);
         }
 
         Debug::log("[Barrier] %s blocked hit at %.0f%% HP. Required attack: %s",
@@ -153,6 +219,7 @@ void BarrierEnemyDamageable::takeDamageEnemy(const EnemyHitContext& hit)
         {
             m_barriers[i].broken = true;
             m_nextBarrierIndex = i + 1;
+            destroyBrokenBarrierUI(i);
 
             Debug::log("[Barrier] %s broke barrier at %.0f%% HP (%s, HP: %.1f -> %.1f)",
                 GameObjectAPI::getName(m_owner),
@@ -163,7 +230,7 @@ void BarrierEnemyDamageable::takeDamageEnemy(const EnemyHitContext& hit)
         }
     }
 
-    EnemyDamageable::takeDamageEnemy(hit);
+    EnemyDamageable::takeDamage(hit);
 }
 
 void BarrierEnemyDamageable::kill()

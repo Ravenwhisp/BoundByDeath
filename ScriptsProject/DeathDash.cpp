@@ -99,7 +99,13 @@ void DeathDash::applyDashDamage()
 
         if (damageable != nullptr)
         {
-            damageable->takeDamageEnemy(m_dashDamage, GameObjectAPI::getTransform(getOwner()), EnemyAttackType::DeathDash);
+            {
+                EnemyHitContext ctx;
+                ctx.damage = m_dashDamage;
+                ctx.attacker = GameObjectAPI::getTransform(getOwner());
+                ctx.attackType = EnemyAttackType::DeathDash;
+                damageable->takeDamage(ctx);
+            }
 
             EnemyShadowMark* shadowMark = GameObjectAPI::findScript<EnemyShadowMark>(enemyObj);
             if (shadowMark != nullptr)

@@ -15,7 +15,7 @@ public:
     ScriptFieldList getExposedFields() const override;
 
     void takeDamage(float amount) override;
-    void takeDamageEnemy(const EnemyHitContext& hit) override;
+    void takeDamage(const HitContext& ctx) override;
     void kill() override;
 
     bool hasActiveBarriers() const { return m_nextBarrierIndex < m_barriers.size(); }
@@ -25,6 +25,10 @@ public:
     std::string m_barrierPercentagesStr = "80";
     int m_requiredAttackType = static_cast<int>(EnemyAttackType::ShadowExecution);
     bool m_shadowExecutionBreaksBarriers = true;
+    std::string m_barrierPrefabPath;
+
+    float m_minPos = 80.0f;
+    float m_maxPos = -90.0f;
 
 private:
     struct Barrier
@@ -33,10 +37,19 @@ private:
         bool broken;
     };
 
+    struct BarrierUI
+    {
+        GameObject* gameObject = nullptr;
+        float hpPercent;
+    };
+
     void parseBarrierConfig();
+    void instantiateBarrierUIs();
+    void destroyBrokenBarrierUI(size_t index);
     float getNextBarrierAbsoluteHp() const;
     bool canBreakBarrier(EnemyAttackType attackType) const;
 
     std::vector<Barrier> m_barriers;
+    std::vector<BarrierUI> m_barrierUIs;
     size_t m_nextBarrierIndex = 0;
 };

@@ -3,6 +3,11 @@
 #include "ScriptAPI.h"
 #include "UISlider.h"
 
+struct HitContext
+{
+    float damage = 0.0f;
+};
+
 class Damageable : public Script
 {
     DECLARE_SCRIPT(Damageable)
@@ -16,6 +21,7 @@ public:
     ScriptFieldList getExposedFields() const override;
 
     virtual void takeDamage(float amount);
+    virtual void takeDamage(const HitContext& ctx);
     void heal(float amount);
     virtual void kill();
     void revive(float hp = -1.0f);

@@ -279,7 +279,13 @@ void LyrielArrowVolley::applyVolleyDamage(const std::vector<GameObject*>& target
 
         if (damageable != nullptr)
         {
-            damageable->takeDamageEnemy(m_volleyDamage, GameObjectAPI::getTransform(getOwner()), EnemyAttackType::LyrielVolley);
+            {
+                EnemyHitContext ctx;
+                ctx.damage = m_volleyDamage;
+                ctx.attacker = GameObjectAPI::getTransform(getOwner());
+                ctx.attackType = EnemyAttackType::LyrielVolley;
+                damageable->takeDamage(ctx);
+            }
         }
 
         if (PersistingPowerupState::isUnlocked(PowerupId::LyrielPowerup1))

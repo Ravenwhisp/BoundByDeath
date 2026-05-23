@@ -225,7 +225,13 @@ void DeathChargedAttack::dealDamageInArc(float damage) const
             continue;
         }
 
-        damageable->takeDamageEnemy(damage, GameObjectAPI::getTransform(getOwner()), EnemyAttackType::DeathCharged);
+        {
+            EnemyHitContext ctx;
+            ctx.damage = damage;
+            ctx.attacker = GameObjectAPI::getTransform(getOwner());
+            ctx.attackType = EnemyAttackType::DeathCharged;
+            damageable->takeDamage(ctx);
+        }
         hit++;
 
         Debug::log("[ARC] hit '%s'  dmg=%.1f  hp=%.1f/%.1f",

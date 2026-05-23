@@ -19,6 +19,37 @@ void EnemyDamageable::Start()
 		Debug::warn("EnemyDetectionAggro Script is missing from %s", GameObjectAPI::getName(m_owner));
 	}
 
+	if (!m_healthBarSlider || !m_healthBar2Slider)
+	{
+		Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
+		Transform* healthBarTransform = TransformAPI::findChildByName(ownerTransform, "HealthBar");
+		if (healthBarTransform)
+		{
+			Transform* backgroundTransform = TransformAPI::findChildByName(healthBarTransform, "Background");
+			if (backgroundTransform)
+			{
+				if (!m_healthBarSlider)
+				{
+					Transform* slider1Transform = TransformAPI::findChildByName(backgroundTransform, "Slider1");
+					if (slider1Transform)
+					{
+						GameObject* slider1Object = ComponentAPI::getOwner(slider1Transform);
+						m_healthBarSlider = static_cast<UISlider*>(GameObjectAPI::getComponent(slider1Object, ComponentType::UISLIDER));
+					}
+				}
+
+				if (!m_healthBar2Slider)
+				{
+					Transform* slider2Transform = TransformAPI::findChildByName(backgroundTransform, "Slider2");
+					if (slider2Transform)
+					{
+						GameObject* slider2Object = ComponentAPI::getOwner(slider2Transform);
+						m_healthBar2Slider = static_cast<UISlider*>(GameObjectAPI::getComponent(slider2Object, ComponentType::UISLIDER));
+					}
+				}
+			}
+		}
+	}
 }
 
 void EnemyDamageable::onDamaged(float amount)
@@ -38,26 +69,18 @@ void EnemyDamageable::onDamaged(float amount)
 	m_enemyDetectionAggro->notifyPlayerAttackedEnemy(m_damageSource);
 }
 
-void EnemyDamageable::takeDamageEnemy(const EnemyHitContext& hit)
+void EnemyDamageable::takeDamage(const HitContext& ctx)
 {
-	if (hit.attacker)
+	const EnemyHitContext& enemyCtx = static_cast<const EnemyHitContext&>(ctx);
+
+	if (enemyCtx.attacker)
 	{
-		m_damageSource = hit.attacker;
+		m_damageSource = enemyCtx.attacker;
 	}
 
-	Damageable::takeDamage(hit.damage);
+	Damageable::takeDamage(enemyCtx.damage);
 
 	m_damageSource = nullptr;
-}
-
-void EnemyDamageable::takeDamageEnemy(float amount, Transform* playerTransform, EnemyAttackType attackType)
-{
-	EnemyHitContext hit;
-	hit.damage = amount;
-	hit.attacker = playerTransform;
-	hit.attackType = attackType;
-
-	takeDamageEnemy(hit);
 }
 
 IMPLEMENT_SCRIPT(EnemyDamageable)
