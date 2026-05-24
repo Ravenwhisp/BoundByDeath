@@ -68,10 +68,10 @@ void BarrierEnemyDamageable::instantiateBarrierUIs()
         return;
 
     Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
-    Transform* healthBarTransform = TransformAPI::findChildByName(ownerTransform, "HealthBar");
+    Transform* healthBarTransform = TransformAPI::findChildByName(ownerTransform, "Health Bar");
     if (!healthBarTransform)
     {
-        Debug::warn("[Barrier] %s - HealthBar not found in hierarchy.", GameObjectAPI::getName(m_owner));
+        Debug::warn("[Barrier] %s - Health Bar not found in hierarchy.", GameObjectAPI::getName(m_owner));
         return;
     }
 

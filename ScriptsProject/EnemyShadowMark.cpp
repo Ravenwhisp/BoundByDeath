@@ -32,7 +32,7 @@ void EnemyShadowMark::Start()
 	if (!m_canvasTransform2D || !m_mark1Object || !m_mark2Object || !m_mark3Object)
 	{
 		Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
-		Transform* shadowMarkTransform = TransformAPI::findChildByName(ownerTransform, "ShadowMark");
+		Transform* shadowMarkTransform = TransformAPI::findChildByName(ownerTransform, "Shadow Mark");
 		if (shadowMarkTransform)
 		{
 			GameObject* shadowMarkObject = ComponentAPI::getOwner(shadowMarkTransform);
