@@ -286,6 +286,7 @@ void ArthurChargingSlam::goToRecover()
 
 void ArthurChargingSlam::setupUI()
 {
+	Transform* canvas = m_attackConfig->m_chargingSlamUICanvasTransform;
     Transform2D* container = m_attackConfig->m_chargingSlamUIContainerTransform2D;
     Transform2D* borders = m_attackConfig->m_chargingSlamUIBordersTransform2D;
     Transform2D* shadow = m_attackConfig->m_chargingSlamUIShadowTransform2D;
@@ -306,17 +307,18 @@ void ArthurChargingSlam::setupUI()
 
     GameObjectAPI::setActive(m_attackConfig->m_chargingSlamUICanvasTransform->getOwner(), true);
 
-    SliderAPI::setFillAmount(m_attackConfig->m_chargingSlamUIBordersSliderComponent, 0.0f);
-    SliderAPI::setFillAmount(m_attackConfig->m_chargingSlamUIShadowSliderComponent, 0.0f);
-    Transform2DAPI::setAlpha(m_attackConfig->m_chargingSlamUIBackgroundTransform2D, 0.0f);
-    Transform2DAPI::setAlpha(m_attackConfig->m_chargingSlamUIShadowTransform2D, 0.0f);
-    Transform2DAPI::setAlpha(m_attackConfig->m_chargingSlamUISpikesTransform2D, 0.0f);
-    Transform2DAPI::setAlpha(m_attackConfig->m_chargingSlamUIContainerTransform2D, 1.0f);
+    SliderAPI::setFillAmount(bordersSlider, 0.0f);
+    SliderAPI::setFillAmount(shadowSlider, 0.0f);
+    Transform2DAPI::setAlpha(background, 0.0f);
+    Transform2DAPI::setAlpha(shadow, 0.0f);
+    Transform2DAPI::setAlpha(spikes, 0.0f);
+    Transform2DAPI::setAlpha(container, 1.0f);
     Transform2DAPI::setPivot(container, Vector2(0.5f, 1.0f));
     Transform2DAPI::setAnchorMin(container, Vector2(0.5f, 1.0f));
 
     const float distance = Vector3::Distance(m_startPosition, m_lockedTargetPosition);
-    m_attackConfig->m_chargingSlamUIContainerTransform2D->setBaseSize(Vector2(m_attackConfig->m_chargingSlamUIContainerTransform2D->getBaseSize().x, distance * 100.f));
+	const float baseWidth = Transform2DAPI::getBaseSize(container).x;
+    Transform2DAPI::setBaseSize(container, Vector2(baseWidth, distance * 100.f));
     
 	// Impact UI setup
     m_isPlayingImpactUI = false;
@@ -325,16 +327,22 @@ void ArthurChargingSlam::setupUI()
     m_isFadingImpactUI = false;
     m_impactUIFadeTimer = 0.0f;
 
-	GameObjectAPI::setActive(m_attackConfig->m_chargingSlamImpactUICanvasTransform->getOwner(), true);
-    if (m_attackConfig->m_chargingSlamImpactUICanvasTransform)
+	Transform* impactCanvas = m_attackConfig->m_chargingSlamImpactUICanvasTransform;
+	Transform2D* impactContainer = m_attackConfig->m_chargingSlamImpactUIContainerTransform2D;
+	Transform2D* impactCenter = m_attackConfig->m_chargingSlamImpactUICenterTransform2D;
+    Transform2D* impactGlow = m_attackConfig->m_chargingSlamImpactUIGlowTransform2D;
+    if (!impactCanvas || !impactContainer || !impactCenter || !impactGlow)
     {
-        TransformAPI::setPosition(m_attackConfig->m_chargingSlamImpactUICanvasTransform, Vector3(m_lockedTargetPosition.x, m_lockedTargetPosition.y, m_lockedTargetPosition.z));
-		TransformAPI::setRotationEuler(m_attackConfig->m_chargingSlamImpactUICanvasTransform, Vector3(90.0f, 0.0f, atan2(m_dashDirection.z, m_dashDirection.x) * 180.0f / 3.14159265f - 90.0f));
+        return;
 	}
 
-	Transform2DAPI::setAlpha(m_attackConfig->m_chargingSlamImpactUIContainerTransform2D, 0.0f);
-	Transform2DAPI::setAlpha(m_attackConfig->m_chargingSlamImpactUICenterTransform2D, 0.0f);
-    Transform2DAPI::setAlpha(m_attackConfig->m_chargingSlamImpactUIGlowTransform2D, 0.0f);
+	GameObjectAPI::setActive(impactCanvas->getOwner(), true);
+    TransformAPI::setPosition(impactCanvas, Vector3(m_lockedTargetPosition.x, m_lockedTargetPosition.y, m_lockedTargetPosition.z));
+	TransformAPI::setRotationEuler(impactCanvas, Vector3(90.0f, 0.0f, atan2(m_dashDirection.z, m_dashDirection.x) * 180.0f / 3.14159265f - 90.0f));
+
+	Transform2DAPI::setAlpha(impactContainer, 0.0f);
+	Transform2DAPI::setAlpha(impactCenter, 0.0f);
+    Transform2DAPI::setAlpha(impactGlow, 0.0f);
 
 }
 
