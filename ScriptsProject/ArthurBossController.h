@@ -124,7 +124,7 @@ public:
 	void showHealthUI(bool show);
 	void updateHealthUIPhase();
 
-	float m_healthBarDuration = 3.0f;
+	float m_healthBarDuration = 1.0f;
 
 private:
 	ScriptComponentRef<Transform> m_healthBarCanvas;
