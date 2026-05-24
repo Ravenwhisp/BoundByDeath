@@ -29,7 +29,7 @@ void LevelCheats::Update()
     if (KeyComboPressed(KeyCode::Q)) AutoWin();
     if (KeyComboPressed(KeyCode::W)) AutoLose();
     if (KeyComboPressed(KeyCode::E)) Teleport();
-    if (KeyComboPressed(KeyCode::R)) ActivateGodMode();
+    if (KeyComboPressed(KeyCode::T)) ToggleInvincibility();
     /*if (KeyComboPressed(KeyCode::T)) SpawnEnemies();*/
     if (KeyComboPressed(KeyCode::D)) restartLevel();
 	if (KeyComboPressed(KeyCode::F)) killEnemies();
@@ -97,17 +97,18 @@ void LevelCheats::Teleport()
     }
 }
 
-void LevelCheats::ActivateGodMode()
+void LevelCheats::ToggleInvincibility()
 {
-    Debug::log("God Mode");
     std::vector<GameObject*> players = SceneAPI::findAllGameObjectsByTag(Tag::PLAYER);
 
     for (GameObject* player : players)
     {
-        PlayerController* playerController = GameObjectAPI::findScript<PlayerController>(player);
-        if (playerController)
+        Damageable* damageable = GameObjectAPI::findScript<Damageable>(player);
+
+        if (damageable)
         {
-            playerController->m_godMode = !playerController->m_godMode;
+            bool newInvulnerableState = !damageable->isInvulnerable();
+            damageable->setInvulnerable(newInvulnerableState);
         }
     }
 }

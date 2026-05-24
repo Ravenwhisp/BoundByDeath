@@ -16,7 +16,7 @@ public:
     void AutoWin();
 	void AutoLose();
     void Teleport();
-	void ActivateGodMode();
+    void ToggleInvincibility();
 	void SpawnEnemies();
 	void RestoreHealth();
 	void DownState();
