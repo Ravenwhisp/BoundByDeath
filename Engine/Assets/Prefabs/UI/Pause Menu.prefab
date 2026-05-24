@@ -1,11 +1,12 @@
 {
-  "SourcePath": "Assets\\Prefabs\\Pause.prefab",
-  "Name": "Pause",
+  "SourcePath": "Assets\\Prefabs\\UI\\Pause Menu.prefab",
+  "Name": "Pause Menu",
   "Version": 2,
-  "PrefabUID": 17125549998012470078,
   "GameObject": {
-    "Name": "Pause",
+    "Name": "Pause Menu",
     "Active": true,
+    "Tag": "DEFAULT",
+    "Layer": "DEFAULT",
     "Transform": {
       "position": [
         0.0,
@@ -28,7 +29,7 @@
       {
         "Type": 6,
         "Data": {
-          "UID": 3449575588356475960,
+          "UID": 4187871511574307046,
           "ComponentType": 6,
           "Active": true,
           "RenderMode": 0,
@@ -38,13 +39,13 @@
       {
         "Type": 3,
         "Data": {
-          "UID": 7308125976516207691,
+          "UID": 8622850727007135955,
           "ComponentType": 3,
           "Active": true,
           "ScriptName": "UIPause",
           "ScriptFields": {
-            "Pause Panel": 15967209682761717676,
-            "Controls Panel": 6230439558093702945
+            "Pause Panel": 15192997143608628575,
+            "Controls Panel": 3645199136419938036
           }
         }
       }
@@ -52,7 +53,9 @@
     "Children": [
       {
         "Name": "Pause Panel",
-        "Active": true,
+        "Active": false,
+        "Tag": "DEFAULT",
+        "Layer": "DEFAULT",
         "Transform": {
           "position": [
             0.0,
@@ -75,7 +78,7 @@
           {
             "Type": 5,
             "Data": {
-              "UID": 11053942647949818093,
+              "UID": 1824729214639788614,
               "ComponentType": 5,
               "Active": true,
               "Position": [
@@ -104,26 +107,17 @@
               ],
               "StretchMode": 3,
               "SizingMode": 0,
-              "AspectRatio": 1.0
-            }
-          },
-          {
-            "Type": 7,
-            "Data": {
-              "UID": 13194823568121517636,
-              "ComponentType": 7,
-              "Active": true,
-              "TextureAssetId": "",
-              "FillAmount": 1.0,
-              "FillMethod": 0,
-              "FillOrigin": 0
+              "AspectRatio": 1.0,
+              "Alpha": 1.0
             }
           }
         ],
         "Children": [
           {
-            "Name": "background",
+            "Name": "Background",
             "Active": true,
+            "Tag": "DEFAULT",
+            "Layer": "DEFAULT",
             "Transform": {
               "position": [
                 0.0,
@@ -146,7 +140,7 @@
               {
                 "Type": 5,
                 "Data": {
-                  "UID": 1090380465356347738,
+                  "UID": 9858437357933696572,
                   "ComponentType": 5,
                   "Active": true,
                   "Position": [
@@ -158,11 +152,11 @@
                     1.0
                   ],
                   "Pivot": [
-                    1.0,
+                    0.5,
                     0.5
                   ],
                   "AnchorMin": [
-                    1.0,
+                    0.0,
                     0.0
                   ],
                   "AnchorMax": [
@@ -173,21 +167,32 @@
                     3840.0,
                     1080.0
                   ],
-                  "StretchMode": 2,
+                  "StretchMode": 3,
                   "SizingMode": 0,
-                  "AspectRatio": 1.0
+                  "AspectRatio": 1.0,
+                  "Alpha": 1.0
                 }
               },
               {
                 "Type": 7,
                 "Data": {
-                  "UID": 11278418304559887001,
+                  "UID": 12843726499972674815,
                   "ComponentType": 7,
                   "Active": true,
-                  "TextureAssetId": "4984dea04d33fa2dcc576e8213dc9706",
+                  "TextureAssetId": {
+                    "uid": 9100706211842559174,
+                    "libId": "4984dea04d33fa2dcc576e8213dc9706"
+                  },
                   "FillAmount": 1.0,
                   "FillMethod": 0,
-                  "FillOrigin": 0
+                  "FillOrigin": 0,
+                  "SheetColumns": 1,
+                  "SheetRows": 1,
+                  "SheetOffset": [
+                    0.0,
+                    0.0
+                  ],
+                  "StretchDrawMode": 0
                 }
               }
             ],
@@ -196,6 +201,8 @@
           {
             "Name": "Center Container",
             "Active": true,
+            "Tag": "DEFAULT",
+            "Layer": "DEFAULT",
             "Transform": {
               "position": [
                 0.0,
@@ -218,7 +225,7 @@
               {
                 "Type": 5,
                 "Data": {
-                  "UID": 15457859146872132508,
+                  "UID": 13038114825457683970,
                   "ComponentType": 5,
                   "Active": true,
                   "Position": [
@@ -247,14 +254,17 @@
                   ],
                   "StretchMode": 2,
                   "SizingMode": 0,
-                  "AspectRatio": 1.0
+                  "AspectRatio": 1.0,
+                  "Alpha": 1.0
                 }
               }
             ],
             "Children": [
               {
-                "Name": "Resume Button",
+                "Name": "ResumeButton",
                 "Active": true,
+                "Tag": "DEFAULT",
+                "Layer": "DEFAULT",
                 "Transform": {
                   "position": [
                     0.0,
@@ -277,7 +287,7 @@
                   {
                     "Type": 5,
                     "Data": {
-                      "UID": 10498704895831944223,
+                      "UID": 5007247540788894859,
                       "ComponentType": 5,
                       "Active": true,
                       "Position": [
@@ -306,25 +316,39 @@
                       ],
                       "StretchMode": 2,
                       "SizingMode": 0,
-                      "AspectRatio": 1.0
+                      "AspectRatio": 1.0,
+                      "Alpha": 1.0
                     }
                   },
                   {
                     "Type": 9,
                     "Data": {
-                      "UID": 17380647565626104724,
+                      "UID": 9517037383416841637,
                       "ComponentType": 9,
                       "Active": true,
-                      "TargetGraphicUID": 4002371714741308739,
-                      "DefaultTextureAssetId": "c114daf2a0222a4e42e64a0eaf692121",
-                      "HoverTextureAssetId": "d75c00f51b208c373f86f084e2e1c7a8",
-                      "PressedTextureAssetId": "f6e40573e119d7c765a85b729adc6b3b",
+                      "TargetGraphicUID": 8494641962565130070,
+                      "DefaultTextureAssetId": {
+                        "uid": 10747260067097418889,
+                        "libId": "c114daf2a0222a4e42e64a0eaf692121"
+                      },
+                      "HoverTextureAssetId": {
+                        "uid": 3600103539877120038,
+                        "libId": "d75c00f51b208c373f86f084e2e1c7a8"
+                      },
+                      "PressedTextureAssetId": {
+                        "uid": 2291279383038014592,
+                        "libId": "f6e40573e119d7c765a85b729adc6b3b"
+                      },
+                      "NavUpUID": 0,
+                      "NavDownUID": 0,
+                      "NavLeftUID": 0,
+                      "NavRightUID": 0,
                       "OnHover": [],
                       "OnPress": [],
                       "OnRelease": [
                         {
-                          "GameObjectUID": 17125549998012470078,
-                          "ComponentUID": 7308125976516207691,
+                          "GameObjectUID": 3612527751760706532,
+                          "ComponentUID": 8622850727007135955,
                           "Method": "Resume",
                           "ParamType": 0
                         }
@@ -334,13 +358,23 @@
                   {
                     "Type": 7,
                     "Data": {
-                      "UID": 4002371714741308739,
+                      "UID": 8494641962565130070,
                       "ComponentType": 7,
                       "Active": true,
-                      "TextureAssetId": "c114daf2a0222a4e42e64a0eaf692121",
+                      "TextureAssetId": {
+                        "uid": 10747260067097418889,
+                        "libId": "c114daf2a0222a4e42e64a0eaf692121"
+                      },
                       "FillAmount": 1.0,
                       "FillMethod": 0,
-                      "FillOrigin": 0
+                      "FillOrigin": 0,
+                      "SheetColumns": 1,
+                      "SheetRows": 1,
+                      "SheetOffset": [
+                        0.0,
+                        0.0
+                      ],
+                      "StretchDrawMode": 0
                     }
                   }
                 ],
@@ -349,6 +383,8 @@
               {
                 "Name": "Reset Button",
                 "Active": true,
+                "Tag": "DEFAULT",
+                "Layer": "DEFAULT",
                 "Transform": {
                   "position": [
                     0.0,
@@ -371,7 +407,7 @@
                   {
                     "Type": 5,
                     "Data": {
-                      "UID": 14688619459647864482,
+                      "UID": 8665386039016797939,
                       "ComponentType": 5,
                       "Active": true,
                       "Position": [
@@ -400,42 +436,66 @@
                       ],
                       "StretchMode": 2,
                       "SizingMode": 0,
-                      "AspectRatio": 1.0
-                    }
-                  },
-                  {
-                    "Type": 7,
-                    "Data": {
-                      "UID": 16129006184180782457,
-                      "ComponentType": 7,
-                      "Active": true,
-                      "TextureAssetId": "ba91053ca8a3ef84724d7e8414942f9d",
-                      "FillAmount": 1.0,
-                      "FillMethod": 0,
-                      "FillOrigin": 0
+                      "AspectRatio": 1.0,
+                      "Alpha": 1.0
                     }
                   },
                   {
                     "Type": 9,
                     "Data": {
-                      "UID": 7999489075965010673,
+                      "UID": 16891409824784993371,
                       "ComponentType": 9,
                       "Active": true,
-                      "TargetGraphicUID": 16129006184180782457,
-                      "DefaultTextureAssetId": "ba91053ca8a3ef84724d7e8414942f9d",
-                      "HoverTextureAssetId": "eec1fb8fae0186730f6c2ea5c16fb81b",
-                      "PressedTextureAssetId": "5bbd2f1ca36dd27e6fc08a9a96b8a95c",
+                      "TargetGraphicUID": 12045105827106184328,
+                      "DefaultTextureAssetId": {
+                        "uid": 4529995760809055705,
+                        "libId": "ba91053ca8a3ef84724d7e8414942f9d"
+                      },
+                      "HoverTextureAssetId": {
+                        "uid": 4885296966179463772,
+                        "libId": "eec1fb8fae0186730f6c2ea5c16fb81b"
+                      },
+                      "PressedTextureAssetId": {
+                        "uid": 12494130194815868929,
+                        "libId": "5bbd2f1ca36dd27e6fc08a9a96b8a95c"
+                      },
+                      "NavUpUID": 0,
+                      "NavDownUID": 0,
+                      "NavLeftUID": 0,
+                      "NavRightUID": 0,
                       "OnHover": [],
                       "OnPress": [],
                       "OnRelease": [
                         {
-                          "GameObjectUID": 17125549998012470078,
-                          "ComponentUID": 7308125976516207691,
+                          "GameObjectUID": 3612527751760706532,
+                          "ComponentUID": 8622850727007135955,
                           "Method": "ChangeScene",
                           "ParamType": 5,
-                          "ParamValue": "pause"
+                          "ParamValue": "NewScene1"
                         }
                       ]
+                    }
+                  },
+                  {
+                    "Type": 7,
+                    "Data": {
+                      "UID": 12045105827106184328,
+                      "ComponentType": 7,
+                      "Active": true,
+                      "TextureAssetId": {
+                        "uid": 4529995760809055705,
+                        "libId": "ba91053ca8a3ef84724d7e8414942f9d"
+                      },
+                      "FillAmount": 1.0,
+                      "FillMethod": 0,
+                      "FillOrigin": 0,
+                      "SheetColumns": 1,
+                      "SheetRows": 1,
+                      "SheetOffset": [
+                        0.0,
+                        0.0
+                      ],
+                      "StretchDrawMode": 0
                     }
                   }
                 ],
@@ -444,6 +504,8 @@
               {
                 "Name": "Controls Button",
                 "Active": true,
+                "Tag": "DEFAULT",
+                "Layer": "DEFAULT",
                 "Transform": {
                   "position": [
                     0.0,
@@ -466,7 +528,7 @@
                   {
                     "Type": 5,
                     "Data": {
-                      "UID": 8227753308532829679,
+                      "UID": 14647189918938960738,
                       "ComponentType": 5,
                       "Active": true,
                       "Position": [
@@ -495,25 +557,39 @@
                       ],
                       "StretchMode": 2,
                       "SizingMode": 0,
-                      "AspectRatio": 1.0
+                      "AspectRatio": 1.0,
+                      "Alpha": 1.0
                     }
                   },
                   {
                     "Type": 9,
                     "Data": {
-                      "UID": 318834572613243462,
+                      "UID": 7773061395341436505,
                       "ComponentType": 9,
                       "Active": true,
-                      "TargetGraphicUID": 3965696343776462329,
-                      "DefaultTextureAssetId": "73e66bd1c7ad0b0abb1fc953bc603680",
-                      "HoverTextureAssetId": "a10220d77449d5c92ddb6ed842c7e146",
-                      "PressedTextureAssetId": "55d2a7e2961cb0504dcb73c0d0590de6",
+                      "TargetGraphicUID": 15233149408558007163,
+                      "DefaultTextureAssetId": {
+                        "uid": 12367809303936359580,
+                        "libId": "73e66bd1c7ad0b0abb1fc953bc603680"
+                      },
+                      "HoverTextureAssetId": {
+                        "uid": 6690651536527833944,
+                        "libId": "a10220d77449d5c92ddb6ed842c7e146"
+                      },
+                      "PressedTextureAssetId": {
+                        "uid": 6854772685373394926,
+                        "libId": "55d2a7e2961cb0504dcb73c0d0590de6"
+                      },
+                      "NavUpUID": 0,
+                      "NavDownUID": 0,
+                      "NavLeftUID": 0,
+                      "NavRightUID": 0,
                       "OnHover": [],
                       "OnPress": [],
                       "OnRelease": [
                         {
-                          "GameObjectUID": 17125549998012470078,
-                          "ComponentUID": 7308125976516207691,
+                          "GameObjectUID": 3612527751760706532,
+                          "ComponentUID": 8622850727007135955,
                           "Method": "ToggleControls",
                           "ParamType": 3,
                           "ParamValue": true
@@ -524,13 +600,23 @@
                   {
                     "Type": 7,
                     "Data": {
-                      "UID": 3965696343776462329,
+                      "UID": 15233149408558007163,
                       "ComponentType": 7,
                       "Active": true,
-                      "TextureAssetId": "73e66bd1c7ad0b0abb1fc953bc603680",
+                      "TextureAssetId": {
+                        "uid": 12367809303936359580,
+                        "libId": "73e66bd1c7ad0b0abb1fc953bc603680"
+                      },
                       "FillAmount": 1.0,
                       "FillMethod": 0,
-                      "FillOrigin": 0
+                      "FillOrigin": 0,
+                      "SheetColumns": 1,
+                      "SheetRows": 1,
+                      "SheetOffset": [
+                        0.0,
+                        0.0
+                      ],
+                      "StretchDrawMode": 0
                     }
                   }
                 ],
@@ -539,6 +625,8 @@
               {
                 "Name": "Title Button",
                 "Active": true,
+                "Tag": "DEFAULT",
+                "Layer": "DEFAULT",
                 "Transform": {
                   "position": [
                     0.0,
@@ -561,7 +649,7 @@
                   {
                     "Type": 5,
                     "Data": {
-                      "UID": 14880930358926279213,
+                      "UID": 15121428555614539047,
                       "ComponentType": 5,
                       "Active": true,
                       "Position": [
@@ -590,42 +678,66 @@
                       ],
                       "StretchMode": 2,
                       "SizingMode": 0,
-                      "AspectRatio": 1.0
-                    }
-                  },
-                  {
-                    "Type": 9,
-                    "Data": {
-                      "UID": 17004044561297169127,
-                      "ComponentType": 9,
-                      "Active": true,
-                      "TargetGraphicUID": 15139440022441751925,
-                      "DefaultTextureAssetId": "faa32244820d4c0c253c9ea5ef987257",
-                      "HoverTextureAssetId": "cf757a4e56b56b0b7b24fc980967b355",
-                      "PressedTextureAssetId": "8b2e4b0d084bc9718ab824f1b5aa18f4",
-                      "OnHover": [],
-                      "OnPress": [],
-                      "OnRelease": [
-                        {
-                          "GameObjectUID": 17125549998012470078,
-                          "ComponentUID": 7308125976516207691,
-                          "Method": "ChangeScene",
-                          "ParamType": 5,
-                          "ParamValue": "Main_Menu"
-                        }
-                      ]
+                      "AspectRatio": 1.0,
+                      "Alpha": 1.0
                     }
                   },
                   {
                     "Type": 7,
                     "Data": {
-                      "UID": 15139440022441751925,
+                      "UID": 12882642556717869685,
                       "ComponentType": 7,
                       "Active": true,
-                      "TextureAssetId": "faa32244820d4c0c253c9ea5ef987257",
+                      "TextureAssetId": {
+                        "uid": 1929336740454299618,
+                        "libId": "faa32244820d4c0c253c9ea5ef987257"
+                      },
                       "FillAmount": 1.0,
                       "FillMethod": 0,
-                      "FillOrigin": 0
+                      "FillOrigin": 0,
+                      "SheetColumns": 1,
+                      "SheetRows": 1,
+                      "SheetOffset": [
+                        0.0,
+                        0.0
+                      ],
+                      "StretchDrawMode": 0
+                    }
+                  },
+                  {
+                    "Type": 9,
+                    "Data": {
+                      "UID": 16709316239163063941,
+                      "ComponentType": 9,
+                      "Active": true,
+                      "TargetGraphicUID": 12882642556717869685,
+                      "DefaultTextureAssetId": {
+                        "uid": 1929336740454299618,
+                        "libId": "faa32244820d4c0c253c9ea5ef987257"
+                      },
+                      "HoverTextureAssetId": {
+                        "uid": 4649292405308704479,
+                        "libId": "cf757a4e56b56b0b7b24fc980967b355"
+                      },
+                      "PressedTextureAssetId": {
+                        "uid": 2401365467452899584,
+                        "libId": "8b2e4b0d084bc9718ab824f1b5aa18f4"
+                      },
+                      "NavUpUID": 0,
+                      "NavDownUID": 0,
+                      "NavLeftUID": 0,
+                      "NavRightUID": 0,
+                      "OnHover": [],
+                      "OnPress": [],
+                      "OnRelease": [
+                        {
+                          "GameObjectUID": 3612527751760706532,
+                          "ComponentUID": 8622850727007135955,
+                          "Method": "ChangeScene",
+                          "ParamType": 5,
+                          "ParamValue": "Main_Menu"
+                        }
+                      ]
                     }
                   }
                 ],
@@ -634,6 +746,8 @@
               {
                 "Name": "Pause Title",
                 "Active": true,
+                "Tag": "DEFAULT",
+                "Layer": "DEFAULT",
                 "Transform": {
                   "position": [
                     0.0,
@@ -656,7 +770,7 @@
                   {
                     "Type": 5,
                     "Data": {
-                      "UID": 13294959370459329739,
+                      "UID": 1742537678817173164,
                       "ComponentType": 5,
                       "Active": true,
                       "Position": [
@@ -685,19 +799,30 @@
                       ],
                       "StretchMode": 2,
                       "SizingMode": 0,
-                      "AspectRatio": 1.0
+                      "AspectRatio": 1.0,
+                      "Alpha": 1.0
                     }
                   },
                   {
                     "Type": 7,
                     "Data": {
-                      "UID": 17802873502105221534,
+                      "UID": 6169667924302690694,
                       "ComponentType": 7,
                       "Active": true,
-                      "TextureAssetId": "76a2b4a2c0dba5a31a636234afb7f929",
+                      "TextureAssetId": {
+                        "uid": 11629917228925704794,
+                        "libId": "76a2b4a2c0dba5a31a636234afb7f929"
+                      },
                       "FillAmount": 1.0,
                       "FillMethod": 0,
-                      "FillOrigin": 0
+                      "FillOrigin": 0,
+                      "SheetColumns": 1,
+                      "SheetRows": 1,
+                      "SheetOffset": [
+                        0.0,
+                        0.0
+                      ],
+                      "StretchDrawMode": 0
                     }
                   }
                 ],
@@ -710,6 +835,8 @@
       {
         "Name": "Controls Panel",
         "Active": false,
+        "Tag": "DEFAULT",
+        "Layer": "DEFAULT",
         "Transform": {
           "position": [
             0.0,
@@ -732,7 +859,7 @@
           {
             "Type": 5,
             "Data": {
-              "UID": 17660734596967513830,
+              "UID": 7215712456886913600,
               "ComponentType": 5,
               "Active": true,
               "Position": [
@@ -761,26 +888,17 @@
               ],
               "StretchMode": 3,
               "SizingMode": 0,
-              "AspectRatio": 1.0
-            }
-          },
-          {
-            "Type": 7,
-            "Data": {
-              "UID": 4655738713258310029,
-              "ComponentType": 7,
-              "Active": true,
-              "TextureAssetId": "",
-              "FillAmount": 1.0,
-              "FillMethod": 0,
-              "FillOrigin": 0
+              "AspectRatio": 1.0,
+              "Alpha": 1.0
             }
           }
         ],
         "Children": [
           {
-            "Name": "background",
+            "Name": "Background",
             "Active": true,
+            "Tag": "DEFAULT",
+            "Layer": "DEFAULT",
             "Transform": {
               "position": [
                 0.0,
@@ -803,151 +921,7 @@
               {
                 "Type": 5,
                 "Data": {
-                  "UID": 5723457809987824271,
-                  "ComponentType": 5,
-                  "Active": true,
-                  "Position": [
-                    0.0,
-                    0.0
-                  ],
-                  "Scale": [
-                    1.0,
-                    1.0
-                  ],
-                  "Pivot": [
-                    1.0,
-                    0.5
-                  ],
-                  "AnchorMin": [
-                    1.0,
-                    0.0
-                  ],
-                  "AnchorMax": [
-                    1.0,
-                    1.0
-                  ],
-                  "BaseSize": [
-                    3840.0,
-                    1080.0
-                  ],
-                  "StretchMode": 2,
-                  "SizingMode": 0,
-                  "AspectRatio": 1.0
-                }
-              },
-              {
-                "Type": 7,
-                "Data": {
-                  "UID": 7684315708112802606,
-                  "ComponentType": 7,
-                  "Active": true,
-                  "TextureAssetId": "4984dea04d33fa2dcc576e8213dc9706",
-                  "FillAmount": 1.0,
-                  "FillMethod": 0,
-                  "FillOrigin": 0
-                }
-              }
-            ],
-            "Children": []
-          },
-          {
-            "Name": "Controls Title",
-            "Active": true,
-            "Transform": {
-              "position": [
-                0.0,
-                0.0,
-                0.0
-              ],
-              "rotation": [
-                -0.0,
-                0.0,
-                -0.0,
-                1.0
-              ],
-              "scale": [
-                1.0,
-                1.0,
-                1.0
-              ]
-            },
-            "Components": [
-              {
-                "Type": 5,
-                "Data": {
-                  "UID": 2864960482835370057,
-                  "ComponentType": 5,
-                  "Active": true,
-                  "Position": [
-                    0.0,
-                    0.0
-                  ],
-                  "Scale": [
-                    1.0,
-                    1.0
-                  ],
-                  "Pivot": [
-                    0.5,
-                    0.5
-                  ],
-                  "AnchorMin": [
-                    0.5,
-                    0.15000000596046448
-                  ],
-                  "AnchorMax": [
-                    0.5,
-                    0.20000000298023224
-                  ],
-                  "BaseSize": [
-                    225.0,
-                    40.0
-                  ],
-                  "StretchMode": 2,
-                  "SizingMode": 0,
-                  "AspectRatio": 1.0
-                }
-              },
-              {
-                "Type": 7,
-                "Data": {
-                  "UID": 13179802184394413345,
-                  "ComponentType": 7,
-                  "Active": true,
-                  "TextureAssetId": "050b84ce277ee6968ee9fafb4b51bab1",
-                  "FillAmount": 1.0,
-                  "FillMethod": 0,
-                  "FillOrigin": 0
-                }
-              }
-            ],
-            "Children": []
-          },
-          {
-            "Name": "Controls Image",
-            "Active": true,
-            "Transform": {
-              "position": [
-                0.0,
-                0.0,
-                0.0
-              ],
-              "rotation": [
-                -0.0,
-                0.0,
-                -0.0,
-                1.0
-              ],
-              "scale": [
-                1.0,
-                1.0,
-                1.0
-              ]
-            },
-            "Components": [
-              {
-                "Type": 5,
-                "Data": {
-                  "UID": 16928586926731423165,
+                  "UID": 3299132955281876305,
                   "ComponentType": 5,
                   "Active": true,
                   "Position": [
@@ -976,27 +950,40 @@
                   ],
                   "StretchMode": 3,
                   "SizingMode": 0,
-                  "AspectRatio": 1.0
+                  "AspectRatio": 1.0,
+                  "Alpha": 1.0
                 }
               },
               {
                 "Type": 7,
                 "Data": {
-                  "UID": 8945017672786493801,
+                  "UID": 12776008375747314788,
                   "ComponentType": 7,
                   "Active": true,
-                  "TextureAssetId": "9a2d62113da549df38058eb5fbefa3b8",
+                  "TextureAssetId": {
+                    "uid": 9100706211842559174,
+                    "libId": "4984dea04d33fa2dcc576e8213dc9706"
+                  },
                   "FillAmount": 1.0,
                   "FillMethod": 0,
-                  "FillOrigin": 0
+                  "FillOrigin": 0,
+                  "SheetColumns": 1,
+                  "SheetRows": 1,
+                  "SheetOffset": [
+                    0.0,
+                    0.0
+                  ],
+                  "StretchDrawMode": 0
                 }
               }
             ],
             "Children": []
           },
           {
-            "Name": "Back Button",
+            "Name": "Controls Title",
             "Active": true,
+            "Tag": "DEFAULT",
+            "Layer": "DEFAULT",
             "Transform": {
               "position": [
                 0.0,
@@ -1019,7 +1006,177 @@
               {
                 "Type": 5,
                 "Data": {
-                  "UID": 10578933039117299154,
+                  "UID": 8863925624267970319,
+                  "ComponentType": 5,
+                  "Active": true,
+                  "Position": [
+                    0.0,
+                    0.0
+                  ],
+                  "Scale": [
+                    1.0,
+                    1.0
+                  ],
+                  "Pivot": [
+                    0.5,
+                    0.5
+                  ],
+                  "AnchorMin": [
+                    0.5,
+                    0.15000000596046448
+                  ],
+                  "AnchorMax": [
+                    0.5,
+                    0.20000000298023224
+                  ],
+                  "BaseSize": [
+                    225.0,
+                    40.0
+                  ],
+                  "StretchMode": 2,
+                  "SizingMode": 0,
+                  "AspectRatio": 1.0,
+                  "Alpha": 1.0
+                }
+              },
+              {
+                "Type": 7,
+                "Data": {
+                  "UID": 1500176238242046409,
+                  "ComponentType": 7,
+                  "Active": true,
+                  "TextureAssetId": {
+                    "uid": 4876564600923104463,
+                    "libId": "050b84ce277ee6968ee9fafb4b51bab1"
+                  },
+                  "FillAmount": 1.0,
+                  "FillMethod": 0,
+                  "FillOrigin": 0,
+                  "SheetColumns": 1,
+                  "SheetRows": 1,
+                  "SheetOffset": [
+                    0.0,
+                    0.0
+                  ],
+                  "StretchDrawMode": 0
+                }
+              }
+            ],
+            "Children": []
+          },
+          {
+            "Name": "Control Image",
+            "Active": true,
+            "Tag": "DEFAULT",
+            "Layer": "DEFAULT",
+            "Transform": {
+              "position": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "rotation": [
+                -0.0,
+                0.0,
+                -0.0,
+                1.0
+              ],
+              "scale": [
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            "Components": [
+              {
+                "Type": 5,
+                "Data": {
+                  "UID": 4463943472651426321,
+                  "ComponentType": 5,
+                  "Active": true,
+                  "Position": [
+                    0.0,
+                    0.0
+                  ],
+                  "Scale": [
+                    1.0,
+                    1.0
+                  ],
+                  "Pivot": [
+                    0.5,
+                    0.5
+                  ],
+                  "AnchorMin": [
+                    0.0,
+                    0.0
+                  ],
+                  "AnchorMax": [
+                    1.0,
+                    1.0
+                  ],
+                  "BaseSize": [
+                    100.0,
+                    100.0
+                  ],
+                  "StretchMode": 3,
+                  "SizingMode": 0,
+                  "AspectRatio": 1.0,
+                  "Alpha": 1.0
+                }
+              },
+              {
+                "Type": 7,
+                "Data": {
+                  "UID": 3439779850509332465,
+                  "ComponentType": 7,
+                  "Active": true,
+                  "TextureAssetId": {
+                    "uid": 9154116592591514781,
+                    "libId": "9a2d62113da549df38058eb5fbefa3b8"
+                  },
+                  "FillAmount": 1.0,
+                  "FillMethod": 0,
+                  "FillOrigin": 0,
+                  "SheetColumns": 1,
+                  "SheetRows": 1,
+                  "SheetOffset": [
+                    0.0,
+                    0.0
+                  ],
+                  "StretchDrawMode": 0
+                }
+              }
+            ],
+            "Children": []
+          },
+          {
+            "Name": "Back Button",
+            "Active": true,
+            "Tag": "DEFAULT",
+            "Layer": "DEFAULT",
+            "Transform": {
+              "position": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "rotation": [
+                -0.0,
+                0.0,
+                -0.0,
+                1.0
+              ],
+              "scale": [
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            "Components": [
+              {
+                "Type": 5,
+                "Data": {
+                  "UID": 14240135273275492536,
                   "ComponentType": 5,
                   "Active": true,
                   "Position": [
@@ -1048,42 +1205,66 @@
                   ],
                   "StretchMode": 0,
                   "SizingMode": 0,
-                  "AspectRatio": 1.0
-                }
-              },
-              {
-                "Type": 7,
-                "Data": {
-                  "UID": 15623021778895724418,
-                  "ComponentType": 7,
-                  "Active": true,
-                  "TextureAssetId": "8aeaec9f8aa5e2fbaf5d402997041761",
-                  "FillAmount": 1.0,
-                  "FillMethod": 0,
-                  "FillOrigin": 0
+                  "AspectRatio": 1.0,
+                  "Alpha": 1.0
                 }
               },
               {
                 "Type": 9,
                 "Data": {
-                  "UID": 12292736711012208592,
+                  "UID": 15690747409691581105,
                   "ComponentType": 9,
                   "Active": true,
-                  "TargetGraphicUID": 15623021778895724418,
-                  "DefaultTextureAssetId": "8aeaec9f8aa5e2fbaf5d402997041761",
-                  "HoverTextureAssetId": "91a36ecc9b6e97af1c248b3804de1f8b",
-                  "PressedTextureAssetId": "45146c99a096c63eb199bbab20162506",
+                  "TargetGraphicUID": 14128282259583483364,
+                  "DefaultTextureAssetId": {
+                    "uid": 2483925001477651013,
+                    "libId": "8aeaec9f8aa5e2fbaf5d402997041761"
+                  },
+                  "HoverTextureAssetId": {
+                    "uid": 11409212524727753087,
+                    "libId": "91a36ecc9b6e97af1c248b3804de1f8b"
+                  },
+                  "PressedTextureAssetId": {
+                    "uid": 2905030221032436137,
+                    "libId": "45146c99a096c63eb199bbab20162506"
+                  },
+                  "NavUpUID": 0,
+                  "NavDownUID": 0,
+                  "NavLeftUID": 0,
+                  "NavRightUID": 0,
                   "OnHover": [],
                   "OnPress": [],
                   "OnRelease": [
                     {
-                      "GameObjectUID": 17125549998012470078,
-                      "ComponentUID": 7308125976516207691,
+                      "GameObjectUID": 3612527751760706532,
+                      "ComponentUID": 8622850727007135955,
                       "Method": "ToggleControls",
                       "ParamType": 3,
                       "ParamValue": false
                     }
                   ]
+                }
+              },
+              {
+                "Type": 7,
+                "Data": {
+                  "UID": 14128282259583483364,
+                  "ComponentType": 7,
+                  "Active": true,
+                  "TextureAssetId": {
+                    "uid": 2483925001477651013,
+                    "libId": "8aeaec9f8aa5e2fbaf5d402997041761"
+                  },
+                  "FillAmount": 1.0,
+                  "FillMethod": 0,
+                  "FillOrigin": 0,
+                  "SheetColumns": 1,
+                  "SheetRows": 1,
+                  "SheetOffset": [
+                    0.0,
+                    0.0
+                  ],
+                  "StretchDrawMode": 0
                 }
               }
             ],
