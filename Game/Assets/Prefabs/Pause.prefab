@@ -1,0 +1,1096 @@
+{
+  "SourcePath": "Assets\\Prefabs\\Pause.prefab",
+  "Name": "Pause",
+  "Version": 2,
+  "PrefabUID": 17125549998012470078,
+  "GameObject": {
+    "Name": "Pause",
+    "Active": true,
+    "Transform": {
+      "position": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    "Components": [
+      {
+        "Type": 6,
+        "Data": {
+          "UID": 3449575588356475960,
+          "ComponentType": 6,
+          "Active": true,
+          "RenderMode": 0,
+          "ZTest": false
+        }
+      },
+      {
+        "Type": 3,
+        "Data": {
+          "UID": 7308125976516207691,
+          "ComponentType": 3,
+          "Active": true,
+          "ScriptName": "UIPause",
+          "ScriptFields": {
+            "Pause Panel": 15967209682761717676,
+            "Controls Panel": 6230439558093702945
+          }
+        }
+      }
+    ],
+    "Children": [
+      {
+        "Name": "Pause Panel",
+        "Active": true,
+        "Transform": {
+          "position": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rotation": [
+            -0.0,
+            0.0,
+            -0.0,
+            1.0
+          ],
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "Components": [
+          {
+            "Type": 5,
+            "Data": {
+              "UID": 11053942647949818093,
+              "ComponentType": 5,
+              "Active": true,
+              "Position": [
+                0.0,
+                0.0
+              ],
+              "Scale": [
+                1.0,
+                1.0
+              ],
+              "Pivot": [
+                0.5,
+                0.5
+              ],
+              "AnchorMin": [
+                0.0,
+                0.0
+              ],
+              "AnchorMax": [
+                1.0,
+                1.0
+              ],
+              "BaseSize": [
+                100.0,
+                100.0
+              ],
+              "StretchMode": 3,
+              "SizingMode": 0,
+              "AspectRatio": 1.0
+            }
+          },
+          {
+            "Type": 7,
+            "Data": {
+              "UID": 13194823568121517636,
+              "ComponentType": 7,
+              "Active": true,
+              "TextureAssetId": "",
+              "FillAmount": 1.0,
+              "FillMethod": 0,
+              "FillOrigin": 0
+            }
+          }
+        ],
+        "Children": [
+          {
+            "Name": "background",
+            "Active": true,
+            "Transform": {
+              "position": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "rotation": [
+                -0.0,
+                0.0,
+                -0.0,
+                1.0
+              ],
+              "scale": [
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            "Components": [
+              {
+                "Type": 5,
+                "Data": {
+                  "UID": 1090380465356347738,
+                  "ComponentType": 5,
+                  "Active": true,
+                  "Position": [
+                    0.0,
+                    0.0
+                  ],
+                  "Scale": [
+                    1.0,
+                    1.0
+                  ],
+                  "Pivot": [
+                    1.0,
+                    0.5
+                  ],
+                  "AnchorMin": [
+                    1.0,
+                    0.0
+                  ],
+                  "AnchorMax": [
+                    1.0,
+                    1.0
+                  ],
+                  "BaseSize": [
+                    3840.0,
+                    1080.0
+                  ],
+                  "StretchMode": 2,
+                  "SizingMode": 0,
+                  "AspectRatio": 1.0
+                }
+              },
+              {
+                "Type": 7,
+                "Data": {
+                  "UID": 11278418304559887001,
+                  "ComponentType": 7,
+                  "Active": true,
+                  "TextureAssetId": "4984dea04d33fa2dcc576e8213dc9706",
+                  "FillAmount": 1.0,
+                  "FillMethod": 0,
+                  "FillOrigin": 0
+                }
+              }
+            ],
+            "Children": []
+          },
+          {
+            "Name": "Center Container",
+            "Active": true,
+            "Transform": {
+              "position": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "rotation": [
+                -0.0,
+                0.0,
+                -0.0,
+                1.0
+              ],
+              "scale": [
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            "Components": [
+              {
+                "Type": 5,
+                "Data": {
+                  "UID": 15457859146872132508,
+                  "ComponentType": 5,
+                  "Active": true,
+                  "Position": [
+                    0.0,
+                    0.0
+                  ],
+                  "Scale": [
+                    1.0,
+                    1.0
+                  ],
+                  "Pivot": [
+                    0.5,
+                    0.5
+                  ],
+                  "AnchorMin": [
+                    0.5,
+                    0.0
+                  ],
+                  "AnchorMax": [
+                    0.5,
+                    1.0
+                  ],
+                  "BaseSize": [
+                    100.0,
+                    100.0
+                  ],
+                  "StretchMode": 2,
+                  "SizingMode": 0,
+                  "AspectRatio": 1.0
+                }
+              }
+            ],
+            "Children": [
+              {
+                "Name": "Resume Button",
+                "Active": true,
+                "Transform": {
+                  "position": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0,
+                    1.0
+                  ],
+                  "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ]
+                },
+                "Components": [
+                  {
+                    "Type": 5,
+                    "Data": {
+                      "UID": 10498704895831944223,
+                      "ComponentType": 5,
+                      "Active": true,
+                      "Position": [
+                        0.0,
+                        0.0
+                      ],
+                      "Scale": [
+                        1.0,
+                        1.0
+                      ],
+                      "Pivot": [
+                        0.5,
+                        0.5
+                      ],
+                      "AnchorMin": [
+                        0.5,
+                        0.3499999940395355
+                      ],
+                      "AnchorMax": [
+                        0.5,
+                        0.4300000071525574
+                      ],
+                      "BaseSize": [
+                        321.0,
+                        60.0
+                      ],
+                      "StretchMode": 2,
+                      "SizingMode": 0,
+                      "AspectRatio": 1.0
+                    }
+                  },
+                  {
+                    "Type": 9,
+                    "Data": {
+                      "UID": 17380647565626104724,
+                      "ComponentType": 9,
+                      "Active": true,
+                      "TargetGraphicUID": 4002371714741308739,
+                      "DefaultTextureAssetId": "c114daf2a0222a4e42e64a0eaf692121",
+                      "HoverTextureAssetId": "d75c00f51b208c373f86f084e2e1c7a8",
+                      "PressedTextureAssetId": "f6e40573e119d7c765a85b729adc6b3b",
+                      "OnHover": [],
+                      "OnPress": [],
+                      "OnRelease": [
+                        {
+                          "GameObjectUID": 17125549998012470078,
+                          "ComponentUID": 7308125976516207691,
+                          "Method": "Resume",
+                          "ParamType": 0
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "Type": 7,
+                    "Data": {
+                      "UID": 4002371714741308739,
+                      "ComponentType": 7,
+                      "Active": true,
+                      "TextureAssetId": "c114daf2a0222a4e42e64a0eaf692121",
+                      "FillAmount": 1.0,
+                      "FillMethod": 0,
+                      "FillOrigin": 0
+                    }
+                  }
+                ],
+                "Children": []
+              },
+              {
+                "Name": "Reset Button",
+                "Active": true,
+                "Transform": {
+                  "position": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0,
+                    1.0
+                  ],
+                  "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ]
+                },
+                "Components": [
+                  {
+                    "Type": 5,
+                    "Data": {
+                      "UID": 14688619459647864482,
+                      "ComponentType": 5,
+                      "Active": true,
+                      "Position": [
+                        0.0,
+                        0.0
+                      ],
+                      "Scale": [
+                        1.0,
+                        1.0
+                      ],
+                      "Pivot": [
+                        0.5,
+                        0.5
+                      ],
+                      "AnchorMin": [
+                        0.5,
+                        0.44999998807907104
+                      ],
+                      "AnchorMax": [
+                        0.5,
+                        0.5299999713897705
+                      ],
+                      "BaseSize": [
+                        321.0,
+                        60.0
+                      ],
+                      "StretchMode": 2,
+                      "SizingMode": 0,
+                      "AspectRatio": 1.0
+                    }
+                  },
+                  {
+                    "Type": 7,
+                    "Data": {
+                      "UID": 16129006184180782457,
+                      "ComponentType": 7,
+                      "Active": true,
+                      "TextureAssetId": "ba91053ca8a3ef84724d7e8414942f9d",
+                      "FillAmount": 1.0,
+                      "FillMethod": 0,
+                      "FillOrigin": 0
+                    }
+                  },
+                  {
+                    "Type": 9,
+                    "Data": {
+                      "UID": 7999489075965010673,
+                      "ComponentType": 9,
+                      "Active": true,
+                      "TargetGraphicUID": 16129006184180782457,
+                      "DefaultTextureAssetId": "ba91053ca8a3ef84724d7e8414942f9d",
+                      "HoverTextureAssetId": "eec1fb8fae0186730f6c2ea5c16fb81b",
+                      "PressedTextureAssetId": "5bbd2f1ca36dd27e6fc08a9a96b8a95c",
+                      "OnHover": [],
+                      "OnPress": [],
+                      "OnRelease": [
+                        {
+                          "GameObjectUID": 17125549998012470078,
+                          "ComponentUID": 7308125976516207691,
+                          "Method": "ChangeScene",
+                          "ParamType": 5,
+                          "ParamValue": "pause"
+                        }
+                      ]
+                    }
+                  }
+                ],
+                "Children": []
+              },
+              {
+                "Name": "Controls Button",
+                "Active": true,
+                "Transform": {
+                  "position": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0,
+                    1.0
+                  ],
+                  "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ]
+                },
+                "Components": [
+                  {
+                    "Type": 5,
+                    "Data": {
+                      "UID": 8227753308532829679,
+                      "ComponentType": 5,
+                      "Active": true,
+                      "Position": [
+                        0.0,
+                        0.0
+                      ],
+                      "Scale": [
+                        1.0,
+                        1.0
+                      ],
+                      "Pivot": [
+                        0.5,
+                        0.5
+                      ],
+                      "AnchorMin": [
+                        0.5,
+                        0.550000011920929
+                      ],
+                      "AnchorMax": [
+                        0.5,
+                        0.6299999952316284
+                      ],
+                      "BaseSize": [
+                        321.0,
+                        60.0
+                      ],
+                      "StretchMode": 2,
+                      "SizingMode": 0,
+                      "AspectRatio": 1.0
+                    }
+                  },
+                  {
+                    "Type": 9,
+                    "Data": {
+                      "UID": 318834572613243462,
+                      "ComponentType": 9,
+                      "Active": true,
+                      "TargetGraphicUID": 3965696343776462329,
+                      "DefaultTextureAssetId": "73e66bd1c7ad0b0abb1fc953bc603680",
+                      "HoverTextureAssetId": "a10220d77449d5c92ddb6ed842c7e146",
+                      "PressedTextureAssetId": "55d2a7e2961cb0504dcb73c0d0590de6",
+                      "OnHover": [],
+                      "OnPress": [],
+                      "OnRelease": [
+                        {
+                          "GameObjectUID": 17125549998012470078,
+                          "ComponentUID": 7308125976516207691,
+                          "Method": "ToggleControls",
+                          "ParamType": 3,
+                          "ParamValue": true
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "Type": 7,
+                    "Data": {
+                      "UID": 3965696343776462329,
+                      "ComponentType": 7,
+                      "Active": true,
+                      "TextureAssetId": "73e66bd1c7ad0b0abb1fc953bc603680",
+                      "FillAmount": 1.0,
+                      "FillMethod": 0,
+                      "FillOrigin": 0
+                    }
+                  }
+                ],
+                "Children": []
+              },
+              {
+                "Name": "Title Button",
+                "Active": true,
+                "Transform": {
+                  "position": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0,
+                    1.0
+                  ],
+                  "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ]
+                },
+                "Components": [
+                  {
+                    "Type": 5,
+                    "Data": {
+                      "UID": 14880930358926279213,
+                      "ComponentType": 5,
+                      "Active": true,
+                      "Position": [
+                        0.0,
+                        0.0
+                      ],
+                      "Scale": [
+                        1.0,
+                        1.0
+                      ],
+                      "Pivot": [
+                        0.5,
+                        0.5
+                      ],
+                      "AnchorMin": [
+                        0.5,
+                        0.6499999761581421
+                      ],
+                      "AnchorMax": [
+                        0.5,
+                        0.7300000190734863
+                      ],
+                      "BaseSize": [
+                        321.0,
+                        60.0
+                      ],
+                      "StretchMode": 2,
+                      "SizingMode": 0,
+                      "AspectRatio": 1.0
+                    }
+                  },
+                  {
+                    "Type": 9,
+                    "Data": {
+                      "UID": 17004044561297169127,
+                      "ComponentType": 9,
+                      "Active": true,
+                      "TargetGraphicUID": 15139440022441751925,
+                      "DefaultTextureAssetId": "faa32244820d4c0c253c9ea5ef987257",
+                      "HoverTextureAssetId": "cf757a4e56b56b0b7b24fc980967b355",
+                      "PressedTextureAssetId": "8b2e4b0d084bc9718ab824f1b5aa18f4",
+                      "OnHover": [],
+                      "OnPress": [],
+                      "OnRelease": [
+                        {
+                          "GameObjectUID": 17125549998012470078,
+                          "ComponentUID": 7308125976516207691,
+                          "Method": "ChangeScene",
+                          "ParamType": 5,
+                          "ParamValue": "Main_Menu"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "Type": 7,
+                    "Data": {
+                      "UID": 15139440022441751925,
+                      "ComponentType": 7,
+                      "Active": true,
+                      "TextureAssetId": "faa32244820d4c0c253c9ea5ef987257",
+                      "FillAmount": 1.0,
+                      "FillMethod": 0,
+                      "FillOrigin": 0
+                    }
+                  }
+                ],
+                "Children": []
+              },
+              {
+                "Name": "Pause Title",
+                "Active": true,
+                "Transform": {
+                  "position": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0,
+                    1.0
+                  ],
+                  "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ]
+                },
+                "Components": [
+                  {
+                    "Type": 5,
+                    "Data": {
+                      "UID": 13294959370459329739,
+                      "ComponentType": 5,
+                      "Active": true,
+                      "Position": [
+                        0.0,
+                        0.0
+                      ],
+                      "Scale": [
+                        1.0,
+                        1.0
+                      ],
+                      "Pivot": [
+                        0.5,
+                        0.5
+                      ],
+                      "AnchorMin": [
+                        0.5,
+                        0.15000000596046448
+                      ],
+                      "AnchorMax": [
+                        0.5,
+                        0.20000000298023224
+                      ],
+                      "BaseSize": [
+                        158.0,
+                        40.0
+                      ],
+                      "StretchMode": 2,
+                      "SizingMode": 0,
+                      "AspectRatio": 1.0
+                    }
+                  },
+                  {
+                    "Type": 7,
+                    "Data": {
+                      "UID": 17802873502105221534,
+                      "ComponentType": 7,
+                      "Active": true,
+                      "TextureAssetId": "76a2b4a2c0dba5a31a636234afb7f929",
+                      "FillAmount": 1.0,
+                      "FillMethod": 0,
+                      "FillOrigin": 0
+                    }
+                  }
+                ],
+                "Children": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "Name": "Controls Panel",
+        "Active": false,
+        "Transform": {
+          "position": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rotation": [
+            -0.0,
+            0.0,
+            -0.0,
+            1.0
+          ],
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "Components": [
+          {
+            "Type": 5,
+            "Data": {
+              "UID": 17660734596967513830,
+              "ComponentType": 5,
+              "Active": true,
+              "Position": [
+                0.0,
+                0.0
+              ],
+              "Scale": [
+                1.0,
+                1.0
+              ],
+              "Pivot": [
+                0.5,
+                0.5
+              ],
+              "AnchorMin": [
+                0.0,
+                0.0
+              ],
+              "AnchorMax": [
+                1.0,
+                1.0
+              ],
+              "BaseSize": [
+                100.0,
+                100.0
+              ],
+              "StretchMode": 3,
+              "SizingMode": 0,
+              "AspectRatio": 1.0
+            }
+          },
+          {
+            "Type": 7,
+            "Data": {
+              "UID": 4655738713258310029,
+              "ComponentType": 7,
+              "Active": true,
+              "TextureAssetId": "",
+              "FillAmount": 1.0,
+              "FillMethod": 0,
+              "FillOrigin": 0
+            }
+          }
+        ],
+        "Children": [
+          {
+            "Name": "background",
+            "Active": true,
+            "Transform": {
+              "position": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "rotation": [
+                -0.0,
+                0.0,
+                -0.0,
+                1.0
+              ],
+              "scale": [
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            "Components": [
+              {
+                "Type": 5,
+                "Data": {
+                  "UID": 5723457809987824271,
+                  "ComponentType": 5,
+                  "Active": true,
+                  "Position": [
+                    0.0,
+                    0.0
+                  ],
+                  "Scale": [
+                    1.0,
+                    1.0
+                  ],
+                  "Pivot": [
+                    1.0,
+                    0.5
+                  ],
+                  "AnchorMin": [
+                    1.0,
+                    0.0
+                  ],
+                  "AnchorMax": [
+                    1.0,
+                    1.0
+                  ],
+                  "BaseSize": [
+                    3840.0,
+                    1080.0
+                  ],
+                  "StretchMode": 2,
+                  "SizingMode": 0,
+                  "AspectRatio": 1.0
+                }
+              },
+              {
+                "Type": 7,
+                "Data": {
+                  "UID": 7684315708112802606,
+                  "ComponentType": 7,
+                  "Active": true,
+                  "TextureAssetId": "4984dea04d33fa2dcc576e8213dc9706",
+                  "FillAmount": 1.0,
+                  "FillMethod": 0,
+                  "FillOrigin": 0
+                }
+              }
+            ],
+            "Children": []
+          },
+          {
+            "Name": "Controls Title",
+            "Active": true,
+            "Transform": {
+              "position": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "rotation": [
+                -0.0,
+                0.0,
+                -0.0,
+                1.0
+              ],
+              "scale": [
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            "Components": [
+              {
+                "Type": 5,
+                "Data": {
+                  "UID": 2864960482835370057,
+                  "ComponentType": 5,
+                  "Active": true,
+                  "Position": [
+                    0.0,
+                    0.0
+                  ],
+                  "Scale": [
+                    1.0,
+                    1.0
+                  ],
+                  "Pivot": [
+                    0.5,
+                    0.5
+                  ],
+                  "AnchorMin": [
+                    0.5,
+                    0.15000000596046448
+                  ],
+                  "AnchorMax": [
+                    0.5,
+                    0.20000000298023224
+                  ],
+                  "BaseSize": [
+                    225.0,
+                    40.0
+                  ],
+                  "StretchMode": 2,
+                  "SizingMode": 0,
+                  "AspectRatio": 1.0
+                }
+              },
+              {
+                "Type": 7,
+                "Data": {
+                  "UID": 13179802184394413345,
+                  "ComponentType": 7,
+                  "Active": true,
+                  "TextureAssetId": "050b84ce277ee6968ee9fafb4b51bab1",
+                  "FillAmount": 1.0,
+                  "FillMethod": 0,
+                  "FillOrigin": 0
+                }
+              }
+            ],
+            "Children": []
+          },
+          {
+            "Name": "Controls Image",
+            "Active": true,
+            "Transform": {
+              "position": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "rotation": [
+                -0.0,
+                0.0,
+                -0.0,
+                1.0
+              ],
+              "scale": [
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            "Components": [
+              {
+                "Type": 5,
+                "Data": {
+                  "UID": 16928586926731423165,
+                  "ComponentType": 5,
+                  "Active": true,
+                  "Position": [
+                    0.0,
+                    0.0
+                  ],
+                  "Scale": [
+                    1.0,
+                    1.0
+                  ],
+                  "Pivot": [
+                    0.5,
+                    0.5
+                  ],
+                  "AnchorMin": [
+                    0.0,
+                    0.0
+                  ],
+                  "AnchorMax": [
+                    1.0,
+                    1.0
+                  ],
+                  "BaseSize": [
+                    100.0,
+                    100.0
+                  ],
+                  "StretchMode": 3,
+                  "SizingMode": 0,
+                  "AspectRatio": 1.0
+                }
+              },
+              {
+                "Type": 7,
+                "Data": {
+                  "UID": 8945017672786493801,
+                  "ComponentType": 7,
+                  "Active": true,
+                  "TextureAssetId": "9a2d62113da549df38058eb5fbefa3b8",
+                  "FillAmount": 1.0,
+                  "FillMethod": 0,
+                  "FillOrigin": 0
+                }
+              }
+            ],
+            "Children": []
+          },
+          {
+            "Name": "Back Button",
+            "Active": true,
+            "Transform": {
+              "position": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "rotation": [
+                -0.0,
+                0.0,
+                -0.0,
+                1.0
+              ],
+              "scale": [
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            "Components": [
+              {
+                "Type": 5,
+                "Data": {
+                  "UID": 10578933039117299154,
+                  "ComponentType": 5,
+                  "Active": true,
+                  "Position": [
+                    36.0,
+                    -24.0
+                  ],
+                  "Scale": [
+                    1.0,
+                    1.0
+                  ],
+                  "Pivot": [
+                    0.0,
+                    1.0
+                  ],
+                  "AnchorMin": [
+                    0.0,
+                    1.0
+                  ],
+                  "AnchorMax": [
+                    0.0,
+                    1.0
+                  ],
+                  "BaseSize": [
+                    280.0,
+                    79.0
+                  ],
+                  "StretchMode": 0,
+                  "SizingMode": 0,
+                  "AspectRatio": 1.0
+                }
+              },
+              {
+                "Type": 7,
+                "Data": {
+                  "UID": 15623021778895724418,
+                  "ComponentType": 7,
+                  "Active": true,
+                  "TextureAssetId": "8aeaec9f8aa5e2fbaf5d402997041761",
+                  "FillAmount": 1.0,
+                  "FillMethod": 0,
+                  "FillOrigin": 0
+                }
+              },
+              {
+                "Type": 9,
+                "Data": {
+                  "UID": 12292736711012208592,
+                  "ComponentType": 9,
+                  "Active": true,
+                  "TargetGraphicUID": 15623021778895724418,
+                  "DefaultTextureAssetId": "8aeaec9f8aa5e2fbaf5d402997041761",
+                  "HoverTextureAssetId": "91a36ecc9b6e97af1c248b3804de1f8b",
+                  "PressedTextureAssetId": "45146c99a096c63eb199bbab20162506",
+                  "OnHover": [],
+                  "OnPress": [],
+                  "OnRelease": [
+                    {
+                      "GameObjectUID": 17125549998012470078,
+                      "ComponentUID": 7308125976516207691,
+                      "Method": "ToggleControls",
+                      "ParamType": 3,
+                      "ParamValue": false
+                    }
+                  ]
+                }
+              }
+            ],
+            "Children": []
+          }
+        ]
+      }
+    ]
+  }
+}
