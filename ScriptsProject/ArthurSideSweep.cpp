@@ -182,8 +182,6 @@ void ArthurSideSweep::setupUI()
     Transform2DAPI::setAlpha(background, 0.0f);
     Transform2DAPI::setAlpha(shadow, 0.0f);
     Transform2DAPI::setAlpha(container, 1.0f);
-    Transform2DAPI::setPivot(container, Vector2(0.5f, 1.0f));
-	Transform2DAPI::setAnchorMin(container, Vector2(0.5f, 1.0f));
 }
 
 void ArthurSideSweep::updateUI()
