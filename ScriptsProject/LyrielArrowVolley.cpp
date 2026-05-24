@@ -321,7 +321,7 @@ void LyrielArrowVolley::applyVolleyDamage(const std::vector<Damageable*>& target
             ctx.damage = m_volleyDamage;
             ctx.attacker = GameObjectAPI::getTransform(getOwner());
             ctx.attackType = EnemyAttackType::LyrielVolley;
-            damageable->takeDamage(ctx);
+            enemyDamageable->takeDamage(ctx);
         }
         else if(BreakableDamageable* breakableDamageable = dynamic_cast<BreakableDamageable*>(target))
         {

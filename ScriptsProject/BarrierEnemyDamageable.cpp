@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "BarrierEnemyDamageable.h"
 #include "Transform2D.h"
-#include <sstream>
 #include <algorithm>
 
 static const char* barrierAttackTypeNames[] =
@@ -20,7 +19,7 @@ static const char* barrierAttackTypeNames[] =
 constexpr int barrierAttackTypeCount = 9;
 
 IMPLEMENT_SCRIPT_FIELDS_INHERITED(BarrierEnemyDamageable, EnemyDamageable,
-    SERIALIZED_STRING(m_barrierPercentagesStr, "Barrier Thresholds (%)"),
+    SERIALIZED_FLOAT_VECTOR(m_barriersThresholds, "Barrier Thresholds (%)"),
     SERIALIZED_ENUM_INT(m_requiredAttackType, "Barrier Break Attack", barrierAttackTypeNames, barrierAttackTypeCount),
     SERIALIZED_BOOL(m_shadowExecutionBreaksBarriers, "Shadow Execution Breaks Barriers"),
     SERIALIZED_STRING(m_barrierPrefabPath, "Barrier UI Prefab Path"),
@@ -36,26 +35,18 @@ BarrierEnemyDamageable::BarrierEnemyDamageable(GameObject* owner)
 void BarrierEnemyDamageable::Start()
 {
     EnemyDamageable::Start();
-    parseBarrierConfig();
+    buildBarriers();
     instantiateBarrierUIs();
 }
 
-void BarrierEnemyDamageable::parseBarrierConfig()
+void BarrierEnemyDamageable::buildBarriers()
 {
     m_barriers.clear();
     m_nextBarrierIndex = 0;
 
-    if (m_barrierPercentagesStr.empty())
-        return;
-
-    std::stringstream ss(m_barrierPercentagesStr);
-    std::string token;
-
-    while (std::getline(ss, token, ','))
+    for (float threshold : m_barriersThresholds)
     {
-        float pct = static_cast<float>(std::atof(token.c_str())) / 100.0f;
-        pct = std::clamp(pct, 0.0f, 1.0f);
-
+        float pct = std::clamp(threshold, 0.0f, 1.0f);
         if (pct > 0.0f)
         {
             Barrier b;
@@ -67,11 +58,6 @@ void BarrierEnemyDamageable::parseBarrierConfig()
 
     std::sort(m_barriers.begin(), m_barriers.end(),
         [](const Barrier& a, const Barrier& b) { return a.hpPercent > b.hpPercent; });
-
-    Debug::log("[Barrier] %s parsed %zu barriers: %s",
-        GameObjectAPI::getName(m_owner),
-        m_barriers.size(),
-        m_barrierPercentagesStr.c_str());
 }
 
 void BarrierEnemyDamageable::instantiateBarrierUIs()

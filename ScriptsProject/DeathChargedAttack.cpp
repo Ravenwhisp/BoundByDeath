@@ -241,9 +241,6 @@ void DeathChargedAttack::dealDamageInArc(float damage) const
             ctx.attackType = EnemyAttackType::DeathCharged;
             damageable->takeDamage(ctx);
 
-            Debug::log("[ARC] hit '%s'  dmg=%.1f  hp=%.1f/%.1f",
-                GameObjectAPI::getName(enemy), damage,
-                damageable->getCurrentHp(), damageable->getMaxHp());
         }
         hit++;
 

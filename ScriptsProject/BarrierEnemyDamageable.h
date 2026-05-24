@@ -22,7 +22,7 @@ public:
     size_t getRemainingBarrierCount() const { return m_barriers.size() - m_nextBarrierIndex; }
 
 public:
-    std::string m_barrierPercentagesStr = "80";
+    std::vector<float> m_barriersThresholds;
     int m_requiredAttackType = static_cast<int>(EnemyAttackType::ShadowExecution);
     bool m_shadowExecutionBreaksBarriers = true;
     std::string m_barrierPrefabPath;
@@ -43,7 +43,7 @@ private:
         float hpPercent;
     };
 
-    void parseBarrierConfig();
+    void buildBarriers();
     void instantiateBarrierUIs();
     void destroyBrokenBarrierUI(size_t index);
     float getNextBarrierAbsoluteHp() const;
