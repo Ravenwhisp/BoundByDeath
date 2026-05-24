@@ -173,11 +173,11 @@ void ArthurSideSweep::setupUI()
     GameObjectAPI::setActive(canvasTransform->getOwner(), true);
     if (m_sweepSide == -1)
     {
-        TransformAPI::setRotationEuler(canvasTransform, Vector3(90.0f, -90.0f, 0.0f));
+        TransformAPI::setRotationEuler(canvasTransform, Vector3(90.0f, 0.0f, -90.0f));
     }
     else
     {
-        TransformAPI::setRotationEuler(canvasTransform, Vector3(90.0f, 90.0f, 0.0f));
+        TransformAPI::setRotationEuler(canvasTransform, Vector3(90.0f, 0.0f, 90.0f));
 	}
     Transform2DAPI::setAlpha(background, 0.0f);
     Transform2DAPI::setAlpha(shadow, 0.0f);
