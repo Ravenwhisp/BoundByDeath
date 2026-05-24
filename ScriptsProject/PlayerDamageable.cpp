@@ -1,8 +1,13 @@
 #include "pch.h"
 #include "PlayerDamageable.h"
+#include "HeartbeatHaptic.h"
 
 #include "PlayerDownState.h"
 #include "PlayerAnimationController.h"
+
+IMPLEMENT_SCRIPT_FIELDS(PlayerDamageable,
+    SERIALIZED_FLOAT(m_heartbeatThreshold, "Heartbeat Threshold", 0.5f, 0.25f, 0.0f)
+)
 
 PlayerDamageable::PlayerDamageable(GameObject* owner)
     : Damageable(owner)
@@ -19,6 +24,30 @@ void PlayerDamageable::Start()
     {
         Debug::warn("%s has PlayerDamageable but no PlayerAnimationController.", GameObjectAPI::getName(m_owner));
     }
+
+    m_haptic = GameObjectAPI::findScript<HeartbeatHaptic>(m_owner);
+    if (m_haptic != nullptr)
+    {
+        m_haptic->m_variant = HapticEffectDefinition::HeartbeatVariant::Health;
+    }
+}
+
+void PlayerDamageable::Update()
+{
+    if (!m_haptic) return;
+
+    if (isDead())
+        return; // dying beat is self-terminating; don't interfere
+
+    if (getHpPercent() >= m_heartbeatThreshold)
+    {
+        m_haptic->stop();
+        return;
+    }
+
+    // danger is the inverse of HP, drives beat speed and intensity
+    const float danger = 1.0f - getHpPercent();
+    m_haptic->tick(danger);
 }
 
 void PlayerDamageable::onDamaged(float amount)
@@ -59,6 +88,12 @@ void PlayerDamageable::onDeath()
     {
         m_playerAnimationController->setDead(true);
     }
+
+    if (m_haptic)
+    {
+        const float danger = 1.0f - getHpPercent();
+        m_haptic->playDyingBeat(danger);
+    }
 }
 
 void PlayerDamageable::onRevive()
@@ -69,6 +104,11 @@ void PlayerDamageable::onRevive()
     {
         m_playerAnimationController->setDead(false);
         m_playerAnimationController->setDowned(false);
+    }
+
+    if (m_haptic)
+    {
+        m_haptic->stop();
     }
 }
 
