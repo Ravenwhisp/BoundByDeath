@@ -1,1 +1,175 @@
-{"asset":{"version":"2.0","generator":"Unity 6000.2.9f1 glTFast 6.15.1"},"nodes":[{"name":"Normal","mesh":0,"translation":[0,-1.026,0]},{"name":"Spectral","mesh":2,"translation":[0,-1.026,0]},{"name":"SpikeTrap","children":[0,1],"mesh":1,"translation":[53.890274,0.006744981,-120.103851]}],"buffers":[{"uri":"SpikeTrap.bin","byteLength":72532}],"bufferViews":[{"buffer":0,"byteLength":2052,"target":34963},{"buffer":0,"byteLength":4008,"byteOffset":2052,"target":34963},{"buffer":0,"byteLength":23688,"byteOffset":6060,"byteStride":56,"target":34962},{"buffer":0,"byteLength":42784,"byteOffset":29748,"byteStride":56,"target":34962}],"accessors":[{"bufferView":2,"componentType":5126,"count":423,"type":"VEC3","max":[0.640078,1.23168039,0.5782746],"min":[-0.652165949,-0.0115970373,-0.6251377]},{"bufferView":2,"componentType":5126,"count":423,"type":"VEC3","byteOffset":12},{"bufferView":2,"componentType":5126,"count":423,"type":"VEC4","byteOffset":24},{"bufferView":2,"componentType":5126,"count":423,"type":"VEC2","byteOffset":40},{"bufferView":2,"componentType":5126,"count":423,"type":"VEC2","byteOffset":48},{"bufferView":0,"componentType":5123,"count":1026,"type":"SCALAR"},{"bufferView":3,"componentType":5126,"count":764,"type":"VEC3","max":[1.00101852,0.173487723,1.00473642],"min":[-1.0026834,-0.006744981,-1.00262642]},{"bufferView":3,"componentType":5126,"count":764,"type":"VEC3","byteOffset":12},{"bufferView":3,"componentType":5126,"count":764,"type":"VEC4","byteOffset":24},{"bufferView":3,"componentType":5126,"count":764,"type":"VEC2","byteOffset":40},{"bufferView":3,"componentType":5126,"count":764,"type":"VEC2","byteOffset":48},{"bufferView":1,"componentType":5123,"count":2004,"type":"SCALAR"}],"images":[{"name":"T_metal_dungeon_N.png","uri":"T_metal_dungeon_N.png","mimeType":"image/png"},{"name":"T_metal_dungeon_01_BC.jpg","uri":"T_metal_dungeon_01_BC.jpg","mimeType":"image/jpeg"},{"name":"T_metal_dungeon_MTSM_nometal.jpg","uri":"T_metal_dungeon_MTSM_nometal.jpg","mimeType":"image/jpeg"}],"materials":[{"name":"M_metal_dungeon_01","pbrMetallicRoughness":{"roughnessFactor":0,"baseColorTexture":{"index":1},"metallicRoughnessTexture":{"index":2}},"normalTexture":{"index":0}},{"name":"EspectralPath","pbrMetallicRoughness":{"baseColorFactor":[0,0.936659038,0.957614,0.192156866],"metallicFactor":0.53,"roughnessFactor":0.5},"emissiveFactor":[0.3160377,0.86320734,1],"alphaMode":"BLEND"}],"meshes":[{"name":"SM_PROP_trap_floor_spikes_dungeon_05","primitives":[{"attributes":{"POSITION":0,"NORMAL":1,"TANGENT":2,"TEXCOORD_0":3,"TEXCOORD_1":4},"indices":5,"material":0}]},{"name":"SM_PROP_trap_floor_dungeon_05","primitives":[{"attributes":{"POSITION":6,"NORMAL":7,"TANGENT":8,"TEXCOORD_0":9,"TEXCOORD_1":10},"indices":11,"material":0}]},{"name":"SM_PROP_trap_floor_spikes_dungeon_05","primitives":[{"attributes":{"POSITION":0,"NORMAL":1,"TANGENT":2,"TEXCOORD_0":3,"TEXCOORD_1":4},"indices":5,"material":1}]}],"scene":0,"scenes":[{"name":"SpikeTrap","nodes":[2]}],"textures":[{"source":0},{"source":1},{"source":2}]}
+{
+  "SourcePath": "Assets\\Models\\Trap\\SpikeTrap.gltf",
+  "Name": "SpikeTrap",
+  "Version": 2,
+  "GameObject": {
+    "Name": "SpikeTrap",
+    "Active": true,
+    "Tag": "DEFAULT",
+    "Layer": "DEFAULT",
+    "PrefabLink": {
+      "SourcePath": "Assets\\Models\\Trap\\SpikeTrap.gltf",
+      "AssetUID": 5609205649917604619
+    },
+    "Transform": {
+      "position": [
+        53.89027404785156,
+        0.006744980812072754,
+        -120.10385131835938
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    "Components": [
+      {
+        "Type": 1,
+        "Data": {
+          "UID": 16531416110771539581,
+          "ComponentType": 1,
+          "Active": true,
+          "MeshAssetId": {
+            "uid": 9787522221163303608,
+            "libId": "f9f61a2ca93ec59cf0233e3d09f61cfa"
+          },
+          "SkinAssetId": {
+            "uid": 0,
+            "libId": ""
+          },
+          "MaterialAssetId": [
+            {
+              "uid": 7489748572007598388,
+              "libId": "a6d873373b28a23bd0431af658d304c6"
+            }
+          ]
+        }
+      },
+      {
+        "Type": 3,
+        "Data": {
+          "UID": 2722275625151100539,
+          "ComponentType": 3,
+          "Active": true,
+          "ScriptName": "SpikeTrap",
+          "ScriptFields": {
+            "Alternative Mode": false,
+            "Active Duration": 2.0,
+            "Preparing Duration": 1.0,
+            "Start Position Y": -1.0,
+            "Wait Position Y": -0.699999988079071,
+            "Active Position Y": 0.0,
+            "Trap Damage": 20.0
+          }
+        }
+      }
+    ],
+    "Children": [
+      {
+        "Name": "Normal",
+        "Active": true,
+        "Tag": "DEFAULT",
+        "Layer": "DEFAULT",
+        "Transform": {
+          "position": [
+            0.0,
+            -1.0260000228881836,
+            0.0
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "Components": [
+          {
+            "Type": 1,
+            "Data": {
+              "UID": 4417822598410609657,
+              "ComponentType": 1,
+              "Active": true,
+              "MeshAssetId": {
+                "uid": 17412517385445504489,
+                "libId": "3f64c6425417658e4ce2a06417223583"
+              },
+              "SkinAssetId": {
+                "uid": 0,
+                "libId": ""
+              },
+              "MaterialAssetId": [
+                {
+                  "uid": 7489748572007598388,
+                  "libId": "a6d873373b28a23bd0431af658d304c6"
+                }
+              ]
+            }
+          }
+        ],
+        "Children": []
+      },
+      {
+        "Name": "Spectral",
+        "Active": true,
+        "Tag": "DEFAULT",
+        "Layer": "DEFAULT",
+        "Transform": {
+          "position": [
+            0.0,
+            -1.0260000228881836,
+            0.0
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "Components": [
+          {
+            "Type": 1,
+            "Data": {
+              "UID": 17169051764833444210,
+              "ComponentType": 1,
+              "Active": true,
+              "MeshAssetId": {
+                "uid": 3998816102135884164,
+                "libId": "3f64c6425417658e4ce2a06417223583"
+              },
+              "SkinAssetId": {
+                "uid": 0,
+                "libId": ""
+              },
+              "MaterialAssetId": [
+                {
+                  "uid": 6057061331494909289,
+                  "libId": "7f2d6bbc872cecd9016622ff7e939b1c"
+                }
+              ]
+            }
+          }
+        ],
+        "Children": []
+      }
+    ]
+  }
+}
