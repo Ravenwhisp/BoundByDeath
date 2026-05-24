@@ -97,6 +97,9 @@
     <Filter Include="Enemies\Archer\States">
       <UniqueIdentifier>{f68d01a4-01d5-4bd7-97e1-24d97173d687}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Interaction/Gameplay\HealthDrop">
+      <UniqueIdentifier>{d8de068a-39f8-435a-ad86-ecaf9ed6e761}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -319,7 +322,30 @@
     </ClInclude>
     <ClInclude Include="PowerupCollectible.h" />
     <ClInclude Include="PersistingPowerupState.h" />
-    <ClInclude Include="PuzzleManagerLVL1.h">
+
+    <ClInclude Include="BreakableDamageable.h">
+      <Filter>Combat</Filter>
+    </ClInclude>
+    <ClInclude Include="BreakableExplosive.h">
+      <Filter>Combat</Filter>
+    </ClInclude>
+    <ClInclude Include="BreakableHealingDrop.h">
+      <Filter>Interaction/Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="BreakableObject.h">
+      <Filter>Interaction/Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="Pickup.h">
+      <Filter>Interaction/Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="HealthPickup.h" />
+    <ClInclude Include="HealthPickup.h">
+      <Filter>Interaction/Gameplay\HealthDrop</Filter>
+    </ClInclude>
+    <ClInclude Include="HealthDropSpawner.h">
+      <Filter>Interaction/Gameplay\HealthDrop</Filter>
+    </ClInclude>
+    <ClInclude Include="PuzzleManagerLVL1.h" >
       <Filter>Interaction/Gameplay\Puzzles</Filter>
     </ClInclude>
     <ClInclude Include="CrystalShadowMark.h">
@@ -621,7 +647,29 @@
     </ClCompile>
     <ClCompile Include="PowerupCollectible.cpp" />
     <ClCompile Include="PersistingPowerupState.cpp" />
-    <ClCompile Include="PuzzleManagerLVL1.cpp">
+    <ClCompile Include="BreakableDamageable.cpp">
+      <Filter>Combat</Filter>
+    </ClCompile>
+    <ClCompile Include="BreakableExplosive.cpp">
+      <Filter>Combat</Filter>
+    </ClCompile>
+    <ClCompile Include="BreakableHealingDrop.cpp">
+      <Filter>Interaction/Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="BreakableObject.cpp">
+      <Filter>Interaction/Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="Pickup.cpp">
+      <Filter>Interaction/Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="HealthPickup.cpp" />
+    <ClCompile Include="HealthPickup.cpp">
+      <Filter>Interaction/Gameplay\HealthDrop</Filter>
+    </ClCompile>
+    <ClCompile Include="HealthDropSpawner.cpp">
+      <Filter>Interaction/Gameplay\HealthDrop</Filter>
+    </ClCompile>
+    <ClCompile Include="PuzzleManagerLVL1.cpp" >
       <Filter>Interaction/Gameplay\Puzzles</Filter>
     </ClCompile>
     <ClCompile Include="CrystalShadowMark.cpp">
