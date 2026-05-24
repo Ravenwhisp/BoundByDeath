@@ -191,23 +191,7 @@ bool PlayerTargetController::isTargetAlive(GameObject* target) const
         return false;
     }
 
-    Script* enemyDamageableScript = GameObjectAPI::getScript(target, "EnemyDamageable");
-    EnemyDamageable* enemyDamageable = dynamic_cast<EnemyDamageable*>(enemyDamageableScript);
-
-    if (enemyDamageable != nullptr)
-    {
-        return !enemyDamageable->isDead() && enemyDamageable->getCurrentHp() > 0.0f;
-    }
-
-    Script* breakableDamageableScript = GameObjectAPI::getScript(target, "BreakableDamageable");
-    BreakableDamageable* breakableDamageable = dynamic_cast<BreakableDamageable*>(breakableDamageableScript);
-
-    if (breakableDamageable != nullptr)
-    {
-        return !breakableDamageable->isDead() && breakableDamageable->getCurrentHp() > 0.0f;
-    }
-
-    Script* damageableScript = GameObjectAPI::getScript(target, "Damageable");
+    Script* damageableScript = GameObjectAPI::findScript<Damageable>(target);
     Damageable* damageable = dynamic_cast<Damageable*>(damageableScript);
 
     if (damageable != nullptr)

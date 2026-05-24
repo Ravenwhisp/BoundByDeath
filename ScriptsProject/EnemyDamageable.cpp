@@ -22,7 +22,7 @@ void EnemyDamageable::Start()
 	if (!m_healthBarSlider || !m_healthBar2Slider)
 	{
 		Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
-		Transform* healthBarTransform = TransformAPI::findChildByName(ownerTransform, "HealthBar");
+		Transform* healthBarTransform = TransformAPI::findChildByName(ownerTransform, "Health Bar");
 		if (healthBarTransform)
 		{
 			Transform* backgroundTransform = TransformAPI::findChildByName(healthBarTransform, "Background");
@@ -30,7 +30,7 @@ void EnemyDamageable::Start()
 			{
 				if (!m_healthBarSlider)
 				{
-					Transform* slider1Transform = TransformAPI::findChildByName(backgroundTransform, "Slider1");
+					Transform* slider1Transform = TransformAPI::findChildByName(backgroundTransform, "Slider 1");
 					if (slider1Transform)
 					{
 						GameObject* slider1Object = ComponentAPI::getOwner(slider1Transform);
@@ -40,7 +40,7 @@ void EnemyDamageable::Start()
 
 				if (!m_healthBar2Slider)
 				{
-					Transform* slider2Transform = TransformAPI::findChildByName(backgroundTransform, "Slider2");
+					Transform* slider2Transform = TransformAPI::findChildByName(backgroundTransform, "Slider 2");
 					if (slider2Transform)
 					{
 						GameObject* slider2Object = ComponentAPI::getOwner(slider2Transform);

@@ -2,39 +2,38 @@
   "SourcePath": "Assets\\Prefabs\\Barried Enemy PaladinSS.prefab",
   "Name": "Barried Enemy PaladinSS",
   "Version": 2,
-  "VariantOf": "Assets\\Prefabs\\Enemy PaladinSS.prefab",
   "GameObject": {
     "Name": "Barried Enemy PaladinSS",
     "Active": true,
     "Tag": "ENEMY",
     "Layer": "DEFAULT",
     "PrefabLink": {
-      "SourcePath": "Assets\\Prefabs\\Enemy PaladinSS.prefab",
-      "AssetUID": 0
+      "SourcePath": "Assets\\Prefabs\\Barried Enemy PaladinSS.prefab",
+      "AssetUID": 13985763258228509278
     },
     "Transform": {
       "position": [
-        9.239344596862791,
-        1.4470961093902588,
-        26.683183670043945
+        14.53857135772705,
+        1.4471582174301147,
+        30.788326263427734
       ],
       "rotation": [
         -0.0,
-        0.0,
+        -0.46463194489479065,
         -0.0,
-        1.0
+        0.885503888130188
       ],
       "scale": [
+        1.0000005960464478,
         1.0,
-        1.0,
-        1.0
+        1.0000005960464478
       ]
     },
     "Components": [
       {
         "Type": 3,
         "Data": {
-          "UID": 8368929961665707827,
+          "UID": 5075545355043140649,
           "ComponentType": 3,
           "Active": true,
           "ScriptName": "EnemyDetectionAggro",
@@ -42,15 +41,15 @@
             "Detection Radius": 14.0,
             "Target Lock Duration": 5.0,
             "Debug Enabled": true,
-            "Player 1 Transform": 743245849143440901,
-            "Player 2 Transform": 16858939129400802547
+            "Lyriel Transform": 0,
+            "Death Transform": 0
           }
         }
       },
       {
         "Type": 3,
         "Data": {
-          "UID": 11157509095188117560,
+          "UID": 6152453886412033798,
           "ComponentType": 3,
           "Active": true,
           "ScriptName": "EnemyController",
@@ -69,25 +68,17 @@
       {
         "Type": 3,
         "Data": {
-          "UID": 16014959075256591611,
+          "UID": 121814995726116859,
           "ComponentType": 3,
           "Active": true,
           "ScriptName": "EnemyDeathHandler",
-          "ScriptFields": {
-            "Destroy Delay": 4.0,
-            "Death State Name": "Paladin_Death",
-            "Health Prefab Path": "Assets/Prefabs/HealthPlaceholder.prefab",
-            "Health Drop Quantity": 1,
-            "Health Drop Amount": 10.0,
-            "Drop Radius": 2.0,
-            "Drop Height": 1.0
-          }
+          "ScriptFields": {}
         }
       },
       {
         "Type": 13,
         "Data": {
-          "UID": 15227829311901038376,
+          "UID": 4467099351863961346,
           "ComponentType": 13,
           "Active": true,
           "StateMachineUID": {
@@ -106,7 +97,7 @@
       {
         "Type": 3,
         "Data": {
-          "UID": 14236918089657512610,
+          "UID": 11934862431973027752,
           "ComponentType": 3,
           "Active": true,
           "ScriptName": "EnemyShadowMark",
@@ -124,7 +115,7 @@
       {
         "Type": 3,
         "Data": {
-          "UID": 8915858481272031082,
+          "UID": 11298748604492612002,
           "ComponentType": 3,
           "Active": true,
           "ScriptName": "BarrierEnemyDamageable",
@@ -133,9 +124,14 @@
             "Health Slider": 7203884739447614000,
             "Health Slider 2": 10252217268521898496,
             "UI Update Time (Slider 2)": 1.0,
-            "Barrier Thresholds (%)": "80",
+            "Barrier Thresholds (%)": [
+              0.800000011920929
+            ],
             "Barrier Break Attack": 7,
-            "Shadow Execution Breaks Barriers": true
+            "Shadow Execution Breaks Barriers": true,
+            "Barrier UI Prefab Path": "Assets/Prefabs/Barrier UI.prefab",
+            "Barrier Min Pos (0% HP)": -80.0,
+            "Barrier Max Pos (100% HP)": 80.0
           }
         }
       }
@@ -1021,7 +1017,7 @@
           {
             "Type": 6,
             "Data": {
-              "UID": 8359746295699988173,
+              "UID": 8149741524928131070,
               "ComponentType": 6,
               "Active": true,
               "RenderMode": 2,
@@ -1057,7 +1053,7 @@
               {
                 "Type": 5,
                 "Data": {
-                  "UID": 370833971610645098,
+                  "UID": 390591948979815230,
                   "ComponentType": 5,
                   "Active": true,
                   "Position": [
@@ -1093,7 +1089,7 @@
               {
                 "Type": 7,
                 "Data": {
-                  "UID": 1659583111752717786,
+                  "UID": 6630680841329566492,
                   "ComponentType": 7,
                   "Active": true,
                   "TextureAssetId": {
@@ -1102,7 +1098,14 @@
                   },
                   "FillAmount": 1.0,
                   "FillMethod": 0,
-                  "FillOrigin": 0
+                  "FillOrigin": 0,
+                  "SheetColumns": 1,
+                  "SheetRows": 1,
+                  "SheetOffset": [
+                    0.0,
+                    0.0
+                  ],
+                  "StretchDrawMode": 0
                 }
               }
             ],
@@ -1134,7 +1137,7 @@
                   {
                     "Type": 5,
                     "Data": {
-                      "UID": 9725454343042258412,
+                      "UID": 14184779912197788754,
                       "ComponentType": 5,
                       "Active": true,
                       "Position": [
@@ -1170,7 +1173,7 @@
                   {
                     "Type": 7,
                     "Data": {
-                      "UID": 17410636100840544134,
+                      "UID": 12511723465696324645,
                       "ComponentType": 7,
                       "Active": true,
                       "TextureAssetId": {
@@ -1179,16 +1182,22 @@
                       },
                       "FillAmount": 1.0,
                       "FillMethod": 0,
-                      "FillOrigin": 0
+                      "FillOrigin": 0,
+                      "SheetColumns": 1,
+                      "SheetRows": 1,
+                      "SheetOffset": [
+                        0.0,
+                        0.0
+                      ],
+                      "StretchDrawMode": 0
                     }
                   },
                   {
                     "Type": 14,
                     "Data": {
-                      "UID": 10252217268521898496,
+                      "UID": 16352776857550717435,
                       "ComponentType": 14,
                       "Active": true,
-                      "TargetGraphicUID": 17410636100840544134,
                       "FillAmount": 1.0,
                       "FillMethod": 0,
                       "FillOrigin": 0
@@ -1224,7 +1233,7 @@
                   {
                     "Type": 5,
                     "Data": {
-                      "UID": 2859673322967911960,
+                      "UID": 2278415270147686453,
                       "ComponentType": 5,
                       "Active": true,
                       "Position": [
@@ -1260,7 +1269,7 @@
                   {
                     "Type": 7,
                     "Data": {
-                      "UID": 11200729202078420256,
+                      "UID": 11210274110146890260,
                       "ComponentType": 7,
                       "Active": true,
                       "TextureAssetId": {
@@ -1269,16 +1278,22 @@
                       },
                       "FillAmount": 1.0,
                       "FillMethod": 0,
-                      "FillOrigin": 0
+                      "FillOrigin": 0,
+                      "SheetColumns": 1,
+                      "SheetRows": 1,
+                      "SheetOffset": [
+                        0.0,
+                        0.0
+                      ],
+                      "StretchDrawMode": 0
                     }
                   },
                   {
                     "Type": 14,
                     "Data": {
-                      "UID": 7203884739447614000,
+                      "UID": 14168249795110952347,
                       "ComponentType": 14,
                       "Active": true,
-                      "TargetGraphicUID": 11200729202078420256,
                       "FillAmount": 1.0,
                       "FillMethod": 0,
                       "FillOrigin": 0
@@ -1318,7 +1333,7 @@
           {
             "Type": 6,
             "Data": {
-              "UID": 7962991210173943093,
+              "UID": 11446462626720465232,
               "ComponentType": 6,
               "Active": true,
               "RenderMode": 2,
@@ -1328,7 +1343,7 @@
           {
             "Type": 5,
             "Data": {
-              "UID": 10600738646958250321,
+              "UID": 5600523717388466433,
               "ComponentType": 5,
               "Active": true,
               "Position": [
@@ -1390,7 +1405,7 @@
               {
                 "Type": 5,
                 "Data": {
-                  "UID": 2583963191937521086,
+                  "UID": 15294853780627327105,
                   "ComponentType": 5,
                   "Active": true,
                   "Position": [
@@ -1426,7 +1441,7 @@
               {
                 "Type": 7,
                 "Data": {
-                  "UID": 11239380972624277646,
+                  "UID": 6597961324119735157,
                   "ComponentType": 7,
                   "Active": true,
                   "TextureAssetId": {
@@ -1435,7 +1450,14 @@
                   },
                   "FillAmount": 1.0,
                   "FillMethod": 0,
-                  "FillOrigin": 0
+                  "FillOrigin": 0,
+                  "SheetColumns": 1,
+                  "SheetRows": 1,
+                  "SheetOffset": [
+                    0.0,
+                    0.0
+                  ],
+                  "StretchDrawMode": 0
                 }
               }
             ],
@@ -1468,7 +1490,7 @@
               {
                 "Type": 5,
                 "Data": {
-                  "UID": 2416973690275613026,
+                  "UID": 13797022500626575924,
                   "ComponentType": 5,
                   "Active": true,
                   "Position": [
@@ -1504,7 +1526,7 @@
               {
                 "Type": 7,
                 "Data": {
-                  "UID": 12036387089806816993,
+                  "UID": 9617793703099330840,
                   "ComponentType": 7,
                   "Active": true,
                   "TextureAssetId": {
@@ -1513,7 +1535,14 @@
                   },
                   "FillAmount": 1.0,
                   "FillMethod": 0,
-                  "FillOrigin": 0
+                  "FillOrigin": 0,
+                  "SheetColumns": 1,
+                  "SheetRows": 1,
+                  "SheetOffset": [
+                    0.0,
+                    0.0
+                  ],
+                  "StretchDrawMode": 0
                 }
               }
             ],
@@ -1546,7 +1575,7 @@
               {
                 "Type": 5,
                 "Data": {
-                  "UID": 5292125504485568072,
+                  "UID": 13684012055265507174,
                   "ComponentType": 5,
                   "Active": true,
                   "Position": [
@@ -1582,7 +1611,7 @@
               {
                 "Type": 7,
                 "Data": {
-                  "UID": 12226475492976347306,
+                  "UID": 3780786594477505763,
                   "ComponentType": 7,
                   "Active": true,
                   "TextureAssetId": {
@@ -1591,7 +1620,14 @@
                   },
                   "FillAmount": 1.0,
                   "FillMethod": 0,
-                  "FillOrigin": 0
+                  "FillOrigin": 0,
+                  "SheetColumns": 1,
+                  "SheetRows": 1,
+                  "SheetOffset": [
+                    0.0,
+                    0.0
+                  ],
+                  "StretchDrawMode": 0
                 }
               }
             ],
@@ -1626,7 +1662,7 @@
           {
             "Type": 1,
             "Data": {
-              "UID": 13139259895763390762,
+              "UID": 15040713856658823719,
               "ComponentType": 1,
               "Active": true,
               "MeshAssetId": {
