@@ -12,6 +12,7 @@
 #include "SimpleMath.h"
 #include "KeyCode.h"
 #include "NavMeshTypes.h"
+#include "UIFill.h"
 
 using DirectX::SimpleMath::Vector3;
 using DirectX::SimpleMath::Vector2;
@@ -22,8 +23,10 @@ class Component;
 class Script;
 class AnimationComponent;
 class UISlider;
+class UISheet;
 class Transform2D;
 class ParticleSystemComponent;
+class ComponentSoundSource;
 
 struct HapticEffectDefinition;
 
@@ -247,6 +250,7 @@ namespace NavigationAPI
 namespace MathAPI
 {
     constexpr float PI = 3.14159265358979323846f;
+	constexpr float TWO_PI = 2.0f * PI;
     ENGINE_API float lerp(float a, float b, float t);
     ENGINE_API Vector3 lerp(const Vector3& a, const Vector3& b, float t);
     ENGINE_API Vector2 lerp(const Vector2& a, const Vector2& b, float t);
@@ -279,6 +283,8 @@ namespace MathAPI
     };
 
     ENGINE_API float evaluateEasing(EasingType type, float t);
+
+	ENGINE_API float moveTowards(float current, float target, float maxDelta);
 }
 
 namespace Transform2DAPI
@@ -289,12 +295,36 @@ namespace Transform2DAPI
     ENGINE_API void setScale(Transform2D* transform, const Vector2& newScale);
     ENGINE_API float getAlpha(const Transform2D* transform);
 	ENGINE_API void setAlpha(Transform2D* transform, float alpha);
+	ENGINE_API Vector2 getPivot(const Transform2D* transform);
+    ENGINE_API void setPivot(Transform2D* transform, const Vector2& newPivot);
+    ENGINE_API Vector2 getAnchorMin(const Transform2D* transform);
+    ENGINE_API void setAnchorMin(Transform2D* transform, const Vector2& newAnchorMin);
+    ENGINE_API Vector2 getAnchorMax(const Transform2D* transform);
+	ENGINE_API void setAnchorMax(Transform2D* transform, const Vector2& newAnchorMax);
+	ENGINE_API Vector2 getBaseSize(const Transform2D* transform);
+	ENGINE_API void setBaseSize(Transform2D* transform, const Vector2& newBaseSize);
 }
 
 namespace SliderAPI
 {
     ENGINE_API float getFillAmount(const UISlider* slider);
-    ENGINE_API void setFillAmount(UISlider* slider, float amount);
+    ENGINE_API void setFillAmount(UISlider* slider, const float amount);
+	ENGINE_API FillMethod getFillMethod(const UISlider* slider);
+    ENGINE_API void setFillMethod(UISlider* slider, FillMethod method);
+    ENGINE_API FillOrigin getFillOrigin(const UISlider* slider);
+	ENGINE_API void setFillOrigin(UISlider* slider, FillOrigin origin);
+}
+
+namespace UISheetAPI
+{
+    ENGINE_API void play(UISheet* sheet);
+    ENGINE_API void stop(UISheet* sheet);
+    ENGINE_API void playReverse(UISheet* sheet);
+    ENGINE_API bool getLoop(UISheet* sheet);
+    ENGINE_API void setLoop(UISheet* sheet, bool isLoop);
+    ENGINE_API bool isPlaying(UISheet* sheet);
+    ENGINE_API Vector2 getOffset(UISheet* sheet);
+    ENGINE_API void setOffset(UISheet* sheet, const Vector2& offset);
 }
 
 namespace DebugDrawAPI
@@ -347,6 +377,16 @@ namespace ParticleSystemAPI
     ENGINE_API bool isPlaying(ParticleSystemComponent* particleSystem);
 
     ENGINE_API void reset(ParticleSystemComponent* particleSystem); // resets the particles
+}
+
+namespace AudioAPI
+{
+    ENGINE_API ComponentSoundSource* getSoundSourceComponent(GameObject* gameObject);
+    ENGINE_API const ComponentSoundSource* getSoundSourceComponent(const GameObject* gameObject);
+    ENGINE_API uint32_t postEvent(ComponentSoundSource* component, const char* bankName, const char* eventName);
+    ENGINE_API void stopEvent(ComponentSoundSource* component, uint32_t playingID);
+    ENGINE_API void pauseEvent(ComponentSoundSource* component, uint32_t playingID);
+    ENGINE_API void resumeEvent(ComponentSoundSource* component, uint32_t playingID);
 }
 
 #include "EngineAPI.inl"
