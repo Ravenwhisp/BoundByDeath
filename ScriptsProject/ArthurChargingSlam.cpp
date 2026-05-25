@@ -118,8 +118,15 @@ void ArthurChargingSlam::OnStateUpdate()
 
 void ArthurChargingSlam::OnStateExit()
 {
-    GameObjectAPI::setActive(m_attackConfig->m_chargingSlamUICanvasTransform->getOwner(), false);
-    GameObjectAPI::setActive(m_attackConfig->m_chargingSlamImpactUICanvasTransform->getOwner(), false);
+    if (m_attackConfig && m_attackConfig->m_chargingSlamUICanvasTransform)
+    {
+        GameObjectAPI::setActive(m_attackConfig->m_chargingSlamUICanvasTransform->getOwner(), false);
+    }
+
+    if (m_attackConfig && m_attackConfig->m_chargingSlamImpactUICanvasTransform)
+    {
+        GameObjectAPI::setActive(m_attackConfig->m_chargingSlamImpactUICanvasTransform->getOwner(), false);
+    }
 
     Debug::log("[ArthurChargingSlam] EXIT");
 }
@@ -289,7 +296,7 @@ void ArthurChargingSlam::setupUI()
     UISlider* bordersSlider = m_attackConfig->m_chargingSlamUIBordersSliderComponent;
     UISlider* shadowSlider = m_attackConfig->m_chargingSlamUIShadowSliderComponent;
 
-    if (!container || !borders || !shadow || !background || !spikes || !bordersSlider || !shadowSlider)
+    if (!canvas || !container || !borders || !shadow || !background || !spikes || !bordersSlider || !shadowSlider)
     {
         return;
     }
@@ -298,7 +305,7 @@ void ArthurChargingSlam::setupUI()
     m_isFadingUI = false;
     m_uiFadeOutTimer = 0.0f;
 
-    GameObjectAPI::setActive(m_attackConfig->m_chargingSlamUICanvasTransform->getOwner(), true);
+    GameObjectAPI::setActive(canvas->getOwner(), true);
 
     SliderAPI::setFillAmount(bordersSlider, 0.0f);
     SliderAPI::setFillAmount(shadowSlider, 0.0f);
@@ -488,7 +495,10 @@ void ArthurChargingSlam::updateUI()
 
         if (t >= 1.0f)
         {
-            GameObjectAPI::setActive(m_attackConfig->m_chargingSlamUICanvasTransform->getOwner(), false);
+            if (m_attackConfig->m_chargingSlamUICanvasTransform)
+            {
+                GameObjectAPI::setActive(m_attackConfig->m_chargingSlamUICanvasTransform->getOwner(), false);
+            }
         }
     }
 
@@ -506,7 +516,10 @@ void ArthurChargingSlam::updateUI()
 
         if (t >= 1.0f)
         {
-            GameObjectAPI::setActive(m_attackConfig->m_chargingSlamImpactUICanvasTransform->getOwner(), false);
+            if (m_attackConfig->m_chargingSlamImpactUICanvasTransform)
+            {
+                GameObjectAPI::setActive(m_attackConfig->m_chargingSlamImpactUICanvasTransform->getOwner(), false);
+            }
         }
     }
 }

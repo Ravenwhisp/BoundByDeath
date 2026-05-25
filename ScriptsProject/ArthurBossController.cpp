@@ -740,7 +740,13 @@ bool ArthurBossController::shouldRepath() const
 
 void ArthurBossController::updateHealthUI()
 {
-	if (!m_healthBarCanvasTransform || !m_healthBarContainerTransform2D || !m_healthBarPhase2Transform2D)
+	if (!m_healthBarCanvasTransform || !m_healthBarContainerTransform2D)
+	{
+		return;
+	}
+
+	GameObject* canvasOwner = m_healthBarCanvasTransform->getOwner();
+	if (!canvasOwner)
 	{
 		return;
 	}
@@ -749,23 +755,30 @@ void ArthurBossController::updateHealthUI()
 	{
 		m_healthBarTimer -= Time::getDeltaTime();
 
-		const float t = std::clamp(m_healthBarTimer / m_healthBarDuration, 0.0f, 1.0f);
-		const float size = - Transform2DAPI::getBaseSize(m_healthBarContainerTransform2D).y * 0.5f;
+		const float duration = m_healthBarDuration > 0.0f ? m_healthBarDuration : 0.0001f;
+		const float t = std::clamp(m_healthBarTimer / duration, 0.0f, 1.0f);
+
+		const float size = -Transform2DAPI::getBaseSize(m_healthBarContainerTransform2D).y * 0.5f;
 		const float position = (m_healthBarVisible ? t : 1.0f - t) * size;
 		const float alpha = m_healthBarVisible ? 1.0f - t : t;
+
 		Transform2DAPI::setPosition(m_healthBarContainerTransform2D, Vector2(0.0f, position));
 		Transform2DAPI::setAlpha(m_healthBarContainerTransform2D, alpha);
 	}
+
 	if (m_healthBarTimer <= 0.0f)
 	{
-		GameObjectAPI::setActive(m_healthBarCanvasTransform->getOwner(), m_healthBarVisible);
+		GameObjectAPI::setActive(canvasOwner, m_healthBarVisible);
 		Transform2DAPI::setAlpha(m_healthBarContainerTransform2D, m_healthBarVisible ? 1.0f : 0.0f);
 	}
 
-	if (m_healthBarPhase2Timer > 0.0f)
+	if (m_healthBarPhase2Transform2D && m_healthBarPhase2Timer > 0.0f)
 	{
 		m_healthBarPhase2Timer -= Time::getDeltaTime();
-		const float t = 1.0f - std::clamp(m_healthBarPhase2Timer / m_healthBarDuration, 0.0f, 1.0f);
+
+		const float duration = m_healthBarDuration > 0.0f ? m_healthBarDuration : 0.0001f;
+		const float t = 1.0f - std::clamp(m_healthBarPhase2Timer / duration, 0.0f, 1.0f);
+
 		Transform2DAPI::setAlpha(m_healthBarPhase2Transform2D, t);
 	}
 }
@@ -775,14 +788,46 @@ void ArthurBossController::setupHealthUI()
 	m_healthBarCanvasTransform = m_healthBarCanvas.getReferencedComponent();
 	m_healthBarContainerTransform2D = m_healthBarContainer.getReferencedComponent();
 	m_healthBarPhase2Transform2D = m_healthBarPhase2.getReferencedComponent();
-	if (m_healthBarCanvasTransform)
+
+	if (!m_healthBarCanvasTransform)
 	{
-		GameObjectAPI::setActive(m_healthBarCanvasTransform->getOwner(), false);
+		Debug::warn("[ArthurBossController] Health Bar Canvas reference is missing.");
+		return;
+	}
+
+	GameObject* canvasOwner = m_healthBarCanvasTransform->getOwner();
+	if (!canvasOwner)
+	{
+		Debug::warn("[ArthurBossController] Health Bar Canvas owner is null.");
+		return;
+	}
+
+	GameObjectAPI::setActive(canvasOwner, false);
+
+	if (m_healthBarContainerTransform2D)
+	{
+		Transform2DAPI::setAlpha(m_healthBarContainerTransform2D, 0.0f);
+	}
+
+	if (m_healthBarPhase2Transform2D)
+	{
+		Transform2DAPI::setAlpha(m_healthBarPhase2Transform2D, 0.0f);
 	}
 }
 
 void ArthurBossController::showHealthUI(bool show)
 {
+	if (!m_healthBarCanvasTransform)
+	{
+		return;
+	}
+
+	GameObject* canvasOwner = m_healthBarCanvasTransform->getOwner();
+	if (!canvasOwner)
+	{
+		return;
+	}
+
 	m_healthBarVisible = show;
 	m_healthBarTimer = m_healthBarDuration;
 	GameObjectAPI::setActive(m_healthBarCanvasTransform->getOwner(), true);
@@ -790,6 +835,11 @@ void ArthurBossController::showHealthUI(bool show)
 
 void ArthurBossController::updateHealthUIPhase()
 {
+	if (!m_healthBarPhase2Transform2D)
+	{
+		return;
+	}
+
 	m_healthBarPhase2Visible = true;
 	m_healthBarPhase2Timer = m_healthBarDuration;
 }
