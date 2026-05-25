@@ -4,6 +4,8 @@
 
 class PlayerAnimationController;
 class HeartbeatHaptic;
+class DeathSound;
+class LyrielSound;
 
 class PlayerDamageable : public Damageable
 {
@@ -28,4 +30,6 @@ protected:
 private:
     PlayerAnimationController* m_playerAnimationController = nullptr;
     HeartbeatHaptic* m_haptic = nullptr;
+    DeathSound*  m_deathSound  = nullptr;
+    LyrielSound* m_lyrielSound = nullptr;
 };

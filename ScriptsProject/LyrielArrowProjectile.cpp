@@ -5,6 +5,7 @@
 #include "BreakableDamageable.h"
 #include "EnemyShadowMark.h"
 #include "LyrielCharacter.h"
+#include "LyrielSound.h"
 
 LyrielArrowProjectile::LyrielArrowProjectile(GameObject* owner)
     : Script(owner)
@@ -100,6 +101,22 @@ void LyrielArrowProjectile::applyImpactDamage()
         return;
     }
 
+    // Resolve LyrielSound on the shooter once for both impact + mark exploit feedback.
+    LyrielSound* sound = nullptr;
+    if (m_arrowOwner != nullptr)
+    {
+        GameObject* shooter = m_arrowOwner->getOwner();
+        if (shooter != nullptr)
+        {
+            sound = GameObjectAPI::findScript<LyrielSound>(shooter);
+        }
+    }
+
+    if (sound != nullptr)
+    {
+        sound->playArrowImpact();
+    }
+
     EnemyDamageable* damageable = GameObjectAPI::findScript<EnemyDamageable>(m_target);
 
     if (damageable != nullptr)
@@ -116,6 +133,11 @@ void LyrielArrowProjectile::applyImpactDamage()
         if (mark != nullptr && mark->isExploitable())
         {
             mark->exploit();
+
+            if (sound != nullptr)
+            {
+                sound->playMarkExploit();
+            }
 
             if (m_arrowOwner != nullptr)
             {

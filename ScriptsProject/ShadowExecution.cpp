@@ -4,6 +4,7 @@
 #include "ReaperGauge.h"
 #include "DeathCharacter.h"
 #include "LyrielCharacter.h"
+#include "CooperativeSound.h"
 #include "PlayerState.h"
 #include "PlayerAnimationController.h"
 #include "EnemyDamageable.h"
@@ -27,6 +28,8 @@ void ShadowExecution::Start()
     {
         Debug::warn("[ShadowExecution] ReaperGauge not found on GameController. Add it as a sibling script.");
     }
+
+    m_sound = GameObjectAPI::findScript<CooperativeSound>(getOwner());
 
     cachePlayers();
 }
@@ -129,6 +132,11 @@ void ShadowExecution::beginExecution()
     m_hitEnemies.clear();
 
     m_reaperGauge->consume();
+
+    if (m_sound != nullptr)
+    {
+        m_sound->playShadowExecution();
+    }
 
     lockPlayers(true);
 
