@@ -27,7 +27,7 @@ void UISplashScreen::Start()
 
 void UISplashScreen::Update()
 {
-    if (Input::isPauseJustPressed(0) && !nextSceneName.empty())
+    if ((Input::isFaceButtonLeftJustPressed || Input::isFaceButtonRightJustPressed || Input::isLeftShoulderJustPressed || Input::isRightShoulderJustPressed || Input::isLeftTriggerJustPressed || Input::isRightTriggerJustPressed) && !nextSceneName.empty())
     {
         SceneAPI::requestSceneChange(nextSceneName.c_str());
     }
