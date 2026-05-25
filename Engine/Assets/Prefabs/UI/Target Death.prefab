@@ -1,11 +1,17 @@
 {
-  "SourcePath": "Assets\\Prefabs\\Target.prefab",
-  "Name": "Target",
+  "SourcePath": "Assets\\Prefabs\\Target Death.prefab",
+  "Name": "Target Death",
   "Version": 2,
-  "PrefabUID": 15568164227557559727,
+  "VariantOf": "Assets\\Prefabs\\Target Lyriel.prefab",
   "GameObject": {
-    "Name": "Target",
+    "Name": "Target Death",
     "Active": true,
+    "Tag": "DEFAULT",
+    "Layer": "DEFAULT",
+    "PrefabLink": {
+      "SourcePath": "Assets\\Prefabs\\Target Lyriel.prefab",
+      "AssetUID": 7216879068800334832
+    },
     "Transform": {
       "position": [
         0.0,
@@ -13,9 +19,9 @@
         0.0
       ],
       "rotation": [
+        -0.0,
         0.0,
-        0.0,
-        0.0,
+        -0.0,
         1.0
       ],
       "scale": [
@@ -28,13 +34,13 @@
       {
         "Type": 3,
         "Data": {
-          "UID": 15634537201134125175,
+          "UID": 5287961243417179322,
           "ComponentType": 3,
           "Active": true,
           "ScriptName": "TargetIndicatorUI",
           "ScriptFields": {
-            "Player Transform": 5162519706045733575,
-            "Indicator Visual Transform": 17301908510871838861,
+            "Player Transform": 743245849143440901,
+            "Indicator Visual Transform": 12530601722236867097,
             "Position Offset": [
               0.0,
               0.05000000074505806,
@@ -49,11 +55,13 @@
       {
         "Name": "Canvas",
         "Active": true,
+        "Tag": "DEFAULT",
+        "Layer": "DEFAULT",
         "Transform": {
           "position": [
-            1.6399009227752686,
-            0.05000000074505806,
-            -3.581796646118164
+            0.0,
+            0.0,
+            0.0
           ],
           "rotation": [
             0.7071068286895752,
@@ -71,7 +79,7 @@
           {
             "Type": 6,
             "Data": {
-              "UID": 6408429692978902871,
+              "UID": 16466196599519362278,
               "ComponentType": 6,
               "Active": true,
               "RenderMode": 1,
@@ -81,16 +89,18 @@
         ],
         "Children": [
           {
-            "Name": "TargetSprite",
+            "Name": "Sprite",
             "Active": true,
+            "Tag": "DEFAULT",
+            "Layer": "DEFAULT",
             "Transform": {
               "position": [
                 0.0,
                 0.0,
-                1.1920928955078125e-7
+                0.0
               ],
               "rotation": [
-                0.0,
+                -0.0,
                 0.0,
                 -0.0,
                 1.0
@@ -105,7 +115,7 @@
               {
                 "Type": 5,
                 "Data": {
-                  "UID": 18216382996764740886,
+                  "UID": 4889723806647224110,
                   "ComponentType": 5,
                   "Active": true,
                   "Position": [
@@ -121,12 +131,12 @@
                     0.5
                   ],
                   "AnchorMin": [
-                    0.5,
-                    0.5
+                    0.0,
+                    0.0
                   ],
                   "AnchorMax": [
-                    0.5,
-                    0.5
+                    0.0,
+                    0.0
                   ],
                   "BaseSize": [
                     100.0,
@@ -134,19 +144,30 @@
                   ],
                   "StretchMode": 0,
                   "SizingMode": 0,
-                  "AspectRatio": 1.0
+                  "AspectRatio": 1.0,
+                  "Alpha": 1.0
                 }
               },
               {
                 "Type": 7,
                 "Data": {
-                  "UID": 3085457503656244638,
+                  "UID": 7162433314195793007,
                   "ComponentType": 7,
                   "Active": true,
-                  "TextureAssetId": "0ff59fa623b7b5e8ce39fcc9b871dcd9",
+                  "TextureAssetId": {
+                    "uid": 13916510673653165836,
+                    "libId": "0ff59fa623b7b5e8ce39fcc9b871dcd9"
+                  },
                   "FillAmount": 1.0,
                   "FillMethod": 0,
-                  "FillOrigin": 0
+                  "FillOrigin": 0,
+                  "SheetColumns": 1,
+                  "SheetRows": 1,
+                  "SheetOffset": [
+                    0.0,
+                    0.0
+                  ],
+                  "StretchDrawMode": 0
                 }
               }
             ],

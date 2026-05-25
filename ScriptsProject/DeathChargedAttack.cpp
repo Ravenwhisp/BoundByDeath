@@ -157,6 +157,7 @@ void DeathChargedAttack::fireAttack()
     // Trigger attack animation and start the post-fire movement lock window
     beginAttackPresentation();
     beginAttackWindow(lockDuration);
+    startCooldown();
 }
 
 void DeathChargedAttack::dealDamageInArc(float damage) const
