@@ -2,15 +2,14 @@
   "SourcePath": "Assets\\Prefabs\\LyrielArrow.prefab",
   "Name": "LyrielArrow",
   "Version": 2,
-  "VariantOf": "Assets\\Models\\Weapons\\Arrow\\LyrielArrow.prefab",
   "GameObject": {
     "Name": "LyrielArrow",
     "Active": true,
     "Tag": "DEFAULT",
     "Layer": "DEFAULT",
     "PrefabLink": {
-      "SourcePath": "Assets\\Models\\Weapons\\Arrow\\LyrielArrow.prefab",
-      "AssetUID": 1034278393325999122
+      "SourcePath": "Assets\\Prefabs\\LyrielArrow.prefab",
+      "AssetUID": 14453342635297372286
     },
     "Transform": {
       "position": [
@@ -34,7 +33,7 @@
       {
         "Type": 1,
         "Data": {
-          "UID": 4642545685903294005,
+          "UID": 10690546896212628754,
           "ComponentType": 1,
           "Active": true,
           "MeshAssetId": {
@@ -56,11 +55,13 @@
       {
         "Type": 3,
         "Data": {
-          "UID": 17564877452189823041,
+          "UID": 14855375595160808859,
           "ComponentType": 3,
           "Active": true,
           "ScriptName": "LyrielArrowProjectile",
-          "ScriptFields": {}
+          "ScriptFields": {
+            "Particle Prefab Path": "Assets/Prefabs/Particles/ParticleArrowFollow.prefab"
+          }
         }
       }
     ],
@@ -92,7 +93,7 @@
           {
             "Type": 17,
             "Data": {
-              "UID": 8984120527184443274,
+              "UID": 3913483626715290876,
               "ComponentType": 17,
               "Active": true,
               "TextureAssetId": {
