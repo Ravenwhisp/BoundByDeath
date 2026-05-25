@@ -7,15 +7,11 @@
     "Active": true,
     "Tag": "ENEMY",
     "Layer": "DEFAULT",
-    "PrefabLink": {
-      "SourcePath": "Assets\\Models\\Characters\\AnimatedCharacters\\Paladin\\Enemy Paladin.prefab",
-      "AssetUID": 14979702683499113102
-    },
     "Transform": {
       "position": [
-        10.077900886535645,
-        1.4470961093902588,
-        -12.08343505859375
+        13.292370796203612,
+        1.357955813407898,
+        28.862401962280273
       ],
       "rotation": [
         -0.0,
@@ -30,22 +26,6 @@
       ]
     },
     "Components": [
-      {
-        "Type": 3,
-        "Data": {
-          "UID": 8368929961665707827,
-          "ComponentType": 3,
-          "Active": true,
-          "ScriptName": "EnemyDetectionAggro",
-          "ScriptFields": {
-            "Detection Radius": 14.0,
-            "Target Lock Duration": 5.0,
-            "Debug Enabled": true,
-            "Player 1 Transform": 743245849143440901,
-            "Player 2 Transform": 16858939129400802547
-          }
-        }
-      },
       {
         "Type": 3,
         "Data": {
@@ -74,7 +54,7 @@
           "ScriptName": "EnemyDamageable",
           "ScriptFields": {
             "Max HP": 100.0,
-            "Health Slider": 1422938727249067227
+            "Health Slider": 14620430749807882589
           }
         }
       },
@@ -124,6 +104,22 @@
           "ScriptName": "EnemyShadowMark",
           "ScriptFields": {
             "Mark Duration": 3.0
+          }
+        }
+      },
+      {
+        "Type": 3,
+        "Data": {
+          "UID": 5661681187240404429,
+          "ComponentType": 3,
+          "Active": true,
+          "ScriptName": "EnemyDetectionAggro",
+          "ScriptFields": {
+            "Detection Radius": 10.0,
+            "Target Lock Duration": 5.0,
+            "Debug Enabled": true,
+            "Player 1 Transform": 0,
+            "Player 2 Transform": 0
           }
         }
       }
@@ -1085,8 +1081,8 @@
                   "ComponentType": 7,
                   "Active": true,
                   "TextureAssetId": {
-                    "uid": 0,
-                    "libId": ""
+                    "uid": 14538694312607389381,
+                    "libId": "2d5f24fa27461cdba4e38a08f027dbfa"
                   },
                   "FillAmount": 1.0,
                   "FillMethod": 0,
@@ -1162,9 +1158,21 @@
                       "ComponentType": 7,
                       "Active": true,
                       "TextureAssetId": {
-                        "uid": 0,
-                        "libId": ""
+                        "uid": 1546006715103161491,
+                        "libId": "70ac6644b69e35b4c1e2a2e364921877"
                       },
+                      "FillAmount": 1.0,
+                      "FillMethod": 0,
+                      "FillOrigin": 0
+                    }
+                  },
+                  {
+                    "Type": 14,
+                    "Data": {
+                      "UID": 14620430749807882589,
+                      "ComponentType": 14,
+                      "Active": true,
+                      "TargetGraphicUID": 11200729202078420256,
                       "FillAmount": 1.0,
                       "FillMethod": 0,
                       "FillOrigin": 0
