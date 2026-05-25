@@ -5,7 +5,7 @@
 #include "PlayerDownState.h"
 #include "PlayerAnimationController.h"
 
-IMPLEMENT_SCRIPT_FIELDS(PlayerDamageable,
+IMPLEMENT_SCRIPT_FIELDS_INHERITED(PlayerDamageable, Damageable,
     SERIALIZED_FLOAT(m_heartbeatThreshold, "Heartbeat Threshold", 0.5f, 0.25f, 0.0f)
 )
 
@@ -34,6 +34,8 @@ void PlayerDamageable::Start()
 
 void PlayerDamageable::Update()
 {
+    Damageable::Update();
+
     if (!m_haptic) return;
 
     if (isDead())
