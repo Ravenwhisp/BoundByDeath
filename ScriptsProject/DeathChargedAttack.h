@@ -37,8 +37,8 @@ protected:
 private:
     void startCharging();
     void fireAttack();
-    void dealDamageInArc(float damage) const;
-    void dealDamageInArc(float damage, float range, float angle) const;
+    void dealDamageInArc(float damage, bool isChargedShot) const;
+    void dealDamageInArc(float damage, float range, float angle, bool isChargedShot) const;
     void updateAimDirection();
     void snapFaceAimDirection();
 

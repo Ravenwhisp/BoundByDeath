@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "PlayerDamageable.h"
 #include "HeartbeatHaptic.h"
+#include "DeathSound.h"
+#include "LyrielSound.h"
 
 #include "PlayerDownState.h"
 #include "PlayerAnimationController.h"
@@ -30,6 +32,9 @@ void PlayerDamageable::Start()
     {
         m_haptic->m_variant = HapticEffectDefinition::HeartbeatVariant::Health;
     }
+
+    m_deathSound  = GameObjectAPI::findScript<DeathSound>(m_owner);
+    m_lyrielSound = GameObjectAPI::findScript<LyrielSound>(m_owner);
 }
 
 void PlayerDamageable::Update()
@@ -59,6 +64,15 @@ void PlayerDamageable::onDamaged(float amount)
     if (m_playerAnimationController != nullptr)
     {
         m_playerAnimationController->requestDamaged();
+    }
+
+    if (m_deathSound != nullptr)
+    {
+        m_deathSound->playHurt();
+    }
+    if (m_lyrielSound != nullptr)
+    {
+        m_lyrielSound->playHurt();
     }
 }
 
@@ -95,6 +109,17 @@ void PlayerDamageable::onDeath()
     {
         const float danger = 1.0f - getHpPercent();
         m_haptic->playDyingBeat(danger);
+    }
+
+    if (m_deathSound != nullptr)
+    {
+        m_deathSound->stopAllLoops();
+        m_deathSound->playDown();
+    }
+    if (m_lyrielSound != nullptr)
+    {
+        m_lyrielSound->stopAllLoops();
+        m_lyrielSound->playDown();
     }
 }
 

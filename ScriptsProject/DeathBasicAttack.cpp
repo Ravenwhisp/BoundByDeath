@@ -2,6 +2,7 @@
 #include "DeathBasicAttack.h"
 
 #include "DeathCharacter.h"
+#include "DeathSound.h"
 #include "PlayerTargetController.h"
 #include "PlayerAnimationController.h"
 #include "PlayerRotation.h"
@@ -73,6 +74,12 @@ void DeathBasicAttack::startAbility()
     m_attackFacingTarget = target;
 
     const int comboStep = m_deathCharacter->getComboStep();
+
+    DeathSound* sound = m_deathCharacter->getSound();
+    if (sound != nullptr)
+    {
+        sound->playLightSwing();
+    }
 
     dealDamageToTarget(target);
     m_deathCharacter->advanceCombo(false);
@@ -169,6 +176,8 @@ void DeathBasicAttack::dealDamageToTarget(GameObject* target) const
             return true;
         };
 
+    DeathSound* sound = m_deathCharacter != nullptr ? m_deathCharacter->getSound() : nullptr;
+
     auto applyDamage = [&](GameObject* enemy)
         {
             EnemyDamageable* damageable = GameObjectAPI::findScript<EnemyDamageable>(enemy);
@@ -180,6 +189,10 @@ void DeathBasicAttack::dealDamageToTarget(GameObject* target) const
                     return;
                 }
                 breakableDamageable->takeDamage(m_basicAttackDamage);
+                if (sound != nullptr)
+                {
+                    sound->playLightImpact();
+                }
                 return;
             }
 
@@ -197,10 +210,19 @@ void DeathBasicAttack::dealDamageToTarget(GameObject* target) const
                 damageable->getCurrentHp(),
                 damageable->getMaxHp());
 
+            if (sound != nullptr)
+            {
+                sound->playLightImpact();
+            }
+
             EnemyShadowMark* shadowMark = GameObjectAPI::findScript<EnemyShadowMark>(enemy);
             if (shadowMark != nullptr)
             {
                 shadowMark->notifyDeathHit();
+                if (sound != nullptr)
+                {
+                    sound->playMarkApply();
+                }
             }
         };
 

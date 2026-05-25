@@ -2,6 +2,7 @@
 #include "DeathDash.h"
 
 #include "DeathCharacter.h"
+#include "DeathSound.h"
 #include "EnemyDamageable.h"
 #include "EnemyShadowMark.h"
 
@@ -22,6 +23,8 @@ void DeathDash::Start()
     {
         Debug::log("[DeathDash] DeathCharacter not found on owner '%s'.", GameObjectAPI::getName(getOwner()));
     }
+
+    m_sound = GameObjectAPI::findScript<DeathSound>(getOwner());
 }
 
 void DeathDash::onDashStarted()
@@ -29,6 +32,12 @@ void DeathDash::onDashStarted()
     Transform* t = GameObjectAPI::getTransform(getOwner());
     m_dashStartPosition = (t != nullptr) ? TransformAPI::getPosition(t) : Vector3::Zero;
     m_dashDamageDealt = false;
+    m_dashImpactSoundPlayed = false;
+
+    if (m_sound != nullptr)
+    {
+        m_sound->playDashWhoosh();
+    }
 }
 
 void DeathDash::onDashEnded()
@@ -38,7 +47,40 @@ void DeathDash::onDashEnded()
 
 void DeathDash::onDashUpdate(float dt)
 {
+    // Play impact sound the first frame Death's path actually contains an enemy.
+    // Damage is still applied at dash end by applyDashDamage; this only fixes timing.
+    if (m_dashImpactSoundPlayed || m_sound == nullptr)
+    {
+        return;
+    }
 
+    if (anyEnemyInsideDashRectangle())
+    {
+        m_sound->playDashImpact();
+        m_dashImpactSoundPlayed = true;
+    }
+}
+
+bool DeathDash::anyEnemyInsideDashRectangle() const
+{
+    const std::vector<GameObject*> enemies = SceneAPI::findAllGameObjectsByTag(Tag::ENEMY, true);
+    for (GameObject* enemy : enemies)
+    {
+        if (enemy == nullptr)
+        {
+            continue;
+        }
+        Transform* enemyTransform = GameObjectAPI::getTransform(enemy);
+        if (enemyTransform == nullptr)
+        {
+            continue;
+        }
+        if (isInsideDashRectangle(TransformAPI::getPosition(enemyTransform)))
+        {
+            return true;
+        }
+    }
+    return false;
 }
 
 
@@ -74,6 +116,8 @@ void DeathDash::applyDashDamage()
 {
 
     std::vector<GameObject*> allEnemies = SceneAPI::findAllGameObjectsByTag(Tag::ENEMY, true);
+
+    bool anyMark = false;
 
     for (GameObject* enemyObj : allEnemies)
     {
@@ -111,8 +155,15 @@ void DeathDash::applyDashDamage()
             if (shadowMark != nullptr)
             {
                 shadowMark->notifyDeathHit();
+                anyMark = true;
             }
         }
+    }
+
+    // playDashImpact is fired in onDashUpdate on first contact, not here.
+    if (m_sound != nullptr && anyMark)
+    {
+        m_sound->playMarkApply();
     }
 }
 
