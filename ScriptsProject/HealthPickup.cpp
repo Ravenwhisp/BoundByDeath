@@ -5,8 +5,9 @@
 #include <cmath>
 
 
-IMPLEMENT_SCRIPT_FIELDS(HealthPickup,
+IMPLEMENT_SCRIPT_FIELDS_INHERITED(HealthPickup, Pickup,
     SERIALIZED_FLOAT(m_healAmount, "Heal Amount",         0.0f, 100.0f, 1.0f),
+    SERIALIZED_STRING(m_collectParticlePrefabPath, "Collect Particle Prefab Path"),
     SERIALIZED_FLOAT(m_spawnHeight, "Spawn Height",        0.0f,   5.0f, 0.1f),
     SERIALIZED_FLOAT(m_fallGravity, "Fall Gravity",        0.0f,  20.0f, 0.5f),
     SERIALIZED_FLOAT(m_idleSpeed, "Idle Speed",          0.0f,  10.0f, 0.05f),
@@ -15,7 +16,7 @@ IMPLEMENT_SCRIPT_FIELDS(HealthPickup,
 )
 
 HealthPickup::HealthPickup(GameObject* owner)
-    : Script(owner)
+    : Pickup(owner)
 {
 }
 
@@ -60,9 +61,11 @@ void HealthPickup::Update()
         idleAnimation();
     }
 }
-void HealthPickup::OnTriggerEnter(GameObject* player){
+void HealthPickup::OnTriggerEnter(GameObject* player)
+{
     Debug::log("HealthPickup triggered by %s", GameObjectAPI::getName(player));
-     if (m_collected)
+
+    if (m_collected)
     {
         return;
     }
@@ -71,8 +74,8 @@ void HealthPickup::OnTriggerEnter(GameObject* player){
     {
         return;
     }
-    Debug::log("Player %s entered health pickup trigger", GameObjectAPI::getName(player));
-    PlayerDamageable* damageable = static_cast<PlayerDamageable*>(GameObjectAPI::getScript(player, "PlayerDamageable"));
+
+    Damageable* damageable = GameObjectAPI::findScript<Damageable>(player);
 
     if (!damageable || damageable->isDead())
     {
@@ -83,14 +86,27 @@ void HealthPickup::OnTriggerEnter(GameObject* player){
     {
         return;
     }
+
     Debug::log("Player %s can collect health pickup, healing for %f", GameObjectAPI::getName(player), m_healAmount);
-    m_collected = true;
 
     damageable->heal(m_healAmount);
 
-    GameObjectAPI::removeGameObject(getOwner());
+    if (!m_collectParticlePrefabPath.empty())
+    {
+        Transform* t = GameObjectAPI::getTransform(getOwner());
+        Vector3 spawnPosition = t != nullptr ? TransformAPI::getGlobalPosition(t) : Vector3::Zero;
+        GameObjectAPI::instantiatePrefab(m_collectParticlePrefabPath.c_str(), spawnPosition, Vector3::Zero, nullptr);
+    }
+
+    Pickup::OnTriggerEnter(player);
 }
 
+void HealthPickup::setupDrop(float healAmount, const Vector3& landingPosition)
+{
+    m_healAmount = healAmount;
+    m_landingPosition = landingPosition;
+    m_hasCustomSpawnFrom = true;
+}
 
 void HealthPickup::fallAnimation()
 {

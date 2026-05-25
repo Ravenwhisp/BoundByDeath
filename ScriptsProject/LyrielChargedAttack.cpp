@@ -2,12 +2,14 @@
 #include "LyrielChargedAttack.h"
 
 #include "LyrielCharacter.h"
+#include "LyrielSound.h"
 #include "CharacterBase.h"
 #include "ArrowPool.h"
 #include "LyrielArrowProjectile.h"
 #include "EnemyDamageable.h"
 #include "EnemyShadowMark.h"
 #include "PlayerState.h"
+#include "BreakableDamageable.h"
 
 #include <cmath>
 
@@ -129,6 +131,12 @@ void LyrielChargedAttack::beginCharge()
     {
         GameObjectAPI::setActive(m_ChargedAttackUI.getReferencedComponent()->getOwner(), true);
     }
+
+    LyrielSound* sound = m_lyrielCharacter != nullptr ? m_lyrielCharacter->getSound() : nullptr;
+    if (sound != nullptr)
+    {
+        sound->startChargedTenseLoop();
+    }
 }
 
 void LyrielChargedAttack::updateCharge()
@@ -164,6 +172,12 @@ void LyrielChargedAttack::updateCharge()
 void LyrielChargedAttack::releaseChargeAndShoot()
 {
     m_isCharging = false;
+
+    LyrielSound* sound = m_lyrielCharacter != nullptr ? m_lyrielCharacter->getSound() : nullptr;
+    if (sound != nullptr)
+    {
+        sound->stopChargedTenseLoop();
+    }
 
     if (m_ChargedAttackUI.getReferencedComponent())
     {
@@ -207,8 +221,21 @@ void LyrielChargedAttack::releaseChargeAndShoot()
 
     std::vector<GameObject*> targets;
     collectEnemiesInLine(origin, forward, targets);
-    applyChargedDamage(targets, damage);
+    const bool anyMarkExploited = applyChargedDamage(targets, damage);
     spawnChargedArrow(origin, forward);
+
+    if (sound != nullptr)
+    {
+        sound->playChargedRelease();
+        if (!targets.empty())
+        {
+            sound->playChargedImpact();
+        }
+        if (anyMarkExploited)
+        {
+            sound->playMarkExploit();
+        }
+    }
 
     beginAttackPresentation();
 
@@ -281,6 +308,11 @@ void LyrielChargedAttack::collectEnemiesInLine(const Vector3& origin, const Vect
     outTargets.clear();
 
     std::vector<GameObject*> allEnemies = SceneAPI::findAllGameObjectsByTag(Tag::ENEMY, true);
+	std::vector<GameObject*> breakables = SceneAPI::findAllGameObjectsByTag(Tag::BREAKABLE, true);
+
+	std::vector<GameObject*> potentialTargets = allEnemies;
+	potentialTargets.insert(potentialTargets.end(), breakables.begin(), breakables.end());
+    //de momento la mejor "manera" que veo es esta, habra que hacer refactor o cambios o algo
 
     Vector3 flatForward = forward;
     flatForward.y = 0.0f;
@@ -295,14 +327,14 @@ void LyrielChargedAttack::collectEnemiesInLine(const Vector3& origin, const Vect
     const float currentRange = computeChargedRange();
     const float lineHalfWidthSq = m_lineHalfWidth * m_lineHalfWidth;
 
-    for (GameObject* enemy : allEnemies)
+    for (GameObject* target : potentialTargets)
     {
-        if (enemy == nullptr)
+        if (target == nullptr)
         {
             continue;
         }
 
-        Transform* enemyTransform = GameObjectAPI::getTransform(enemy);
+        Transform* enemyTransform = GameObjectAPI::getTransform(target);
         if (enemyTransform == nullptr)
         {
             continue;
@@ -331,13 +363,15 @@ void LyrielChargedAttack::collectEnemiesInLine(const Vector3& origin, const Vect
 
         if (lateralOffset.LengthSquared() <= lineHalfWidthSq)
         {
-            outTargets.push_back(enemy);
+            outTargets.push_back(target);
         }
     }
 }
 
-void LyrielChargedAttack::applyChargedDamage(const std::vector<GameObject*>& targets, float damage)
+bool LyrielChargedAttack::applyChargedDamage(const std::vector<GameObject*>& targets, float damage)
 {
+    bool anyMarkExploited = false;
+
     for (GameObject* target : targets)
     {
         if (target == nullptr)
@@ -349,17 +383,32 @@ void LyrielChargedAttack::applyChargedDamage(const std::vector<GameObject*>& tar
 
         if (damageable != nullptr)
         {
-            damageable->takeDamageEnemy(damage, GameObjectAPI::getTransform(getOwner()));
+            {
+                EnemyHitContext ctx;
+                ctx.damage = damage;
+                ctx.attacker = GameObjectAPI::getTransform(getOwner());
+                ctx.attackType = EnemyAttackType::LyrielCharged;
+                damageable->takeDamage(ctx);
+            }
 
             EnemyShadowMark* mark = GameObjectAPI::findScript<EnemyShadowMark>(target);
             if (mark != nullptr && mark->isExploitable())
             {
                 mark->exploit();
+                anyMarkExploited = true;
                 if (m_lyrielCharacter != nullptr)
                     m_lyrielCharacter->onMarkExploited();
             }
+            continue;
+        }
+        BreakableDamageable* breakableDamageable = GameObjectAPI::findScript<BreakableDamageable>(target);
+        if (breakableDamageable != nullptr)
+        {
+            breakableDamageable->takeDamage(damage);
         }
     }
+
+    return anyMarkExploited;
 }
 
 void LyrielChargedAttack::spawnChargedArrow(const Vector3& origin, const Vector3& forward)

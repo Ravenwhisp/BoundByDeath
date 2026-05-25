@@ -2,10 +2,12 @@
 #include "DeathChargedAttack.h"
 
 #include "DeathCharacter.h"
+#include "DeathSound.h"
 #include "PlayerState.h"
 #include "PlayerAnimationController.h"
 #include "EnemyDamageable.h"
 #include "EnemyShadowMark.h"
+#include "BreakableDamageable.h"
 
 #include <cmath>
 
@@ -103,6 +105,12 @@ void DeathChargedAttack::startCharging()
     if (ps != nullptr)
         ps->setState(PlayerStateType::AttackRecovery);
 
+    DeathSound* sound = m_deathCharacter != nullptr ? m_deathCharacter->getSound() : nullptr;
+    if (sound != nullptr)
+    {
+        sound->startChargeLoop();
+    }
+
     Debug::log("[COMBO] R2 cargando  step=%d/3", m_deathCharacter->getComboStep() + 1);
 }
 
@@ -136,7 +144,23 @@ void DeathChargedAttack::fireAttack()
         Debug::log("[COMBO] R2  step %d/3  dmg=%.1f", comboStep + 1, damage);
     }
 
-    dealDamageInArc(damage, m_chargedArcRange, m_chargedArcAngle);
+    DeathSound* sound = m_deathCharacter != nullptr ? m_deathCharacter->getSound() : nullptr;
+    if (sound != nullptr)
+    {
+        sound->stopChargeLoop();
+        if (isChargedShot)
+        {
+            // Charged: the release IS the attack sound. No swing, no impact.
+            sound->playChargeRelease();
+        }
+        else
+        {
+            // Tap R2 or mid-combo: regular swing; impact will play if it lands.
+            sound->playHeavySwing();
+        }
+    }
+
+    dealDamageInArc(damage, m_chargedArcRange, m_chargedArcAngle, isChargedShot);
 
     // Max charge (auto-fired at full charge, always step 0) gets longer combo window
     const float window = (isChargedShot && isMaxCharge)
@@ -156,9 +180,10 @@ void DeathChargedAttack::fireAttack()
     // Trigger attack animation and start the post-fire movement lock window
     beginAttackPresentation();
     beginAttackWindow(lockDuration);
+    startCooldown();
 }
 
-void DeathChargedAttack::dealDamageInArc(float damage) const
+void DeathChargedAttack::dealDamageInArc(float damage, bool isChargedShot) const
 {
     const Transform* myTransform = GameObjectAPI::getTransform(m_owner);
     if (myTransform == nullptr)
@@ -181,17 +206,21 @@ void DeathChargedAttack::dealDamageInArc(float damage) const
     const float     arcRangeSq = m_arcRange * m_arcRange;
 
     const auto enemies = SceneAPI::findAllGameObjectsByTag(Tag::ENEMY);
+	const auto breakables = SceneAPI::findAllGameObjectsByTag(Tag::BREAKABLE);
+	auto targets = enemies;
+	targets.insert(targets.end(), breakables.begin(), breakables.end());
     int scanned = 0;
     int hit = 0;
+    bool anyMark = false;
 
-    for (GameObject* enemy : enemies)
+    for (GameObject* target : targets)
     {
-        if (enemy == nullptr)
+        if (target == nullptr)
         {
             continue;
         }
 
-        const Transform* enemyTr = GameObjectAPI::getTransform(enemy);
+        const Transform* enemyTr = GameObjectAPI::getTransform(target);
         if (enemyTr == nullptr)
         {
             continue;
@@ -218,24 +247,48 @@ void DeathChargedAttack::dealDamageInArc(float damage) const
             }
         }
 
-        EnemyDamageable* damageable = GameObjectAPI::findScript<EnemyDamageable>(enemy);
+        EnemyDamageable* damageable = GameObjectAPI::findScript<EnemyDamageable>(target);
         if (damageable == nullptr)
         {
-            Debug::log("[ARC] '%s' has no EnemyDamageable.", GameObjectAPI::getName(enemy));
-            continue;
+            BreakableDamageable* breakableDamageable = GameObjectAPI::findScript<BreakableDamageable>(target);
+            if (breakableDamageable == nullptr)
+            {
+                Debug::log("[ARC] '%s' has no Damageable.", GameObjectAPI::getName(target));
+                continue;
+            }
+            breakableDamageable->takeDamage(damage);    
         }
+        else 
+        {
+            EnemyHitContext ctx;
+            ctx.damage = damage;
+            ctx.attacker = GameObjectAPI::getTransform(getOwner());
+            ctx.attackType = EnemyAttackType::DeathCharged;
+            damageable->takeDamage(ctx);
 
-        damageable->takeDamageEnemy(damage, GameObjectAPI::getTransform(getOwner()));
+        }
         hit++;
 
-        Debug::log("[ARC] hit '%s'  dmg=%.1f  hp=%.1f/%.1f",
-            GameObjectAPI::getName(enemy), damage,
-            damageable->getCurrentHp(), damageable->getMaxHp());
-
-        EnemyShadowMark* shadowMark = GameObjectAPI::findScript<EnemyShadowMark>(enemy);
+        EnemyShadowMark* shadowMark = GameObjectAPI::findScript<EnemyShadowMark>(target);
         if (shadowMark != nullptr)
         {
             shadowMark->notifyDeathHit();
+            anyMark = true;
+        }
+    }
+
+    DeathSound* sound = m_deathCharacter != nullptr ? m_deathCharacter->getSound() : nullptr;
+    if (sound != nullptr)
+    {
+        // Charged shot uses charge_release as its impact sound (posted in fireAttack);
+        // only non-charged shots get heavy_impact here.
+        if (hit > 0 && !isChargedShot)
+        {
+            sound->playHeavyImpact();
+        }
+        if (anyMark)
+        {
+            sound->playMarkApply();
         }
     }
 
@@ -249,13 +302,13 @@ void DeathChargedAttack::dealDamageInArc(float damage) const
     }
 }
 
-void DeathChargedAttack::dealDamageInArc(float damage, float range, float angle) const //charged attack
+void DeathChargedAttack::dealDamageInArc(float damage, float range, float angle, bool isChargedShot) const //charged attack
 {
     const float savedRange = m_arcRange;
     const float savedAngle = m_arcAngle;
     const_cast<DeathChargedAttack*>(this)->m_arcRange = range;
     const_cast<DeathChargedAttack*>(this)->m_arcAngle = angle;
-    dealDamageInArc(damage);
+    dealDamageInArc(damage, isChargedShot);
     const_cast<DeathChargedAttack*>(this)->m_arcRange = savedRange;
     const_cast<DeathChargedAttack*>(this)->m_arcAngle = savedAngle;
 }

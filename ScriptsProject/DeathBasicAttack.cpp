@@ -2,12 +2,14 @@
 #include "DeathBasicAttack.h"
 
 #include "DeathCharacter.h"
+#include "DeathSound.h"
 #include "PlayerTargetController.h"
 #include "PlayerAnimationController.h"
 #include "PlayerRotation.h"
 #include "PlayerState.h"
 #include "EnemyDamageable.h"
 #include "EnemyShadowMark.h"
+#include "BreakableDamageable.h"
 
 #include <cmath>
 
@@ -68,6 +70,12 @@ void DeathBasicAttack::startAbility()
     m_attackFacingTarget = target;
 
     const int comboStep = m_deathCharacter->getComboStep();
+
+    DeathSound* sound = m_deathCharacter->getSound();
+    if (sound != nullptr)
+    {
+        sound->playLightSwing();
+    }
 
     dealDamageToTarget(target);
     m_deathCharacter->advanceCombo(false);
@@ -164,15 +172,33 @@ void DeathBasicAttack::dealDamageToTarget(GameObject* target) const
             return true;
         };
 
+    DeathSound* sound = m_deathCharacter != nullptr ? m_deathCharacter->getSound() : nullptr;
+
     auto applyDamage = [&](GameObject* enemy)
         {
             EnemyDamageable* damageable = GameObjectAPI::findScript<EnemyDamageable>(enemy);
             if (damageable == nullptr)
             {
+                BreakableDamageable* breakableDamageable = GameObjectAPI::findScript<BreakableDamageable>(enemy);
+                if(breakableDamageable == nullptr)
+                {
+                    return;
+                }
+                breakableDamageable->takeDamage(m_basicAttackDamage);
+                if (sound != nullptr)
+                {
+                    sound->playLightImpact();
+                }
                 return;
             }
 
-            damageable->takeDamageEnemy(m_basicAttackDamage, GameObjectAPI::getTransform(getOwner()));
+            {
+                EnemyHitContext ctx;
+                ctx.damage = m_basicAttackDamage;
+                ctx.attacker = GameObjectAPI::getTransform(getOwner());
+                ctx.attackType = EnemyAttackType::DeathBasic;
+                damageable->takeDamage(ctx);
+            }
 
             Debug::log("[BASIC] hit '%s'  dmg=%.1f  hp=%.1f/%.1f",
                 GameObjectAPI::getName(enemy),
@@ -180,10 +206,19 @@ void DeathBasicAttack::dealDamageToTarget(GameObject* target) const
                 damageable->getCurrentHp(),
                 damageable->getMaxHp());
 
+            if (sound != nullptr)
+            {
+                sound->playLightImpact();
+            }
+
             EnemyShadowMark* shadowMark = GameObjectAPI::findScript<EnemyShadowMark>(enemy);
             if (shadowMark != nullptr)
             {
                 shadowMark->notifyDeathHit();
+                if (sound != nullptr)
+                {
+                    sound->playMarkApply();
+                }
             }
         };
 

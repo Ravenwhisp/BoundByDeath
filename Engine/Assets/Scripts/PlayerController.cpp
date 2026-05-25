@@ -120,6 +120,11 @@ void PlayerController::Update()
         }
     }
 
+    if (m_playerState && !m_playerState->canUseAbilities())
+    {
+        return;
+    }
+
     if(m_basicAttack && Input::isRightShoulderJustPressed(m_playerIndex))
     {
 		m_basicAttack->tryAbility();
