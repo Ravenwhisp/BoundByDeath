@@ -84,7 +84,7 @@ void ArthurEarthHammer::OnStateUpdate()
 
 void ArthurEarthHammer::OnStateExit()
 {
-    if (m_attackConfig)
+    if (m_attackConfig && m_attackConfig->m_earthHammerUICanvasTransform)
     {
         GameObjectAPI::setActive(m_attackConfig->m_earthHammerUICanvasTransform->getOwner(), false);
 	}
@@ -140,19 +140,34 @@ void ArthurEarthHammer::goToRecover()
 
 void ArthurEarthHammer::setupUI()
 {
+    if (!m_attackConfig)
+    {
+        return;
+    }
+
+    Transform* canvas = m_attackConfig->m_earthHammerUICanvasTransform;
+    Transform2D* container = m_attackConfig->m_earthHammerUIContainerTransform2D;
+    Transform2D* ring = m_attackConfig->m_earthHammerUIRingTransform2D;
+    Transform2D* inner = m_attackConfig->m_earthHammerUIInnerTransform2D;
+    Transform2D* spikes = m_attackConfig->m_earthHammerUISpikesTransform2D;
+    Transform2D* glow = m_attackConfig->m_earthHammerUIGlowTransform2D;
+
+    if (!canvas || !container || !ring || !inner || !spikes || !glow)
+    {
+        return;
+    }
+
     m_hasStartedImpactUI = false;
-
     m_impactUITimer = 0.0f;
-
     m_innerScale = 0.1f;
 
-    GameObjectAPI::setActive(m_attackConfig->m_earthHammerUICanvasTransform->getOwner(), true);
+    GameObjectAPI::setActive(canvas->getOwner(), true);
 
-    Transform2DAPI::setAlpha(m_attackConfig->m_earthHammerUIRingTransform2D, 1.0f);
-    Transform2DAPI::setAlpha(m_attackConfig->m_earthHammerUIInnerTransform2D, 1.0f);
-    Transform2DAPI::setAlpha(m_attackConfig->m_earthHammerUISpikesTransform2D, 0.0f);
-    Transform2DAPI::setAlpha(m_attackConfig->m_earthHammerUIGlowTransform2D, 0.0f);
-    Transform2DAPI::setAlpha(m_attackConfig->m_earthHammerUIContainerTransform2D, 0.0f);
+    Transform2DAPI::setAlpha(ring, 1.0f);
+    Transform2DAPI::setAlpha(inner, 1.0f);
+    Transform2DAPI::setAlpha(spikes, 0.0f);
+    Transform2DAPI::setAlpha(glow, 0.0f);
+    Transform2DAPI::setAlpha(container, 0.0f);
 }
 
 void ArthurEarthHammer::updateUI()

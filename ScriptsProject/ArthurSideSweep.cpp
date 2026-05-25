@@ -5,6 +5,10 @@
 #include "ArthurAttackConfig.h"
 #include "EnemyAttackExecutor.h"
 
+IMPLEMENT_SCRIPT_FIELDS(ArthurSideSweep,
+    SERIALIZED_INT(m_sweepSide, "Sweep Side")
+)
+
 ArthurSideSweep::ArthurSideSweep(GameObject* owner)
     : StateMachineScript(owner)
 {
@@ -46,8 +50,6 @@ void ArthurSideSweep::OnStateEnter()
 
     m_arthurController->clearPath();
     m_arthurController->updateCurrentTarget();
-
-    m_sweepSide = m_arthurController->getSelectedSideSweepSide();
 
 	setupUI();
 
@@ -94,7 +96,7 @@ void ArthurSideSweep::OnStateUpdate()
 
 void ArthurSideSweep::OnStateExit()
 {
-    if (m_attackConfig)
+    if (m_attackConfig && m_attackConfig->m_sideSweepUICanvasTransform)
     {
 		GameObjectAPI::setActive(m_attackConfig->m_sideSweepUICanvasTransform->getOwner(), false);
 	}

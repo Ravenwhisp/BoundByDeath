@@ -136,7 +136,7 @@ void ArthurHeavySwipe::OnStateExit()
         AnimationAPI::setSpeedMultiplier(animation, m_previousAnimationSpeed);
     }
 
-	if (m_attackConfig)
+	if (m_attackConfig && m_attackConfig->m_heavySwipeUICanvasTransform)
     {
         GameObjectAPI::setActive(m_attackConfig->m_heavySwipeUICanvasTransform->getOwner(), false);
     }
@@ -196,6 +196,7 @@ void ArthurHeavySwipe::setupUI()
         return;
     }
 
+    Transform* canvas = m_attackConfig->m_heavySwipeUICanvasTransform;
     Transform2D* container = m_attackConfig->m_heavySwipeUIContainerTransform2D;
     Transform2D* background = m_attackConfig->m_heavySwipeUIBackgroundTransform2D;
     Transform2D* border = m_attackConfig->m_heavySwipeUIBorderTransform2D;
@@ -203,19 +204,19 @@ void ArthurHeavySwipe::setupUI()
     Transform2D* rightClaw = m_attackConfig->m_heavySwipeUIRightClawTransform2D;
     Transform2D* leftClaw = m_attackConfig->m_heavySwipeUILeftClawTransform2D;
 
-    if (!container || !background || !border || !glow || !rightClaw || !leftClaw)
+    if (!canvas || !container || !background || !border || !glow || !rightClaw || !leftClaw)
     {
         return;
     }
 
-    GameObjectAPI::setActive(m_attackConfig->m_heavySwipeUICanvasTransform->getOwner(), true);
-    
-    Transform2DAPI::setAlpha(m_attackConfig->m_heavySwipeUIContainerTransform2D, 0.0f);
-    Transform2DAPI::setAlpha(m_attackConfig->m_heavySwipeUIBackgroundTransform2D, 1.0f);
-    Transform2DAPI::setAlpha(m_attackConfig->m_heavySwipeUIBorderTransform2D, 1.0f);
-    Transform2DAPI::setAlpha(m_attackConfig->m_heavySwipeUIGlowTransform2D, 0.0f);
-    Transform2DAPI::setAlpha(m_attackConfig->m_heavySwipeUIRightClawTransform2D, 0.0f);
-	Transform2DAPI::setAlpha(m_attackConfig->m_heavySwipeUILeftClawTransform2D, 0.0f);
+    GameObjectAPI::setActive(canvas->getOwner(), true);
+
+    Transform2DAPI::setAlpha(container, 0.0f);
+    Transform2DAPI::setAlpha(background, 1.0f);
+    Transform2DAPI::setAlpha(border, 1.0f);
+    Transform2DAPI::setAlpha(glow, 0.0f);
+    Transform2DAPI::setAlpha(rightClaw, 0.0f);
+    Transform2DAPI::setAlpha(leftClaw, 0.0f);
 }
 
 void ArthurHeavySwipe::updateUI()
