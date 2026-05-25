@@ -58,15 +58,6 @@
     <Filter Include="UI">
       <UniqueIdentifier>{e135fa5e-751a-4bac-acd9-1ede1f2173ca}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Player\Characters">
-      <UniqueIdentifier>{18003957-5065-4adc-b44d-b287c568bfc1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Player\Characters\Lyriel">
-      <UniqueIdentifier>{1dd13501-33d1-47a1-bae7-c0a21d148ac5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Player\Characters\Death">
-      <UniqueIdentifier>{c05ea1a6-3703-4a10-a84a-609d150244ed}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Interaction/Gameplay\Puzzles">
       <UniqueIdentifier>{5258ec66-1d97-4672-a686-3d60947602f0}</UniqueIdentifier>
     </Filter>
@@ -182,6 +173,9 @@
     <ClInclude Include="ReaperGauge.h">
       <Filter>Combat</Filter>
     </ClInclude>
+    <ClInclude Include="CooperativeSound.h">
+      <Filter>Combat</Filter>
+    </ClInclude>
     <ClInclude Include="EnemyDamageable.h">
       <Filter>Enemies</Filter>
     </ClInclude>
@@ -212,6 +206,9 @@
     <ClInclude Include="DeathCharacter.h">
       <Filter>Character\Death</Filter>
     </ClInclude>
+    <ClInclude Include="DeathSound.h">
+      <Filter>Character\Death</Filter>
+    </ClInclude>
     <ClInclude Include="DeathAbilityBase.h">
       <Filter>Character\Death\Abilities</Filter>
     </ClInclude>
@@ -228,6 +225,9 @@
       <Filter>Character\Death\Abilities</Filter>
     </ClInclude>
     <ClInclude Include="LyrielCharacter.h">
+      <Filter>Character\Lyriel</Filter>
+    </ClInclude>
+    <ClInclude Include="LyrielSound.h">
       <Filter>Character\Lyriel</Filter>
     </ClInclude>
     <ClInclude Include="LyrielArrowProjectile.h">
@@ -257,62 +257,11 @@
     <ClInclude Include="UIPause.h">
       <Filter>UI</Filter>
     </ClInclude>
-    <ClInclude Include="ArrowPool.h">
-      <Filter>Player\Characters\Lyriel</Filter>
-    </ClInclude>
-    <ClInclude Include="CharacterBase.h">
-      <Filter>Player\Characters</Filter>
-    </ClInclude>
-    <ClInclude Include="AbilityBase.h">
-      <Filter>Player\Characters</Filter>
-    </ClInclude>
-    <ClInclude Include="AbilityDash.h">
-      <Filter>Player\Characters</Filter>
-    </ClInclude>
-    <ClInclude Include="DeathAbilityBase.h">
-      <Filter>Player\Characters\Death</Filter>
-    </ClInclude>
-    <ClInclude Include="DeathBasicAttack.h">
-      <Filter>Player\Characters\Death</Filter>
-    </ClInclude>
-    <ClInclude Include="DeathCharacter.h">
-      <Filter>Player\Characters\Death</Filter>
-    </ClInclude>
-    <ClInclude Include="DeathChargedAttack.h">
-      <Filter>Player\Characters\Death</Filter>
-    </ClInclude>
-    <ClInclude Include="DeathDash.h">
-      <Filter>Player\Characters\Death</Filter>
-    </ClInclude>
-    <ClInclude Include="DeathTaunt.h">
-      <Filter>Player\Characters\Death</Filter>
-    </ClInclude>
     <ClInclude Include="EnemyDamageable.h">
       <Filter>Enemies</Filter>
     </ClInclude>
     <ClInclude Include="LevelCheats.h">
       <Filter>Interaction/Gameplay</Filter>
-    </ClInclude>
-    <ClInclude Include="LyrielAbilityBase.h">
-      <Filter>Player\Characters\Lyriel</Filter>
-    </ClInclude>
-    <ClInclude Include="LyrielArrowProjectile.h">
-      <Filter>Player\Characters\Lyriel</Filter>
-    </ClInclude>
-    <ClInclude Include="LyrielArrowVolley.h">
-      <Filter>Player\Characters\Lyriel</Filter>
-    </ClInclude>
-    <ClInclude Include="LyrielBasicAttack.h">
-      <Filter>Player\Characters\Lyriel</Filter>
-    </ClInclude>
-    <ClInclude Include="LyrielCharacter.h">
-      <Filter>Player\Characters\Lyriel</Filter>
-    </ClInclude>
-    <ClInclude Include="LyrielChargedAttack.h">
-      <Filter>Player\Characters\Lyriel</Filter>
-    </ClInclude>
-    <ClInclude Include="LyrielDash.h">
-      <Filter>Player\Characters\Lyriel</Filter>
     </ClInclude>
     <ClInclude Include="PlayerAnimationController.h">
       <Filter>Player</Filter>
@@ -510,6 +459,9 @@
     <ClCompile Include="ReaperGauge.cpp">
       <Filter>Combat</Filter>
     </ClCompile>
+    <ClCompile Include="CooperativeSound.cpp">
+      <Filter>Combat</Filter>
+    </ClCompile>
     <ClCompile Include="EnemyDamageable.cpp">
       <Filter>Enemies</Filter>
     </ClCompile>
@@ -540,6 +492,9 @@
     <ClCompile Include="DeathCharacter.cpp">
       <Filter>Character\Death</Filter>
     </ClCompile>
+    <ClCompile Include="DeathSound.cpp">
+      <Filter>Character\Death</Filter>
+    </ClCompile>
     <ClCompile Include="DeathAbilityBase.cpp">
       <Filter>Character\Death\Abilities</Filter>
     </ClCompile>
@@ -556,6 +511,9 @@
       <Filter>Character\Death\Abilities</Filter>
     </ClCompile>
     <ClCompile Include="LyrielCharacter.cpp">
+      <Filter>Character\Lyriel</Filter>
+    </ClCompile>
+    <ClCompile Include="LyrielSound.cpp">
       <Filter>Character\Lyriel</Filter>
     </ClCompile>
     <ClCompile Include="LyrielArrowProjectile.cpp">
@@ -585,62 +543,11 @@
     <ClCompile Include="UIPause.cpp">
       <Filter>UI</Filter>
     </ClCompile>
-    <ClCompile Include="ArrowPool.cpp">
-      <Filter>Player\Characters\Lyriel</Filter>
-    </ClCompile>
-    <ClCompile Include="CharacterBase.cpp">
-      <Filter>Player\Characters</Filter>
-    </ClCompile>
-    <ClCompile Include="AbilityBase.cpp">
-      <Filter>Player\Characters</Filter>
-    </ClCompile>
-    <ClCompile Include="AbilityDash.cpp">
-      <Filter>Player\Characters</Filter>
-    </ClCompile>
-    <ClCompile Include="DeathAbilityBase.cpp">
-      <Filter>Player\Characters\Death</Filter>
-    </ClCompile>
-    <ClCompile Include="DeathBasicAttack.cpp">
-      <Filter>Player\Characters\Death</Filter>
-    </ClCompile>
-    <ClCompile Include="DeathCharacter.cpp">
-      <Filter>Player\Characters\Death</Filter>
-    </ClCompile>
-    <ClCompile Include="DeathChargedAttack.cpp">
-      <Filter>Player\Characters\Death</Filter>
-    </ClCompile>
-    <ClCompile Include="DeathDash.cpp">
-      <Filter>Player\Characters\Death</Filter>
-    </ClCompile>
-    <ClCompile Include="DeathTaunt.cpp">
-      <Filter>Player\Characters\Death</Filter>
-    </ClCompile>
     <ClCompile Include="EnemyDamageable.cpp">
       <Filter>Enemies</Filter>
     </ClCompile>
     <ClCompile Include="LevelCheats.cpp">
       <Filter>Interaction/Gameplay</Filter>
-    </ClCompile>
-    <ClCompile Include="LyrielAbilityBase.cpp">
-      <Filter>Player\Characters\Lyriel</Filter>
-    </ClCompile>
-    <ClCompile Include="LyrielArrowProjectile.cpp">
-      <Filter>Player\Characters\Lyriel</Filter>
-    </ClCompile>
-    <ClCompile Include="LyrielArrowVolley.cpp">
-      <Filter>Player\Characters\Lyriel</Filter>
-    </ClCompile>
-    <ClCompile Include="LyrielBasicAttack.cpp">
-      <Filter>Player\Characters\Lyriel</Filter>
-    </ClCompile>
-    <ClCompile Include="LyrielCharacter.cpp">
-      <Filter>Player\Characters\Lyriel</Filter>
-    </ClCompile>
-    <ClCompile Include="LyrielChargedAttack.cpp">
-      <Filter>Player\Characters\Lyriel</Filter>
-    </ClCompile>
-    <ClCompile Include="LyrielDash.cpp">
-      <Filter>Player\Characters\Lyriel</Filter>
     </ClCompile>
     <ClCompile Include="PlayerAnimationController.cpp">
       <Filter>Player</Filter>

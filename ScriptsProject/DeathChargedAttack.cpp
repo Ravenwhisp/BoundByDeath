@@ -2,6 +2,7 @@
 #include "DeathChargedAttack.h"
 
 #include "DeathCharacter.h"
+#include "DeathSound.h"
 #include "PlayerState.h"
 #include "PlayerAnimationController.h"
 #include "EnemyDamageable.h"
@@ -104,6 +105,12 @@ void DeathChargedAttack::startCharging()
     if (ps != nullptr)
         ps->setState(PlayerStateType::AttackRecovery);
 
+    DeathSound* sound = m_deathCharacter != nullptr ? m_deathCharacter->getSound() : nullptr;
+    if (sound != nullptr)
+    {
+        sound->startChargeLoop();
+    }
+
     Debug::log("[COMBO] R2 cargando  step=%d/3", m_deathCharacter->getComboStep() + 1);
 }
 
@@ -137,7 +144,23 @@ void DeathChargedAttack::fireAttack()
         Debug::log("[COMBO] R2  step %d/3  dmg=%.1f", comboStep + 1, damage);
     }
 
-    dealDamageInArc(damage, m_chargedArcRange, m_chargedArcAngle);
+    DeathSound* sound = m_deathCharacter != nullptr ? m_deathCharacter->getSound() : nullptr;
+    if (sound != nullptr)
+    {
+        sound->stopChargeLoop();
+        if (isChargedShot)
+        {
+            // Charged: the release IS the attack sound. No swing, no impact.
+            sound->playChargeRelease();
+        }
+        else
+        {
+            // Tap R2 or mid-combo: regular swing; impact will play if it lands.
+            sound->playHeavySwing();
+        }
+    }
+
+    dealDamageInArc(damage, m_chargedArcRange, m_chargedArcAngle, isChargedShot);
 
     // Max charge (auto-fired at full charge, always step 0) gets longer combo window
     const float window = (isChargedShot && isMaxCharge)
@@ -160,7 +183,7 @@ void DeathChargedAttack::fireAttack()
     startCooldown();
 }
 
-void DeathChargedAttack::dealDamageInArc(float damage) const
+void DeathChargedAttack::dealDamageInArc(float damage, bool isChargedShot) const
 {
     const Transform* myTransform = GameObjectAPI::getTransform(m_owner);
     if (myTransform == nullptr)
@@ -188,6 +211,7 @@ void DeathChargedAttack::dealDamageInArc(float damage) const
 	targets.insert(targets.end(), breakables.begin(), breakables.end());
     int scanned = 0;
     int hit = 0;
+    bool anyMark = false;
 
     for (GameObject* target : targets)
     {
@@ -249,6 +273,22 @@ void DeathChargedAttack::dealDamageInArc(float damage) const
         if (shadowMark != nullptr)
         {
             shadowMark->notifyDeathHit();
+            anyMark = true;
+        }
+    }
+
+    DeathSound* sound = m_deathCharacter != nullptr ? m_deathCharacter->getSound() : nullptr;
+    if (sound != nullptr)
+    {
+        // Charged shot uses charge_release as its impact sound (posted in fireAttack);
+        // only non-charged shots get heavy_impact here.
+        if (hit > 0 && !isChargedShot)
+        {
+            sound->playHeavyImpact();
+        }
+        if (anyMark)
+        {
+            sound->playMarkApply();
         }
     }
 
@@ -262,13 +302,13 @@ void DeathChargedAttack::dealDamageInArc(float damage) const
     }
 }
 
-void DeathChargedAttack::dealDamageInArc(float damage, float range, float angle) const //charged attack
+void DeathChargedAttack::dealDamageInArc(float damage, float range, float angle, bool isChargedShot) const //charged attack
 {
     const float savedRange = m_arcRange;
     const float savedAngle = m_arcAngle;
     const_cast<DeathChargedAttack*>(this)->m_arcRange = range;
     const_cast<DeathChargedAttack*>(this)->m_arcAngle = angle;
-    dealDamageInArc(damage);
+    dealDamageInArc(damage, isChargedShot);
     const_cast<DeathChargedAttack*>(this)->m_arcRange = savedRange;
     const_cast<DeathChargedAttack*>(this)->m_arcAngle = savedAngle;
 }

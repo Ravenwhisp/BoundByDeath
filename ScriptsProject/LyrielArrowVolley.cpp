@@ -2,6 +2,7 @@
 #include "LyrielArrowVolley.h"
 
 #include "LyrielCharacter.h"
+#include "LyrielSound.h"
 #include "CharacterBase.h"
 #include "ArrowPool.h"
 #include "LyrielArrowProjectile.h"
@@ -187,8 +188,18 @@ void LyrielArrowVolley::releaseAimAndCast()
 
     std::vector<Damageable*> targets;
     collectEnemiesInCone(origin, forward, targets);
-    applyVolleyDamage(targets);
+    const bool anyMarkExploited = applyVolleyDamage(targets);
     spawnVolleyArrows(origin, forward);
+
+    LyrielSound* sound = m_lyrielCharacter != nullptr ? m_lyrielCharacter->getSound() : nullptr;
+    if (sound != nullptr)
+    {
+        sound->playVolleyRelease();
+        if (anyMarkExploited)
+        {
+            sound->playMarkExploit();
+        }
+    }
 
     beginAttackPresentation();
 
@@ -288,8 +299,10 @@ void LyrielArrowVolley::collectEnemiesInCone(const Vector3& origin, const Vector
     }
 }
 
-void LyrielArrowVolley::applyVolleyDamage(const std::vector<Damageable*>& targets)
+bool LyrielArrowVolley::applyVolleyDamage(const std::vector<Damageable*>& targets)
 {
+    bool anyMarkExploited = false;
+
     for (Damageable* target : targets)
     {
         if (target == nullptr)
@@ -335,11 +348,14 @@ void LyrielArrowVolley::applyVolleyDamage(const std::vector<Damageable*>& target
             if (mark != nullptr && mark->isExploitable())
             {
                 mark->exploit();
+                anyMarkExploited = true;
                 if (m_lyrielCharacter != nullptr)
                     m_lyrielCharacter->onMarkExploited();
             }
         }
     }
+
+    return anyMarkExploited;
 }
 
 void LyrielArrowVolley::spawnVolleyArrows(const Vector3& origin, const Vector3& forward)
