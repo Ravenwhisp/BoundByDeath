@@ -84,7 +84,17 @@ void ArthurChase::OnStateUpdate()
 	{
 		m_arthurController->clearPath();
 		m_arthurController->consumeSideSweepCooldown();
-		AnimationAPI::sendTrigger(m_animation, "ToSideSweep");
+
+		const int selectedSide = m_arthurController->getSelectedSideSweepSide();
+
+		if (selectedSide == -1)
+		{
+			AnimationAPI::sendTrigger(m_animation, "ToRightSideSweep");
+		}
+		else
+		{
+			AnimationAPI::sendTrigger(m_animation, "ToLeftSideSweep");
+		}
 		return;
 	}
 
