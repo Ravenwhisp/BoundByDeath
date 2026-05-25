@@ -2,15 +2,14 @@
   "SourcePath": "Assets\\Prefabs\\HealthPlaceholder.prefab",
   "Name": "HealthPlaceholder",
   "Version": 2,
-  "VariantOf": "Assets\\Models\\Sphere.gltf",
   "GameObject": {
     "Name": "HealthPlaceholder",
     "Active": true,
     "Tag": "DEFAULT",
     "Layer": "DEFAULT",
     "PrefabLink": {
-      "SourcePath": "Assets\\Models\\Sphere.gltf",
-      "AssetUID": 268176518659522292
+      "SourcePath": "Assets\\Prefabs\\HealthPlaceholder.prefab",
+      "AssetUID": 11584889274909007939
     },
     "Transform": {
       "position": [
@@ -34,12 +33,12 @@
       {
         "Type": 1,
         "Data": {
-          "UID": 10488725764386558946,
+          "UID": 17284316049402714986,
           "ComponentType": 1,
           "Active": true,
           "MeshAssetId": {
             "uid": 7216509819157143983,
-            "libId": "317b0784ead19d4c1fb1f1483db8dd01"
+            "libId": "68dccb0c527b73c4a9907f70298dfb48"
           },
           "SkinAssetId": {
             "uid": 0,
@@ -56,12 +55,13 @@
       {
         "Type": 3,
         "Data": {
-          "UID": 18297467876903909147,
+          "UID": 8100406804761680030,
           "ComponentType": 3,
           "Active": true,
           "ScriptName": "HealthPickup",
           "ScriptFields": {
             "Heal Amount": 10.0,
+            "Collect Particle Prefab Path": "Assets/Prefabs/Particles/Health_2.prefab",
             "Spawn Height": 1.5,
             "Fall Gravity": 8.0,
             "Idle Speed": 0.20000000298023224,
@@ -73,7 +73,7 @@
       {
         "Type": 15,
         "Data": {
-          "UID": 17811663011889429530,
+          "UID": 15649613748945817043,
           "ComponentType": 15,
           "Active": true,
           "Shape": 0,
