@@ -7,6 +7,10 @@
     "Active": true,
     "Tag": "ENEMY",
     "Layer": "DEFAULT",
+    "PrefabLink": {
+      "SourcePath": "Assets\\Prefabs\\Enemies\\Arthur.prefab",
+      "AssetUID": 0
+    },
     "Transform": {
       "position": [
         -69.0,
@@ -3062,6 +3066,640 @@
               }
             ],
             "Children": []
+          }
+        ]
+      },
+      {
+        "Name": "Arthur Health UI",
+        "Active": true,
+        "Tag": "DEFAULT",
+        "Layer": "DEFAULT",
+        "Transform": {
+          "position": [
+            123.99999237060548,
+            11.0,
+            69.0000228881836
+          ],
+          "rotation": [
+            0.0,
+            0.7071068286895752,
+            0.0,
+            -0.7071067094802856
+          ],
+          "scale": [
+            1.0000001192092896,
+            1.0,
+            1.0000001192092896
+          ]
+        },
+        "Components": [
+          {
+            "Type": 6,
+            "Data": {
+              "UID": 12950238566140413086,
+              "ComponentType": 6,
+              "Active": true,
+              "RenderMode": 0,
+              "ZTest": false
+            }
+          }
+        ],
+        "Children": [
+          {
+            "Name": "Health Bar",
+            "Active": true,
+            "Tag": "DEFAULT",
+            "Layer": "DEFAULT",
+            "Transform": {
+              "position": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "rotation": [
+                -0.0,
+                0.0,
+                -0.0,
+                1.0
+              ],
+              "scale": [
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            "Components": [
+              {
+                "Type": 5,
+                "Data": {
+                  "UID": 1701668411001584626,
+                  "ComponentType": 5,
+                  "Active": true,
+                  "Position": [
+                    0.0,
+                    0.0
+                  ],
+                  "Scale": [
+                    1.0,
+                    1.0
+                  ],
+                  "Pivot": [
+                    0.5,
+                    0.5
+                  ],
+                  "AnchorMin": [
+                    0.5,
+                    0.0
+                  ],
+                  "AnchorMax": [
+                    0.5,
+                    0.10000000149011612
+                  ],
+                  "BaseSize": [
+                    1301.0,
+                    140.0
+                  ],
+                  "StretchMode": 2,
+                  "SizingMode": 0,
+                  "AspectRatio": 1.0,
+                  "Alpha": 1.0
+                }
+              }
+            ],
+            "Children": [
+              {
+                "Name": "Health Background",
+                "Active": true,
+                "Tag": "DEFAULT",
+                "Layer": "DEFAULT",
+                "Transform": {
+                  "position": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0,
+                    1.0
+                  ],
+                  "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ]
+                },
+                "Components": [
+                  {
+                    "Type": 5,
+                    "Data": {
+                      "UID": 3405116761250904189,
+                      "ComponentType": 5,
+                      "Active": true,
+                      "Position": [
+                        0.0,
+                        0.0
+                      ],
+                      "Scale": [
+                        1.0,
+                        1.0
+                      ],
+                      "Pivot": [
+                        0.5,
+                        0.5
+                      ],
+                      "AnchorMin": [
+                        0.5,
+                        0.0
+                      ],
+                      "AnchorMax": [
+                        0.5,
+                        1.0
+                      ],
+                      "BaseSize": [
+                        1301.0,
+                        140.0
+                      ],
+                      "StretchMode": 2,
+                      "SizingMode": 0,
+                      "AspectRatio": 1.0,
+                      "Alpha": 1.0
+                    }
+                  },
+                  {
+                    "Type": 7,
+                    "Data": {
+                      "UID": 1676188581171626541,
+                      "ComponentType": 7,
+                      "Active": true,
+                      "TextureAssetId": {
+                        "uid": 593940522257763597,
+                        "libId": "b3614077da3f21dd12db18aaf9af75f4"
+                      },
+                      "FillAmount": 1.0,
+                      "FillMethod": 0,
+                      "FillOrigin": 0,
+                      "SheetColumns": 1,
+                      "SheetRows": 1,
+                      "SheetOffset": [
+                        0.0,
+                        0.0
+                      ],
+                      "StretchDrawMode": 0
+                    }
+                  }
+                ],
+                "Children": []
+              },
+              {
+                "Name": "Health Background Phase 2",
+                "Active": true,
+                "Tag": "DEFAULT",
+                "Layer": "DEFAULT",
+                "Transform": {
+                  "position": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0,
+                    1.0
+                  ],
+                  "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ]
+                },
+                "Components": [
+                  {
+                    "Type": 5,
+                    "Data": {
+                      "UID": 8862284627827753740,
+                      "ComponentType": 5,
+                      "Active": true,
+                      "Position": [
+                        0.0,
+                        0.0
+                      ],
+                      "Scale": [
+                        1.0,
+                        1.0
+                      ],
+                      "Pivot": [
+                        0.5,
+                        0.5
+                      ],
+                      "AnchorMin": [
+                        0.5,
+                        0.0
+                      ],
+                      "AnchorMax": [
+                        0.5,
+                        1.0
+                      ],
+                      "BaseSize": [
+                        1301.0,
+                        140.0
+                      ],
+                      "StretchMode": 2,
+                      "SizingMode": 0,
+                      "AspectRatio": 1.0,
+                      "Alpha": 1.0
+                    }
+                  },
+                  {
+                    "Type": 7,
+                    "Data": {
+                      "UID": 15254306336816555505,
+                      "ComponentType": 7,
+                      "Active": true,
+                      "TextureAssetId": {
+                        "uid": 16724957911390201402,
+                        "libId": "1de0009b661f542a8c3b42ce3820abd7"
+                      },
+                      "FillAmount": 1.0,
+                      "FillMethod": 0,
+                      "FillOrigin": 0,
+                      "SheetColumns": 1,
+                      "SheetRows": 1,
+                      "SheetOffset": [
+                        0.0,
+                        0.0
+                      ],
+                      "StretchDrawMode": 0
+                    }
+                  }
+                ],
+                "Children": []
+              },
+              {
+                "Name": "Health Slider Background",
+                "Active": true,
+                "Tag": "DEFAULT",
+                "Layer": "DEFAULT",
+                "Transform": {
+                  "position": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0,
+                    1.0
+                  ],
+                  "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ]
+                },
+                "Components": [
+                  {
+                    "Type": 5,
+                    "Data": {
+                      "UID": 16471146115379931999,
+                      "ComponentType": 5,
+                      "Active": true,
+                      "Position": [
+                        0.0,
+                        0.0
+                      ],
+                      "Scale": [
+                        1.0,
+                        1.0
+                      ],
+                      "Pivot": [
+                        0.5,
+                        0.5
+                      ],
+                      "AnchorMin": [
+                        0.5,
+                        0.0
+                      ],
+                      "AnchorMax": [
+                        0.5,
+                        1.0
+                      ],
+                      "BaseSize": [
+                        1301.0,
+                        140.0
+                      ],
+                      "StretchMode": 2,
+                      "SizingMode": 0,
+                      "AspectRatio": 1.0,
+                      "Alpha": 1.0
+                    }
+                  },
+                  {
+                    "Type": 7,
+                    "Data": {
+                      "UID": 10110401446018542681,
+                      "ComponentType": 7,
+                      "Active": true,
+                      "TextureAssetId": {
+                        "uid": 7792263869521518352,
+                        "libId": "3bc44c4cc927370697a73cee2f63707c"
+                      },
+                      "FillAmount": 1.0,
+                      "FillMethod": 0,
+                      "FillOrigin": 0,
+                      "SheetColumns": 1,
+                      "SheetRows": 1,
+                      "SheetOffset": [
+                        0.0,
+                        0.0
+                      ],
+                      "StretchDrawMode": 0
+                    }
+                  }
+                ],
+                "Children": []
+              },
+              {
+                "Name": "Health Slider 2",
+                "Active": true,
+                "Tag": "DEFAULT",
+                "Layer": "DEFAULT",
+                "Transform": {
+                  "position": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0,
+                    1.0
+                  ],
+                  "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ]
+                },
+                "Components": [
+                  {
+                    "Type": 5,
+                    "Data": {
+                      "UID": 14785439024513747886,
+                      "ComponentType": 5,
+                      "Active": true,
+                      "Position": [
+                        0.0,
+                        0.0
+                      ],
+                      "Scale": [
+                        1.0,
+                        1.0
+                      ],
+                      "Pivot": [
+                        0.5,
+                        0.5
+                      ],
+                      "AnchorMin": [
+                        0.5,
+                        0.0
+                      ],
+                      "AnchorMax": [
+                        0.5,
+                        1.0
+                      ],
+                      "BaseSize": [
+                        1301.0,
+                        140.0
+                      ],
+                      "StretchMode": 2,
+                      "SizingMode": 0,
+                      "AspectRatio": 1.0,
+                      "Alpha": 1.0
+                    }
+                  },
+                  {
+                    "Type": 7,
+                    "Data": {
+                      "UID": 11412203355506204990,
+                      "ComponentType": 7,
+                      "Active": true,
+                      "TextureAssetId": {
+                        "uid": 3820535561689001313,
+                        "libId": "bb9a5e466b250e3c607eea3e99cf3e86"
+                      },
+                      "FillAmount": 1.0,
+                      "FillMethod": 0,
+                      "FillOrigin": 0,
+                      "SheetColumns": 1,
+                      "SheetRows": 1,
+                      "SheetOffset": [
+                        0.0,
+                        0.0
+                      ],
+                      "StretchDrawMode": 0
+                    }
+                  },
+                  {
+                    "Type": 14,
+                    "Data": {
+                      "UID": 10486887829417920041,
+                      "ComponentType": 14,
+                      "Active": true,
+                      "FillAmount": 1.0,
+                      "FillMethod": 0,
+                      "FillOrigin": 0
+                    }
+                  }
+                ],
+                "Children": []
+              },
+              {
+                "Name": "Health Slider 1",
+                "Active": true,
+                "Tag": "DEFAULT",
+                "Layer": "DEFAULT",
+                "Transform": {
+                  "position": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0,
+                    1.0
+                  ],
+                  "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ]
+                },
+                "Components": [
+                  {
+                    "Type": 5,
+                    "Data": {
+                      "UID": 18415907622018409870,
+                      "ComponentType": 5,
+                      "Active": true,
+                      "Position": [
+                        0.0,
+                        0.0
+                      ],
+                      "Scale": [
+                        1.0,
+                        1.0
+                      ],
+                      "Pivot": [
+                        0.5,
+                        0.5
+                      ],
+                      "AnchorMin": [
+                        0.5,
+                        0.0
+                      ],
+                      "AnchorMax": [
+                        0.5,
+                        1.0
+                      ],
+                      "BaseSize": [
+                        1301.0,
+                        140.0
+                      ],
+                      "StretchMode": 2,
+                      "SizingMode": 0,
+                      "AspectRatio": 1.0,
+                      "Alpha": 1.0
+                    }
+                  },
+                  {
+                    "Type": 7,
+                    "Data": {
+                      "UID": 9934829375603252953,
+                      "ComponentType": 7,
+                      "Active": true,
+                      "TextureAssetId": {
+                        "uid": 13122372935860040410,
+                        "libId": "00a9748b6a963d55cc610015b8c96b83"
+                      },
+                      "FillAmount": 1.0,
+                      "FillMethod": 0,
+                      "FillOrigin": 0,
+                      "SheetColumns": 1,
+                      "SheetRows": 1,
+                      "SheetOffset": [
+                        0.0,
+                        0.0
+                      ],
+                      "StretchDrawMode": 0
+                    }
+                  },
+                  {
+                    "Type": 14,
+                    "Data": {
+                      "UID": 1029083385113641433,
+                      "ComponentType": 14,
+                      "Active": true,
+                      "FillAmount": 1.0,
+                      "FillMethod": 0,
+                      "FillOrigin": 0
+                    }
+                  }
+                ],
+                "Children": []
+              },
+              {
+                "Name": "Health Slider Frame",
+                "Active": true,
+                "Tag": "DEFAULT",
+                "Layer": "DEFAULT",
+                "Transform": {
+                  "position": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0,
+                    1.0
+                  ],
+                  "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ]
+                },
+                "Components": [
+                  {
+                    "Type": 5,
+                    "Data": {
+                      "UID": 17003053027881790833,
+                      "ComponentType": 5,
+                      "Active": true,
+                      "Position": [
+                        0.0,
+                        0.0
+                      ],
+                      "Scale": [
+                        1.0,
+                        1.0
+                      ],
+                      "Pivot": [
+                        0.5,
+                        0.5
+                      ],
+                      "AnchorMin": [
+                        0.5,
+                        0.0
+                      ],
+                      "AnchorMax": [
+                        0.5,
+                        1.0
+                      ],
+                      "BaseSize": [
+                        1301.0,
+                        140.0
+                      ],
+                      "StretchMode": 2,
+                      "SizingMode": 0,
+                      "AspectRatio": 1.0,
+                      "Alpha": 1.0
+                    }
+                  },
+                  {
+                    "Type": 7,
+                    "Data": {
+                      "UID": 18030450888076092655,
+                      "ComponentType": 7,
+                      "Active": true,
+                      "TextureAssetId": {
+                        "uid": 8568987479420228082,
+                        "libId": "c8929af15acd6e3c1052c4e170aff21a"
+                      },
+                      "FillAmount": 1.0,
+                      "FillMethod": 0,
+                      "FillOrigin": 0,
+                      "SheetColumns": 1,
+                      "SheetRows": 1,
+                      "SheetOffset": [
+                        0.0,
+                        0.0
+                      ],
+                      "StretchDrawMode": 0
+                    }
+                  }
+                ],
+                "Children": []
+              }
+            ]
           }
         ]
       }
