@@ -274,6 +274,7 @@ void PlayerDownState::setupUI()
         }
     }
 
+	m_downedSpriteTransform = m_downedSprite.getReferencedComponent();
     if (m_downedSpriteTransform)
     {
 		GameObjectAPI::setActive(m_downedSpriteTransform->getOwner(), false);
