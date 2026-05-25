@@ -29,6 +29,8 @@ DeathBasicAttack::DeathBasicAttack(GameObject* owner)
 void DeathBasicAttack::Start()
 {
     DeathAbilityBase::Start();
+
+    setupUI();
 }
 
 void DeathBasicAttack::Update()
@@ -43,6 +45,8 @@ void DeathBasicAttack::Update()
             releaseComboMoveLock();
         }
     }
+
+    updateUI();
 
     // Block new input while the attack window is still running
     if (m_attackStateTimer > 0.0f)
@@ -381,6 +385,56 @@ void DeathBasicAttack::faceTarget(GameObject* target)
     dir.Normalize();
 
     playerRotation->applyFacingFromDirection(getOwner(), dir, Time::getDeltaTime());
+}
+
+void DeathBasicAttack::setupUI()
+{
+    Transform* t = GameObjectAPI::getTransform(getOwner());
+    if (t)
+    {
+        m_deathSlashUITransform = TransformAPI::findChildByName(t, "DeathSlashUI");
+        if (m_deathSlashUITransform)
+        {
+            GameObjectAPI::setActive(m_deathSlashUITransform->getOwner(), false);
+            m_deathSlashUISlider = static_cast<UISlider*>(GameObjectAPI::getComponent(m_deathSlashUITransform->getOwner(), ComponentType::UISLIDER));
+            if (m_deathSlashUISlider)
+            {
+                SliderAPI::setFillAmount(m_deathSlashUISlider, 0.0f);
+            }
+        }
+    }
+
+    if (!m_deathSlashUITransform)
+    {
+        Debug::warn("DeathBasicAttack on '%s' could not find DeathSlashUI child for attack UI.", GameObjectAPI::getName(getOwner()));
+    }
+    else if (!m_deathSlashUISlider)
+    {
+        Debug::warn("DeathBasicAttack on '%s' could not find UISlider on DeathSlashUI for attack UI.", GameObjectAPI::getName(getOwner()));
+    }
+}
+
+void DeathBasicAttack::updateUI()
+{
+    AbilityBase::updateUI();
+
+    if (m_deathSlashUITransform == nullptr || m_deathSlashUISlider == nullptr)
+    {
+        return;
+    }
+
+	Debug::log("[UI] attack window timer: %.2f / %.2f", m_attackStateTimer, m_attackLockDuration);
+
+    const bool showUI = m_attackStateTimer > 0.0f;
+    GameObjectAPI::setActive(m_deathSlashUITransform->getOwner(), showUI);
+    if (showUI)
+    {
+        const float t = 1.0f - (m_attackStateTimer / m_attackLockDuration);
+        SliderAPI::setFillOrigin(m_deathSlashUISlider, t < 0.5f ? FillOrigin::Radial180BottomCCW : FillOrigin::Radial180Bottom);
+        const float fillAmount = MathAPI::pingPong(t);
+        const float easedFill = MathAPI::evaluateEasing(MathAPI::EasingType::EaseOutCubic, fillAmount);
+        SliderAPI::setFillAmount(m_deathSlashUISlider, fillAmount);
+    }
 }
 
 IMPLEMENT_SCRIPT(DeathBasicAttack)
