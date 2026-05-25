@@ -11,10 +11,17 @@ ArthurRecover::ArthurRecover(GameObject* owner)
 void ArthurRecover::OnStateEnter()
 {
 	m_arthurController = GameObjectAPI::findScript<ArthurBossController>(getOwner());
+	m_animation = AnimationAPI::getAnimationComponent(getOwner());
 
 	if (!m_arthurController)
 	{
 		Debug::error("[ArthurRecover] ArthurBossController not found.");
+		return;
+	}
+
+	if (!m_animation)
+	{
+		Debug::error("[ArthurRecover] AnimationComponent not found.");
 		return;
 	}
 
@@ -27,38 +34,35 @@ void ArthurRecover::OnStateEnter()
 
 void ArthurRecover::OnStateUpdate()
 {
-	m_stateTimer += Time::getDeltaTime();
-
-	AnimationComponent* animation = AnimationAPI::getAnimationComponent(getOwner());
-	if (!animation)
+	if (!m_arthurController || !m_animation)
 	{
-		Debug::error("[ArthurRecover] Animation Component not found.");
 		return;
 	}
 
-	if (!m_arthurController)
+	m_stateTimer += Time::getDeltaTime();
+
+	if (m_arthurController->trySendDeathTrigger(m_animation))
 	{
-		Debug::error("[ArthurRecover] ArthurBossController not found.");
 		return;
 	}
 
 	if (m_arthurController->isDead())
 	{
 		m_arthurController->clearPath();
-		AnimationAPI::sendTrigger(animation, "ToDeath");
+		AnimationAPI::sendTrigger(m_animation, "ToDeath");
 		return;
 	}
 
 	if (!m_arthurController->hasValidTarget())
 	{
 		m_arthurController->clearPath();
-		AnimationAPI::sendTrigger(animation, "ToIdle");
+		AnimationAPI::sendTrigger(m_animation, "ToIdle");
 		return;
 	}
 
 	if (m_stateTimer >= m_arthurController->getRecoveryDuration())
 	{
-		AnimationAPI::sendTrigger(animation, "ToChase");
+		AnimationAPI::sendTrigger(m_animation, "ToChase");
 		return;
 	}
 }

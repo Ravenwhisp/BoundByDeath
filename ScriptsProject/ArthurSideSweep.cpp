@@ -3,7 +3,7 @@
 
 #include "ArthurBossController.h"
 #include "ArthurAttackConfig.h"
-#include "ArthurAttackExecutor.h"
+#include "EnemyAttackExecutor.h"
 
 ArthurSideSweep::ArthurSideSweep(GameObject* owner)
     : StateMachineScript(owner)
@@ -14,7 +14,8 @@ void ArthurSideSweep::OnStateEnter()
 {
     m_arthurController = GameObjectAPI::findScript<ArthurBossController>(getOwner());
     m_attackConfig = GameObjectAPI::findScript<ArthurAttackConfig>(getOwner());
-    m_attackExecutor = GameObjectAPI::findScript<ArthurAttackExecutor>(getOwner());
+    m_attackExecutor = GameObjectAPI::findScript<EnemyAttackExecutor>(getOwner());
+    m_animation = AnimationAPI::getAnimationComponent(getOwner());
 
     m_stateTimer = 0.0f;
     m_hasAppliedHit = false;
@@ -33,7 +34,13 @@ void ArthurSideSweep::OnStateEnter()
 
     if (!m_attackExecutor)
     {
-        Debug::error("[ArthurSideSweep] ArthurAttackExecutor not found.");
+        Debug::error("[ArthurSideSweep] EnemyAttackExecutor not found.");
+        return;
+    }
+
+    if (!m_animation)
+    {
+        Debug::error("[ArthurSideSweep] AnimationComponent not found.");
         return;
     }
 
@@ -49,21 +56,13 @@ void ArthurSideSweep::OnStateEnter()
 
 void ArthurSideSweep::OnStateUpdate()
 {
-    if (!m_arthurController || !m_attackConfig || !m_attackExecutor)
+    if (!m_arthurController || !m_attackConfig || !m_attackExecutor || !m_animation)
     {
         return;
     }
 
-    AnimationComponent* animation = AnimationAPI::getAnimationComponent(getOwner());
-    if (!animation)
+    if (m_arthurController->trySendDeathTrigger(m_animation))
     {
-        return;
-    }
-
-    if (m_arthurController->isDead())
-    {
-        m_arthurController->clearPath();
-        AnimationAPI::sendTrigger(animation, "ToDeath");
         return;
     }
 
@@ -125,13 +124,7 @@ void ArthurSideSweep::applyHit()
 
 void ArthurSideSweep::goToRecover()
 {
-    if (!m_attackConfig)
-    {
-        return;
-    }
-
-    AnimationComponent* animation = AnimationAPI::getAnimationComponent(getOwner());
-    if (!animation)
+    if (!m_attackConfig || !m_animation)
     {
         return;
     }
@@ -150,7 +143,7 @@ void ArthurSideSweep::goToRecover()
 
     Debug::log("[ArthurSideSweep] Going to Recover.");
 
-    AnimationAPI::sendTrigger(animation, "ToRecover");
+    AnimationAPI::sendTrigger(m_animation, "ToRecover");
 }
 
 void ArthurSideSweep::setupUI()

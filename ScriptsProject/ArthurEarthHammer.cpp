@@ -3,7 +3,7 @@
 
 #include "ArthurBossController.h"
 #include "ArthurAttackConfig.h"
-#include "ArthurAttackExecutor.h"
+#include "EnemyAttackExecutor.h"
 
 ArthurEarthHammer::ArthurEarthHammer(GameObject* owner)
     : StateMachineScript(owner)
@@ -14,7 +14,8 @@ void ArthurEarthHammer::OnStateEnter()
 {
     m_arthurController = GameObjectAPI::findScript<ArthurBossController>(getOwner());
     m_attackConfig = GameObjectAPI::findScript<ArthurAttackConfig>(getOwner());
-    m_attackExecutor = GameObjectAPI::findScript<ArthurAttackExecutor>(getOwner());
+    m_attackExecutor = GameObjectAPI::findScript<EnemyAttackExecutor>(getOwner());
+    m_animation = AnimationAPI::getAnimationComponent(getOwner());
 
     m_stateTimer = 0.0f;
     m_hasAppliedImpact = false;
@@ -33,7 +34,13 @@ void ArthurEarthHammer::OnStateEnter()
 
     if (!m_attackExecutor)
     {
-        Debug::error("[ArthurEarthHammer] ArthurAttackExecutor not found.");
+        Debug::error("[ArthurEarthHammer] EnemyAttackExecutor not found.");
+        return;
+    }
+
+    if (!m_animation)
+    {
+        Debug::error("[ArthurEarthHammer] AnimationComponent not found.");
         return;
     }
 
@@ -48,21 +55,13 @@ void ArthurEarthHammer::OnStateEnter()
 
 void ArthurEarthHammer::OnStateUpdate()
 {
-    if (!m_arthurController || !m_attackConfig || !m_attackExecutor)
+    if (!m_arthurController || !m_attackConfig || !m_attackExecutor || !m_animation)
     {
         return;
     }
 
-    AnimationComponent* animation = AnimationAPI::getAnimationComponent(getOwner());
-    if (!animation)
+    if (m_arthurController->trySendDeathTrigger(m_animation))
     {
-        return;
-    }
-
-    if (m_arthurController->isDead())
-    {
-        m_arthurController->clearPath();
-        AnimationAPI::sendTrigger(animation, "ToDeath");
         return;
     }
 
@@ -124,13 +123,7 @@ void ArthurEarthHammer::applyImpact()
 
 void ArthurEarthHammer::goToRecover()
 {
-    if (!m_attackConfig)
-    {
-        return;
-    }
-
-    AnimationComponent* animation = AnimationAPI::getAnimationComponent(getOwner());
-    if (!animation)
+    if (!m_attackConfig || !m_animation)
     {
         return;
     }
@@ -142,7 +135,7 @@ void ArthurEarthHammer::goToRecover()
 
     Debug::log("[ArthurEarthHammer] Going to Recover.");
 
-    AnimationAPI::sendTrigger(animation, "ToRecover");
+    AnimationAPI::sendTrigger(m_animation, "ToRecover");
 }
 
 void ArthurEarthHammer::setupUI()

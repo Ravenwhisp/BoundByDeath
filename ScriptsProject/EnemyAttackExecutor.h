@@ -2,15 +2,15 @@
 
 #include "ScriptAPI.h"
 
-class ArthurDetectionAggro;
+class EnemyDetectionAggro;
 class PlayerStunState;
 
-class ArthurAttackExecutor : public Script
+class EnemyAttackExecutor : public Script
 {
-    DECLARE_SCRIPT(ArthurAttackExecutor)
+    DECLARE_SCRIPT(EnemyAttackExecutor)
 
 public:
-    explicit ArthurAttackExecutor(GameObject* owner);
+    explicit EnemyAttackExecutor(GameObject* owner);
 
     void Start() override;
 
@@ -28,5 +28,5 @@ private:
     void applyStunToTarget(Transform* targetTransform, float stunDuration, const char* sourceName);
 
 private:
-    ArthurDetectionAggro* m_arthurDetectionAggro = nullptr;
+    EnemyDetectionAggro* m_enemyDetectionAggro = nullptr;
 };

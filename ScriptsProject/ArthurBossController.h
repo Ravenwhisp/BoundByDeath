@@ -49,6 +49,8 @@ private:
 	Vector3 m_searchExtents = Vector3(5.0f, 5.0f, 5.0f);
 	const float RADIANS_TO_DEGREES = 180.0f / 3.14159265f;
 
+	bool m_deathTriggerSent = false;
+
 	float m_recoveryDuration = 0.75f;
 
 	int m_selectedSideSweepSide = 1;
@@ -65,6 +67,7 @@ public:
 	float getDistanceToCurrentTarget() const; // Get the distance between target and boss and compare with the different attack ranges
 	Transform* getCurrentTarget() const { return m_currentTarget; }
 	bool isDead() const;
+	bool trySendDeathTrigger(AnimationComponent* animation);
 
 	// Phase helpers
 	void setPhase(ArthurBossPhase phase);
