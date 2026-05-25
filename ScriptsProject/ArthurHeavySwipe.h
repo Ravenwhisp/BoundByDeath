@@ -22,6 +22,10 @@ private:
     void tryApplyHit(int hitIndex);
     void goToRecover();
 
+    void setupUI();
+    void updateUI();
+	void applyHitEffects(float t, Transform2D* glow, Transform2D* border, Transform2D* claw);
+
 private:
     ArthurBossController* m_arthurController = nullptr;
     ArthurAttackConfig* m_attackConfig = nullptr;

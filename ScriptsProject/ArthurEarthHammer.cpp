@@ -41,6 +41,8 @@ void ArthurEarthHammer::OnStateEnter()
     m_arthurController->updateCurrentTarget();
     m_arthurController->faceCurrentTarget();
 
+    setupUI();
+
     Debug::log("[ArthurEarthHammer] ENTER");
 }
 
@@ -66,6 +68,8 @@ void ArthurEarthHammer::OnStateUpdate()
 
     m_stateTimer += Time::getDeltaTime();
 
+    updateUI();
+
     if (!m_hasAppliedImpact && m_stateTimer >= m_attackConfig->m_earthHammerHitTime)
     {
         applyImpact();
@@ -81,6 +85,11 @@ void ArthurEarthHammer::OnStateUpdate()
 
 void ArthurEarthHammer::OnStateExit()
 {
+    if (m_attackConfig)
+    {
+        GameObjectAPI::setActive(m_attackConfig->m_earthHammerUICanvasTransform->getOwner(), false);
+	}
+
     Debug::log("[ArthurEarthHammer] EXIT");
 }
 
@@ -134,6 +143,84 @@ void ArthurEarthHammer::goToRecover()
     Debug::log("[ArthurEarthHammer] Going to Recover.");
 
     AnimationAPI::sendTrigger(animation, "ToRecover");
+}
+
+void ArthurEarthHammer::setupUI()
+{
+    m_hasStartedImpactUI = false;
+
+    m_impactUITimer = 0.0f;
+
+    m_innerScale = 0.1f;
+
+    GameObjectAPI::setActive(m_attackConfig->m_earthHammerUICanvasTransform->getOwner(), true);
+
+    Transform2DAPI::setAlpha(m_attackConfig->m_earthHammerUIRingTransform2D, 1.0f);
+    Transform2DAPI::setAlpha(m_attackConfig->m_earthHammerUIInnerTransform2D, 1.0f);
+    Transform2DAPI::setAlpha(m_attackConfig->m_earthHammerUISpikesTransform2D, 0.0f);
+    Transform2DAPI::setAlpha(m_attackConfig->m_earthHammerUIGlowTransform2D, 0.0f);
+    Transform2DAPI::setAlpha(m_attackConfig->m_earthHammerUIContainerTransform2D, 0.0f);
+}
+
+void ArthurEarthHammer::updateUI()
+{
+    if (!m_attackConfig)
+    {
+        return;
+    }
+
+
+    Transform2D* container = m_attackConfig->m_earthHammerUIContainerTransform2D;
+    Transform2D* ring = m_attackConfig->m_earthHammerUIRingTransform2D;
+    Transform2D* inner = m_attackConfig->m_earthHammerUIInnerTransform2D;
+	Transform2D* spikes = m_attackConfig->m_earthHammerUISpikesTransform2D;
+    Transform2D* glow = m_attackConfig->m_earthHammerUIGlowTransform2D;
+
+    if (!container || !ring || !inner || !spikes || !glow)
+    {
+        return;
+    }
+
+    const float hitTime = m_attackConfig->m_earthHammerHitTime;
+    const float totalTime = m_attackConfig->m_earthHammerTotalDuration;
+
+    // CHARGE PHASE
+
+    if (!m_hasAppliedImpact)
+    {
+        const float t = std::clamp(m_stateTimer / hitTime, 0.0f, 1.0f);
+        
+        const float ringAlpha = MathAPI::evaluateEasing(MathAPI::EasingType::EaseOutQuad, t);
+        Transform2DAPI::setAlpha(container, ringAlpha);
+
+        m_innerScale = 0.1f + (t * 0.9f);
+        Transform2DAPI::setScale(inner, Vector2(m_innerScale, m_innerScale));
+
+        return;
+    }
+
+    // IMPACT PHASE
+
+    if (!m_hasStartedImpactUI)
+    {
+        m_hasStartedImpactUI = true;
+        m_impactUITimer = 0.0f;
+        m_innerScale = 1.0f;
+    }
+
+    const float dt = Time::getDeltaTime();
+    m_impactUITimer += dt;
+
+    const float impactDuration = m_attackConfig->m_earthHammerRecoveryDuration;
+    const float t = std::clamp(m_impactUITimer / impactDuration, 0.0f, 1.0f);
+
+
+    const float containerAlpha = 1.0f - MathAPI::evaluateEasing(MathAPI::EasingType::EaseInCubic, t);
+    Transform2DAPI::setAlpha(container, containerAlpha);
+
+    const float glowAlpha = 1.0f - MathAPI::evaluateEasing(MathAPI::EasingType::EaseOutQuad, t);
+    Transform2DAPI::setAlpha(glow, glowAlpha);
+    Transform2DAPI::setAlpha(spikes, glowAlpha);
 }
 
 IMPLEMENT_SCRIPT(ArthurEarthHammer)
