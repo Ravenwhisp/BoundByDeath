@@ -91,6 +91,7 @@ public:
 	Transform* getNonFocusTarget() const;
 
 	void faceCurrentTarget();
+	void facePosition(const Vector3& worldPosition);
 
 	void setRecoveryDuration(float recoveryDuration);
 	float getRecoveryDuration() const { return m_recoveryDuration; }

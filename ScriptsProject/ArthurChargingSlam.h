@@ -20,6 +20,8 @@ public:
     void OnStateUpdate() override;
     void OnStateExit() override;
 
+    ScriptFieldList getExposedFields() const override;
+
 private:
     void lockTargetPosition();
 
@@ -34,6 +36,15 @@ private:
 
     void setupUI();
     void updateUI();
+
+    // Animations
+    void setupAnimationPrepSection();
+    void setupAnimationDashSection();
+    void setupAnimationImpactSection();
+
+    float getChargingDuration() const;
+    float getDashSpeed() const;
+    float getSafeSectionSpeed(float animationSectionDuration, float gameplayDuration) const;
 
 private:
     ArthurBossController* m_arthurController = nullptr;
@@ -62,4 +73,12 @@ private:
 
     bool m_isFadingImpactUI = false;
     float m_impactUIFadeTimer = 0.0f;
+
+    // Animation Timings
+    float m_animPrepStartTime = 0.0f;
+    float m_animDashStartTime = 2.0f;
+    float m_animImpactStartTime = 3.0f;
+    float m_animEndTime = 4.0f;
+
+    float m_previousAnimationSpeed = 1.0f;
 };

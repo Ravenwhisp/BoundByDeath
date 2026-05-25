@@ -177,7 +177,7 @@
             "clipName": "Arthur_ChargeSlam",
             "speed": 1.0,
             "behaviourScriptName": "ArthurChargingSlam",
-            "behaviourFieldsJson": "",
+            "behaviourFieldsJson": "{\"Anim Prep Start Time\":0.0,\"Anim Dash Start Time\":2.5,\"Anim Impact Start Time\":5.0,\"Anim End Time\":6.5}",
             "overrideLoop": true,
             "loop": false
         },
@@ -376,6 +376,18 @@
             "sourceStateName": "LEFT SIDE SWEEP",
             "targetStateName": "Arthur_Death",
             "triggerName": "ToDeath",
+            "blendTimeSeconds": 0.25
+        },
+        {
+            "sourceStateName": "Arthur_Recover",
+            "targetStateName": "IDLE",
+            "triggerName": "ToIdle",
+            "blendTimeSeconds": 0.25
+        },
+        {
+            "sourceStateName": "CHASE",
+            "targetStateName": "IDLE",
+            "triggerName": "ToIdle",
             "blendTimeSeconds": 0.25
         }
     ]

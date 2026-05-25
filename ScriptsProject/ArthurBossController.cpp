@@ -479,6 +479,22 @@ void ArthurBossController::faceCurrentTarget()
 	rotateTowardsDirection(direction);
 }
 
+void ArthurBossController::facePosition(const Vector3& worldPosition)
+{
+	Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
+	Vector3 ownerPosition = TransformAPI::getGlobalPosition(ownerTransform);
+
+	Vector3 direction = worldPosition - ownerPosition;
+	direction.y = 0.0f;
+
+	if (direction.LengthSquared() < 0.0001f)
+	{
+		return;
+	}
+
+	rotateTowardsDirection(direction);
+}
+
 void ArthurBossController::setRecoveryDuration(float recoveryDuration)
 {
 	m_recoveryDuration = recoveryDuration;
