@@ -2,15 +2,15 @@
   "SourcePath": "Assets\\Prefabs\\Particles\\LyrielArrowParticle.prefab",
   "Name": "LyrielArrowParticle",
   "Version": 2,
-  "VariantOf": "Assets\\Prefabs\\LyrielArrowParticle.prefab",
+  "VariantOf": "Assets\\Models\\Weapons\\Arrow\\LyrielArrow.prefab",
   "GameObject": {
     "Name": "LyrielArrowParticle",
     "Active": true,
     "Tag": "DEFAULT",
     "Layer": "DEFAULT",
     "PrefabLink": {
-      "SourcePath": "Assets\\Prefabs\\LyrielArrowParticle.prefab",
-      "AssetUID": 7683243865458335400
+      "SourcePath": "Assets\\Models\\Weapons\\Arrow\\LyrielArrow.prefab",
+      "AssetUID": 1034278393325999122
     },
     "Transform": {
       "position": [
@@ -34,7 +34,7 @@
       {
         "Type": 1,
         "Data": {
-          "UID": 17142121855436090531,
+          "UID": 17355007504104811624,
           "ComponentType": 1,
           "Active": true,
           "MeshAssetId": {
@@ -56,11 +56,13 @@
       {
         "Type": 3,
         "Data": {
-          "UID": 13090445972221460546,
+          "UID": 15026659658363346571,
           "ComponentType": 3,
           "Active": true,
           "ScriptName": "LyrielArrowProjectile",
-          "ScriptFields": {}
+          "ScriptFields": {
+            "Particle Prefab Path": ""
+          }
         }
       }
     ],
@@ -70,29 +72,33 @@
         "Active": true,
         "Tag": "DEFAULT",
         "Layer": "DEFAULT",
+        "PrefabLink": {
+          "SourcePath": "Assets\\Prefabs\\Particles\\ParticleLyrielArrow.prefab",
+          "AssetUID": 2784579969055712761
+        },
         "Transform": {
           "position": [
-            1.311011791229248,
-            0.04543162509799003,
-            -1.4901161193847656e-8
+            -0.019947528839111328,
+            0.022715812548995015,
+            -2.9802322387695313e-8
           ],
           "rotation": [
             0.5000000596046448,
-            0.5,
-            0.5,
-            0.4999999701976776
+            0.4999999403953552,
+            0.5000000596046448,
+            0.4999999403953552
           ],
           "scale": [
-            0.5007719993591309,
+            0.25038599967956543,
             0.5151686668395996,
-            1.0470174551010132
+            0.5235087275505066
           ]
         },
         "Components": [
           {
             "Type": 17,
             "Data": {
-              "UID": 14328849576976923871,
+              "UID": 18108070553858823335,
               "ComponentType": 17,
               "Active": true,
               "TextureAssetId": {
@@ -142,13 +148,20 @@
                     {
                       "ModuleType": 6,
                       "StartScale": [
-                        0.25,
-                        0.25
+                        0.4000000059604645,
+                        0.4000000059604645
                       ],
                       "EndScale": [
                         0.0,
                         0.0
                       ]
+                    },
+                    {
+                      "ModuleType": 7,
+                      "StartRotation": 0.0,
+                      "VelocityType": 0,
+                      "AngularVelocity": 0.0,
+                      "FlipRotation": 0.0
                     }
                   ]
                 }
