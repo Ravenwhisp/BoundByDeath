@@ -5,7 +5,9 @@
 
 class ArthurBossController;
 class ArthurAttackConfig;
-class ArthurAttackExecutor;
+class EnemyAttackExecutor;
+class AnimationComponent;
+
 
 class ArthurSideSweep : public StateMachineScript
 {
@@ -22,10 +24,14 @@ private:
     void applyHit();
     void goToRecover();
 
+	void setupUI();
+	void updateUI();
+
 private:
     ArthurBossController* m_arthurController = nullptr;
     ArthurAttackConfig* m_attackConfig = nullptr;
-    ArthurAttackExecutor* m_attackExecutor = nullptr;
+    EnemyAttackExecutor* m_attackExecutor = nullptr;
+    AnimationComponent* m_animation = nullptr;
 
     float m_stateTimer = 0.0f;
 
