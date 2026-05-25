@@ -9,6 +9,8 @@ class ArcherAttackConfig : public Script
 public:
     explicit ArcherAttackConfig(GameObject* owner);
 
+    void Start() override;
+
     ScriptFieldList getExposedFields() const override;
 
 public:
@@ -28,9 +30,14 @@ public:
     float m_arrowBarrageTotalDuration = 1.7f;
     float m_arrowBarrageCooldown = 5.0f;
 
+    Transform* m_barrageUITransform = nullptr;
+    Transform2D* m_barrageUITransform2D = nullptr;
+    Transform2D* m_barrageUIGlow = nullptr;
+
     // Somersault
     float m_somersaultTriggerRange = 2.0f;
     float m_somersaultDistance = 4.0f;
     float m_somersaultDuration = 0.35f;
     float m_somersaultCooldown = 9.0f;
+
 };
