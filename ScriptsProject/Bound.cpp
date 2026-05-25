@@ -97,7 +97,7 @@ void Bound::Update()
 
         if (m_haptic)
         {
-            if (!p1LowHp && !p2LowHp)
+            if (p1LowHp && p2LowHp)
                 m_haptic->tick(t);
             else
                 m_haptic->stop();
