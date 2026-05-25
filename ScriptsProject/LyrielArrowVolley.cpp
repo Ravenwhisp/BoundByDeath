@@ -317,7 +317,11 @@ void LyrielArrowVolley::applyVolleyDamage(const std::vector<Damageable*>& target
 
         if(EnemyDamageable* enemyDamageable = dynamic_cast<EnemyDamageable*>(target))
         {
-            enemyDamageable->takeDamageEnemy(m_volleyDamage, GameObjectAPI::getTransform(getOwner()));
+            EnemyHitContext ctx;
+            ctx.damage = m_volleyDamage;
+            ctx.attacker = GameObjectAPI::getTransform(getOwner());
+            ctx.attackType = EnemyAttackType::LyrielVolley;
+            enemyDamageable->takeDamage(ctx);
         }
         else if(BreakableDamageable* breakableDamageable = dynamic_cast<BreakableDamageable*>(target))
         {

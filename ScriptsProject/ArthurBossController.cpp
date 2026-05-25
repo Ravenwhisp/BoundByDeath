@@ -20,7 +20,11 @@ IMPLEMENT_SCRIPT_FIELDS(ArthurBossController,
 	SERIALIZED_FLOAT(m_moveSpeed, "Move Speed", 0.0f, 50.0f, 0.1f),
 	SERIALIZED_FLOAT(m_turnSpeed, "Turn Speed", 0.0f, 5.0f, 0.1f),
 	SERIALIZED_FLOAT(m_intervalRepath, "Interval", 0.0f, 50.0f, 0.1f),
-	SERIALIZED_BOOL(m_debugEnabled, "Debug Enabled")
+	SERIALIZED_BOOL(m_debugEnabled, "Debug Enabled"),
+	SERIALIZED_COMPONENT_REF(m_healthBarCanvas, "Health Bar Canvas", ComponentType::TRANSFORM),
+	SERIALIZED_COMPONENT_REF(m_healthBarContainer, "Health Bar Container", ComponentType::TRANSFORM2D),
+	SERIALIZED_COMPONENT_REF(m_healthBarPhase2, "Health Bar Phase 2", ComponentType::TRANSFORM2D),
+	SERIALIZED_FLOAT(m_healthBarDuration, "Health Bar Duration", 0.0f, 10.0f, 0.1f)
 )
 
 ArthurBossController::ArthurBossController(GameObject* owner)
@@ -43,6 +47,8 @@ void ArthurBossController::Start()
 	{
 		Debug::error("ArthurAttackConfig script not found!");
 	}
+
+	setupHealthUI();
 }
 
 void ArthurBossController::drawGizmo()
@@ -71,11 +77,14 @@ void ArthurBossController::Update()
 	{
 		m_arthurDetectionAggro->startEncounter();
 		m_hasStartedEncounter = true;
+		showHealthUI(true);
 	}
 
 	updateAttackCooldowns(Time::getDeltaTime());
 
 	updateBossPhase();
+
+	updateHealthUI();
 }
 
 bool ArthurBossController::hasValidTarget() const
@@ -146,17 +155,50 @@ float ArthurBossController::getDistanceToCurrentTarget() const
 
 	return difference.Length();
 }
-
+  
 bool ArthurBossController::isDead() const
 {
-	Damageable* damageable = GameObjectAPI::findScript<Damageable>(getOwner());
+  Damageable* damageable = GameObjectAPI::findScript<Damageable>(getOwner());
 
-	if (damageable && damageable->isDead())
+    if (damageable && damageable->isDead())
+    {
+      return true;
+    }
+
+    return false;
+  }
+
+bool ArthurBossController::trySendDeathTrigger(AnimationComponent* animation)
+{
+	if (m_deathTriggerSent)
 	{
-		return true;
+		return false;
 	}
 
-	return false;
+	if (!isDead())
+	{
+		return false;
+	}
+
+	if (!animation)
+	{
+		return false;
+	}
+
+	clearPath();
+
+	const bool sent = AnimationAPI::sendTrigger(animation, "ToDeath");
+
+	if (!sent)
+	{
+		return false;
+	}
+
+	m_deathTriggerSent = true;
+
+	Debug::log("[ArthurBossController] ToDeath trigger sent.");
+
+	return true;
 }
 
 void ArthurBossController::setPhase(ArthurBossPhase phase)
@@ -182,15 +224,17 @@ void ArthurBossController::updateBossPhase()
 		return;
 	}
 
-	if (damageable->getMaxHp() <= 0.0f)
-	{
-		return;
-	}
+    if (damageable->getMaxHp() <= 0.0f)
+    {
+      return;
+    }
 
-	if (damageable->getCurrentHp() <= damageable->getMaxHp() * 0.5f)
-	{
-		setPhase(ArthurBossPhase::Phase2);
-	}
+    if (damageable->getCurrentHp() <= damageable->getMaxHp() * 0.5f)
+    {
+      setPhase(ArthurBossPhase::Phase2);
+    }
+	
+	updateHealthUIPhase();
 }
 
 void ArthurBossController::updateAttackCooldowns(float dt)
@@ -692,6 +736,62 @@ void ArthurBossController::addToRepathTimer(float dt)
 bool ArthurBossController::shouldRepath() const
 {
 	return m_repathTimer >= m_intervalRepath;
+}
+
+void ArthurBossController::updateHealthUI()
+{
+	if (!m_healthBarCanvasTransform || !m_healthBarContainerTransform2D || !m_healthBarPhase2Transform2D)
+	{
+		return;
+	}
+
+	if (m_healthBarTimer > 0.0f)
+	{
+		m_healthBarTimer -= Time::getDeltaTime();
+
+		const float t = std::clamp(m_healthBarTimer / m_healthBarDuration, 0.0f, 1.0f);
+		const float size = - Transform2DAPI::getBaseSize(m_healthBarContainerTransform2D).y * 0.5f;
+		const float position = (m_healthBarVisible ? t : 1.0f - t) * size;
+		const float alpha = m_healthBarVisible ? 1.0f - t : t;
+		Transform2DAPI::setPosition(m_healthBarContainerTransform2D, Vector2(0.0f, position));
+		Transform2DAPI::setAlpha(m_healthBarContainerTransform2D, alpha);
+	}
+	if (m_healthBarTimer <= 0.0f)
+	{
+		GameObjectAPI::setActive(m_healthBarCanvasTransform->getOwner(), m_healthBarVisible);
+		Transform2DAPI::setAlpha(m_healthBarContainerTransform2D, m_healthBarVisible ? 1.0f : 0.0f);
+	}
+
+	if (m_healthBarPhase2Timer > 0.0f)
+	{
+		m_healthBarPhase2Timer -= Time::getDeltaTime();
+		const float t = 1.0f - std::clamp(m_healthBarPhase2Timer / m_healthBarDuration, 0.0f, 1.0f);
+		Transform2DAPI::setAlpha(m_healthBarPhase2Transform2D, t);
+	}
+}
+
+void ArthurBossController::setupHealthUI()
+{
+	m_healthBarCanvasTransform = m_healthBarCanvas.getReferencedComponent();
+	m_healthBarContainerTransform2D = m_healthBarContainer.getReferencedComponent();
+	m_healthBarPhase2Transform2D = m_healthBarPhase2.getReferencedComponent();
+	if (m_healthBarCanvasTransform)
+	{
+		GameObjectAPI::setActive(m_healthBarCanvasTransform->getOwner(), false);
+	}
+}
+
+void ArthurBossController::showHealthUI(bool show)
+{
+	m_healthBarVisible = show;
+	m_healthBarTimer = m_healthBarDuration;
+	GameObjectAPI::setActive(m_healthBarCanvasTransform->getOwner(), true);
+}
+
+void ArthurBossController::updateHealthUIPhase()
+{
+	m_healthBarPhase2Visible = true;
+	m_healthBarPhase2Timer = m_healthBarDuration;
 }
 
 IMPLEMENT_SCRIPT(ArthurBossController)

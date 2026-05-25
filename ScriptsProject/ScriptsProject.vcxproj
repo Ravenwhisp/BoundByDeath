@@ -86,6 +86,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -103,6 +104,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -163,10 +165,13 @@
     <ClInclude Include="..\Engine\Assets\Scripts\TestingButton.h" />
     <ClInclude Include="..\Engine\Assets\Scripts\TriggerArea.h" />
     <ClInclude Include="AbilityBase.h" />
+    <ClInclude Include="ArcherArrowBarrageState.h" />
+    <ClInclude Include="ArcherAttackConfig.h" />
+    <ClInclude Include="ArcherSomersaultState.h" />
     <ClInclude Include="ArrowPool.h" />
     <ClInclude Include="ArthurAttackConfig.h" />
     <ClInclude Include="ArthurAttackDebugDraw.h" />
-    <ClInclude Include="ArthurAttackExecutor.h" />
+    <ClInclude Include="EnemyAttackExecutor.h" />
     <ClInclude Include="ArthurBossController.h" />
     <ClInclude Include="ArthurChargingSlam.h" />
     <ClInclude Include="ArthurChase.h" />
@@ -193,10 +198,15 @@
     <ClInclude Include="DebugDamageTrigger.h" />
     <ClInclude Include="DebugDrawTest.h" />
     <ClInclude Include="EnemyATTACK.h" />
+    <ClInclude Include="EnemyAttackState.h" />
     <ClInclude Include="EnemyCHARGE.h" />
     <ClInclude Include="EnemyCHASE.h" />
+    <ClInclude Include="BarrierEnemyDamageable.h" />
+    <ClInclude Include="EnemyChaseState.h" />
     <ClInclude Include="EnemyDamageable.h" />
     <ClInclude Include="EnemyDeathState.h" />
+    <ClInclude Include="LinkedDeathEnemyState.h" />
+    <ClInclude Include="EnemyIdleState.h" />
     <ClInclude Include="EnemyShadowMark.h" />
     <ClInclude Include="HealthDropSpawner.h" />
     <ClInclude Include="HeartbeatHaptic.h" />
@@ -204,6 +214,7 @@
     <ClInclude Include="Pickup.h" />
     <ClInclude Include="PlayerStunState.h" />
     <ClInclude Include="PuzzleManagerLVL1.h" />
+    <ClInclude Include="RangedEnemyController.h" />
     <ClInclude Include="ReaperGauge.h" />
     <ClInclude Include="ShadowExecution.h" />
     <ClInclude Include="EnemyDetectionAggro.h" />
@@ -245,10 +256,13 @@
     <ClCompile Include="..\Engine\Assets\Scripts\TestingButton.cpp" />
     <ClCompile Include="..\Engine\Assets\Scripts\TriggerArea.cpp" />
     <ClCompile Include="AbilityBase.cpp" />
+    <ClCompile Include="ArcherArrowBarrageState.cpp" />
+    <ClCompile Include="ArcherAttackConfig.cpp" />
+    <ClCompile Include="ArcherSomersaultState.cpp" />
     <ClCompile Include="ArrowPool.cpp" />
     <ClCompile Include="ArthurAttackConfig.cpp" />
     <ClCompile Include="ArthurAttackDebugDraw.cpp" />
-    <ClCompile Include="ArthurAttackExecutor.cpp" />
+    <ClCompile Include="EnemyAttackExecutor.cpp" />
     <ClCompile Include="ArthurBossController.cpp" />
     <ClCompile Include="ArthurChargingSlam.cpp" />
     <ClCompile Include="ArthurChase.cpp" />
@@ -276,10 +290,15 @@
     <ClCompile Include="DebugDrawTest.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="EnemyATTACK.cpp" />
+    <ClCompile Include="EnemyAttackState.cpp" />
     <ClCompile Include="EnemyCHARGE.cpp" />
     <ClCompile Include="EnemyCHASE.cpp" />
+    <ClCompile Include="BarrierEnemyDamageable.cpp" />
+    <ClCompile Include="EnemyChaseState.cpp" />
     <ClCompile Include="EnemyDamageable.cpp" />
     <ClCompile Include="EnemyDeathState.cpp" />
+    <ClCompile Include="LinkedDeathEnemyState.cpp" />
+    <ClCompile Include="EnemyIdleState.cpp" />
     <ClCompile Include="EnemyShadowMark.cpp" />
     <ClCompile Include="HealthDropSpawner.cpp" />
     <ClCompile Include="HeartbeatHaptic.cpp" />
@@ -287,6 +306,7 @@
     <ClCompile Include="Pickup.cpp" />
     <ClCompile Include="PlayerStunState.cpp" />
     <ClCompile Include="PuzzleManagerLVL1.cpp" />
+    <ClCompile Include="RangedEnemyController.cpp" />
     <ClCompile Include="ReaperGauge.cpp" />
     <ClCompile Include="ShadowExecution.cpp" />
     <ClCompile Include="EnemyDetectionAggro.cpp" />
