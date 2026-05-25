@@ -322,7 +322,6 @@
     </ClInclude>
     <ClInclude Include="PowerupCollectible.h" />
     <ClInclude Include="PersistingPowerupState.h" />
-
     <ClInclude Include="BreakableDamageable.h">
       <Filter>Combat</Filter>
     </ClInclude>
@@ -345,7 +344,7 @@
     <ClInclude Include="HealthDropSpawner.h">
       <Filter>Interaction/Gameplay\HealthDrop</Filter>
     </ClInclude>
-    <ClInclude Include="PuzzleManagerLVL1.h" >
+    <ClInclude Include="PuzzleManagerLVL1.h">
       <Filter>Interaction/Gameplay\Puzzles</Filter>
     </ClInclude>
     <ClInclude Include="CrystalShadowMark.h">
@@ -424,6 +423,10 @@
     <ClInclude Include="EnemyAttackExecutor.h">
       <Filter>Enemies</Filter>
     </ClInclude>
+    <ClInclude Include="BarrierEnemyDamageable.h" />
+    <ClInclude Include="LinkedDeathEnemyState.h" />
+    <ClInclude Include="HeartbeatHaptic.h" />
+    <ClInclude Include="Level2Cheats.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
@@ -669,7 +672,7 @@
     <ClCompile Include="HealthDropSpawner.cpp">
       <Filter>Interaction/Gameplay\HealthDrop</Filter>
     </ClCompile>
-    <ClCompile Include="PuzzleManagerLVL1.cpp" >
+    <ClCompile Include="PuzzleManagerLVL1.cpp">
       <Filter>Interaction/Gameplay\Puzzles</Filter>
     </ClCompile>
     <ClCompile Include="CrystalShadowMark.cpp">
@@ -748,5 +751,9 @@
     <ClCompile Include="EnemyAttackExecutor.cpp">
       <Filter>Enemies</Filter>
     </ClCompile>
+    <ClCompile Include="BarrierEnemyDamageable.cpp" />
+    <ClCompile Include="LinkedDeathEnemyState.cpp" />
+    <ClCompile Include="HeartbeatHaptic.cpp" />
+    <ClCompile Include="Level2Cheats.cpp" />
   </ItemGroup>
 </Project>
