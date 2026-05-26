@@ -218,6 +218,7 @@
     <ClInclude Include="LightZoneManager.h" />
     <ClInclude Include="LightZoneTrigger.h" />
     <ClInclude Include="PersistingPowerupState.h" />
+    <ClInclude Include="PowerupCollectible.h" />
     <ClInclude Include="Pickup.h" />
     <ClInclude Include="PlayerStunState.h" />
     <ClInclude Include="PuzzleManagerLVL1.h" />
@@ -242,7 +243,6 @@
     <ClInclude Include="AbilityDash.h" />
     <ClInclude Include="LyrielDash.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="PowerupCollectible.h" />
     <ClInclude Include="SpikeTrap.h" />
     <ClInclude Include="PlayerAnimationController.h" />
     <ClInclude Include="PlayerDamageable.h" />
@@ -254,6 +254,7 @@
     <ClInclude Include="TargetIndicatorUI.h" />
     <ClInclude Include="UIController.h" />
     <ClInclude Include="UIPause.h" />
+    <ClInclude Include="UISplashScreen.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Engine\Assets\Scripts\CameraFollow.cpp" />
@@ -317,6 +318,7 @@
     <ClCompile Include="LightZoneManager.cpp" />
     <ClCompile Include="LightZoneTrigger.cpp" />
     <ClCompile Include="PersistingPowerupState.cpp" />
+    <ClCompile Include="PowerupCollectible.cpp" />
     <ClCompile Include="Pickup.cpp" />
     <ClCompile Include="PlayerStunState.cpp" />
     <ClCompile Include="PuzzleManagerLVL1.cpp" />
@@ -349,7 +351,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="PowerupCollectible.cpp" />
     <ClCompile Include="SpikeTrap.cpp" />
     <ClCompile Include="PlayerAnimationController.cpp" />
     <ClCompile Include="PlayerDamageable.cpp" />
@@ -361,6 +362,7 @@
     <ClCompile Include="TargetIndicatorUI.cpp" />
     <ClCompile Include="UIController.cpp" />
     <ClCompile Include="UIPause.cpp" />
+    <ClCompile Include="UISplashScreen.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
