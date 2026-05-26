@@ -40,15 +40,6 @@ void DeathChargedAttack::Update()
 {
     DeathAbilityBase::Update();
 
-    // Release combo movement lock once the attack window is done and combo has ended
-    if (m_movementLockedForCombo && !m_isCharging && m_attackStateTimer <= 0.0f)
-    {
-        if (m_deathCharacter->getComboStep() == 0)
-        {
-            releaseComboMoveLock();
-        }
-    }
-
     // Charging phase — accumulate time, sample right stick for aim, auto-fire at max
     if (m_isCharging)
     {
@@ -348,14 +339,9 @@ void DeathChargedAttack::onAttackWindowUpdate()
 
 void DeathChargedAttack::onAttackWindowFinished()
 {
-    // Between combo hits: keep movement locked while the combo is still alive
-    if (m_movementLockedForCombo && m_deathCharacter != nullptr && m_deathCharacter->getComboStep() > 0)
+    if (m_movementLockedForCombo)
     {
-        PlayerState* ps = m_character ? m_character->getPlayerState() : nullptr;
-        if (ps != nullptr && !ps->isDowned())
-        {
-            ps->setState(PlayerStateType::AttackRecovery);
-        }
+        releaseComboMoveLock();
     }
 }
 

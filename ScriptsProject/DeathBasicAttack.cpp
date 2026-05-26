@@ -36,16 +36,7 @@ void DeathBasicAttack::Start()
 
 void DeathBasicAttack::Update()
 {
-	DeathAbilityBase::Update();
-    // Release movement lock when combo fully ends outside an attack window
-    if (m_movementLockedForCombo && m_attackStateTimer <= 0.0f)
-    {
-        const bool comboActive = m_deathCharacter != nullptr && m_deathCharacter->getComboStep() > 0;
-        if (!comboActive)
-        {
-            releaseComboMoveLock();
-        }
-    }
+    DeathAbilityBase::Update();
 
     updateUI();
 
@@ -115,14 +106,9 @@ void DeathBasicAttack::onAttackWindowFinished()
 {
     m_attackFacingTarget = nullptr;
 
-    // Between combo hits: keep movement locked while combo is still active
-    if (m_movementLockedForCombo && m_deathCharacter != nullptr && m_deathCharacter->getComboStep() > 0)
+    if (m_movementLockedForCombo)
     {
-        PlayerState* ps = m_character ? m_character->getPlayerState() : nullptr;
-        if (ps != nullptr && !ps->isDowned())
-        {
-            ps->setState(PlayerStateType::AttackRecovery);
-        }
+        releaseComboMoveLock();
     }
 }
 
