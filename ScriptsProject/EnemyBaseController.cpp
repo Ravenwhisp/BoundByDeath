@@ -3,6 +3,24 @@
 
 #include "Damageable.h"
 
+static const char* navAgentProfileNames[] =
+{
+    "PlayerNormal",
+    "PlayerSpectral",
+    "EnemyGround"
+};
+
+constexpr int navAgentProfileCount = 3;
+
+IMPLEMENT_SCRIPT_FIELDS(EnemyBaseController,
+    SERIALIZED_ENUM_INT(m_enemyType, "Enemy Type", navAgentProfileNames, navAgentProfileCount),
+    SERIALIZED_FLOAT(m_moveSpeed, "Move Speed", 0.0f, 50.0f, 0.1f),
+    SERIALIZED_FLOAT(m_turnSpeedDegrees, "Turn Speed Degrees", 0.0f, 1080.0f, 1.0f),
+    SERIALIZED_FLOAT(m_repathInterval, "Repath Interval", 0.0f, 50.0f, 0.1f),
+    SERIALIZED_FLOAT(m_pathPointReachDistance, "Path Point Reach Distance", 0.01f, 5.0f, 0.01f),
+    SERIALIZED_VEC3(m_pathSearchExtents, "Path Search Extents")
+)
+
 EnemyBaseController::EnemyBaseController(GameObject* owner)
     : Script(owner)
 {
@@ -23,7 +41,17 @@ void EnemyBaseController::updateCurrentTarget()
 
 bool EnemyBaseController::hasValidTarget() const
 {
-    return m_currentTarget != nullptr;
+    if (!m_currentTarget)
+    {
+        return false;
+    }
+
+    if (isTargetDowned(m_currentTarget))
+    {
+        return false;
+    }
+
+    return true;
 }
 
 float EnemyBaseController::getDistanceToCurrentTarget() const
@@ -109,6 +137,29 @@ void EnemyBaseController::facePosition(const Vector3& worldPosition)
     rotateTowardsDirection(direction);
 }
 
+bool EnemyBaseController::moveTowardsTarget()
+{
+    if (!hasValidTarget())
+    {
+        clearPath();
+        return false;
+    }
+
+    m_repathTimer += Time::getDeltaTime();
+
+    if (!m_hasPath || m_repathTimer >= m_repathInterval)
+    {
+        if (!buildPathToTarget())
+        {
+            return false;
+        }
+
+        resetRepathTimer();
+    }
+
+    return followPath();
+}
+
 void EnemyBaseController::clearPath()
 {
     m_path.clear();
@@ -119,61 +170,6 @@ void EnemyBaseController::clearPath()
 void EnemyBaseController::resetRepathTimer()
 {
     m_repathTimer = 0.0f;
-}
-
-void EnemyBaseController::rotateTowardsDirection(const Vector3& direction)
-{
-    Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
-
-    if (!ownerTransform)
-    {
-        return;
-    }
-
-    Vector3 desiredDirection = direction;
-    desiredDirection.y = 0.0f;
-
-    if (desiredDirection.LengthSquared() <= 0.00001f)
-    {
-        return;
-    }
-
-    desiredDirection.Normalize();
-
-    Vector3 currentEuler = TransformAPI::getEulerDegrees(ownerTransform);
-
-    constexpr float radiansToDegrees = 180.0f / 3.14159265f;
-
-    const float desiredYawRadians = std::atan2(desiredDirection.x, desiredDirection.z);
-    const float desiredYawDegrees = desiredYawRadians * radiansToDegrees;
-
-    float deltaYaw = desiredYawDegrees - currentEuler.y;
-
-    while (deltaYaw > 180.0f)
-    {
-        deltaYaw -= 360.0f;
-    }
-
-    while (deltaYaw < -180.0f)
-    {
-        deltaYaw += 360.0f;
-    }
-
-    const float maxStep = getTurnSpeedDegrees() * Time::getDeltaTime();
-
-    if (deltaYaw > maxStep)
-    {
-        deltaYaw = maxStep;
-    }
-
-    if (deltaYaw < -maxStep)
-    {
-        deltaYaw = -maxStep;
-    }
-
-    currentEuler.y += deltaYaw;
-
-    TransformAPI::setRotationEuler(ownerTransform, currentEuler);
 }
 
 bool EnemyBaseController::isDead() const
@@ -219,4 +215,187 @@ bool EnemyBaseController::trySendDeathTrigger(AnimationComponent* animation)
     Debug::log("[EnemyBaseController] ToDeath trigger sent.");
 
     return true;
+}
+
+void EnemyBaseController::rotateTowardsDirection(const Vector3& direction)
+{
+    Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
+
+    if (!ownerTransform)
+    {
+        return;
+    }
+
+    Vector3 desiredDirection = direction;
+    desiredDirection.y = 0.0f;
+
+    if (desiredDirection.LengthSquared() <= 0.00001f)
+    {
+        return;
+    }
+
+    desiredDirection.Normalize();
+
+    Vector3 currentEuler = TransformAPI::getEulerDegrees(ownerTransform);
+
+    constexpr float radiansToDegrees = 180.0f / 3.14159265f;
+
+    const float desiredYawRadians = std::atan2(desiredDirection.x, desiredDirection.z);
+    const float desiredYawDegrees = desiredYawRadians * radiansToDegrees;
+
+    float deltaYaw = desiredYawDegrees - currentEuler.y;
+
+    while (deltaYaw > 180.0f)
+    {
+        deltaYaw -= 360.0f;
+    }
+
+    while (deltaYaw < -180.0f)
+    {
+        deltaYaw += 360.0f;
+    }
+
+    const float maxStep = m_turnSpeedDegrees * Time::getDeltaTime();
+
+    if (deltaYaw > maxStep)
+    {
+        deltaYaw = maxStep;
+    }
+
+    if (deltaYaw < -maxStep)
+    {
+        deltaYaw = -maxStep;
+    }
+
+    currentEuler.y += deltaYaw;
+
+    TransformAPI::setRotationEuler(ownerTransform, currentEuler);
+}
+
+bool EnemyBaseController::buildPathToTarget()
+{
+    if (!hasValidTarget())
+    {
+        return false;
+    }
+
+    Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
+
+    if (!ownerTransform)
+    {
+        return false;
+    }
+
+    const Vector3 start = TransformAPI::getPosition(ownerTransform);
+    const Vector3 destination = getPathDestination();
+
+    Vector3 pathPoints[MAX_PATH_POINTS];
+
+    const int pointCount = NavigationAPI::findStraightPath(start, destination, pathPoints, MAX_PATH_POINTS, m_pathSearchExtents, static_cast<NavAgentProfile>(m_enemyType));
+
+    if (pointCount < 2)
+    {
+        clearPath();
+        return false;
+    }
+
+    m_path = std::vector<Vector3>(pathPoints, pathPoints + pointCount);
+    m_currentPathIndex = 1;
+    m_hasPath = true;
+
+    return true;
+}
+
+bool EnemyBaseController::followPath()
+{
+    if (!m_hasPath)
+    {
+        return false;
+    }
+
+    if (m_currentPathIndex >= m_path.size())
+    {
+        clearPath();
+        return false;
+    }
+
+    Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
+
+    if (!ownerTransform)
+    {
+        return false;
+    }
+
+    Vector3 ownerPosition = TransformAPI::getPosition(ownerTransform);
+    Vector3 currentPathPoint = m_path[m_currentPathIndex];
+
+    Vector3 toPoint = currentPathPoint - ownerPosition;
+    toPoint.y = 0.0f;
+
+    float distanceToPoint = toPoint.Length();
+
+    if (distanceToPoint <= m_pathPointReachDistance)
+    {
+        ++m_currentPathIndex;
+
+        if (m_currentPathIndex >= m_path.size())
+        {
+            clearPath();
+            return false;
+        }
+
+        currentPathPoint = m_path[m_currentPathIndex];
+        toPoint = currentPathPoint - ownerPosition;
+        toPoint.y = 0.0f;
+        distanceToPoint = toPoint.Length();
+
+        if (distanceToPoint <= 0.0001f)
+        {
+            return false;
+        }
+    }
+
+    toPoint.Normalize();
+
+    const float maxStep = m_moveSpeed * Time::getDeltaTime();
+    const Vector3 desiredStepTarget = ownerPosition + toPoint * maxStep;
+
+    Vector3 nextPosition;
+    if (!NavigationAPI::moveAlongSurface(ownerPosition, desiredStepTarget, nextPosition, m_pathSearchExtents))
+    {
+        clearPath();
+        return false;
+    }
+
+    Vector3 actualStep = nextPosition - ownerPosition;
+    actualStep.y = 0.0f;
+
+    if (actualStep.LengthSquared() <= 0.00001f)
+    {
+        clearPath();
+        return false;
+    }
+
+    facePosition(nextPosition);
+
+    TransformAPI::setPosition(ownerTransform, nextPosition);
+
+    return true;
+}
+
+Vector3 EnemyBaseController::getPathDestination() const
+{
+    if (!m_currentTarget)
+    {
+        Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
+
+        if (!ownerTransform)
+        {
+            return Vector3::Zero;
+        }
+
+        return TransformAPI::getPosition(ownerTransform);
+    }
+
+    return TransformAPI::getPosition(m_currentTarget);
 }

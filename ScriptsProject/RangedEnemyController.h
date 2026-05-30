@@ -16,11 +16,7 @@ public:
     void Start() override;
     void Update() override;
 
-    ScriptFieldList getExposedFields() const override;
-
     bool isTargetInAttackRange() const;
-
-    bool moveTowardsTarget();
 
     // Somersault helpers
     bool playerInSomersaultRange() const;
@@ -40,22 +36,11 @@ public:
 
 protected:
     Transform* acquireCurrentTarget() override;
-    float getTurnSpeedDegrees() const override;
-
-private:
-    bool rebuildPathToTarget();
-
-public:
-    float m_moveSpeed = 3.5f;
-    float m_pathPointReachDistance = 0.25f;
-    float m_repathInterval = 0.5f;
-    float m_turnSpeedDegrees = 360.0f;
+    bool isTargetDowned(Transform* target) const override;
 
 private:
     EnemyDetectionAggro* m_enemyDetectionAggro = nullptr;
     ArcherAttackConfig* m_attackConfig = nullptr;
-
-    Vector3 m_lastTargetPosition = Vector3::Zero;
 
     float m_somersaultCooldownTimer = 0.0f;
     float m_arrowBarrageCooldownTimer = 0.0f;

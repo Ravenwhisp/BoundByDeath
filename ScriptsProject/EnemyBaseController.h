@@ -11,7 +11,8 @@ public:
     explicit EnemyBaseController(GameObject* owner);
     virtual ~EnemyBaseController() = default;
 
-public:
+    ScriptFieldList getExposedFields() const override;
+
     // Target helpers
     virtual void updateCurrentTarget();
     Transform* getCurrentTarget() const { return m_currentTarget; }
@@ -26,6 +27,8 @@ public:
     void facePosition(const Vector3& worldPosition);
 
     // Movement/path helpers
+    bool moveTowardsTarget();
+
     virtual void clearPath();
     virtual void resetRepathTimer();
 
@@ -36,9 +39,25 @@ public:
 private:
     void rotateTowardsDirection(const Vector3& direction);
 
+    bool buildPathToTarget();
+    bool followPath();
+
 protected:
+    //These we will not need if we Refactor DetectionAggro to have a base class
     virtual Transform* acquireCurrentTarget() = 0;
-    virtual float getTurnSpeedDegrees() const = 0;
+    virtual bool isTargetDowned(Transform* target) const = 0;
+
+    virtual Vector3 getPathDestination() const;
+
+public:
+    int m_enemyType = static_cast<int>(NavAgentProfile::EnemyGround);
+
+    float m_moveSpeed = 3.5f;
+    float m_turnSpeedDegrees = 360.0f;
+    float m_repathInterval = 0.5f;
+    float m_pathPointReachDistance = 0.25f;
+
+    Vector3 m_pathSearchExtents = Vector3(5.0f, 5.0f, 5.0f);
 
 protected:
     Transform* m_currentTarget = nullptr;
@@ -48,4 +67,7 @@ protected:
     size_t m_currentPathIndex = 0;
     bool m_hasPath = false;
     float m_repathTimer = 0.0f;
+
+private:
+    static constexpr size_t MAX_PATH_POINTS = 128;
 };
