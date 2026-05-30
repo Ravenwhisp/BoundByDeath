@@ -107,7 +107,7 @@ void ArcherArrowBarrageState::OnStateExit()
 
 void ArcherArrowBarrageState::lockImpactPosition()
 {
-    Transform* targetTransform = m_archerController->getTarget();
+    Transform* targetTransform = m_archerController->getCurrentTarget();
 
     if (!targetTransform)
     {

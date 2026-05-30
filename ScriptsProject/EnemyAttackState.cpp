@@ -42,7 +42,7 @@ void EnemyAttackState::OnStateEnter()
 
     m_archerController->clearPath();
     m_archerController->updateCurrentTarget();
-    m_committedTarget = m_archerController->getTarget();
+    m_committedTarget = m_archerController->getCurrentTarget();
 
     Debug::log("[EnemyAttackState] ENTER");
 }
@@ -59,7 +59,7 @@ void EnemyAttackState::OnStateUpdate()
         return;
     }
 
-    m_archerController->faceTarget();
+    m_archerController->faceCurrentTarget();
 
     m_stateTimer += Time::getDeltaTime();
 
@@ -73,7 +73,7 @@ void EnemyAttackState::OnStateUpdate()
     {
         m_archerController->updateCurrentTarget();
 
-        if (!m_archerController->hasTarget())
+        if (!m_archerController->hasValidTarget())
         {
             AnimationAPI::sendTrigger(m_animation, "ToIdle");
             Debug::log("[EnemyAttackState] Attack finished, Idle trigger sent");

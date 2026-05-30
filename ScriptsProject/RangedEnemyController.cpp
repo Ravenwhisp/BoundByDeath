@@ -6,10 +6,6 @@
 
 #include "Damageable.h"
 
-#include <cfloat>
-#include <cmath>
-#include <algorithm>
-
 IMPLEMENT_SCRIPT_FIELDS(RangedEnemyController,
     SERIALIZED_FLOAT(m_moveSpeed, "Move Speed", 0.0f, 20.0f, 0.1f),
     SERIALIZED_FLOAT(m_pathPointReachDistance, "Path Point Reach Distance", 0.01f, 5.0f, 0.01f),
@@ -17,7 +13,7 @@ IMPLEMENT_SCRIPT_FIELDS(RangedEnemyController,
     SERIALIZED_FLOAT(m_turnSpeedDegrees, "Turn Speed Degrees", 0.0f, 1080.0f, 1.0f)
 )
 
-RangedEnemyController::RangedEnemyController(GameObject* owner) : Script(owner)
+RangedEnemyController::RangedEnemyController(GameObject* owner) : EnemyBaseController(owner)
 {
 }
 
@@ -36,7 +32,7 @@ void RangedEnemyController::Start()
         Debug::warn("[RangedEnemyController] ArcherAttackConfig not found on '%s'.", GameObjectAPI::getName(getOwner()));
     }
 
-    m_target = nullptr;
+    m_currentTarget = nullptr;
     m_repathTimer = 0.0f;
     m_lastTargetPosition = Vector3::Zero;
     m_deathTriggerSent = false;
@@ -55,65 +51,39 @@ void RangedEnemyController::Update()
     m_repathTimer += dt;
 }
 
-void RangedEnemyController::updateCurrentTarget()
+Transform* RangedEnemyController::acquireCurrentTarget()
 {
     if (!m_enemyDetectionAggro)
     {
         m_enemyDetectionAggro = GameObjectAPI::findScript<EnemyDetectionAggro>(getOwner());
     }
 
-    Transform* previousTarget = m_target;
-
     if (!m_enemyDetectionAggro)
     {
-        m_target = nullptr;
-    }
-    else
-    {
-        m_target = m_enemyDetectionAggro->getCurrentTarget();
+        return nullptr;
     }
 
-    if (m_target != previousTarget)
-    {
-        clearPath();
-    }
+    return m_enemyDetectionAggro->getCurrentTarget();
 }
 
-float RangedEnemyController::getDistanceToTarget() const
+float RangedEnemyController::getTurnSpeedDegrees() const
 {
-    if (!m_target)
-    {
-        return FLT_MAX;
-    }
-
-    Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
-    if (!ownerTransform)
-    {
-        return FLT_MAX;
-    }
-
-    Vector3 ownerPosition = TransformAPI::getPosition(ownerTransform);
-    Vector3 targetPosition = TransformAPI::getPosition(m_target);
-
-    Vector3 delta = targetPosition - ownerPosition;
-    delta.y = 0.0f;
-
-    return delta.Length();
+    return m_turnSpeedDegrees;
 }
 
 bool RangedEnemyController::isTargetInAttackRange() const
 {
-    if (!m_target || !m_attackConfig)
+    if (!hasValidTarget() || !m_attackConfig)
     {
         return false;
     }
 
-    return getDistanceToTarget() <= m_attackConfig->m_basicAttackRange;
+    return isCurrentTargetInRange(m_attackConfig->m_basicAttackRange);
 }
 
 bool RangedEnemyController::moveTowardsTarget()
 {
-    if (!m_target)
+    if (!hasValidTarget())
     {
         clearPath();
         return false;
@@ -131,7 +101,7 @@ bool RangedEnemyController::moveTowardsTarget()
     }
 
     Vector3 ownerPosition = TransformAPI::getPosition(ownerTransform);
-    Vector3 targetPosition = TransformAPI::getPosition(m_target);
+    Vector3 targetPosition = TransformAPI::getPosition(m_currentTarget);
     targetPosition.y = 0.0f;
 
     bool shouldRepath = !m_hasPath || m_repathTimer >= m_repathInterval;
@@ -203,8 +173,6 @@ bool RangedEnemyController::moveTowardsTarget()
         return false;
     }
 
-    TransformAPI::setPosition(ownerTransform, nextPosition);
-
     Vector3 actualStep = nextPosition - ownerPosition;
     actualStep.y = 0.0f;
 
@@ -214,41 +182,15 @@ bool RangedEnemyController::moveTowardsTarget()
         return false;
     }
 
-    rotateTowardsDirection(actualStep);
+    facePosition(nextPosition);
+    TransformAPI::setPosition(ownerTransform, nextPosition);
 
     return true;
 }
 
-void RangedEnemyController::faceTarget()
-{
-    if (!m_target)
-    {
-        return;
-    }
-
-    Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
-    if (!ownerTransform)
-    {
-        return;
-    }
-
-    Vector3 ownerPosition = TransformAPI::getPosition(ownerTransform);
-    Vector3 targetPosition = TransformAPI::getPosition(m_target);
-
-    Vector3 direction = targetPosition - ownerPosition;
-    direction.y = 0.0f;
-
-    if (direction.LengthSquared() <= 0.00001f)
-    {
-        return;
-    }
-
-    rotateTowardsDirection(direction);
-}
-
 bool RangedEnemyController::rebuildPathToTarget()
 {
-    if (!m_target)
+    if (!hasValidTarget())
     {
         return false;
     }
@@ -260,7 +202,7 @@ bool RangedEnemyController::rebuildPathToTarget()
     }
 
     const Vector3 ownerPosition = TransformAPI::getPosition(ownerTransform);
-    const Vector3 targetPosition = TransformAPI::getPosition(m_target);
+    const Vector3 targetPosition = TransformAPI::getPosition(m_currentTarget);
 
     constexpr int MAX_PATH_POINTS = 128;
     Vector3 pathPoints[MAX_PATH_POINTS];
@@ -283,110 +225,6 @@ bool RangedEnemyController::rebuildPathToTarget()
     m_hasPath = true;
 
     return true;
-}
-
-void RangedEnemyController::clearPath()
-{
-    m_path.clear();
-    m_currentPathIndex = 0;
-    m_hasPath = false;
-}
-
-bool RangedEnemyController::isDead() const
-{
-    Damageable* damageable = GameObjectAPI::findScript<Damageable>(getOwner());
-
-    if (damageable && damageable->isDead())
-    {
-        return true;
-    }
-
-    return false;
-}
-
-bool RangedEnemyController::trySendDeathTrigger(AnimationComponent* animation)
-{
-    if (m_deathTriggerSent)
-    {
-        return false;
-    }
-
-    if (!isDead())
-    {
-        return false;
-    }
-
-    if (!animation)
-    {
-        return false;
-    }
-
-    clearPath();
-
-    const bool sent = AnimationAPI::sendTrigger(animation, "ToDeath");
-
-    if (!sent)
-    {
-        return false;
-    }
-
-    m_deathTriggerSent = true;
-
-    Debug::log("[RangedEnemyController] ToDeath trigger sent.");
-
-    return true;
-}
-
-void RangedEnemyController::rotateTowardsDirection(const Vector3& direction)
-{
-    Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
-    if (!ownerTransform)
-    {
-        return;
-    }
-
-    Vector3 moveDir = direction;
-    moveDir.y = 0.0f;
-
-    if (moveDir.LengthSquared() <= 0.00001f)
-    {
-        return;
-    }
-
-    moveDir.Normalize();
-
-    Vector3 currentEuler = TransformAPI::getEulerDegrees(ownerTransform);
-
-    const float desiredYawRadians = std::atan2(moveDir.x, moveDir.z);
-    float desiredYawDegrees = DirectX::XMConvertToDegrees(desiredYawRadians);
-
-    float currentYawDegrees = currentEuler.y;
-    float deltaYaw = desiredYawDegrees - currentYawDegrees;
-
-    while (deltaYaw > 180.0f)
-    {
-        deltaYaw -= 360.0f;
-    }
-
-    while (deltaYaw < -180.0f)
-    {
-        deltaYaw += 360.0f;
-    }
-
-    const float maxStep = m_turnSpeedDegrees * Time::getDeltaTime();
-
-    if (deltaYaw > maxStep)
-    {
-        deltaYaw = maxStep;
-    }
-
-    if (deltaYaw < -maxStep)
-    {
-        deltaYaw = -maxStep;
-    }
-
-    currentEuler.y += deltaYaw;
-    TransformAPI::setRotationEuler(ownerTransform, currentEuler);
 }
 
 bool RangedEnemyController::playerInSomersaultRange() const
@@ -578,12 +416,12 @@ void RangedEnemyController::updateArrowBarrageCooldown(float dt)
 
 bool RangedEnemyController::isTargetInArrowBarrageRange() const
 {
-    if (!m_target || !m_attackConfig)
+    if (!hasValidTarget() || !m_attackConfig)
     {
         return false;
     }
 
-    return getDistanceToTarget() <= m_attackConfig->m_arrowBarrageRange;
+    return isCurrentTargetInRange(m_attackConfig->m_arrowBarrageRange);
 }
 
 IMPLEMENT_SCRIPT(RangedEnemyController)

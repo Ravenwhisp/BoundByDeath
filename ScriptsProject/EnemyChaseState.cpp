@@ -40,7 +40,7 @@ void EnemyChaseState::OnStateUpdate()
         return;
     }
 
-    if (!m_archerController->hasTarget())
+    if (!m_archerController->hasValidTarget())
     {
         AnimationAPI::sendTrigger(m_animation, "ToIdle");
 

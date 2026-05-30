@@ -26,8 +26,8 @@ public:
     void facePosition(const Vector3& worldPosition);
 
     // Movement/path helpers
-    virtual void clearPath() {}
-    virtual void resetRepathTimer() {}
+    virtual void clearPath();
+    virtual void resetRepathTimer();
 
     // Death helpers
     bool isDead() const;
@@ -43,4 +43,9 @@ protected:
 protected:
     Transform* m_currentTarget = nullptr;
     bool m_deathTriggerSent = false;
+
+    std::vector<Vector3> m_path;
+    size_t m_currentPathIndex = 0;
+    bool m_hasPath = false;
+    float m_repathTimer = 0.0f;
 };

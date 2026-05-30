@@ -109,6 +109,18 @@ void EnemyBaseController::facePosition(const Vector3& worldPosition)
     rotateTowardsDirection(direction);
 }
 
+void EnemyBaseController::clearPath()
+{
+    m_path.clear();
+    m_currentPathIndex = 0;
+    m_hasPath = false;
+}
+
+void EnemyBaseController::resetRepathTimer()
+{
+    m_repathTimer = 0.0f;
+}
+
 void EnemyBaseController::rotateTowardsDirection(const Vector3& direction)
 {
     Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
