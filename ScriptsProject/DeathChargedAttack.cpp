@@ -32,37 +32,19 @@ DeathChargedAttack::DeathChargedAttack(GameObject* owner)
 void DeathChargedAttack::Start()
 {
     DeathAbilityBase::Start();
+
+    setupUI();
 }
 
 void DeathChargedAttack::Update()
 {
     DeathAbilityBase::Update();
 
-    // Release combo movement lock once the attack window is done and combo has ended
-    if (m_movementLockedForCombo && !m_isCharging && m_attackStateTimer <= 0.0f)
-    {
-        if (m_deathCharacter->getComboStep() == 0)
-        {
-            releaseComboMoveLock();
-        }
-    }
-
     // Charging phase — accumulate time, sample right stick for aim, auto-fire at max
     if (m_isCharging)
     {
         m_chargeTime += Time::getDeltaTime();
         updateAimDirection();
-
-        if (m_ChargedAttackUI.getReferencedComponent())
-        {
-            GameObjectAPI::setActive(m_ChargedAttackUI.getReferencedComponent()->getOwner(), true);
-
-			const float yawRad = std::atan2(m_aimDirection.x, m_aimDirection.z);
-			const float targetYawDeg = yawRad * (180.0f / 3.14159265f);
-
-			TransformAPI::setPosition(m_ChargedAttackUI.getReferencedComponent(), TransformAPI::getGlobalPosition(GameObjectAPI::getTransform(getOwner())));
-			TransformAPI::setRotationEuler(m_ChargedAttackUI.getReferencedComponent(), Vector3(0.0f, targetYawDeg, 0.0f));
-        }
 
         const bool maxReached = (m_chargeTime >= m_maxChargeTime);
         const bool released   = Input::isRightTriggerReleased(getPlayerIndex());
@@ -74,11 +56,13 @@ void DeathChargedAttack::Update()
 
         return;
     }
-
-    else if (m_ChargedAttackUI.getReferencedComponent())
+    
+    else if (m_chargedAttackUITransform)
     {
-        GameObjectAPI::setActive(m_ChargedAttackUI.getReferencedComponent()->getOwner(), false);
+        GameObjectAPI::setActive(m_chargedAttackUITransform->getOwner(), false);
     }
+
+    updateUI();
 }
 
 void DeathChargedAttack::startAbility()
@@ -355,14 +339,9 @@ void DeathChargedAttack::onAttackWindowUpdate()
 
 void DeathChargedAttack::onAttackWindowFinished()
 {
-    // Between combo hits: keep movement locked while the combo is still alive
-    if (m_movementLockedForCombo && m_deathCharacter != nullptr && m_deathCharacter->getComboStep() > 0)
+    if (m_movementLockedForCombo)
     {
-        PlayerState* ps = m_character ? m_character->getPlayerState() : nullptr;
-        if (ps != nullptr && !ps->isDowned())
-        {
-            ps->setState(PlayerStateType::AttackRecovery);
-        }
+        releaseComboMoveLock();
     }
 }
 
@@ -436,6 +415,70 @@ void DeathChargedAttack::drawGizmo()
             DebugDrawAPI::drawLine(posFlat + radialDir(a0) * range,
                                    posFlat + radialDir(a1) * range, colYellow);
         }
+    }
+}
+
+void DeathChargedAttack::setupUI()
+{
+	m_chargedAttackUITransform = m_ChargedAttackUI.getReferencedComponent();
+    if (!m_chargedAttackUITransform)
+    {
+        Debug::warn("DeathChargedAttack on '%s' has no Charged Attack UI Transform reference for attack UI.", GameObjectAPI::getName(getOwner()));
+	}
+
+    Transform* t = GameObjectAPI::getTransform(getOwner());
+    if (t)
+    {
+        m_deathSlashUITransform = TransformAPI::findChildByName(t, "DeathSlashUI Charged");
+        if (m_deathSlashUITransform)
+        {
+            GameObjectAPI::setActive(m_deathSlashUITransform->getOwner(), false);
+            m_deathSlashUISlider = static_cast<UISlider*>(GameObjectAPI::getComponent(m_deathSlashUITransform->getOwner(), ComponentType::UISLIDER));
+            if (m_deathSlashUISlider)
+            {
+                SliderAPI::setFillAmount(m_deathSlashUISlider, 0.0f);
+            }
+        }
+    }
+
+    if (!m_deathSlashUITransform)
+    {
+        Debug::warn("DeathChargedAttack on '%s' could not find DeathSlashUI child for attack UI.", GameObjectAPI::getName(getOwner()));
+    }
+    else if (!m_deathSlashUISlider)
+    {
+        Debug::warn("DeathChargedAttack on '%s' could not find UISlider on DeathSlashUI for attack UI.", GameObjectAPI::getName(getOwner()));
+    }
+}
+
+void DeathChargedAttack::updateUI()
+{
+    AbilityBase::updateUI();
+
+    if (m_isCharging && m_chargedAttackUITransform)
+    {
+        GameObjectAPI::setActive(m_chargedAttackUITransform->getOwner(), true);
+
+        const float yawRad = std::atan2(m_aimDirection.x, m_aimDirection.z);
+        const float targetYawDeg = yawRad * (180.0f / MathAPI::PI);
+
+        TransformAPI::setPosition(m_chargedAttackUITransform, TransformAPI::getGlobalPosition(GameObjectAPI::getTransform(getOwner())));
+        TransformAPI::setRotationEuler(m_chargedAttackUITransform, Vector3(0.0f, targetYawDeg, 0.0f));
+    }
+
+    if (m_deathSlashUITransform == nullptr || m_deathSlashUISlider == nullptr)
+    {
+        return;
+    }
+    const bool showUI = m_attackStateTimer > 0.0f;
+    GameObjectAPI::setActive(m_deathSlashUITransform->getOwner(), showUI);
+    if (showUI)
+    {
+        const float t = 1.0f - (m_attackStateTimer / m_attackLockDuration);
+        SliderAPI::setFillOrigin(m_deathSlashUISlider, t < 0.5f ? FillOrigin::Radial180BottomCCW : FillOrigin::Radial180Bottom);
+		const float fillAmount = MathAPI::pingPong(t);
+        const float easedFill = MathAPI::evaluateEasing(MathAPI::EasingType::EaseOutCubic, fillAmount);
+        SliderAPI::setFillAmount(m_deathSlashUISlider, fillAmount);
     }
 }
 

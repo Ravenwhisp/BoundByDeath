@@ -30,20 +30,15 @@ DeathBasicAttack::DeathBasicAttack(GameObject* owner)
 void DeathBasicAttack::Start()
 {
     DeathAbilityBase::Start();
+
+    setupUI();
 }
 
 void DeathBasicAttack::Update()
 {
-	DeathAbilityBase::Update();
-    // Release movement lock when combo fully ends outside an attack window
-    if (m_movementLockedForCombo && m_attackStateTimer <= 0.0f)
-    {
-        const bool comboActive = m_deathCharacter != nullptr && m_deathCharacter->getComboStep() > 0;
-        if (!comboActive)
-        {
-            releaseComboMoveLock();
-        }
-    }
+    DeathAbilityBase::Update();
+
+    updateUI();
 
     // Block new input while the attack window is still running
     if (m_attackStateTimer > 0.0f)
@@ -111,14 +106,9 @@ void DeathBasicAttack::onAttackWindowFinished()
 {
     m_attackFacingTarget = nullptr;
 
-    // Between combo hits: keep movement locked while combo is still active
-    if (m_movementLockedForCombo && m_deathCharacter != nullptr && m_deathCharacter->getComboStep() > 0)
+    if (m_movementLockedForCombo)
     {
-        PlayerState* ps = m_character ? m_character->getPlayerState() : nullptr;
-        if (ps != nullptr && !ps->isDowned())
-        {
-            ps->setState(PlayerStateType::AttackRecovery);
-        }
+        releaseComboMoveLock();
     }
 }
 
@@ -403,6 +393,56 @@ void DeathBasicAttack::faceTarget(GameObject* target)
     dir.Normalize();
 
     playerRotation->applyFacingFromDirection(getOwner(), dir, Time::getDeltaTime());
+}
+
+void DeathBasicAttack::setupUI()
+{
+    Transform* t = GameObjectAPI::getTransform(getOwner());
+    if (t)
+    {
+        m_deathSlashUITransform = TransformAPI::findChildByName(t, "DeathSlashUI");
+        if (m_deathSlashUITransform)
+        {
+            GameObjectAPI::setActive(m_deathSlashUITransform->getOwner(), false);
+            m_deathSlashUISlider = static_cast<UISlider*>(GameObjectAPI::getComponent(m_deathSlashUITransform->getOwner(), ComponentType::UISLIDER));
+            if (m_deathSlashUISlider)
+            {
+                SliderAPI::setFillAmount(m_deathSlashUISlider, 0.0f);
+            }
+        }
+    }
+
+    if (!m_deathSlashUITransform)
+    {
+        Debug::warn("DeathBasicAttack on '%s' could not find DeathSlashUI child for attack UI.", GameObjectAPI::getName(getOwner()));
+    }
+    else if (!m_deathSlashUISlider)
+    {
+        Debug::warn("DeathBasicAttack on '%s' could not find UISlider on DeathSlashUI for attack UI.", GameObjectAPI::getName(getOwner()));
+    }
+}
+
+void DeathBasicAttack::updateUI()
+{
+    AbilityBase::updateUI();
+
+    if (m_deathSlashUITransform == nullptr || m_deathSlashUISlider == nullptr)
+    {
+        return;
+    }
+
+	Debug::log("[UI] attack window timer: %.2f / %.2f", m_attackStateTimer, m_attackLockDuration);
+
+    const bool showUI = m_attackStateTimer > 0.0f;
+    GameObjectAPI::setActive(m_deathSlashUITransform->getOwner(), showUI);
+    if (showUI)
+    {
+        const float t = 1.0f - (m_attackStateTimer / m_attackLockDuration);
+        SliderAPI::setFillOrigin(m_deathSlashUISlider, t < 0.5f ? FillOrigin::Radial180BottomCCW : FillOrigin::Radial180Bottom);
+        const float fillAmount = MathAPI::pingPong(t);
+        const float easedFill = MathAPI::evaluateEasing(MathAPI::EasingType::EaseOutCubic, fillAmount);
+        SliderAPI::setFillAmount(m_deathSlashUISlider, fillAmount);
+    }
 }
 
 IMPLEMENT_SCRIPT(DeathBasicAttack)

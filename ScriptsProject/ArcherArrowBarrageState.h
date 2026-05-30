@@ -37,4 +37,9 @@ private:
 
     bool m_hasLockedImpactPosition = false;
     bool m_hasAppliedImpact = false;
+
+private:
+    void setupUI();
+    void updateUI();
+
 };
