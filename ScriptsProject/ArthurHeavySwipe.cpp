@@ -60,6 +60,7 @@ void ArthurHeavySwipe::OnStateEnter()
     AnimationAPI::setSpeedMultiplier(m_animation, animationSpeed);
 
     m_arthurController->clearPath();
+    m_arthurController->resetRepathTimer();
     m_arthurController->updateCurrentTarget();
     m_arthurController->faceCurrentTarget();
 

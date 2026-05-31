@@ -64,6 +64,8 @@ void ArthurChargingSlam::OnStateEnter()
     }
 
     m_arthurController->clearPath();
+    m_arthurController->resetRepathTimer();
+
     m_arthurController->updateCurrentTarget();
     m_arthurController->faceCurrentTarget();
 
@@ -234,8 +236,6 @@ void ArthurChargingSlam::updateDash()
 
     currentPosition += m_dashDirection * stepDistance;
     TransformAPI::setPosition(ownerTransform, currentPosition);
-
-    m_arthurController->updateCurrentTarget();
 
     Transform* focusTarget = m_arthurController->getFocusTarget();
     Transform* nonFocusTarget = m_arthurController->getNonFocusTarget();

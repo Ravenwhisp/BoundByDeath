@@ -39,16 +39,16 @@ void ArthurRecover::OnStateUpdate()
 		return;
 	}
 
-	m_stateTimer += Time::getDeltaTime();
-
 	if (m_arthurController->trySendDeathTrigger(m_animation))
 	{
 		return;
 	}
 
+	m_stateTimer += Time::getDeltaTime();
+
+	m_arthurController->updateCurrentTarget();
 	if (!m_arthurController->hasValidTarget())
 	{
-		m_arthurController->clearPath();
 		AnimationAPI::sendTrigger(m_animation, "ToIdle");
 		return;
 	}
