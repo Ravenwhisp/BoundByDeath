@@ -48,6 +48,8 @@ void ArcherArrowBarrageState::OnStateEnter()
     }
 
     m_archerController->clearPath();
+    m_archerController->resetRepathTimer();
+
     m_archerController->updateCurrentTarget();
 
     setupUI();

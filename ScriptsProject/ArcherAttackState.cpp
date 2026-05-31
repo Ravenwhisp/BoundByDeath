@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "EnemyAttackState.h"
+#include "ArcherAttackState.h"
 
 #include "RangedEnemyController.h"
 #include "ArcherAttackConfig.h"
@@ -7,12 +7,12 @@
 #include "Damageable.h"
 #include "PlayerState.h"
 
-EnemyAttackState::EnemyAttackState(GameObject* owner)
+ArcherAttackState::ArcherAttackState(GameObject* owner)
     : StateMachineScript(owner)
 {
 }
 
-void EnemyAttackState::OnStateEnter()
+void ArcherAttackState::OnStateEnter()
 {
     m_archerController = GameObjectAPI::findScript<RangedEnemyController>(getOwner());
     m_attackConfig = GameObjectAPI::findScript<ArcherAttackConfig>(getOwner());
@@ -24,30 +24,32 @@ void EnemyAttackState::OnStateEnter()
 
     if (!m_archerController)
     {
-        Debug::error("[EnemyAttackState] RangedEnemyController not found.");
+        Debug::error("[ArcherAttackState] RangedEnemyController not found.");
         return;
     }
 
     if (!m_attackConfig)
     {
-        Debug::error("[EnemyAttackState] ArcherAttackConfig not found.");
+        Debug::error("[ArcherAttackState] ArcherAttackConfig not found.");
         return;
     }
 
     if (!m_animation)
     {
-        Debug::error("[EnemyAttackState] AnimationComponent not found.");
+        Debug::error("[ArcherAttackState] AnimationComponent not found.");
         return;
     }
 
     m_archerController->clearPath();
+    m_archerController->resetRepathTimer();
+
     m_archerController->updateCurrentTarget();
     m_committedTarget = m_archerController->getCurrentTarget();
 
-    Debug::log("[EnemyAttackState] ENTER");
+    Debug::log("[ArcherAttackState] ENTER");
 }
 
-void EnemyAttackState::OnStateUpdate()
+void ArcherAttackState::OnStateUpdate()
 {
     if (!m_archerController || !m_attackConfig || !m_animation)
     {
@@ -76,24 +78,24 @@ void EnemyAttackState::OnStateUpdate()
         if (!m_archerController->hasValidTarget())
         {
             AnimationAPI::sendTrigger(m_animation, "ToIdle");
-            Debug::log("[EnemyAttackState] Attack finished, Idle trigger sent");
+            Debug::log("[ArcherAttackState] Attack finished, Idle trigger sent");
         }
         else
         {
             AnimationAPI::sendTrigger(m_animation, "ToChase");
-            Debug::log("[EnemyAttackState] Attack finished, Chase trigger sent");
+            Debug::log("[ArcherAttackState] Attack finished, Chase trigger sent");
         }
 
         return;
     }
 }
 
-void EnemyAttackState::OnStateExit()
+void ArcherAttackState::OnStateExit()
 {
-    Debug::log("[EnemyAttackState] EXIT");
+    Debug::log("[ArcherAttackState] EXIT");
 }
 
-void EnemyAttackState::tryDamageTarget(Transform* targetTransform)
+void ArcherAttackState::tryDamageTarget(Transform* targetTransform)
 {
     if (!m_attackConfig)
     {
@@ -125,7 +127,7 @@ void EnemyAttackState::tryDamageTarget(Transform* targetTransform)
 
     damageable->takeDamage(m_attackConfig->m_basicAttackDamage);
 
-    Debug::log("[EnemyAttackState] Damaged '%s' for %.2f.", GameObjectAPI::getName(targetObject), m_attackConfig->m_basicAttackDamage);
+    Debug::log("[ArcherAttackState] Damaged '%s' for %.2f.", GameObjectAPI::getName(targetObject), m_attackConfig->m_basicAttackDamage);
 }
 
-IMPLEMENT_SCRIPT(EnemyAttackState)
+IMPLEMENT_SCRIPT(ArcherAttackState)

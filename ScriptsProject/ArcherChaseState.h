@@ -6,12 +6,12 @@
 class RangedEnemyController;
 class AnimationComponent;
 
-class EnemyChaseState : public StateMachineScript
+class ArcherChaseState : public StateMachineScript
 {
-    DECLARE_SCRIPT(EnemyChaseState)
+    DECLARE_SCRIPT(ArcherChaseState)
 
 public:
-    explicit EnemyChaseState(GameObject* owner);
+    explicit ArcherChaseState(GameObject* owner);
 
     void OnStateEnter() override;
     void OnStateUpdate() override;

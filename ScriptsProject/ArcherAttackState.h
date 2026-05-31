@@ -7,12 +7,12 @@ class RangedEnemyController;
 class ArcherAttackConfig;
 class AnimationComponent;
 
-class EnemyAttackState : public StateMachineScript
+class ArcherAttackState : public StateMachineScript
 {
-    DECLARE_SCRIPT(EnemyAttackState)
+    DECLARE_SCRIPT(ArcherAttackState)
 
 public:
-    explicit EnemyAttackState(GameObject* owner);
+    explicit ArcherAttackState(GameObject* owner);
 
     void OnStateEnter() override;
     void OnStateUpdate() override;

@@ -1,34 +1,37 @@
 #include "pch.h"
-#include "EnemyChaseState.h"
+#include "ArcherChaseState.h"
 
 #include "RangedEnemyController.h"
 
-EnemyChaseState::EnemyChaseState(GameObject* owner)
+ArcherChaseState::ArcherChaseState(GameObject* owner)
     : StateMachineScript(owner)
 {
 }
 
-void EnemyChaseState::OnStateEnter()
+void ArcherChaseState::OnStateEnter()
 {
     m_archerController = GameObjectAPI::findScript<RangedEnemyController>(getOwner());
     m_animation = AnimationAPI::getAnimationComponent(getOwner());
 
     if (!m_archerController)
     {
-        Debug::error("[EnemyChaseState] RangedEnemyController not found.");
+        Debug::error("[ArcherChaseState] RangedEnemyController not found.");
         return;
     }
 
     if (!m_animation)
     {
-        Debug::error("[EnemyChaseState] AnimationComponent not found.");
+        Debug::error("[ArcherChaseState] AnimationComponent not found.");
         return;
     }
 
-    Debug::log("[EnemyChaseState] ENTER");
+    m_archerController->clearPath();
+    m_archerController->resetRepathTimer();
+
+    Debug::log("[ArcherChaseState] ENTER");
 }
 
-void EnemyChaseState::OnStateUpdate()
+void ArcherChaseState::OnStateUpdate()
 {
     if (!m_archerController || !m_animation)
     {
@@ -44,7 +47,7 @@ void EnemyChaseState::OnStateUpdate()
     {
         AnimationAPI::sendTrigger(m_animation, "ToIdle");
 
-        Debug::log("[EnemyChaseState] Idle trigger sent");
+        Debug::log("[ArcherChaseState] Idle trigger sent");
 
         return;
     }
@@ -52,14 +55,14 @@ void EnemyChaseState::OnStateUpdate()
     if (m_archerController->playerInSomersaultRange() && m_archerController->isSomersaultReady())
     {
         AnimationAPI::sendTrigger(m_animation, "ToSomersault");
-        Debug::log("[EnemyChaseState] Somersault trigger sent");
+        Debug::log("[ArcherChaseState] Somersault trigger sent");
         return;
     }
 
     if (m_archerController->isTargetInArrowBarrageRange()  && m_archerController->isArrowBarrageReady())
     {
         AnimationAPI::sendTrigger(m_animation, "ToArrowBarrage");
-        Debug::log("[EnemyChaseState] Arrow Barrage trigger sent");
+        Debug::log("[ArcherChaseState] Arrow Barrage trigger sent");
         return;
     }
 
@@ -67,7 +70,7 @@ void EnemyChaseState::OnStateUpdate()
     {
         AnimationAPI::sendTrigger(m_animation, "ToAttack");
 
-        Debug::log("[EnemyChaseState] Attack trigger sent");
+        Debug::log("[ArcherChaseState] Attack trigger sent");
 
         return;
     }
@@ -75,9 +78,9 @@ void EnemyChaseState::OnStateUpdate()
     m_archerController->moveTowardsTarget();
 }
 
-void EnemyChaseState::OnStateExit()
+void ArcherChaseState::OnStateExit()
 {
-    Debug::log("[EnemyChaseState] EXIT");
+    Debug::log("[ArcherChaseState] EXIT");
 
     if (!m_archerController)
     {
@@ -85,6 +88,7 @@ void EnemyChaseState::OnStateExit()
     }
 
     m_archerController->clearPath();
+    m_archerController->resetRepathTimer();
 }
 
-IMPLEMENT_SCRIPT(EnemyChaseState)
+IMPLEMENT_SCRIPT(ArcherChaseState)
