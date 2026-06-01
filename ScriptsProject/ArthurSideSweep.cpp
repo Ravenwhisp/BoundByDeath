@@ -49,7 +49,7 @@ void ArthurSideSweep::OnStateEnter()
     }
 
     m_arthurController->clearPath();
-    m_arthurController->updateCurrentTarget();
+    m_arthurController->resetRepathTimer();
 
 	setupUI();
 

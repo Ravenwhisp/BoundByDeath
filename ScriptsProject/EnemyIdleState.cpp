@@ -40,7 +40,7 @@ void EnemyIdleState::OnStateUpdate()
         return;
     }
 
-    if (!m_archerController->hasTarget())
+    if (!m_archerController->hasValidTarget())
     {
         return;
     }

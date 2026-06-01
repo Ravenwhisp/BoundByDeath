@@ -36,6 +36,7 @@ void ArcherSomersaultState::OnStateEnter()
     }
 
     m_archerController->clearPath();
+    m_archerController->resetRepathTimer();
 
     m_escapeDirection = m_archerController->getDirectionAwayFromClosestPlayer();
 

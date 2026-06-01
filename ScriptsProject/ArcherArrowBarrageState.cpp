@@ -48,6 +48,8 @@ void ArcherArrowBarrageState::OnStateEnter()
     }
 
     m_archerController->clearPath();
+    m_archerController->resetRepathTimer();
+
     m_archerController->updateCurrentTarget();
 
     setupUI();
@@ -107,7 +109,7 @@ void ArcherArrowBarrageState::OnStateExit()
 
 void ArcherArrowBarrageState::lockImpactPosition()
 {
-    Transform* targetTransform = m_archerController->getTarget();
+    Transform* targetTransform = m_archerController->getCurrentTarget();
 
     if (!targetTransform)
     {

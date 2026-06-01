@@ -45,6 +45,8 @@ void ArthurEarthHammer::OnStateEnter()
     }
 
     m_arthurController->clearPath();
+    m_arthurController->resetRepathTimer();
+
     m_arthurController->updateCurrentTarget();
     m_arthurController->faceCurrentTarget();
 
