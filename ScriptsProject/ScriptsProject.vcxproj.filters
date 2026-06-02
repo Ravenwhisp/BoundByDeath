@@ -34,9 +34,6 @@
     <Filter Include="Enemies">
       <UniqueIdentifier>{994356b7-31d7-4286-a7d0-f22fa651b995}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Enemies\States">
-      <UniqueIdentifier>{920d4967-84f4-4616-9099-b8b0c3eeb8af}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Character">
       <UniqueIdentifier>{a1f2e3d4-b5c6-7890-abcd-ef1234567890}</UniqueIdentifier>
     </Filter>
@@ -96,6 +93,15 @@
     </Filter>
     <Filter Include="Interaction/Gameplay\Powerups">
       <UniqueIdentifier>{2aff9aad-d5be-40f1-a331-13a9ec37a9a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Enemies\Paladin">
+      <UniqueIdentifier>{e1454828-6ebb-478f-8c27-4e27c414a2a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Enemies\Paladin\States">
+      <UniqueIdentifier>{920d4967-84f4-4616-9099-b8b0c3eeb8af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Enemies\Paladin\Attacks">
+      <UniqueIdentifier>{d3b1e8b6-13a2-4024-9173-3254725c66b6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -180,10 +186,10 @@
       <Filter>Enemies</Filter>
     </ClInclude>
     <ClInclude Include="EnemyIDLE.h">
-      <Filter>Enemies\States</Filter>
+      <Filter>Enemies\Paladin\States</Filter>
     </ClInclude>
     <ClInclude Include="EnemyCHASE.h">
-      <Filter>Enemies\States</Filter>
+      <Filter>Enemies\Paladin\States</Filter>
     </ClInclude>
     <ClInclude Include="CharacterBase.h">
       <Filter>Character</Filter>
@@ -261,13 +267,13 @@
       <Filter>Enemies\Arthur</Filter>
     </ClInclude>
     <ClInclude Include="EnemyATTACK.h">
-      <Filter>Enemies\States</Filter>
+      <Filter>Enemies\Paladin\States</Filter>
     </ClInclude>
     <ClInclude Include="EnemyCHARGE.h">
-      <Filter>Enemies\States</Filter>
+      <Filter>Enemies\Paladin\States</Filter>
     </ClInclude>
     <ClInclude Include="EnemyRECOVER.h">
-      <Filter>Enemies\States</Filter>
+      <Filter>Enemies\Paladin\States</Filter>
     </ClInclude>
     <ClInclude Include="ArthurEarthHammer.h">
       <Filter>Enemies\Arthur\Attacks</Filter>
@@ -389,6 +395,12 @@
     <ClInclude Include="EnemyBaseController.h">
       <Filter>Enemies</Filter>
     </ClInclude>
+    <ClInclude Include="MeleeEnemyController.h">
+      <Filter>Enemies\Paladin</Filter>
+    </ClInclude>
+    <ClInclude Include="PaladinAttackConfig.h">
+      <Filter>Enemies\Paladin</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
@@ -473,10 +485,10 @@
       <Filter>Enemies</Filter>
     </ClCompile>
     <ClCompile Include="EnemyIDLE.cpp">
-      <Filter>Enemies\States</Filter>
+      <Filter>Enemies\Paladin\States</Filter>
     </ClCompile>
     <ClCompile Include="EnemyCHASE.cpp">
-      <Filter>Enemies\States</Filter>
+      <Filter>Enemies\Paladin\States</Filter>
     </ClCompile>
     <ClCompile Include="CharacterBase.cpp">
       <Filter>Character</Filter>
@@ -554,13 +566,13 @@
       <Filter>Enemies\Arthur</Filter>
     </ClCompile>
     <ClCompile Include="EnemyATTACK.cpp">
-      <Filter>Enemies\States</Filter>
+      <Filter>Enemies\Paladin\States</Filter>
     </ClCompile>
     <ClCompile Include="EnemyCHARGE.cpp">
-      <Filter>Enemies\States</Filter>
+      <Filter>Enemies\Paladin\States</Filter>
     </ClCompile>
     <ClCompile Include="EnemyRECOVER.cpp">
-      <Filter>Enemies\States</Filter>
+      <Filter>Enemies\Paladin\States</Filter>
     </ClCompile>
     <ClCompile Include="ArthurEarthHammer.cpp">
       <Filter>Enemies\Arthur\Attacks</Filter>
@@ -681,6 +693,12 @@
     </ClCompile>
     <ClCompile Include="EnemyBaseController.cpp">
       <Filter>Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="MeleeEnemyController.cpp">
+      <Filter>Enemies\Paladin</Filter>
+    </ClCompile>
+    <ClCompile Include="PaladinAttackConfig.cpp">
+      <Filter>Enemies\Paladin</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
