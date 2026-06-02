@@ -4,6 +4,7 @@
 
 class ArthurDetectionAggro;
 class ArthurAttackConfig;
+class ArthurUI;
 
 enum class ArthurBossPhase
 {
@@ -54,12 +55,6 @@ public:
 	Vector3 getSideSweepDirection(int side) const;
 	bool trySelectSideSweepSide(); //This one will be used when deciding to enter SideSweep state
 	int getSelectedSideSweepSide() const { return m_selectedSideSweepSide; }
-
-	//UI
-	void updateHealthUI();
-	void setupHealthUI();
-	void showHealthUI(bool show);
-	void updateHealthUIPhase();
 	
 protected:
 	Transform* acquireCurrentTarget() override;
@@ -72,11 +67,10 @@ private:
 public:
 	float m_combatRange = 3.0f;
 
-	float m_healthBarDuration = 1.0f;
-
 private:
 	ArthurDetectionAggro* m_arthurDetectionAggro = nullptr;
 	ArthurAttackConfig* m_attackConfig = nullptr;
+	ArthurUI* m_arthurUI = nullptr;
 
 	ArthurBossPhase m_phase = ArthurBossPhase::Phase1;
 
@@ -90,18 +84,4 @@ private:
 	float m_chargingSlamCooldownTimer = 0.0f;
 	float m_sideSweepCooldownTimer = 0.0f;
 	float m_earthHammerCooldownTimer = 0.0f;
-
-	//UI
-	ScriptComponentRef<Transform> m_healthBarCanvas;
-	ScriptComponentRef<Transform2D> m_healthBarContainer;
-	ScriptComponentRef<Transform2D> m_healthBarPhase2;
-
-	Transform* m_healthBarCanvasTransform = nullptr;
-	Transform2D* m_healthBarContainerTransform2D = nullptr;
-	Transform2D* m_healthBarPhase2Transform2D = nullptr;
-
-	float m_healthBarTimer = 0.0f;
-	bool m_healthBarVisible = false;
-	float m_healthBarPhase2Timer = 0.0f;
-	bool m_healthBarPhase2Visible = false;
 };
