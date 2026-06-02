@@ -3,7 +3,7 @@
 #include "EnemyBaseController.h"
 
 class EnemyDetectionAggro;
-
+class PaladinAttackConfig;
 
 class MeleeEnemyController : public EnemyBaseController
 {
@@ -34,6 +34,7 @@ protected:
 
 private:
 	EnemyDetectionAggro* m_enemyDetectionAggro = nullptr;
+	PaladinAttackConfig* m_attackConfig = nullptr;
 
 	float m_chargeCooldownTimer = 0.0f;
 };
