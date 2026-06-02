@@ -34,9 +34,6 @@
     <Filter Include="Enemies">
       <UniqueIdentifier>{994356b7-31d7-4286-a7d0-f22fa651b995}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Enemies\States">
-      <UniqueIdentifier>{920d4967-84f4-4616-9099-b8b0c3eeb8af}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Character">
       <UniqueIdentifier>{a1f2e3d4-b5c6-7890-abcd-ef1234567890}</UniqueIdentifier>
     </Filter>
@@ -58,17 +55,11 @@
     <Filter Include="Enemies\Arthur">
       <UniqueIdentifier>{4f70e375-e641-46b1-8fc4-77b2d8034816}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Enemies\Arthur\Attacks">
-      <UniqueIdentifier>{9c76ffc7-6ef2-4ccf-b1c3-0a0f0c637147}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Enemies\Arthur\States">
       <UniqueIdentifier>{10e43235-b0ea-4590-a473-24e5c1676a4f}</UniqueIdentifier>
     </Filter>
     <Filter Include="Enemies\Archer">
       <UniqueIdentifier>{3e7ea8a6-7ef4-49db-9f2a-bb5ede53a53d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Enemies\Archer\Attacks">
-      <UniqueIdentifier>{2204dc11-e1ba-4159-ada6-1141768039b7}</UniqueIdentifier>
     </Filter>
     <Filter Include="Enemies\Archer\States">
       <UniqueIdentifier>{f68d01a4-01d5-4bd7-97e1-24d97173d687}</UniqueIdentifier>
@@ -96,6 +87,12 @@
     </Filter>
     <Filter Include="Interaction/Gameplay\Powerups">
       <UniqueIdentifier>{2aff9aad-d5be-40f1-a331-13a9ec37a9a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Enemies\Paladin">
+      <UniqueIdentifier>{920d4967-84f4-4616-9099-b8b0c3eeb8af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Enemies\BaseStates">
+      <UniqueIdentifier>{0112598d-0a85-4d82-8391-69ed7ed3e0ea}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -176,14 +173,11 @@
     <ClInclude Include="EnemyController.h">
       <Filter>Enemies</Filter>
     </ClInclude>
-    <ClInclude Include="EnemySTUN.h">
-      <Filter>Enemies</Filter>
-    </ClInclude>
     <ClInclude Include="EnemyIDLE.h">
-      <Filter>Enemies\States</Filter>
+      <Filter>Enemies\Paladin</Filter>
     </ClInclude>
     <ClInclude Include="EnemyCHASE.h">
-      <Filter>Enemies\States</Filter>
+      <Filter>Enemies\Paladin</Filter>
     </ClInclude>
     <ClInclude Include="CharacterBase.h">
       <Filter>Character</Filter>
@@ -251,9 +245,6 @@
     <ClInclude Include="UISplashScreen.h">
       <Filter>UI</Filter>
     </ClInclude>
-    <ClInclude Include="ArthurHeavySwipe.h">
-      <Filter>Enemies\Arthur\Attacks</Filter>
-    </ClInclude>
     <ClInclude Include="ArthurAttackConfig.h">
       <Filter>Enemies\Arthur</Filter>
     </ClInclude>
@@ -261,58 +252,28 @@
       <Filter>Enemies\Arthur</Filter>
     </ClInclude>
     <ClInclude Include="EnemyATTACK.h">
-      <Filter>Enemies\States</Filter>
+      <Filter>Enemies\Paladin</Filter>
     </ClInclude>
     <ClInclude Include="EnemyCHARGE.h">
-      <Filter>Enemies\States</Filter>
+      <Filter>Enemies\Paladin</Filter>
     </ClInclude>
     <ClInclude Include="EnemyRECOVER.h">
-      <Filter>Enemies\States</Filter>
-    </ClInclude>
-    <ClInclude Include="ArthurEarthHammer.h">
-      <Filter>Enemies\Arthur\Attacks</Filter>
-    </ClInclude>
-    <ClInclude Include="ArthurSideSweep.h">
-      <Filter>Enemies\Arthur\Attacks</Filter>
-    </ClInclude>
-    <ClInclude Include="ArthurChargingSlam.h">
-      <Filter>Enemies\Arthur\Attacks</Filter>
+      <Filter>Enemies\Paladin</Filter>
     </ClInclude>
     <ClInclude Include="PlayerStunState.h">
       <Filter>Player\States</Filter>
     </ClInclude>
-    <ClInclude Include="ArthurIdle.h">
-      <Filter>Enemies\Arthur\States</Filter>
-    </ClInclude>
     <ClInclude Include="ArthurChase.h">
       <Filter>Enemies\Arthur\States</Filter>
-    </ClInclude>
-    <ClInclude Include="ArthurRecover.h">
-      <Filter>Enemies\Arthur\States</Filter>
-    </ClInclude>
-    <ClInclude Include="EnemyDeathState.h">
-      <Filter>Enemies\Archer</Filter>
     </ClInclude>
     <ClInclude Include="RangedEnemyController.h">
       <Filter>Enemies\Archer</Filter>
     </ClInclude>
-    <ClInclude Include="ArcherAttackState.h">
-      <Filter>Enemies\Archer\Attacks</Filter>
-    </ClInclude>
     <ClInclude Include="ArcherChaseState.h">
-      <Filter>Enemies\Archer\States</Filter>
-    </ClInclude>
-    <ClInclude Include="EnemyIdleState.h">
       <Filter>Enemies\Archer\States</Filter>
     </ClInclude>
     <ClInclude Include="ArcherAttackConfig.h">
       <Filter>Enemies\Archer</Filter>
-    </ClInclude>
-    <ClInclude Include="ArcherSomersaultState.h">
-      <Filter>Enemies\Archer\Attacks</Filter>
-    </ClInclude>
-    <ClInclude Include="ArcherArrowBarrageState.h">
-      <Filter>Enemies\Archer\Attacks</Filter>
     </ClInclude>
     <ClInclude Include="EnemyAttackExecutor.h">
       <Filter>Enemies</Filter>
@@ -388,6 +349,39 @@
     </ClInclude>
     <ClInclude Include="EnemyBaseController.h">
       <Filter>Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyDeathState.h">
+      <Filter>Enemies\BaseStates</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemySTUN.h">
+      <Filter>Enemies\Paladin</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyIdleState.h">
+      <Filter>Enemies\BaseStates</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyRecoverState.h">
+      <Filter>Enemies\BaseStates</Filter>
+    </ClInclude>
+    <ClInclude Include="ArcherArrowBarrageState.h">
+      <Filter>Enemies\Archer\States</Filter>
+    </ClInclude>
+    <ClInclude Include="ArcherAttackState.h">
+      <Filter>Enemies\Archer\States</Filter>
+    </ClInclude>
+    <ClInclude Include="ArcherSomersaultState.h">
+      <Filter>Enemies\Archer\States</Filter>
+    </ClInclude>
+    <ClInclude Include="ArthurChargingSlam.h">
+      <Filter>Enemies\Arthur\States</Filter>
+    </ClInclude>
+    <ClInclude Include="ArthurEarthHammer.h">
+      <Filter>Enemies\Arthur\States</Filter>
+    </ClInclude>
+    <ClInclude Include="ArthurHeavySwipe.h">
+      <Filter>Enemies\Arthur\States</Filter>
+    </ClInclude>
+    <ClInclude Include="ArthurSideSweep.h">
+      <Filter>Enemies\Arthur\States</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -469,14 +463,11 @@
     <ClCompile Include="EnemyController.cpp">
       <Filter>Enemies</Filter>
     </ClCompile>
-    <ClCompile Include="EnemySTUN.cpp">
-      <Filter>Enemies</Filter>
-    </ClCompile>
     <ClCompile Include="EnemyIDLE.cpp">
-      <Filter>Enemies\States</Filter>
+      <Filter>Enemies\Paladin</Filter>
     </ClCompile>
     <ClCompile Include="EnemyCHASE.cpp">
-      <Filter>Enemies\States</Filter>
+      <Filter>Enemies\Paladin</Filter>
     </ClCompile>
     <ClCompile Include="CharacterBase.cpp">
       <Filter>Character</Filter>
@@ -544,9 +535,6 @@
     <ClCompile Include="UISplashScreen.cpp">
       <Filter>UI</Filter>
     </ClCompile>
-    <ClCompile Include="ArthurHeavySwipe.cpp">
-      <Filter>Enemies\Arthur\Attacks</Filter>
-    </ClCompile>
     <ClCompile Include="ArthurAttackConfig.cpp">
       <Filter>Enemies\Arthur</Filter>
     </ClCompile>
@@ -554,22 +542,13 @@
       <Filter>Enemies\Arthur</Filter>
     </ClCompile>
     <ClCompile Include="EnemyATTACK.cpp">
-      <Filter>Enemies\States</Filter>
+      <Filter>Enemies\Paladin</Filter>
     </ClCompile>
     <ClCompile Include="EnemyCHARGE.cpp">
-      <Filter>Enemies\States</Filter>
+      <Filter>Enemies\Paladin</Filter>
     </ClCompile>
     <ClCompile Include="EnemyRECOVER.cpp">
-      <Filter>Enemies\States</Filter>
-    </ClCompile>
-    <ClCompile Include="ArthurEarthHammer.cpp">
-      <Filter>Enemies\Arthur\Attacks</Filter>
-    </ClCompile>
-    <ClCompile Include="ArthurSideSweep.cpp">
-      <Filter>Enemies\Arthur\Attacks</Filter>
-    </ClCompile>
-    <ClCompile Include="ArthurChargingSlam.cpp">
-      <Filter>Enemies\Arthur\Attacks</Filter>
+      <Filter>Enemies\Paladin</Filter>
     </ClCompile>
     <ClCompile Include="PlayerStunState.cpp">
       <Filter>Player\States</Filter>
@@ -577,35 +556,14 @@
     <ClCompile Include="ArthurChase.cpp">
       <Filter>Enemies\Arthur\States</Filter>
     </ClCompile>
-    <ClCompile Include="ArthurIdle.cpp">
-      <Filter>Enemies\Arthur\States</Filter>
-    </ClCompile>
-    <ClCompile Include="ArthurRecover.cpp">
-      <Filter>Enemies\Arthur\States</Filter>
-    </ClCompile>
-    <ClCompile Include="EnemyDeathState.cpp">
-      <Filter>Enemies\Archer</Filter>
-    </ClCompile>
     <ClCompile Include="RangedEnemyController.cpp">
       <Filter>Enemies\Archer</Filter>
-    </ClCompile>
-    <ClCompile Include="ArcherAttackState.cpp">
-      <Filter>Enemies\Archer\Attacks</Filter>
     </ClCompile>
     <ClCompile Include="ArcherChaseState.cpp">
       <Filter>Enemies\Archer\States</Filter>
     </ClCompile>
-    <ClCompile Include="EnemyIdleState.cpp">
-      <Filter>Enemies\Archer\States</Filter>
-    </ClCompile>
     <ClCompile Include="ArcherAttackConfig.cpp">
       <Filter>Enemies\Archer</Filter>
-    </ClCompile>
-    <ClCompile Include="ArcherSomersaultState.cpp">
-      <Filter>Enemies\Archer\Attacks</Filter>
-    </ClCompile>
-    <ClCompile Include="ArcherArrowBarrageState.cpp">
-      <Filter>Enemies\Archer\Attacks</Filter>
     </ClCompile>
     <ClCompile Include="EnemyAttackExecutor.cpp">
       <Filter>Enemies</Filter>
@@ -681,6 +639,39 @@
     </ClCompile>
     <ClCompile Include="EnemyBaseController.cpp">
       <Filter>Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyDeathState.cpp">
+      <Filter>Enemies\BaseStates</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemySTUN.cpp">
+      <Filter>Enemies\Paladin</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyIdleState.cpp">
+      <Filter>Enemies\BaseStates</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyRecoverState.cpp">
+      <Filter>Enemies\BaseStates</Filter>
+    </ClCompile>
+    <ClCompile Include="ArcherArrowBarrageState.cpp">
+      <Filter>Enemies\Archer\States</Filter>
+    </ClCompile>
+    <ClCompile Include="ArcherAttackState.cpp">
+      <Filter>Enemies\Archer\States</Filter>
+    </ClCompile>
+    <ClCompile Include="ArcherSomersaultState.cpp">
+      <Filter>Enemies\Archer\States</Filter>
+    </ClCompile>
+    <ClCompile Include="ArthurChargingSlam.cpp">
+      <Filter>Enemies\Arthur\States</Filter>
+    </ClCompile>
+    <ClCompile Include="ArthurEarthHammer.cpp">
+      <Filter>Enemies\Arthur\States</Filter>
+    </ClCompile>
+    <ClCompile Include="ArthurHeavySwipe.cpp">
+      <Filter>Enemies\Arthur\States</Filter>
+    </ClCompile>
+    <ClCompile Include="ArthurSideSweep.cpp">
+      <Filter>Enemies\Arthur\States</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

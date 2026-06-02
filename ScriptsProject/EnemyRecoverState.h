@@ -3,22 +3,22 @@
 #include "ScriptAPI.h"
 #include "StateMachineScript.h"
 
-class ArthurBossController;
+class EnemyBaseController;
 class AnimationComponent;
 
-class ArthurRecover : public StateMachineScript
+class EnemyRecoverState : public StateMachineScript
 {
-	DECLARE_SCRIPT(ArthurRecover)
+	DECLARE_SCRIPT(EnemyRecoverState)
 
 public:
-	explicit ArthurRecover(GameObject* owner);
+	explicit EnemyRecoverState(GameObject* owner);
 
 	void OnStateEnter() override;
 	void OnStateUpdate() override;
 	void OnStateExit() override;
 
 private:
-	ArthurBossController* m_arthurController = nullptr;
+	EnemyBaseController* m_controller = nullptr;
 	AnimationComponent* m_animation = nullptr;
 	float m_stateTimer = 0.0f;
 };

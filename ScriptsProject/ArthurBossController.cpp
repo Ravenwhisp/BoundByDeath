@@ -208,11 +208,6 @@ Transform* ArthurBossController::getNonFocusTarget() const
 	return nullptr;
 }
 
-void ArthurBossController::setRecoveryDuration(float recoveryDuration)
-{
-	m_recoveryDuration = recoveryDuration;
-}
-
 bool ArthurBossController::areBothPlayersInEarthHammerRange() const
 {
 	if (!m_attackConfig || !m_arthurDetectionAggro)

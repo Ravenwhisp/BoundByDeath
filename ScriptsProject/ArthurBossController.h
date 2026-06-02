@@ -45,9 +45,6 @@ public:
 	Transform* getFocusTarget() const { return m_currentTarget; }
 	Transform* getNonFocusTarget() const;
 
-	void setRecoveryDuration(float recoveryDuration);
-	float getRecoveryDuration() const { return m_recoveryDuration; }
-
 	bool areBothPlayersInEarthHammerRange() const;
 	bool isTargetInChargingSlamRange() const;
 	bool isCurrentTargetInsideHeavySwipeArea(float range, float halfAngleDegrees) const;
@@ -86,8 +83,6 @@ private:
 	bool m_hasStartedEncounter = false;
 
 	const float RADIANS_TO_DEGREES = 180.0f / 3.14159265f;
-
-	float m_recoveryDuration = 0.75f;
 
 	int m_selectedSideSweepSide = 1;
 
