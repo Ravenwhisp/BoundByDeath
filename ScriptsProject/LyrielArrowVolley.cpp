@@ -11,11 +11,11 @@
 #include "PersistingPowerupState.h"
 #include "EnemyShadowMark.h"
 #include "BreakableDamageable.h"
+#include "LyrielUI.h"
 
 #include <cmath>
 
 IMPLEMENT_SCRIPT_FIELDS_INHERITED(LyrielArrowVolley, LyrielAbilityBase,
-    SERIALIZED_COMPONENT_REF(m_AbilityUI, "Ability UI", ComponentType::TRANSFORM),
     SERIALIZED_FLOAT(m_volleyDamage, "Volley Damage", 0.0f, 100.0f, 0.5f),
     SERIALIZED_FLOAT(m_volleyRange, "Volley Range", 0.0f, 50.0f, 0.1f),
     SERIALIZED_FLOAT(m_coneAngleDegrees, "Cone Angle Degrees", 1.0f, 180.0f, 1.0f),
@@ -32,6 +32,13 @@ LyrielArrowVolley::LyrielArrowVolley(GameObject* owner)
 void LyrielArrowVolley::Start()
 {
     LyrielAbilityBase::Start();
+
+    m_lyrielUI = GameObjectAPI::findScript<LyrielUI>(getOwner());
+
+    if (!m_lyrielUI)
+    {
+        Debug::warn("[LyrielArrowVolley] LyrielUI not found.");
+    }
 }
 
 void LyrielArrowVolley::Update()
@@ -123,9 +130,10 @@ void LyrielArrowVolley::beginAim()
     {
 		m_currentAimDirection = getFallbackFacingDirection();
     }
-    if (m_AbilityUI.getReferencedComponent())
+
+    if (m_lyrielUI)
     {
-        GameObjectAPI::setActive(m_AbilityUI.getReferencedComponent()->getOwner(), true);
+        m_lyrielUI->showArrowVolleyUI();
     }
 }
 
@@ -136,14 +144,16 @@ void LyrielArrowVolley::updateAim()
     {
         m_currentAimDirection = aimDirection;
     }
-    if (m_AbilityUI.getReferencedComponent())
+    
+    if (m_lyrielUI)
     {
-        const Vector3 origin = TransformAPI::getGlobalPosition(GameObjectAPI::getTransform(getOwner()));
-        const float yawRad = std::atan2(m_currentAimDirection.x, m_currentAimDirection.z);
-        const float targetYawDeg = yawRad * (180.0f / 3.14159265f);
+        Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
 
-        TransformAPI::setPosition(m_AbilityUI.getReferencedComponent(), origin);
-        TransformAPI::setRotationEuler(m_AbilityUI.getReferencedComponent(), Vector3(0.0f, targetYawDeg, 0.0f));
+        if (ownerTransform)
+        {
+            const Vector3 origin = TransformAPI::getGlobalPosition(ownerTransform);
+            m_lyrielUI->updateArrowVolleyUI(origin, m_currentAimDirection);
+        }
     }
 }
 
@@ -151,9 +161,9 @@ void LyrielArrowVolley::releaseAimAndCast()
 {
     m_isAiming = false;
 
-    if (m_AbilityUI.getReferencedComponent())
+    if (m_lyrielUI)
     {
-        GameObjectAPI::setActive(m_AbilityUI.getReferencedComponent()->getOwner(), false);
+        m_lyrielUI->hideArrowVolleyUI();
     }
 
     if (!canCast())
