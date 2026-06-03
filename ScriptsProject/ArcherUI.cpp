@@ -82,3 +82,5 @@ void ArcherUI::hideArrowBarrageUI()
 
 	GameObjectAPI::setActive(owner, false);
 }
+
+IMPLEMENT_SCRIPT(ArcherUI)
