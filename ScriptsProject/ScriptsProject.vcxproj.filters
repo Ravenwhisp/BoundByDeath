@@ -49,9 +49,6 @@
     <Filter Include="Character\Lyriel\Abilities">
       <UniqueIdentifier>{e5b6c7d8-f9a0-1234-ef01-234567890124}</UniqueIdentifier>
     </Filter>
-    <Filter Include="UI">
-      <UniqueIdentifier>{e135fa5e-751a-4bac-acd9-1ede1f2173ca}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Enemies\Arthur">
       <UniqueIdentifier>{4f70e375-e641-46b1-8fc4-77b2d8034816}</UniqueIdentifier>
     </Filter>
@@ -96,6 +93,12 @@
     </Filter>
     <Filter Include="Enemies\Arthur\UI">
       <UniqueIdentifier>{a529141b-b492-4638-98db-84183f71004d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game UI">
+      <UniqueIdentifier>{e135fa5e-751a-4bac-acd9-1ede1f2173ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Enemies\Archer\UI">
+      <UniqueIdentifier>{973f9bea-e3b9-4558-8f7f-a2a715e0920b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -240,13 +243,13 @@
       <Filter>Character\Lyriel\Abilities</Filter>
     </ClInclude>
     <ClInclude Include="UIController.h">
-      <Filter>UI</Filter>
+      <Filter>Game UI</Filter>
     </ClInclude>
     <ClInclude Include="UIPause.h">
-      <Filter>UI</Filter>
+      <Filter>Game UI</Filter>
     </ClInclude>
     <ClInclude Include="UISplashScreen.h">
-      <Filter>UI</Filter>
+      <Filter>Game UI</Filter>
     </ClInclude>
     <ClInclude Include="ArthurAttackConfig.h">
       <Filter>Enemies\Arthur</Filter>
@@ -388,6 +391,9 @@
     </ClInclude>
     <ClInclude Include="ArthurUI.h">
       <Filter>Enemies\Arthur\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="ArcherUI.h">
+      <Filter>Enemies\Archer\UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -533,13 +539,13 @@
       <Filter>Character\Lyriel\Abilities</Filter>
     </ClCompile>
     <ClCompile Include="UIController.cpp">
-      <Filter>UI</Filter>
+      <Filter>Game UI</Filter>
     </ClCompile>
     <ClCompile Include="UIPause.cpp">
-      <Filter>UI</Filter>
+      <Filter>Game UI</Filter>
     </ClCompile>
     <ClCompile Include="UISplashScreen.cpp">
-      <Filter>UI</Filter>
+      <Filter>Game UI</Filter>
     </ClCompile>
     <ClCompile Include="ArthurAttackConfig.cpp">
       <Filter>Enemies\Arthur</Filter>
@@ -681,6 +687,9 @@
     </ClCompile>
     <ClCompile Include="ArthurUI.cpp">
       <Filter>Enemies\Arthur\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="ArcherUI.cpp">
+      <Filter>Enemies\Archer\UI</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
