@@ -72,10 +72,7 @@ void ArthurHeavySwipe::OnStateEnter()
     m_arthurController->updateCurrentTarget();
     m_arthurController->faceCurrentTarget();
 
-    if (m_arthurUI)
-    {
-        m_arthurUI->setupHeavySwipeUI();
-    }
+    m_arthurUI->setupHeavySwipeUI();
 
     Debug::log("[ArthurHeavySwipe] ENTER");
 }

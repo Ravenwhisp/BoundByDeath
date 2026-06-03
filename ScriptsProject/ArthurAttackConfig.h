@@ -11,8 +11,6 @@ class ArthurAttackConfig : public Script
 public:
     explicit ArthurAttackConfig(GameObject* owner);
 
-    void Start() override;
-
     ScriptFieldList getExposedFields() const override;
 
 public:
@@ -73,34 +71,6 @@ public:
     float m_chargingSlamMinRange = 5.0f;
     float m_chargingSlamMaxRange = 8.0f;
 
-    ScriptComponentRef<Transform> m_chargingSlamUICanvas;
-    ScriptComponentRef<Transform2D> m_chargingSlamUIContainer;
-	ScriptComponentRef<Transform2D> m_chargingSlamUIBackground;
-    ScriptComponentRef<Transform2D> m_chargingSlamUIBorders;
-    ScriptComponentRef<Transform2D> m_chargingSlamUIShadow;
-    ScriptComponentRef<Transform2D> m_chargingSlamUISpikes;
-    ScriptComponentRef<UISlider> m_chargingSlamUIBordersSlider;
-    ScriptComponentRef<UISlider> m_chargingSlamUIShadowSlider;
-
-    Transform* m_chargingSlamUICanvasTransform = nullptr;
-	Transform2D* m_chargingSlamUIContainerTransform2D = nullptr;
-    Transform2D* m_chargingSlamUIBackgroundTransform2D = nullptr;
-    Transform2D* m_chargingSlamUIBordersTransform2D = nullptr;
-    Transform2D* m_chargingSlamUIShadowTransform2D = nullptr;
-	Transform2D* m_chargingSlamUISpikesTransform2D = nullptr;
-	UISlider* m_chargingSlamUIBordersSliderComponent = nullptr;
-    UISlider* m_chargingSlamUIShadowSliderComponent = nullptr;
-
-	ScriptComponentRef<Transform> m_chargingSlamImpactUICanvas;
-	ScriptComponentRef<Transform2D> m_chargingSlamImpactUIContainer;
-    ScriptComponentRef<Transform2D> m_chargingSlamImpactUICenter;
-    ScriptComponentRef<Transform2D> m_chargingSlamImpactUIGlow;
-
-	Transform* m_chargingSlamImpactUICanvasTransform = nullptr;
-	Transform2D* m_chargingSlamImpactUIContainerTransform2D = nullptr;
-	Transform2D* m_chargingSlamImpactUICenterTransform2D = nullptr;
-	Transform2D* m_chargingSlamImpactUIGlowTransform2D = nullptr;
-
     // Earth Hammer
     float m_earthHammerDamage = 20.0f;
     float m_earthHammerRadius = 5.0f;
@@ -116,18 +86,4 @@ public:
 
     float m_earthHammerPhase2Damage = 25.0f;
     float m_earthHammerPhase2StunDuration = 1.75f;
-
-	ScriptComponentRef<Transform> m_earthHammerUICanvas;
-	ScriptComponentRef<Transform2D> m_earthHammerUIContainer;
-    ScriptComponentRef<Transform2D> m_earthHammerUIInner;
-    ScriptComponentRef<Transform2D> m_earthHammerUISpikes;
-	ScriptComponentRef<Transform2D> m_earthHammerUIGlow;
-    ScriptComponentRef<Transform2D> m_earthHammerUIRing;
-
-	Transform* m_earthHammerUICanvasTransform = nullptr;
-	Transform2D* m_earthHammerUIContainerTransform2D = nullptr;
-    Transform2D* m_earthHammerUIInnerTransform2D = nullptr;
-	Transform2D* m_earthHammerUISpikesTransform2D = nullptr;
-    Transform2D* m_earthHammerUIGlowTransform2D = nullptr;
-	Transform2D* m_earthHammerUIRingTransform2D = nullptr;
 };

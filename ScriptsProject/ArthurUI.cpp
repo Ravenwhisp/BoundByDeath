@@ -24,6 +24,30 @@ IMPLEMENT_SCRIPT_FIELDS(ArthurUI,
 		SERIALIZED_COMPONENT_REF(m_sideSweepUIContainer, "Side Sweep UI Container", ComponentType::TRANSFORM2D),
 		SERIALIZED_COMPONENT_REF(m_sideSweepUIBackground, "Side Sweep UI Background", ComponentType::TRANSFORM2D),
 		SERIALIZED_COMPONENT_REF(m_sideSweepUIShadow, "Side Sweep UI Shadow", ComponentType::TRANSFORM2D)
+	),
+
+	FIELD_GROUP_COLLAPSE("Charging Slam",
+		SERIALIZED_COMPONENT_REF(m_chargingSlamUICanvas, "Charging Slam UI Canvas", ComponentType::TRANSFORM),
+		SERIALIZED_COMPONENT_REF(m_chargingSlamUIContainer, "Charging Slam UI Container", ComponentType::TRANSFORM2D),
+		SERIALIZED_COMPONENT_REF(m_chargingSlamUIBackground, "Charging Slam UI Background", ComponentType::TRANSFORM2D),
+		SERIALIZED_COMPONENT_REF(m_chargingSlamUIBorders, "Charging Slam UI Borders", ComponentType::TRANSFORM2D),
+		SERIALIZED_COMPONENT_REF(m_chargingSlamUIShadow, "Charging Slam UI Shadow", ComponentType::TRANSFORM2D),
+		SERIALIZED_COMPONENT_REF(m_chargingSlamUISpikes, "Charging Slam UI Spikes", ComponentType::TRANSFORM2D),
+		SERIALIZED_COMPONENT_REF(m_chargingSlamUIBordersSlider, "Charging Slam UI Borders Slider", ComponentType::UISLIDER),
+		SERIALIZED_COMPONENT_REF(m_chargingSlamUIShadowSlider, "Charging Slam UI Shadow Slider", ComponentType::UISLIDER),
+		SERIALIZED_COMPONENT_REF(m_chargingSlamImpactUICanvas, "Charging Slam Impact UI Canvas", ComponentType::TRANSFORM),
+		SERIALIZED_COMPONENT_REF(m_chargingSlamImpactUIContainer, "Charging Slam Impact UI Container", ComponentType::TRANSFORM2D),
+		SERIALIZED_COMPONENT_REF(m_chargingSlamImpactUICenter, "Charging Slam Impact UI Center", ComponentType::TRANSFORM2D),
+		SERIALIZED_COMPONENT_REF(m_chargingSlamImpactUIGlow, "Charging Slam Impact UI Glow", ComponentType::TRANSFORM2D)
+	),
+
+	FIELD_GROUP_COLLAPSE("Earth Hammer",
+		SERIALIZED_COMPONENT_REF(m_earthHammerUICanvas, "Earth Hammer UI Canvas", ComponentType::TRANSFORM),
+		SERIALIZED_COMPONENT_REF(m_earthHammerUIContainer, "Earth Hammer UI Container", ComponentType::TRANSFORM2D),
+		SERIALIZED_COMPONENT_REF(m_earthHammerUIInner, "Earth Hammer UI Inner", ComponentType::TRANSFORM2D),
+		SERIALIZED_COMPONENT_REF(m_earthHammerUISpikes, "Earth Hammer UI Spikes", ComponentType::TRANSFORM2D),
+		SERIALIZED_COMPONENT_REF(m_earthHammerUIGlow, "Earth Hammer UI Glow", ComponentType::TRANSFORM2D),
+		SERIALIZED_COMPONENT_REF(m_earthHammerUIRing, "Earth Hammer UI Ring", ComponentType::TRANSFORM2D)
 	)
 )
 
@@ -52,6 +76,31 @@ void ArthurUI::Start()
 	m_sideSweepUIShadowTransform2D = m_sideSweepUIShadow.getReferencedComponent();
 
 	hideSideSweepUI();
+
+	m_chargingSlamUICanvasTransform = m_chargingSlamUICanvas.getReferencedComponent();
+	m_chargingSlamUIContainerTransform2D = m_chargingSlamUIContainer.getReferencedComponent();
+	m_chargingSlamUIBackgroundTransform2D = m_chargingSlamUIBackground.getReferencedComponent();
+	m_chargingSlamUIBordersTransform2D = m_chargingSlamUIBorders.getReferencedComponent();
+	m_chargingSlamUIShadowTransform2D = m_chargingSlamUIShadow.getReferencedComponent();
+	m_chargingSlamUISpikesTransform2D = m_chargingSlamUISpikes.getReferencedComponent();
+	m_chargingSlamUIBordersSliderComponent = m_chargingSlamUIBordersSlider.getReferencedComponent();
+	m_chargingSlamUIShadowSliderComponent = m_chargingSlamUIShadowSlider.getReferencedComponent();
+
+	m_chargingSlamImpactUICanvasTransform = m_chargingSlamImpactUICanvas.getReferencedComponent();
+	m_chargingSlamImpactUIContainerTransform2D = m_chargingSlamImpactUIContainer.getReferencedComponent();
+	m_chargingSlamImpactUICenterTransform2D = m_chargingSlamImpactUICenter.getReferencedComponent();
+	m_chargingSlamImpactUIGlowTransform2D = m_chargingSlamImpactUIGlow.getReferencedComponent();
+
+	hideChargingSlamUI();
+
+	m_earthHammerUICanvasTransform = m_earthHammerUICanvas.getReferencedComponent();
+	m_earthHammerUIContainerTransform2D = m_earthHammerUIContainer.getReferencedComponent();
+	m_earthHammerUIInnerTransform2D = m_earthHammerUIInner.getReferencedComponent();
+	m_earthHammerUISpikesTransform2D = m_earthHammerUISpikes.getReferencedComponent();
+	m_earthHammerUIGlowTransform2D = m_earthHammerUIGlow.getReferencedComponent();
+	m_earthHammerUIRingTransform2D = m_earthHammerUIRing.getReferencedComponent();
+
+	hideEarthHammerUI();
 }
 
 void ArthurUI::Update()
@@ -320,6 +369,273 @@ void ArthurUI::hideSideSweepUI()
 	}
 
 	GameObject* owner = m_sideSweepUICanvasTransform->getOwner();
+
+	if (!owner)
+	{
+		return;
+	}
+
+	GameObjectAPI::setActive(owner, false);
+}
+
+void ArthurUI::setupChargingSlamUI(const Vector3& startPosition, const Vector3& lockedTargetPosition, const Vector3& dashDirection)
+{
+	if (!m_chargingSlamUICanvasTransform || !m_chargingSlamUIContainerTransform2D || !m_chargingSlamUIBordersTransform2D || !m_chargingSlamUIShadowTransform2D || !m_chargingSlamUIBackgroundTransform2D || !m_chargingSlamUISpikesTransform2D || !m_chargingSlamUIBordersSliderComponent || !m_chargingSlamUIShadowSliderComponent)
+	{
+		return;
+	}
+
+	m_isChargingSlamUIFading = false;
+	m_chargingSlamUIFadeOutTimer = 0.0f;
+
+	GameObjectAPI::setActive(m_chargingSlamUICanvasTransform->getOwner(), true);
+
+	SliderAPI::setFillAmount(m_chargingSlamUIBordersSliderComponent, 0.0f);
+	SliderAPI::setFillAmount(m_chargingSlamUIShadowSliderComponent, 0.0f);
+	Transform2DAPI::setAlpha(m_chargingSlamUIBackgroundTransform2D, 0.0f);
+	Transform2DAPI::setAlpha(m_chargingSlamUIShadowTransform2D, 0.0f);
+	Transform2DAPI::setAlpha(m_chargingSlamUISpikesTransform2D, 0.0f);
+	Transform2DAPI::setAlpha(m_chargingSlamUIContainerTransform2D, 1.0f);
+	Transform2DAPI::setPivot(m_chargingSlamUIContainerTransform2D, Vector2(0.5f, 1.0f));
+	Transform2DAPI::setAnchorMin(m_chargingSlamUIContainerTransform2D, Vector2(0.5f, 1.0f));
+
+	const float distance = Vector3::Distance(startPosition, lockedTargetPosition);
+	const float baseWidth = Transform2DAPI::getBaseSize(m_chargingSlamUIContainerTransform2D).x;
+	Transform2DAPI::setBaseSize(m_chargingSlamUIContainerTransform2D, Vector2(baseWidth, distance * 100.0f));
+
+	m_isChargingSlamImpactUIPlaying = false;
+	m_chargingSlamImpactUITimer = 0.0f;
+	m_isChargingSlamImpactUIFading = false;
+	m_chargingSlamImpactUIFadeTimer = 0.0f;
+
+	if (!m_chargingSlamImpactUICanvasTransform || !m_chargingSlamImpactUIContainerTransform2D || !m_chargingSlamImpactUICenterTransform2D || !m_chargingSlamImpactUIGlowTransform2D)
+	{
+		return;
+	}
+
+	GameObjectAPI::setActive(m_chargingSlamImpactUICanvasTransform->getOwner(), true);
+	TransformAPI::setPosition(m_chargingSlamImpactUICanvasTransform, Vector3(lockedTargetPosition.x, lockedTargetPosition.y, lockedTargetPosition.z));
+	TransformAPI::setRotationEuler(m_chargingSlamImpactUICanvasTransform, Vector3(90.0f, 0.0f, atan2(dashDirection.z, dashDirection.x) * 180.0f / 3.14159265f - 90.0f));
+
+	Transform2DAPI::setAlpha(m_chargingSlamImpactUIContainerTransform2D, 0.0f);
+	Transform2DAPI::setAlpha(m_chargingSlamImpactUICenterTransform2D, 0.0f);
+	Transform2DAPI::setAlpha(m_chargingSlamImpactUIGlowTransform2D, 0.0f);
+}
+
+void ArthurUI::updateChargingSlamUI(float stateTimer, bool isPhase2, bool hasStartedDash, bool hasAppliedImpact, const Vector3& startPosition, const Vector3& lockedTargetPosition, float chargeDuration)
+{
+	if (!m_chargingSlamUIContainerTransform2D || !m_chargingSlamUIBordersTransform2D || !m_chargingSlamUIShadowTransform2D || !m_chargingSlamUIBackgroundTransform2D || !m_chargingSlamUISpikesTransform2D || !m_chargingSlamUIBordersSliderComponent || !m_chargingSlamUIShadowSliderComponent || !m_chargingSlamImpactUIContainerTransform2D || !m_chargingSlamImpactUICenterTransform2D || !m_chargingSlamImpactUIGlowTransform2D)
+	{
+		return;
+	}
+
+	const float deltaTime = Time::getDeltaTime();
+
+	if (!hasStartedDash)
+	{
+		const float t = std::clamp(stateTimer / chargeDuration, 0.0f, 1.0f);
+
+		Transform2DAPI::setAlpha(m_chargingSlamUIShadowTransform2D, t);
+		SliderAPI::setFillAmount(m_chargingSlamUIShadowSliderComponent, t);
+		Transform2DAPI::setAlpha(m_chargingSlamUISpikesTransform2D, t);
+
+		const float bordersFill = MathAPI::evaluateEasing(MathAPI::EasingType::EaseOutQuad, t);
+		SliderAPI::setFillAmount(m_chargingSlamUIBordersSliderComponent, bordersFill);
+
+		const float backgroundAlpha = MathAPI::evaluateEasing(MathAPI::EasingType::EaseInQuad, t);
+		Transform2DAPI::setAlpha(m_chargingSlamUIBackgroundTransform2D, backgroundAlpha);
+
+		SliderAPI::setFillOrigin(m_chargingSlamUIBordersSliderComponent, FillOrigin::VerticalTop);
+		SliderAPI::setFillOrigin(m_chargingSlamUIShadowSliderComponent, FillOrigin::VerticalTop);
+	}
+
+	if (hasStartedDash && !m_isChargingSlamUIFading)
+	{
+		SliderAPI::setFillOrigin(m_chargingSlamUIBordersSliderComponent, FillOrigin::VerticalBottom);
+		SliderAPI::setFillOrigin(m_chargingSlamUIShadowSliderComponent, FillOrigin::VerticalBottom);
+
+		Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
+
+		if (!ownerTransform)
+		{
+			return;
+		}
+
+		Vector3 currentPosition = TransformAPI::getGlobalPosition(ownerTransform);
+
+		const float totalDistance = Vector3::Distance(startPosition, lockedTargetPosition);
+		const float remainingDistance = Vector3::Distance(currentPosition, lockedTargetPosition);
+
+		float dashT = 1.0f;
+
+		if (totalDistance > 0.001f)
+		{
+			dashT = remainingDistance / totalDistance;
+		}
+
+		dashT = std::clamp(dashT, 0.0f, 1.0f);
+
+		SliderAPI::setFillAmount(m_chargingSlamUIBordersSliderComponent, dashT);
+		SliderAPI::setFillAmount(m_chargingSlamUIShadowSliderComponent, dashT);
+		Transform2DAPI::setPivot(m_chargingSlamUIContainerTransform2D, Vector2(0.5f, dashT));
+		Transform2DAPI::setAnchorMin(m_chargingSlamUIContainerTransform2D, Vector2(0.5f, dashT));
+	}
+
+	if (!hasAppliedImpact)
+	{
+		float t = std::clamp(stateTimer / chargeDuration, 0.0f, 1.0f);
+		t = MathAPI::evaluateEasing(MathAPI::EasingType::EaseInQuad, t);
+		Transform2DAPI::setAlpha(m_chargingSlamImpactUIContainerTransform2D, t);
+	}
+
+	if (m_isChargingSlamImpactUIPlaying)
+	{
+		m_chargingSlamImpactUITimer += deltaTime;
+
+		const float duration = 0.45f;
+		const float t = std::clamp(m_chargingSlamImpactUITimer / duration, 0.0f, 1.0f);
+
+		const float centerAlpha = 1.0f - MathAPI::evaluateEasing(MathAPI::EasingType::EaseOutQuad, t);
+		Transform2DAPI::setAlpha(m_chargingSlamImpactUICenterTransform2D, centerAlpha);
+
+		float glowAlpha = MathAPI::pingPong(t);
+		glowAlpha = MathAPI::evaluateEasing(MathAPI::EasingType::EaseOutQuad, glowAlpha);
+		Transform2DAPI::setAlpha(m_chargingSlamImpactUIGlowTransform2D, glowAlpha);
+
+		if (t >= 1.0f)
+		{
+			m_isChargingSlamImpactUIPlaying = false;
+			m_isChargingSlamImpactUIFading = true;
+			m_chargingSlamImpactUIFadeTimer = 0.0f;
+		}
+	}
+
+	if (m_isChargingSlamUIFading)
+	{
+		const float fadeDuration = 0.35f;
+
+		m_chargingSlamUIFadeOutTimer += deltaTime;
+
+		float t = std::clamp(m_chargingSlamUIFadeOutTimer / fadeDuration, 0.0f, 1.0f);
+		t = MathAPI::evaluateEasing(MathAPI::EasingType::EaseOutQuad, t);
+
+		const float alpha = 1.0f - t;
+		Transform2DAPI::setAlpha(m_chargingSlamUIContainerTransform2D, alpha);
+
+		if (t >= 1.0f && m_chargingSlamUICanvasTransform)
+		{
+			GameObjectAPI::setActive(m_chargingSlamUICanvasTransform->getOwner(), false);
+		}
+	}
+
+	if (m_isChargingSlamImpactUIFading)
+	{
+		const float fadeDuration = 0.35f;
+
+		m_chargingSlamImpactUIFadeTimer += deltaTime;
+
+		float t = std::clamp(m_chargingSlamImpactUIFadeTimer / fadeDuration, 0.0f, 1.0f);
+		t = MathAPI::evaluateEasing(MathAPI::EasingType::EaseInQuad, t);
+
+		const float alpha = 1.0f - t;
+		Transform2DAPI::setAlpha(m_chargingSlamImpactUIContainerTransform2D, alpha);
+
+		if (t >= 1.0f && m_chargingSlamImpactUICanvasTransform)
+		{
+			GameObjectAPI::setActive(m_chargingSlamImpactUICanvasTransform->getOwner(), false);
+		}
+	}
+}
+
+void ArthurUI::startChargingSlamImpactUI()
+{
+	m_isChargingSlamUIFading = true;
+	m_chargingSlamUIFadeOutTimer = 0.0f;
+
+	m_isChargingSlamImpactUIPlaying = true;
+	m_chargingSlamImpactUITimer = 0.0f;
+}
+
+void ArthurUI::hideChargingSlamUI()
+{
+	if (m_chargingSlamUICanvasTransform)
+	{
+		GameObjectAPI::setActive(m_chargingSlamUICanvasTransform->getOwner(), false);
+	}
+
+	if (m_chargingSlamImpactUICanvasTransform)
+	{
+		GameObjectAPI::setActive(m_chargingSlamImpactUICanvasTransform->getOwner(), false);
+	}
+}
+
+void ArthurUI::setupEarthHammerUI()
+{
+	if (!m_earthHammerUICanvasTransform || !m_earthHammerUIContainerTransform2D || !m_earthHammerUIRingTransform2D || !m_earthHammerUIInnerTransform2D || !m_earthHammerUISpikesTransform2D || !m_earthHammerUIGlowTransform2D)
+	{
+		return;
+	}
+
+	m_earthHammerHasStartedImpactUI = false;
+	m_earthHammerImpactUITimer = 0.0f;
+	m_earthHammerInnerScale = 0.1f;
+
+	GameObjectAPI::setActive(m_earthHammerUICanvasTransform->getOwner(), true);
+
+	Transform2DAPI::setAlpha(m_earthHammerUIRingTransform2D, 1.0f);
+	Transform2DAPI::setAlpha(m_earthHammerUIInnerTransform2D, 1.0f);
+	Transform2DAPI::setAlpha(m_earthHammerUISpikesTransform2D, 0.0f);
+	Transform2DAPI::setAlpha(m_earthHammerUIGlowTransform2D, 0.0f);
+	Transform2DAPI::setAlpha(m_earthHammerUIContainerTransform2D, 0.0f);
+}
+
+void ArthurUI::updateEarthHammerUI(float stateTimer, bool hasAppliedImpact, float hitTime, float impactDuration)
+{
+	if (!m_earthHammerUIContainerTransform2D || !m_earthHammerUIRingTransform2D || !m_earthHammerUIInnerTransform2D || !m_earthHammerUISpikesTransform2D || !m_earthHammerUIGlowTransform2D)
+	{
+		return;
+	}
+
+	if (!hasAppliedImpact)
+	{
+		const float t = std::clamp(stateTimer / hitTime, 0.0f, 1.0f);
+
+		const float ringAlpha = MathAPI::evaluateEasing(MathAPI::EasingType::EaseOutQuad, t);
+		Transform2DAPI::setAlpha(m_earthHammerUIContainerTransform2D, ringAlpha);
+
+		m_earthHammerInnerScale = 0.1f + (t * 0.9f);
+		Transform2DAPI::setScale(m_earthHammerUIInnerTransform2D, Vector2(m_earthHammerInnerScale, m_earthHammerInnerScale));
+
+		return;
+	}
+
+	if (!m_earthHammerHasStartedImpactUI)
+	{
+		m_earthHammerHasStartedImpactUI = true;
+		m_earthHammerImpactUITimer = 0.0f;
+		m_earthHammerInnerScale = 1.0f;
+	}
+
+	m_earthHammerImpactUITimer += Time::getDeltaTime();
+
+	const float t = std::clamp(m_earthHammerImpactUITimer / impactDuration, 0.0f, 1.0f);
+
+	const float containerAlpha = 1.0f - MathAPI::evaluateEasing(MathAPI::EasingType::EaseInCubic, t);
+	Transform2DAPI::setAlpha(m_earthHammerUIContainerTransform2D, containerAlpha);
+
+	const float glowAlpha = 1.0f - MathAPI::evaluateEasing(MathAPI::EasingType::EaseOutQuad, t);
+	Transform2DAPI::setAlpha(m_earthHammerUIGlowTransform2D, glowAlpha);
+	Transform2DAPI::setAlpha(m_earthHammerUISpikesTransform2D, glowAlpha);
+}
+
+void ArthurUI::hideEarthHammerUI()
+{
+	if (!m_earthHammerUICanvasTransform)
+	{
+		return;
+	}
+
+	GameObject* owner = m_earthHammerUICanvasTransform->getOwner();
 
 	if (!owner)
 	{

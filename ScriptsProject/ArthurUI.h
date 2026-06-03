@@ -33,6 +33,17 @@ public:
 	void updateSideSweepUI(float stateTimer, float hitTime, float totalDuration);
 	void hideSideSweepUI();
 
+	// Charging Slam
+	void setupChargingSlamUI(const Vector3& startPosition, const Vector3& lockedTargetPosition, const Vector3& dashDirection);
+	void updateChargingSlamUI(float stateTimer, bool isPhase2, bool hasStartedDash, bool hasAppliedImpact, const Vector3& startPosition, const Vector3& lockedTargetPosition, float chargeDuration);
+	void startChargingSlamImpactUI();
+	void hideChargingSlamUI();
+
+	// Earth Hammer
+	void setupEarthHammerUI();
+	void updateEarthHammerUI(float stateTimer, bool hasAppliedImpact, float hitTime, float impactDuration);
+	void hideEarthHammerUI();
+
 private:
 	void applyHeavySwipeHitEffects(float t, Transform2D* glow, Transform2D* border, Transform2D* claw, float heavySwipeRange);
 
@@ -82,4 +93,61 @@ private:
 	Transform2D* m_sideSweepUIContainerTransform2D = nullptr;
 	Transform2D* m_sideSweepUIBackgroundTransform2D = nullptr;
 	Transform2D* m_sideSweepUIShadowTransform2D = nullptr;
+
+	// Charging Slam
+	ScriptComponentRef<Transform> m_chargingSlamUICanvas;
+	ScriptComponentRef<Transform2D> m_chargingSlamUIContainer;
+	ScriptComponentRef<Transform2D> m_chargingSlamUIBackground;
+	ScriptComponentRef<Transform2D> m_chargingSlamUIBorders;
+	ScriptComponentRef<Transform2D> m_chargingSlamUIShadow;
+	ScriptComponentRef<Transform2D> m_chargingSlamUISpikes;
+	ScriptComponentRef<UISlider> m_chargingSlamUIBordersSlider;
+	ScriptComponentRef<UISlider> m_chargingSlamUIShadowSlider;
+
+	Transform* m_chargingSlamUICanvasTransform = nullptr;
+	Transform2D* m_chargingSlamUIContainerTransform2D = nullptr;
+	Transform2D* m_chargingSlamUIBackgroundTransform2D = nullptr;
+	Transform2D* m_chargingSlamUIBordersTransform2D = nullptr;
+	Transform2D* m_chargingSlamUIShadowTransform2D = nullptr;
+	Transform2D* m_chargingSlamUISpikesTransform2D = nullptr;
+	UISlider* m_chargingSlamUIBordersSliderComponent = nullptr;
+	UISlider* m_chargingSlamUIShadowSliderComponent = nullptr;
+
+	ScriptComponentRef<Transform> m_chargingSlamImpactUICanvas;
+	ScriptComponentRef<Transform2D> m_chargingSlamImpactUIContainer;
+	ScriptComponentRef<Transform2D> m_chargingSlamImpactUICenter;
+	ScriptComponentRef<Transform2D> m_chargingSlamImpactUIGlow;
+
+	Transform* m_chargingSlamImpactUICanvasTransform = nullptr;
+	Transform2D* m_chargingSlamImpactUIContainerTransform2D = nullptr;
+	Transform2D* m_chargingSlamImpactUICenterTransform2D = nullptr;
+	Transform2D* m_chargingSlamImpactUIGlowTransform2D = nullptr;
+
+	float m_chargingSlamUIFadeOutTimer = 0.0f;
+	bool m_isChargingSlamUIFading = false;
+
+	bool m_isChargingSlamImpactUIPlaying = false;
+	float m_chargingSlamImpactUITimer = 0.0f;
+
+	bool m_isChargingSlamImpactUIFading = false;
+	float m_chargingSlamImpactUIFadeTimer = 0.0f;
+
+	// Earth Hammer UI
+	ScriptComponentRef<Transform> m_earthHammerUICanvas;
+	ScriptComponentRef<Transform2D> m_earthHammerUIContainer;
+	ScriptComponentRef<Transform2D> m_earthHammerUIInner;
+	ScriptComponentRef<Transform2D> m_earthHammerUISpikes;
+	ScriptComponentRef<Transform2D> m_earthHammerUIGlow;
+	ScriptComponentRef<Transform2D> m_earthHammerUIRing;
+
+	Transform* m_earthHammerUICanvasTransform = nullptr;
+	Transform2D* m_earthHammerUIContainerTransform2D = nullptr;
+	Transform2D* m_earthHammerUIInnerTransform2D = nullptr;
+	Transform2D* m_earthHammerUISpikesTransform2D = nullptr;
+	Transform2D* m_earthHammerUIGlowTransform2D = nullptr;
+	Transform2D* m_earthHammerUIRingTransform2D = nullptr;
+
+	bool m_earthHammerHasStartedImpactUI = false;
+	float m_earthHammerImpactUITimer = 0.0f;
+	float m_earthHammerInnerScale = 0.1f;
 };

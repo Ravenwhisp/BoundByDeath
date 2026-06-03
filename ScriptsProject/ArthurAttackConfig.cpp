@@ -46,19 +46,7 @@ IMPLEMENT_SCRIPT_FIELDS(ArthurAttackConfig,
         SERIALIZED_FLOAT(m_chargingSlamPhase2HitTime, "Charging Slam Phase 2 Hit Time", 0.0f, 10.0f, 0.05f),
         SERIALIZED_FLOAT(m_chargingSlamPhase2DashSpeed, "Charging Slam Phase 2 Dash Speed", 0.0f, 50.0f, 0.1f),
         SERIALIZED_FLOAT(m_chargingSlamMinRange, "Charging Slam Min Range", 0.0f, 20.0f, 0.1f),
-        SERIALIZED_FLOAT(m_chargingSlamMaxRange, "Charging Slam Max Range", 0.0f, 20.0f, 0.1f),
-        SERIALIZED_COMPONENT_REF(m_chargingSlamUICanvas, "Charging Slam UI Canvas", ComponentType::TRANSFORM),
-        SERIALIZED_COMPONENT_REF(m_chargingSlamUIContainer, "Charging Slam UI Container", ComponentType::TRANSFORM2D),
-	    SERIALIZED_COMPONENT_REF(m_chargingSlamUIBackground, "Charging Slam UI Background", ComponentType::TRANSFORM2D),
-	    SERIALIZED_COMPONENT_REF(m_chargingSlamUIBorders, "Charging Slam UI Borders", ComponentType::TRANSFORM2D),
-	    SERIALIZED_COMPONENT_REF(m_chargingSlamUIShadow, "Charging Slam UI Shadow", ComponentType::TRANSFORM2D),
-	    SERIALIZED_COMPONENT_REF(m_chargingSlamUISpikes, "Charging Slam UI Spikes", ComponentType::TRANSFORM2D),
-	    SERIALIZED_COMPONENT_REF(m_chargingSlamUIBordersSlider, "Charging Slam UI Borders Slider", ComponentType::UISLIDER),
-	    SERIALIZED_COMPONENT_REF(m_chargingSlamUIShadowSlider, "Charging Slam UI Shadow Slider", ComponentType::UISLIDER),
-	    SERIALIZED_COMPONENT_REF(m_chargingSlamImpactUICanvas, "Charging Slam Impact UI Canvas", ComponentType::TRANSFORM),
-	    SERIALIZED_COMPONENT_REF(m_chargingSlamImpactUIContainer, "Charging Slam Impact UI Container", ComponentType::TRANSFORM2D),
-	    SERIALIZED_COMPONENT_REF(m_chargingSlamImpactUICenter, "Charging Slam Impact UI Center", ComponentType::TRANSFORM2D),
-	    SERIALIZED_COMPONENT_REF(m_chargingSlamImpactUIGlow, "Charging Slam Impact UI Glow", ComponentType::TRANSFORM2D)
+        SERIALIZED_FLOAT(m_chargingSlamMaxRange, "Charging Slam Max Range", 0.0f, 20.0f, 0.1f)
     ),
     // Earth Hammer
     FIELD_GROUP_COLLAPSE("Earth Hammer",
@@ -70,58 +58,13 @@ IMPLEMENT_SCRIPT_FIELDS(ArthurAttackConfig,
         SERIALIZED_FLOAT(m_earthHammerStunDuration, "Earth Hammer Stun Duration", 0.0f, 10.0f, 0.05f),
         SERIALIZED_FLOAT(m_earthHammerCooldown, "Earth Hammer Cooldown", 0.0f, 10.0f, 0.1f),
         SERIALIZED_FLOAT(m_earthHammerPhase2Damage, "Earth Hammer Phase 2 Damage", 0.0f, 9999.0f, 1.0f),
-        SERIALIZED_FLOAT(m_earthHammerPhase2StunDuration, "Earth Hammer Phase 2 Stun Duration", 0.0f, 10.0f, 0.05f),
-	    SERIALIZED_COMPONENT_REF(m_earthHammerUICanvas, "Earth Hammer UI Canvas", ComponentType::TRANSFORM),
-	    SERIALIZED_COMPONENT_REF(m_earthHammerUIContainer, "Earth Hammer UI Container", ComponentType::TRANSFORM2D),
-	    SERIALIZED_COMPONENT_REF(m_earthHammerUIInner, "Earth Hammer UI Inner", ComponentType::TRANSFORM2D),
-	    SERIALIZED_COMPONENT_REF(m_earthHammerUISpikes, "Earth Hammer UI Spikes", ComponentType::TRANSFORM2D),
-	    SERIALIZED_COMPONENT_REF(m_earthHammerUIGlow, "Earth Hammer UI Glow", ComponentType::TRANSFORM2D),
-	    SERIALIZED_COMPONENT_REF(m_earthHammerUIRing, "Earth Hammer UI Ring", ComponentType::TRANSFORM2D)
+        SERIALIZED_FLOAT(m_earthHammerPhase2StunDuration, "Earth Hammer Phase 2 Stun Duration", 0.0f, 10.0f, 0.05f)
     )
-
 )
 
 ArthurAttackConfig::ArthurAttackConfig(GameObject* owner)
     : Script(owner)
 {
-}
-
-void ArthurAttackConfig::Start()
-{
-	// Charging Slam UI
-	m_chargingSlamUICanvasTransform = m_chargingSlamUICanvas.getReferencedComponent();
-    m_chargingSlamUIContainerTransform2D = m_chargingSlamUIContainer.getReferencedComponent();
-	m_chargingSlamUIBackgroundTransform2D = m_chargingSlamUIBackground.getReferencedComponent();
-	m_chargingSlamUIBordersTransform2D = m_chargingSlamUIBorders.getReferencedComponent();
-	m_chargingSlamUIShadowTransform2D = m_chargingSlamUIShadow.getReferencedComponent();
-	m_chargingSlamUISpikesTransform2D = m_chargingSlamUISpikes.getReferencedComponent();
-	m_chargingSlamUIBordersSliderComponent = m_chargingSlamUIBordersSlider.getReferencedComponent();
-	m_chargingSlamUIShadowSliderComponent = m_chargingSlamUIShadowSlider.getReferencedComponent();
-    if (m_chargingSlamUICanvasTransform)
-    {
-        GameObjectAPI::setActive(m_chargingSlamUICanvasTransform->getOwner(), false);
-    }
-
-    m_chargingSlamImpactUICanvasTransform = m_chargingSlamImpactUICanvas.getReferencedComponent();
-    m_chargingSlamImpactUIContainerTransform2D = m_chargingSlamImpactUIContainer.getReferencedComponent();
-    m_chargingSlamImpactUICenterTransform2D = m_chargingSlamImpactUICenter.getReferencedComponent();
-    m_chargingSlamImpactUIGlowTransform2D = m_chargingSlamImpactUIGlow.getReferencedComponent();
-    if (m_chargingSlamImpactUICanvasTransform)
-    {
-        GameObjectAPI::setActive(m_chargingSlamImpactUICanvasTransform->getOwner(), false);
-    }
-
-	// Earth Hammer UI
-    m_earthHammerUICanvasTransform = m_earthHammerUICanvas.getReferencedComponent();
-	m_earthHammerUIContainerTransform2D = m_earthHammerUIContainer.getReferencedComponent();
-    m_earthHammerUIInnerTransform2D = m_earthHammerUIInner.getReferencedComponent();
-    m_earthHammerUISpikesTransform2D = m_earthHammerUISpikes.getReferencedComponent();
-    m_earthHammerUIGlowTransform2D = m_earthHammerUIGlow.getReferencedComponent();
-    m_earthHammerUIRingTransform2D = m_earthHammerUIRing.getReferencedComponent();
-    if (m_earthHammerUICanvasTransform)
-    {
-        GameObjectAPI::setActive(m_earthHammerUICanvasTransform->getOwner(), false);
-    }
 }
 
 IMPLEMENT_SCRIPT(ArthurAttackConfig)

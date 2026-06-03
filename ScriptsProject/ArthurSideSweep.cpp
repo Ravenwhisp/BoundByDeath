@@ -59,10 +59,7 @@ void ArthurSideSweep::OnStateEnter()
     m_arthurController->clearPath();
     m_arthurController->resetRepathTimer();
 
-    if (m_arthurUI)
-    {
-        m_arthurUI->setupSideSweepUI(m_sweepSide);
-    }
+    m_arthurUI->setupSideSweepUI(m_sweepSide);
 
     Debug::log("[ArthurSideSweep] ENTER");
 }
