@@ -20,6 +20,24 @@ void ArcherUI::Start()
 	m_arrowBarrageUIContainerTransform2D = m_arrowBarrageUIContainer.getReferencedComponent();
 	m_arrowBarrageUIGlowTransform2D = m_arrowBarrageUIGlow.getReferencedComponent();
 
+	if (!m_arrowBarrageUICanvasTransform || !m_arrowBarrageUIContainerTransform2D || !m_arrowBarrageUIGlowTransform2D)
+	{
+		Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
+		m_arrowBarrageUICanvasTransform = TransformAPI::findChildByName(ownerTransform, "Arrow Barrage UI");
+		if (m_arrowBarrageUICanvasTransform)
+		{
+			GameObject* arrowBarrageUIObject = ComponentAPI::getOwner(m_arrowBarrageUICanvasTransform);
+			if (!m_arrowBarrageUIContainerTransform2D)
+			{
+				m_arrowBarrageUIContainerTransform2D = static_cast<Transform2D*>(GameObjectAPI::getComponent(arrowBarrageUIObject, ComponentType::TRANSFORM2D));
+			}
+			if (!m_arrowBarrageUIGlowTransform2D)
+			{
+				m_arrowBarrageUIGlowTransform2D = static_cast<Transform2D*>(GameObjectAPI::getComponent(arrowBarrageUIObject, ComponentType::TRANSFORM2D));
+			}
+		}
+	}
+
 	hideArrowBarrageUI();
 }
 
