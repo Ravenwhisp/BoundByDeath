@@ -6,12 +6,12 @@
 #include "PlayerRotation.h"
 #include "PersistingPowerupState.h"
 #include "EnemyShadowMark.h"
+#include "DeathUI.h"
 
 #include <cmath>
 
 IMPLEMENT_SCRIPT_FIELDS_INHERITED(DeathTaunt, DeathAbilityBase,
     SERIALIZED_FLOAT(m_tauntDuration, "Taunt Duration", 0.0f, 10.0f, 0.1f),
-    SERIALIZED_COMPONENT_REF(m_AbilityUI, "Ability UI", ComponentType::TRANSFORM),
     SERIALIZED_FLOAT(m_TauntDurationSeconds, "Ability Duration", 1.0f, 10.0f, 0.05f),
     SERIALIZED_FLOAT(m_TauntRange, "Cone Range", 1.0f, 10.0f, 0.1f),
     SERIALIZED_FLOAT(m_TauntHalfAngleDegrees, "Cone Angle", 1.0f, 180.0f, 1.0f)
@@ -30,6 +30,13 @@ void DeathTaunt::Start()
     {
         m_playerRotation = m_character->getPlayerRotation();
     }
+
+    m_deathUI = GameObjectAPI::findScript<DeathUI>(getOwner());
+
+    if (!m_deathUI)
+    {
+        Debug::warn("[DeathTaunt] DeathUI not found.");
+    }
 }
 
 void DeathTaunt::Update()
@@ -40,6 +47,12 @@ void DeathTaunt::Update()
     {
         m_isAiming = false;
         m_currentAimDirection = Vector3::Zero;
+
+        if (m_deathUI)
+        {
+            m_deathUI->hideTauntUI();
+        }
+
         return;
     }
 
@@ -152,9 +165,10 @@ void DeathTaunt::beginAim()
 		m_currentAimDirection = getFallbackFacingDirection();
     }
     faceDirection(m_currentAimDirection);
-    if (m_AbilityUI.getReferencedComponent())
+
+    if (m_deathUI)
     {
-        GameObjectAPI::setActive(m_AbilityUI.getReferencedComponent()->getOwner(), true);
+        m_deathUI->showTauntUI();
     }
 }
 
@@ -166,14 +180,11 @@ void DeathTaunt::updateAim()
         m_currentAimDirection = aimDirection;
         faceDirection(m_currentAimDirection);
     }
-    if (m_AbilityUI.getReferencedComponent())
+    
+    if (m_deathUI)
     {
         const Vector3 origin = TransformAPI::getGlobalPosition(GameObjectAPI::getTransform(getOwner()));
-        const float yawRad = std::atan2(m_currentAimDirection.x, m_currentAimDirection.z);
-        const float targetYawDeg = yawRad * (180.0f / 3.14159265f);
-
-        TransformAPI::setPosition(m_AbilityUI.getReferencedComponent(), origin);
-        TransformAPI::setRotationEuler(m_AbilityUI.getReferencedComponent(), Vector3(0.0f, targetYawDeg, 0.0f));
+        m_deathUI->updateTauntUI(origin, m_currentAimDirection);
     }
 }
 
@@ -182,9 +193,9 @@ void DeathTaunt::releaseAimAndCast()
     Debug::log("[DeathTaunt] L2 released — casting.");
     m_isAiming = false;
 
-    if (m_AbilityUI.getReferencedComponent())
+    if (m_deathUI)
     {
-        GameObjectAPI::setActive(m_AbilityUI.getReferencedComponent()->getOwner(), false);
+        m_deathUI->hideTauntUI();
     }
 
     Vector3 finalDirection = m_currentAimDirection;

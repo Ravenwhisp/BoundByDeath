@@ -217,6 +217,11 @@ bool EnemyBaseController::trySendDeathTrigger(AnimationComponent* animation)
     return true;
 }
 
+void EnemyBaseController::setRecoveryDuration(float recoveryDuration)
+{
+    m_recoveryDuration = recoveryDuration;
+}
+
 void EnemyBaseController::rotateTowardsDirection(const Vector3& direction)
 {
     Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());

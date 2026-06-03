@@ -8,11 +8,11 @@
 #include "EnemyDamageable.h"
 #include "EnemyShadowMark.h"
 #include "BreakableDamageable.h"
+#include "DeathUI.h"
 
 #include <cmath>
 
 IMPLEMENT_SCRIPT_FIELDS_INHERITED(DeathChargedAttack, DeathAbilityBase,
-    SERIALIZED_COMPONENT_REF(m_ChargedAttackUI, "Charged Attack UI", ComponentType::TRANSFORM),
     SERIALIZED_FLOAT(m_chargedAttackDamage, "Charged Attack Damage", 0.0f, 200.0f, 1.0f),
     SERIALIZED_FLOAT(m_arcRange, "Arc Range", 0.5f, 10.0f, 0.1f),
     SERIALIZED_FLOAT(m_arcAngle, "Arc Angle", 10.0f, 360.0f, 5.0f),
@@ -33,21 +33,37 @@ void DeathChargedAttack::Start()
 {
     DeathAbilityBase::Start();
 
-    setupUI();
+    m_deathUI = GameObjectAPI::findScript<DeathUI>(getOwner());
+
+    if (!m_deathUI)
+    {
+        Debug::warn("[DeathChargedAttack] DeathUI not found.");
+    }
 }
 
 void DeathChargedAttack::Update()
 {
     DeathAbilityBase::Update();
 
-    // Charging phase — accumulate time, sample right stick for aim, auto-fire at max
     if (m_isCharging)
     {
         m_chargeTime += Time::getDeltaTime();
         updateAimDirection();
 
-        const bool maxReached = (m_chargeTime >= m_maxChargeTime);
-        const bool released   = Input::isRightTriggerReleased(getPlayerIndex());
+        if (m_deathUI)
+        {
+            Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
+
+            if (ownerTransform)
+            {
+                const Vector3 origin = TransformAPI::getGlobalPosition(ownerTransform);
+                m_deathUI->showChargedAttackUI();
+                m_deathUI->updateChargedAttackUI(origin, m_aimDirection);
+            }
+        }
+
+        const bool maxReached = m_chargeTime >= m_maxChargeTime;
+        const bool released = Input::isRightTriggerReleased(getPlayerIndex());
 
         if (maxReached || released)
         {
@@ -56,13 +72,11 @@ void DeathChargedAttack::Update()
 
         return;
     }
-    
-    else if (m_chargedAttackUITransform)
-    {
-        GameObjectAPI::setActive(m_chargedAttackUITransform->getOwner(), false);
-    }
 
-    updateUI();
+    if (m_deathUI)
+    {
+        m_deathUI->hideChargedAttackUI();
+    }
 }
 
 void DeathChargedAttack::startAbility()
@@ -418,67 +432,13 @@ void DeathChargedAttack::drawGizmo()
     }
 }
 
-void DeathChargedAttack::setupUI()
-{
-	m_chargedAttackUITransform = m_ChargedAttackUI.getReferencedComponent();
-    if (!m_chargedAttackUITransform)
-    {
-        Debug::warn("DeathChargedAttack on '%s' has no Charged Attack UI Transform reference for attack UI.", GameObjectAPI::getName(getOwner()));
-	}
-
-    Transform* t = GameObjectAPI::getTransform(getOwner());
-    if (t)
-    {
-        m_deathSlashUITransform = TransformAPI::findChildByName(t, "DeathSlashUI Charged");
-        if (m_deathSlashUITransform)
-        {
-            GameObjectAPI::setActive(m_deathSlashUITransform->getOwner(), false);
-            m_deathSlashUISlider = static_cast<UISlider*>(GameObjectAPI::getComponent(m_deathSlashUITransform->getOwner(), ComponentType::UISLIDER));
-            if (m_deathSlashUISlider)
-            {
-                SliderAPI::setFillAmount(m_deathSlashUISlider, 0.0f);
-            }
-        }
-    }
-
-    if (!m_deathSlashUITransform)
-    {
-        Debug::warn("DeathChargedAttack on '%s' could not find DeathSlashUI child for attack UI.", GameObjectAPI::getName(getOwner()));
-    }
-    else if (!m_deathSlashUISlider)
-    {
-        Debug::warn("DeathChargedAttack on '%s' could not find UISlider on DeathSlashUI for attack UI.", GameObjectAPI::getName(getOwner()));
-    }
-}
-
 void DeathChargedAttack::updateUI()
 {
-    AbilityBase::updateUI();
+    DeathAbilityBase::updateUI();
 
-    if (m_isCharging && m_chargedAttackUITransform)
+    if (m_deathUI)
     {
-        GameObjectAPI::setActive(m_chargedAttackUITransform->getOwner(), true);
-
-        const float yawRad = std::atan2(m_aimDirection.x, m_aimDirection.z);
-        const float targetYawDeg = yawRad * (180.0f / MathAPI::PI);
-
-        TransformAPI::setPosition(m_chargedAttackUITransform, TransformAPI::getGlobalPosition(GameObjectAPI::getTransform(getOwner())));
-        TransformAPI::setRotationEuler(m_chargedAttackUITransform, Vector3(0.0f, targetYawDeg, 0.0f));
-    }
-
-    if (m_deathSlashUITransform == nullptr || m_deathSlashUISlider == nullptr)
-    {
-        return;
-    }
-    const bool showUI = m_attackStateTimer > 0.0f;
-    GameObjectAPI::setActive(m_deathSlashUITransform->getOwner(), showUI);
-    if (showUI)
-    {
-        const float t = 1.0f - (m_attackStateTimer / m_attackLockDuration);
-        SliderAPI::setFillOrigin(m_deathSlashUISlider, t < 0.5f ? FillOrigin::Radial180BottomCCW : FillOrigin::Radial180Bottom);
-		const float fillAmount = MathAPI::pingPong(t);
-        const float easedFill = MathAPI::evaluateEasing(MathAPI::EasingType::EaseOutCubic, fillAmount);
-        SliderAPI::setFillAmount(m_deathSlashUISlider, fillAmount);
+        m_deathUI->updateChargedSlashUI(m_attackStateTimer, m_attackLockDuration);
     }
 }
 

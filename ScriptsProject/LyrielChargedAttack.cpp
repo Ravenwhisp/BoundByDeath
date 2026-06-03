@@ -10,13 +10,13 @@
 #include "EnemyShadowMark.h"
 #include "PlayerState.h"
 #include "BreakableDamageable.h"
+#include "LyrielUI.h"
 
 #include <cmath>
 
 static const float PI = 3.1415926535897931f;
 
 IMPLEMENT_SCRIPT_FIELDS_INHERITED(LyrielChargedAttack, LyrielAbilityBase,
-    SERIALIZED_COMPONENT_REF(m_ChargedAttackUI, "Charged Attack UI", ComponentType::TRANSFORM),
     SERIALIZED_FLOAT(m_minDamage, "Min Damage", 0.0f, 100.0f, 0.5f),
     SERIALIZED_FLOAT(m_maxDamage, "Max Damage", 0.0f, 200.0f, 0.5f),
     SERIALIZED_FLOAT(m_maxChargeTime, "Max Charge Time", 0.1f, 5.0f, 0.05f),
@@ -35,6 +35,13 @@ LyrielChargedAttack::LyrielChargedAttack(GameObject* owner)
 void LyrielChargedAttack::Start()
 {
     LyrielAbilityBase::Start();
+
+    m_lyrielUI = GameObjectAPI::findScript<LyrielUI>(getOwner());
+
+    if (!m_lyrielUI)
+    {
+        Debug::warn("[LyrielChargedAttack] LyrielUI not found.");
+    }
 }
 
 void LyrielChargedAttack::Update()
@@ -127,9 +134,10 @@ void LyrielChargedAttack::beginCharge()
     {
         m_currentAimDirection = getFallbackFacingDirection();
     }
-    if (m_ChargedAttackUI.getReferencedComponent())
+
+    if (m_lyrielUI)
     {
-        GameObjectAPI::setActive(m_ChargedAttackUI.getReferencedComponent()->getOwner(), true);
+        m_lyrielUI->showChargedAttackUI();
     }
 
     LyrielSound* sound = m_lyrielCharacter != nullptr ? m_lyrielCharacter->getSound() : nullptr;
@@ -153,19 +161,17 @@ void LyrielChargedAttack::updateCharge()
         m_currentAimDirection = aimDirection;
     }
 
-    if (m_ChargedAttackUI.getReferencedComponent())
+    if (m_lyrielUI)
     {
-		const Vector3 origin = TransformAPI::getGlobalPosition(GameObjectAPI::getTransform(getOwner()));
+        Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
 
-        const float yawRad = std::atan2(m_currentAimDirection.x, m_currentAimDirection.z);
-        const float targetYawDeg = yawRad * (180.0f / PI);
+        if (ownerTransform)
+        {
+            const Vector3 origin = TransformAPI::getGlobalPosition(ownerTransform);
+            const float range = computeChargedRange();
 
-		const float timerRatio = m_chargeTimer / m_maxChargeTime;
-        const float range = m_minAttackRange + timerRatio * (m_maxAttackRange - m_minAttackRange);
-
-        TransformAPI::setPosition(m_ChargedAttackUI.getReferencedComponent(), origin);
-        TransformAPI::setRotationEuler(m_ChargedAttackUI.getReferencedComponent(), Vector3(0.0f, targetYawDeg, 0.0f));
-        TransformAPI::setScale(m_ChargedAttackUI.getReferencedComponent(), Vector3(1.0f, 1.0f, range));
+            m_lyrielUI->updateChargedAttackUI(origin, m_currentAimDirection, range);
+        }
     }
 }
 
@@ -179,9 +185,9 @@ void LyrielChargedAttack::releaseChargeAndShoot()
         sound->stopChargedTenseLoop();
     }
 
-    if (m_ChargedAttackUI.getReferencedComponent())
+    if (m_lyrielUI)
     {
-        GameObjectAPI::setActive(m_ChargedAttackUI.getReferencedComponent()->getOwner(), false);
+        m_lyrielUI->hideChargedAttackUI();
     }
 
     if (!canShoot())

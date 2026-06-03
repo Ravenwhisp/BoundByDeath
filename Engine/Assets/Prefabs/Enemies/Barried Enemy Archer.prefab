@@ -7,6 +7,10 @@
     "Active": true,
     "Tag": "ENEMY",
     "Layer": "DEFAULT",
+    "PrefabLink": {
+      "SourcePath": "Assets\\Prefabs\\Enemies\\Barried Enemy Archer.prefab",
+      "AssetUID": 12459419019628210225
+    },
     "Transform": {
       "position": [
         8.97591495513916,
@@ -29,7 +33,7 @@
       {
         "Type": 13,
         "Data": {
-          "UID": 5990799797018376640,
+          "UID": 11718456210141038764,
           "ComponentType": 13,
           "Active": true,
           "StateMachineUID": {
@@ -48,7 +52,7 @@
       {
         "Type": 3,
         "Data": {
-          "UID": 5522998709517696192,
+          "UID": 16708893000445056079,
           "ComponentType": 3,
           "Active": true,
           "ScriptName": "EnemyDetectionAggro",
@@ -64,22 +68,28 @@
       {
         "Type": 3,
         "Data": {
-          "UID": 11628615467479240140,
+          "UID": 16430080145927647658,
           "ComponentType": 3,
           "Active": true,
           "ScriptName": "RangedEnemyController",
           "ScriptFields": {
+            "Enemy Type": 2,
             "Move Speed": 3.5,
-            "Path Point Reach Distance": 0.25,
+            "Turn Speed Degrees": 360.0,
             "Repath Interval": 0.5,
-            "Turn Speed Degrees": 360.0
+            "Path Point Reach Distance": 0.25,
+            "Path Search Extents": [
+              5.0,
+              5.0,
+              5.0
+            ]
           }
         }
       },
       {
         "Type": 3,
         "Data": {
-          "UID": 15740251115590156486,
+          "UID": 520342401682825736,
           "ComponentType": 3,
           "Active": true,
           "ScriptName": "ArcherAttackConfig",
@@ -106,7 +116,7 @@
       {
         "Type": 3,
         "Data": {
-          "UID": 269019305570313722,
+          "UID": 15456382334938467381,
           "ComponentType": 3,
           "Active": true,
           "ScriptName": "EnemyAttackExecutor",
@@ -116,7 +126,7 @@
       {
         "Type": 3,
         "Data": {
-          "UID": 13520242741716355790,
+          "UID": 11147729616038910654,
           "ComponentType": 3,
           "Active": true,
           "ScriptName": "BarrierEnemyDamageable",
@@ -132,14 +142,15 @@
             "Shadow Execution Breaks Barriers": true,
             "Barrier UI Prefab Path": "Assets/Prefabs/UI/Barrier UI.prefab",
             "Barrier Min Pos (0% HP)": -80.0,
-            "Barrier Max Pos (100% HP)": 80.0
+            "Barrier Max Pos (100% HP)": 80.0,
+            "Barrier UI Height": 0.0
           }
         }
       },
       {
         "Type": 3,
         "Data": {
-          "UID": 1572819164392768201,
+          "UID": 9220046000806074849,
           "ComponentType": 3,
           "Active": true,
           "ScriptName": "EnemyShadowMark",
@@ -151,6 +162,20 @@
             "Mark Phase 1": 0,
             "Mark Phase 2": 0,
             "Mark Phase 3": 0
+          }
+        }
+      },
+      {
+        "Type": 3,
+        "Data": {
+          "UID": 12305963108779178945,
+          "ComponentType": 3,
+          "Active": true,
+          "ScriptName": "ArcherUI",
+          "ScriptFields": {
+            "Arrow Barrage UI Canvas": 0,
+            "Arrow Barrage UI Container": 0,
+            "Arrow Barrage UI Glow": 0
           }
         }
       }
@@ -1227,10 +1252,10 @@
                     0.24862830340862271
                   ],
                   "rotation": [
-                    0.25242891907691956,
-                    0.2503669559955597,
-                    0.6570338606834412,
-                    0.664757490158081
+                    0.25242894887924194,
+                    0.2503669857978821,
+                    0.6570339202880859,
+                    0.6647575497627258
                   ],
                   "scale": [
                     1.0,
@@ -1272,7 +1297,7 @@
           {
             "Type": 1,
             "Data": {
-              "UID": 13416639156292645931,
+              "UID": 11309897442716043991,
               "ComponentType": 1,
               "Active": true,
               "MeshAssetId": {
@@ -1321,7 +1346,7 @@
           {
             "Type": 1,
             "Data": {
-              "UID": 4315310813432351454,
+              "UID": 15114146697537945887,
               "ComponentType": 1,
               "Active": true,
               "MeshAssetId": {
@@ -1370,7 +1395,7 @@
           {
             "Type": 6,
             "Data": {
-              "UID": 5850572295784334450,
+              "UID": 10217844996014842332,
               "ComponentType": 6,
               "Active": true,
               "RenderMode": 2,
@@ -1406,7 +1431,7 @@
               {
                 "Type": 5,
                 "Data": {
-                  "UID": 6361704983063418149,
+                  "UID": 11829747906277210876,
                   "ComponentType": 5,
                   "Active": true,
                   "Position": [
@@ -1442,7 +1467,7 @@
               {
                 "Type": 7,
                 "Data": {
-                  "UID": 6845694599617421895,
+                  "UID": 7899568123325329818,
                   "ComponentType": 7,
                   "Active": true,
                   "TextureAssetId": {
@@ -1490,7 +1515,7 @@
                   {
                     "Type": 5,
                     "Data": {
-                      "UID": 945111812496516833,
+                      "UID": 8691005120319276190,
                       "ComponentType": 5,
                       "Active": true,
                       "Position": [
@@ -1526,7 +1551,7 @@
                   {
                     "Type": 14,
                     "Data": {
-                      "UID": 15619087461714710798,
+                      "UID": 3183834109888490912,
                       "ComponentType": 14,
                       "Active": true,
                       "FillAmount": 1.0,
@@ -1537,7 +1562,7 @@
                   {
                     "Type": 7,
                     "Data": {
-                      "UID": 7529829148716601348,
+                      "UID": 16137854595866289868,
                       "ComponentType": 7,
                       "Active": true,
                       "TextureAssetId": {
@@ -1586,7 +1611,7 @@
                   {
                     "Type": 5,
                     "Data": {
-                      "UID": 7335330130418673459,
+                      "UID": 8891172572331927929,
                       "ComponentType": 5,
                       "Active": true,
                       "Position": [
@@ -1622,7 +1647,7 @@
                   {
                     "Type": 14,
                     "Data": {
-                      "UID": 1489890612749021711,
+                      "UID": 9963556093213622100,
                       "ComponentType": 14,
                       "Active": true,
                       "FillAmount": 1.0,
@@ -1633,7 +1658,7 @@
                   {
                     "Type": 7,
                     "Data": {
-                      "UID": 1736451554823703564,
+                      "UID": 2857027356823315235,
                       "ComponentType": 7,
                       "Active": true,
                       "TextureAssetId": {
@@ -1686,7 +1711,7 @@
           {
             "Type": 6,
             "Data": {
-              "UID": 2683456174047097520,
+              "UID": 15510238477556141995,
               "ComponentType": 6,
               "Active": true,
               "RenderMode": 2,
@@ -1696,7 +1721,7 @@
           {
             "Type": 5,
             "Data": {
-              "UID": 2442812784775303536,
+              "UID": 17665617439374703735,
               "ComponentType": 5,
               "Active": true,
               "Position": [
@@ -1758,7 +1783,7 @@
               {
                 "Type": 5,
                 "Data": {
-                  "UID": 10542091040816415679,
+                  "UID": 14608058424547383433,
                   "ComponentType": 5,
                   "Active": true,
                   "Position": [
@@ -1794,7 +1819,7 @@
               {
                 "Type": 7,
                 "Data": {
-                  "UID": 813580299295023776,
+                  "UID": 3218947775790414946,
                   "ComponentType": 7,
                   "Active": true,
                   "TextureAssetId": {
@@ -1843,7 +1868,7 @@
               {
                 "Type": 5,
                 "Data": {
-                  "UID": 12691792254059726503,
+                  "UID": 699632302630837338,
                   "ComponentType": 5,
                   "Active": true,
                   "Position": [
@@ -1879,7 +1904,7 @@
               {
                 "Type": 7,
                 "Data": {
-                  "UID": 3724681771870157026,
+                  "UID": 4124979109410717174,
                   "ComponentType": 7,
                   "Active": true,
                   "TextureAssetId": {
@@ -1928,7 +1953,7 @@
               {
                 "Type": 5,
                 "Data": {
-                  "UID": 11284177217342839628,
+                  "UID": 7530346049671376491,
                   "ComponentType": 5,
                   "Active": true,
                   "Position": [
@@ -1964,12 +1989,260 @@
               {
                 "Type": 7,
                 "Data": {
-                  "UID": 2898762623826424157,
+                  "UID": 3782458091420970723,
                   "ComponentType": 7,
                   "Active": true,
                   "TextureAssetId": {
                     "uid": 3978257701211318606,
                     "libId": "92fc1133779520dfd85e4f0d3f616c3e"
+                  },
+                  "FillAmount": 1.0,
+                  "FillMethod": 0,
+                  "FillOrigin": 0,
+                  "SheetColumns": 1,
+                  "SheetRows": 1,
+                  "SheetOffset": [
+                    0.0,
+                    0.0
+                  ],
+                  "StretchDrawMode": 0
+                }
+              }
+            ],
+            "Children": []
+          }
+        ]
+      },
+      {
+        "Name": "Arrow Barrage UI",
+        "Active": true,
+        "Tag": "DEFAULT",
+        "Layer": "DEFAULT",
+        "PrefabLink": {
+          "SourcePath": "Assets\\Prefabs\\UI\\Arrow Barrage UI.prefab",
+          "AssetUID": 1863799789881219650
+        },
+        "Transform": {
+          "position": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rotation": [
+            0.5,
+            -0.5,
+            0.5000000596046448,
+            0.4999999403953552
+          ],
+          "scale": [
+            1.000095009803772,
+            1.0000683069229126,
+            1.0000264644622805
+          ]
+        },
+        "Components": [
+          {
+            "Type": 6,
+            "Data": {
+              "UID": 16631678571742466504,
+              "ComponentType": 6,
+              "Active": true,
+              "RenderMode": 1,
+              "ZTest": true
+            }
+          },
+          {
+            "Type": 5,
+            "Data": {
+              "UID": 10478550162506224632,
+              "ComponentType": 5,
+              "Active": true,
+              "Position": [
+                0.0,
+                0.0
+              ],
+              "Scale": [
+                1.0,
+                1.0
+              ],
+              "Pivot": [
+                0.5,
+                0.5
+              ],
+              "AnchorMin": [
+                0.5,
+                0.5
+              ],
+              "AnchorMax": [
+                0.5,
+                0.5
+              ],
+              "BaseSize": [
+                100.0,
+                100.0
+              ],
+              "StretchMode": 0,
+              "SizingMode": 0,
+              "AspectRatio": 1.0,
+              "Alpha": 1.0
+            }
+          }
+        ],
+        "Children": [
+          {
+            "Name": "Background",
+            "Active": true,
+            "Tag": "DEFAULT",
+            "Layer": "DEFAULT",
+            "Transform": {
+              "position": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "rotation": [
+                -0.0,
+                0.0,
+                -0.0,
+                1.0
+              ],
+              "scale": [
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            "Components": [
+              {
+                "Type": 5,
+                "Data": {
+                  "UID": 13433403498989723064,
+                  "ComponentType": 5,
+                  "Active": true,
+                  "Position": [
+                    0.0,
+                    0.0
+                  ],
+                  "Scale": [
+                    1.0,
+                    1.0
+                  ],
+                  "Pivot": [
+                    0.5,
+                    0.5
+                  ],
+                  "AnchorMin": [
+                    0.5,
+                    0.5
+                  ],
+                  "AnchorMax": [
+                    0.5,
+                    0.5
+                  ],
+                  "BaseSize": [
+                    100.0,
+                    100.0
+                  ],
+                  "StretchMode": 0,
+                  "SizingMode": 0,
+                  "AspectRatio": 1.0,
+                  "Alpha": 1.0
+                }
+              },
+              {
+                "Type": 7,
+                "Data": {
+                  "UID": 17806459496687239715,
+                  "ComponentType": 7,
+                  "Active": true,
+                  "TextureAssetId": {
+                    "uid": 14028292152440818002,
+                    "libId": "f43ac8c6731db9a833178a3c3f1abddf"
+                  },
+                  "FillAmount": 1.0,
+                  "FillMethod": 0,
+                  "FillOrigin": 0,
+                  "SheetColumns": 1,
+                  "SheetRows": 1,
+                  "SheetOffset": [
+                    0.0,
+                    0.0
+                  ],
+                  "StretchDrawMode": 0
+                }
+              }
+            ],
+            "Children": []
+          },
+          {
+            "Name": "Glow",
+            "Active": true,
+            "Tag": "DEFAULT",
+            "Layer": "DEFAULT",
+            "Transform": {
+              "position": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "rotation": [
+                5.9604641222676946e-8,
+                0.0,
+                0.0,
+                1.0
+              ],
+              "scale": [
+                1.0000265836715698,
+                0.9999734163284302,
+                1.0
+              ]
+            },
+            "Components": [
+              {
+                "Type": 5,
+                "Data": {
+                  "UID": 5981188806632825403,
+                  "ComponentType": 5,
+                  "Active": true,
+                  "Position": [
+                    0.0,
+                    0.0
+                  ],
+                  "Scale": [
+                    1.0,
+                    1.0
+                  ],
+                  "Pivot": [
+                    0.5,
+                    0.5
+                  ],
+                  "AnchorMin": [
+                    0.5,
+                    0.5
+                  ],
+                  "AnchorMax": [
+                    0.5,
+                    0.5
+                  ],
+                  "BaseSize": [
+                    100.0,
+                    100.0
+                  ],
+                  "StretchMode": 0,
+                  "SizingMode": 0,
+                  "AspectRatio": 1.0,
+                  "Alpha": 1.0
+                }
+              },
+              {
+                "Type": 7,
+                "Data": {
+                  "UID": 7299029946573104052,
+                  "ComponentType": 7,
+                  "Active": true,
+                  "TextureAssetId": {
+                    "uid": 5418711115811689343,
+                    "libId": "40ee2518f8e28c45376c94d99a3e2cd3"
                   },
                   "FillAmount": 1.0,
                   "FillMethod": 0,

@@ -4,6 +4,7 @@
 #include <vector>
 
 class Damageable;
+class LyrielUI;
 
 class LyrielArrowVolley : public LyrielAbilityBase
 {
@@ -17,8 +18,6 @@ public:
     void drawGizmo() override;
 
     ScriptFieldList getExposedFields() const override;
-
-    ScriptComponentRef<Transform> m_AbilityUI;
 
 protected:
 	void startAbility() override;
@@ -43,11 +42,6 @@ private:
 
     void drawAimPreview(const Vector3& origin, const Vector3& forward) const;
 
-private:
-    bool m_isAiming = false;
-    Vector3 m_currentAimDirection = Vector3::Zero;
-    Vector3 m_attackFacingDirection = Vector3::Zero;
-
 public:
     float m_volleyDamage = 20.0f;
     float m_volleyRange = 8.0f;
@@ -57,4 +51,11 @@ public:
     float m_arrowSpeed = 18.0f;
 
     float m_attackLockDuration = 0.2f;
+
+private:
+    LyrielUI* m_lyrielUI = nullptr;
+
+    bool m_isAiming = false;
+    Vector3 m_currentAimDirection = Vector3::Zero;
+    Vector3 m_attackFacingDirection = Vector3::Zero;
 };
