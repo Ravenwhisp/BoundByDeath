@@ -2,22 +2,19 @@
 #include "LyrielUI.h"
 
 IMPLEMENT_SCRIPT_FIELDS_INHERITED(LyrielUI, CharacterUI,
-	FIELD_GROUP_COLLAPSE("Charged Attack",
-		SERIALIZED_COMPONENT_REF(m_chargedAttackUI, "Charged Attack UI", ComponentType::TRANSFORM)
-	),
+	FIELD_GROUP_LABEL("Charged Attack"),
+	SERIALIZED_COMPONENT_REF(m_chargedAttackUI, "Charged Attack UI", ComponentType::TRANSFORM),
 
-	FIELD_GROUP_COLLAPSE("Arrow Volley",
-		SERIALIZED_COMPONENT_REF(m_arrowVolleyUI, "Arrow Volley UI", ComponentType::TRANSFORM)
-	),
+	FIELD_GROUP_LABEL("Arrow Volley"),
+	SERIALIZED_COMPONENT_REF(m_arrowVolleyUI, "Arrow Volley UI", ComponentType::TRANSFORM),
 
-	FIELD_GROUP_COLLAPSE("Dash Charges",
-		SERIALIZED_COMPONENT_REF(m_charge1UI, "Charge 1 UI", ComponentType::TRANSFORM2D),
-		SERIALIZED_COMPONENT_REF(m_charge2UI, "Charge 2 UI", ComponentType::TRANSFORM2D),
-		SERIALIZED_COMPONENT_REF(m_charge3UI, "Charge 3 UI", ComponentType::TRANSFORM2D),
-		SERIALIZED_FLOAT(m_chargedScale, "Charged Scale", 0.1f, 5.0f, 0.1f),
-		SERIALIZED_FLOAT(m_emptyScale, "Empty Scale", 0.1f, 5.0f, 0.1f),
-		SERIALIZED_FLOAT(m_uiScaleSpeed, "UI Scale Speed", 0.1f, 20.0f, 0.1f)
-	)
+	FIELD_GROUP_LABEL("Dash"),
+	SERIALIZED_COMPONENT_REF(m_charge1UI, "Charge 1 UI", ComponentType::TRANSFORM2D),
+	SERIALIZED_COMPONENT_REF(m_charge2UI, "Charge 2 UI", ComponentType::TRANSFORM2D),
+	SERIALIZED_COMPONENT_REF(m_charge3UI, "Charge 3 UI", ComponentType::TRANSFORM2D),
+	SERIALIZED_FLOAT(m_chargedScale, "Charged Scale", 0.1f, 5.0f, 0.1f),
+	SERIALIZED_FLOAT(m_emptyScale, "Empty Scale", 0.1f, 5.0f, 0.1f),
+	SERIALIZED_FLOAT(m_uiScaleSpeed, "UI Scale Speed", 0.1f, 20.0f, 0.1f)
 )
 
 LyrielUI::LyrielUI(GameObject* owner)

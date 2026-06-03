@@ -103,6 +103,9 @@
     <Filter Include="Character\Lyriel\UI">
       <UniqueIdentifier>{48566356-9253-4bd3-8d73-5c8666a2adca}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Character\Death\UI">
+      <UniqueIdentifier>{c0d34b51-4e99-4a88-847b-b50081a02770}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -403,6 +406,9 @@
     </ClInclude>
     <ClInclude Include="CharacterUI.h">
       <Filter>Character</Filter>
+    </ClInclude>
+    <ClInclude Include="DeathUI.h">
+      <Filter>Character\Death\UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -705,6 +711,9 @@
     </ClCompile>
     <ClCompile Include="CharacterUI.cpp">
       <Filter>Character</Filter>
+    </ClCompile>
+    <ClCompile Include="DeathUI.cpp">
+      <Filter>Character\Death\UI</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
