@@ -28,7 +28,8 @@ IMPLEMENT_SCRIPT_FIELDS(LyrielConfig,
 		SERIALIZED_INT(m_volleyNumVisualArrows, "Volley Num Visual Arrows"),
 		SERIALIZED_FLOAT(m_volleyArrowSpeed, "Volley Arrow Speed", 0.0f, 100.0f, 0.5f),
 		SERIALIZED_FLOAT(m_volleyAttackLockDuration, "Volley Attack Lock Duration", 0.0f, 2.0f, 0.01f),
-		SERIALIZED_FLOAT(m_volleyCooldown, "Volley Cooldown", 0.0f, 10.0f, 0.01f)
+		SERIALIZED_FLOAT(m_volleyCooldown, "Volley Cooldown", 0.0f, 10.0f, 0.01f),
+		SERIALIZED_FLOAT(m_volleyCooldownReductionPerExploit, "Volley CD Reduction Per Shadow Mark Exploit", 0.0f, 1.0f, 0.05f)
 	),
 
 	FIELD_GROUP_COLLAPSE("Dash",
@@ -37,10 +38,6 @@ IMPLEMENT_SCRIPT_FIELDS(LyrielConfig,
 		SERIALIZED_FLOAT(m_dashRechargeTime, "Dash Recharge Time", 0.1f, 10.0f, 0.1f),
 		SERIALIZED_INT(m_dashMaxCharges, "Dash Max Charges"),
 		SERIALIZED_FLOAT(m_dashCooldown, "Dash Cooldown", 0.0f, 10.0f, 0.01f)
-	),
-
-	FIELD_GROUP_COLLAPSE("Passive / Powerup",
-		SERIALIZED_FLOAT(m_volleyCooldownReductionPerExploit, "Volley CD Reduction Per Exploit", 0.0f, 1.0f, 0.05f)
 	)
 )
 
