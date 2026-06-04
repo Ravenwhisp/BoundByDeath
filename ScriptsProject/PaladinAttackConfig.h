@@ -15,6 +15,6 @@ public:
 	// Charge
 	float m_chargeRange = 5.0f;
 	float m_chargeDuration = 0.5f;
-	float m_chargeSpeed = 6.0f;
+	float m_chargeSpeed = 10.0f;
 	float m_chargeCooldown = 3.0f;
 };

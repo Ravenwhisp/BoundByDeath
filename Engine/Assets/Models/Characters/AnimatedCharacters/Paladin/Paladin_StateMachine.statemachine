@@ -1,6 +1,6 @@
 {
     "name": "Paladin_StateMachine",
-    "defaultState": "Idle",
+    "defaultState": "IDLE",
     "clips": [
         {
             "name": "Paladin_Tpose",
@@ -70,7 +70,7 @@
             "loop": true
         },
         {
-            "name": "Idle",
+            "name": "IDLE",
             "clipName": "Paladin_Idle",
             "speed": 1.0,
             "behaviourScriptName": "EnemyIdleState",
@@ -79,34 +79,34 @@
             "loop": true
         },
         {
-            "name": "Recover",
+            "name": "RECOVER",
             "clipName": "Paladin_Idle_long",
             "speed": 1.0,
-            "behaviourScriptName": "EnemyRECOVER",
+            "behaviourScriptName": "EnemyRecoverState",
             "behaviourFieldsJson": "{\"Recover Duration\":0.6000000238418579,\"Go To Stun After Recover\":false,\"Debug Enabled\":true}",
             "overrideLoop": false,
             "loop": true
         },
         {
-            "name": "Attack",
+            "name": "ATTACK",
             "clipName": "Paladin_Attack",
             "speed": 1.0,
-            "behaviourScriptName": "EnemyATTACK",
+            "behaviourScriptName": "EnemyAttackState",
             "behaviourFieldsJson": "{\"Attack Damage\":10.0,\"Attack Cooldown\":1.7000000476837158,\"Attack Total Duration\":1.649999976158142,\"Damage Trigger Time\":0.25,\"Attack Commit Duration\":0.3499999940395355,\"Debug Enabled\":true}",
             "overrideLoop": true,
             "loop": false
         },
         {
-            "name": "Stun",
+            "name": "STUN",
             "clipName": "Paladin_Damage",
             "speed": 1.0,
-            "behaviourScriptName": "EnemySTUN",
+            "behaviourScriptName": "EnemyStunnedState",
             "behaviourFieldsJson": "{\"Stun Duration\":1.0,\"Debug Enabled\":true}",
             "overrideLoop": true,
             "loop": false
         },
         {
-            "name": "Paladin_Death",
+            "name": "DEATH",
             "clipName": "Paladin_Death",
             "speed": 1.0,
             "behaviourScriptName": "EnemyDeathState",
@@ -115,19 +115,19 @@
             "loop": false
         },
         {
-            "name": "Charge",
+            "name": "CHARGE",
             "clipName": "Paladin_Walk",
             "speed": 1.0,
-            "behaviourScriptName": "EnemyCHARGE",
+            "behaviourScriptName": "PaladinChargeState",
             "behaviourFieldsJson": "{\"Charge Duration\":0.5,\"Charge Speed\":6.0,\"Charge Cooldown\":3.0,\"Debug Enabled\":true}",
             "overrideLoop": false,
             "loop": true
         },
         {
-            "name": "Chase",
+            "name": "CHASE",
             "clipName": "Paladin_Walk",
             "speed": 1.0,
-            "behaviourScriptName": "EnemyCHASE",
+            "behaviourScriptName": "PaladinChaseState",
             "behaviourFieldsJson": "{\"Use Charge\":true,\"Charge Trigger Range\":4.0,\"Debug Enabled\":true}",
             "overrideLoop": false,
             "loop": true
@@ -135,39 +135,93 @@
     ],
     "transitions": [
         {
-            "sourceStateName": "Idle",
-            "targetStateName": "Paladin_Death",
+            "sourceStateName": "IDLE",
+            "targetStateName": "DEATH",
             "triggerName": "ToDeath",
             "blendTimeSeconds": 0.25
         },
         {
-            "sourceStateName": "Recover",
-            "targetStateName": "Paladin_Death",
+            "sourceStateName": "RECOVER",
+            "targetStateName": "DEATH",
             "triggerName": "ToDeath",
             "blendTimeSeconds": 0.25
         },
         {
-            "sourceStateName": "Stun",
-            "targetStateName": "Paladin_Death",
+            "sourceStateName": "STUN",
+            "targetStateName": "DEATH",
             "triggerName": "ToDeath",
             "blendTimeSeconds": 0.25
         },
         {
-            "sourceStateName": "Chase",
-            "targetStateName": "Paladin_Death",
+            "sourceStateName": "CHASE",
+            "targetStateName": "DEATH",
             "triggerName": "ToDeath",
             "blendTimeSeconds": 0.25
         },
         {
-            "sourceStateName": "Charge",
-            "targetStateName": "Paladin_Death",
+            "sourceStateName": "CHARGE",
+            "targetStateName": "DEATH",
             "triggerName": "ToDeath",
             "blendTimeSeconds": 0.25
         },
         {
-            "sourceStateName": "Attack",
-            "targetStateName": "Paladin_Death",
+            "sourceStateName": "ATTACK",
+            "targetStateName": "DEATH",
             "triggerName": "ToDeath",
+            "blendTimeSeconds": 0.25
+        },
+        {
+            "sourceStateName": "IDLE",
+            "targetStateName": "CHASE",
+            "triggerName": "ToChase",
+            "blendTimeSeconds": 0.25
+        },
+        {
+            "sourceStateName": "CHASE",
+            "targetStateName": "IDLE",
+            "triggerName": "ToIdle",
+            "blendTimeSeconds": 0.25
+        },
+        {
+            "sourceStateName": "CHASE",
+            "targetStateName": "CHARGE",
+            "triggerName": "ToCharge",
+            "blendTimeSeconds": 0.25
+        },
+        {
+            "sourceStateName": "CHASE",
+            "targetStateName": "ATTACK",
+            "triggerName": "ToAttack",
+            "blendTimeSeconds": 0.25
+        },
+        {
+            "sourceStateName": "CHARGE",
+            "targetStateName": "CHASE",
+            "triggerName": "ToChase",
+            "blendTimeSeconds": 0.25
+        },
+        {
+            "sourceStateName": "RECOVER",
+            "targetStateName": "IDLE",
+            "triggerName": "ToIdle",
+            "blendTimeSeconds": 0.25
+        },
+        {
+            "sourceStateName": "RECOVER",
+            "targetStateName": "CHASE",
+            "triggerName": "ToChase",
+            "blendTimeSeconds": 0.25
+        },
+        {
+            "sourceStateName": "ATTACK",
+            "targetStateName": "IDLE",
+            "triggerName": "ToIdle",
+            "blendTimeSeconds": 0.25
+        },
+        {
+            "sourceStateName": "ATTACK",
+            "targetStateName": "CHASE",
+            "triggerName": "ToChase",
             "blendTimeSeconds": 0.25
         }
     ]
