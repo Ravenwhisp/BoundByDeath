@@ -39,6 +39,7 @@ void MeleeEnemyController::Update()
 
 	updateCurrentTarget();
 	updateChargeCooldown(dt);
+	updateStun(dt);
 }
 
 Transform* MeleeEnemyController::acquireCurrentTarget()

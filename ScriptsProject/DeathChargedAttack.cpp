@@ -9,6 +9,7 @@
 #include "EnemyShadowMark.h"
 #include "BreakableDamageable.h"
 #include "DeathUI.h"
+#include "EnemyBaseController.h"
 
 #include <cmath>
 
@@ -266,6 +267,13 @@ void DeathChargedAttack::dealDamageInArc(float damage, bool isChargedShot) const
 
         }
         hit++;
+
+        EnemyBaseController* enemyController = GameObjectAPI::findScript<EnemyBaseController>(target);
+
+        if (enemyController != nullptr)
+        {
+            enemyController->useStun();
+        }
 
         EnemyShadowMark* shadowMark = GameObjectAPI::findScript<EnemyShadowMark>(target);
         if (shadowMark != nullptr)

@@ -98,7 +98,7 @@
         },
         {
             "name": "STUN",
-            "clipName": "Paladin_Damage",
+            "clipName": "Paladin_Idle_long",
             "speed": 1.0,
             "behaviourScriptName": "EnemyStunnedState",
             "behaviourFieldsJson": "{\"Stun Duration\":1.0,\"Debug Enabled\":true}",
@@ -222,6 +222,42 @@
             "sourceStateName": "ATTACK",
             "targetStateName": "CHASE",
             "triggerName": "ToChase",
+            "blendTimeSeconds": 0.25
+        },
+        {
+            "sourceStateName": "IDLE",
+            "targetStateName": "STUN",
+            "triggerName": "ToStun",
+            "blendTimeSeconds": 0.25
+        },
+        {
+            "sourceStateName": "STUN",
+            "targetStateName": "IDLE",
+            "triggerName": "ToIdle",
+            "blendTimeSeconds": 0.25
+        },
+        {
+            "sourceStateName": "STUN",
+            "targetStateName": "CHASE",
+            "triggerName": "ToChase",
+            "blendTimeSeconds": 0.25
+        },
+        {
+            "sourceStateName": "CHASE",
+            "targetStateName": "STUN",
+            "triggerName": "ToStun",
+            "blendTimeSeconds": 0.25
+        },
+        {
+            "sourceStateName": "CHARGE",
+            "targetStateName": "STUN",
+            "triggerName": "ToStun",
+            "blendTimeSeconds": 0.25
+        },
+        {
+            "sourceStateName": "ATTACK",
+            "targetStateName": "STUN",
+            "triggerName": "ToStun",
             "blendTimeSeconds": 0.25
         }
     ]

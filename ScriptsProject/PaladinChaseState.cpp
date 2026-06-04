@@ -43,6 +43,11 @@ void PaladinChaseState::OnStateUpdate()
 		return;
 	}
 
+	if (m_paladinController->trySendStunTrigger(m_animation))
+	{
+		return;
+	}
+
 	if (!m_paladinController->hasValidTarget())
 	{
 		AnimationAPI::sendTrigger(m_animation, "ToIdle");

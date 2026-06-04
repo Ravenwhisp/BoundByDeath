@@ -14,7 +14,7 @@ EnemyAttackState::EnemyAttackState(GameObject* owner)
 
 void EnemyAttackState::OnStateEnter()
 {
-    m_enemyController = GameObjectAPI::findScript<EnemyBaseController>(getOwner());
+    m_controller = GameObjectAPI::findScript<EnemyBaseController>(getOwner());
     m_attackConfig = GameObjectAPI::findScript<EnemyBaseAttackConfig>(getOwner());
     m_animation = AnimationAPI::getAnimationComponent(getOwner());
 
@@ -22,7 +22,7 @@ void EnemyAttackState::OnStateEnter()
     m_hasAppliedDamage = false;
     m_committedTarget = nullptr;
 
-    if (!m_enemyController)
+    if (!m_controller)
     {
         Debug::error("[EnemyAttackState] RangedEnemyController not found.");
         return;
@@ -40,28 +40,33 @@ void EnemyAttackState::OnStateEnter()
         return;
     }
 
-    m_enemyController->clearPath();
-    m_enemyController->resetRepathTimer();
+    m_controller->clearPath();
+    m_controller->resetRepathTimer();
 
-    m_enemyController->updateCurrentTarget();
-    m_committedTarget = m_enemyController->getCurrentTarget();
+    m_controller->updateCurrentTarget();
+    m_committedTarget = m_controller->getCurrentTarget();
 
     Debug::log("[EnemyAttackState] ENTER");
 }
 
 void EnemyAttackState::OnStateUpdate()
 {
-    if (!m_enemyController || !m_attackConfig || !m_animation)
+    if (!m_controller || !m_attackConfig || !m_animation)
     {
         return;
     }
 
-    if (m_enemyController->trySendDeathTrigger(m_animation))
+    if (m_controller->trySendDeathTrigger(m_animation))
     {
         return;
     }
 
-    m_enemyController->faceCurrentTarget();
+    if (m_controller->trySendStunTrigger(m_animation))
+    {
+        return;
+    }
+
+    m_controller->faceCurrentTarget();
 
     m_stateTimer += Time::getDeltaTime();
 
@@ -73,9 +78,9 @@ void EnemyAttackState::OnStateUpdate()
 
     if (m_stateTimer >= m_attackConfig->m_basicAttackTotalDuration)
     {
-        m_enemyController->updateCurrentTarget();
+        m_controller->updateCurrentTarget();
 
-        if (!m_enemyController->hasValidTarget())
+        if (!m_controller->hasValidTarget())
         {
             AnimationAPI::sendTrigger(m_animation, "ToIdle");
             Debug::log("[EnemyAttackState] Attack finished, Idle trigger sent");

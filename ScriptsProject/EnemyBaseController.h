@@ -43,6 +43,11 @@ public:
     // Stunned helpers
     void setStunnedDuration(float stunnedDuration);
     float getStunnedDuration() const { return m_stunnedDuration; }
+    void useStun();
+    bool trySendStunTrigger(AnimationComponent* animation);
+    bool isStunned() const { return m_isStunned; }
+    void clearStun();
+    void updateStun(float dt);
 
 private:
     void rotateTowardsDirection(const Vector3& direction);
@@ -78,6 +83,9 @@ protected:
 
     float m_recoveryDuration = 0.75f;
     float m_stunnedDuration = 2.0f;
+    float m_stunnedTimer = 0.0f;
+    bool m_stunnedTriggerSent = false;
+    bool m_isStunned = false;
 
 private:
     static constexpr size_t MAX_PATH_POINTS = 128;

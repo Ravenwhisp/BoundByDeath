@@ -22,7 +22,7 @@ private:
     void tryDamageTarget(Transform* targetTransform);
 
 private:
-    EnemyBaseController* m_enemyController = nullptr;
+    EnemyBaseController* m_controller = nullptr;
     EnemyBaseAttackConfig* m_attackConfig = nullptr;
     AnimationComponent* m_animation = nullptr;
 

@@ -55,6 +55,11 @@ void PaladinChargeState::OnStateUpdate()
 		return;
 	}
 
+	if (m_paladinController->trySendStunTrigger(m_animation))
+	{
+		return;
+	}
+
 	m_stateTimer += Time::getDeltaTime();
 
 	moveCharge();
