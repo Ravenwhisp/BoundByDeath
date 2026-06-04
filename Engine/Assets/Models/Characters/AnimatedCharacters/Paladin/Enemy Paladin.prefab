@@ -1,5 +1,5 @@
 {
-  "SourcePath": "Assets\\Models\\Characters\\AnimatedCharacters\\Paladin\\Enemy Paladin.prefab",
+  "SourcePath": "Assets/Models/Characters/AnimatedCharacters/Paladin/Enemy Paladin.prefab",
   "Name": "Enemy Paladin",
   "Version": 2,
   "GameObject": {
@@ -9,9 +9,9 @@
     "Layer": "DEFAULT",
     "Transform": {
       "position": [
-        13.292370796203612,
+        -1.1902141571044922,
         1.357955813407898,
-        28.862401962280273
+        36.42356491088867
       ],
       "rotation": [
         -0.0,
@@ -27,64 +27,14 @@
     },
     "Components": [
       {
-        "Type": 3,
-        "Data": {
-          "UID": 11157509095188117560,
-          "ComponentType": 3,
-          "Active": true,
-          "ScriptName": "EnemyController",
-          "ScriptFields": {
-            "Enemy Type": 2,
-            "Combat Range": 1.2000000476837158,
-            "Move Speed": 2.0,
-            "Turn Speed": 4.0,
-            "Interval": 0.4000000059604645,
-            "Attack Enter Range Bonus": 0.44999998807907104,
-            "Attack Exit Range Bonus": 0.800000011920929,
-            "Debug Enabled": true
-          }
-        }
-      },
-      {
-        "Type": 3,
-        "Data": {
-          "UID": 8649393709814296531,
-          "ComponentType": 3,
-          "Active": true,
-          "ScriptName": "EnemyDamageable",
-          "ScriptFields": {
-            "Max HP": 100.0,
-            "Health Slider": 14620430749807882589
-          }
-        }
-      },
-      {
-        "Type": 3,
-        "Data": {
-          "UID": 16014959075256591611,
-          "ComponentType": 3,
-          "Active": true,
-          "ScriptName": "EnemyDeathHandler",
-          "ScriptFields": {
-            "Destroy Delay": 4.0,
-            "Death State Name": "Paladin_Death",
-            "Health Prefab Path": "Assets/Prefabs/HealthPlaceholder.prefab",
-            "Health Drop Quantity": 1,
-            "Health Drop Amount": 10.0,
-            "Drop Radius": 2.0,
-            "Drop Height": 1.0
-          }
-        }
-      },
-      {
         "Type": 13,
         "Data": {
-          "UID": 15227829311901038376,
+          "UID": 16181693564176296651,
           "ComponentType": 13,
           "Active": true,
           "StateMachineUID": {
             "uid": 11588540065910136440,
-            "libId": "dd9904de2bb2cb58b145284f1da9c980"
+            "libId": "8705ad9ac55612f988285aa644b7af92"
           },
           "AnimationSourceUID": {
             "uid": 0,
@@ -98,19 +48,7 @@
       {
         "Type": 3,
         "Data": {
-          "UID": 14236918089657512610,
-          "ComponentType": 3,
-          "Active": true,
-          "ScriptName": "EnemyShadowMark",
-          "ScriptFields": {
-            "Mark Duration": 3.0
-          }
-        }
-      },
-      {
-        "Type": 3,
-        "Data": {
-          "UID": 5661681187240404429,
+          "UID": 14779560075805941651,
           "ComponentType": 3,
           "Active": true,
           "ScriptName": "EnemyDetectionAggro",
@@ -118,8 +56,74 @@
             "Detection Radius": 10.0,
             "Target Lock Duration": 5.0,
             "Debug Enabled": true,
-            "Player 1 Transform": 0,
-            "Player 2 Transform": 0
+            "Lyriel Transform": 743245849143440901,
+            "Death Transform": 16858939129400802547
+          }
+        }
+      },
+      {
+        "Type": 3,
+        "Data": {
+          "UID": 15357579286430794407,
+          "ComponentType": 3,
+          "Active": true,
+          "ScriptName": "MeleeEnemyController",
+          "ScriptFields": {
+            "Enemy Type": 2,
+            "Move Speed": 3.5,
+            "Turn Speed Degrees": 360.0,
+            "Repath Interval": 0.5,
+            "Path Point Reach Distance": 0.25,
+            "Path Search Extents": [
+              5.0,
+              5.0,
+              5.0
+            ]
+          }
+        }
+      },
+      {
+        "Type": 3,
+        "Data": {
+          "UID": 15484823007088020400,
+          "ComponentType": 3,
+          "Active": true,
+          "ScriptName": "PaladinAttackConfig",
+          "ScriptFields": {
+            "Basic Attack Range": 2.0,
+            "Basic Attack Damage": 10.0,
+            "Basic Attack Windup Time": 0.3499999940395355,
+            "Basic Attack Total Duration": 0.800000011920929,
+            "Basic Attack Cooldown": 1.2000000476837158,
+            "Charge Range": 5.0,
+            "Charge Duration": 0.5,
+            "Charge Speed": 6.0,
+            "Charge Cooldown": 3.0
+          }
+        }
+      },
+      {
+        "Type": 3,
+        "Data": {
+          "UID": 13299267468897361565,
+          "ComponentType": 3,
+          "Active": true,
+          "ScriptName": "EnemyAttackExecutor",
+          "ScriptFields": {}
+        }
+      },
+      {
+        "Type": 3,
+        "Data": {
+          "UID": 8182664559894417812,
+          "ComponentType": 3,
+          "Active": true,
+          "ScriptName": "EnemyDamageable",
+          "ScriptFields": {
+            "Max HP": 100.0,
+            "Health Slider": 0,
+            "Health Slider 2": 0,
+            "UI Update Time (Slider 2)": 1.0
           }
         }
       }
@@ -1005,7 +1009,7 @@
           {
             "Type": 6,
             "Data": {
-              "UID": 8359746295699988173,
+              "UID": 1424491569372981682,
               "ComponentType": 6,
               "Active": true,
               "RenderMode": 2,
@@ -1041,7 +1045,7 @@
               {
                 "Type": 5,
                 "Data": {
-                  "UID": 370833971610645098,
+                  "UID": 15389578762475069838,
                   "ComponentType": 5,
                   "Active": true,
                   "Position": [
@@ -1077,7 +1081,7 @@
               {
                 "Type": 7,
                 "Data": {
-                  "UID": 1659583111752717786,
+                  "UID": 14362633966828405138,
                   "ComponentType": 7,
                   "Active": true,
                   "TextureAssetId": {
@@ -1086,7 +1090,14 @@
                   },
                   "FillAmount": 1.0,
                   "FillMethod": 0,
-                  "FillOrigin": 0
+                  "FillOrigin": 0,
+                  "SheetColumns": 1,
+                  "SheetRows": 1,
+                  "SheetOffset": [
+                    0.0,
+                    0.0
+                  ],
+                  "StretchDrawMode": 0
                 }
               }
             ],
@@ -1118,7 +1129,7 @@
                   {
                     "Type": 5,
                     "Data": {
-                      "UID": 2859673322967911960,
+                      "UID": 5181923001610933043,
                       "ComponentType": 5,
                       "Active": true,
                       "Position": [
@@ -1154,7 +1165,7 @@
                   {
                     "Type": 7,
                     "Data": {
-                      "UID": 11200729202078420256,
+                      "UID": 5583482028897723660,
                       "ComponentType": 7,
                       "Active": true,
                       "TextureAssetId": {
@@ -1163,16 +1174,22 @@
                       },
                       "FillAmount": 1.0,
                       "FillMethod": 0,
-                      "FillOrigin": 0
+                      "FillOrigin": 0,
+                      "SheetColumns": 1,
+                      "SheetRows": 1,
+                      "SheetOffset": [
+                        0.0,
+                        0.0
+                      ],
+                      "StretchDrawMode": 0
                     }
                   },
                   {
                     "Type": 14,
                     "Data": {
-                      "UID": 14620430749807882589,
+                      "UID": 7560101472046587107,
                       "ComponentType": 14,
                       "Active": true,
-                      "TargetGraphicUID": 11200729202078420256,
                       "FillAmount": 1.0,
                       "FillMethod": 0,
                       "FillOrigin": 0
@@ -1212,12 +1229,12 @@
           {
             "Type": 1,
             "Data": {
-              "UID": 13139259895763390762,
+              "UID": 9235795461054291515,
               "ComponentType": 1,
               "Active": true,
               "MeshAssetId": {
                 "uid": 6555910244077164144,
-                "libId": "5cf7e613a915887267ae6b86f8b3b125"
+                "libId": "2e0e7f2d1cca1284eee6b3dfc9b5b8eb"
               },
               "SkinAssetId": {
                 "uid": 3439490537757966537,

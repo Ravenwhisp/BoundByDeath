@@ -26,8 +26,6 @@ public:
 
 	Vector3 getChargeDirection() const;
 
-	// Stun helpers
-
 protected:
 	Transform* acquireCurrentTarget() override;
 	bool isTargetDowned(Transform* target) const override;
