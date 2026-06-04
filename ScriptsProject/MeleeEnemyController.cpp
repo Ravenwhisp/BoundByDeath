@@ -107,3 +107,57 @@ bool MeleeEnemyController::playerInChargeRange() const
 	return distanceToTargetSquared <= chargeDistanceSquared && distanceToTargetSquared > attackRangeSquared;
 }
 
+bool MeleeEnemyController::isChargeReady() const
+{
+	return m_chargeCooldownTimer <= 0.0f;
+}
+
+void MeleeEnemyController::consumeChargeCooldown()
+{
+	if (!m_attackConfig)
+	{
+		return;
+	}
+
+	m_chargeCooldownTimer = m_attackConfig->m_chargeCooldown;
+}
+
+void MeleeEnemyController::updateChargeCooldown(float dt)
+{
+	if (m_chargeCooldownTimer <= 0.0f)
+	{
+		return;
+	}
+
+	m_chargeCooldownTimer -= dt;
+
+	if (m_chargeCooldownTimer < 0.0f)
+	{
+		m_chargeCooldownTimer = 0.0f;
+	}
+}
+
+Vector3 MeleeEnemyController::getChargeDirection() const
+{
+	if (!m_enemyDetectionAggro || !m_currentTarget)
+	{
+		return Vector3::Zero;
+	}
+
+	Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
+	Vector3 ownerPosition = TransformAPI::getPosition(ownerTransform);
+	Vector3 direction = TransformAPI::getForward(ownerTransform);
+	Vector3 targetPosition = TransformAPI::getPosition(m_currentTarget);
+
+	direction = targetPosition - ownerPosition;
+	direction.y = 0.0f;
+
+	if (direction.LengthSquared() > 0.0001f)
+	{
+		direction.Normalize();
+	}
+
+	return direction;
+}
+
+IMPLEMENT_SCRIPT(MeleeEnemyController)
