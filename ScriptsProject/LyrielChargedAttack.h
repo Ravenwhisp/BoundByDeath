@@ -3,6 +3,8 @@
 #include "LyrielAbilityBase.h"
 #include <vector>
 
+class LyrielUI;
+
 class LyrielChargedAttack : public LyrielAbilityBase
 {
     DECLARE_SCRIPT(LyrielChargedAttack)
@@ -15,8 +17,6 @@ public:
     void drawGizmo() override;
 
     ScriptFieldList getExposedFields() const override;
-
-    ScriptComponentRef<Transform> m_ChargedAttackUI;
 
 protected:
     void startAbility() override;
@@ -44,12 +44,6 @@ private:
 
     bool isAimStickValid(const Vector3& direction) const;
 
-private:
-    bool m_isCharging = false;
-    float m_chargeTimer = 0.0f;
-    Vector3 m_currentAimDirection = Vector3::Zero;
-    Vector3 m_attackFacingDirection = Vector3::Zero;
-
 public:
     float m_minDamage = 5.0f;
     float m_maxDamage = 30.0f;
@@ -62,4 +56,12 @@ public:
     float m_attackLockDuration = 0.3f;
 
     float m_arrowSpeed = 20.0f;
+
+private:
+    LyrielUI* m_lyrielUI = nullptr;
+
+    bool m_isCharging = false;
+    float m_chargeTimer = 0.0f;
+    Vector3 m_currentAimDirection = Vector3::Zero;
+    Vector3 m_attackFacingDirection = Vector3::Zero;
 };

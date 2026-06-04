@@ -2,6 +2,8 @@
 
 #include "DeathAbilityBase.h"
 
+class DeathUI;
+
 class DeathBasicAttack : public DeathAbilityBase
 {
     DECLARE_SCRIPT(DeathBasicAttack)
@@ -27,7 +29,7 @@ private:
     void faceTarget(GameObject* target);
 	void dealDamageToTarget(GameObject* target) const;
 
-    GameObject* m_attackFacingTarget    = nullptr;
+    void updateUI() override;
 
 public:
     float m_basicAttackDamage = 20.0f;
@@ -38,9 +40,7 @@ public:
     float m_finalHitLockDuration = 0.7f;
 
 private:
-	Transform* m_deathSlashUITransform = nullptr;
-    UISlider* m_deathSlashUISlider = nullptr;
+    DeathUI* m_deathUI = nullptr;
 
-    void setupUI();
-    void updateUI() override;
+    GameObject* m_attackFacingTarget = nullptr;
 };

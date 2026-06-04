@@ -36,6 +36,10 @@ public:
     bool isDead() const;
     bool trySendDeathTrigger(AnimationComponent* animation);
 
+    // Recovery helpers
+    void setRecoveryDuration(float recoveryDuration);
+    float getRecoveryDuration() const { return m_recoveryDuration; }
+
 private:
     void rotateTowardsDirection(const Vector3& direction);
 
@@ -67,6 +71,8 @@ protected:
     size_t m_currentPathIndex = 0;
     bool m_hasPath = false;
     float m_repathTimer = 0.0f;
+
+    float m_recoveryDuration = 0.75f;
 
 private:
     static constexpr size_t MAX_PATH_POINTS = 128;
