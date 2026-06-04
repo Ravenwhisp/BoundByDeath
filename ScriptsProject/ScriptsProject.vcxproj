@@ -173,6 +173,8 @@
     <ClInclude Include="ArthurAttackConfig.h" />
     <ClInclude Include="ArthurAttackDebugDraw.h" />
     <ClInclude Include="ArthurUI.h" />
+    <ClInclude Include="EnemyAttackState.h" />
+    <ClInclude Include="EnemyBaseAttackConfig.h" />
     <ClInclude Include="CharacterUI.h" />
     <ClInclude Include="DeathUI.h" />
     <ClInclude Include="DestroyParticles.h" />
@@ -206,10 +208,7 @@
     <ClInclude Include="LyrielSound.h" />
     <ClInclude Include="DebugDamageTrigger.h" />
     <ClInclude Include="DebugDrawTest.h" />
-    <ClInclude Include="EnemyATTACK.h" />
     <ClInclude Include="ArcherAttackState.h" />
-    <ClInclude Include="EnemyCHARGE.h" />
-    <ClInclude Include="EnemyCHASE.h" />
     <ClInclude Include="BarrierEnemyDamageable.h" />
     <ClInclude Include="ArcherChaseState.h" />
     <ClInclude Include="EnemyDamageable.h" />
@@ -235,10 +234,6 @@
     <ClInclude Include="ReaperGauge.h" />
     <ClInclude Include="ShadowExecution.h" />
     <ClInclude Include="EnemyDetectionAggro.h" />
-    <ClInclude Include="EnemyController.h" />
-    <ClInclude Include="EnemyIDLE.h" />
-    <ClInclude Include="EnemyRECOVER.h" />
-    <ClInclude Include="EnemySTUN.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="DefeatConditionManager.h" />
     <ClInclude Include="HealthPickup.h" />
@@ -281,6 +276,8 @@
     <ClCompile Include="ArthurAttackConfig.cpp" />
     <ClCompile Include="ArthurAttackDebugDraw.cpp" />
     <ClCompile Include="ArthurUI.cpp" />
+    <ClCompile Include="EnemyAttackState.cpp" />
+    <ClCompile Include="EnemyBaseAttackConfig.cpp" />
     <ClCompile Include="CharacterUI.cpp" />
     <ClCompile Include="DeathUI.cpp" />
     <ClCompile Include="DestroyParticles.cpp" />
@@ -315,10 +312,7 @@
     <ClCompile Include="DebugDamageTrigger.cpp" />
     <ClCompile Include="DebugDrawTest.cpp" />
     <ClCompile Include="dllmain.cpp" />
-    <ClCompile Include="EnemyATTACK.cpp" />
     <ClCompile Include="ArcherAttackState.cpp" />
-    <ClCompile Include="EnemyCHARGE.cpp" />
-    <ClCompile Include="EnemyCHASE.cpp" />
     <ClCompile Include="BarrierEnemyDamageable.cpp" />
     <ClCompile Include="ArcherChaseState.cpp" />
     <ClCompile Include="EnemyDamageable.cpp" />
@@ -346,10 +340,6 @@
     <ClCompile Include="EnemyDetectionAggro.cpp" />
     <ClCompile Include="DefeatConditionManager.cpp" />
     <ClCompile Include="HealthPickup.cpp" />
-    <ClCompile Include="EnemyController.cpp" />
-    <ClCompile Include="EnemyIDLE.cpp" />
-    <ClCompile Include="EnemyRECOVER.cpp" />
-    <ClCompile Include="EnemySTUN.cpp" />
     <ClCompile Include="EngineDependencies\SimpleMath.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
