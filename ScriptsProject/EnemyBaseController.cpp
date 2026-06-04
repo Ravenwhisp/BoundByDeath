@@ -222,6 +222,11 @@ void EnemyBaseController::setRecoveryDuration(float recoveryDuration)
     m_recoveryDuration = recoveryDuration;
 }
 
+void EnemyBaseController::setStunnedDuration(float stunnedDuration)
+{
+    m_stunnedDuration = stunnedDuration;
+}
+
 void EnemyBaseController::rotateTowardsDirection(const Vector3& direction)
 {
     Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());

@@ -410,6 +410,12 @@
     <ClInclude Include="DeathUI.h">
       <Filter>Character\Death\UI</Filter>
     </ClInclude>
+    <ClInclude Include="MeleeEnemyController.h" />
+    <ClInclude Include="PaladinAttackConfig.h" />
+    <ClInclude Include="PaladinChaseState.h" />
+    <ClInclude Include="EnemyStunnedState.h">
+      <Filter>Enemies\BaseStates</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
@@ -714,6 +720,12 @@
     </ClCompile>
     <ClCompile Include="DeathUI.cpp">
       <Filter>Character\Death\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="MeleeEnemyController.cpp" />
+    <ClCompile Include="PaladinAttackConfig.cpp" />
+    <ClCompile Include="PaladinChaseState.cpp" />
+    <ClCompile Include="EnemyStunnedState.cpp">
+      <Filter>Enemies\BaseStates</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -40,6 +40,10 @@ public:
     void setRecoveryDuration(float recoveryDuration);
     float getRecoveryDuration() const { return m_recoveryDuration; }
 
+    // Stunned helpers
+    void setStunnedDuration(float stunnedDuration);
+    float getStunnedDuration() const { return m_stunnedDuration; }
+
 private:
     void rotateTowardsDirection(const Vector3& direction);
 
@@ -73,6 +77,7 @@ protected:
     float m_repathTimer = 0.0f;
 
     float m_recoveryDuration = 0.75f;
+    float m_stunnedDuration = 2.0f;
 
 private:
     static constexpr size_t MAX_PATH_POINTS = 128;
