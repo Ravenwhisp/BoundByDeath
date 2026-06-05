@@ -52,7 +52,6 @@ void ShadowExecution::Update()
     if (m_isActive)
     {
         updateExecution(dt);
-        updateUI();
         return;
     }
 
@@ -175,7 +174,13 @@ void ShadowExecution::updateExecution(float dt)
     applyAoEDamage();
 
     if (m_executionTimer >= m_executionDuration)
+    {
         endExecution();
+    }
+    else
+    {
+        updateUI();
+    }
 }
 
 void ShadowExecution::applyAoEDamage()
