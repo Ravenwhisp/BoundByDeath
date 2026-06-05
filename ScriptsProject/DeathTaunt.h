@@ -15,15 +15,14 @@ public:
     void Start()  override;
     void Update() override;
 
-    ScriptFieldList getExposedFields() const override;
-
     void drawGizmo() override;
-    void onFieldEdited(const ScriptFieldInfo& field) override;
 
 protected:
 	void startAbility() override;
 
 	bool canStartSpecificAbility() const override;
+
+    float getCooldown() const override;
 
 private:
     void beginAim();
@@ -36,12 +35,6 @@ private:
     Vector3 computeAimDirection() const;
     void faceDirection(const Vector3& direction);
     bool isAimStickValid(const Vector3& direction) const;
-
-public:
-    float m_tauntDuration = 2.0f;
-    float m_TauntDurationSeconds = 3.0f;
-    float m_TauntRange = 2.5f;
-    float m_TauntHalfAngleDegrees = 35.0f;
 
 private:
     PlayerRotation* m_playerRotation = nullptr;

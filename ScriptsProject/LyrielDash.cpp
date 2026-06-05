@@ -4,11 +4,7 @@
 #include "LyrielCharacter.h"
 #include "LyrielSound.h"
 #include "LyrielUI.h"
-
-IMPLEMENT_SCRIPT_FIELDS_INHERITED(LyrielDash, AbilityDash,
-    SERIALIZED_FLOAT(m_chargeRechargeTime, "Charge Recharge Time", 0.1f, 10.0f, 0.1f),
-    SERIALIZED_INT(m_maxCharges, "Max charges")
-)
+#include "LyrielConfig.h"
 
 LyrielDash::LyrielDash(GameObject* owner)
     : AbilityDash(owner)
@@ -19,12 +15,17 @@ void LyrielDash::Start()
 {
     AbilityDash::Start();
 
-    if (m_character == nullptr)
+    m_lyrielCharacter = dynamic_cast<LyrielCharacter*>(m_character);
+
+    if (!m_lyrielCharacter)
     {
-        Debug::log("[LyrielDash] CharacterBase not found on owner '%s'.", GameObjectAPI::getName(getOwner()));
+        Debug::error("[LyrielDash] LyrielCharacter not found.");
+        return;
     }
 
-    m_currentCharges = m_maxCharges;
+    m_config = GameObjectAPI::findScript<LyrielConfig>(getOwner());
+
+    m_currentCharges = m_config->m_dashMaxCharges;
 
     m_lyrielUI = GameObjectAPI::findScript<LyrielUI>(getOwner());
 
@@ -34,7 +35,7 @@ void LyrielDash::Start()
     }
     else
     {
-        m_lyrielUI->setupDashCharges(m_maxCharges);
+        m_lyrielUI->setupDashCharges(m_config->m_dashMaxCharges);
     }
 
     m_sound = GameObjectAPI::findScript<LyrielSound>(getOwner());
@@ -42,15 +43,30 @@ void LyrielDash::Start()
 
 void LyrielDash::recoverCharge()
 {
-    if (m_currentCharges < m_maxCharges)
+    if (m_currentCharges < m_config->m_dashMaxCharges)
     {
         ++m_currentCharges;
 
-        if (m_currentCharges == m_maxCharges)
+        if (m_currentCharges == m_config->m_dashMaxCharges)
         {
             m_chargeRecoveryTimer = 0.0f;
         }
     }
+}
+
+float LyrielDash::getCooldown() const
+{
+    return m_config->m_dashCooldown;
+}
+
+float LyrielDash::getDashDuration() const
+{
+    return m_config->m_dashDuration;
+}
+
+float LyrielDash::getDashDistance() const
+{
+    return m_config->m_dashDistance;
 }
 
 bool LyrielDash::canDash() const
@@ -70,26 +86,26 @@ void LyrielDash::onDashStarted()
 
 void LyrielDash::onDashUpdate(float dt)
 {
-    if (m_currentCharges < m_maxCharges)
+    if (m_currentCharges < m_config->m_dashMaxCharges)
     {
         m_chargeRecoveryTimer += dt;
 
-        while (m_chargeRecoveryTimer >= m_chargeRechargeTime && m_currentCharges < m_maxCharges)
+        while (m_chargeRecoveryTimer >= m_config->m_dashRechargeTime && m_currentCharges < m_config->m_dashMaxCharges)
         {
             ++m_currentCharges;
-            m_chargeRecoveryTimer -= m_chargeRechargeTime;
+            m_chargeRecoveryTimer -= m_config->m_dashRechargeTime;
         }
 
-        if (m_currentCharges >= m_maxCharges)
+        if (m_currentCharges >= m_config->m_dashMaxCharges)
         {
-            m_currentCharges = m_maxCharges;
+            m_currentCharges = m_config->m_dashMaxCharges;
             m_chargeRecoveryTimer = 0.0f;
         }
     }
 
     if (m_lyrielUI)
     {
-        m_lyrielUI->updateDashChargesUI(m_currentCharges, m_maxCharges, dt);
+        m_lyrielUI->updateDashChargesUI(m_currentCharges, m_config->m_dashMaxCharges, dt);
     }
 }
 
@@ -98,7 +114,7 @@ bool LyrielDash::validateDashTarget()
     Vector3 currentPosition = TransformAPI::getPosition(getOwner()->GetTransform());
     m_debugDashStart = currentPosition; // Debugging
 
-    Vector3 candidateEnd = currentPosition + m_dashDirection * m_dashDistance;
+    Vector3 candidateEnd = currentPosition + m_dashDirection * getDashDistance();
     m_debugDashCandidateEnd = candidateEnd; // Debugging
 
     Vector3 sampledPosition;

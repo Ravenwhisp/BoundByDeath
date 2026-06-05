@@ -16,20 +16,19 @@ public:
     void Update() override;
     void drawGizmo() override;
 
-    ScriptFieldList getExposedFields() const override;
-
 protected:
     void startAbility() override;
 
     void onAttackWindowUpdate() override;
     void onAttackWindowFinished() override;
 
+    float getCooldown() const override;
+
 private:
     void beginCharge();
     void updateCharge();
     void releaseChargeAndShoot();
 
-    bool canStartCharge() const;
     bool canShoot() const;
 
     Vector3 computeAimDirection() const;
@@ -43,19 +42,6 @@ private:
     void drawChargePreview(const Vector3& origin, const Vector3& forward) const;
 
     bool isAimStickValid(const Vector3& direction) const;
-
-public:
-    float m_minDamage = 5.0f;
-    float m_maxDamage = 30.0f;
-    float m_maxChargeTime = 2.0f;
-
-    float m_minAttackRange = 4.0f;
-    float m_maxAttackRange = 10.0f;
-    float m_lineHalfWidth = 0.75f;
-
-    float m_attackLockDuration = 0.3f;
-
-    float m_arrowSpeed = 20.0f;
 
 private:
     LyrielUI* m_lyrielUI = nullptr;
