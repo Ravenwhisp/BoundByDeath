@@ -40,10 +40,7 @@ void PlayerTargetController::Update()
         return;
     }
 
-    if (Input::isRightStickJustPressed(m_character->getPlayerIndex()))
-    {
-        cycleTarget();
-    }
+    // New directional targeting will go here
 }
 
 void PlayerTargetController::drawGizmo()
@@ -115,69 +112,16 @@ void PlayerTargetController::updateTargetsInRange()
 
 void PlayerTargetController::ensureValidCurrentTarget()
 {
-    GameObject* previousTarget = m_currentTarget;
-
-    if (m_targetsInRange.empty())
+    if (m_currentTarget == nullptr)
     {
-        m_currentTarget = nullptr;
-    }
-    else if (findTargetIndex(m_currentTarget) == -1)
-    {
-        m_currentTarget = m_targetsInRange[0];
-    }
-
-    if (m_currentTarget != previousTarget)
-    {
-        if (m_currentTarget != nullptr)
-        {
-            Debug::log("Current target: %s", GameObjectAPI::getName(m_currentTarget));
-        }
-        else
-        {
-            Debug::log("No current target");
-        }
-    }
-}
-
-void PlayerTargetController::cycleTarget()
-{
-    if (m_targetsInRange.empty())
-    {
-        m_currentTarget = nullptr;
-        Debug::log("No targets in range");
         return;
     }
 
-    GameObject* previousTarget = m_currentTarget;
-
-    const int currentIndex = findTargetIndex(m_currentTarget);
-
-    if (currentIndex == -1)
+    if (!isTargetInRange(m_currentTarget) || !isTargetAlive(m_currentTarget))
     {
-        m_currentTarget = m_targetsInRange[0];
+        Debug::log("No current target");
+        m_currentTarget = nullptr;
     }
-    else
-    {
-        const int nextIndex = (currentIndex + 1) % static_cast<int>(m_targetsInRange.size());
-        m_currentTarget = m_targetsInRange[nextIndex];
-    }
-
-    if (m_currentTarget != nullptr && m_currentTarget != previousTarget)
-    {
-        const bool isLock = (previousTarget == nullptr);
-        if (m_deathSound != nullptr)
-        {
-            if (isLock) m_deathSound->playLockTarget();
-            else        m_deathSound->playSwitchTarget();
-        }
-        if (m_lyrielSound != nullptr)
-        {
-            if (isLock) m_lyrielSound->playLockTarget();
-            else        m_lyrielSound->playSwitchTarget();
-        }
-    }
-
-    Debug::log("Cycled target: %s", GameObjectAPI::getName(m_currentTarget));
 }
 
 bool PlayerTargetController::isTargetInRange(GameObject* target) const
@@ -222,24 +166,6 @@ bool PlayerTargetController::isTargetAlive(GameObject* target) const
     }
 
     return false;
-}
-
-int PlayerTargetController::findTargetIndex(GameObject* target) const
-{
-    if (target == nullptr)
-    {
-        return -1;
-    }
-
-    for (int i = 0; i < static_cast<int>(m_targetsInRange.size()); ++i)
-    {
-        if (m_targetsInRange[i] == target)
-        {
-            return i;
-        }
-    }
-
-    return -1;
 }
 
 IMPLEMENT_SCRIPT(PlayerTargetController)
