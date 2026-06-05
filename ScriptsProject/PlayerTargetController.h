@@ -35,6 +35,7 @@ private:
 
     bool tryComputeTargetScore(GameObject* target, const Vector3& aimDirection, float& outScore) const;
     GameObject* findBestTarget(const Vector3& aimDirection, float& outBestScore) const;
+    bool shouldSwitchTarget(GameObject* candidate, const Vector3& aimDirection, float candidateScore) const;
 
     bool isTargetInRange(GameObject* target) const;
     bool isTargetAlive(GameObject* target) const;
@@ -45,7 +46,7 @@ public:
     float m_targetConeAngle = 50.0f;
     float m_angleWeight = 0.75f;
     float m_distanceWeight = 0.25f;
-
+    float m_switchMargin = 0.15f;
 
 private:
     CharacterBase* m_character = nullptr;

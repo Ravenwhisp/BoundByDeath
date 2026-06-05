@@ -12,7 +12,8 @@ IMPLEMENT_SCRIPT_FIELDS(PlayerTargetController,
     SERIALIZED_FLOAT(m_targetRange, "Target Range", 0.0f, 20.0f, 0.05f),
     SERIALIZED_FLOAT(m_targetConeAngle, "Target Cone Angle", 1.0f, 180.0f, 1.0f),
     SERIALIZED_FLOAT(m_angleWeight, "Angle Weight", 0.0f, 1.0f, 0.01f),
-    SERIALIZED_FLOAT(m_distanceWeight, "Distance Weight", 0.0f, 1.0f, 0.01f)
+    SERIALIZED_FLOAT(m_distanceWeight, "Distance Weight", 0.0f, 1.0f, 0.01f),
+    SERIALIZED_FLOAT(m_switchMargin, "Switch Margin", 0.0f, 1.0f, 0.01f)
 )
 
 PlayerTargetController::PlayerTargetController(GameObject* owner)
@@ -132,7 +133,10 @@ void PlayerTargetController::updateCurrentTarget()
         return;
     }
 
-    setCurrentTarget(bestTarget);
+    if (shouldSwitchTarget(bestTarget, aimDirection, bestScore))
+    {
+        setCurrentTarget(bestTarget);
+    }
 }
 
 void PlayerTargetController::setCurrentTarget(GameObject* newTarget)
@@ -405,7 +409,34 @@ GameObject* PlayerTargetController::findBestTarget(const Vector3& aimDirection, 
     return bestTarget;
 }
 
+bool PlayerTargetController::shouldSwitchTarget(GameObject* candidate, const Vector3& aimDirection, float candidateScore) const
+{
+    if (candidate == nullptr)
+    {
+        return false;
+    }
 
+    if (m_currentTarget == nullptr)
+    {
+        return true;
+    }
+
+    // If the candidate is already the current target, no switch needed
+    if (candidate == m_currentTarget)
+    {
+        return false;
+    }
+
+    // If the current target can no longer be scored then replace it
+    float currentScore = FLT_MAX;
+    if (!tryComputeTargetScore(m_currentTarget, aimDirection, currentScore))
+    {
+        return true;
+    }
+
+    // Only switch if the new target is clearly better than the current one.
+    return candidateScore + m_switchMargin < currentScore;
+}
 
 bool PlayerTargetController::isTargetInRange(GameObject* target) const
 {
