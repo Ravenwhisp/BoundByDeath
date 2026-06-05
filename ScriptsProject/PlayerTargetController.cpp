@@ -38,25 +38,8 @@ void PlayerTargetController::Update()
     updateTargetsInRange();
     ensureValidCurrentTarget();
 
-    if (!canUpdateTargetFromAim())
-    {
-        return;
-    }
+    updateCurrentTarget();
 
-    const Vector3 aimDirection = computeAimDirection();
-
-    if (!isAimStickValid(aimDirection))
-    {
-        return;
-    }
-
-    float bestScore = FLT_MAX;
-    GameObject* bestTarget = findBestTargetFromAim(aimDirection, bestScore);
-
-    if (bestTarget != nullptr)
-    {
-        Debug::log("[TargetSystem] Best aimed target: %s | Score: %.3f", GameObjectAPI::getName(bestTarget), bestScore);
-    }
 
 }
 
@@ -127,6 +110,77 @@ void PlayerTargetController::updateTargetsInRange()
     }
 }
 
+void PlayerTargetController::updateCurrentTarget()
+{
+    if (!canUpdateTarget())
+    {
+        return;
+    }
+
+    const Vector3 aimDirection = computeAimDirection();
+
+    if (!isAimStickValid(aimDirection))
+    {
+        return;
+    }
+
+    float bestScore = FLT_MAX;
+    GameObject* bestTarget = findBestTarget(aimDirection, bestScore);
+
+    if (bestTarget == nullptr)
+    {
+        return;
+    }
+
+    setCurrentTarget(bestTarget);
+}
+
+void PlayerTargetController::setCurrentTarget(GameObject* newTarget)
+{
+    if (m_currentTarget == newTarget)
+    {
+        return;
+    }
+
+    GameObject* previousTarget = m_currentTarget;
+    m_currentTarget = newTarget;
+
+    if (m_currentTarget != nullptr)
+    {
+        const bool isLock = previousTarget == nullptr;
+
+        if (m_deathSound != nullptr)
+        {
+            if (isLock)
+            {
+                m_deathSound->playLockTarget();
+            }
+            else
+            {
+                m_deathSound->playSwitchTarget();
+            }
+        }
+
+        if (m_lyrielSound != nullptr)
+        {
+            if (isLock)
+            {
+                m_lyrielSound->playLockTarget();
+            }
+            else
+            {
+                m_lyrielSound->playSwitchTarget();
+            }
+        }
+
+        Debug::log("[TargetSystem] Current target: %s", GameObjectAPI::getName(m_currentTarget));
+    }
+    else
+    {
+        Debug::log("[TargetSystem] No current target");
+    }
+}
+
 void PlayerTargetController::ensureValidCurrentTarget()
 {
     if (m_currentTarget == nullptr)
@@ -136,12 +190,11 @@ void PlayerTargetController::ensureValidCurrentTarget()
 
     if (!isTargetInRange(m_currentTarget) || !isTargetAlive(m_currentTarget))
     {
-        Debug::log("No current target");
-        m_currentTarget = nullptr;
+        setCurrentTarget(nullptr);
     }
 }
 
-bool PlayerTargetController::canUpdateTargetFromAim() const
+bool PlayerTargetController::canUpdateTarget() const
 {
     if (m_character == nullptr)
     {
@@ -327,7 +380,7 @@ bool PlayerTargetController::tryComputeTargetScore(GameObject* target, const Vec
     return true;
 }
 
-GameObject* PlayerTargetController::findBestTargetFromAim(const Vector3& aimDirection, float& outBestScore) const
+GameObject* PlayerTargetController::findBestTarget(const Vector3& aimDirection, float& outBestScore) const
 {
     GameObject* bestTarget = nullptr;
     outBestScore = FLT_MAX;
@@ -351,6 +404,8 @@ GameObject* PlayerTargetController::findBestTargetFromAim(const Vector3& aimDire
 
     return bestTarget;
 }
+
+
 
 bool PlayerTargetController::isTargetInRange(GameObject* target) const
 {

@@ -26,13 +26,15 @@ private:
     void updateTargetsInRange();
     void ensureValidCurrentTarget();
 
-    bool canUpdateTargetFromAim() const;
+    bool canUpdateTarget() const;
+    void updateCurrentTarget();
+    void setCurrentTarget(GameObject* newTarget);
 
     Vector3 computeAimDirection() const;
     bool isAimStickValid(const Vector3& direction) const;
 
     bool tryComputeTargetScore(GameObject* target, const Vector3& aimDirection, float& outScore) const;
-    GameObject* findBestTargetFromAim(const Vector3& aimDirection, float& outBestScore) const;
+    GameObject* findBestTarget(const Vector3& aimDirection, float& outBestScore) const;
 
     bool isTargetInRange(GameObject* target) const;
     bool isTargetAlive(GameObject* target) const;
