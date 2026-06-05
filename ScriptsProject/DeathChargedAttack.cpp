@@ -159,7 +159,7 @@ void DeathChargedAttack::fireAttack()
         }
     }
 
-    dealDamageInArc(damage, m_chargedArcRange, m_chargedArcAngle, isChargedShot);
+    dealDamageInArc(damage, m_chargedArcRange, m_chargedArcAngle, isChargedShot, isMaxCharge);
 
     // Max charge (auto-fired at full charge, always step 0) gets longer combo window
     const float window = (isChargedShot && isMaxCharge)
@@ -182,7 +182,7 @@ void DeathChargedAttack::fireAttack()
     startCooldown();
 }
 
-void DeathChargedAttack::dealDamageInArc(float damage, bool isChargedShot) const
+void DeathChargedAttack::dealDamageInArc(float damage, bool isChargedShot, bool isMaxCharge) const
 {
     const Transform* myTransform = GameObjectAPI::getTransform(m_owner);
     if (myTransform == nullptr)
@@ -270,7 +270,7 @@ void DeathChargedAttack::dealDamageInArc(float damage, bool isChargedShot) const
 
         EnemyBaseController* enemyController = GameObjectAPI::findScript<EnemyBaseController>(target);
 
-        if (enemyController != nullptr)
+        if (enemyController != nullptr && isMaxCharge)
         {
             enemyController->useStun();
         }
@@ -308,13 +308,13 @@ void DeathChargedAttack::dealDamageInArc(float damage, bool isChargedShot) const
     }
 }
 
-void DeathChargedAttack::dealDamageInArc(float damage, float range, float angle, bool isChargedShot) const //charged attack
+void DeathChargedAttack::dealDamageInArc(float damage, float range, float angle, bool isChargedShot, bool isMaxCharge) const //charged attack
 {
     const float savedRange = m_arcRange;
     const float savedAngle = m_arcAngle;
     const_cast<DeathChargedAttack*>(this)->m_arcRange = range;
     const_cast<DeathChargedAttack*>(this)->m_arcAngle = angle;
-    dealDamageInArc(damage, isChargedShot);
+    dealDamageInArc(damage, isChargedShot, isMaxCharge);
     const_cast<DeathChargedAttack*>(this)->m_arcRange = savedRange;
     const_cast<DeathChargedAttack*>(this)->m_arcAngle = savedAngle;
 }
