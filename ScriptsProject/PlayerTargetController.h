@@ -26,11 +26,24 @@ private:
     void updateTargetsInRange();
     void ensureValidCurrentTarget();
 
+    bool canUpdateTargetFromAim() const;
+
+    Vector3 computeAimDirection() const;
+    bool isAimStickValid(const Vector3& direction) const;
+
+    bool tryComputeTargetScore(GameObject* target, const Vector3& aimDirection, float& outScore) const;
+    GameObject* findBestTargetFromAim(const Vector3& aimDirection, float& outBestScore) const;
+
     bool isTargetInRange(GameObject* target) const;
     bool isTargetAlive(GameObject* target) const;
 
 public:
     float m_targetRange = 8.0f;
+
+    float m_targetConeAngle = 50.0f;
+    float m_angleWeight = 0.75f;
+    float m_distanceWeight = 0.25f;
+
 
 private:
     CharacterBase* m_character = nullptr;
