@@ -44,9 +44,11 @@ public:
     float m_targetRange = 8.0f;
 
     float m_targetConeAngle = 50.0f;
-    float m_angleWeight = 0.75f;
-    float m_distanceWeight = 0.25f;
+    float m_angleWeight = 0.85f;
+    float m_distanceWeight = 0.15f;
+
     float m_switchMargin = 0.15f;
+    float m_switchCooldown = 0.25f;
 
 private:
     CharacterBase* m_character = nullptr;
@@ -55,4 +57,6 @@ private:
 
     DeathSound*  m_deathSound  = nullptr;
     LyrielSound* m_lyrielSound = nullptr;
+
+    float m_switchCooldownTimer = 0.0f;
 };

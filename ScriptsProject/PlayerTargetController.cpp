@@ -13,7 +13,8 @@ IMPLEMENT_SCRIPT_FIELDS(PlayerTargetController,
     SERIALIZED_FLOAT(m_targetConeAngle, "Target Cone Angle", 1.0f, 180.0f, 1.0f),
     SERIALIZED_FLOAT(m_angleWeight, "Angle Weight", 0.0f, 1.0f, 0.01f),
     SERIALIZED_FLOAT(m_distanceWeight, "Distance Weight", 0.0f, 1.0f, 0.01f),
-    SERIALIZED_FLOAT(m_switchMargin, "Switch Margin", 0.0f, 1.0f, 0.01f)
+    SERIALIZED_FLOAT(m_switchMargin, "Switch Margin", 0.0f, 1.0f, 0.01f),
+    SERIALIZED_FLOAT(m_switchCooldown, "Switch Cooldown", 0.0f, 1.0f, 0.01f)
 )
 
 PlayerTargetController::PlayerTargetController(GameObject* owner)
@@ -36,12 +37,18 @@ void PlayerTargetController::Start()
 
 void PlayerTargetController::Update()
 {
+    const float dt = Time::getDeltaTime();
+
+    if (m_switchCooldownTimer > 0.0f)
+    {
+        m_switchCooldownTimer -= dt;
+    }
+
+
     updateTargetsInRange();
     ensureValidCurrentTarget();
 
     updateCurrentTarget();
-
-
 }
 
 void PlayerTargetController::drawGizmo()
@@ -148,6 +155,11 @@ void PlayerTargetController::setCurrentTarget(GameObject* newTarget)
 
     GameObject* previousTarget = m_currentTarget;
     m_currentTarget = newTarget;
+
+    if (m_currentTarget != nullptr && previousTarget != nullptr)
+    {
+        m_switchCooldownTimer = m_switchCooldown;
+    }
 
     if (m_currentTarget != nullptr)
     {
@@ -423,6 +435,11 @@ bool PlayerTargetController::shouldSwitchTarget(GameObject* candidate, const Vec
 
     // If the candidate is already the current target, no switch needed
     if (candidate == m_currentTarget)
+    {
+        return false;
+    }
+
+    if (m_switchCooldownTimer > 0.0f)
     {
         return false;
     }
