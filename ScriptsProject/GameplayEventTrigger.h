@@ -2,6 +2,8 @@
 
 #include "ScriptAPI.h"
 
+class GameplayEventAction;
+
 class GameplayEventTrigger : public Script
 {
     DECLARE_SCRIPT(GameplayEventTrigger)
@@ -18,8 +20,11 @@ public:
 
 private:
     void findPlayers();
+    void findEventActions();
+
     void setPlayerInside(GameObject* gameObject, bool inside);
     bool isTrackedPlayer(GameObject* gameObject) const;
+
     bool canActivate() const;
     void tryActivate();
     void activateEvent();
@@ -35,4 +40,6 @@ private:
     bool m_player2Inside = false;
 
     bool m_hasTriggered = false;
+
+    std::vector<GameplayEventAction*> m_eventActions;
 };

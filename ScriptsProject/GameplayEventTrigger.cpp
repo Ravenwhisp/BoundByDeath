@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "GameplayEventTrigger.h"
 
+#include "GameplayEventAction.h"
+
 IMPLEMENT_SCRIPT_FIELDS(GameplayEventTrigger,
     SERIALIZED_BOOL(m_triggerOnlyOnce, "Trigger Only Once")
 )
@@ -13,6 +15,7 @@ GameplayEventTrigger::GameplayEventTrigger(GameObject* owner)
 void GameplayEventTrigger::Start()
 {
     findPlayers();
+    findEventActions();
 }
 
 void GameplayEventTrigger::OnTriggerEnter(GameObject* gameObject)
@@ -77,6 +80,41 @@ void GameplayEventTrigger::findPlayers()
     }
 }
 
+void GameplayEventTrigger::findEventActions()
+{
+    m_eventActions.clear();
+
+    GameObject* owner = getOwner();
+    if (owner == nullptr)
+    {
+        return;
+    }
+
+    const int scriptCount = GameObjectAPI::getScriptCount(owner);
+
+    for (int i = 0; i < scriptCount; ++i)
+    {
+        Script* script = GameObjectAPI::getScriptByIndex(owner, i);
+        if (script == nullptr)
+        {
+            continue;
+        }
+
+        GameplayEventAction* eventAction = dynamic_cast<GameplayEventAction*>(script);
+        if (eventAction == nullptr)
+        {
+            continue;
+        }
+
+        m_eventActions.push_back(eventAction);
+    }
+
+    if (m_eventActions.empty())
+    {
+        Debug::warn("GameplayEventTrigger on '%s' has no GameplayEventAction scripts attached.", GameObjectAPI::getName(owner));
+    }
+}
+
 void GameplayEventTrigger::setPlayerInside(GameObject* gameObject, bool inside)
 {
     if (gameObject == m_player1)
@@ -114,17 +152,27 @@ void GameplayEventTrigger::tryActivate()
         return;
     }
 
-    activateEvent();
-
     if (m_triggerOnlyOnce)
     {
         m_hasTriggered = true;
     }
+
+    activateEvent();
 }
 
 void GameplayEventTrigger::activateEvent()
 {
     Debug::log("GameplayEventTrigger '%s' activated.", GameObjectAPI::getName(getOwner()));
+
+    for (GameplayEventAction* eventAction : m_eventActions)
+    {
+        if (eventAction == nullptr)
+        {
+            continue;
+        }
+
+        eventAction->executeEvent(this);
+    }
 }
 
 IMPLEMENT_SCRIPT(GameplayEventTrigger)
