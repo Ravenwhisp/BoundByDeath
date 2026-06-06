@@ -106,6 +106,12 @@
     <Filter Include="Character\Death\UI">
       <UniqueIdentifier>{c0d34b51-4e99-4a88-847b-b50081a02770}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Camera\Transitions">
+      <UniqueIdentifier>{9ffa8dad-98df-4347-ba4e-2aa24b5cbfe1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Interaction/Gameplay\Events">
+      <UniqueIdentifier>{baef95a7-49dc-4f68-9fbe-d1220cdade01}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -415,6 +421,9 @@
     </ClInclude>
     <ClInclude Include="DeathConfig.h">
       <Filter>Character\Death</Filter>
+    </ClInclude>
+    <ClInclude Include="GameplayEventTrigger.h">
+      <Filter>Interaction/Gameplay\Events</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -726,6 +735,9 @@
     </ClCompile>
     <ClCompile Include="DeathConfig.cpp">
       <Filter>Character\Death</Filter>
+    </ClCompile>
+    <ClCompile Include="GameplayEventTrigger.cpp">
+      <Filter>Interaction/Gameplay\Events</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
