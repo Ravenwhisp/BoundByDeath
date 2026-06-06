@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "CameraTransitionController.h"
 
+#include "PlayerController.h"
 #include "CameraFollow.h"
 #include "CameraTransitionEvent.h"
 
@@ -17,6 +18,8 @@ void CameraTransitionController::Start()
     {
         Debug::warn("CameraTransitionController on '%s' could not find CameraFollow on the same GameObject.", GameObjectAPI::getName(getOwner()));
     }
+
+    findPlayerControllers();
 }
 
 void CameraTransitionController::Update()
@@ -83,6 +86,8 @@ void CameraTransitionController::startMovingToTarget(CameraTransitionEvent* even
     {
         m_cameraFollow->setFollowEnabled(false);
     }
+
+    setPlayersGameplayInputLocked(true);
 }
 
 void CameraTransitionController::updateMovingToTarget(float dt)
@@ -165,10 +170,44 @@ void CameraTransitionController::finishTransition()
         m_cameraFollow->setFollowEnabled(true);
     }
 
+    setPlayersGameplayInputLocked(false);
+
     m_currentEvent = nullptr;
     m_state = TransitionState::None;
     m_isTransitioning = false;
     m_timer = 0.0f;
+}
+
+void CameraTransitionController::findPlayerControllers()
+{
+    m_playerControllers.clear();
+
+    const std::vector<GameObject*> players = SceneAPI::findAllGameObjectsByTag(Tag::PLAYER, true);
+
+    for (GameObject* player : players)
+    {
+        PlayerController* playerController = GameObjectAPI::findScript<PlayerController>(player);
+        if (playerController == nullptr)
+        {
+            Debug::warn("CameraTransitionController could not find PlayerController on player '%s'.", GameObjectAPI::getName(player));
+            continue;
+        }
+
+        m_playerControllers.push_back(playerController);
+    }
+}
+
+void CameraTransitionController::setPlayersGameplayInputLocked(bool locked)
+{
+    for (PlayerController* playerController : m_playerControllers)
+    {
+        if (playerController == nullptr)
+        {
+            continue;
+        }
+
+        playerController->setGameplayInputLocked(locked);
+    }
 }
 
 IMPLEMENT_SCRIPT(CameraTransitionController)

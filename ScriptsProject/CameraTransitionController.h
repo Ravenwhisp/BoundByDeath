@@ -4,6 +4,7 @@
 
 class CameraFollow;
 class CameraTransitionEvent;
+class PlayerController;
 
 class CameraTransitionController : public Script
 {
@@ -35,9 +36,13 @@ private:
     void updateReturning(float dt);
     void finishTransition();
 
+    void findPlayerControllers();
+    void setPlayersGameplayInputLocked(bool locked);
+
 private:
     CameraFollow* m_cameraFollow = nullptr;
     CameraTransitionEvent* m_currentEvent = nullptr;
+    std::vector<PlayerController*> m_playerControllers;
 
     TransitionState m_state = TransitionState::None;
 
@@ -54,6 +59,4 @@ private:
     Vector3 m_returnStartPosition = Vector3(0.0f, 0.0f, 0.0f);
     Vector3 m_returnStartRotation = Vector3(0.0f, 0.0f, 0.0f);
 
-public:
-    bool m_ignoreNewTransitionsWhilePlaying = true;
 };

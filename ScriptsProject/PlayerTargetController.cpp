@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "PlayerTargetController.h"
 
+#include "PlayerController.h"
 #include "CharacterBase.h"
 #include "Damageable.h"
 #include "DeathSound.h"
@@ -20,10 +21,16 @@ PlayerTargetController::PlayerTargetController(GameObject* owner)
 void PlayerTargetController::Start()
 {
     m_character = GameObjectAPI::findScript<CharacterBase>(getOwner());
+    m_playerController = GameObjectAPI::findScript<PlayerController>(getOwner());
 
     if (m_character == nullptr)
     {
         Debug::warn("PlayerTargetController on '%s' could not find CharacterBase-derived script on the same GameObject.", GameObjectAPI::getName(getOwner()));
+    }
+
+    if (m_playerController == nullptr)
+    {
+        Debug::warn("PlayerTargetController on '%s' could not find PlayerController on the same GameObject.", GameObjectAPI::getName(getOwner()));
     }
 
     m_deathSound  = GameObjectAPI::findScript<DeathSound>(getOwner());
@@ -32,6 +39,11 @@ void PlayerTargetController::Start()
 
 void PlayerTargetController::Update()
 {
+    if (m_playerController != nullptr && m_playerController->isGameplayInputLocked())
+    {
+        return;
+    }
+
     updateTargetsInRange();
     ensureValidCurrentTarget();
 
