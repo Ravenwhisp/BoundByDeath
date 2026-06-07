@@ -32,6 +32,7 @@ protected:
     bool canStartAbility() const;
     virtual bool canStartSpecificAbility() const { return true; }
 
+    virtual float getCooldown() const { return m_cooldown; }
     void updateCooldown(float dt);
 	void updateAttackWindow(float dt);
 	void startCooldown();
@@ -58,7 +59,7 @@ protected:
     CharacterUI* m_characterUI = nullptr;
     int m_uiSlot = static_cast<int>(AbilityUISlot::BasicAttack);
 
-    float m_cooldown = 0.0f;
+    float m_cooldown = 0.0;
     float m_cooldownTimer = 0.0f;
 
     float m_attackStateTimer = 0.0f;

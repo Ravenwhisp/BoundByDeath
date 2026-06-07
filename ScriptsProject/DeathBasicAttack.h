@@ -15,13 +15,13 @@ public:
     void Update()     override;
     void drawGizmo()  override;
 
-    ScriptFieldList getExposedFields() const override;
-
 protected:
     void onAttackWindowUpdate()   override;
     void onAttackWindowFinished() override;
 
 	bool canStartSpecificAbility() const override;
+
+    float getCooldown() const override;
 
 private:
     void startAbility() override;
@@ -30,14 +30,6 @@ private:
 	void dealDamageToTarget(GameObject* target) const;
 
     void updateUI() override;
-
-public:
-    float m_basicAttackDamage = 20.0f;
-    float m_basicAttackRange = 1.5f;
-    float m_basicAttackHitAngle = 50.0f;
-
-    float m_attackLockDuration = 0.35f;
-    float m_finalHitLockDuration = 0.7f;
 
 private:
     DeathUI* m_deathUI = nullptr;
