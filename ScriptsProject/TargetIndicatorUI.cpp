@@ -4,7 +4,7 @@
 
 IMPLEMENT_SCRIPT_FIELDS(TargetIndicatorUI,
     SERIALIZED_COMPONENT_REF(m_playerTransform, "Player Transform", ComponentType::TRANSFORM),
-    SERIALIZED_COMPONENT_REF(m_indicatorVisualTransform, "Indicator Visual Transform", ComponentType::TRANSFORM),
+    SERIALIZED_COMPONENT_REF(m_targetIndicatorTransform, "Target Indicator Transform", ComponentType::TRANSFORM),
     SERIALIZED_VEC3(m_positionOffset, "Position Offset"),
     SERIALIZED_FLOAT(m_followSharpness, "Follow Sharpness", 0.0f, 50.0f, 0.1f),
     FIELD_GROUP_LABEL("Animation"),
@@ -21,13 +21,16 @@ void TargetIndicatorUI::Start()
 {
     m_playerTargetController = getPlayerTargetController();
 
-    Transform* visualTransform = m_indicatorVisualTransform.getReferencedComponent();
+    Transform* visualTransform = m_targetIndicatorTransform.getReferencedComponent();
     if (visualTransform != nullptr)
     {
         m_baseScale = TransformAPI::getScale(visualTransform);
     }
 
-    hideIndicator();
+    onStart();
+
+    hideTargetIndicator();
+    hideDirectionIndicator();
 }
 
 void TargetIndicatorUI::Update()
@@ -39,27 +42,47 @@ void TargetIndicatorUI::Update()
 
     if (m_playerTargetController == nullptr)
     {
-        hideIndicator();
-        return;
-    }
-
-    Transform* visualTransform = m_indicatorVisualTransform.getReferencedComponent();
-    if (visualTransform == nullptr)
-    {
-        hideIndicator();
+        hideTargetIndicator();
+        hideDirectionIndicator();
         return;
     }
 
     GameObject* currentTarget = m_playerTargetController->getCurrentTarget();
     if (currentTarget == nullptr)
     {
-        hideIndicator();
+        hideTargetIndicator();
+        hideDirectionIndicator();
+        m_previousTarget = nullptr;
+        return;
+    }
+
+    updateTargetIndicator(currentTarget);
+    updateDirectionIndicator(currentTarget);
+}
+
+void TargetIndicatorUI::updateTargetIndicator(GameObject* currentTarget)
+{
+    Transform* visualTransform = m_targetIndicatorTransform.getReferencedComponent();
+    if (visualTransform == nullptr)
+    {
+        hideTargetIndicator();
+        return;
+    }
+
+    if (currentTarget == nullptr)
+    {
+        hideTargetIndicator();
         return;
     }
 
     Transform* targetTransform = GameObjectAPI::getTransform(currentTarget);
+    if (targetTransform == nullptr)
+    {
+        hideTargetIndicator();
+        return;
+    }
 
-    showIndicator();
+    showTargetIndicator();
 
     const Vector3 targetPosition = TransformAPI::getGlobalPosition(targetTransform);
     const Vector3 desiredPosition = targetPosition + m_positionOffset;
@@ -102,9 +125,9 @@ PlayerTargetController* TargetIndicatorUI::getPlayerTargetController() const
     return GameObjectAPI::findScript<PlayerTargetController>(player);
 }
 
-void TargetIndicatorUI::hideIndicator()
+void TargetIndicatorUI::hideTargetIndicator()
 {
-    Transform* visualTransform = m_indicatorVisualTransform.getReferencedComponent();
+    Transform* visualTransform = m_targetIndicatorTransform.getReferencedComponent();
     if (visualTransform == nullptr)
     {
         return;
@@ -117,9 +140,9 @@ void TargetIndicatorUI::hideIndicator()
     GameObjectAPI::setActive(visualObject, false);
 }
 
-void TargetIndicatorUI::showIndicator()
+void TargetIndicatorUI::showTargetIndicator()
 {
-    Transform* visualTransform = m_indicatorVisualTransform.getReferencedComponent();
+    Transform* visualTransform = m_targetIndicatorTransform.getReferencedComponent();
     if (visualTransform == nullptr)
     {
         return;
@@ -134,16 +157,16 @@ void TargetIndicatorUI::startSwitchAnimation()
     m_switchAnimationTimer = m_switchPopDuration;
 }
 
-void TargetIndicatorUI::updateSwitchAnimation(Transform* visualTransform)
+void TargetIndicatorUI::updateSwitchAnimation(Transform* targetIndicatorTransform)
 {
-    if (visualTransform == nullptr)
+    if (targetIndicatorTransform == nullptr)
     {
         return;
     }
 
     if (m_switchAnimationTimer <= 0.0f || m_switchPopDuration <= 0.0001f)
     {
-        TransformAPI::setScale(visualTransform, m_baseScale);
+        TransformAPI::setScale(targetIndicatorTransform, m_baseScale);
         return;
     }
 
@@ -159,7 +182,7 @@ void TargetIndicatorUI::updateSwitchAnimation(Transform* visualTransform)
     const float popAmount = sinf(normalizedTime * 3.14159265f);
     const float scaleMultiplier = 1.0f + ((m_switchPopScale - 1.0f) * popAmount);
 
-    TransformAPI::setScale(visualTransform, m_baseScale * scaleMultiplier);
+    TransformAPI::setScale(targetIndicatorTransform, m_baseScale * scaleMultiplier);
 }
 
 IMPLEMENT_SCRIPT(TargetIndicatorUI)

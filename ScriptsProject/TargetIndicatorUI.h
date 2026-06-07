@@ -17,17 +17,23 @@ public:
 
     ScriptFieldList getExposedFields() const override;
 
-private:
+protected:
+    virtual void onStart() {}
+    virtual void updateDirectionIndicator(GameObject* currentTarget) {}
+    virtual void hideDirectionIndicator() {}
+
     PlayerTargetController* getPlayerTargetController() const;
-    void hideIndicator();
-    void showIndicator();
+    void updateTargetIndicator(GameObject* currentTarget);
+
+    void hideTargetIndicator();
+    void showTargetIndicator();
 
     void startSwitchAnimation();
-    void updateSwitchAnimation(Transform* visualTransform);
+    void updateSwitchAnimation(Transform* targetIndicatorTransform);
 
-public:
+protected:
     ScriptComponentRef<Transform> m_playerTransform;
-    ScriptComponentRef<Transform> m_indicatorVisualTransform;
+    ScriptComponentRef<Transform> m_targetIndicatorTransform;
 
     Vector3 m_positionOffset = Vector3(0.0f, 0.05f, 0.0f);
     float m_followSharpness = 20.0f;
@@ -35,7 +41,6 @@ public:
     float m_switchPopScale = 1.25f;
     float m_switchPopDuration = 0.18f;
 
-private:
     PlayerTargetController* m_playerTargetController = nullptr;
     GameObject* m_previousTarget = nullptr;
 
