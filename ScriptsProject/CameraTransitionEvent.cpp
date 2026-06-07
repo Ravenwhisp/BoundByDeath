@@ -17,17 +17,17 @@ CameraTransitionEvent::CameraTransitionEvent(GameObject* owner)
 
 void CameraTransitionEvent::Start()
 {
-    m_targetPoint = findTargetPoint();
+    findTargetPoints();
 
-    if (m_targetPoint == nullptr)
+    if (m_targetPoints.empty())
     {
-        Debug::warn("CameraTransitionEvent on '%s' could not find child path 'CameraPoints/Point1'.", GameObjectAPI::getName(getOwner()));
+        Debug::warn("CameraTransitionEvent on '%s' could not find any points under 'CameraPoints'.", GameObjectAPI::getName(getOwner()));
     }
 }
 
 void CameraTransitionEvent::executeEvent(GameplayEventTrigger* trigger)
 {
-    if (m_targetPoint == nullptr)
+    if (m_targetPoints.empty())
     {
         return;
     }
@@ -42,27 +42,47 @@ void CameraTransitionEvent::executeEvent(GameplayEventTrigger* trigger)
     cameraTransitionController->startTransition(this);
 }
 
-Transform* CameraTransitionEvent::findTargetPoint() const
+Transform* CameraTransitionEvent::getTargetPoint(int index) const
 {
-    GameObject* owner = getOwner();
-    if (owner == nullptr)
+    if (index < 0 || index >= static_cast<int>(m_targetPoints.size()))
     {
         return nullptr;
     }
 
-    Transform* ownerTransform = GameObjectAPI::getTransform(owner);
-    if (ownerTransform == nullptr)
-    {
-        return nullptr;
-    }
+    return m_targetPoints[index];
+}
 
-    Transform* cameraPointsRoot = TransformAPI::findChildByName(ownerTransform, "CameraPoints");
+void CameraTransitionEvent::findTargetPoints()
+{
+    m_targetPoints.clear();
+
+    Transform* cameraPointsRoot = findCameraPointsRoot();
     if (cameraPointsRoot == nullptr)
     {
-        return nullptr;
+        return;
     }
 
-    return TransformAPI::findChildByName(cameraPointsRoot, "Point1");
+    for (int i = 1; i <= 32; ++i)
+    {
+        char pointName[32];
+        sprintf_s(pointName, "Point%d", i);
+
+        Transform* point = TransformAPI::findChildByName(cameraPointsRoot, pointName);
+        if (point == nullptr)
+        {
+            break;
+        }
+
+        m_targetPoints.push_back(point);
+    }
+}
+
+Transform* CameraTransitionEvent::findCameraPointsRoot() const
+{
+    GameObject* owner = getOwner();
+    Transform* ownerTransform = GameObjectAPI::getTransform(owner);
+
+    return TransformAPI::findChildByName(ownerTransform, "CameraPoints");
 }
 
 CameraTransitionController* CameraTransitionEvent::findCameraTransitionController() const

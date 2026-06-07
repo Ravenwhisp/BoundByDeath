@@ -65,7 +65,10 @@ void CameraTransitionController::startTransition(CameraTransitionEvent* event)
 void CameraTransitionController::startMovingToTarget(CameraTransitionEvent* event)
 {
     Transform* cameraTransform = GameObjectAPI::getTransform(getOwner());
-    Transform* targetPoint = event->getTargetPoint();
+
+    m_currentPointIndex = 0;
+    Transform* targetPoint = event->getTargetPoint(m_currentPointIndex);
+
     if (targetPoint == nullptr)
     {
         Debug::warn("CameraTransitionController on '%s' could not start transition because target point is null.", GameObjectAPI::getName(getOwner()));
@@ -77,8 +80,11 @@ void CameraTransitionController::startMovingToTarget(CameraTransitionEvent* even
     m_state = TransitionState::MovingToTarget;
     m_timer = 0.0f;
 
-    m_startPosition = TransformAPI::getGlobalPosition(cameraTransform);
-    m_startRotation = TransformAPI::getGlobalEulerDegrees(cameraTransform);
+    m_transitionStartPosition = TransformAPI::getGlobalPosition(cameraTransform);
+    m_transitionStartRotation = TransformAPI::getGlobalEulerDegrees(cameraTransform);
+
+    m_segmentStartPosition = m_transitionStartPosition;
+    m_segmentStartRotation = m_transitionStartRotation;
 
     m_targetPosition = TransformAPI::getGlobalPosition(targetPoint);
     m_targetRotation = TransformAPI::getGlobalEulerDegrees(targetPoint);
@@ -101,10 +107,10 @@ void CameraTransitionController::updateMovingToTarget(float dt)
     m_timer += dt;
 
     const float normalizedTime = m_timer / duration;
-    const float alpha = MathAPI::smoothStep(0.0f, 1.0f, normalizedTime);
+    const float alpha = normalizedTime;
 
-    const Vector3 newPosition = MathAPI::lerp(m_startPosition, m_targetPosition, alpha);
-    const Vector3 newRotation = MathAPI::lerp(m_startRotation, m_targetRotation, alpha);
+    const Vector3 newPosition = MathAPI::lerp(m_segmentStartPosition, m_targetPosition, alpha);
+    const Vector3 newRotation = MathAPI::lerp(m_segmentStartRotation, m_targetRotation, alpha);
 
     TransformAPI::setGlobalPosition(cameraTransform, newPosition);
     TransformAPI::setGlobalRotationEuler(cameraTransform, newRotation);
@@ -113,6 +119,22 @@ void CameraTransitionController::updateMovingToTarget(float dt)
     {
         TransformAPI::setGlobalPosition(cameraTransform, m_targetPosition);
         TransformAPI::setGlobalRotationEuler(cameraTransform, m_targetRotation);
+
+        m_currentPointIndex++;
+
+        if (m_currentPointIndex < m_currentEvent->getTargetPointCount())
+        {
+            Transform* nextPoint = m_currentEvent->getTargetPoint(m_currentPointIndex);
+
+            m_segmentStartPosition = m_targetPosition;
+            m_segmentStartRotation = m_targetRotation;
+
+            m_targetPosition = TransformAPI::getGlobalPosition(nextPoint);
+            m_targetRotation = TransformAPI::getGlobalEulerDegrees(nextPoint);
+
+            m_timer = 0.0f;
+            return;
+        }
 
         m_state = TransitionState::Holding;
         m_timer = 0.0f;
@@ -150,16 +172,16 @@ void CameraTransitionController::updateReturning(float dt)
     const float normalizedTime = m_timer / duration;
     const float alpha = MathAPI::smoothStep(0.0f, 1.0f, normalizedTime);
 
-    const Vector3 newPosition = MathAPI::lerp(m_returnStartPosition, m_startPosition, alpha);
-    const Vector3 newRotation = MathAPI::lerp(m_returnStartRotation, m_startRotation, alpha);
+    const Vector3 newPosition = MathAPI::lerp(m_returnStartPosition, m_transitionStartPosition, alpha);
+    const Vector3 newRotation = MathAPI::lerp(m_returnStartRotation, m_transitionStartRotation, alpha);
 
     TransformAPI::setGlobalPosition(cameraTransform, newPosition);
     TransformAPI::setGlobalRotationEuler(cameraTransform, newRotation);
 
     if (m_timer >= duration)
     {
-        TransformAPI::setGlobalPosition(cameraTransform, m_startPosition);
-        TransformAPI::setGlobalRotationEuler(cameraTransform, m_startRotation);
+        TransformAPI::setGlobalPosition(cameraTransform, m_transitionStartPosition);
+        TransformAPI::setGlobalRotationEuler(cameraTransform, m_transitionStartRotation);
 
         finishTransition();
     }
@@ -194,7 +216,6 @@ void CameraTransitionController::findPlayerControllers()
         if (playerController == nullptr)
         {
             Debug::warn("CameraTransitionController could not find PlayerController on player '%s'.", GameObjectAPI::getName(player));
-            continue;
         }
         else
         {

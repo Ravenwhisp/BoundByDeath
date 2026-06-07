@@ -19,14 +19,17 @@ public:
 
     ScriptFieldList getExposedFields() const override;
 
+    const std::vector<Transform*>& getTargetPoints() const { return m_targetPoints; }
+    Transform* getTargetPoint(int index) const;
+    int getTargetPointCount() const { return static_cast<int>(m_targetPoints.size()); }
 
-    Transform* getTargetPoint() const { return m_targetPoint; }
     float getMoveToDuration() const { return m_moveToDuration; }
     float getHoldDuration() const { return m_holdDuration; }
     float getReturnDuration() const { return m_returnDuration; }
 
 private:
-    Transform* findTargetPoint() const;
+    void findTargetPoints();
+    Transform* findCameraPointsRoot() const;
     CameraTransitionController* findCameraTransitionController() const;
 
 public:
@@ -35,5 +38,5 @@ public:
     float m_returnDuration = 1.5f;
 
 private:
-    Transform* m_targetPoint = nullptr;
+    std::vector<Transform*> m_targetPoints;
 };

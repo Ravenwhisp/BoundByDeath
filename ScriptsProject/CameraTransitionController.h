@@ -53,11 +53,15 @@ private:
 
     float m_timer = 0.0f;
 
-    Vector3 m_startPosition = Vector3(0.0f, 0.0f, 0.0f);
-    Vector3 m_startRotation = Vector3(0.0f, 0.0f, 0.0f);
+    Vector3 m_transitionStartPosition = Vector3(0.0f, 0.0f, 0.0f);
+    Vector3 m_transitionStartRotation = Vector3(0.0f, 0.0f, 0.0f);
+
+    Vector3 m_segmentStartPosition = Vector3(0.0f, 0.0f, 0.0f);
+    Vector3 m_segmentStartRotation = Vector3(0.0f, 0.0f, 0.0f);
 
     Vector3 m_targetPosition = Vector3(0.0f, 0.0f, 0.0f);
     Vector3 m_targetRotation = Vector3(0.0f, 0.0f, 0.0f);
+    int m_currentPointIndex = 0;
 
     Vector3 m_returnStartPosition = Vector3(0.0f, 0.0f, 0.0f);
     Vector3 m_returnStartRotation = Vector3(0.0f, 0.0f, 0.0f);
