@@ -37,6 +37,12 @@ private:
     void updateReturning(float dt);
     void finishTransition();
 
+    void buildPathFromCurrentEvent();
+    Vector3 evaluateCatmullRomPath(float normalizedTime) const;
+    Vector3 evaluateRotationPath(float normalizedTime) const;
+
+    Vector3 catmullRom(const Vector3& p0, const Vector3& p1, const Vector3& p2, const Vector3& p3, float t) const;
+
     void findPlayerControllers();
     void setPlayersGameplayInputLocked(bool locked);
     void setPlayersInvulnerable(bool invulnerable);
@@ -56,14 +62,10 @@ private:
     Vector3 m_transitionStartPosition = Vector3(0.0f, 0.0f, 0.0f);
     Vector3 m_transitionStartRotation = Vector3(0.0f, 0.0f, 0.0f);
 
-    Vector3 m_segmentStartPosition = Vector3(0.0f, 0.0f, 0.0f);
-    Vector3 m_segmentStartRotation = Vector3(0.0f, 0.0f, 0.0f);
-
-    Vector3 m_targetPosition = Vector3(0.0f, 0.0f, 0.0f);
-    Vector3 m_targetRotation = Vector3(0.0f, 0.0f, 0.0f);
-    int m_currentPointIndex = 0;
-
     Vector3 m_returnStartPosition = Vector3(0.0f, 0.0f, 0.0f);
     Vector3 m_returnStartRotation = Vector3(0.0f, 0.0f, 0.0f);
+
+    std::vector<Vector3> m_pathPositions;
+    std::vector<Vector3> m_pathRotations;
 
 };

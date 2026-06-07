@@ -5,7 +5,7 @@
 #include "CameraTransitionController.h"
 
 IMPLEMENT_SCRIPT_FIELDS(CameraTransitionEvent,
-    SERIALIZED_FLOAT(m_moveToDuration, "Move To Duration", 0.0f, 20.0f, 0.05f),
+    SERIALIZED_FLOAT(m_pathDuration, "Path Duration", 0.0f, 20.0f, 0.05f),
     SERIALIZED_FLOAT(m_holdDuration, "Hold Duration", 0.0f, 20.0f, 0.05f),
     SERIALIZED_FLOAT(m_returnDuration, "Return Duration", 0.0f, 20.0f, 0.05f)
 )

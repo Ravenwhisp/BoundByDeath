@@ -23,7 +23,7 @@ public:
     Transform* getTargetPoint(int index) const;
     int getTargetPointCount() const { return static_cast<int>(m_targetPoints.size()); }
 
-    float getMoveToDuration() const { return m_moveToDuration; }
+    float getPathDuration() const { return m_pathDuration; }
     float getHoldDuration() const { return m_holdDuration; }
     float getReturnDuration() const { return m_returnDuration; }
 
@@ -33,7 +33,7 @@ private:
     CameraTransitionController* findCameraTransitionController() const;
 
 public:
-    float m_moveToDuration = 1.5f;
+    float m_pathDuration = 1.5f;
     float m_holdDuration = 1.0f;
     float m_returnDuration = 1.5f;
 

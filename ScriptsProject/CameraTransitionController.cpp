@@ -66,15 +66,6 @@ void CameraTransitionController::startMovingToTarget(CameraTransitionEvent* even
 {
     Transform* cameraTransform = GameObjectAPI::getTransform(getOwner());
 
-    m_currentPointIndex = 0;
-    Transform* targetPoint = event->getTargetPoint(m_currentPointIndex);
-
-    if (targetPoint == nullptr)
-    {
-        Debug::warn("CameraTransitionController on '%s' could not start transition because target point is null.", GameObjectAPI::getName(getOwner()));
-        return;
-    }
-
     m_currentEvent = event;
     m_isTransitioning = true;
     m_state = TransitionState::MovingToTarget;
@@ -83,11 +74,13 @@ void CameraTransitionController::startMovingToTarget(CameraTransitionEvent* even
     m_transitionStartPosition = TransformAPI::getGlobalPosition(cameraTransform);
     m_transitionStartRotation = TransformAPI::getGlobalEulerDegrees(cameraTransform);
 
-    m_segmentStartPosition = m_transitionStartPosition;
-    m_segmentStartRotation = m_transitionStartRotation;
+    buildPathFromCurrentEvent();
 
-    m_targetPosition = TransformAPI::getGlobalPosition(targetPoint);
-    m_targetRotation = TransformAPI::getGlobalEulerDegrees(targetPoint);
+    if (m_pathPositions.size() < 2)
+    {
+        finishTransition();
+        return;
+    }
 
     if (m_cameraFollow != nullptr)
     {
@@ -102,39 +95,23 @@ void CameraTransitionController::updateMovingToTarget(float dt)
 {
     Transform* cameraTransform = GameObjectAPI::getTransform(getOwner());
 
-    const float duration = m_currentEvent->getMoveToDuration();
+    const int segmentCount = static_cast<int>(m_pathPositions.size()) - 1;
+    const float totalDuration = m_currentEvent->getPathDuration();
 
     m_timer += dt;
 
-    const float normalizedTime = m_timer / duration;
-    const float alpha = normalizedTime;
+    const float normalizedTime = m_timer / totalDuration;
 
-    const Vector3 newPosition = MathAPI::lerp(m_segmentStartPosition, m_targetPosition, alpha);
-    const Vector3 newRotation = MathAPI::lerp(m_segmentStartRotation, m_targetRotation, alpha);
+    const Vector3 newPosition = evaluateCatmullRomPath(normalizedTime);
+    const Vector3 newRotation = evaluateRotationPath(normalizedTime);
 
     TransformAPI::setGlobalPosition(cameraTransform, newPosition);
     TransformAPI::setGlobalRotationEuler(cameraTransform, newRotation);
 
-    if (m_timer >= duration)
+    if (m_timer >= totalDuration)
     {
-        TransformAPI::setGlobalPosition(cameraTransform, m_targetPosition);
-        TransformAPI::setGlobalRotationEuler(cameraTransform, m_targetRotation);
-
-        m_currentPointIndex++;
-
-        if (m_currentPointIndex < m_currentEvent->getTargetPointCount())
-        {
-            Transform* nextPoint = m_currentEvent->getTargetPoint(m_currentPointIndex);
-
-            m_segmentStartPosition = m_targetPosition;
-            m_segmentStartRotation = m_targetRotation;
-
-            m_targetPosition = TransformAPI::getGlobalPosition(nextPoint);
-            m_targetRotation = TransformAPI::getGlobalEulerDegrees(nextPoint);
-
-            m_timer = 0.0f;
-            return;
-        }
+        TransformAPI::setGlobalPosition(cameraTransform, m_pathPositions.back());
+        TransformAPI::setGlobalRotationEuler(cameraTransform, m_pathRotations.back());
 
         m_state = TransitionState::Holding;
         m_timer = 0.0f;
@@ -201,6 +178,76 @@ void CameraTransitionController::finishTransition()
     m_state = TransitionState::None;
     m_isTransitioning = false;
     m_timer = 0.0f;
+}
+
+void CameraTransitionController::buildPathFromCurrentEvent()
+{
+    m_pathPositions.clear();
+    m_pathRotations.clear();
+
+    m_pathPositions.push_back(m_transitionStartPosition);
+    m_pathRotations.push_back(m_transitionStartRotation);
+
+    const int pointCount = m_currentEvent->getTargetPointCount();
+
+    for (int i = 0; i < pointCount; ++i)
+    {
+        Transform* point = m_currentEvent->getTargetPoint(i);
+
+        m_pathPositions.push_back(TransformAPI::getGlobalPosition(point));
+        m_pathRotations.push_back(TransformAPI::getGlobalEulerDegrees(point));
+    }
+}
+
+Vector3 CameraTransitionController::evaluateCatmullRomPath(float normalizedTime) const
+{
+    const int pointCount = static_cast<int>(m_pathPositions.size());
+    const int segmentCount = pointCount - 1;
+
+    const float scaledTime = normalizedTime * static_cast<float>(segmentCount);
+
+    int segmentIndex = static_cast<int>(scaledTime);
+    float localAlpha = scaledTime - static_cast<float>(segmentIndex);
+
+    if (segmentIndex >= segmentCount)
+    {
+        segmentIndex = segmentCount - 1;
+        localAlpha = 1.0f;
+    }
+
+    const int p0Index = segmentIndex > 0 ? segmentIndex - 1 : segmentIndex;
+    const int p1Index = segmentIndex;
+    const int p2Index = segmentIndex + 1;
+    const int p3Index = segmentIndex + 2 < pointCount ? segmentIndex + 2 : segmentIndex + 1;
+
+    return catmullRom(m_pathPositions[p0Index], m_pathPositions[p1Index], m_pathPositions[p2Index], m_pathPositions[p3Index], localAlpha);
+}
+
+Vector3 CameraTransitionController::evaluateRotationPath(float normalizedTime) const
+{
+    const int pointCount = static_cast<int>(m_pathRotations.size());
+    const int segmentCount = pointCount - 1;
+
+    const float scaledTime = normalizedTime * static_cast<float>(segmentCount);
+
+    int segmentIndex = static_cast<int>(scaledTime);
+    float localAlpha = scaledTime - static_cast<float>(segmentIndex);
+
+    if (segmentIndex >= segmentCount)
+    {
+        segmentIndex = segmentCount - 1;
+        localAlpha = 1.0f;
+    }
+
+    return MathAPI::lerp(m_pathRotations[segmentIndex], m_pathRotations[segmentIndex + 1], localAlpha);
+}
+
+Vector3 CameraTransitionController::catmullRom(const Vector3& p0, const Vector3& p1, const Vector3& p2, const Vector3& p3, float t) const
+{
+    const float t2 = t * t;
+    const float t3 = t2 * t;
+
+    return (p1 * 2.0f + (p2 - p0) * t + (p0 * 2.0f - p1 * 5.0f + p2 * 4.0f - p3) * t2 + (p1 * 3.0f - p0 - p2 * 3.0f + p3) * t3) * 0.5f;
 }
 
 void CameraTransitionController::findPlayerControllers()
