@@ -5,6 +5,7 @@
 class CameraFollow;
 class CameraTransitionEvent;
 class PlayerController;
+class Damageable;
 
 class CameraTransitionController : public Script
 {
@@ -38,11 +39,13 @@ private:
 
     void findPlayerControllers();
     void setPlayersGameplayInputLocked(bool locked);
+    void setPlayersInvulnerable(bool invulnerable);
 
 private:
     CameraFollow* m_cameraFollow = nullptr;
     CameraTransitionEvent* m_currentEvent = nullptr;
     std::vector<PlayerController*> m_playerControllers;
+    std::vector<Damageable*> m_playerDamageables;
 
     TransitionState m_state = TransitionState::None;
 

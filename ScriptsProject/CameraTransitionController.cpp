@@ -4,6 +4,7 @@
 #include "PlayerController.h"
 #include "CameraFollow.h"
 #include "CameraTransitionEvent.h"
+#include "Damageable.h"
 
 CameraTransitionController::CameraTransitionController(GameObject* owner)
     : Script(owner)
@@ -88,6 +89,7 @@ void CameraTransitionController::startMovingToTarget(CameraTransitionEvent* even
     }
 
     setPlayersGameplayInputLocked(true);
+    setPlayersInvulnerable(true);
 }
 
 void CameraTransitionController::updateMovingToTarget(float dt)
@@ -171,6 +173,7 @@ void CameraTransitionController::finishTransition()
     }
 
     setPlayersGameplayInputLocked(false);
+    setPlayersInvulnerable(false);
 
     m_currentEvent = nullptr;
     m_state = TransitionState::None;
@@ -181,6 +184,7 @@ void CameraTransitionController::finishTransition()
 void CameraTransitionController::findPlayerControllers()
 {
     m_playerControllers.clear();
+    m_playerDamageables.clear();
 
     const std::vector<GameObject*> players = SceneAPI::findAllGameObjectsByTag(Tag::PLAYER, true);
 
@@ -192,8 +196,20 @@ void CameraTransitionController::findPlayerControllers()
             Debug::warn("CameraTransitionController could not find PlayerController on player '%s'.", GameObjectAPI::getName(player));
             continue;
         }
+        else
+        {
+            m_playerControllers.push_back(playerController);
+        }
 
-        m_playerControllers.push_back(playerController);
+        Damageable* damageable = GameObjectAPI::findScript<Damageable>(player);
+        if (damageable == nullptr)
+        {
+            Debug::warn("CameraTransitionController could not find Damageable on player '%s'.", GameObjectAPI::getName(player));
+        }
+        else
+        {
+            m_playerDamageables.push_back(damageable);
+        }
     }
 }
 
@@ -207,6 +223,19 @@ void CameraTransitionController::setPlayersGameplayInputLocked(bool locked)
         }
 
         playerController->setGameplayInputLocked(locked);
+    }
+}
+
+void CameraTransitionController::setPlayersInvulnerable(bool invulnerable)
+{
+    for (Damageable* damageable : m_playerDamageables)
+    {
+        if (damageable == nullptr)
+        {
+            continue;
+        }
+
+        damageable->setInvulnerable(invulnerable);
     }
 }
 
