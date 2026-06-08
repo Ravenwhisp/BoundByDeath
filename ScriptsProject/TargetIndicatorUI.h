@@ -44,6 +44,6 @@ protected:
     PlayerTargetController* m_playerTargetController = nullptr;
     GameObject* m_previousTarget = nullptr;
 
-    Vector3 m_baseScale = Vector3(1.0f, 1.0f, 1.0f);
+    Vector3 m_targetIndicatorBaseScale = Vector3(1.0f, 1.0f, 1.0f);
     float m_switchAnimationTimer = 0.0f;
 };
