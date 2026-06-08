@@ -1,0 +1,308 @@
+{
+  "SourcePath": "Assets\\Prefabs\\Particles\\StunVFX.prefab",
+  "Name": "StunVFX",
+  "Version": 2,
+  "GameObject": {
+    "Name": "StunVFX",
+    "Active": true,
+    "Tag": "DEFAULT",
+    "Layer": "DEFAULT",
+    "Transform": {
+      "position": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    "Components": [],
+    "Children": [
+      {
+        "Name": "GhostlyWisps",
+        "Active": true,
+        "Tag": "DEFAULT",
+        "Layer": "DEFAULT",
+        "Transform": {
+          "position": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "Components": [
+          {
+            "Type": 17,
+            "Data": {
+              "UID": 4465780045139241101,
+              "ComponentType": 17,
+              "Active": true,
+              "TextureAssetId": {
+                "uid": 17427793376948693573,
+                "libId": "6eaf6e601878bab14a649a5599054651"
+              },
+              "ParticleEmitters": [
+                {
+                  "Modules": [
+                    {
+                      "ModuleType": 2,
+                      "Looping": true,
+                      "Duration": 8.0,
+                      "RateOverTime": 0.3,
+                      "RateOverDistance": 0.0
+                    },
+                    {
+                      "ModuleType": 4,
+                      "StartLifeTime": 8.0
+                    },
+                    {
+                      "ModuleType": 1,
+                      "ShapeType": 2,
+                      "Radius": 0.3499999940395355,
+                      "RadiusThickness": 0.05000000074505806
+                    },
+                    {
+                      "ModuleType": 3,
+                      "StartColor": [
+                        0.75,
+                        0.87,
+                        1.0,
+                        0.85
+                      ],
+                      "EndColor": [
+                        0.85,
+                        0.93,
+                        1.0,
+                        0.0
+                      ]
+                    },
+                    {
+                      "ModuleType": 5,
+                      "InitialVelocity": 0.12
+                    },
+                    {
+                      "ModuleType": 6,
+                      "StartScale": [
+                        0.16,
+                        0.16
+                      ],
+                      "EndScale": [
+                        0.22,
+                        0.22
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "Children": []
+      },
+      {
+        "Name": "SoulSigil",
+        "Active": true,
+        "Tag": "DEFAULT",
+        "Layer": "DEFAULT",
+        "Transform": {
+          "position": [
+            0.0,
+            0.02,
+            0.0
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "Components": [
+          {
+            "Type": 17,
+            "Data": {
+              "UID": 12384058652618034191,
+              "ComponentType": 17,
+              "Active": true,
+              "TextureAssetId": {
+                "uid": 18397412372386409293,
+                "libId": "daec75fabdc85d041af40097e2ac1b24"
+              },
+              "ParticleEmitters": [
+                {
+                  "Modules": [
+                    {
+                      "ModuleType": 2,
+                      "Looping": true,
+                      "Duration": 5.0,
+                      "RateOverTime": 0.4,
+                      "RateOverDistance": 0.0
+                    },
+                    {
+                      "ModuleType": 4,
+                      "StartLifeTime": 2.5
+                    },
+                    {
+                      "ModuleType": 1,
+                      "ShapeType": 0,
+                      "Radius": 0.019999999552965164,
+                      "RadiusThickness": 1.0
+                    },
+                    {
+                      "ModuleType": 3,
+                      "StartColor": [
+                        0.8,
+                        0.9,
+                        1.0,
+                        0.55
+                      ],
+                      "EndColor": [
+                        0.7,
+                        0.85,
+                        1.0,
+                        0.0
+                      ]
+                    },
+                    {
+                      "ModuleType": 5,
+                      "InitialVelocity": 0.0
+                    },
+                    {
+                      "ModuleType": 6,
+                      "StartScale": [
+                        0.45,
+                        0.45
+                      ],
+                      "EndScale": [
+                        0.7,
+                        0.7
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "Children": []
+      },
+      {
+        "Name": "EyeGlow",
+        "Active": true,
+        "Tag": "DEFAULT",
+        "Layer": "DEFAULT",
+        "Transform": {
+          "position": [
+            0.0,
+            1.6,
+            0.0
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "Components": [
+          {
+            "Type": 17,
+            "Data": {
+              "UID": 15147933670746555116,
+              "ComponentType": 17,
+              "Active": true,
+              "TextureAssetId": {
+                "uid": 17427793376948693573,
+                "libId": "6eaf6e601878bab14a649a5599054651"
+              },
+              "ParticleEmitters": [
+                {
+                  "Modules": [
+                    {
+                      "ModuleType": 2,
+                      "Looping": true,
+                      "Duration": 6.0,
+                      "RateOverTime": 0.25,
+                      "RateOverDistance": 0.0
+                    },
+                    {
+                      "ModuleType": 4,
+                      "StartLifeTime": 6.0
+                    },
+                    {
+                      "ModuleType": 1,
+                      "ShapeType": 0,
+                      "Radius": 0.019999999552965164,
+                      "RadiusThickness": 1.0
+                    },
+                    {
+                      "ModuleType": 3,
+                      "StartColor": [
+                        0.78,
+                        0.9,
+                        1.0,
+                        0.8
+                      ],
+                      "EndColor": [
+                        0.78,
+                        0.9,
+                        1.0,
+                        0.8
+                      ]
+                    },
+                    {
+                      "ModuleType": 5,
+                      "InitialVelocity": 0.0
+                    },
+                    {
+                      "ModuleType": 6,
+                      "StartScale": [
+                        0.3,
+                        0.3
+                      ],
+                      "EndScale": [
+                        0.3,
+                        0.3
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "Children": []
+      }
+    ]
+  }
+}
