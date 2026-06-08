@@ -4,7 +4,7 @@
 IMPLEMENT_SCRIPT_FIELDS_INHERITED(LyrielTargetIndicatorUI, TargetIndicatorUI,
     FIELD_GROUP_LABEL("Direction Arrow"),
     SERIALIZED_COMPONENT_REF(m_directionArrowTransform, "Direction Arrow Transform", ComponentType::TRANSFORM),
-    SERIALIZED_FLOAT(m_floorYOffset, "Floor Y Offset", -1.0f, 1.0f, 0.01f),
+    SERIALIZED_COMPONENT_REF(m_directionOriginTransform, "Direction Origin Transform", ComponentType::TRANSFORM),
     SERIALIZED_FLOAT(m_forwardOffset, "Forward Offset", 0.0f, 5.0f, 0.05f),
     SERIALIZED_FLOAT(m_rotationOffsetDegrees, "Rotation Offset Degrees", -180.0f, 180.0f, 1.0f)
 )
@@ -14,17 +14,14 @@ LyrielTargetIndicatorUI::LyrielTargetIndicatorUI(GameObject* owner)
 {
 }
 
-void LyrielTargetIndicatorUI::onStart()
-{
-    Transform* arrowTransform = m_directionArrowTransform.getReferencedComponent();
-    if (arrowTransform != nullptr)
-    {
-        m_directionArrowBaseScale = TransformAPI::getScale(arrowTransform);
-    }
-}
-
 void LyrielTargetIndicatorUI::updateDirectionIndicator(GameObject* currentTarget)
 {
+    if (currentTarget == nullptr)
+    {
+        hideDirectionIndicator();
+        return;
+    }
+
     Transform* arrowTransform = m_directionArrowTransform.getReferencedComponent();
     if (arrowTransform == nullptr)
     {
@@ -32,10 +29,10 @@ void LyrielTargetIndicatorUI::updateDirectionIndicator(GameObject* currentTarget
         return;
     }
 
-    Vector3 playerPosition;
+    Vector3 originPosition;
     Vector3 direction;
 
-    if (!tryGetDirectionToTarget(currentTarget, playerPosition, direction))
+    if (!tryGetDirectionToTarget(originPosition, direction))
     {
         hideDirectionIndicator();
         return;
@@ -44,11 +41,7 @@ void LyrielTargetIndicatorUI::updateDirectionIndicator(GameObject* currentTarget
     GameObject* arrowObject = ComponentAPI::getOwner(arrowTransform);
     GameObjectAPI::setActive(arrowObject, true);
 
-    Vector3 arrowPosition = playerPosition + direction * m_forwardOffset;
-    arrowPosition.y = playerPosition.y + m_floorYOffset;
-
-    updateDirectionArrowTransform(arrowTransform, arrowPosition, direction);
-    TransformAPI::setScale(arrowTransform, m_directionArrowBaseScale);
+    updateDirectionArrowTransform(arrowTransform, originPosition, direction);
 }
 
 void LyrielTargetIndicatorUI::hideDirectionIndicator()
@@ -59,35 +52,31 @@ void LyrielTargetIndicatorUI::hideDirectionIndicator()
         return;
     }
 
-    TransformAPI::setScale(arrowTransform, m_directionArrowBaseScale);
-
     GameObject* arrowObject = ComponentAPI::getOwner(arrowTransform);
     GameObjectAPI::setActive(arrowObject, false);
 }
 
-bool LyrielTargetIndicatorUI::tryGetDirectionToTarget(GameObject* currentTarget, Vector3& outPlayerPosition, Vector3& outDirection) const
+bool LyrielTargetIndicatorUI::tryGetDirectionToTarget(Vector3& outOriginPosition, Vector3& outDirection) const
 {
-    if (currentTarget == nullptr)
+    Transform* originTransform = m_directionOriginTransform.getReferencedComponent();
+    Transform* targetIndicatorTransform = m_targetIndicatorTransform.getReferencedComponent();
+
+    if (originTransform == nullptr || targetIndicatorTransform == nullptr)
     {
         return false;
     }
 
-    Transform* playerTransform = m_playerTransform.getReferencedComponent();
-    Transform* targetTransform = GameObjectAPI::getTransform(currentTarget);
+    outOriginPosition = TransformAPI::getGlobalPosition(originTransform);
+    const Vector3 targetIndicatorPosition = TransformAPI::getGlobalPosition(targetIndicatorTransform);
 
-    if (playerTransform == nullptr)
-    {
-        return false;
-    }
+    Vector3 flatOriginPosition = outOriginPosition;
+    Vector3 flatTargetPosition = targetIndicatorPosition;
 
-    outPlayerPosition = TransformAPI::getGlobalPosition(playerTransform);
-    Vector3 targetPosition = TransformAPI::getGlobalPosition(targetTransform);
+    flatOriginPosition.z = 0.0f;
+    flatTargetPosition.z = 0.0f;
 
-    outPlayerPosition.y = 0.0f;
-    targetPosition.y = 0.0f;
-
-    outDirection = targetPosition - outPlayerPosition;
-    outDirection.y = 0.0f;
+    outDirection = flatTargetPosition - flatOriginPosition;
+    outDirection.z = 0.0f;
 
     if (outDirection.LengthSquared() <= 0.0001f)
     {
@@ -98,7 +87,7 @@ bool LyrielTargetIndicatorUI::tryGetDirectionToTarget(GameObject* currentTarget,
     return true;
 }
 
-void LyrielTargetIndicatorUI::updateDirectionArrowTransform(Transform* arrowTransform, const Vector3& position, const Vector3& direction) const
+void LyrielTargetIndicatorUI::updateDirectionArrowTransform(Transform* arrowTransform, const Vector3& originPosition, const Vector3& direction) const
 {
     if (arrowTransform == nullptr)
     {
@@ -106,7 +95,7 @@ void LyrielTargetIndicatorUI::updateDirectionArrowTransform(Transform* arrowTran
     }
 
     Vector3 flatDirection = direction;
-    flatDirection.y = 0.0f;
+    flatDirection.z = 0.0f;
 
     if (flatDirection.LengthSquared() <= 0.0001f)
     {
@@ -115,12 +104,16 @@ void LyrielTargetIndicatorUI::updateDirectionArrowTransform(Transform* arrowTran
 
     flatDirection.Normalize();
 
-    TransformAPI::setGlobalPosition(arrowTransform, position);
+    Vector3 arrowPosition = originPosition + flatDirection * m_forwardOffset;
 
-    const float yawRadians = atan2f(flatDirection.x, flatDirection.z);
-    const float yawDegrees = DirectX::XMConvertToDegrees(yawRadians) + m_rotationOffsetDegrees;
+    arrowPosition.z = originPosition.z;
 
-    TransformAPI::setGlobalRotationEuler(arrowTransform, Vector3(0.0f, yawDegrees, 0.0f));
+    TransformAPI::setGlobalPosition(arrowTransform, arrowPosition);
+
+    const float angleRadians = atan2f(flatDirection.y, flatDirection.x);
+    const float angleDegrees = DirectX::XMConvertToDegrees(angleRadians) - 90.0f + m_rotationOffsetDegrees;
+
+    TransformAPI::setGlobalRotationEuler(arrowTransform, Vector3(0.0f, 0.0f, angleDegrees));
 }
 
 IMPLEMENT_SCRIPT(LyrielTargetIndicatorUI)

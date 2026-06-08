@@ -91,22 +91,22 @@ void TargetIndicatorUI::updateTargetIndicator(GameObject* currentTarget)
 
     if (targetChanged)
     {
-        TransformAPI::setPosition(visualTransform, desiredPosition);
+        TransformAPI::setGlobalPosition(visualTransform, desiredPosition);
         startSwitchAnimation();
         m_previousTarget = currentTarget;
     }
     else if (m_followSharpness <= 0.0f)
     {
-        TransformAPI::setPosition(visualTransform, desiredPosition);
+        TransformAPI::setGlobalPosition(visualTransform, desiredPosition);
     }
     else
     {
-        const Vector3 currentPosition = TransformAPI::getPosition(visualTransform);
+        const Vector3 currentPosition = TransformAPI::getGlobalPosition(visualTransform);
         const float dt = Time::getDeltaTime();
         const float followFraction = 1.0f - expf(-m_followSharpness * dt);
         const Vector3 smoothedPosition = currentPosition + (desiredPosition - currentPosition) * followFraction;
 
-        TransformAPI::setPosition(visualTransform, smoothedPosition);
+        TransformAPI::setGlobalPosition(visualTransform, smoothedPosition);
     }
 
     updateSwitchAnimation(visualTransform);
