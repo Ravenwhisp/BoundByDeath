@@ -16,13 +16,15 @@ protected:
     void hideDirectionIndicator() override;
 
 private:
-    bool tryGetDirectionToTarget(Vector3& outOriginPosition, Vector3& outDirection) const;
-    void updateDirectionArrowTransform(Transform* arrowTransform, const Vector3& originPosition, const Vector3& direction) const;
+    bool tryGetDirectionToTarget(GameObject* currentTarget, Vector3& outPlayerPosition, Vector3& outDirection) const;
+
+    void updateDirectionArrowTransform(Transform* arrowTransform, const Vector3& playerPosition, const Vector3& direction) const;
 
 public:
     ScriptComponentRef<Transform> m_directionArrowTransform;
-    ScriptComponentRef<Transform> m_directionOriginTransform;
 
     float m_forwardOffset = 1.0f;
+    float m_heightOffset = 0.05f;
     float m_rotationOffsetDegrees = 0.0f;
+
 };
