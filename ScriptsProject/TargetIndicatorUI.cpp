@@ -136,8 +136,7 @@ void TargetIndicatorUI::hideTargetIndicator()
     m_switchAnimationTimer = 0.0f;
     TransformAPI::setScale(visualTransform, m_targetIndicatorBaseScale);
 
-    GameObject* visualObject = ComponentAPI::getOwner(visualTransform);
-    GameObjectAPI::setActive(visualObject, false);
+    setVisualActive(visualTransform, false);
 }
 
 void TargetIndicatorUI::showTargetIndicator()
@@ -148,8 +147,7 @@ void TargetIndicatorUI::showTargetIndicator()
         return;
     }
 
-    GameObject* visualObject = ComponentAPI::getOwner(visualTransform);
-    GameObjectAPI::setActive(visualObject, true);
+    setVisualActive(visualTransform, true);
 }
 
 void TargetIndicatorUI::startSwitchAnimation()
@@ -183,6 +181,85 @@ void TargetIndicatorUI::updateSwitchAnimation(Transform* targetIndicatorTransfor
     const float scaleMultiplier = 1.0f + ((m_switchPopScale - 1.0f) * popAmount);
 
     TransformAPI::setScale(targetIndicatorTransform, m_targetIndicatorBaseScale * scaleMultiplier);
+}
+
+bool TargetIndicatorUI::tryGetFlatDirectionToTarget(GameObject* currentTarget, Vector3& outPlayerPosition, Vector3& outDirection, float* outDistance) const
+{
+    if (outDistance != nullptr)
+    {
+        *outDistance = 0.0f;
+    }
+
+    if (currentTarget == nullptr)
+    {
+        return false;
+    }
+
+    Transform* playerTransform = m_playerTransform.getReferencedComponent();
+    Transform* targetTransform = GameObjectAPI::getTransform(currentTarget);
+
+    if (playerTransform == nullptr || targetTransform == nullptr)
+    {
+        return false;
+    }
+
+    outPlayerPosition = TransformAPI::getGlobalPosition(playerTransform);
+    const Vector3 targetPosition = TransformAPI::getGlobalPosition(targetTransform);
+
+    Vector3 flatPlayerPosition = outPlayerPosition;
+    Vector3 flatTargetPosition = targetPosition;
+
+    flatPlayerPosition.y = 0.0f;
+    flatTargetPosition.y = 0.0f;
+
+    outDirection = flatTargetPosition - flatPlayerPosition;
+    outDirection.y = 0.0f;
+
+    const float distanceSq = outDirection.LengthSquared();
+    if (distanceSq <= 0.0001f)
+    {
+        return false;
+    }
+
+    if (outDistance != nullptr)
+    {
+        *outDistance = sqrtf(distanceSq);
+    }
+
+    outDirection.Normalize();
+    return true;
+}
+
+void TargetIndicatorUI::setVisualActive(Transform* visualTransform, bool active) const
+{
+    if (visualTransform == nullptr)
+    {
+        return;
+    }
+
+    GameObject* visualObject = ComponentAPI::getOwner(visualTransform);
+    if (visualObject == nullptr)
+    {
+        return;
+    }
+
+    GameObjectAPI::setActive(visualObject, active);
+}
+
+float TargetIndicatorUI::getDirectionAngleDegrees(const Vector3& direction, float rotationOffsetDegrees) const
+{
+    Vector3 flatDirection = direction;
+    flatDirection.y = 0.0f;
+
+    if (flatDirection.LengthSquared() <= 0.0001f)
+    {
+        return rotationOffsetDegrees;
+    }
+
+    flatDirection.Normalize();
+
+    const float angleRadians = atan2f(flatDirection.z, flatDirection.x);
+    return DirectX::XMConvertToDegrees(angleRadians) + rotationOffsetDegrees;
 }
 
 IMPLEMENT_SCRIPT(TargetIndicatorUI)

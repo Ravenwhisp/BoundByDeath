@@ -23,6 +23,8 @@ protected:
     virtual void hideDirectionIndicator() {}
 
     PlayerTargetController* getPlayerTargetController() const;
+
+    // Target Indicator animation
     void updateTargetIndicator(GameObject* currentTarget);
 
     void hideTargetIndicator();
@@ -30,6 +32,12 @@ protected:
 
     void startSwitchAnimation();
     void updateSwitchAnimation(Transform* targetIndicatorTransform);
+
+    // Direction indicator helpers
+    bool tryGetFlatDirectionToTarget(GameObject* currentTarget, Vector3& outPlayerPosition, Vector3& outDirection, float* outDistance = nullptr) const;
+
+    void setVisualActive(Transform* visualTransform, bool active) const;
+    float getDirectionAngleDegrees(const Vector3& direction, float rotationOffsetDegrees) const;
 
 protected:
     ScriptComponentRef<Transform> m_playerTransform;

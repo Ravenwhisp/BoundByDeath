@@ -31,7 +31,7 @@ void LyrielTargetIndicatorUI::updateDirectionIndicator(GameObject* currentTarget
     Vector3 direction;
     float distanceToTarget = 0.0f;
 
-    if (!tryGetDirectionToTarget(currentTarget, playerPosition, direction, distanceToTarget))
+    if (!tryGetFlatDirectionToTarget(currentTarget, playerPosition, direction, &distanceToTarget))
     {
         hideDirectionIndicator();
         return;
@@ -41,7 +41,7 @@ void LyrielTargetIndicatorUI::updateDirectionIndicator(GameObject* currentTarget
 
     if (shouldShowArrow)
     {
-        setDirectionArrowActive(true);
+        setVisualActive(arrowTransform, true);
         updateDirectionArrowTransform(arrowTransform, playerPosition, direction);
     }
 
@@ -56,48 +56,8 @@ void LyrielTargetIndicatorUI::hideDirectionIndicator()
         Transform2DAPI::setAlpha(arrowTransform2D, 0.0f);
     }
 
-    setDirectionArrowActive(false);
-}
-
-bool LyrielTargetIndicatorUI::tryGetDirectionToTarget(GameObject* currentTarget, Vector3& outPlayerPosition, Vector3& outDirection, float& outDistance) const
-{
-    outDistance = 0.0f;
-
-    if (currentTarget == nullptr)
-    {
-        return false;
-    }
-
-    Transform* playerTransform = m_playerTransform.getReferencedComponent();
-    Transform* targetTransform = GameObjectAPI::getTransform(currentTarget);
-
-    if (playerTransform == nullptr || targetTransform == nullptr)
-    {
-        return false;
-    }
-
-    outPlayerPosition = TransformAPI::getGlobalPosition(playerTransform);
-    const Vector3 targetPosition = TransformAPI::getGlobalPosition(targetTransform);
-
-    Vector3 flatPlayerPosition = outPlayerPosition;
-    Vector3 flatTargetPosition = targetPosition;
-
-    flatPlayerPosition.y = 0.0f;
-    flatTargetPosition.y = 0.0f;
-
-    outDirection = flatTargetPosition - flatPlayerPosition;
-    outDirection.y = 0.0f;
-
-    const float distanceSq = outDirection.LengthSquared();
-    if (distanceSq <= 0.0001f)
-    {
-        return false;
-    }
-
-    outDistance = sqrtf(distanceSq);
-    outDirection.Normalize();
-
-    return true;
+    Transform* arrowTransform = m_directionArrowTransform.getReferencedComponent();
+    setVisualActive(arrowTransform, false);
 }
 
 void LyrielTargetIndicatorUI::updateDirectionArrowTransform(Transform* arrowTransform, const Vector3& playerPosition, const Vector3& direction) const
@@ -122,25 +82,24 @@ void LyrielTargetIndicatorUI::updateDirectionArrowTransform(Transform* arrowTran
 
     TransformAPI::setGlobalPosition(arrowTransform, arrowPosition);
 
-    const float angleRadians = atan2f(flatDirection.z, flatDirection.x);
-    const float angleDegrees = DirectX::XMConvertToDegrees(angleRadians) + m_rotationOffsetDegrees;
-
+    const float angleDegrees = getDirectionAngleDegrees(flatDirection, m_rotationOffsetDegrees);
     TransformAPI::setRotationEuler(arrowTransform, Vector3(0.0f, 0.0f, angleDegrees));
 }
 
 void LyrielTargetIndicatorUI::updateDirectionArrowVisibility(bool shouldBeVisible)
 {
     Transform2D* arrowTransform2D = getDirectionArrowTransform2D();
+    Transform* arrowTransform = m_directionArrowTransform.getReferencedComponent();
 
     if (arrowTransform2D == nullptr)
     {
-        setDirectionArrowActive(shouldBeVisible);
+        setVisualActive(arrowTransform, shouldBeVisible);
         return;
     }
 
     if (shouldBeVisible)
     {
-        setDirectionArrowActive(true);
+        setVisualActive(arrowTransform, true);
     }
 
     const float currentAlpha = Transform2DAPI::getAlpha(arrowTransform2D);
@@ -157,20 +116,8 @@ void LyrielTargetIndicatorUI::updateDirectionArrowVisibility(bool shouldBeVisibl
 
     if (!shouldBeVisible && newAlpha <= 0.001f)
     {
-        setDirectionArrowActive(false);
+        setVisualActive(arrowTransform, false);
     }
-}
-
-void LyrielTargetIndicatorUI::setDirectionArrowActive(bool active)
-{
-    Transform* arrowTransform = m_directionArrowTransform.getReferencedComponent();
-    if (arrowTransform == nullptr)
-    {
-        return;
-    }
-
-    GameObject* arrowObject = ComponentAPI::getOwner(arrowTransform);
-    GameObjectAPI::setActive(arrowObject, active);
 }
 
 Transform2D* LyrielTargetIndicatorUI::getDirectionArrowTransform2D() const

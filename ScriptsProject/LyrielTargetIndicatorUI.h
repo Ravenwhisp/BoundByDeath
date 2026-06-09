@@ -18,12 +18,9 @@ protected:
     void hideDirectionIndicator() override;
 
 private:
-    bool tryGetDirectionToTarget(GameObject* currentTarget, Vector3& outPlayerPosition, Vector3& outDirection, float& outDistance) const;
-
     void updateDirectionArrowTransform(Transform* arrowTransform, const Vector3& playerPosition, const Vector3& direction) const;
 
     void updateDirectionArrowVisibility(bool shouldBeVisible);
-    void setDirectionArrowActive(bool active);
     Transform2D* getDirectionArrowTransform2D() const;
 
 public:
