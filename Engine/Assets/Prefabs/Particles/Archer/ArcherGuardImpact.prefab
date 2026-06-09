@@ -1,0 +1,230 @@
+{
+  "SourcePath": "Assets\\Prefabs\\Particles\\ArcherGuardImpact.prefab",
+  "Name": "ArcherGuardImpact",
+  "Version": 2,
+  "GameObject": {
+    "Name": "ArcherGuardImpact",
+    "Active": true,
+    "Tag": "DEFAULT",
+    "Layer": "DEFAULT",
+    "Transform": {
+      "position": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    "Components": [],
+    "Children": [
+      {
+        "Name": "ImpactSplash",
+        "Active": true,
+        "Tag": "DEFAULT",
+        "Layer": "DEFAULT",
+        "Transform": {
+          "position": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "Components": [
+          {
+            "Type": 17,
+            "Data": {
+              "UID": 6522225918258791587,
+              "ComponentType": 17,
+              "Active": true,
+              "TextureAssetId": {
+                "uid": 12947316424740063385,
+                "libId": "a6acc35a09babe130f350de4884f4c8e"
+              },
+              "ParticleEmitters": [
+                {
+                  "Modules": [
+                    {
+                      "ModuleType": 2,
+                      "Looping": false,
+                      "Duration": 0.30000001192092896,
+                      "RateOverTime": 17.100000381469727,
+                      "RateOverDistance": 0.0
+                    },
+                    {
+                      "ModuleType": 4,
+                      "StartLifeTime": 0.20000000298023224
+                    },
+                    {
+                      "ModuleType": 1,
+                      "ShapeType": 2,
+                      "Radius": 0.30000001192092896,
+                      "RadiusThickness": 0.0
+                    },
+                    {
+                      "ModuleType": 3,
+                      "StartColor": [
+                        1.0,
+                        0.913099,
+                        0.715694,
+                        1.0
+                      ],
+                      "EndColor": [
+                        0.052861,
+                        0.017642,
+                        0.000607,
+                        0.0
+                      ]
+                    },
+                    {
+                      "ModuleType": 5,
+                      "InitialVelocity": 4.0
+                    },
+                    {
+                      "ModuleType": 6,
+                      "StartScale": [
+                        0.5,
+                        0.5
+                      ],
+                      "EndScale": [
+                        1.5,
+                        1.5
+                      ]
+                    },
+                    {
+                      "ModuleType": 7,
+                      "StartRotation": 0.0,
+                      "VelocityType": 0,
+                      "AngularVelocity": 0.0,
+                      "FlipRotation": 0.5
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "Children": []
+      },
+      {
+        "Name": "CorruptionStain",
+        "Active": true,
+        "Tag": "DEFAULT",
+        "Layer": "DEFAULT",
+        "Transform": {
+          "position": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rotation": [
+            0.7071068286895752,
+            0.0,
+            0.0,
+            0.7071067690849304
+          ],
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "Components": [
+          {
+            "Type": 17,
+            "Data": {
+              "UID": 14260336964641071183,
+              "ComponentType": 17,
+              "Active": true,
+              "TextureAssetId": {
+                "uid": 15909538867754171662,
+                "libId": "1682de5f1f09666108b7d825231ee3bd"
+              },
+              "ParticleEmitters": [
+                {
+                  "Modules": [
+                    {
+                      "ModuleType": 2,
+                      "Looping": false,
+                      "Duration": 0.10000000149011612,
+                      "RateOverTime": 10.0,
+                      "RateOverDistance": 0.0
+                    },
+                    {
+                      "ModuleType": 4,
+                      "StartLifeTime": 5.0
+                    },
+                    {
+                      "ModuleType": 1,
+                      "ShapeType": 2,
+                      "Radius": 0.0,
+                      "RadiusThickness": 0.0
+                    },
+                    {
+                      "ModuleType": 3,
+                      "StartColor": [
+                        0.124772,
+                        0.039546,
+                        0.001821,
+                        1.0
+                      ],
+                      "EndColor": [
+                        0.052861,
+                        0.017642,
+                        0.000607,
+                        0.0
+                      ]
+                    },
+                    {
+                      "ModuleType": 5,
+                      "InitialVelocity": 0.0
+                    },
+                    {
+                      "ModuleType": 6,
+                      "StartScale": [
+                        2.0,
+                        2.0
+                      ],
+                      "EndScale": [
+                        2.5,
+                        2.5
+                      ]
+                    },
+                    {
+                      "ModuleType": 7,
+                      "StartRotation": 0.0,
+                      "VelocityType": 0,
+                      "AngularVelocity": 0.0,
+                      "FlipRotation": 0.0
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "Children": []
+      }
+    ]
+  }
+}

@@ -1,0 +1,132 @@
+{
+  "SourcePath": "Assets\\Prefabs\\Particles\\ArcherGuardCharge.prefab",
+  "Name": "ArcherGuardCharge",
+  "Version": 2,
+  "GameObject": {
+    "Name": "ArcherGuardCharge",
+    "Active": true,
+    "Tag": "DEFAULT",
+    "Layer": "DEFAULT",
+    "Transform": {
+      "position": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    "Components": [],
+    "Children": [
+      {
+        "Name": "ChargeOrb",
+        "Active": true,
+        "Tag": "DEFAULT",
+        "Layer": "DEFAULT",
+        "Transform": {
+          "position": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "Components": [
+          {
+            "Type": 17,
+            "Data": {
+              "UID": 14588024861692523293,
+              "ComponentType": 17,
+              "Active": true,
+              "TextureAssetId": {
+                "uid": 4380675350421491452,
+                "libId": "905768d99beecfb4fcc4d8b87cc52809"
+              },
+              "ParticleEmitters": [
+                {
+                  "Modules": [
+                    {
+                      "ModuleType": 2,
+                      "Looping": true,
+                      "Duration": 10.0,
+                      "RateOverTime": 5.0,
+                      "RateOverDistance": 0.0
+                    },
+                    {
+                      "ModuleType": 4,
+                      "StartLifeTime": 0.5
+                    },
+                    {
+                      "ModuleType": 1,
+                      "ShapeType": 1,
+                      "Radius": 0.0,
+                      "RadiusThickness": 0.0,
+                      "RadiusScale": 1.0
+                    },
+                    {
+                      "ModuleType": 3,
+                      "StartColor": [
+                        1.0,
+                        0.913099,
+                        0.715694,
+                        1.0
+                      ],
+                      "EndColor": [
+                        0.863157,
+                        0.346704,
+                        0.020289,
+                        0.0
+                      ]
+                    },
+                    {
+                      "ModuleType": 5,
+                      "InitialVelocity": 0.0
+                    },
+                    {
+                      "ModuleType": 6,
+                      "StartScale": [
+                        0.30000001192092896,
+                        0.30000001192092896
+                      ],
+                      "EndScale": [
+                        1.0,
+                        1.0
+                      ]
+                    },
+                    {
+                      "ModuleType": 7,
+                      "StartRotation": 0.0,
+                      "VelocityType": 0,
+                      "AngularVelocity": 0.0,
+                      "FlipRotation": 0.0
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "Children": []
+      }
+    ]
+  }
+}

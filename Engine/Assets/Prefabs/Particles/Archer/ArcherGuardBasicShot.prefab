@@ -1,0 +1,430 @@
+{
+  "SourcePath": "Assets\\Prefabs\\Particles\\ArcherGuardBasicShot.prefab",
+  "Name": "ArcherGuardBasicShot",
+  "Version": 2,
+  "GameObject": {
+    "Name": "ArcherGuardBasicShot",
+    "Active": true,
+    "Tag": "DEFAULT",
+    "Layer": "DEFAULT",
+    "Transform": {
+      "position": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    "Components": [],
+    "Children": [
+      {
+        "Name": "ArrowTrail",
+        "Active": true,
+        "Tag": "DEFAULT",
+        "Layer": "DEFAULT",
+        "Transform": {
+          "position": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "Components": [
+          {
+            "Type": 17,
+            "Data": {
+              "UID": 3897749387797847405,
+              "ComponentType": 17,
+              "Active": true,
+              "TextureAssetId": {
+                "uid": 17905927135886085238,
+                "libId": "d8d1ddaea9c386f7aec2a9c8b9df63ae"
+              },
+              "ParticleEmitters": [
+                {
+                  "Modules": [
+                    {
+                      "ModuleType": 2,
+                      "Looping": true,
+                      "Duration": 10.0,
+                      "RateOverTime": 20.0,
+                      "RateOverDistance": 0.0
+                    },
+                    {
+                      "ModuleType": 4,
+                      "StartLifeTime": 0.20000000298023224
+                    },
+                    {
+                      "ModuleType": 1,
+                      "ShapeType": 1,
+                      "Radius": 0.05,
+                      "RadiusThickness": 1.0,
+                      "RadiusScale": 0.5
+                    },
+                    {
+                      "ModuleType": 3,
+                      "StartColor": [
+                        1.0,
+                        0.913099,
+                        0.715694,
+                        1.0
+                      ],
+                      "EndColor": [
+                        0.863157,
+                        0.346704,
+                        0.020289,
+                        0.0
+                      ]
+                    },
+                    {
+                      "ModuleType": 5,
+                      "InitialVelocity": 0.30000001192092896
+                    },
+                    {
+                      "ModuleType": 6,
+                      "StartScale": [
+                        0.800000011920929,
+                        0.800000011920929
+                      ],
+                      "EndScale": [
+                        0.10000000149011612,
+                        0.10000000149011612
+                      ]
+                    },
+                    {
+                      "ModuleType": 7,
+                      "StartRotation": 0.0,
+                      "VelocityType": 0,
+                      "AngularVelocity": 0.0,
+                      "FlipRotation": 0.0
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "Children": []
+      },
+      {
+        "Name": "EmberSparks",
+        "Active": true,
+        "Tag": "DEFAULT",
+        "Layer": "DEFAULT",
+        "Transform": {
+          "position": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "Components": [
+          {
+            "Type": 17,
+            "Data": {
+              "UID": 6606295410818598843,
+              "ComponentType": 17,
+              "Active": true,
+              "TextureAssetId": {
+                "uid": 14944502442081492448,
+                "libId": "b5ba4a8b80e041a6d6c3fa6d490c4859"
+              },
+              "ParticleEmitters": [
+                {
+                  "Modules": [
+                    {
+                      "ModuleType": 2,
+                      "Looping": false,
+                      "Duration": 0.10000000149011612,
+                      "RateOverTime": 30.0,
+                      "RateOverDistance": 0.0
+                    },
+                    {
+                      "ModuleType": 4,
+                      "StartLifeTime": 0.30000001192092896
+                    },
+                    {
+                      "ModuleType": 1,
+                      "ShapeType": 2,
+                      "Radius": 0.20000000298023224,
+                      "RadiusThickness": 0.0
+                    },
+                    {
+                      "ModuleType": 3,
+                      "StartColor": [
+                        0.863157,
+                        0.346704,
+                        0.020289,
+                        1.0
+                      ],
+                      "EndColor": [
+                        0.124772,
+                        0.039546,
+                        0.001821,
+                        0.0
+                      ]
+                    },
+                    {
+                      "ModuleType": 5,
+                      "InitialVelocity": 3.0
+                    },
+                    {
+                      "ModuleType": 6,
+                      "StartScale": [
+                        0.15000000596046448,
+                        0.15000000596046448
+                      ],
+                      "EndScale": [
+                        0.0,
+                        0.0
+                      ]
+                    },
+                    {
+                      "ModuleType": 7,
+                      "StartRotation": 0.0,
+                      "VelocityType": 0,
+                      "AngularVelocity": 90.0,
+                      "FlipRotation": 0.5
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "Children": []
+      },
+      {
+        "Name": "NockBurstRing",
+        "Active": true,
+        "Tag": "DEFAULT",
+        "Layer": "DEFAULT",
+        "Transform": {
+          "position": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "Components": [
+          {
+            "Type": 17,
+            "Data": {
+              "UID": 16538696291007800490,
+              "ComponentType": 17,
+              "Active": true,
+              "TextureAssetId": {
+                "uid": 7930543677389543952,
+                "libId": "a5ecfc04cffb7d7d58f18e7957374ecf"
+              },
+              "ParticleEmitters": [
+                {
+                  "Modules": [
+                    {
+                      "ModuleType": 2,
+                      "Looping": false,
+                      "Duration": 1.0,
+                      "RateOverTime": 1.0,
+                      "RateOverDistance": 0.0
+                    },
+                    {
+                      "ModuleType": 4,
+                      "StartLifeTime": 0.25
+                    },
+                    {
+                      "ModuleType": 1,
+                      "ShapeType": 2,
+                      "Radius": 0.0,
+                      "RadiusThickness": 0.0
+                    },
+                    {
+                      "ModuleType": 3,
+                      "StartColor": [
+                        0.955973,
+                        0.571125,
+                        0.177888,
+                        1.0
+                      ],
+                      "EndColor": [
+                        0.863157,
+                        0.346704,
+                        0.020289,
+                        0.0
+                      ]
+                    },
+                    {
+                      "ModuleType": 5,
+                      "InitialVelocity": 0.0
+                    },
+                    {
+                      "ModuleType": 6,
+                      "StartScale": [
+                        0.5,
+                        0.5
+                      ],
+                      "EndScale": [
+                        2.0,
+                        2.0
+                      ]
+                    },
+                    {
+                      "ModuleType": 7,
+                      "StartRotation": 0.0,
+                      "VelocityType": 0,
+                      "AngularVelocity": 0.0,
+                      "FlipRotation": 0.0
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "Children": []
+      },
+      {
+        "Name": "EmberWisps",
+        "Active": true,
+        "Tag": "DEFAULT",
+        "Layer": "DEFAULT",
+        "Transform": {
+          "position": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "Components": [
+          {
+            "Type": 17,
+            "Data": {
+              "UID": 16770500831394431477,
+              "ComponentType": 17,
+              "Active": true,
+              "TextureAssetId": {
+                "uid": 15253520980476075893,
+                "libId": "4c8aa850cd8d2bc6a867889d5594cb52"
+              },
+              "ParticleEmitters": [
+                {
+                  "Modules": [
+                    {
+                      "ModuleType": 2,
+                      "Looping": true,
+                      "Duration": 10.0,
+                      "RateOverTime": 3.0,
+                      "RateOverDistance": 0.0
+                    },
+                    {
+                      "ModuleType": 4,
+                      "StartLifeTime": 1.5
+                    },
+                    {
+                      "ModuleType": 1,
+                      "ShapeType": 1,
+                      "Radius": 0.10000000149011612,
+                      "RadiusThickness": 0.5,
+                      "RadiusScale": 1.0
+                    },
+                    {
+                      "ModuleType": 3,
+                      "StartColor": [
+                        0.955973,
+                        0.571125,
+                        0.177888,
+                        1.0
+                      ],
+                      "EndColor": [
+                        0.491021,
+                        0.177888,
+                        0.008568,
+                        0.0
+                      ]
+                    },
+                    {
+                      "ModuleType": 5,
+                      "InitialVelocity": 0.800000011920929
+                    },
+                    {
+                      "ModuleType": 6,
+                      "StartScale": [
+                        0.20000000298023224,
+                        0.20000000298023224
+                      ],
+                      "EndScale": [
+                        0.05000000074505806,
+                        0.05000000074505806
+                      ]
+                    },
+                    {
+                      "ModuleType": 7,
+                      "StartRotation": 0.0,
+                      "VelocityType": 0,
+                      "AngularVelocity": 15.0,
+                      "FlipRotation": 0.5
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "Children": []
+      }
+    ]
+  }
+}
