@@ -16,7 +16,7 @@ protected:
     void hideDirectionIndicator() override;
 
 private:
-    bool tryGetDirectionToTarget(GameObject* currentTarget, Vector3& outPlayerPosition, Vector3& outDirection) const;
+    bool tryGetDirectionToTarget(GameObject* currentTarget, Vector3& outPlayerPosition, Vector3& outDirection, float& outDistance) const;
 
     void updateDirectionArrowTransform(Transform* arrowTransform, const Vector3& playerPosition, const Vector3& direction) const;
 
@@ -25,6 +25,8 @@ public:
 
     float m_forwardOffset = 1.0f;
     float m_heightOffset = 0.05f;
-    float m_rotationOffsetDegrees = 0.0f;
+    float m_rotationOffsetDegrees = -90.0f;
+
+    float m_minDistanceToShowArrow = 1.7f;
 
 };

@@ -6,7 +6,8 @@ IMPLEMENT_SCRIPT_FIELDS_INHERITED(LyrielTargetIndicatorUI, TargetIndicatorUI,
     SERIALIZED_COMPONENT_REF(m_directionArrowTransform, "Direction Arrow Transform", ComponentType::TRANSFORM),
     SERIALIZED_FLOAT(m_forwardOffset, "Forward Offset", 0.0f, 5.0f, 0.05f),
     SERIALIZED_FLOAT(m_heightOffset, "Height Offset", -1.0f, 1.0f, 0.01f),
-    SERIALIZED_FLOAT(m_rotationOffsetDegrees, "Rotation Offset Degrees", -180.0f, 180.0f, 1.0f)
+    SERIALIZED_FLOAT(m_rotationOffsetDegrees, "Rotation Offset Degrees", -180.0f, 180.0f, 1.0f),
+    SERIALIZED_FLOAT(m_minDistanceToShowArrow, "Min Distance To Show Arrow", 0.0f, 10.0f, 0.05f)
 )
 
 LyrielTargetIndicatorUI::LyrielTargetIndicatorUI(GameObject* owner)
@@ -25,8 +26,15 @@ void LyrielTargetIndicatorUI::updateDirectionIndicator(GameObject* currentTarget
 
     Vector3 playerPosition;
     Vector3 direction;
+    float distanceToTarget = 0.0f;
 
-    if (!tryGetDirectionToTarget(currentTarget, playerPosition, direction))
+    if (!tryGetDirectionToTarget(currentTarget, playerPosition, direction, distanceToTarget))
+    {
+        hideDirectionIndicator();
+        return;
+    }
+
+    if (distanceToTarget <= m_minDistanceToShowArrow)
     {
         hideDirectionIndicator();
         return;
@@ -50,8 +58,10 @@ void LyrielTargetIndicatorUI::hideDirectionIndicator()
     GameObjectAPI::setActive(arrowObject, false);
 }
 
-bool LyrielTargetIndicatorUI::tryGetDirectionToTarget(GameObject* currentTarget, Vector3& outPlayerPosition, Vector3& outDirection) const
+bool LyrielTargetIndicatorUI::tryGetDirectionToTarget(GameObject* currentTarget, Vector3& outPlayerPosition, Vector3& outDirection, float& outDistance) const
 {
+    outDistance = 0.0f;
+
     if (currentTarget == nullptr)
     {
         return false;
@@ -77,19 +87,19 @@ bool LyrielTargetIndicatorUI::tryGetDirectionToTarget(GameObject* currentTarget,
     outDirection = flatTargetPosition - flatPlayerPosition;
     outDirection.y = 0.0f;
 
-    if (outDirection.LengthSquared() <= 0.0001f)
+    const float distanceSq = outDirection.LengthSquared();
+    if (distanceSq <= 0.0001f)
     {
         return false;
     }
 
+    outDistance = sqrtf(distanceSq);
     outDirection.Normalize();
+
     return true;
 }
 
-void LyrielTargetIndicatorUI::updateDirectionArrowTransform(
-    Transform* arrowTransform,
-    const Vector3& playerPosition,
-    const Vector3& direction) const
+void LyrielTargetIndicatorUI::updateDirectionArrowTransform(Transform* arrowTransform, const Vector3& playerPosition, const Vector3& direction) const
 {
     if (arrowTransform == nullptr)
     {
