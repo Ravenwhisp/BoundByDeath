@@ -78,6 +78,29 @@ void PlayerTargetController::drawGizmo()
             drawLine(ownerPosition, targetPosition, yellow, 0, true);
         }
     }
+    
+	const Vector3 aimDir = computeAimDirection();
+
+    const Vector3 aimPosition = ownerPosition + aimDir * 3.0f;
+    drawLine(ownerPosition, aimPosition, yellow, 0, true);
+
+    const Vector3 posFlat = { ownerPosition.x, ownerPosition.y, ownerPosition.z };
+    const float halfRad = m_targetConeAngle * 0.5f * (3.14159265f / 180.0f);
+    const float range = m_targetRange;
+    const Vector3 colBase = yellow;
+
+    auto radialDir = [&](float a) -> Vector3
+        {
+            return Vector3(
+                aimDir.x * cosf(a) + aimDir.z * sinf(a),
+                0.0f,
+                -aimDir.x * sinf(a) + aimDir.z * cosf(a));
+        };
+
+    // Arc outline
+    DebugDrawAPI::drawLine(posFlat, posFlat + radialDir(-halfRad) * range, colBase);
+    DebugDrawAPI::drawLine(posFlat, posFlat + radialDir(halfRad) * range, colBase);
+
 }
 
 void PlayerTargetController::updateTargetsInRange()
