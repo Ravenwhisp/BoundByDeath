@@ -6,6 +6,7 @@ class CameraFollow;
 class CameraTransitionEvent;
 class PlayerController;
 class Damageable;
+class CameraComponent;
 
 class CameraTransitionController : public Script
 {
@@ -49,6 +50,7 @@ private:
 
 private:
     CameraFollow* m_cameraFollow = nullptr;
+    CameraComponent* m_cameraComponent = nullptr;
     CameraTransitionEvent* m_currentEvent = nullptr;
     std::vector<PlayerController*> m_playerControllers;
     std::vector<Damageable*> m_playerDamageables;
@@ -67,5 +69,8 @@ private:
 
     std::vector<Vector3> m_pathPositions;
     std::vector<Vector3> m_pathRotations;
+
+    float m_originalFov = 90.0f;
+    float m_returnStartFov = 90.0f;
 
 };

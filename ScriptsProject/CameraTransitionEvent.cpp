@@ -7,7 +7,9 @@
 IMPLEMENT_SCRIPT_FIELDS(CameraTransitionEvent,
     SERIALIZED_FLOAT(m_pathDuration, "Path Duration", 0.0f, 20.0f, 0.05f),
     SERIALIZED_FLOAT(m_holdDuration, "Hold Duration", 0.0f, 20.0f, 0.05f),
-    SERIALIZED_FLOAT(m_returnDuration, "Return Duration", 0.0f, 20.0f, 0.05f)
+    SERIALIZED_FLOAT(m_returnDuration, "Return Duration", 0.0f, 20.0f, 0.05f),
+    SERIALIZED_BOOL(m_useFovTransition, "Use FOV Transition"),
+    SERIALIZED_FLOAT(m_targetFov, "Target FOV", 5.0f, 120.0f, 0.1f)
 )
 
 CameraTransitionEvent::CameraTransitionEvent(GameObject* owner)

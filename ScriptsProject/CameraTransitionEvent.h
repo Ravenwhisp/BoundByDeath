@@ -27,6 +27,9 @@ public:
     float getHoldDuration() const { return m_holdDuration; }
     float getReturnDuration() const { return m_returnDuration; }
 
+    bool usesFovTransition() const { return m_useFovTransition; }
+    float getTargetFov() const { return m_targetFov; }
+
 private:
     void findTargetPoints();
     Transform* findCameraPointsRoot() const;
@@ -36,6 +39,9 @@ public:
     float m_pathDuration = 1.5f;
     float m_holdDuration = 1.0f;
     float m_returnDuration = 1.5f;
+
+    bool m_useFovTransition = false;
+    float m_targetFov = 90.0f;
 
 private:
     std::vector<Transform*> m_targetPoints;
