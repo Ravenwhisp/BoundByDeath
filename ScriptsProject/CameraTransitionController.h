@@ -50,7 +50,7 @@ private:
 
 private:
     CameraFollow* m_cameraFollow = nullptr;
-    CameraComponent* m_cameraComponent = nullptr;
+    CameraComponent* m_camera = nullptr;
     CameraTransitionEvent* m_currentEvent = nullptr;
     std::vector<PlayerController*> m_playerControllers;
     std::vector<Damageable*> m_playerDamageables;

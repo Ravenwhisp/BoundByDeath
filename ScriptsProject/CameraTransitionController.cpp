@@ -20,6 +20,13 @@ void CameraTransitionController::Start()
         Debug::warn("CameraTransitionController on '%s' could not find CameraFollow on the same GameObject.", GameObjectAPI::getName(getOwner()));
     }
 
+    m_camera = CameraAPI::getCameraComponent(getOwner());
+
+    if (m_camera == nullptr)
+    {
+        Debug::warn("CameraTransitionController on '%s' could not find CameraComponent on the same GameObject.", GameObjectAPI::getName(getOwner()));
+    }
+
     findPlayerControllers();
 }
 
@@ -74,6 +81,12 @@ void CameraTransitionController::startMovingToTarget(CameraTransitionEvent* even
     m_transitionStartPosition = TransformAPI::getGlobalPosition(cameraTransform);
     m_transitionStartRotation = TransformAPI::getGlobalEulerDegrees(cameraTransform);
 
+    if (m_camera != nullptr)
+    {
+        m_originalFov = CameraAPI::getFov(m_camera);
+        m_returnStartFov = m_originalFov;
+    }
+
     buildPathFromCurrentEvent();
 
     if (m_pathPositions.size() < 2)
@@ -95,12 +108,18 @@ void CameraTransitionController::updateMovingToTarget(float dt)
 {
     Transform* cameraTransform = GameObjectAPI::getTransform(getOwner());
 
-    const int segmentCount = static_cast<int>(m_pathPositions.size()) - 1;
     const float totalDuration = m_currentEvent->getPathDuration();
 
     m_timer += dt;
 
     const float normalizedTime = m_timer / totalDuration;
+
+    if (m_camera != nullptr && m_currentEvent->usesFovTransition())
+    {
+        const float newFov = MathAPI::lerp(m_originalFov, m_currentEvent->getTargetFov(), normalizedTime);
+
+        CameraAPI::setFov(m_camera, newFov);
+    }
 
     const Vector3 newPosition = evaluateCatmullRomPath(normalizedTime);
     const Vector3 newRotation = evaluateRotationPath(normalizedTime);
@@ -112,6 +131,11 @@ void CameraTransitionController::updateMovingToTarget(float dt)
     {
         TransformAPI::setGlobalPosition(cameraTransform, m_pathPositions.back());
         TransformAPI::setGlobalRotationEuler(cameraTransform, m_pathRotations.back());
+
+        if (m_camera != nullptr && m_currentEvent->usesFovTransition())
+        {
+            CameraAPI::setFov(m_camera, m_currentEvent->getTargetFov());
+        }
 
         m_state = TransitionState::Holding;
         m_timer = 0.0f;
@@ -134,6 +158,11 @@ void CameraTransitionController::updateHolding(float dt)
     m_returnStartPosition = TransformAPI::getGlobalPosition(cameraTransform);
     m_returnStartRotation = TransformAPI::getGlobalEulerDegrees(cameraTransform);
 
+    if (m_camera != nullptr)
+    {
+        m_returnStartFov = CameraAPI::getFov(m_camera);
+    }
+
     m_state = TransitionState::Returning;
     m_timer = 0.0f;
 }
@@ -149,6 +178,13 @@ void CameraTransitionController::updateReturning(float dt)
     const float normalizedTime = m_timer / duration;
     const float alpha = MathAPI::smoothStep(0.0f, 1.0f, normalizedTime);
 
+    if (m_camera != nullptr && m_currentEvent->usesFovTransition())
+    {
+        const float newFov = MathAPI::lerp(m_returnStartFov, m_originalFov, alpha);
+
+        CameraAPI::setFov(m_camera, newFov);
+    }
+
     const Vector3 newPosition = MathAPI::lerp(m_returnStartPosition, m_transitionStartPosition, alpha);
     const Vector3 newRotation = MathAPI::lerp(m_returnStartRotation, m_transitionStartRotation, alpha);
 
@@ -159,6 +195,11 @@ void CameraTransitionController::updateReturning(float dt)
     {
         TransformAPI::setGlobalPosition(cameraTransform, m_transitionStartPosition);
         TransformAPI::setGlobalRotationEuler(cameraTransform, m_transitionStartRotation);
+
+        if (m_camera != nullptr && m_currentEvent->usesFovTransition())
+        {
+            CameraAPI::setFov(m_camera, m_originalFov);
+        }
 
         finishTransition();
     }
