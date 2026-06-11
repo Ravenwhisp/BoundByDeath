@@ -1,0 +1,232 @@
+{
+  "SourcePath": "Assets\\Prefabs\\Particles\\StunStars.prefab",
+  "Name": "StunStars",
+  "Version": 2,
+  "GameObject": {
+    "Name": "StunStars",
+    "Active": true,
+    "Tag": "DEFAULT",
+    "Layer": "DEFAULT",
+    "Transform": {
+      "position": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    "Components": [],
+    "Children": [
+      {
+        "Name": "StarOrbit",
+        "Active": true,
+        "Tag": "DEFAULT",
+        "Layer": "DEFAULT",
+        "Transform": {
+          "position": [
+            0.0,
+            1.6,
+            0.0
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "Components": [
+          {
+            "Type": 17,
+            "Data": {
+              "UID": 7403317671168307646,
+              "ComponentType": 17,
+              "Active": true,
+              "TextureAssetId": {
+                "uid": 18273319153496833892,
+                "libId": "9fc075901c14acaba243881e70af8c69"
+              },
+              "ParticleEmitters": [
+                {
+                  "Modules": [
+                    {
+                      "ModuleType": 2,
+                      "Looping": true,
+                      "Duration": 10.0,
+                      "RateOverTime": 1.5,
+                      "RateOverDistance": 0.0
+                    },
+                    {
+                      "ModuleType": 4,
+                      "StartLifeTime": 2.0
+                    },
+                    {
+                      "ModuleType": 1,
+                      "ShapeType": 1,
+                      "Radius": 0.4000000059604645,
+                      "RadiusThickness": 1.0,
+                      "RadiusScale": 1.0
+                    },
+                    {
+                      "ModuleType": 3,
+                      "StartColor": [
+                        0.955973,
+                        0.571125,
+                        0.177888,
+                        1.0
+                      ],
+                      "EndColor": [
+                        0.491021,
+                        0.177888,
+                        0.008568,
+                        0.0
+                      ]
+                    },
+                    {
+                      "ModuleType": 5,
+                      "InitialVelocity": 0.10000000149011612
+                    },
+                    {
+                      "ModuleType": 6,
+                      "StartScale": [
+                        0.30000001192092896,
+                        0.30000001192092896
+                      ],
+                      "EndScale": [
+                        0.25,
+                        0.25
+                      ]
+                    },
+                    {
+                      "ModuleType": 7,
+                      "StartRotation": 0.0,
+                      "VelocityType": 0,
+                      "AngularVelocity": 90.0,
+                      "FlipRotation": 0.20000000298023224
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "Children": []
+      },
+      {
+        "Name": "StarTrail",
+        "Active": true,
+        "Tag": "DEFAULT",
+        "Layer": "DEFAULT",
+        "Transform": {
+          "position": [
+            0.0,
+            1.6,
+            0.0
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "Components": [
+          {
+            "Type": 17,
+            "Data": {
+              "UID": 12200119753502949506,
+              "ComponentType": 17,
+              "Active": true,
+              "TextureAssetId": {
+                "uid": 15384188213969556184,
+                "libId": "8b70a57c936fd81c3c2d5fa840d74406"
+              },
+              "ParticleEmitters": [
+                {
+                  "Modules": [
+                    {
+                      "ModuleType": 2,
+                      "Looping": true,
+                      "Duration": 10.0,
+                      "RateOverTime": 25.0,
+                      "RateOverDistance": 0.0
+                    },
+                    {
+                      "ModuleType": 4,
+                      "StartLifeTime": 0.15000000596046448
+                    },
+                    {
+                      "ModuleType": 1,
+                      "ShapeType": 1,
+                      "Radius": 0.4000000059604645,
+                      "RadiusThickness": 1.0,
+                      "RadiusScale": 1.0
+                    },
+                    {
+                      "ModuleType": 3,
+                      "StartColor": [
+                        0.955973,
+                        0.571125,
+                        0.177888,
+                        1.0
+                      ],
+                      "EndColor": [
+                        0.863157,
+                        0.346704,
+                        0.020289,
+                        0.0
+                      ]
+                    },
+                    {
+                      "ModuleType": 5,
+                      "InitialVelocity": 0.20000000298023224
+                    },
+                    {
+                      "ModuleType": 6,
+                      "StartScale": [
+                        0.5,
+                        0.5
+                      ],
+                      "EndScale": [
+                        0.05000000074505806,
+                        0.05000000074505806
+                      ]
+                    },
+                    {
+                      "ModuleType": 7,
+                      "StartRotation": 0.0,
+                      "VelocityType": 0,
+                      "AngularVelocity": 90.0,
+                      "FlipRotation": 0.0
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "Children": []
+      }
+    ]
+  }
+}
