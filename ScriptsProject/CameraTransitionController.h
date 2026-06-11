@@ -7,6 +7,7 @@ class CameraTransitionEvent;
 class PlayerController;
 class Damageable;
 class CameraComponent;
+class HUDFader;
 
 class CameraTransitionController : public Script
 {
@@ -48,10 +49,13 @@ private:
     void setPlayersGameplayInputLocked(bool locked);
     void setPlayersInvulnerable(bool invulnerable);
 
+    void findHUDFader();
+
 private:
     CameraFollow* m_cameraFollow = nullptr;
     CameraComponent* m_camera = nullptr;
     CameraTransitionEvent* m_currentEvent = nullptr;
+    HUDFader* m_hudFader = nullptr;
     std::vector<PlayerController*> m_playerControllers;
     std::vector<Damageable*> m_playerDamageables;
 
@@ -72,5 +76,8 @@ private:
 
     float m_originalFov = 90.0f;
     float m_returnStartFov = 90.0f;
+
+    float m_hudFadeOutDuration = 0.35f;
+    float m_hudFadeInDuration = 0.35f;
 
 };

@@ -5,6 +5,7 @@
 #include "CameraFollow.h"
 #include "CameraTransitionEvent.h"
 #include "Damageable.h"
+#include "HUDFader.h"
 
 CameraTransitionController::CameraTransitionController(GameObject* owner)
     : Script(owner)
@@ -28,6 +29,7 @@ void CameraTransitionController::Start()
     }
 
     findPlayerControllers();
+    findHUDFader();
 }
 
 void CameraTransitionController::Update()
@@ -102,6 +104,11 @@ void CameraTransitionController::startMovingToTarget(CameraTransitionEvent* even
 
     setPlayersGameplayInputLocked(true);
     setPlayersInvulnerable(true);
+
+    if (m_hudFader != nullptr)
+    {
+        m_hudFader->fadeTo(0.0f, m_hudFadeOutDuration);
+    }
 }
 
 void CameraTransitionController::updateMovingToTarget(float dt)
@@ -214,6 +221,11 @@ void CameraTransitionController::finishTransition()
 
     setPlayersGameplayInputLocked(false);
     setPlayersInvulnerable(false);
+
+    if (m_hudFader != nullptr)
+    {
+        m_hudFader->fadeTo(1.0f, m_hudFadeInDuration);
+    }
 
     m_currentEvent = nullptr;
     m_state = TransitionState::None;
@@ -346,6 +358,19 @@ void CameraTransitionController::setPlayersInvulnerable(bool invulnerable)
 
         damageable->setInvulnerable(invulnerable);
     }
+}
+
+void CameraTransitionController::findHUDFader()
+{
+    const std::vector<GameObject*> hudFaderObjects = SceneAPI::findAllGameObjectsWithScript<HUDFader>();
+
+    if (hudFaderObjects.empty())
+    {
+        Debug::warn("CameraTransitionController could not find any GameObject with HUDFader.");
+        return;
+    }
+
+    m_hudFader = GameObjectAPI::findScript<HUDFader>(hudFaderObjects[0]);
 }
 
 IMPLEMENT_SCRIPT(CameraTransitionController)
