@@ -39,6 +39,7 @@ void RangedEnemyController::Update()
     updateCurrentTarget();
     updateSomersaultCooldown(dt);
     updateArrowBarrageCooldown(dt);
+    updateStun(dt);
 }
 
 Transform* RangedEnemyController::acquireCurrentTarget()

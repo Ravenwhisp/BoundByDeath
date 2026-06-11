@@ -173,6 +173,8 @@
     <ClInclude Include="ArthurAttackConfig.h" />
     <ClInclude Include="ArthurAttackDebugDraw.h" />
     <ClInclude Include="ArthurUI.h" />
+    <ClInclude Include="EnemyAttackState.h" />
+    <ClInclude Include="EnemyBaseAttackConfig.h" />
     <ClInclude Include="CharacterUI.h" />
     <ClInclude Include="DeathConfig.h" />
     <ClInclude Include="DeathTargetIndicatorUI.h" />
@@ -205,13 +207,10 @@
     <ClInclude Include="DeathTaunt.h" />
     <ClInclude Include="EnemyBaseController.h" />
     <ClInclude Include="LyrielConfig.h" />
+    <ClInclude Include="EnemyStunnedState.h" />
     <ClInclude Include="LyrielSound.h" />
     <ClInclude Include="DebugDamageTrigger.h" />
     <ClInclude Include="DebugDrawTest.h" />
-    <ClInclude Include="EnemyATTACK.h" />
-    <ClInclude Include="ArcherAttackState.h" />
-    <ClInclude Include="EnemyCHARGE.h" />
-    <ClInclude Include="EnemyCHASE.h" />
     <ClInclude Include="BarrierEnemyDamageable.h" />
     <ClInclude Include="ArcherChaseState.h" />
     <ClInclude Include="EnemyDamageable.h" />
@@ -226,6 +225,10 @@
     <ClInclude Include="LightZoneTrigger.h" />
     <ClInclude Include="LyrielTargetIndicatorUI.h" />
     <ClInclude Include="LyrielUI.h" />
+    <ClInclude Include="MeleeEnemyController.h" />
+    <ClInclude Include="PaladinAttackConfig.h" />
+    <ClInclude Include="PaladinChargeState.h" />
+    <ClInclude Include="PaladinChaseState.h" />
     <ClInclude Include="PersistingPowerupState.h" />
     <ClInclude Include="PowerupCollectible.h" />
     <ClInclude Include="Pickup.h" />
@@ -235,10 +238,6 @@
     <ClInclude Include="ReaperGauge.h" />
     <ClInclude Include="ShadowExecution.h" />
     <ClInclude Include="EnemyDetectionAggro.h" />
-    <ClInclude Include="EnemyController.h" />
-    <ClInclude Include="EnemyIDLE.h" />
-    <ClInclude Include="EnemyRECOVER.h" />
-    <ClInclude Include="EnemySTUN.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="DefeatConditionManager.h" />
     <ClInclude Include="HealthPickup.h" />
@@ -281,6 +280,8 @@
     <ClCompile Include="ArthurAttackConfig.cpp" />
     <ClCompile Include="ArthurAttackDebugDraw.cpp" />
     <ClCompile Include="ArthurUI.cpp" />
+    <ClCompile Include="EnemyAttackState.cpp" />
+    <ClCompile Include="EnemyBaseAttackConfig.cpp" />
     <ClCompile Include="CharacterUI.cpp" />
     <ClCompile Include="DeathConfig.cpp" />
     <ClCompile Include="DeathTargetIndicatorUI.cpp" />
@@ -313,14 +314,11 @@
     <ClCompile Include="DeathTaunt.cpp" />
     <ClCompile Include="EnemyBaseController.cpp" />
     <ClCompile Include="LyrielConfig.cpp" />
+    <ClCompile Include="EnemyStunnedState.cpp" />
     <ClCompile Include="LyrielSound.cpp" />
     <ClCompile Include="DebugDamageTrigger.cpp" />
     <ClCompile Include="DebugDrawTest.cpp" />
     <ClCompile Include="dllmain.cpp" />
-    <ClCompile Include="EnemyATTACK.cpp" />
-    <ClCompile Include="ArcherAttackState.cpp" />
-    <ClCompile Include="EnemyCHARGE.cpp" />
-    <ClCompile Include="EnemyCHASE.cpp" />
     <ClCompile Include="BarrierEnemyDamageable.cpp" />
     <ClCompile Include="ArcherChaseState.cpp" />
     <ClCompile Include="EnemyDamageable.cpp" />
@@ -335,6 +333,10 @@
     <ClCompile Include="LightZoneTrigger.cpp" />
     <ClCompile Include="LyrielTargetIndicatorUI.cpp" />
     <ClCompile Include="LyrielUI.cpp" />
+    <ClCompile Include="MeleeEnemyController.cpp" />
+    <ClCompile Include="PaladinAttackConfig.cpp" />
+    <ClCompile Include="PaladinChargeState.cpp" />
+    <ClCompile Include="PaladinChaseState.cpp" />
     <ClCompile Include="PersistingPowerupState.cpp" />
     <ClCompile Include="PowerupCollectible.cpp" />
     <ClCompile Include="Pickup.cpp" />
@@ -346,10 +348,6 @@
     <ClCompile Include="EnemyDetectionAggro.cpp" />
     <ClCompile Include="DefeatConditionManager.cpp" />
     <ClCompile Include="HealthPickup.cpp" />
-    <ClCompile Include="EnemyController.cpp" />
-    <ClCompile Include="EnemyIDLE.cpp" />
-    <ClCompile Include="EnemyRECOVER.cpp" />
-    <ClCompile Include="EnemySTUN.cpp" />
     <ClCompile Include="EngineDependencies\SimpleMath.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>

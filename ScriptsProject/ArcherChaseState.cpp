@@ -43,6 +43,11 @@ void ArcherChaseState::OnStateUpdate()
         return;
     }
 
+    if (m_archerController->trySendStunTrigger(m_animation))
+    {
+        return;
+    }
+
     if (!m_archerController->hasValidTarget())
     {
         AnimationAPI::sendTrigger(m_animation, "ToIdle");

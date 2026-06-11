@@ -1,38 +1,38 @@
 #include "pch.h"
-#include "EnemyRecoverState.h"
+#include "EnemyStunnedState.h"
 
 #include "EnemyBaseController.h"
 
-EnemyRecoverState::EnemyRecoverState(GameObject* owner)
+EnemyStunnedState::EnemyStunnedState(GameObject* owner)
 	: StateMachineScript(owner)
 {
 }
 
-void EnemyRecoverState::OnStateEnter()
+void EnemyStunnedState::OnStateEnter()
 {
 	m_controller = GameObjectAPI::findScript<EnemyBaseController>(getOwner());
 	m_animation = AnimationAPI::getAnimationComponent(getOwner());
 
 	if (!m_controller)
 	{
-		Debug::error("[EnemyRecoverState] EnemyController not found.");
+		Debug::error("[EnemyStunnedState] EnemyController not found.");
 		return;
 	}
 
 	if (!m_animation)
 	{
-		Debug::error("[EnemyRecoverState] AnimationComponent not found.");
+		Debug::error("[EnemyStunnedState] AnimationComponent not found.");
 		return;
 	}
 
 	m_controller->clearPath();
 	m_controller->resetRepathTimer();
 	m_stateTimer = 0.0f;
-
-	Debug::log("[EnemyRecoverState] ENTER");
+	
+	Debug::log("[EnemyStunnedState] ENTER");
 }
 
-void EnemyRecoverState::OnStateUpdate()
+void EnemyStunnedState::OnStateUpdate()
 {
 	if (!m_controller || !m_animation)
 	{
@@ -44,31 +44,26 @@ void EnemyRecoverState::OnStateUpdate()
 		return;
 	}
 
-	if (m_controller->trySendStunTrigger(m_animation))
-	{
-		return;
-	}
-
 	m_stateTimer += Time::getDeltaTime();
-
 	m_controller->updateCurrentTarget();
+
 	if (!m_controller->hasValidTarget())
 	{
 		AnimationAPI::sendTrigger(m_animation, "ToIdle");
 		return;
 	}
 
-	if (m_stateTimer >= m_controller->getRecoveryDuration())
+	if (m_stateTimer >= m_controller->getStunnedDuration())
 	{
 		AnimationAPI::sendTrigger(m_animation, "ToChase");
 		return;
 	}
 }
 
-void EnemyRecoverState::OnStateExit()
+void EnemyStunnedState::OnStateExit()
 {
 	m_stateTimer = 0.0f;
-	Debug::log("[EnemyRecoverState] EXIT");
+	Debug::log("[EnemyStunnedState] EXIT");
 }
 
-IMPLEMENT_SCRIPT(EnemyRecoverState)
+IMPLEMENT_SCRIPT(EnemyStunnedState)

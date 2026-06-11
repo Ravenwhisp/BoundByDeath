@@ -3,16 +3,16 @@
 #include "ScriptAPI.h"
 #include "StateMachineScript.h"
 
-class RangedEnemyController;
-class ArcherAttackConfig;
+class EnemyBaseController;
+class EnemyBaseAttackConfig;
 class AnimationComponent;
 
-class ArcherAttackState : public StateMachineScript
+class EnemyAttackState : public StateMachineScript
 {
-    DECLARE_SCRIPT(ArcherAttackState)
+    DECLARE_SCRIPT(EnemyAttackState)
 
 public:
-    explicit ArcherAttackState(GameObject* owner);
+    explicit EnemyAttackState(GameObject* owner);
 
     void OnStateEnter() override;
     void OnStateUpdate() override;
@@ -22,8 +22,8 @@ private:
     void tryDamageTarget(Transform* targetTransform);
 
 private:
-    RangedEnemyController* m_archerController = nullptr;
-    ArcherAttackConfig* m_attackConfig = nullptr;
+    EnemyBaseController* m_controller = nullptr;
+    EnemyBaseAttackConfig* m_attackConfig = nullptr;
     AnimationComponent* m_animation = nullptr;
 
     Transform* m_committedTarget = nullptr;
