@@ -10,20 +10,9 @@
 #include "BreakableDamageable.h"
 #include "DeathUI.h"
 #include "EnemyBaseController.h"
+#include "DeathConfig.h"
 
 #include <cmath>
-
-IMPLEMENT_SCRIPT_FIELDS_INHERITED(DeathChargedAttack, DeathAbilityBase,
-    SERIALIZED_FLOAT(m_chargedAttackDamage, "Charged Attack Damage", 0.0f, 200.0f, 1.0f),
-    SERIALIZED_FLOAT(m_arcRange, "Arc Range", 0.5f, 10.0f, 0.1f),
-    SERIALIZED_FLOAT(m_arcAngle, "Arc Angle", 10.0f, 360.0f, 5.0f),
-    SERIALIZED_FLOAT(m_maxChargeTime, "Max Charge Time", 0.5f, 5.0f, 0.1f),
-    SERIALIZED_FLOAT(m_minChargeTime, "Min Charge Time", 0.0f, 3.0f, 0.05f),
-    SERIALIZED_FLOAT(m_attackLockDuration, "Attack Lock Duration", 0.05f, 2.0f, 0.05f),
-    SERIALIZED_FLOAT(m_finalHitLockDuration, "Final Hit Lock Duration", 0.05f, 3.0f, 0.05f),
-    SERIALIZED_FLOAT(m_chargedArcRange, "Charged Arc Range", 0.5f, 10.0f, 0.1f),
-    SERIALIZED_FLOAT(m_chargedArcAngle, "Charged Arc Angle", 10.0f, 360.0f, 5.0f)
-)
 
 DeathChargedAttack::DeathChargedAttack(GameObject* owner)
     : DeathAbilityBase(owner)
@@ -63,7 +52,7 @@ void DeathChargedAttack::Update()
             }
         }
 
-        const bool maxReached = m_chargeTime >= m_maxChargeTime;
+        const bool maxReached = m_chargeTime >= m_config->m_chargedMaxChargeTime;
         const bool released = Input::isRightTriggerReleased(getPlayerIndex());
 
         if (maxReached || released)
@@ -119,27 +108,27 @@ void DeathChargedAttack::fireAttack()
     snapFaceAimDirection();
 
     const int   comboStep   = m_deathCharacter->getComboStep();
-    const bool  isMaxCharge = (m_chargeTime >= m_maxChargeTime);
+    const bool  isMaxCharge = (m_chargeTime >= m_config->m_chargedMaxChargeTime);
 
     // Charged-mode shot: only valid as combo starter (step 0), needs min charge time
-    const bool isChargedShot = (m_chargeTime >= m_minChargeTime) && (comboStep == 0);
+    const bool isChargedShot = (m_chargeTime >= m_config->m_chargedMinChargeTime) && (comboStep == 0);
 
     float damage;
     if (isChargedShot)
     {
-        const float rawRatio    = m_chargeTime / m_maxChargeTime;
+        const float rawRatio    = m_chargeTime / m_config->m_chargedMaxChargeTime;
         const float chargeRatio = rawRatio > 1.0f ? 1.0f : rawRatio;
-        damage = m_chargedAttackDamage * (1.0f + chargeRatio);
+        damage = m_config->m_chargedAttackDamage * (1.0f + chargeRatio);
 
         if (isMaxCharge)
             Debug::log("[COMBO] R2 CARGA MAXIMA  step %d/3  dmg=%.1f", comboStep + 1, damage);
         else
             Debug::log("[COMBO] R2 CARGADO  step %d/3  ratio=%.0f%%  dmg=%.1f",
-                comboStep + 1, (m_chargeTime / m_maxChargeTime) * 100.0f, damage);
+                comboStep + 1, (m_chargeTime / m_config->m_chargedMaxChargeTime) * 100.0f, damage);
     }
     else
     {
-        damage = m_chargedAttackDamage;
+        damage = m_config->m_chargedAttackDamage;
         Debug::log("[COMBO] R2  step %d/3  dmg=%.1f", comboStep + 1, damage);
     }
 
@@ -159,12 +148,15 @@ void DeathChargedAttack::fireAttack()
         }
     }
 
-    dealDamageInArc(damage, m_chargedArcRange, m_chargedArcAngle, isChargedShot, isMaxCharge);
+    const float range = isChargedShot ? m_config->m_chargedShotArcRange : m_config->m_chargedArcRange;
+    const float angle = isChargedShot ? m_config->m_chargedShotArcAngle : m_config->m_chargedArcAngle;
+
+    dealDamageInArc(damage, range, angle, isChargedShot, isMaxCharge);
 
     // Max charge (auto-fired at full charge, always step 0) gets longer combo window
     const float window = (isChargedShot && isMaxCharge)
-        ? m_deathCharacter->m_comboWindowMaxCharge
-        : m_deathCharacter->m_comboWindowR2;
+        ? m_deathCharacter->getComboWindowMaxCharge()
+        : m_deathCharacter->getComboWindowR2();
     m_deathCharacter->advanceCombo(true, window);
 
     const bool isLast = (comboStep >= 2);
@@ -174,7 +166,7 @@ void DeathChargedAttack::fireAttack()
     m_chargeTime = 0.0f;
     m_isCharging = false;
 
-    const float lockDuration = (comboStep >= 2) ? m_finalHitLockDuration : m_attackLockDuration;
+    const float lockDuration = (comboStep >= 2) ? m_config->m_chargedFinalHitLockDuration : m_config->m_chargedAttackLockDuration;
 
     // Trigger attack animation and start the post-fire movement lock window
     beginAttackPresentation();
@@ -182,7 +174,7 @@ void DeathChargedAttack::fireAttack()
     startCooldown();
 }
 
-void DeathChargedAttack::dealDamageInArc(float damage, bool isChargedShot, bool isMaxCharge) const
+void DeathChargedAttack::dealDamageInArc(float damage, float range, float angle, bool isChargedShot, bool isMaxCharge) const
 {
     const Transform* myTransform = GameObjectAPI::getTransform(m_owner);
     if (myTransform == nullptr)
@@ -201,8 +193,8 @@ void DeathChargedAttack::dealDamageInArc(float damage, bool isChargedShot, bool 
     }
 
     constexpr float k_degToRad = 3.14159265f / 180.0f;
-    const float     halfAngleCos = cosf(m_arcAngle * 0.5f * k_degToRad);
-    const float     arcRangeSq = m_arcRange * m_arcRange;
+    const float halfAngleCos = cosf(angle * 0.5f * k_degToRad);
+    const float arcRangeSq = range * range;
 
     const auto enemies = SceneAPI::findAllGameObjectsByTag(Tag::ENEMY);
 	const auto breakables = SceneAPI::findAllGameObjectsByTag(Tag::BREAKABLE);
@@ -236,10 +228,11 @@ void DeathChargedAttack::dealDamageInArc(float damage, bool isChargedShot, bool 
             continue;
         }
 
-        if (m_arcAngle < 360.0f && distSq > 0.0001f)
+        if (angle < 360.0f && distSq > 0.0001f)
         {
             Vector3 toEnemyNorm = toEnemy;
             toEnemyNorm.Normalize();
+
             if (myForward.Dot(toEnemyNorm) < halfAngleCos)
             {
                 continue;
@@ -308,17 +301,6 @@ void DeathChargedAttack::dealDamageInArc(float damage, bool isChargedShot, bool 
     }
 }
 
-void DeathChargedAttack::dealDamageInArc(float damage, float range, float angle, bool isChargedShot, bool isMaxCharge) const //charged attack
-{
-    const float savedRange = m_arcRange;
-    const float savedAngle = m_arcAngle;
-    const_cast<DeathChargedAttack*>(this)->m_arcRange = range;
-    const_cast<DeathChargedAttack*>(this)->m_arcAngle = angle;
-    dealDamageInArc(damage, isChargedShot, isMaxCharge);
-    const_cast<DeathChargedAttack*>(this)->m_arcRange = savedRange;
-    const_cast<DeathChargedAttack*>(this)->m_arcAngle = savedAngle;
-}
-
 void DeathChargedAttack::updateAimDirection()
 {
     Vector3 aimDirection = computeCameraRelativeAimDirection(0.09f);
@@ -367,6 +349,11 @@ void DeathChargedAttack::onAttackWindowFinished()
     }
 }
 
+float DeathChargedAttack::getCooldown() const
+{
+    return m_config->m_chargedCooldown;
+}
+
 void DeathChargedAttack::drawGizmo()
 {
     if (m_deathCharacter == nullptr)
@@ -377,7 +364,7 @@ void DeathChargedAttack::drawGizmo()
         return;
 
     const Vector3 pos   = TransformAPI::getPosition(t);
-    const float   range = m_chargedArcRange;
+    const float   range = m_config->m_chargedArcRange;
 
     // While charging with stick input, show arc in aim direction; otherwise use character forward
     Vector3 fwd;
@@ -390,7 +377,7 @@ void DeathChargedAttack::drawGizmo()
     {
         fwd = TransformAPI::getForward(t);
     }
-    const float   angle   = m_chargedArcAngle;
+    const float   angle   = m_config->m_chargedArcAngle;
     const Vector3 posFlat = { pos.x, pos.y, pos.z };
 
     constexpr float k_degToRad = 3.14159265f / 180.0f;
@@ -424,9 +411,9 @@ void DeathChargedAttack::drawGizmo()
     }
 
     // Charge fill: yellow overlay that grows with charge ratio
-    if (m_isCharging && m_maxChargeTime > 0.0f)
+    if (m_isCharging && m_config->m_chargedMaxChargeTime > 0.0f)
     {
-        const float ratio   = m_chargeTime / m_maxChargeTime;
+        const float ratio   = m_chargeTime / m_config->m_chargedMaxChargeTime;
         const float clamped = ratio > 1.0f ? 1.0f : ratio;
         const int   fillEnd = static_cast<int>(clamped * static_cast<float>(arcSegs));
 
@@ -446,7 +433,7 @@ void DeathChargedAttack::updateUI()
 
     if (m_deathUI)
     {
-        m_deathUI->updateChargedSlashUI(m_attackStateTimer, m_attackLockDuration);
+        m_deathUI->updateChargedSlashUI(m_attackStateTimer, m_config->m_chargedAttackLockDuration);
     }
 }
 

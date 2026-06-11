@@ -17,20 +17,19 @@ public:
     void Update() override;
     void drawGizmo() override;
 
-    ScriptFieldList getExposedFields() const override;
-
 protected:
 	void startAbility() override;
 
     void onAttackWindowUpdate() override;
     void onAttackWindowFinished() override;
 
+    float getCooldown() const override;
+
 private:
     void beginAim();
     void updateAim();
     void releaseAimAndCast();
 
-    bool canStartAim() const;
     bool canCast() const;
 
     Vector3 computeAimDirection() const;
@@ -41,16 +40,6 @@ private:
     void spawnVolleyArrows(const Vector3& origin, const Vector3& forward);
 
     void drawAimPreview(const Vector3& origin, const Vector3& forward) const;
-
-public:
-    float m_volleyDamage = 20.0f;
-    float m_volleyRange = 8.0f;
-    float m_coneAngleDegrees = 50.0f;
-
-    int m_numVisualArrows = 5;
-    float m_arrowSpeed = 18.0f;
-
-    float m_attackLockDuration = 0.2f;
 
 private:
     LyrielUI* m_lyrielUI = nullptr;

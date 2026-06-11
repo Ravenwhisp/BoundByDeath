@@ -17,7 +17,6 @@ static const char* abilityUISlotNames[] =
 constexpr int abilityUISlotCount = 4;
 
 IMPLEMENT_SCRIPT_FIELDS(AbilityBase,
-    SERIALIZED_FLOAT(m_cooldown, "Cooldown", 0.0f, 10.0f, 0.01f),
     SERIALIZED_ENUM_INT(m_uiSlot, "UI Slot", abilityUISlotNames, abilityUISlotCount)
 )
 
@@ -70,6 +69,11 @@ void AbilityBase::updateCooldown(float dt)
     }
 
     m_cooldownTimer -= dt;
+
+    if (m_cooldownTimer < 0.0f)
+    {
+        m_cooldownTimer = 0.0f;
+    }
 }
 
 void AbilityBase::updateUI()
@@ -79,31 +83,28 @@ void AbilityBase::updateUI()
         return;
     }
 
+    const float cooldown = getCooldown();
     const AbilityUISlot slot = static_cast<AbilityUISlot>(m_uiSlot);
 
-    if (m_cooldownTimer <= 0.0f)
+    if (m_cooldownTimer <= 0.0f || cooldown <= 0.0001f)
     {
         m_characterUI->hideAbilityCooldown(slot);
         return;
     }
 
-    if (m_cooldown <= 0.0001f)
-    {
-        m_characterUI->hideAbilityCooldown(slot);
-        return;
-    }
-
-    m_characterUI->updateAbilityCooldown(slot, m_cooldownTimer / m_cooldown);
+    m_characterUI->updateAbilityCooldown(slot, m_cooldownTimer / cooldown);
 }
 
 void AbilityBase::reduceCooldown(float fraction)
 {
-    if (m_cooldownTimer <= 0.0f || fraction <= 0.0f || m_cooldown <= 0.0f)
+    const float cooldown = getCooldown();
+
+    if (m_cooldownTimer <= 0.0f || fraction <= 0.0f || cooldown <= 0.0f)
     {
         return;
     }
 
-    m_cooldownTimer -= fraction * m_cooldown;
+    m_cooldownTimer -= fraction * cooldown;
 
     if (m_cooldownTimer <= 0.0f)
     {
@@ -119,13 +120,13 @@ void AbilityBase::reduceCooldown(float fraction)
 
     if (m_characterUI)
     {
-        m_characterUI->updateAbilityCooldown(static_cast<AbilityUISlot>(m_uiSlot), m_cooldownTimer / m_cooldown);
+        m_characterUI->updateAbilityCooldown(static_cast<AbilityUISlot>(m_uiSlot), m_cooldownTimer / cooldown);
     }
 }
 
 void AbilityBase::startCooldown()
 {
-    m_cooldownTimer = m_cooldown;
+    m_cooldownTimer = getCooldown();
 
     if (m_characterUI)
     {

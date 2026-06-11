@@ -4,6 +4,8 @@
 
 class LyrielSound;
 class LyrielUI;
+class LyrielCharacter;
+class LyrielConfig;
 
 class LyrielDash : public AbilityDash
 {
@@ -13,11 +15,14 @@ public:
     explicit LyrielDash(GameObject* owner);
 
     void Start() override;
-    ScriptFieldList getExposedFields() const override;
 
     void recoverCharge();
 
 protected:
+    float getCooldown() const override;
+    float getDashDuration() const override;
+    float getDashDistance() const override;
+
     bool canDash() const override;
     void onDashStarted() override;
     void onDashUpdate(float dt) override;
@@ -25,10 +30,10 @@ protected:
     void drawGizmo() override;
 
 private:
+    LyrielCharacter* m_lyrielCharacter = nullptr;
+    LyrielConfig* m_config = nullptr;
     LyrielUI* m_lyrielUI = nullptr;
 
-    float m_chargeRechargeTime = 3.0f;
-    int m_maxCharges = 3;
     int m_currentCharges = 0;
     float m_chargeRecoveryTimer = 0.0f;
 

@@ -7,15 +7,9 @@
 #include "PersistingPowerupState.h"
 #include "EnemyShadowMark.h"
 #include "DeathUI.h"
+#include "DeathConfig.h"
 
 #include <cmath>
-
-IMPLEMENT_SCRIPT_FIELDS_INHERITED(DeathTaunt, DeathAbilityBase,
-    SERIALIZED_FLOAT(m_tauntDuration, "Taunt Duration", 0.0f, 10.0f, 0.1f),
-    SERIALIZED_FLOAT(m_TauntDurationSeconds, "Ability Duration", 1.0f, 10.0f, 0.05f),
-    SERIALIZED_FLOAT(m_TauntRange, "Cone Range", 1.0f, 10.0f, 0.1f),
-    SERIALIZED_FLOAT(m_TauntHalfAngleDegrees, "Cone Angle", 1.0f, 180.0f, 1.0f)
-)
 
 DeathTaunt::DeathTaunt(GameObject* owner)
     : DeathAbilityBase(owner)
@@ -84,6 +78,11 @@ bool DeathTaunt::canStartSpecificAbility() const
     return !m_isAiming;
 }
 
+float DeathTaunt::getCooldown() const
+{
+    return m_config->m_tauntCooldown;
+}
+
 void DeathTaunt::startAbility()
 {
 	beginAim();
@@ -117,7 +116,7 @@ void DeathTaunt::drawGizmo()
 
     ownerForward.Normalize();
 
-    const float clampedHalfAngle = (m_TauntHalfAngleDegrees < 0.1f) ? 0.1f : ((m_TauntHalfAngleDegrees > 89.9f) ? 89.9f : m_TauntHalfAngleDegrees);
+    const float clampedHalfAngle = (m_config->m_tauntHalfAngleDegrees < 0.1f) ? 0.1f : ((m_config->m_tauntHalfAngleDegrees > 89.9f) ? 89.9f : m_config->m_tauntHalfAngleDegrees);
     const float halfAngleRadians = clampedHalfAngle * (3.14159265f / 180.0f);
 
     const int numSteps = 16;
@@ -134,16 +133,8 @@ void DeathTaunt::drawGizmo()
             direction.x * std::sin(angle) + direction.z * std::cos(angle)
         );
         direction.Normalize();
-        Vector3 arcPoint = ownerPosition + direction * m_TauntRange;
+        Vector3 arcPoint = ownerPosition + direction * m_config->m_tauntRange;
         DebugDrawAPI::drawLine(ownerPosition, arcPoint, color, 0, false);
-    }
-}
-
-void DeathTaunt::onFieldEdited(const ScriptFieldInfo& field)
-{
-    if (strcmp(field.name, "Cone Range") == 0 || strcmp(field.name, "Cone Angle") == 0)
-    {
-        m_debugConeTimer = 1.0f;
     }
 }
 
@@ -254,8 +245,8 @@ void DeathTaunt::applyTauntToEnemiesInCone(const Vector3& ownerForward) const
             continue;
         }
 
-        enemyAggro->applyTaunt(ownerTransform, m_TauntDurationSeconds);
-        Debug::log("[DeathTaunt] Taunt applied to '%s' for %.1fs.", GameObjectAPI::getName(enemy), m_TauntDurationSeconds);
+        enemyAggro->applyTaunt(ownerTransform, m_config->m_tauntDuration);
+        Debug::log("[DeathTaunt] Taunt applied to '%s' for %.1fs.", GameObjectAPI::getName(enemy), m_config->m_tauntDuration);
 
         if (PersistingPowerupState::isUnlocked(PowerupId::DeathPowerup1))
         {
@@ -330,7 +321,7 @@ bool DeathTaunt::isEnemyInsideTauntCone(GameObject* enemy, const Vector3& ownerP
     directionToEnemy.y = 0.0f;
 
     const float distanceToEnemy = directionToEnemy.Length();
-    if (distanceToEnemy <= 0.0f || distanceToEnemy > m_TauntRange)
+    if (distanceToEnemy <= 0.0f || distanceToEnemy > m_config->m_tauntRange)
     {
         return false;
     }
@@ -344,7 +335,7 @@ bool DeathTaunt::isEnemyInsideTauntCone(GameObject* enemy, const Vector3& ownerP
     flattenedForward.Normalize();
     directionToEnemy.Normalize();
 
-    const float halfAngleRadians = m_TauntHalfAngleDegrees * (3.14159265f / 180.0f);
+    const float halfAngleRadians = m_config->m_tauntHalfAngleDegrees * (3.14159265f / 180.0f);
     const float coneThreshold = std::cos(halfAngleRadians);
 
     // TODO: Add a line-of-sight / wall check before confirming the taunt hit.

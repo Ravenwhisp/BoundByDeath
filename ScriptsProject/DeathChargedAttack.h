@@ -15,8 +15,6 @@ public:
     void Update()    override;
     void drawGizmo() override;
 
-    ScriptFieldList getExposedFields() const override;
-
 protected:
     void startAbility() override;
 
@@ -25,26 +23,16 @@ protected:
     void onAttackWindowUpdate()     override;
     void onAttackWindowFinished()   override;
 
+    float getCooldown() const override;
+
 private:
     void startCharging();
     void fireAttack();
-    void dealDamageInArc(float damage, bool isChargedShot, bool isMaxCharge) const;
     void dealDamageInArc(float damage, float range, float angle, bool isChargedShot, bool isMaxCharge) const;
     void updateAimDirection();
     void snapFaceAimDirection();
 
     void updateUI() override;
-
-public:
-    float m_chargedAttackDamage = 40.0f;
-    float m_arcRange = 2.5f;
-    float m_arcAngle = 120.0f;
-    float m_maxChargeTime = 2.0f;
-    float m_minChargeTime = 0.5f;
-    float m_attackLockDuration = 0.4f;
-    float m_finalHitLockDuration = 0.8f;
-    float m_chargedArcRange = 3.5f;
-    float m_chargedArcAngle = 150.0f;
 
 private:
     DeathUI* m_deathUI = nullptr;
