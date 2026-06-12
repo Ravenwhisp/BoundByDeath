@@ -115,6 +115,12 @@
     <Filter Include="Enemies\Paladin\States">
       <UniqueIdentifier>{354fd5fd-3f85-4b65-a21e-b65564c3e224}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Interaction/Gameplay\Events">
+      <UniqueIdentifier>{baef95a7-49dc-4f68-9fbe-d1220cdade01}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Interaction/Gameplay\Events\Camera">
+      <UniqueIdentifier>{4f36a9ae-6441-4cb1-a5b0-d1d06d4dc161}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -406,6 +412,18 @@
     </ClInclude>
     <ClInclude Include="DeathTargetIndicatorUI.h">
       <Filter>Player\Targeting\Death</Filter>
+    </ClInclude>
+    <ClInclude Include="GameplayEventTrigger.h">
+      <Filter>Interaction/Gameplay\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="GameplayEventAction.h">
+      <Filter>Interaction/Gameplay\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraTransitionEvent.h">
+      <Filter>Interaction/Gameplay\Events\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraTransitionController.h">
+      <Filter>Interaction/Gameplay\Events\Camera</Filter>
     </ClInclude>
     <ClInclude Include="EnemyStunnedState.h">
       <Filter>Enemies\BaseStates</Filter>
@@ -741,6 +759,15 @@
     </ClCompile>
     <ClCompile Include="DeathTargetIndicatorUI.cpp">
       <Filter>Player\Targeting\Death</Filter>
+    </ClCompile>
+    <ClCompile Include="GameplayEventTrigger.cpp">
+      <Filter>Interaction/Gameplay\Events</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraTransitionEvent.cpp">
+      <Filter>Interaction/Gameplay\Events\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraTransitionController.cpp">
+      <Filter>Interaction/Gameplay\Events\Camera</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

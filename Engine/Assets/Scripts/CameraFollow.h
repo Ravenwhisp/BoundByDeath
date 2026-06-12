@@ -16,6 +16,9 @@ public:
 
     ScriptFieldList getExposedFields() const override;
 
+    void setFollowEnabled(bool enabled) { m_followEnabled = enabled; }
+    bool isFollowEnabled() const { return m_followEnabled; }
+
 public:
     ScriptComponentRef<Transform> m_firstTarget;
     ScriptComponentRef<Transform> m_secondTarget;
@@ -43,5 +46,6 @@ private:
 private:
     bool m_firstUpdateAfterResolve = true;
 
+    bool m_followEnabled = true;
     float m_currentExtraHeight = 0.0f;
 };

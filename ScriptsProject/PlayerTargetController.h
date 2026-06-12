@@ -3,6 +3,7 @@
 #include "ScriptAPI.h"
 #include <vector>
 
+class PlayerController;
 class CharacterBase;
 class DeathSound;
 class LyrielSound;
@@ -51,7 +52,9 @@ public:
     float m_switchCooldown = 0.25f;
 
 private:
+    PlayerController* m_playerController = nullptr;
     CharacterBase* m_character = nullptr;
+
     GameObject* m_currentTarget = nullptr;
     std::vector<GameObject*> m_targetsInRange;
 
