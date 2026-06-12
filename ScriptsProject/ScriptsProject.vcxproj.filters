@@ -121,6 +121,9 @@
     <Filter Include="Interaction/Gameplay\Events\Camera">
       <UniqueIdentifier>{4f36a9ae-6441-4cb1-a5b0-d1d06d4dc161}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Interaction/Gameplay\Events\PopUp">
+      <UniqueIdentifier>{f5133925-52af-42ef-9418-8a5323556ee6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -446,6 +449,13 @@
     <ClInclude Include="PaladinChargeState.h">
       <Filter>Enemies\Paladin\States</Filter>
     </ClInclude>
+    <ClInclude Include="HUDFader.h" />
+    <ClInclude Include="PopUpEvent.h">
+      <Filter>Interaction/Gameplay\Events\PopUp</Filter>
+    </ClInclude>
+    <ClInclude Include="PopUpController.h">
+      <Filter>Interaction/Gameplay\Events\PopUp</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
@@ -768,6 +778,13 @@
     </ClCompile>
     <ClCompile Include="CameraTransitionController.cpp">
       <Filter>Interaction/Gameplay\Events\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="HUDFader.cpp" />
+    <ClCompile Include="PopUpEvent.cpp">
+      <Filter>Interaction/Gameplay\Events\PopUp</Filter>
+    </ClCompile>
+    <ClCompile Include="PopUpController.cpp">
+      <Filter>Interaction/Gameplay\Events\PopUp</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
