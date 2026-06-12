@@ -40,12 +40,14 @@ public:
 
     Transform2D* getTutorialUIImageTransform2D() const { return m_tutorialUIImage.getReferencedComponent(); }
 
-    float getShowDuration() const { return m_showDuration; }
-    float getHideDuration() const { return m_hideDuration; }
-
     TutorialUIEventType getEventType() const { return static_cast<TutorialUIEventType>(m_eventType); }
     TutorialUITransitionType getTransitionType() const { return static_cast<TutorialUITransitionType>(m_transitionType); }
     TutorialUICloseMode getCloseMode() const { return static_cast<TutorialUICloseMode>(m_closeMode); }
+
+    float getShowDuration() const { return m_showDuration; }
+    float getHideDuration() const { return m_hideDuration; }
+
+    bool shouldLockGameplay() const { return m_lockGameplay; }
 
 private:
     TutorialUIController* findTutorialUIController() const;
@@ -59,4 +61,6 @@ public:
 
     float m_showDuration = 0.25f;
     float m_hideDuration = 0.25f;
+
+    bool m_lockGameplay = true;
 };

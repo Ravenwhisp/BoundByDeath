@@ -25,15 +25,15 @@ private:
     enum class TutorialUIState
     {
         None,
-        FadingIn,
-        WaitingForConfirmation,
-        FadingOut
+        Showing,
+        Waiting,
+        Hiding
     };
 
 private:
-    void updateFadingIn(float dt);
-    void updateWaitingForConfirmation();
-    void updateFadingOut(float dt);
+    void updateShowing(float dt);
+    void updateWaiting();
+    void updateHiding(float dt);
 
     void finishTutorialUI();
 

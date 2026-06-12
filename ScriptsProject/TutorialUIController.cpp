@@ -26,16 +26,16 @@ void TutorialUIController::Update()
 
     switch (m_state)
     {
-    case TutorialUIState::FadingIn:
-        updateFadingIn(dt);
+    case TutorialUIState::Showing:
+        updateShowing(dt);
         break;
 
-    case TutorialUIState::WaitingForConfirmation:
-        updateWaitingForConfirmation();
+    case TutorialUIState::Waiting:
+        updateWaiting();
         break;
 
-    case TutorialUIState::FadingOut:
-        updateFadingOut(dt);
+    case TutorialUIState::Hiding:
+        updateHiding(dt);
         break;
 
     case TutorialUIState::None:
@@ -60,7 +60,7 @@ void TutorialUIController::startTutorialUI(TutorialUIEvent* event)
     m_currentTutorialUIImage = event->getTutorialUIImageTransform2D();
 
     m_isShowingTutorialUI = true;
-    m_state = TutorialUIState::FadingIn;
+    m_state = TutorialUIState::Showing;
 
     m_timer = 0.0f;
     m_currentAlpha = 0.0f;
@@ -68,12 +68,16 @@ void TutorialUIController::startTutorialUI(TutorialUIEvent* event)
     m_player1Confirmed = false;
     m_player2Confirmed = false;
 
-    setPlayersGameplayInputLocked(true);
-    setPlayersInvulnerable(true);
+    if (m_currentEvent->shouldLockGameplay())
+    {
+        setPlayersGameplayInputLocked(true);
+        setPlayersInvulnerable(true);
+    }
+
     setTutorialUIAlpha(0.0f);
 }
 
-void TutorialUIController::updateFadingIn(float dt)
+void TutorialUIController::updateShowing(float dt)
 {
     const float duration = m_currentEvent->getShowDuration();
 
@@ -90,12 +94,12 @@ void TutorialUIController::updateFadingIn(float dt)
         m_currentAlpha = 1.0f;
         setTutorialUIAlpha(m_currentAlpha);
 
-        m_state = TutorialUIState::WaitingForConfirmation;
+        m_state = TutorialUIState::Waiting;
         m_timer = 0.0f;
     }
 }
 
-void TutorialUIController::updateWaitingForConfirmation()
+void TutorialUIController::updateWaiting()
 {
     if (Input::isFaceButtonBottomJustPressed(0))
     {
@@ -112,11 +116,11 @@ void TutorialUIController::updateWaitingForConfirmation()
         return;
     }
 
-    m_state = TutorialUIState::FadingOut;
+    m_state = TutorialUIState::Hiding;
     m_timer = 0.0f;
 }
 
-void TutorialUIController::updateFadingOut(float dt)
+void TutorialUIController::updateHiding(float dt)
 {
     const float duration = m_currentEvent->getHideDuration();
 
@@ -139,8 +143,11 @@ void TutorialUIController::updateFadingOut(float dt)
 
 void TutorialUIController::finishTutorialUI()
 {
-    setPlayersGameplayInputLocked(false);
-    setPlayersInvulnerable(false);
+    if (m_currentEvent->shouldLockGameplay())
+    {
+        setPlayersGameplayInputLocked(true);
+        setPlayersInvulnerable(true);
+    }
 
     m_currentEvent = nullptr;
     m_currentTutorialUIImage = nullptr;
