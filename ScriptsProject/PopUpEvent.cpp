@@ -4,6 +4,12 @@
 #include "GameplayEventTrigger.h"
 #include "PopUpController.h"
 
+IMPLEMENT_SCRIPT_FIELDS(PopUpEvent,
+    SERIALIZED_COMPONENT_REF(m_popUpImage, "Pop Up Image", ComponentType::TRANSFORM2D),
+    SERIALIZED_FLOAT(m_fadeInDuration, "Fade In Duration", 0.0f, 5.0f, 0.05f),
+    SERIALIZED_FLOAT(m_fadeOutDuration, "Fade Out Duration", 0.0f, 5.0f, 0.05f)
+)
+
 PopUpEvent::PopUpEvent(GameObject* owner)
     : GameplayEventAction(owner)
 {
@@ -11,6 +17,14 @@ PopUpEvent::PopUpEvent(GameObject* owner)
 
 void PopUpEvent::executeEvent(GameplayEventTrigger* trigger)
 {
+    Transform2D* popUpImage = getPopUpImageTransform2D();
+
+    if (popUpImage == nullptr)
+    {
+        Debug::warn("PopUpEvent on '%s' has no Pop Up Image assigned.", GameObjectAPI::getName(getOwner()));
+        return;
+    }
+
     PopUpController* popUpController = findPopUpController();
 
     if (popUpController == nullptr)

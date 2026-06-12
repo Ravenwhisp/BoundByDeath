@@ -56,7 +56,7 @@ void PopUpController::startPopUp(PopUpEvent* event)
     }
 
     m_currentEvent = event;
-    m_currentPopUpImage = nullptr;
+    m_currentPopUpImage = event->getPopUpImageTransform2D();
 
     m_isShowingPopUp = true;
     m_state = PopUpState::FadingIn;
@@ -73,7 +73,7 @@ void PopUpController::startPopUp(PopUpEvent* event)
 
 void PopUpController::updateFadingIn(float dt)
 {
-    const float duration = 0.25f;
+    const float duration = m_currentEvent->getFadeInDuration();
 
     m_timer += dt;
 
@@ -116,7 +116,7 @@ void PopUpController::updateWaitingForConfirmation()
 
 void PopUpController::updateFadingOut(float dt)
 {
-    const float duration = 0.25f;
+    const float duration = m_currentEvent->getFadeOutDuration();
 
     m_timer += dt;
 
