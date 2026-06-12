@@ -6,30 +6,57 @@
 #include "Transform2D.h"
 
 class GameplayEventTrigger;
-class PopUpController;
+class TutorialUIController;
 
-class PopUpEvent : public GameplayEventAction
+enum class TutorialUIEventType
 {
-    DECLARE_SCRIPT(PopUpEvent)
+    SideInfo = 0,
+    CollectiblePopup
+};
+
+enum class TutorialUITransitionType
+{
+    Fade = 0,
+    SlideFromLeft,
+    SlideFromRight
+};
+
+enum class TutorialUICloseMode
+{
+    BothPlayersConfirm = 0,
+    ObjectiveCompleted
+};
+
+class TutorialUIEvent : public GameplayEventAction
+{
+    DECLARE_SCRIPT(TutorialUIEvent)
 
 public:
-    explicit PopUpEvent(GameObject* owner);
+    explicit TutorialUIEvent(GameObject* owner);
 
     void executeEvent(GameplayEventTrigger* trigger) override;
 
     ScriptFieldList getExposedFields() const override;
 
-    Transform2D* getPopUpImageTransform2D() const { return m_popUpImage.getReferencedComponent(); }
+    Transform2D* getTutorialUIImageTransform2D() const { return m_tutorialUIImage.getReferencedComponent(); }
 
-    float getFadeInDuration() const { return m_fadeInDuration; }
-    float getFadeOutDuration() const { return m_fadeOutDuration; }
+    float getShowDuration() const { return m_showDuration; }
+    float getHideDuration() const { return m_hideDuration; }
+
+    TutorialUIEventType getEventType() const { return static_cast<TutorialUIEventType>(m_eventType); }
+    TutorialUITransitionType getTransitionType() const { return static_cast<TutorialUITransitionType>(m_transitionType); }
+    TutorialUICloseMode getCloseMode() const { return static_cast<TutorialUICloseMode>(m_closeMode); }
 
 private:
-    PopUpController* findPopUpController() const;
+    TutorialUIController* findTutorialUIController() const;
 
 public:
-    ScriptComponentRef<Transform2D> m_popUpImage;
+    ScriptComponentRef<Transform2D> m_tutorialUIImage;
 
-    float m_fadeInDuration = 0.25f;
-    float m_fadeOutDuration = 0.25f;
+    int m_eventType = static_cast<int>(TutorialUIEventType::CollectiblePopup);
+    int m_transitionType = static_cast<int>(TutorialUITransitionType::Fade);
+    int m_closeMode = static_cast<int>(TutorialUICloseMode::BothPlayersConfirm);
+
+    float m_showDuration = 0.25f;
+    float m_hideDuration = 0.25f;
 };

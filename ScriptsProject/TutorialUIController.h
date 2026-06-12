@@ -2,27 +2,27 @@
 
 #include "ScriptAPI.h"
 
-class PopUpEvent;
+class TutorialUIEvent;
 class PlayerController;
 class Damageable;
 class Transform2D;
 
-class PopUpController : public Script
+class TutorialUIController : public Script
 {
-    DECLARE_SCRIPT(PopUpController)
+    DECLARE_SCRIPT(TutorialUIController)
 
 public:
-    explicit PopUpController(GameObject* owner);
+    explicit TutorialUIController(GameObject* owner);
 
     void Start() override;
     void Update() override;
 
-    void startPopUp(PopUpEvent* event);
+    void startTutorialUI(TutorialUIEvent* event);
 
-    bool isShowingPopUp() const { return m_isShowingPopUp; }
+    bool isShowingTutorialUI() const { return m_isShowingTutorialUI; }
 
 private:
-    enum class PopUpState
+    enum class TutorialUIState
     {
         None,
         FadingIn,
@@ -35,24 +35,24 @@ private:
     void updateWaitingForConfirmation();
     void updateFadingOut(float dt);
 
-    void finishPopUp();
+    void finishTutorialUI();
 
     void findPlayerControllers();
     void setPlayersGameplayInputLocked(bool locked);
     void setPlayersInvulnerable(bool invulnerable);
 
-    void setPopUpAlpha(float alpha);
+    void setTutorialUIAlpha(float alpha);
 
 private:
-    PopUpEvent* m_currentEvent = nullptr;
-    Transform2D* m_currentPopUpImage = nullptr;
+    TutorialUIEvent* m_currentEvent = nullptr;
+    Transform2D* m_currentTutorialUIImage = nullptr;
 
     std::vector<PlayerController*> m_playerControllers;
     std::vector<Damageable*> m_playerDamageables;
 
-    PopUpState m_state = PopUpState::None;
+    TutorialUIState m_state = TutorialUIState::None;
 
-    bool m_isShowingPopUp = false;
+    bool m_isShowingTutorialUI = false;
 
     bool m_player1Confirmed = false;
     bool m_player2Confirmed = false;

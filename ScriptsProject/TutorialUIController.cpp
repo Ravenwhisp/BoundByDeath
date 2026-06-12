@@ -1,23 +1,23 @@
 #include "pch.h"
-#include "PopUpController.h"
+#include "TutorialUIController.h"
 
-#include "PopUpEvent.h"
+#include "TutorialUIEvent.h"
 #include "PlayerController.h"
 #include "Damageable.h"
 
-PopUpController::PopUpController(GameObject* owner)
+TutorialUIController::TutorialUIController(GameObject* owner)
     : Script(owner)
 {
 }
 
-void PopUpController::Start()
+void TutorialUIController::Start()
 {
     findPlayerControllers();
 }
 
-void PopUpController::Update()
+void TutorialUIController::Update()
 {
-    if (!m_isShowingPopUp)
+    if (!m_isShowingTutorialUI)
     {
         return;
     }
@@ -26,27 +26,27 @@ void PopUpController::Update()
 
     switch (m_state)
     {
-    case PopUpState::FadingIn:
+    case TutorialUIState::FadingIn:
         updateFadingIn(dt);
         break;
 
-    case PopUpState::WaitingForConfirmation:
+    case TutorialUIState::WaitingForConfirmation:
         updateWaitingForConfirmation();
         break;
 
-    case PopUpState::FadingOut:
+    case TutorialUIState::FadingOut:
         updateFadingOut(dt);
         break;
 
-    case PopUpState::None:
+    case TutorialUIState::None:
     default:
         break;
     }
 }
 
-void PopUpController::startPopUp(PopUpEvent* event)
+void TutorialUIController::startTutorialUI(TutorialUIEvent* event)
 {
-    if (m_isShowingPopUp)
+    if (m_isShowingTutorialUI)
     {
         return;
     }
@@ -57,10 +57,10 @@ void PopUpController::startPopUp(PopUpEvent* event)
     }
 
     m_currentEvent = event;
-    m_currentPopUpImage = event->getPopUpImageTransform2D();
+    m_currentTutorialUIImage = event->getTutorialUIImageTransform2D();
 
-    m_isShowingPopUp = true;
-    m_state = PopUpState::FadingIn;
+    m_isShowingTutorialUI = true;
+    m_state = TutorialUIState::FadingIn;
 
     m_timer = 0.0f;
     m_currentAlpha = 0.0f;
@@ -70,12 +70,12 @@ void PopUpController::startPopUp(PopUpEvent* event)
 
     setPlayersGameplayInputLocked(true);
     setPlayersInvulnerable(true);
-    setPopUpAlpha(0.0f);
+    setTutorialUIAlpha(0.0f);
 }
 
-void PopUpController::updateFadingIn(float dt)
+void TutorialUIController::updateFadingIn(float dt)
 {
-    const float duration = m_currentEvent->getFadeInDuration();
+    const float duration = m_currentEvent->getShowDuration();
 
     m_timer += dt;
 
@@ -83,19 +83,19 @@ void PopUpController::updateFadingIn(float dt)
     const float alpha = MathAPI::smoothStep(0.0f, 1.0f, normalizedTime);
 
     m_currentAlpha = alpha;
-    setPopUpAlpha(m_currentAlpha);
+    setTutorialUIAlpha(m_currentAlpha);
 
     if (m_timer >= duration)
     {
         m_currentAlpha = 1.0f;
-        setPopUpAlpha(m_currentAlpha);
+        setTutorialUIAlpha(m_currentAlpha);
 
-        m_state = PopUpState::WaitingForConfirmation;
+        m_state = TutorialUIState::WaitingForConfirmation;
         m_timer = 0.0f;
     }
 }
 
-void PopUpController::updateWaitingForConfirmation()
+void TutorialUIController::updateWaitingForConfirmation()
 {
     if (Input::isFaceButtonBottomJustPressed(0))
     {
@@ -112,13 +112,13 @@ void PopUpController::updateWaitingForConfirmation()
         return;
     }
 
-    m_state = PopUpState::FadingOut;
+    m_state = TutorialUIState::FadingOut;
     m_timer = 0.0f;
 }
 
-void PopUpController::updateFadingOut(float dt)
+void TutorialUIController::updateFadingOut(float dt)
 {
-    const float duration = m_currentEvent->getFadeOutDuration();
+    const float duration = m_currentEvent->getHideDuration();
 
     m_timer += dt;
 
@@ -126,27 +126,27 @@ void PopUpController::updateFadingOut(float dt)
     const float alpha = MathAPI::smoothStep(0.0f, 1.0f, normalizedTime);
 
     m_currentAlpha = MathAPI::lerp(1.0f, 0.0f, alpha);
-    setPopUpAlpha(m_currentAlpha);
+    setTutorialUIAlpha(m_currentAlpha);
 
     if (m_timer >= duration)
     {
         m_currentAlpha = 0.0f;
-        setPopUpAlpha(m_currentAlpha);
+        setTutorialUIAlpha(m_currentAlpha);
 
-        finishPopUp();
+        finishTutorialUI();
     }
 }
 
-void PopUpController::finishPopUp()
+void TutorialUIController::finishTutorialUI()
 {
     setPlayersGameplayInputLocked(false);
     setPlayersInvulnerable(false);
 
     m_currentEvent = nullptr;
-    m_currentPopUpImage = nullptr;
+    m_currentTutorialUIImage = nullptr;
 
-    m_state = PopUpState::None;
-    m_isShowingPopUp = false;
+    m_state = TutorialUIState::None;
+    m_isShowingTutorialUI = false;
 
     m_player1Confirmed = false;
     m_player2Confirmed = false;
@@ -155,7 +155,7 @@ void PopUpController::finishPopUp()
     m_currentAlpha = 0.0f;
 }
 
-void PopUpController::findPlayerControllers()
+void TutorialUIController::findPlayerControllers()
 {
     m_playerControllers.clear();
     m_playerDamageables.clear();
@@ -167,7 +167,7 @@ void PopUpController::findPlayerControllers()
         PlayerController* playerController = GameObjectAPI::findScript<PlayerController>(player);
         if (playerController == nullptr)
         {
-            Debug::warn("PopUpController could not find PlayerController on player '%s'.", GameObjectAPI::getName(player));
+            Debug::warn("TutorialUIController could not find PlayerController on player '%s'.", GameObjectAPI::getName(player));
         }
         else
         {
@@ -177,7 +177,7 @@ void PopUpController::findPlayerControllers()
         Damageable* damageable = GameObjectAPI::findScript<Damageable>(player);
         if (damageable == nullptr)
         {
-            Debug::warn("PopUpController could not find Damageable on player '%s'.", GameObjectAPI::getName(player));
+            Debug::warn("TutorialUIController could not find Damageable on player '%s'.", GameObjectAPI::getName(player));
         }
         else
         {
@@ -186,7 +186,7 @@ void PopUpController::findPlayerControllers()
     }
 }
 
-void PopUpController::setPlayersGameplayInputLocked(bool locked)
+void TutorialUIController::setPlayersGameplayInputLocked(bool locked)
 {
     for (PlayerController* playerController : m_playerControllers)
     {
@@ -199,7 +199,7 @@ void PopUpController::setPlayersGameplayInputLocked(bool locked)
     }
 }
 
-void PopUpController::setPlayersInvulnerable(bool invulnerable)
+void TutorialUIController::setPlayersInvulnerable(bool invulnerable)
 {
     for (Damageable* damageable : m_playerDamageables)
     {
@@ -212,14 +212,14 @@ void PopUpController::setPlayersInvulnerable(bool invulnerable)
     }
 }
 
-void PopUpController::setPopUpAlpha(float alpha)
+void TutorialUIController::setTutorialUIAlpha(float alpha)
 {
-    if (m_currentPopUpImage == nullptr)
+    if (m_currentTutorialUIImage == nullptr)
     {
         return;
     }
 
-    Transform2DAPI::setAlpha(m_currentPopUpImage, alpha);
+    Transform2DAPI::setAlpha(m_currentTutorialUIImage, alpha);
 }
 
-IMPLEMENT_SCRIPT(PopUpController)
+IMPLEMENT_SCRIPT(TutorialUIController)

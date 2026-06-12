@@ -1,51 +1,79 @@
 #include "pch.h"
-#include "PopUpEvent.h"
+#include "TutorialUIEvent.h"
 
 #include "GameplayEventTrigger.h"
-#include "PopUpController.h"
+#include "TutorialUIController.h"
 
-IMPLEMENT_SCRIPT_FIELDS(PopUpEvent,
-    SERIALIZED_COMPONENT_REF(m_popUpImage, "Pop Up Image", ComponentType::TRANSFORM2D),
-    SERIALIZED_FLOAT(m_fadeInDuration, "Fade In Duration", 0.0f, 5.0f, 0.05f),
-    SERIALIZED_FLOAT(m_fadeOutDuration, "Fade Out Duration", 0.0f, 5.0f, 0.05f)
+static const char* tutorialUIEventTypeNames[] =
+{
+    "Side Info",
+    "Collectible Popup"
+};
+
+constexpr int tutorialUIEventTypeCount = 2;
+
+static const char* tutorialUITransitionTypeNames[] =
+{
+    "Fade",
+    "Slide From Left",
+    "Slide From Right"
+};
+
+constexpr int tutorialUITransitionTypeCount = 3;
+
+static const char* tutorialUICloseModeNames[] =
+{
+    "Both Players Confirm",
+    "Objective Completed"
+};
+
+constexpr int tutorialUICloseModeCount = 2;
+
+IMPLEMENT_SCRIPT_FIELDS(TutorialUIEvent,
+    SERIALIZED_COMPONENT_REF(m_tutorialUIImage, "Tutorial UI Image", ComponentType::TRANSFORM2D),
+    SERIALIZED_ENUM_INT(m_eventType, "Event Type", tutorialUIEventTypeNames, tutorialUIEventTypeCount),
+    SERIALIZED_ENUM_INT(m_transitionType, "Transition Type", tutorialUITransitionTypeNames, tutorialUITransitionTypeCount),
+    SERIALIZED_ENUM_INT(m_closeMode, "Close Mode", tutorialUICloseModeNames, tutorialUICloseModeCount),
+    SERIALIZED_FLOAT(m_showDuration, "Show Duration", 0.0f, 5.0f, 0.05f),
+    SERIALIZED_FLOAT(m_hideDuration, "Hide Duration", 0.0f, 5.0f, 0.05f)
 )
 
-PopUpEvent::PopUpEvent(GameObject* owner)
+TutorialUIEvent::TutorialUIEvent(GameObject* owner)
     : GameplayEventAction(owner)
 {
 }
 
-void PopUpEvent::executeEvent(GameplayEventTrigger* trigger)
+void TutorialUIEvent::executeEvent(GameplayEventTrigger* trigger)
 {
-    Transform2D* popUpImage = getPopUpImageTransform2D();
+    Transform2D* tutorialUIImage = getTutorialUIImageTransform2D();
 
-    if (popUpImage == nullptr)
+    if (tutorialUIImage == nullptr)
     {
-        Debug::warn("PopUpEvent on '%s' has no Pop Up Image assigned.", GameObjectAPI::getName(getOwner()));
+        Debug::warn("TutorialUIEvent on '%s' has no Tutorial UI Image assigned.", GameObjectAPI::getName(getOwner()));
         return;
     }
 
-    PopUpController* popUpController = findPopUpController();
+    TutorialUIController* tutorialUIController = findTutorialUIController();
 
-    if (popUpController == nullptr)
+    if (tutorialUIController == nullptr)
     {
-        Debug::warn("PopUpEvent on '%s' could not find PopUpController in the scene.", GameObjectAPI::getName(getOwner()));
+        Debug::warn("TutorialUIEvent on '%s' could not find TutorialUIController in the scene.", GameObjectAPI::getName(getOwner()));
         return;
     }
 
-    popUpController->startPopUp(this);
+    tutorialUIController->startTutorialUI(this);
 }
 
-PopUpController* PopUpEvent::findPopUpController() const
+TutorialUIController* TutorialUIEvent::findTutorialUIController() const
 {
-    const std::vector<GameObject*> popUpControllerObjects = SceneAPI::findAllGameObjectsWithScript<PopUpController>();
+    const std::vector<GameObject*> tutorialUIControllerObjects = SceneAPI::findAllGameObjectsWithScript<TutorialUIController>();
 
-    if (popUpControllerObjects.empty())
+    if (tutorialUIControllerObjects.empty())
     {
         return nullptr;
     }
 
-    return GameObjectAPI::findScript<PopUpController>(popUpControllerObjects[0]);
+    return GameObjectAPI::findScript<TutorialUIController>(tutorialUIControllerObjects[0]);
 }
 
-IMPLEMENT_SCRIPT(PopUpEvent)
+IMPLEMENT_SCRIPT(TutorialUIEvent)
