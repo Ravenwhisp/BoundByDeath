@@ -112,6 +112,9 @@
     <Filter Include="Player\Targeting\Death">
       <UniqueIdentifier>{f0ae8d07-3265-48a1-985a-fbc989dd6a40}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Enemies\Paladin\States">
+      <UniqueIdentifier>{354fd5fd-3f85-4b65-a21e-b65564c3e224}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Interaction/Gameplay\Events">
       <UniqueIdentifier>{baef95a7-49dc-4f68-9fbe-d1220cdade01}</UniqueIdentifier>
     </Filter>
@@ -194,15 +197,6 @@
     <ClInclude Include="EnemyDetectionAggro.h">
       <Filter>Enemies</Filter>
     </ClInclude>
-    <ClInclude Include="EnemyController.h">
-      <Filter>Enemies</Filter>
-    </ClInclude>
-    <ClInclude Include="EnemyIDLE.h">
-      <Filter>Enemies\Paladin</Filter>
-    </ClInclude>
-    <ClInclude Include="EnemyCHASE.h">
-      <Filter>Enemies\Paladin</Filter>
-    </ClInclude>
     <ClInclude Include="CharacterBase.h">
       <Filter>Character</Filter>
     </ClInclude>
@@ -274,15 +268,6 @@
     </ClInclude>
     <ClInclude Include="ArthurAttackDebugDraw.h">
       <Filter>Enemies\Arthur</Filter>
-    </ClInclude>
-    <ClInclude Include="EnemyATTACK.h">
-      <Filter>Enemies\Paladin</Filter>
-    </ClInclude>
-    <ClInclude Include="EnemyCHARGE.h">
-      <Filter>Enemies\Paladin</Filter>
-    </ClInclude>
-    <ClInclude Include="EnemyRECOVER.h">
-      <Filter>Enemies\Paladin</Filter>
     </ClInclude>
     <ClInclude Include="PlayerStunState.h">
       <Filter>Player\States</Filter>
@@ -377,9 +362,6 @@
     <ClInclude Include="EnemyDeathState.h">
       <Filter>Enemies\BaseStates</Filter>
     </ClInclude>
-    <ClInclude Include="EnemySTUN.h">
-      <Filter>Enemies\Paladin</Filter>
-    </ClInclude>
     <ClInclude Include="EnemyIdleState.h">
       <Filter>Enemies\BaseStates</Filter>
     </ClInclude>
@@ -387,9 +369,6 @@
       <Filter>Enemies\BaseStates</Filter>
     </ClInclude>
     <ClInclude Include="ArcherArrowBarrageState.h">
-      <Filter>Enemies\Archer\States</Filter>
-    </ClInclude>
-    <ClInclude Include="ArcherAttackState.h">
       <Filter>Enemies\Archer\States</Filter>
     </ClInclude>
     <ClInclude Include="ArcherSomersaultState.h">
@@ -445,6 +424,27 @@
     </ClInclude>
     <ClInclude Include="CameraTransitionController.h">
       <Filter>Interaction/Gameplay\Events\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyStunnedState.h">
+      <Filter>Enemies\BaseStates</Filter>
+    </ClInclude>
+    <ClInclude Include="PaladinChaseState.h">
+      <Filter>Enemies\Paladin\States</Filter>
+    </ClInclude>
+    <ClInclude Include="PaladinAttackConfig.h">
+      <Filter>Enemies\Paladin</Filter>
+    </ClInclude>
+    <ClInclude Include="MeleeEnemyController.h">
+      <Filter>Enemies\Paladin</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyBaseAttackConfig.h">
+      <Filter>Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyAttackState.h">
+      <Filter>Enemies\BaseStates</Filter>
+    </ClInclude>
+    <ClInclude Include="PaladinChargeState.h">
+      <Filter>Enemies\Paladin\States</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -523,15 +523,6 @@
     <ClCompile Include="EnemyDetectionAggro.cpp">
       <Filter>Enemies</Filter>
     </ClCompile>
-    <ClCompile Include="EnemyController.cpp">
-      <Filter>Enemies</Filter>
-    </ClCompile>
-    <ClCompile Include="EnemyIDLE.cpp">
-      <Filter>Enemies\Paladin</Filter>
-    </ClCompile>
-    <ClCompile Include="EnemyCHASE.cpp">
-      <Filter>Enemies\Paladin</Filter>
-    </ClCompile>
     <ClCompile Include="CharacterBase.cpp">
       <Filter>Character</Filter>
     </ClCompile>
@@ -603,15 +594,6 @@
     </ClCompile>
     <ClCompile Include="ArthurAttackDebugDraw.cpp">
       <Filter>Enemies\Arthur</Filter>
-    </ClCompile>
-    <ClCompile Include="EnemyATTACK.cpp">
-      <Filter>Enemies\Paladin</Filter>
-    </ClCompile>
-    <ClCompile Include="EnemyCHARGE.cpp">
-      <Filter>Enemies\Paladin</Filter>
-    </ClCompile>
-    <ClCompile Include="EnemyRECOVER.cpp">
-      <Filter>Enemies\Paladin</Filter>
     </ClCompile>
     <ClCompile Include="PlayerStunState.cpp">
       <Filter>Player\States</Filter>
@@ -706,9 +688,6 @@
     <ClCompile Include="EnemyDeathState.cpp">
       <Filter>Enemies\BaseStates</Filter>
     </ClCompile>
-    <ClCompile Include="EnemySTUN.cpp">
-      <Filter>Enemies\Paladin</Filter>
-    </ClCompile>
     <ClCompile Include="EnemyIdleState.cpp">
       <Filter>Enemies\BaseStates</Filter>
     </ClCompile>
@@ -716,9 +695,6 @@
       <Filter>Enemies\BaseStates</Filter>
     </ClCompile>
     <ClCompile Include="ArcherArrowBarrageState.cpp">
-      <Filter>Enemies\Archer\States</Filter>
-    </ClCompile>
-    <ClCompile Include="ArcherAttackState.cpp">
       <Filter>Enemies\Archer\States</Filter>
     </ClCompile>
     <ClCompile Include="ArcherSomersaultState.cpp">
@@ -750,6 +726,27 @@
     </ClCompile>
     <ClCompile Include="DeathUI.cpp">
       <Filter>Character\Death\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyStunnedState.cpp">
+      <Filter>Enemies\BaseStates</Filter>
+    </ClCompile>
+    <ClCompile Include="PaladinChaseState.cpp">
+      <Filter>Enemies\Paladin\States</Filter>
+    </ClCompile>
+    <ClCompile Include="MeleeEnemyController.cpp">
+      <Filter>Enemies\Paladin</Filter>
+    </ClCompile>
+    <ClCompile Include="PaladinAttackConfig.cpp">
+      <Filter>Enemies\Paladin</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyBaseAttackConfig.cpp">
+      <Filter>Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyAttackState.cpp">
+      <Filter>Enemies\BaseStates</Filter>
+    </ClCompile>
+    <ClCompile Include="PaladinChargeState.cpp">
+      <Filter>Enemies\Paladin\States</Filter>
     </ClCompile>
     <ClCompile Include="LyrielConfig.cpp">
       <Filter>Character\Lyriel</Filter>

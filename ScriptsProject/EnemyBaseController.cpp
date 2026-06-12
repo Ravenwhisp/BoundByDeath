@@ -222,6 +222,78 @@ void EnemyBaseController::setRecoveryDuration(float recoveryDuration)
     m_recoveryDuration = recoveryDuration;
 }
 
+void EnemyBaseController::setStunnedDuration(float stunnedDuration)
+{
+    m_stunnedDuration = stunnedDuration;
+}
+
+void EnemyBaseController::useStun()
+{
+    m_isStunned = true;
+    m_stunnedTriggerSent = false;
+    m_stunnedTimer = m_stunnedDuration;
+    clearPath();
+}
+
+bool EnemyBaseController::trySendStunTrigger(AnimationComponent* animation)
+{
+    if (m_stunnedTriggerSent)
+    {
+        return false;
+    }
+
+    if (!m_isStunned)
+    {
+        return false;
+    }
+
+    if (isDead())
+    {
+        return false;
+    }
+
+    if (!animation)
+    {
+        return false;
+    }
+
+    clearPath();
+
+    const bool sent = AnimationAPI::sendTrigger(animation, "ToStun");
+
+    if (!sent)
+    {
+        return false;
+    }
+
+    m_stunnedTriggerSent = true;
+
+    Debug::log("[EnemyBaseController] ToStun trigger sent.");
+
+    return true;
+}
+
+void EnemyBaseController::clearStun()
+{
+    m_isStunned = false;
+    m_stunnedTriggerSent = false;
+}
+
+void EnemyBaseController::updateStun(float dt)
+{
+    if (!m_isStunned)
+    {
+        return;
+    }
+
+    m_stunnedTimer -= dt;
+
+    if (m_stunnedTimer <= 0.0f)
+    {
+        clearStun();
+    }
+}
+
 void EnemyBaseController::rotateTowardsDirection(const Vector3& direction)
 {
     Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());

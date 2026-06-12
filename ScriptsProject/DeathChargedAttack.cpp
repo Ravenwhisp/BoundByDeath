@@ -9,6 +9,7 @@
 #include "EnemyShadowMark.h"
 #include "BreakableDamageable.h"
 #include "DeathUI.h"
+#include "EnemyBaseController.h"
 #include "DeathConfig.h"
 
 #include <cmath>
@@ -150,7 +151,7 @@ void DeathChargedAttack::fireAttack()
     const float range = isChargedShot ? m_config->m_chargedShotArcRange : m_config->m_chargedArcRange;
     const float angle = isChargedShot ? m_config->m_chargedShotArcAngle : m_config->m_chargedArcAngle;
 
-    dealDamageInArc(damage, range, angle, isChargedShot);
+    dealDamageInArc(damage, range, angle, isChargedShot, isMaxCharge);
 
     // Max charge (auto-fired at full charge, always step 0) gets longer combo window
     const float window = (isChargedShot && isMaxCharge)
@@ -173,7 +174,7 @@ void DeathChargedAttack::fireAttack()
     startCooldown();
 }
 
-void DeathChargedAttack::dealDamageInArc(float damage, float range, float angle, bool isChargedShot) const
+void DeathChargedAttack::dealDamageInArc(float damage, float range, float angle, bool isChargedShot, bool isMaxCharge) const
 {
     const Transform* myTransform = GameObjectAPI::getTransform(m_owner);
     if (myTransform == nullptr)
@@ -259,6 +260,13 @@ void DeathChargedAttack::dealDamageInArc(float damage, float range, float angle,
 
         }
         hit++;
+
+        EnemyBaseController* enemyController = GameObjectAPI::findScript<EnemyBaseController>(target);
+
+        if (enemyController != nullptr && isMaxCharge)
+        {
+            enemyController->useStun();
+        }
 
         EnemyShadowMark* shadowMark = GameObjectAPI::findScript<EnemyShadowMark>(target);
         if (shadowMark != nullptr)

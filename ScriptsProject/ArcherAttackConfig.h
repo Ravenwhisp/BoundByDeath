@@ -1,8 +1,8 @@
 #pragma once
 
-#include "ScriptAPI.h"
+#include "EnemyBaseAttackConfig.h"
 
-class ArcherAttackConfig : public Script
+class ArcherAttackConfig : public EnemyBaseAttackConfig
 {
     DECLARE_SCRIPT(ArcherAttackConfig)
 
@@ -12,13 +12,6 @@ public:
     ScriptFieldList getExposedFields() const override;
 
 public:
-    // Basic attack
-    float m_basicAttackRange = 4.0f;
-    float m_basicAttackDamage = 10.0f;
-    float m_basicAttackWindupTime = 0.35f;
-    float m_basicAttackTotalDuration = 0.8f;
-    float m_basicAttackCooldown = 1.2f;
-
     // Arrow Barrage
     float m_arrowBarrageRange = 7.0f;
     float m_arrowBarrageDamage = 15.0f;
