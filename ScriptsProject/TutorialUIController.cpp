@@ -67,6 +67,7 @@ void TutorialUIController::startTutorialUI(TutorialUIEvent* event)
 
     m_player1Confirmed = false;
     m_player2Confirmed = false;
+    m_objectiveCompleted = false;
 
     if (m_currentEvent->shouldLockGameplay())
     {
@@ -75,6 +76,16 @@ void TutorialUIController::startTutorialUI(TutorialUIEvent* event)
     }
 
     setTutorialUIAlpha(0.0f);
+}
+
+void TutorialUIController::notifyObjectiveCompleted()
+{
+    if (!m_isShowingTutorialUI)
+    {
+        return;
+    }
+
+    m_objectiveCompleted = true;
 }
 
 void TutorialUIController::updateShowing(float dt)
@@ -101,23 +112,42 @@ void TutorialUIController::updateShowing(float dt)
 
 void TutorialUIController::updateWaiting()
 {
-    if (Input::isFaceButtonBottomJustPressed(0))
-    {
-        m_player1Confirmed = true;
-    }
-
-    if (Input::isFaceButtonBottomJustPressed(1))
-    {
-        m_player2Confirmed = true;
-    }
-
-    if (!m_player1Confirmed || !m_player2Confirmed)
+    if (m_currentEvent == nullptr)
     {
         return;
     }
 
-    m_state = TutorialUIState::Hiding;
-    m_timer = 0.0f;
+    switch (m_currentEvent->getCloseMode())
+    {
+    case TutorialUICloseMode::BothPlayersConfirm:
+        if (Input::isFaceButtonBottomJustPressed(0))
+        {
+            m_player1Confirmed = true;
+        }
+
+        if (Input::isFaceButtonBottomJustPressed(1))
+        {
+            m_player2Confirmed = true;
+        }
+
+        if (m_player1Confirmed && m_player2Confirmed)
+        {
+            m_state = TutorialUIState::Hiding;
+            m_timer = 0.0f;
+        }
+        break;
+
+    case TutorialUICloseMode::ObjectiveCompleted:
+        if (m_objectiveCompleted)
+        {
+            m_state = TutorialUIState::Hiding;
+            m_timer = 0.0f;
+        }
+        break;
+
+    default:
+        break;
+    }
 }
 
 void TutorialUIController::updateHiding(float dt)
@@ -145,8 +175,8 @@ void TutorialUIController::finishTutorialUI()
 {
     if (m_currentEvent->shouldLockGameplay())
     {
-        setPlayersGameplayInputLocked(true);
-        setPlayersInvulnerable(true);
+        setPlayersGameplayInputLocked(false);
+        setPlayersInvulnerable(false);
     }
 
     m_currentEvent = nullptr;
@@ -157,6 +187,7 @@ void TutorialUIController::finishTutorialUI()
 
     m_player1Confirmed = false;
     m_player2Confirmed = false;
+    m_objectiveCompleted = false;
 
     m_timer = 0.0f;
     m_currentAlpha = 0.0f;

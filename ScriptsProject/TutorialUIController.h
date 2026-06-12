@@ -18,6 +18,7 @@ public:
     void Update() override;
 
     void startTutorialUI(TutorialUIEvent* event);
+    void notifyObjectiveCompleted();
 
     bool isShowingTutorialUI() const { return m_isShowingTutorialUI; }
 
@@ -56,6 +57,7 @@ private:
 
     bool m_player1Confirmed = false;
     bool m_player2Confirmed = false;
+    bool m_objectiveCompleted = false;
 
     float m_timer = 0.0f;
     float m_currentAlpha = 0.0f;
