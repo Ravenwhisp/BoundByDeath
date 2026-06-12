@@ -3,6 +3,7 @@
 
 #include "PopUpEvent.h"
 #include "PlayerController.h"
+#include "Damageable.h"
 
 PopUpController::PopUpController(GameObject* owner)
     : Script(owner)
@@ -68,6 +69,7 @@ void PopUpController::startPopUp(PopUpEvent* event)
     m_player2Confirmed = false;
 
     setPlayersGameplayInputLocked(true);
+    setPlayersInvulnerable(true);
     setPopUpAlpha(0.0f);
 }
 
@@ -138,6 +140,7 @@ void PopUpController::updateFadingOut(float dt)
 void PopUpController::finishPopUp()
 {
     setPlayersGameplayInputLocked(false);
+    setPlayersInvulnerable(false);
 
     m_currentEvent = nullptr;
     m_currentPopUpImage = nullptr;
@@ -155,20 +158,31 @@ void PopUpController::finishPopUp()
 void PopUpController::findPlayerControllers()
 {
     m_playerControllers.clear();
+    m_playerDamageables.clear();
 
     const std::vector<GameObject*> players = SceneAPI::findAllGameObjectsByTag(Tag::PLAYER, true);
 
     for (GameObject* player : players)
     {
         PlayerController* playerController = GameObjectAPI::findScript<PlayerController>(player);
-
         if (playerController == nullptr)
         {
             Debug::warn("PopUpController could not find PlayerController on player '%s'.", GameObjectAPI::getName(player));
-            continue;
+        }
+        else
+        {
+            m_playerControllers.push_back(playerController);
         }
 
-        m_playerControllers.push_back(playerController);
+        Damageable* damageable = GameObjectAPI::findScript<Damageable>(player);
+        if (damageable == nullptr)
+        {
+            Debug::warn("PopUpController could not find Damageable on player '%s'.", GameObjectAPI::getName(player));
+        }
+        else
+        {
+            m_playerDamageables.push_back(damageable);
+        }
     }
 }
 
@@ -182,6 +196,19 @@ void PopUpController::setPlayersGameplayInputLocked(bool locked)
         }
 
         playerController->setGameplayInputLocked(locked);
+    }
+}
+
+void PopUpController::setPlayersInvulnerable(bool invulnerable)
+{
+    for (Damageable* damageable : m_playerDamageables)
+    {
+        if (damageable == nullptr)
+        {
+            continue;
+        }
+
+        damageable->setInvulnerable(invulnerable);
     }
 }
 

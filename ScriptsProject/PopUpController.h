@@ -4,6 +4,7 @@
 
 class PopUpEvent;
 class PlayerController;
+class Damageable;
 class Transform2D;
 
 class PopUpController : public Script
@@ -38,6 +39,7 @@ private:
 
     void findPlayerControllers();
     void setPlayersGameplayInputLocked(bool locked);
+    void setPlayersInvulnerable(bool invulnerable);
 
     void setPopUpAlpha(float alpha);
 
@@ -46,6 +48,7 @@ private:
     Transform2D* m_currentPopUpImage = nullptr;
 
     std::vector<PlayerController*> m_playerControllers;
+    std::vector<Damageable*> m_playerDamageables;
 
     PopUpState m_state = PopUpState::None;
 
