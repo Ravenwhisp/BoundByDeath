@@ -3,6 +3,8 @@
 #include "ScriptAPI.h"
 #include "GameplayEventAction.h"
 
+#include "Transform2D.h"
+
 class GameplayEventTrigger;
 class PopUpController;
 
