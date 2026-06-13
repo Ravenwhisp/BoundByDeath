@@ -43,6 +43,11 @@ void EnemyIdleState::OnStateUpdate()
         return;
     }
 
+    if (m_controller->trySendStunTrigger(m_animation))
+    {
+        return;
+    }
+
     m_controller->updateCurrentTarget();
     if (!m_controller->hasValidTarget())
     {
