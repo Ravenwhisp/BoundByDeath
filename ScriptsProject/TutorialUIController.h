@@ -36,6 +36,12 @@ private:
     void updateWaiting();
     void updateHiding(float dt);
 
+    void prepareShowTransition();
+    void prepareHideTransition();
+
+    void updateShowTransition(float alpha);
+    void updateHideTransition(float alpha);
+
     void finishTutorialUI();
 
     void findPlayerControllers();
@@ -43,6 +49,8 @@ private:
     void setPlayersInvulnerable(bool invulnerable);
 
     void setTutorialUIAlpha(float alpha);
+    void setTutorialUIPosition(const Vector2& position);
+    Vector2 calculateHiddenPosition() const;
 
 private:
     TutorialUIEvent* m_currentEvent = nullptr;
@@ -61,4 +69,9 @@ private:
 
     float m_timer = 0.0f;
     float m_currentAlpha = 0.0f;
+
+    Vector2 m_visiblePosition = Vector2(0.0f, 0.0f);
+    Vector2 m_hiddenPosition = Vector2(0.0f, 0.0f);
+
+    float m_slideOffset = 600.0f;
 };

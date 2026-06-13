@@ -75,7 +75,7 @@ void TutorialUIController::startTutorialUI(TutorialUIEvent* event)
         setPlayersInvulnerable(true);
     }
 
-    setTutorialUIAlpha(0.0f);
+    prepareShowTransition();
 }
 
 void TutorialUIController::notifyObjectiveCompleted()
@@ -97,13 +97,11 @@ void TutorialUIController::updateShowing(float dt)
     const float normalizedTime = m_timer >= duration ? 1.0f : m_timer / duration;
     const float alpha = MathAPI::smoothStep(0.0f, 1.0f, normalizedTime);
 
-    m_currentAlpha = alpha;
-    setTutorialUIAlpha(m_currentAlpha);
+    updateShowTransition(alpha);
 
     if (m_timer >= duration)
     {
-        m_currentAlpha = 1.0f;
-        setTutorialUIAlpha(m_currentAlpha);
+        updateShowTransition(1.0f);
 
         m_state = TutorialUIState::Waiting;
         m_timer = 0.0f;
@@ -132,6 +130,7 @@ void TutorialUIController::updateWaiting()
 
         if (m_player1Confirmed && m_player2Confirmed)
         {
+            prepareHideTransition();
             m_state = TutorialUIState::Hiding;
             m_timer = 0.0f;
         }
@@ -140,6 +139,7 @@ void TutorialUIController::updateWaiting()
     case TutorialUICloseMode::ObjectiveCompleted:
         if (m_objectiveCompleted)
         {
+            prepareHideTransition();
             m_state = TutorialUIState::Hiding;
             m_timer = 0.0f;
         }
@@ -159,15 +159,126 @@ void TutorialUIController::updateHiding(float dt)
     const float normalizedTime = m_timer >= duration ? 1.0f : m_timer / duration;
     const float alpha = MathAPI::smoothStep(0.0f, 1.0f, normalizedTime);
 
-    m_currentAlpha = MathAPI::lerp(1.0f, 0.0f, alpha);
-    setTutorialUIAlpha(m_currentAlpha);
+    updateHideTransition(alpha);
 
     if (m_timer >= duration)
     {
-        m_currentAlpha = 0.0f;
-        setTutorialUIAlpha(m_currentAlpha);
-
+        updateHideTransition(1.0f);
         finishTutorialUI();
+    }
+}
+
+void TutorialUIController::prepareShowTransition()
+{
+    if (m_currentTutorialUIImage == nullptr || m_currentEvent == nullptr)
+    {
+        return;
+    }
+
+    m_visiblePosition = Transform2DAPI::getPosition(m_currentTutorialUIImage);
+    m_hiddenPosition = calculateHiddenPosition();
+
+    switch (m_currentEvent->getTransitionType())
+    {
+    case TutorialUITransitionType::Fade:
+        setTutorialUIAlpha(0.0f);
+        break;
+
+    case TutorialUITransitionType::SlideFromLeft:
+    case TutorialUITransitionType::SlideFromRight:
+        setTutorialUIAlpha(1.0f);
+        setTutorialUIPosition(m_hiddenPosition);
+        break;
+
+    default:
+        setTutorialUIAlpha(0.0f);
+        break;
+    }
+}
+
+void TutorialUIController::prepareHideTransition()
+{
+    if (m_currentTutorialUIImage == nullptr || m_currentEvent == nullptr)
+    {
+        return;
+    }
+
+    m_visiblePosition = Transform2DAPI::getPosition(m_currentTutorialUIImage);
+    m_hiddenPosition = calculateHiddenPosition();
+
+    switch (m_currentEvent->getTransitionType())
+    {
+    case TutorialUITransitionType::Fade:
+        setTutorialUIAlpha(1.0f);
+        break;
+
+    case TutorialUITransitionType::SlideFromLeft:
+    case TutorialUITransitionType::SlideFromRight:
+        setTutorialUIAlpha(1.0f);
+        setTutorialUIPosition(m_visiblePosition);
+        break;
+
+    default:
+        setTutorialUIAlpha(1.0f);
+        break;
+    }
+}
+
+void TutorialUIController::updateShowTransition(float alpha)
+{
+    if (m_currentEvent == nullptr || m_currentTutorialUIImage == nullptr)
+    {
+        return;
+    }
+
+    switch (m_currentEvent->getTransitionType())
+    {
+    case TutorialUITransitionType::Fade:
+        m_currentAlpha = alpha;
+        setTutorialUIAlpha(m_currentAlpha);
+        break;
+
+    case TutorialUITransitionType::SlideFromLeft:
+    case TutorialUITransitionType::SlideFromRight:
+    {
+        const Vector2 position = MathAPI::lerp(m_hiddenPosition, m_visiblePosition, alpha);
+        setTutorialUIPosition(position);
+        break;
+    }
+
+    default:
+        m_currentAlpha = alpha;
+        setTutorialUIAlpha(m_currentAlpha);
+        break;
+    }
+}
+
+void TutorialUIController::updateHideTransition(float alpha)
+{
+    if (m_currentEvent == nullptr || m_currentTutorialUIImage == nullptr)
+    {
+        return;
+    }
+
+    switch (m_currentEvent->getTransitionType())
+    {
+    case TutorialUITransitionType::Fade:
+        m_currentAlpha = MathAPI::lerp(1.0f, 0.0f, alpha);
+        setTutorialUIAlpha(m_currentAlpha);
+        break;
+
+    case TutorialUITransitionType::SlideFromLeft:
+    case TutorialUITransitionType::SlideFromRight:
+    {
+        const Vector2 position = MathAPI::lerp(m_visiblePosition, m_hiddenPosition, alpha);
+        setTutorialUIPosition(position);
+        break;
+    }
+
+    default:
+        m_currentAlpha = MathAPI::lerp(1.0f, 0.0f, alpha);
+        setTutorialUIAlpha(m_currentAlpha);
+        break;
     }
 }
 
@@ -258,6 +369,37 @@ void TutorialUIController::setTutorialUIAlpha(float alpha)
     }
 
     Transform2DAPI::setAlpha(m_currentTutorialUIImage, alpha);
+}
+
+void TutorialUIController::setTutorialUIPosition(const Vector2& position)
+{
+    if (m_currentTutorialUIImage == nullptr)
+    {
+        return;
+    }
+
+    Transform2DAPI::setPosition(m_currentTutorialUIImage, position);
+}
+
+Vector2 TutorialUIController::calculateHiddenPosition() const
+{
+    if (m_currentEvent == nullptr)
+    {
+        return m_visiblePosition;
+    }
+
+    switch (m_currentEvent->getTransitionType())
+    {
+    case TutorialUITransitionType::SlideFromLeft:
+        return Vector2(m_visiblePosition.x - m_slideOffset, m_visiblePosition.y);
+
+    case TutorialUITransitionType::SlideFromRight:
+        return Vector2(m_visiblePosition.x + m_slideOffset, m_visiblePosition.y);
+
+    case TutorialUITransitionType::Fade:
+    default:
+        return m_visiblePosition;
+    }
 }
 
 IMPLEMENT_SCRIPT(TutorialUIController)
