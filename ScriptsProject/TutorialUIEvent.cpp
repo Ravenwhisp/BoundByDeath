@@ -4,14 +4,6 @@
 #include "GameplayEventTrigger.h"
 #include "TutorialUIController.h"
 
-static const char* tutorialUIEventTypeNames[] =
-{
-    "Side Info",
-    "Collectible Popup"
-};
-
-constexpr int tutorialUIEventTypeCount = 2;
-
 static const char* tutorialUITransitionTypeNames[] =
 {
     "Fade",
@@ -31,12 +23,11 @@ constexpr int tutorialUICloseModeCount = 2;
 
 IMPLEMENT_SCRIPT_FIELDS(TutorialUIEvent,
     SERIALIZED_COMPONENT_REF_VECTOR(m_tutorialUIImages, "Tutorial UI Images", ComponentType::TRANSFORM2D),
-    SERIALIZED_ENUM_INT(m_eventType, "Event Type", tutorialUIEventTypeNames, tutorialUIEventTypeCount),
     SERIALIZED_ENUM_INT(m_transitionType, "Transition Type", tutorialUITransitionTypeNames, tutorialUITransitionTypeCount),
     SERIALIZED_ENUM_INT(m_closeMode, "Close Mode", tutorialUICloseModeNames, tutorialUICloseModeCount),
+    SERIALIZED_BOOL(m_lockGameplay, "Lock Gameplay"),
     SERIALIZED_FLOAT(m_showDuration, "Show Duration", 0.0f, 5.0f, 0.05f),
-    SERIALIZED_FLOAT(m_hideDuration, "Hide Duration", 0.0f, 5.0f, 0.05f),
-    SERIALIZED_BOOL(m_lockGameplay, "Lock Gameplay")
+    SERIALIZED_FLOAT(m_hideDuration, "Hide Duration", 0.0f, 5.0f, 0.05f)
 )
 
 TutorialUIEvent::TutorialUIEvent(GameObject* owner)

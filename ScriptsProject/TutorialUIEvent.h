@@ -8,12 +8,6 @@
 class GameplayEventTrigger;
 class TutorialUIController;
 
-enum class TutorialUIEventType
-{
-    SideInfo = 0,
-    CollectiblePopup
-};
-
 enum class TutorialUITransitionType
 {
     Fade = 0,
@@ -41,7 +35,6 @@ public:
     Transform2D* getTutorialUIImageTransform2D(int index) const;
     int getTutorialUIImageCount() const;
 
-    TutorialUIEventType getEventType() const { return static_cast<TutorialUIEventType>(m_eventType); }
     TutorialUITransitionType getTransitionType() const { return static_cast<TutorialUITransitionType>(m_transitionType); }
     TutorialUICloseMode getCloseMode() const { return static_cast<TutorialUICloseMode>(m_closeMode); }
 
@@ -56,7 +49,6 @@ private:
 public:
     std::vector<ScriptComponentRef<Transform2D>> m_tutorialUIImages;
 
-    int m_eventType = static_cast<int>(TutorialUIEventType::CollectiblePopup);
     int m_transitionType = static_cast<int>(TutorialUITransitionType::Fade);
     int m_closeMode = static_cast<int>(TutorialUICloseMode::BothPlayersConfirm);
 
