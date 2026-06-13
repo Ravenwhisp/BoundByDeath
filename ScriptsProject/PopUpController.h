@@ -2,28 +2,28 @@
 
 #include "ScriptAPI.h"
 
-class TutorialUIEvent;
+class PopUpEvent;
 class PlayerController;
 class Damageable;
 class Transform2D;
 
-class TutorialUIController : public Script
+class PopUpController : public Script
 {
-    DECLARE_SCRIPT(TutorialUIController)
+    DECLARE_SCRIPT(PopUpController)
 
 public:
-    explicit TutorialUIController(GameObject* owner);
+    explicit PopUpController(GameObject* owner);
 
     void Start() override;
     void Update() override;
 
-    void startTutorialUI(TutorialUIEvent* event);
+    void startPopUp(PopUpEvent* event);
     void notifyObjectiveCompleted();
 
-    bool isShowingTutorialUI() const { return m_isShowingTutorialUI; }
+    bool isShowingPopUp() const { return m_isShowingPopUp; }
 
 private:
-    enum class TutorialUIState
+    enum class PopUpState
     {
         None,
         Showing,
@@ -42,31 +42,31 @@ private:
     void updateShowTransition(float alpha);
     void updateHideTransition(float alpha);
 
-    bool setCurrentTutorialUIImage(int index);
-    void hideAllTutorialUIImages();
+    bool setCurrentPopUpImage(int index);
+    void hideAllPopUpImages();
 
-    void finishTutorialUI();
+    void finishPopUp();
 
     void findPlayerControllers();
     void setPlayersGameplayInputLocked(bool locked);
     void setPlayersInvulnerable(bool invulnerable);
 
-    void setTutorialUIAlpha(float alpha);
-    void setTutorialUIPosition(const Vector2& position);
+    void setPopUpAlpha(float alpha);
+    void setPopUpPosition(const Vector2& position);
     Vector2 calculateHiddenPosition() const;
 
 private:
-    TutorialUIEvent* m_currentEvent = nullptr;
-    Transform2D* m_currentTutorialUIImage = nullptr;
+    PopUpEvent* m_currentEvent = nullptr;
+    Transform2D* m_currentPopUpImage = nullptr;
 
     int m_currentImageIndex = 0;
 
     std::vector<PlayerController*> m_playerControllers;
     std::vector<Damageable*> m_playerDamageables;
 
-    TutorialUIState m_state = TutorialUIState::None;
+    PopUpState m_state = PopUpState::None;
 
-    bool m_isShowingTutorialUI = false;
+    bool m_isShowingPopUp = false;
 
     bool m_player1Confirmed = false;
     bool m_player2Confirmed = false;

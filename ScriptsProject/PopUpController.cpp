@@ -1,23 +1,23 @@
 #include "pch.h"
-#include "TutorialUIController.h"
+#include "PopUpController.h"
 
-#include "TutorialUIEvent.h"
+#include "PopUpEvent.h"
 #include "PlayerController.h"
 #include "Damageable.h"
 
-TutorialUIController::TutorialUIController(GameObject* owner)
+PopUpController::PopUpController(GameObject* owner)
     : Script(owner)
 {
 }
 
-void TutorialUIController::Start()
+void PopUpController::Start()
 {
     findPlayerControllers();
 }
 
-void TutorialUIController::Update()
+void PopUpController::Update()
 {
-    if (!m_isShowingTutorialUI)
+    if (!m_isShowingPopUp)
     {
         return;
     }
@@ -26,27 +26,27 @@ void TutorialUIController::Update()
 
     switch (m_state)
     {
-    case TutorialUIState::Showing:
+    case PopUpState::Showing:
         updateShowing(dt);
         break;
 
-    case TutorialUIState::Waiting:
+    case PopUpState::Waiting:
         updateWaiting();
         break;
 
-    case TutorialUIState::Hiding:
+    case PopUpState::Hiding:
         updateHiding(dt);
         break;
 
-    case TutorialUIState::None:
+    case PopUpState::None:
     default:
         break;
     }
 }
 
-void TutorialUIController::startTutorialUI(TutorialUIEvent* event)
+void PopUpController::startPopUp(PopUpEvent* event)
 {
-    if (m_isShowingTutorialUI)
+    if (m_isShowingPopUp)
     {
         return;
     }
@@ -59,16 +59,16 @@ void TutorialUIController::startTutorialUI(TutorialUIEvent* event)
     m_currentEvent = event;
     m_currentImageIndex = 0;
 
-    hideAllTutorialUIImages();
+    hideAllPopUpImages();
 
-    if (!setCurrentTutorialUIImage(m_currentImageIndex))
+    if (!setCurrentPopUpImage(m_currentImageIndex))
     {
         m_currentEvent = nullptr;
         return;
     }
 
-    m_isShowingTutorialUI = true;
-    m_state = TutorialUIState::Showing;
+    m_isShowingPopUp = true;
+    m_state = PopUpState::Showing;
 
     m_timer = 0.0f;
     m_currentAlpha = 0.0f;
@@ -86,9 +86,9 @@ void TutorialUIController::startTutorialUI(TutorialUIEvent* event)
     prepareShowTransition();
 }
 
-void TutorialUIController::notifyObjectiveCompleted()
+void PopUpController::notifyObjectiveCompleted()
 {
-    if (!m_isShowingTutorialUI)
+    if (!m_isShowingPopUp)
     {
         return;
     }
@@ -96,7 +96,7 @@ void TutorialUIController::notifyObjectiveCompleted()
     m_objectiveCompleted = true;
 }
 
-void TutorialUIController::updateShowing(float dt)
+void PopUpController::updateShowing(float dt)
 {
     const float duration = m_currentEvent->getShowDuration();
 
@@ -111,12 +111,12 @@ void TutorialUIController::updateShowing(float dt)
     {
         updateShowTransition(1.0f);
 
-        m_state = TutorialUIState::Waiting;
+        m_state = PopUpState::Waiting;
         m_timer = 0.0f;
     }
 }
 
-void TutorialUIController::updateWaiting()
+void PopUpController::updateWaiting()
 {
     if (m_currentEvent == nullptr)
     {
@@ -125,7 +125,7 @@ void TutorialUIController::updateWaiting()
 
     switch (m_currentEvent->getCloseMode())
     {
-    case TutorialUICloseMode::BothPlayersConfirm:
+    case PopUpCloseMode::BothPlayersConfirm:
         if (Input::isFaceButtonBottomJustPressed(0))
         {
             m_player1Confirmed = true;
@@ -139,16 +139,16 @@ void TutorialUIController::updateWaiting()
         if (m_player1Confirmed && m_player2Confirmed)
         {
             prepareHideTransition();
-            m_state = TutorialUIState::Hiding;
+            m_state = PopUpState::Hiding;
             m_timer = 0.0f;
         }
         break;
 
-    case TutorialUICloseMode::ObjectiveCompleted:
+    case PopUpCloseMode::ObjectiveCompleted:
         if (m_objectiveCompleted)
         {
             prepareHideTransition();
-            m_state = TutorialUIState::Hiding;
+            m_state = PopUpState::Hiding;
             m_timer = 0.0f;
         }
         break;
@@ -158,7 +158,7 @@ void TutorialUIController::updateWaiting()
     }
 }
 
-void TutorialUIController::updateHiding(float dt)
+void PopUpController::updateHiding(float dt)
 {
     const float duration = m_currentEvent->getHideDuration();
 
@@ -175,7 +175,7 @@ void TutorialUIController::updateHiding(float dt)
 
         const int nextImageIndex = m_currentImageIndex + 1;
 
-        if (nextImageIndex < m_currentEvent->getTutorialUIImageCount())
+        if (nextImageIndex < m_currentEvent->getPopUpImageCount())
         {
             m_currentImageIndex = nextImageIndex;
 
@@ -183,9 +183,9 @@ void TutorialUIController::updateHiding(float dt)
             m_player2Confirmed = false;
             m_objectiveCompleted = false;
 
-            if (setCurrentTutorialUIImage(m_currentImageIndex))
+            if (setCurrentPopUpImage(m_currentImageIndex))
             {
-                m_state = TutorialUIState::Showing;
+                m_state = PopUpState::Showing;
                 m_timer = 0.0f;
                 m_currentAlpha = 0.0f;
 
@@ -194,154 +194,154 @@ void TutorialUIController::updateHiding(float dt)
             }
         }
 
-        finishTutorialUI();
+        finishPopUp();
     }
 }
 
-void TutorialUIController::prepareShowTransition()
+void PopUpController::prepareShowTransition()
 {
-    if (m_currentTutorialUIImage == nullptr || m_currentEvent == nullptr)
+    if (m_currentPopUpImage == nullptr || m_currentEvent == nullptr)
     {
         return;
     }
 
-    m_visiblePosition = Transform2DAPI::getPosition(m_currentTutorialUIImage);
+    m_visiblePosition = Transform2DAPI::getPosition(m_currentPopUpImage);
     m_hiddenPosition = calculateHiddenPosition();
 
     switch (m_currentEvent->getTransitionType())
     {
-    case TutorialUITransitionType::Fade:
-        setTutorialUIAlpha(0.0f);
+    case PopUpTransitionType::Fade:
+        setPopUpAlpha(0.0f);
         break;
 
-    case TutorialUITransitionType::SlideFromLeft:
-    case TutorialUITransitionType::SlideFromRight:
-        setTutorialUIAlpha(1.0f);
-        setTutorialUIPosition(m_hiddenPosition);
+    case PopUpTransitionType::SlideFromLeft:
+    case PopUpTransitionType::SlideFromRight:
+        setPopUpAlpha(1.0f);
+        setPopUpPosition(m_hiddenPosition);
         break;
 
     default:
-        setTutorialUIAlpha(0.0f);
+        setPopUpAlpha(0.0f);
         break;
     }
 }
 
-void TutorialUIController::prepareHideTransition()
+void PopUpController::prepareHideTransition()
 {
-    if (m_currentTutorialUIImage == nullptr || m_currentEvent == nullptr)
+    if (m_currentPopUpImage == nullptr || m_currentEvent == nullptr)
     {
         return;
     }
 
-    m_visiblePosition = Transform2DAPI::getPosition(m_currentTutorialUIImage);
+    m_visiblePosition = Transform2DAPI::getPosition(m_currentPopUpImage);
     m_hiddenPosition = calculateHiddenPosition();
 
     switch (m_currentEvent->getTransitionType())
     {
-    case TutorialUITransitionType::Fade:
-        setTutorialUIAlpha(1.0f);
+    case PopUpTransitionType::Fade:
+        setPopUpAlpha(1.0f);
         break;
 
-    case TutorialUITransitionType::SlideFromLeft:
-    case TutorialUITransitionType::SlideFromRight:
-        setTutorialUIAlpha(1.0f);
-        setTutorialUIPosition(m_visiblePosition);
+    case PopUpTransitionType::SlideFromLeft:
+    case PopUpTransitionType::SlideFromRight:
+        setPopUpAlpha(1.0f);
+        setPopUpPosition(m_visiblePosition);
         break;
 
     default:
-        setTutorialUIAlpha(1.0f);
+        setPopUpAlpha(1.0f);
         break;
     }
 }
 
-void TutorialUIController::updateShowTransition(float alpha)
+void PopUpController::updateShowTransition(float alpha)
 {
-    if (m_currentEvent == nullptr || m_currentTutorialUIImage == nullptr)
+    if (m_currentEvent == nullptr || m_currentPopUpImage == nullptr)
     {
         return;
     }
 
     switch (m_currentEvent->getTransitionType())
     {
-    case TutorialUITransitionType::Fade:
+    case PopUpTransitionType::Fade:
         m_currentAlpha = alpha;
-        setTutorialUIAlpha(m_currentAlpha);
+        setPopUpAlpha(m_currentAlpha);
         break;
 
-    case TutorialUITransitionType::SlideFromLeft:
-    case TutorialUITransitionType::SlideFromRight:
+    case PopUpTransitionType::SlideFromLeft:
+    case PopUpTransitionType::SlideFromRight:
     {
         const Vector2 position = MathAPI::lerp(m_hiddenPosition, m_visiblePosition, alpha);
-        setTutorialUIPosition(position);
+        setPopUpPosition(position);
         break;
     }
 
     default:
         m_currentAlpha = alpha;
-        setTutorialUIAlpha(m_currentAlpha);
+        setPopUpAlpha(m_currentAlpha);
         break;
     }
 }
 
-void TutorialUIController::updateHideTransition(float alpha)
+void PopUpController::updateHideTransition(float alpha)
 {
-    if (m_currentEvent == nullptr || m_currentTutorialUIImage == nullptr)
+    if (m_currentEvent == nullptr || m_currentPopUpImage == nullptr)
     {
         return;
     }
 
     switch (m_currentEvent->getTransitionType())
     {
-    case TutorialUITransitionType::Fade:
+    case PopUpTransitionType::Fade:
         m_currentAlpha = MathAPI::lerp(1.0f, 0.0f, alpha);
-        setTutorialUIAlpha(m_currentAlpha);
+        setPopUpAlpha(m_currentAlpha);
         break;
 
-    case TutorialUITransitionType::SlideFromLeft:
-    case TutorialUITransitionType::SlideFromRight:
+    case PopUpTransitionType::SlideFromLeft:
+    case PopUpTransitionType::SlideFromRight:
     {
         const Vector2 position = MathAPI::lerp(m_visiblePosition, m_hiddenPosition, alpha);
-        setTutorialUIPosition(position);
+        setPopUpPosition(position);
         break;
     }
 
     default:
         m_currentAlpha = MathAPI::lerp(1.0f, 0.0f, alpha);
-        setTutorialUIAlpha(m_currentAlpha);
+        setPopUpAlpha(m_currentAlpha);
         break;
     }
 }
 
-bool TutorialUIController::setCurrentTutorialUIImage(int index)
+bool PopUpController::setCurrentPopUpImage(int index)
 {
     if (m_currentEvent == nullptr)
     {
         return false;
     }
 
-    m_currentTutorialUIImage = m_currentEvent->getTutorialUIImageTransform2D(index);
+    m_currentPopUpImage = m_currentEvent->getPopUpImageTransform2D(index);
 
-    if (m_currentTutorialUIImage == nullptr)
+    if (m_currentPopUpImage == nullptr)
     {
-        Debug::warn("TutorialUIController could not set Tutorial UI Image at index %d.", index);
+        Debug::warn("PopUpController could not set PopUpI Image at index %d.", index);
         return false;
     }
 
     return true;
 }
 
-void TutorialUIController::hideAllTutorialUIImages()
+void PopUpController::hideAllPopUpImages()
 {
     if (m_currentEvent == nullptr)
     {
         return;
     }
 
-    const int imageCount = m_currentEvent->getTutorialUIImageCount();
+    const int imageCount = m_currentEvent->getPopUpImageCount();
 
     for (int i = 0; i < imageCount; ++i)
     {
-        Transform2D* image = m_currentEvent->getTutorialUIImageTransform2D(i);
+        Transform2D* image = m_currentEvent->getPopUpImageTransform2D(i);
 
         if (image == nullptr)
         {
@@ -352,7 +352,7 @@ void TutorialUIController::hideAllTutorialUIImages()
     }
 }
 
-void TutorialUIController::finishTutorialUI()
+void PopUpController::finishPopUp()
 {
     if (m_currentEvent->shouldLockGameplay())
     {
@@ -361,11 +361,11 @@ void TutorialUIController::finishTutorialUI()
     }
 
     m_currentEvent = nullptr;
-    m_currentTutorialUIImage = nullptr;
+    m_currentPopUpImage = nullptr;
     m_currentImageIndex = 0;
 
-    m_state = TutorialUIState::None;
-    m_isShowingTutorialUI = false;
+    m_state = PopUpState::None;
+    m_isShowingPopUp = false;
 
     m_player1Confirmed = false;
     m_player2Confirmed = false;
@@ -375,7 +375,7 @@ void TutorialUIController::finishTutorialUI()
     m_currentAlpha = 0.0f;
 }
 
-void TutorialUIController::findPlayerControllers()
+void PopUpController::findPlayerControllers()
 {
     m_playerControllers.clear();
     m_playerDamageables.clear();
@@ -387,7 +387,7 @@ void TutorialUIController::findPlayerControllers()
         PlayerController* playerController = GameObjectAPI::findScript<PlayerController>(player);
         if (playerController == nullptr)
         {
-            Debug::warn("TutorialUIController could not find PlayerController on player '%s'.", GameObjectAPI::getName(player));
+            Debug::warn("PopUpController could not find PlayerController on player '%s'.", GameObjectAPI::getName(player));
         }
         else
         {
@@ -397,7 +397,7 @@ void TutorialUIController::findPlayerControllers()
         Damageable* damageable = GameObjectAPI::findScript<Damageable>(player);
         if (damageable == nullptr)
         {
-            Debug::warn("TutorialUIController could not find Damageable on player '%s'.", GameObjectAPI::getName(player));
+            Debug::warn("PopUpController could not find Damageable on player '%s'.", GameObjectAPI::getName(player));
         }
         else
         {
@@ -406,7 +406,7 @@ void TutorialUIController::findPlayerControllers()
     }
 }
 
-void TutorialUIController::setPlayersGameplayInputLocked(bool locked)
+void PopUpController::setPlayersGameplayInputLocked(bool locked)
 {
     for (PlayerController* playerController : m_playerControllers)
     {
@@ -419,7 +419,7 @@ void TutorialUIController::setPlayersGameplayInputLocked(bool locked)
     }
 }
 
-void TutorialUIController::setPlayersInvulnerable(bool invulnerable)
+void PopUpController::setPlayersInvulnerable(bool invulnerable)
 {
     for (Damageable* damageable : m_playerDamageables)
     {
@@ -432,27 +432,27 @@ void TutorialUIController::setPlayersInvulnerable(bool invulnerable)
     }
 }
 
-void TutorialUIController::setTutorialUIAlpha(float alpha)
+void PopUpController::setPopUpAlpha(float alpha)
 {
-    if (m_currentTutorialUIImage == nullptr)
+    if (m_currentPopUpImage == nullptr)
     {
         return;
     }
 
-    Transform2DAPI::setAlpha(m_currentTutorialUIImage, alpha);
+    Transform2DAPI::setAlpha(m_currentPopUpImage, alpha);
 }
 
-void TutorialUIController::setTutorialUIPosition(const Vector2& position)
+void PopUpController::setPopUpPosition(const Vector2& position)
 {
-    if (m_currentTutorialUIImage == nullptr)
+    if (m_currentPopUpImage == nullptr)
     {
         return;
     }
 
-    Transform2DAPI::setPosition(m_currentTutorialUIImage, position);
+    Transform2DAPI::setPosition(m_currentPopUpImage, position);
 }
 
-Vector2 TutorialUIController::calculateHiddenPosition() const
+Vector2 PopUpController::calculateHiddenPosition() const
 {
     if (m_currentEvent == nullptr)
     {
@@ -461,16 +461,16 @@ Vector2 TutorialUIController::calculateHiddenPosition() const
 
     switch (m_currentEvent->getTransitionType())
     {
-    case TutorialUITransitionType::SlideFromLeft:
+    case PopUpTransitionType::SlideFromLeft:
         return Vector2(m_visiblePosition.x - m_slideOffset, m_visiblePosition.y);
 
-    case TutorialUITransitionType::SlideFromRight:
+    case PopUpTransitionType::SlideFromRight:
         return Vector2(m_visiblePosition.x + m_slideOffset, m_visiblePosition.y);
 
-    case TutorialUITransitionType::Fade:
+    case PopUpTransitionType::Fade:
     default:
         return m_visiblePosition;
     }
 }
 
-IMPLEMENT_SCRIPT(TutorialUIController)
+IMPLEMENT_SCRIPT(PopUpController)
