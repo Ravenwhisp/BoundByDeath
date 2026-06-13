@@ -106,6 +106,12 @@
     <Filter Include="Character\Death\UI">
       <UniqueIdentifier>{c0d34b51-4e99-4a88-847b-b50081a02770}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Player\Targeting\Lyriel">
+      <UniqueIdentifier>{f1d67fa5-e3f2-45e4-9809-bb393a7f43f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Player\Targeting\Death">
+      <UniqueIdentifier>{f0ae8d07-3265-48a1-985a-fbc989dd6a40}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -415,6 +421,12 @@
     </ClInclude>
     <ClInclude Include="DeathConfig.h">
       <Filter>Character\Death</Filter>
+    </ClInclude>
+    <ClInclude Include="LyrielTargetIndicatorUI.h">
+      <Filter>Player\Targeting\Lyriel</Filter>
+    </ClInclude>
+    <ClInclude Include="DeathTargetIndicatorUI.h">
+      <Filter>Player\Targeting\Death</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -726,6 +738,12 @@
     </ClCompile>
     <ClCompile Include="DeathConfig.cpp">
       <Filter>Character\Death</Filter>
+    </ClCompile>
+    <ClCompile Include="LyrielTargetIndicatorUI.cpp">
+      <Filter>Player\Targeting\Lyriel</Filter>
+    </ClCompile>
+    <ClCompile Include="DeathTargetIndicatorUI.cpp">
+      <Filter>Player\Targeting\Death</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
