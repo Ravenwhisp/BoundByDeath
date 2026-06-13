@@ -38,7 +38,8 @@ public:
 
     ScriptFieldList getExposedFields() const override;
 
-    Transform2D* getTutorialUIImageTransform2D() const { return m_tutorialUIImage.getReferencedComponent(); }
+    Transform2D* getTutorialUIImageTransform2D(int index) const;
+    int getTutorialUIImageCount() const;
 
     TutorialUIEventType getEventType() const { return static_cast<TutorialUIEventType>(m_eventType); }
     TutorialUITransitionType getTransitionType() const { return static_cast<TutorialUITransitionType>(m_transitionType); }
@@ -53,7 +54,7 @@ private:
     TutorialUIController* findTutorialUIController() const;
 
 public:
-    ScriptComponentRef<Transform2D> m_tutorialUIImage;
+    std::vector<ScriptComponentRef<Transform2D>> m_tutorialUIImages;
 
     int m_eventType = static_cast<int>(TutorialUIEventType::CollectiblePopup);
     int m_transitionType = static_cast<int>(TutorialUITransitionType::Fade);

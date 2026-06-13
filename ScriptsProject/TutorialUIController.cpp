@@ -57,7 +57,15 @@ void TutorialUIController::startTutorialUI(TutorialUIEvent* event)
     }
 
     m_currentEvent = event;
-    m_currentTutorialUIImage = event->getTutorialUIImageTransform2D();
+    m_currentImageIndex = 0;
+
+    hideAllTutorialUIImages();
+
+    if (!setCurrentTutorialUIImage(m_currentImageIndex))
+    {
+        m_currentEvent = nullptr;
+        return;
+    }
 
     m_isShowingTutorialUI = true;
     m_state = TutorialUIState::Showing;
@@ -164,6 +172,28 @@ void TutorialUIController::updateHiding(float dt)
     if (m_timer >= duration)
     {
         updateHideTransition(1.0f);
+
+        const int nextImageIndex = m_currentImageIndex + 1;
+
+        if (nextImageIndex < m_currentEvent->getTutorialUIImageCount())
+        {
+            m_currentImageIndex = nextImageIndex;
+
+            m_player1Confirmed = false;
+            m_player2Confirmed = false;
+            m_objectiveCompleted = false;
+
+            if (setCurrentTutorialUIImage(m_currentImageIndex))
+            {
+                m_state = TutorialUIState::Showing;
+                m_timer = 0.0f;
+                m_currentAlpha = 0.0f;
+
+                prepareShowTransition();
+                return;
+            }
+        }
+
         finishTutorialUI();
     }
 }
@@ -282,6 +312,46 @@ void TutorialUIController::updateHideTransition(float alpha)
     }
 }
 
+bool TutorialUIController::setCurrentTutorialUIImage(int index)
+{
+    if (m_currentEvent == nullptr)
+    {
+        return false;
+    }
+
+    m_currentTutorialUIImage = m_currentEvent->getTutorialUIImageTransform2D(index);
+
+    if (m_currentTutorialUIImage == nullptr)
+    {
+        Debug::warn("TutorialUIController could not set Tutorial UI Image at index %d.", index);
+        return false;
+    }
+
+    return true;
+}
+
+void TutorialUIController::hideAllTutorialUIImages()
+{
+    if (m_currentEvent == nullptr)
+    {
+        return;
+    }
+
+    const int imageCount = m_currentEvent->getTutorialUIImageCount();
+
+    for (int i = 0; i < imageCount; ++i)
+    {
+        Transform2D* image = m_currentEvent->getTutorialUIImageTransform2D(i);
+
+        if (image == nullptr)
+        {
+            continue;
+        }
+
+        Transform2DAPI::setAlpha(image, 0.0f);
+    }
+}
+
 void TutorialUIController::finishTutorialUI()
 {
     if (m_currentEvent->shouldLockGameplay())
@@ -292,6 +362,7 @@ void TutorialUIController::finishTutorialUI()
 
     m_currentEvent = nullptr;
     m_currentTutorialUIImage = nullptr;
+    m_currentImageIndex = 0;
 
     m_state = TutorialUIState::None;
     m_isShowingTutorialUI = false;

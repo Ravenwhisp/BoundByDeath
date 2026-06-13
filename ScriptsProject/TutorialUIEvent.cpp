@@ -30,7 +30,7 @@ static const char* tutorialUICloseModeNames[] =
 constexpr int tutorialUICloseModeCount = 2;
 
 IMPLEMENT_SCRIPT_FIELDS(TutorialUIEvent,
-    SERIALIZED_COMPONENT_REF(m_tutorialUIImage, "Tutorial UI Image", ComponentType::TRANSFORM2D),
+    SERIALIZED_COMPONENT_REF_VECTOR(m_tutorialUIImages, "Tutorial UI Images", ComponentType::TRANSFORM2D),
     SERIALIZED_ENUM_INT(m_eventType, "Event Type", tutorialUIEventTypeNames, tutorialUIEventTypeCount),
     SERIALIZED_ENUM_INT(m_transitionType, "Transition Type", tutorialUITransitionTypeNames, tutorialUITransitionTypeCount),
     SERIALIZED_ENUM_INT(m_closeMode, "Close Mode", tutorialUICloseModeNames, tutorialUICloseModeCount),
@@ -46,11 +46,15 @@ TutorialUIEvent::TutorialUIEvent(GameObject* owner)
 
 void TutorialUIEvent::executeEvent(GameplayEventTrigger* trigger)
 {
-    Transform2D* tutorialUIImage = getTutorialUIImageTransform2D();
-
-    if (tutorialUIImage == nullptr)
+    if (getTutorialUIImageCount() == 0)
     {
-        Debug::warn("TutorialUIEvent on '%s' has no Tutorial UI Image assigned.", GameObjectAPI::getName(getOwner()));
+        Debug::warn("TutorialUIEvent on '%s' has no Tutorial UI Images assigned.", GameObjectAPI::getName(getOwner()));
+        return;
+    }
+
+    if (getTutorialUIImageTransform2D(0) == nullptr)
+    {
+        Debug::warn("TutorialUIEvent on '%s' has an invalid first Tutorial UI Image.", GameObjectAPI::getName(getOwner()));
         return;
     }
 
@@ -63,6 +67,21 @@ void TutorialUIEvent::executeEvent(GameplayEventTrigger* trigger)
     }
 
     tutorialUIController->startTutorialUI(this);
+}
+
+Transform2D* TutorialUIEvent::getTutorialUIImageTransform2D(int index) const
+{
+    if (index < 0 || index >= static_cast<int>(m_tutorialUIImages.size()))
+    {
+        return nullptr;
+    }
+
+    return m_tutorialUIImages[index].getReferencedComponent();
+}
+
+int TutorialUIEvent::getTutorialUIImageCount() const
+{
+    return static_cast<int>(m_tutorialUIImages.size());
 }
 
 TutorialUIController* TutorialUIEvent::findTutorialUIController() const

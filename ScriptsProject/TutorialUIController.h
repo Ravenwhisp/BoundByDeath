@@ -42,6 +42,9 @@ private:
     void updateShowTransition(float alpha);
     void updateHideTransition(float alpha);
 
+    bool setCurrentTutorialUIImage(int index);
+    void hideAllTutorialUIImages();
+
     void finishTutorialUI();
 
     void findPlayerControllers();
@@ -55,6 +58,8 @@ private:
 private:
     TutorialUIEvent* m_currentEvent = nullptr;
     Transform2D* m_currentTutorialUIImage = nullptr;
+
+    int m_currentImageIndex = 0;
 
     std::vector<PlayerController*> m_playerControllers;
     std::vector<Damageable*> m_playerDamageables;
