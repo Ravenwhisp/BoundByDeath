@@ -3,6 +3,8 @@
 
 #include "GameplayEventTrigger.h"
 #include "PopUpController.h"
+#include "PlayerController.h"
+#include "PlayerMovement.h"
 
 static const char* objectiveTypeNames[] =
 {
@@ -27,8 +29,15 @@ ObjectiveEvent::ObjectiveEvent(GameObject* owner)
 
 void ObjectiveEvent::executeEvent(GameplayEventTrigger* trigger)
 {
+    findTargetPlayer();
+
     m_isActive = true;
     m_hasCompleted = false;
+}
+
+void ObjectiveEvent::Start()
+{
+    findTargetPlayer();
 }
 
 void ObjectiveEvent::Update()
@@ -77,16 +86,58 @@ bool ObjectiveEvent::isObjectiveCompleted() const
 
 bool ObjectiveEvent::isMovementCompleted() const
 {
-    //Need to create this objective
-    const Vector2 moveInput = Input::getMoveAxis(m_targetPlayerIndex);
+    if (m_targetPlayerMovement == nullptr)
+    {
+        return false;
+    }
 
-    return moveInput.Length() > 0.1f;
+    return m_targetPlayerMovement->isMoving();
 }
 
 bool ObjectiveEvent::isAutoAttackCompleted() const
 {
     //Need to create this objective
     return false;
+}
+
+void ObjectiveEvent::findTargetPlayer()
+{
+    m_targetPlayerController = nullptr;
+    m_targetPlayerMovement = nullptr;
+
+    const std::vector<GameObject*> players = SceneAPI::findAllGameObjectsByTag(Tag::PLAYER, true);
+
+    for (GameObject* player : players)
+    {
+        if (player == nullptr)
+        {
+            continue;
+        }
+
+        PlayerController* playerController = GameObjectAPI::findScript<PlayerController>(player);
+
+        if (playerController == nullptr)
+        {
+            continue;
+        }
+
+        if (playerController->getPlayerIndex() != m_targetPlayerIndex)
+        {
+            continue;
+        }
+
+        m_targetPlayerController = playerController;
+        m_targetPlayerMovement = GameObjectAPI::findScript<PlayerMovement>(player);
+
+        if (m_targetPlayerMovement == nullptr)
+        {
+            Debug::warn("ObjectiveEvent on '%s' could not find PlayerMovement on target player %d.", GameObjectAPI::getName(getOwner()), m_targetPlayerIndex);
+        }
+
+        return;
+    }
+
+    Debug::warn("ObjectiveEvent on '%s' could not find player with index %d.", GameObjectAPI::getName(getOwner()), m_targetPlayerIndex);
 }
 
 PopUpController* ObjectiveEvent::findPopUpController() const

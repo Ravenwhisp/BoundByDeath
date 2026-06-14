@@ -7,6 +7,8 @@
 
 class GameplayEventTrigger;
 class PopUpController;
+class PlayerController;
+class PlayerMovement;
 
 class ObjectiveEvent : public GameplayEventAction
 {
@@ -15,6 +17,7 @@ class ObjectiveEvent : public GameplayEventAction
 public:
     explicit ObjectiveEvent(GameObject* owner);
 
+    void Start() override;
     void Update() override;
 
     void executeEvent(GameplayEventTrigger* trigger) override;
@@ -26,13 +29,17 @@ private:
     bool isMovementCompleted() const;
     bool isAutoAttackCompleted() const;
 
+    void findTargetPlayer();
     PopUpController* findPopUpController() const;
-
-private:
-    bool m_isActive = false;
-    bool m_hasCompleted = false;
 
 public:
     int m_objectiveType = static_cast<int>(ObjectiveType::Movement);
     int m_targetPlayerIndex = 0;
+
+private:
+    PlayerController* m_targetPlayerController = nullptr;
+    PlayerMovement* m_targetPlayerMovement = nullptr;
+
+    bool m_isActive = false;
+    bool m_hasCompleted = false;
 };
