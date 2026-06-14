@@ -18,7 +18,7 @@ public:
     void Update() override;
 
     void startPopUp(PopUpEvent* event);
-    void notifyObjectiveCompleted();
+    void notifyObjectiveCompleted(GameObject* sourceObject);
 
     bool isShowingPopUp() const { return !m_activePopUps.empty(); }
 
@@ -34,8 +34,9 @@ private:
     struct ActivePopUp
     {
         PopUpEvent* event = nullptr;
-        Transform2D* currentImage = nullptr;
+        GameObject* sourceObject = nullptr;
 
+        Transform2D* currentImage = nullptr;
         int currentImageIndex = 0;
 
         PopUpState state = PopUpState::None;

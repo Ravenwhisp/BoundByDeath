@@ -41,6 +41,7 @@ void PopUpController::startPopUp(PopUpEvent* event)
 
     ActivePopUp popUp;
     popUp.event = event;
+    popUp.sourceObject = event->getOwner();
     popUp.currentImageIndex = 0;
     popUp.state = PopUpState::Showing;
 
@@ -69,11 +70,21 @@ void PopUpController::startPopUp(PopUpEvent* event)
     m_activePopUps.push_back(popUp);
 }
 
-void PopUpController::notifyObjectiveCompleted()
+void PopUpController::notifyObjectiveCompleted(GameObject* sourceObject)
 {
+    if (sourceObject == nullptr)
+    {
+        return;
+    }
+
     for (ActivePopUp& popUp : m_activePopUps)
     {
         if (popUp.event == nullptr)
+        {
+            continue;
+        }
+
+        if (popUp.sourceObject != sourceObject)
         {
             continue;
         }

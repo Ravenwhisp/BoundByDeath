@@ -124,6 +124,9 @@
     <Filter Include="Interaction/Gameplay\Events\PopUp">
       <UniqueIdentifier>{f5133925-52af-42ef-9418-8a5323556ee6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Interaction/Gameplay\Events\PlayerObjectives">
+      <UniqueIdentifier>{7a51092b-902d-4bdd-9711-bbb01813d5fd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -456,6 +459,12 @@
     <ClInclude Include="PopUpController.h">
       <Filter>Interaction/Gameplay\Events\PopUp</Filter>
     </ClInclude>
+    <ClInclude Include="ObjectiveTypes.h">
+      <Filter>Interaction/Gameplay\Events\PlayerObjectives</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectiveEvent.h">
+      <Filter>Interaction/Gameplay\Events\PlayerObjectives</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
@@ -785,6 +794,9 @@
     </ClCompile>
     <ClCompile Include="PopUpController.cpp">
       <Filter>Interaction/Gameplay\Events\PopUp</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectiveEvent.cpp">
+      <Filter>Interaction/Gameplay\Events\PlayerObjectives</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
