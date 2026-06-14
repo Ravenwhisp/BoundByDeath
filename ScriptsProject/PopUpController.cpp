@@ -17,25 +17,90 @@ void PopUpController::Start()
 
 void PopUpController::Update()
 {
-    if (!m_isShowingPopUp)
+    if (m_activePopUps.empty())
     {
         return;
     }
 
     const float dt = Time::getDeltaTime();
 
-    switch (m_state)
+    for (ActivePopUp& popUp : m_activePopUps)
+    {
+        updatePopUp(popUp, dt);
+    }
+
+    removeFinishedPopUps();
+}
+
+void PopUpController::startPopUp(PopUpEvent* event)
+{
+    if (event == nullptr)
+    {
+        return;
+    }
+
+    ActivePopUp popUp;
+    popUp.event = event;
+    popUp.currentImageIndex = 0;
+    popUp.state = PopUpState::Showing;
+
+    popUp.timer = 0.0f;
+    popUp.currentAlpha = 0.0f;
+
+    popUp.player1Confirmed = false;
+    popUp.player2Confirmed = false;
+    popUp.objectiveCompleted = false;
+
+    hideAllPopUpImages(popUp);
+
+    if (!setCurrentPopUpImage(popUp, popUp.currentImageIndex))
+    {
+        return;
+    }
+
+    if (popUp.event->shouldLockGameplay())
+    {
+        setPlayersGameplayInputLocked(true);
+        setPlayersInvulnerable(true);
+    }
+
+    prepareShowTransition(popUp);
+
+    m_activePopUps.push_back(popUp);
+}
+
+void PopUpController::notifyObjectiveCompleted()
+{
+    for (ActivePopUp& popUp : m_activePopUps)
+    {
+        if (popUp.event == nullptr)
+        {
+            continue;
+        }
+
+        if (popUp.event->getCloseMode() != PopUpCloseMode::ObjectiveCompleted)
+        {
+            continue;
+        }
+
+        popUp.objectiveCompleted = true;
+    }
+}
+
+void PopUpController::updatePopUp(ActivePopUp& popUp, float dt)
+{
+    switch (popUp.state)
     {
     case PopUpState::Showing:
-        updateShowing(dt);
+        updateShowing(popUp, dt);
         break;
 
     case PopUpState::Waiting:
-        updateWaiting();
+        updateWaiting(popUp);
         break;
 
     case PopUpState::Hiding:
-        updateHiding(dt);
+        updateHiding(popUp, dt);
         break;
 
     case PopUpState::None:
@@ -44,112 +109,71 @@ void PopUpController::Update()
     }
 }
 
-void PopUpController::startPopUp(PopUpEvent* event)
+void PopUpController::removeFinishedPopUps()
 {
-    if (m_isShowingPopUp)
+    for (int i = static_cast<int>(m_activePopUps.size()) - 1; i >= 0; --i)
     {
-        return;
+        if (m_activePopUps[i].state == PopUpState::None)
+        {
+            m_activePopUps.erase(m_activePopUps.begin() + i);
+        }
     }
-
-    if (event == nullptr)
-    {
-        return;
-    }
-
-    m_currentEvent = event;
-    m_currentImageIndex = 0;
-
-    hideAllPopUpImages();
-
-    if (!setCurrentPopUpImage(m_currentImageIndex))
-    {
-        m_currentEvent = nullptr;
-        return;
-    }
-
-    m_isShowingPopUp = true;
-    m_state = PopUpState::Showing;
-
-    m_timer = 0.0f;
-    m_currentAlpha = 0.0f;
-
-    m_player1Confirmed = false;
-    m_player2Confirmed = false;
-    m_objectiveCompleted = false;
-
-    if (m_currentEvent->shouldLockGameplay())
-    {
-        setPlayersGameplayInputLocked(true);
-        setPlayersInvulnerable(true);
-    }
-
-    prepareShowTransition();
 }
 
-void PopUpController::notifyObjectiveCompleted()
+void PopUpController::updateShowing(ActivePopUp& popUp, float dt)
 {
-    if (!m_isShowingPopUp)
-    {
-        return;
-    }
+    const float duration = popUp.event->getShowDuration();
 
-    m_objectiveCompleted = true;
-}
+    popUp.timer += dt;
 
-void PopUpController::updateShowing(float dt)
-{
-    const float duration = m_currentEvent->getShowDuration();
-
-    m_timer += dt;
-
-    const float normalizedTime = m_timer >= duration ? 1.0f : m_timer / duration;
+    const float normalizedTime = popUp.timer >= duration ? 1.0f : popUp.timer / duration;
     const float alpha = MathAPI::smoothStep(0.0f, 1.0f, normalizedTime);
 
-    updateShowTransition(alpha);
+    updateShowTransition(popUp, alpha);
 
-    if (m_timer >= duration)
+    if (popUp.timer >= duration)
     {
-        updateShowTransition(1.0f);
+        updateShowTransition(popUp, 1.0f);
 
-        m_state = PopUpState::Waiting;
-        m_timer = 0.0f;
+        popUp.state = PopUpState::Waiting;
+        popUp.timer = 0.0f;
     }
 }
 
-void PopUpController::updateWaiting()
+void PopUpController::updateWaiting(ActivePopUp& popUp)
 {
-    if (m_currentEvent == nullptr)
+    if (popUp.event == nullptr)
     {
         return;
     }
 
-    switch (m_currentEvent->getCloseMode())
+    switch (popUp.event->getCloseMode())
     {
     case PopUpCloseMode::BothPlayersConfirm:
         if (Input::isFaceButtonBottomJustPressed(0))
         {
-            m_player1Confirmed = true;
+            popUp.player1Confirmed = true;
         }
 
         if (Input::isFaceButtonBottomJustPressed(1))
         {
-            m_player2Confirmed = true;
+            popUp.player2Confirmed = true;
         }
 
-        if (m_player1Confirmed && m_player2Confirmed)
+        if (popUp.player1Confirmed && popUp.player2Confirmed)
         {
-            prepareHideTransition();
-            m_state = PopUpState::Hiding;
-            m_timer = 0.0f;
+            prepareHideTransition(popUp);
+            popUp.state = PopUpState::Hiding;
+            popUp.timer = 0.0f;
         }
         break;
 
     case PopUpCloseMode::ObjectiveCompleted:
-        if (m_objectiveCompleted)
+        if (popUp.objectiveCompleted)
         {
-            prepareHideTransition();
-            m_state = PopUpState::Hiding;
-            m_timer = 0.0f;
+            prepareHideTransition(popUp);
+            popUp.state = PopUpState::Hiding;
+            popUp.timer = 0.0f;
         }
         break;
 
@@ -158,190 +182,190 @@ void PopUpController::updateWaiting()
     }
 }
 
-void PopUpController::updateHiding(float dt)
+void PopUpController::updateHiding(ActivePopUp& popUp, float dt)
 {
-    const float duration = m_currentEvent->getHideDuration();
+    const float duration = popUp.event->getHideDuration();
 
-    m_timer += dt;
+    popUp.timer += dt;
 
-    const float normalizedTime = m_timer >= duration ? 1.0f : m_timer / duration;
+    const float normalizedTime = popUp.timer >= duration ? 1.0f : popUp.timer / duration;
     const float alpha = MathAPI::smoothStep(0.0f, 1.0f, normalizedTime);
 
-    updateHideTransition(alpha);
+    updateHideTransition(popUp, alpha);
 
-    if (m_timer >= duration)
+    if (popUp.timer >= duration)
     {
-        updateHideTransition(1.0f);
+        updateHideTransition(popUp, 1.0f);
 
-        const int nextImageIndex = m_currentImageIndex + 1;
+        const int nextImageIndex = popUp.currentImageIndex + 1;
 
-        if (nextImageIndex < m_currentEvent->getPopUpImageCount())
+        if (nextImageIndex < popUp.event->getPopUpImageCount())
         {
-            m_currentImageIndex = nextImageIndex;
+            popUp.currentImageIndex = nextImageIndex;
 
-            m_player1Confirmed = false;
-            m_player2Confirmed = false;
-            m_objectiveCompleted = false;
+            popUp.player1Confirmed = false;
+            popUp.player2Confirmed = false;
+            popUp.objectiveCompleted = false;
 
-            if (setCurrentPopUpImage(m_currentImageIndex))
+            if (setCurrentPopUpImage(popUp, popUp.currentImageIndex))
             {
-                m_state = PopUpState::Showing;
-                m_timer = 0.0f;
-                m_currentAlpha = 0.0f;
+                popUp.state = PopUpState::Showing;
+                popUp.timer = 0.0f;
+                popUp.currentAlpha = 0.0f;
 
-                prepareShowTransition();
+                prepareShowTransition(popUp);
                 return;
             }
         }
 
-        finishPopUp();
+        finishPopUp(popUp);
     }
 }
 
-void PopUpController::prepareShowTransition()
+void PopUpController::prepareShowTransition(ActivePopUp& popUp)
 {
-    if (m_currentPopUpImage == nullptr || m_currentEvent == nullptr)
+    if (popUp.currentImage == nullptr || popUp.event == nullptr)
     {
         return;
     }
 
-    m_visiblePosition = Transform2DAPI::getPosition(m_currentPopUpImage);
-    m_hiddenPosition = calculateHiddenPosition();
+    popUp.visiblePosition = Transform2DAPI::getPosition(popUp.currentImage);
+    popUp.hiddenPosition = calculateHiddenPosition(popUp);
 
-    switch (m_currentEvent->getTransitionType())
+    switch (popUp.event->getTransitionType())
     {
     case PopUpTransitionType::Fade:
-        setPopUpAlpha(0.0f);
+        setPopUpAlpha(popUp, 0.0f);
         break;
 
     case PopUpTransitionType::SlideFromLeft:
     case PopUpTransitionType::SlideFromRight:
-        setPopUpAlpha(1.0f);
-        setPopUpPosition(m_hiddenPosition);
+        setPopUpAlpha(popUp, 1.0f);
+        setPopUpPosition(popUp, popUp.hiddenPosition);
         break;
 
     default:
-        setPopUpAlpha(0.0f);
+        setPopUpAlpha(popUp, 0.0f);
         break;
     }
 }
 
-void PopUpController::prepareHideTransition()
+void PopUpController::prepareHideTransition(ActivePopUp& popUp)
 {
-    if (m_currentPopUpImage == nullptr || m_currentEvent == nullptr)
+    if (popUp.currentImage == nullptr || popUp.event == nullptr)
     {
         return;
     }
 
-    m_visiblePosition = Transform2DAPI::getPosition(m_currentPopUpImage);
-    m_hiddenPosition = calculateHiddenPosition();
+    popUp.visiblePosition = Transform2DAPI::getPosition(popUp.currentImage);
+    popUp.hiddenPosition = calculateHiddenPosition(popUp);
 
-    switch (m_currentEvent->getTransitionType())
+    switch (popUp.event->getTransitionType())
     {
     case PopUpTransitionType::Fade:
-        setPopUpAlpha(1.0f);
+        setPopUpAlpha(popUp, 1.0f);
         break;
 
     case PopUpTransitionType::SlideFromLeft:
     case PopUpTransitionType::SlideFromRight:
-        setPopUpAlpha(1.0f);
-        setPopUpPosition(m_visiblePosition);
+        setPopUpAlpha(popUp, 1.0f);
+        setPopUpPosition(popUp, popUp.visiblePosition);
         break;
 
     default:
-        setPopUpAlpha(1.0f);
+        setPopUpAlpha(popUp, 1.0f);
         break;
     }
 }
 
-void PopUpController::updateShowTransition(float alpha)
+void PopUpController::updateShowTransition(ActivePopUp& popUp, float alpha)
 {
-    if (m_currentEvent == nullptr || m_currentPopUpImage == nullptr)
+    if (popUp.event == nullptr || popUp.currentImage == nullptr)
     {
         return;
     }
 
-    switch (m_currentEvent->getTransitionType())
+    switch (popUp.event->getTransitionType())
     {
     case PopUpTransitionType::Fade:
-        m_currentAlpha = alpha;
-        setPopUpAlpha(m_currentAlpha);
-        break;
-
-    case PopUpTransitionType::SlideFromLeft:
-    case PopUpTransitionType::SlideFromRight:
-    {
-        const Vector2 position = MathAPI::lerp(m_hiddenPosition, m_visiblePosition, alpha);
-        setPopUpPosition(position);
-        break;
-    }
-
-    default:
-        m_currentAlpha = alpha;
-        setPopUpAlpha(m_currentAlpha);
-        break;
-    }
-}
-
-void PopUpController::updateHideTransition(float alpha)
-{
-    if (m_currentEvent == nullptr || m_currentPopUpImage == nullptr)
-    {
-        return;
-    }
-
-    switch (m_currentEvent->getTransitionType())
-    {
-    case PopUpTransitionType::Fade:
-        m_currentAlpha = MathAPI::lerp(1.0f, 0.0f, alpha);
-        setPopUpAlpha(m_currentAlpha);
+        popUp.currentAlpha = alpha;
+        setPopUpAlpha(popUp, popUp.currentAlpha);
         break;
 
     case PopUpTransitionType::SlideFromLeft:
     case PopUpTransitionType::SlideFromRight:
     {
-        const Vector2 position = MathAPI::lerp(m_visiblePosition, m_hiddenPosition, alpha);
-        setPopUpPosition(position);
+        const Vector2 position = MathAPI::lerp(popUp.hiddenPosition, popUp.visiblePosition, alpha);
+        setPopUpPosition(popUp, position);
         break;
     }
 
     default:
-        m_currentAlpha = MathAPI::lerp(1.0f, 0.0f, alpha);
-        setPopUpAlpha(m_currentAlpha);
+        popUp.currentAlpha = alpha;
+        setPopUpAlpha(popUp, popUp.currentAlpha);
         break;
     }
 }
 
-bool PopUpController::setCurrentPopUpImage(int index)
+void PopUpController::updateHideTransition(ActivePopUp& popUp, float alpha)
 {
-    if (m_currentEvent == nullptr)
+    if (popUp.event == nullptr || popUp.currentImage == nullptr)
+    {
+        return;
+    }
+
+    switch (popUp.event->getTransitionType())
+    {
+    case PopUpTransitionType::Fade:
+        popUp.currentAlpha = MathAPI::lerp(1.0f, 0.0f, alpha);
+        setPopUpAlpha(popUp, popUp.currentAlpha);
+        break;
+
+    case PopUpTransitionType::SlideFromLeft:
+    case PopUpTransitionType::SlideFromRight:
+    {
+        const Vector2 position = MathAPI::lerp(popUp.visiblePosition, popUp.hiddenPosition, alpha);
+        setPopUpPosition(popUp, position);
+        break;
+    }
+
+    default:
+        popUp.currentAlpha = MathAPI::lerp(1.0f, 0.0f, alpha);
+        setPopUpAlpha(popUp, popUp.currentAlpha);
+        break;
+    }
+}
+
+bool PopUpController::setCurrentPopUpImage(ActivePopUp& popUp, int index)
+{
+    if (popUp.event == nullptr)
     {
         return false;
     }
 
-    m_currentPopUpImage = m_currentEvent->getPopUpImageTransform2D(index);
+    popUp.currentImage = popUp.event->getPopUpImageTransform2D(index);
 
-    if (m_currentPopUpImage == nullptr)
+    if (popUp.currentImage == nullptr)
     {
-        Debug::warn("PopUpController could not set PopUpI Image at index %d.", index);
+        Debug::warn("PopUpController could not set PopUp Image at index %d.", index);
         return false;
     }
 
     return true;
 }
 
-void PopUpController::hideAllPopUpImages()
+void PopUpController::hideAllPopUpImages(ActivePopUp& popUp)
 {
-    if (m_currentEvent == nullptr)
+    if (popUp.event == nullptr)
     {
         return;
     }
 
-    const int imageCount = m_currentEvent->getPopUpImageCount();
+    const int imageCount = popUp.event->getPopUpImageCount();
 
     for (int i = 0; i < imageCount; ++i)
     {
-        Transform2D* image = m_currentEvent->getPopUpImageTransform2D(i);
+        Transform2D* image = popUp.event->getPopUpImageTransform2D(i);
 
         if (image == nullptr)
         {
@@ -352,27 +376,26 @@ void PopUpController::hideAllPopUpImages()
     }
 }
 
-void PopUpController::finishPopUp()
+void PopUpController::finishPopUp(ActivePopUp& popUp)
 {
-    if (m_currentEvent->shouldLockGameplay())
+    if (popUp.event != nullptr && popUp.event->shouldLockGameplay())
     {
         setPlayersGameplayInputLocked(false);
         setPlayersInvulnerable(false);
     }
 
-    m_currentEvent = nullptr;
-    m_currentPopUpImage = nullptr;
-    m_currentImageIndex = 0;
+    popUp.event = nullptr;
+    popUp.currentImage = nullptr;
+    popUp.currentImageIndex = 0;
 
-    m_state = PopUpState::None;
-    m_isShowingPopUp = false;
+    popUp.state = PopUpState::None;
 
-    m_player1Confirmed = false;
-    m_player2Confirmed = false;
-    m_objectiveCompleted = false;
+    popUp.player1Confirmed = false;
+    popUp.player2Confirmed = false;
+    popUp.objectiveCompleted = false;
 
-    m_timer = 0.0f;
-    m_currentAlpha = 0.0f;
+    popUp.timer = 0.0f;
+    popUp.currentAlpha = 0.0f;
 }
 
 void PopUpController::findPlayerControllers()
@@ -432,44 +455,44 @@ void PopUpController::setPlayersInvulnerable(bool invulnerable)
     }
 }
 
-void PopUpController::setPopUpAlpha(float alpha)
+void PopUpController::setPopUpAlpha(ActivePopUp& popUp, float alpha)
 {
-    if (m_currentPopUpImage == nullptr)
+    if (popUp.currentImage == nullptr)
     {
         return;
     }
 
-    Transform2DAPI::setAlpha(m_currentPopUpImage, alpha);
+    Transform2DAPI::setAlpha(popUp.currentImage, alpha);
 }
 
-void PopUpController::setPopUpPosition(const Vector2& position)
+void PopUpController::setPopUpPosition(ActivePopUp& popUp, const Vector2& position)
 {
-    if (m_currentPopUpImage == nullptr)
+    if (popUp.currentImage == nullptr)
     {
         return;
     }
 
-    Transform2DAPI::setPosition(m_currentPopUpImage, position);
+    Transform2DAPI::setPosition(popUp.currentImage, position);
 }
 
-Vector2 PopUpController::calculateHiddenPosition() const
+Vector2 PopUpController::calculateHiddenPosition(const ActivePopUp& popUp) const
 {
-    if (m_currentEvent == nullptr)
+    if (popUp.event == nullptr)
     {
-        return m_visiblePosition;
+        return popUp.visiblePosition;
     }
 
-    switch (m_currentEvent->getTransitionType())
+    switch (popUp.event->getTransitionType())
     {
     case PopUpTransitionType::SlideFromLeft:
-        return Vector2(m_visiblePosition.x - m_slideOffset, m_visiblePosition.y);
+        return Vector2(popUp.visiblePosition.x - m_slideOffset, popUp.visiblePosition.y);
 
     case PopUpTransitionType::SlideFromRight:
-        return Vector2(m_visiblePosition.x + m_slideOffset, m_visiblePosition.y);
+        return Vector2(popUp.visiblePosition.x + m_slideOffset, popUp.visiblePosition.y);
 
     case PopUpTransitionType::Fade:
     default:
-        return m_visiblePosition;
+        return popUp.visiblePosition;
     }
 }
 

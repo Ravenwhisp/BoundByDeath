@@ -20,7 +20,7 @@ public:
     void startPopUp(PopUpEvent* event);
     void notifyObjectiveCompleted();
 
-    bool isShowingPopUp() const { return m_isShowingPopUp; }
+    bool isShowingPopUp() const { return !m_activePopUps.empty(); }
 
 private:
     enum class PopUpState
@@ -31,52 +31,58 @@ private:
         Hiding
     };
 
+    struct ActivePopUp
+    {
+        PopUpEvent* event = nullptr;
+        Transform2D* currentImage = nullptr;
+
+        int currentImageIndex = 0;
+
+        PopUpState state = PopUpState::None;
+
+        bool player1Confirmed = false;
+        bool player2Confirmed = false;
+        bool objectiveCompleted = false;
+
+        float timer = 0.0f;
+        float currentAlpha = 0.0f;
+
+        Vector2 visiblePosition = Vector2(0.0f, 0.0f);
+        Vector2 hiddenPosition = Vector2(0.0f, 0.0f);
+    };
+
 private:
-    void updateShowing(float dt);
-    void updateWaiting();
-    void updateHiding(float dt);
+    void updatePopUp(ActivePopUp& popUp, float dt);
+    void removeFinishedPopUps();
 
-    void prepareShowTransition();
-    void prepareHideTransition();
+    void updateShowing(ActivePopUp& popUp, float dt);
+    void updateWaiting(ActivePopUp& popUp);
+    void updateHiding(ActivePopUp& popUp, float dt);
 
-    void updateShowTransition(float alpha);
-    void updateHideTransition(float alpha);
+    void prepareShowTransition(ActivePopUp& popUp);
+    void prepareHideTransition(ActivePopUp& popUp);
 
-    bool setCurrentPopUpImage(int index);
-    void hideAllPopUpImages();
+    void updateShowTransition(ActivePopUp& popUp, float alpha);
+    void updateHideTransition(ActivePopUp& popUp, float alpha);
 
-    void finishPopUp();
+    bool setCurrentPopUpImage(ActivePopUp& popUp, int index);
+    void hideAllPopUpImages(ActivePopUp& popUp);
+
+    void finishPopUp(ActivePopUp& popUp);
 
     void findPlayerControllers();
     void setPlayersGameplayInputLocked(bool locked);
     void setPlayersInvulnerable(bool invulnerable);
 
-    void setPopUpAlpha(float alpha);
-    void setPopUpPosition(const Vector2& position);
-    Vector2 calculateHiddenPosition() const;
+    void setPopUpAlpha(ActivePopUp& popUp, float alpha);
+    void setPopUpPosition(ActivePopUp& popUp, const Vector2& position);
+    Vector2 calculateHiddenPosition(const ActivePopUp& popUp) const;
 
 private:
-    PopUpEvent* m_currentEvent = nullptr;
-    Transform2D* m_currentPopUpImage = nullptr;
-
-    int m_currentImageIndex = 0;
+    std::vector<ActivePopUp> m_activePopUps;
 
     std::vector<PlayerController*> m_playerControllers;
     std::vector<Damageable*> m_playerDamageables;
-
-    PopUpState m_state = PopUpState::None;
-
-    bool m_isShowingPopUp = false;
-
-    bool m_player1Confirmed = false;
-    bool m_player2Confirmed = false;
-    bool m_objectiveCompleted = false;
-
-    float m_timer = 0.0f;
-    float m_currentAlpha = 0.0f;
-
-    Vector2 m_visiblePosition = Vector2(0.0f, 0.0f);
-    Vector2 m_hiddenPosition = Vector2(0.0f, 0.0f);
 
     float m_slideOffset = 600.0f;
 };
