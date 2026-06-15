@@ -6,6 +6,7 @@
 #include "PlayerTargetController.h"
 #include "PlayerAnimationController.h"
 #include "PlayerRotation.h"
+#include "PlayerMovement.h"
 #include "PlayerState.h"
 #include "EnemyDamageable.h"
 #include "EnemyShadowMark.h"
@@ -25,6 +26,7 @@ void DeathBasicAttack::Start()
     DeathAbilityBase::Start();
 
     m_deathUI = GameObjectAPI::findScript<DeathUI>(getOwner());
+    m_playerMovement = GameObjectAPI::findScript<PlayerMovement>(getOwner());
 
     if (!m_deathUI)
     {
@@ -57,10 +59,17 @@ void DeathBasicAttack::startAbility()
     setAbilityLocked(true);
     m_movementLockedForCombo = true;
 
-    snapFaceTarget(target);
+    faceTarget(target);
     m_attackFacingTarget = target;
 
     const int comboStep = m_deathCharacter->getComboStep();
+    const bool  isFinalHit  = (comboStep >= 2);
+    const float lockDuration = isFinalHit ? m_config->m_basicFinalHitLockDuration : m_config->m_basicAttackLockDuration;
+
+    if (target != nullptr && m_playerMovement != nullptr)
+    {
+        closeGapToTarget(target, lockDuration);
+    }
 
     DeathSound* sound = m_deathCharacter->getSound();
     if (sound != nullptr)
@@ -68,11 +77,9 @@ void DeathBasicAttack::startAbility()
         sound->playLightSwing();
     }
 
+    snapFaceTarget(target);
     dealDamageToTarget(target);
     m_deathCharacter->advanceCombo(false);
-
-    const bool  isFinalHit  = (comboStep >= 2);
-    const float lockDuration = isFinalHit ? m_config->m_basicFinalHitLockDuration : m_config->m_basicAttackLockDuration;
 
     beginAttackPresentation();
     beginAttackWindow(lockDuration);
@@ -90,7 +97,16 @@ void DeathBasicAttack::startAbility()
 
 void DeathBasicAttack::onAttackWindowUpdate()
 {
-    faceTarget(m_attackFacingTarget);
+    if (m_attackFacingTarget != nullptr)
+    {
+        faceTarget(m_attackFacingTarget);
+    }
+
+    if (m_closeGapVelocity.LengthSquared() > 0.0001f && m_playerMovement != nullptr)
+    {
+        const float dt = Time::getDeltaTime();
+        m_playerMovement->playerDashMovement(getOwner(), m_closeGapVelocity * dt);
+    }
 
     PlayerAnimationController* anim = m_character ? m_character->getAnimationController() : nullptr;
     if (anim != nullptr)
@@ -102,6 +118,7 @@ void DeathBasicAttack::onAttackWindowUpdate()
 void DeathBasicAttack::onAttackWindowFinished()
 {
     m_attackFacingTarget = nullptr;
+    m_closeGapVelocity = Vector3::Zero;
 
     if (m_movementLockedForCombo)
     {
@@ -345,14 +362,12 @@ void DeathBasicAttack::snapFaceTarget(GameObject* target)
         return;
     }
 
-    const float rangeSq = m_config->m_basicAttackRange * m_config->m_basicAttackRange;
-
     Vector3 myPos     = TransformAPI::getGlobalPosition(myTransform);
     Vector3 targetPos = TransformAPI::getGlobalPosition(targetTransform);
     Vector3 dir       = targetPos - myPos;
     dir.y = 0.0f;
 
-    if (dir.LengthSquared() > rangeSq || dir.LengthSquared() <= 0.0001f)
+    if (dir.LengthSquared() <= 0.0001f)
     {
         return;
     }
@@ -363,6 +378,42 @@ void DeathBasicAttack::snapFaceTarget(GameObject* target)
     const float     yaw        = atan2f(dir.x, dir.z) * k_radToDeg;
     const Vector3   euler      = TransformAPI::getEulerDegrees(myTransform);
     TransformAPI::setRotationEuler(myTransform, Vector3(euler.x, yaw, euler.z));
+}
+
+void DeathBasicAttack::closeGapToTarget(GameObject* target, float lockDuration)
+{
+    if (target == nullptr || m_config == nullptr || m_playerMovement == nullptr)
+    {
+        return;
+    }
+
+    Transform* myTransform     = GameObjectAPI::getTransform(getOwner());
+    Transform* targetTransform = GameObjectAPI::getTransform(target);
+    if (myTransform == nullptr || targetTransform == nullptr)
+    {
+        return;
+    }
+
+    Vector3 myPos     = TransformAPI::getGlobalPosition(myTransform);
+    Vector3 targetPos = TransformAPI::getGlobalPosition(targetTransform);
+    Vector3 dir       = targetPos - myPos;
+    dir.y = 0.0f;
+
+    const float dist = dir.Length();
+
+    if (dist <= m_config->m_basicAttackRange || dist > m_config->m_basicCloseGapRange)
+    {
+        return;
+    }
+
+    dir.Normalize();
+
+    const float gapDistance = dist - m_config->m_basicAttackRange * 0.9f;
+
+    m_playerMovement->playerDashMovement(getOwner(), dir * gapDistance);
+
+    const float followThroughSpeed = (lockDuration > 0.0001f) ? (gapDistance / lockDuration) : 0.0f;
+    m_closeGapVelocity = dir * followThroughSpeed;
 }
 
 void DeathBasicAttack::faceTarget(GameObject* target)
@@ -381,12 +432,6 @@ void DeathBasicAttack::faceTarget(GameObject* target)
 
     Vector3 dir = targetPos - myPos;
     dir.y = 0.0f;
-
-    const float rangeSq = m_config->m_basicAttackRange * m_config->m_basicAttackRange;
-    if (dir.LengthSquared() > rangeSq)
-    {
-        return;
-    }
 
     if (dir.LengthSquared() <= 0.0001f)
     {

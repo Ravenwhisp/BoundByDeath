@@ -21,6 +21,7 @@ public:
 	// Basic Attack
 	float m_basicAttackDamage = 20.0f;
 	float m_basicAttackRange = 1.5f;
+	float m_basicCloseGapRange = 2.1f;
 	float m_basicAttackHitAngle = 50.0f;
 	float m_basicAttackLockDuration = 0.35f;
 	float m_basicFinalHitLockDuration = 0.7f;
