@@ -69,6 +69,8 @@ void DeathBasicAttack::startAbility()
     }
 
     dealDamageToTarget(target);
+    notifyAbilitySuccessfullyStarted();
+
     m_deathCharacter->advanceCombo(false);
 
     const bool  isFinalHit  = (comboStep >= 2);

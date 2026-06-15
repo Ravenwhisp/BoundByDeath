@@ -5,6 +5,7 @@
 #include "EnemyShadowMark.h"
 #include "PlayerMovement.h"
 #include "DeathConfig.h"
+#include "DeathBasicAttack.h"
 
 #include <cmath>
 #include <vector>
@@ -18,9 +19,15 @@ void DeathCharacter::Start()
 {
     CharacterBase::Start();
 
+    m_basicAttack = GameObjectAPI::findScript<DeathBasicAttack>(getOwner());
     m_sound    = GameObjectAPI::findScript<DeathSound>(getOwner());
     m_movement = GameObjectAPI::findScript<PlayerMovement>(getOwner());
     m_config = GameObjectAPI::findScript<DeathConfig>(getOwner());
+
+    if (m_basicAttack == nullptr)
+    {
+        Debug::warn("[DeathCharacter] DeathBasicAttack not found on owner '%s'.", GameObjectAPI::getName(getOwner()));
+    }
 
     if (m_sound == nullptr)
     {

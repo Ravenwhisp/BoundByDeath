@@ -7,8 +7,9 @@
 
 class GameplayEventTrigger;
 class PopUpController;
-class PlayerController;
+class CharacterBase;
 class PlayerMovement;
+class AbilityBase;
 
 class ObjectiveEvent : public GameplayEventAction
 {
@@ -37,9 +38,12 @@ public:
     int m_targetPlayerIndex = 0;
 
 private:
-    PlayerController* m_targetPlayerController = nullptr;
+    CharacterBase* m_targetCharacter = nullptr;
     PlayerMovement* m_targetPlayerMovement = nullptr;
+    AbilityBase* m_targetBasicAttack = nullptr;
 
     bool m_isActive = false;
     bool m_hasCompleted = false;
+
+    int m_initialBasicAttackUseCount = 0;
 };

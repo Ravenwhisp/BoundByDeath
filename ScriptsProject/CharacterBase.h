@@ -8,6 +8,7 @@ class PlayerRotation;
 class PlayerAnimationController;
 class PlayerTargetController;
 class Damageable;
+class AbilityBase;
 
 class CharacterBase : public Script
 {
@@ -25,6 +26,8 @@ public:
     PlayerTargetController* getTargetController() const { return m_targetController; }
     Damageable* getDamageable() const { return m_damageable; }
 
+    AbilityBase* getBasicAttack() const { return m_basicAttack; }
+
     bool isDowned() const;
     bool isUsingAbility() const;
     void setUsingAbility(bool value);
@@ -36,4 +39,6 @@ protected:
     PlayerAnimationController* m_playerAnimationController = nullptr;
     PlayerTargetController* m_targetController = nullptr;
     Damageable* m_damageable = nullptr;
+
+    AbilityBase* m_basicAttack = nullptr;
 };

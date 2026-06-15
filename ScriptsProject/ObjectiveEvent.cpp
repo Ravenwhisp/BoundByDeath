@@ -3,8 +3,10 @@
 
 #include "GameplayEventTrigger.h"
 #include "PopUpController.h"
-#include "PlayerController.h"
+
+#include "CharacterBase.h"
 #include "PlayerMovement.h"
+#include "AbilityBase.h"
 
 static const char* objectiveTypeNames[] =
 {
@@ -30,6 +32,8 @@ ObjectiveEvent::ObjectiveEvent(GameObject* owner)
 void ObjectiveEvent::executeEvent(GameplayEventTrigger* trigger)
 {
     findTargetPlayer();
+
+    m_initialBasicAttackUseCount = m_targetBasicAttack != nullptr ? m_targetBasicAttack->getSuccessfulUse() : 0;
 
     m_isActive = true;
     m_hasCompleted = false;
@@ -96,14 +100,19 @@ bool ObjectiveEvent::isMovementCompleted() const
 
 bool ObjectiveEvent::isAutoAttackCompleted() const
 {
-    //Need to create this objective
-    return false;
+    if (m_targetBasicAttack == nullptr)
+    {
+        return false;
+    }
+
+    return m_targetBasicAttack->getSuccessfulUse() > m_initialBasicAttackUseCount;
 }
 
 void ObjectiveEvent::findTargetPlayer()
 {
-    m_targetPlayerController = nullptr;
+    m_targetCharacter = nullptr;
     m_targetPlayerMovement = nullptr;
+    m_targetBasicAttack = nullptr;
 
     const std::vector<GameObject*> players = SceneAPI::findAllGameObjectsByTag(Tag::PLAYER, true);
 
@@ -114,24 +123,30 @@ void ObjectiveEvent::findTargetPlayer()
             continue;
         }
 
-        PlayerController* playerController = GameObjectAPI::findScript<PlayerController>(player);
+        CharacterBase* character = GameObjectAPI::findScript<CharacterBase>(player);
 
-        if (playerController == nullptr)
+        if (character == nullptr)
         {
             continue;
         }
 
-        if (playerController->getPlayerIndex() != m_targetPlayerIndex)
+        if (character->getPlayerIndex() != m_targetPlayerIndex)
         {
             continue;
         }
 
-        m_targetPlayerController = playerController;
+        m_targetCharacter = character;
         m_targetPlayerMovement = GameObjectAPI::findScript<PlayerMovement>(player);
+        m_targetBasicAttack = character->getBasicAttack();
 
         if (m_targetPlayerMovement == nullptr)
         {
             Debug::warn("ObjectiveEvent on '%s' could not find PlayerMovement on target player %d.", GameObjectAPI::getName(getOwner()), m_targetPlayerIndex);
+        }
+
+        if (m_targetBasicAttack == nullptr)
+        {
+            Debug::warn("ObjectiveEvent on '%s' could not find BasicAttack on target player %d.", GameObjectAPI::getName(getOwner()), m_targetPlayerIndex);
         }
 
         return;

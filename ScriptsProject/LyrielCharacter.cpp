@@ -6,6 +6,7 @@
 #include "LyrielSound.h"
 #include "PlayerMovement.h"
 #include "LyrielConfig.h"
+#include "LyrielBasicAttack.h"
 
 IMPLEMENT_SCRIPT_FIELDS(LyrielCharacter,
     SERIALIZED_STRING(m_arrowSpawnChildName, "Arrow Spawn Child Name")
@@ -21,15 +22,22 @@ void LyrielCharacter::Start()
     CharacterBase::Start();
 
     m_arrowPool     = GameObjectAPI::findScript<ArrowPool>(getOwner());
+    m_basicAttack = GameObjectAPI::findScript<LyrielBasicAttack>(getOwner());
     m_dash          = GameObjectAPI::findScript<LyrielDash>(getOwner());
     m_arrowVolley   = GameObjectAPI::findScript<LyrielArrowVolley>(getOwner());
     m_sound         = GameObjectAPI::findScript<LyrielSound>(getOwner());
     m_movement      = GameObjectAPI::findScript<PlayerMovement>(getOwner());
     m_config        = GameObjectAPI::findScript<LyrielConfig>(getOwner());
 
+
     if (m_arrowPool == nullptr)
     {
         Debug::log("[LyrielCharacter] ArrowPool not found on owner '%s'.", GameObjectAPI::getName(getOwner()));
+    }
+
+    if (m_basicAttack == nullptr)
+    {
+        Debug::warn("[LyrielCharacter] LyrielBasicAttack not found on owner '%s'.", GameObjectAPI::getName(getOwner()));
     }
 
     if (m_dash == nullptr)
