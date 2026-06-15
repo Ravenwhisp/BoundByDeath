@@ -27,6 +27,8 @@ public:
     Damageable* getDamageable() const { return m_damageable; }
 
     AbilityBase* getBasicAttack() const { return m_basicAttack; }
+    AbilityBase* getChargedAttack() const { return m_chargedAttack; }
+    AbilityBase* getSpecialAbility() const { return m_specialAbility; }
 
     bool isDowned() const;
     bool isUsingAbility() const;
@@ -41,4 +43,6 @@ protected:
     Damageable* m_damageable = nullptr;
 
     AbilityBase* m_basicAttack = nullptr;
+    AbilityBase* m_chargedAttack = nullptr;
+    AbilityBase* m_specialAbility = nullptr;
 };

@@ -13,11 +13,11 @@ static const char* objectiveTypeNames[] =
     "None",
     "Movement",
     "Auto Attack",
-    //"Charged Attack",
-    //"Ability 1"
+    "Charged Attack",
+    "Ability"
 };
 
-constexpr int objectiveTypeCount = 3;
+constexpr int objectiveTypeCount = 5;
 
 IMPLEMENT_SCRIPT_FIELDS(ObjectiveEvent,
     SERIALIZED_ENUM_INT(m_objectiveType, "Objective Type", objectiveTypeNames, objectiveTypeCount),
@@ -34,6 +34,10 @@ void ObjectiveEvent::executeEvent(GameplayEventTrigger* trigger)
     findTargetPlayer();
 
     m_initialBasicAttackUseCount = m_targetBasicAttack != nullptr ? m_targetBasicAttack->getSuccessfulUse() : 0;
+
+    m_initialChargedAttackUseCount = m_targetChargedAttack != nullptr ? m_targetChargedAttack->getSuccessfulUse() : 0;
+
+    m_initialSpecialAbilityUseCount = m_targetSpecialAbility != nullptr ? m_targetSpecialAbility->getSuccessfulUse() : 0;
 
     m_isActive = true;
     m_hasCompleted = false;
@@ -82,6 +86,12 @@ bool ObjectiveEvent::isObjectiveCompleted() const
     case ObjectiveType::AutoAttack:
         return isAutoAttackCompleted();
 
+    case ObjectiveType::ChargedAttack:
+        return isChargedAttackCompleted();
+
+    case ObjectiveType::Ability:
+        return isAbilityCompleted();
+
     case ObjectiveType::None:
     default:
         return false;
@@ -108,11 +118,33 @@ bool ObjectiveEvent::isAutoAttackCompleted() const
     return m_targetBasicAttack->getSuccessfulUse() > m_initialBasicAttackUseCount;
 }
 
+bool ObjectiveEvent::isChargedAttackCompleted() const
+{
+    if (m_targetChargedAttack == nullptr)
+    {
+        return false;
+    }
+
+    return m_targetChargedAttack->getSuccessfulUse() > m_initialChargedAttackUseCount;
+}
+
+bool ObjectiveEvent::isAbilityCompleted() const
+{
+    if (m_targetSpecialAbility == nullptr)
+    {
+        return false;
+    }
+
+    return m_targetSpecialAbility->getSuccessfulUse() > m_initialSpecialAbilityUseCount;
+}
+
 void ObjectiveEvent::findTargetPlayer()
 {
     m_targetCharacter = nullptr;
     m_targetPlayerMovement = nullptr;
     m_targetBasicAttack = nullptr;
+    m_targetChargedAttack = nullptr;
+    m_targetSpecialAbility = nullptr;
 
     const std::vector<GameObject*> players = SceneAPI::findAllGameObjectsByTag(Tag::PLAYER, true);
 
@@ -138,16 +170,8 @@ void ObjectiveEvent::findTargetPlayer()
         m_targetCharacter = character;
         m_targetPlayerMovement = GameObjectAPI::findScript<PlayerMovement>(player);
         m_targetBasicAttack = character->getBasicAttack();
-
-        if (m_targetPlayerMovement == nullptr)
-        {
-            Debug::warn("ObjectiveEvent on '%s' could not find PlayerMovement on target player %d.", GameObjectAPI::getName(getOwner()), m_targetPlayerIndex);
-        }
-
-        if (m_targetBasicAttack == nullptr)
-        {
-            Debug::warn("ObjectiveEvent on '%s' could not find BasicAttack on target player %d.", GameObjectAPI::getName(getOwner()), m_targetPlayerIndex);
-        }
+        m_targetChargedAttack = character->getChargedAttack();
+        m_targetSpecialAbility = character->getSpecialAbility();
 
         return;
     }

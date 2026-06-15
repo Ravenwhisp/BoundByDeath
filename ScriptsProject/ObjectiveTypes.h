@@ -4,7 +4,7 @@ enum class ObjectiveType
 {
     None = 0,
     Movement,
-    AutoAttack
-    //ChargedAttack,
-    //Ability
+    AutoAttack,
+    ChargedAttack,
+    Ability
 };
