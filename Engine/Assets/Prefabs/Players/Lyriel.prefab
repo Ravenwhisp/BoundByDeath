@@ -26,7 +26,7 @@
   "Components": [
     {
       "UID": 18322179586372733105,
-      "ComponentType": 3,
+      "ComponentType": "SCRIPT",
       "Active": true,
       "ScriptName": "PlayerController",
       "ScriptFields": {
@@ -36,7 +36,7 @@
     },
     {
       "UID": 14990016604882839329,
-      "ComponentType": 3,
+      "ComponentType": "SCRIPT",
       "Active": true,
       "ScriptName": "PlayerMovement",
       "ScriptFields": {
@@ -51,7 +51,7 @@
     },
     {
       "UID": 12679091576116378304,
-      "ComponentType": 3,
+      "ComponentType": "SCRIPT",
       "Active": true,
       "ScriptName": "PlayerRotation",
       "ScriptFields": {
@@ -60,7 +60,7 @@
     },
     {
       "UID": 8066047301628663825,
-      "ComponentType": 3,
+      "ComponentType": "SCRIPT",
       "Active": true,
       "ScriptName": "PlayerDamageable",
       "ScriptFields": {
@@ -70,7 +70,7 @@
     },
     {
       "UID": 3945684703428035519,
-      "ComponentType": 3,
+      "ComponentType": "SCRIPT",
       "Active": true,
       "ScriptName": "PlayerTargetController",
       "ScriptFields": {
@@ -79,14 +79,14 @@
     },
     {
       "UID": 5589085794038761639,
-      "ComponentType": 3,
+      "ComponentType": "SCRIPT",
       "Active": true,
       "ScriptName": "PlayerState",
       "ScriptFields": {}
     },
     {
       "UID": 6201224367100329629,
-      "ComponentType": 3,
+      "ComponentType": "SCRIPT",
       "Active": true,
       "ScriptName": "PlayerDownState",
       "ScriptFields": {
@@ -99,7 +99,7 @@
     },
     {
       "UID": 11736826884875474891,
-      "ComponentType": 3,
+      "ComponentType": "SCRIPT",
       "Active": true,
       "ScriptName": "LyrielCharacter",
       "ScriptFields": {
@@ -108,7 +108,7 @@
     },
     {
       "UID": 10169020269872124841,
-      "ComponentType": 3,
+      "ComponentType": "SCRIPT",
       "Active": true,
       "ScriptName": "LyrielBasicAttack",
       "ScriptFields": {
@@ -120,7 +120,7 @@
     },
     {
       "UID": 4728211188375264122,
-      "ComponentType": 3,
+      "ComponentType": "SCRIPT",
       "Active": true,
       "ScriptName": "LyrielChargedAttack",
       "ScriptFields": {
@@ -138,7 +138,7 @@
     },
     {
       "UID": 8241270681048224167,
-      "ComponentType": 3,
+      "ComponentType": "SCRIPT",
       "Active": true,
       "ScriptName": "LyrielArrowVolley",
       "ScriptFields": {
@@ -154,7 +154,7 @@
     },
     {
       "UID": 10280679244793249724,
-      "ComponentType": 3,
+      "ComponentType": "SCRIPT",
       "Active": true,
       "ScriptName": "LyrielDash",
       "ScriptFields": {
@@ -166,7 +166,7 @@
     },
     {
       "UID": 4251132492932056944,
-      "ComponentType": 3,
+      "ComponentType": "SCRIPT",
       "Active": true,
       "ScriptName": "ArrowPool",
       "ScriptFields": {
@@ -176,7 +176,7 @@
     },
     {
       "UID": 14948165656584359693,
-      "ComponentType": 3,
+      "ComponentType": "SCRIPT",
       "Active": true,
       "ScriptName": "PlayerAnimationController",
       "ScriptFields": {
@@ -196,9 +196,13 @@
     },
     {
       "UID": 15752882594789593627,
-      "ComponentType": 16,
+      "ComponentType": "ANIMATION",
       "Active": true,
-      "StateMachineUID": "0a1f47df213702357490c562426c096a",
+      "StateMachineUID": {
+        "uid": 0,
+        "libId": "0a1f47df213702357490c562426c096a",
+        "type": "ANIMATION_STATE_MACHINE"
+      },
       "PlayOnStart": true,
       "ApplyScale": false,
       "ForceWorldAfterApply": true
@@ -232,23 +236,23 @@
       "Components": [
         {
           "UID": 6065379135112282686,
-          "ComponentType": 1,
+          "ComponentType": "MODEL",
           "Active": true,
           "MeshAssetId": {
             "uid": 0,
             "libId": "ae2447f70a62fff5f722d92b25369e2a",
-            "type": 3
+            "type": "MESH"
           },
           "SkinAssetId": {
             "uid": 0,
             "libId": "a9a8a3ece9c3b49f197efce3f07d019e",
-            "type": 7
+            "type": "SKIN"
           },
           "Materials": [
             {
               "uid": 0,
               "libId": "b36a5e267bbae38a71b7ba86ac42fab2",
-              "type": 0
+              "type": "MATERIAL"
             }
           ]
         }
@@ -1139,5 +1143,6 @@
       "Components": [],
       "Children": []
     }
-  ]
+  ],
+  "Version": 2
 }

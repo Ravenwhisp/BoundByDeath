@@ -26,7 +26,7 @@
   "Components": [
     {
       "UID": 9338183764478007423,
-      "ComponentType": 3,
+      "ComponentType": "SCRIPT",
       "Active": true,
       "ScriptName": "Damageable",
       "ScriptFields": {
@@ -36,7 +36,7 @@
     },
     {
       "UID": 13034570644050630903,
-      "ComponentType": 3,
+      "ComponentType": "SCRIPT",
       "Active": true,
       "ScriptName": "EnemyDeathHandler",
       "ScriptFields": {
@@ -46,16 +46,20 @@
     },
     {
       "UID": 11586239806536333011,
-      "ComponentType": 16,
+      "ComponentType": "ANIMATION",
       "Active": true,
-      "StateMachineUID": "d650f6628e921dcd36b9b959aee7f3f4",
+      "StateMachineUID": {
+        "uid": 0,
+        "libId": "d650f6628e921dcd36b9b959aee7f3f4",
+        "type": "ANIMATION_STATE_MACHINE"
+      },
       "PlayOnStart": true,
       "ApplyScale": false,
       "ForceWorldAfterApply": true
     },
     {
       "UID": 6103770285237674135,
-      "ComponentType": 3,
+      "ComponentType": "SCRIPT",
       "Active": true,
       "ScriptName": "EnemyDamageable",
       "ScriptFields": {
@@ -65,7 +69,7 @@
     },
     {
       "UID": 16442792193183561505,
-      "ComponentType": 3,
+      "ComponentType": "SCRIPT",
       "Active": true,
       "ScriptName": "EnemyDetectionAggro",
       "ScriptFields": {
@@ -78,7 +82,7 @@
     },
     {
       "UID": 3378807444327347002,
-      "ComponentType": 3,
+      "ComponentType": "SCRIPT",
       "Active": true,
       "ScriptName": "EnemyShadowMark",
       "ScriptFields": {
@@ -999,28 +1003,29 @@
       "Components": [
         {
           "UID": 11891516884635179903,
-          "ComponentType": 1,
+          "ComponentType": "MODEL",
           "Active": true,
           "MeshAssetId": {
             "uid": 0,
             "libId": "3abbe891a715bbd5d59775f6687ad7ae",
-            "type": 3
+            "type": "MESH"
           },
           "SkinAssetId": {
             "uid": 0,
             "libId": "464dfc20b1ef5040e1c5b75a53aad840",
-            "type": 7
+            "type": "SKIN"
           },
           "Materials": [
             {
               "uid": 0,
               "libId": "6f811cf91e663705dbf886616e1b62c4",
-              "type": 0
+              "type": "MATERIAL"
             }
           ]
         }
       ],
       "Children": []
     }
-  ]
+  ],
+  "Version": 2
 }

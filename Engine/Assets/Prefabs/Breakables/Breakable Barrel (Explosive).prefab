@@ -26,7 +26,7 @@
   "Components": [
     {
       "UID": 12896880543233010624,
-      "ComponentType": 3,
+      "ComponentType": "SCRIPT",
       "Active": true,
       "ScriptName": "BreakableExplosive",
       "ScriptFields": {
@@ -38,7 +38,7 @@
     },
     {
       "UID": 8080163399357080226,
-      "ComponentType": 3,
+      "ComponentType": "SCRIPT",
       "Active": true,
       "ScriptName": "BreakableDamageable",
       "ScriptFields": {
@@ -77,21 +77,23 @@
       "Components": [
         {
           "UID": 14090016816862575804,
-          "ComponentType": 1,
+          "ComponentType": "MODEL",
           "Active": true,
           "MeshAssetId": {
             "uid": 195768552811033379,
-            "libId": "2ad2a26066686852907c4484174fb114"
+            "libId": "2ad2a26066686852907c4484174fb114",
+            "type": "MESH"
           },
           "SkinAssetId": {
             "uid": 0,
-            "libId": ""
+            "libId": "",
+            "type": "SKIN"
           },
           "Materials": [
             {
               "uid": 2403703750103720078,
               "libId": "80684dc5a55f1f4701c35913770c344b",
-              "type": 2
+              "type": "MATERIAL"
             }
           ]
         }
@@ -125,26 +127,30 @@
       "Components": [
         {
           "UID": 9167657352758935951,
-          "ComponentType": 1,
+          "ComponentType": "MODEL",
           "Active": true,
           "MeshAssetId": {
             "uid": 11678468528292670682,
-            "libId": "fab16d493f7d2a72f050d914c9d59a94"
+            "libId": "fab16d493f7d2a72f050d914c9d59a94",
+            "type": "MESH"
           },
           "SkinAssetId": {
             "uid": 0,
-            "libId": ""
+            "libId": "",
+            "type": "SKIN"
           },
           "Materials": [
             {
               "uid": 10422386566006367085,
               "libId": "04f0e20aff8a46adc8a3953ec5e37386",
-              "type": 2
+              "type": "MATERIAL"
             }
           ]
         }
       ],
       "Children": []
     }
-  ]
+  ],
+  "Version": 2,
+  "VariantOf": "Assets\\Prefabs\\Breakables\\Breakable Barrel (Normal).prefab"
 }
