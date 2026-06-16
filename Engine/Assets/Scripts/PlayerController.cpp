@@ -71,16 +71,6 @@ void PlayerController::Update()
         return;
     }
 
-    if (m_gameplayInputLocked)
-    {
-        if (m_playerMovement)
-        {
-            m_playerMovement->setMoving(false);
-        }
-
-        return;
-    }
-
     const float dt = Time::getDeltaTime();
 
     const bool downed = m_playerState && m_playerState->isDowned();
