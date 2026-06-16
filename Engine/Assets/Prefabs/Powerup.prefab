@@ -26,27 +26,29 @@
   "Components": [
     {
       "UID": 17409157922247722194,
-      "ComponentType": 1,
+      "ComponentType": "MODEL",
       "Active": true,
       "MeshAssetId": {
         "uid": 7216509819157143983,
-        "libId": "317b0784ead19d4c1fb1f1483db8dd01"
+        "libId": "317b0784ead19d4c1fb1f1483db8dd01",
+        "type": "MESH"
       },
       "SkinAssetId": {
         "uid": 0,
-        "libId": ""
+        "libId": "",
+        "type": "SKIN"
       },
       "Materials": [
         {
           "uid": 5515184839933692502,
           "libId": "d558ea3acc98aa9599e52151509bf9ed",
-          "type": 2
+          "type": "MATERIAL"
         }
       ]
     },
     {
       "UID": 16086666370765471121,
-      "ComponentType": 15,
+      "ComponentType": "TRIGGER",
       "Active": true,
       "Shape": 0,
       "Center": [
@@ -62,7 +64,7 @@
     },
     {
       "UID": 549017308376115455,
-      "ComponentType": 3,
+      "ComponentType": "SCRIPT",
       "Active": true,
       "ScriptName": "PowerupCollectible",
       "ScriptFields": {
@@ -74,5 +76,7 @@
       }
     }
   ],
-  "Children": []
+  "Children": [],
+  "Version": 2,
+  "VariantOf": "Assets\\Models\\Sphere.gltf"
 }
