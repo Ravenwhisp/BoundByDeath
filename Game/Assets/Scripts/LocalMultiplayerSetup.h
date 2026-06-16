@@ -4,14 +4,12 @@
 
 class LocalMultiplayerSetup : public Script
 {
-    DECLARE_SCRIPT(LocalMultiplayerSetup)
-
 public:
     explicit LocalMultiplayerSetup(GameObject* owner);
 
     void Start() override;
 
-    ScriptFieldList getExposedFields() const override;
+    ExposedFieldList getExposedFields() const override;
     ScriptMethodList getExposedMethods() const override;
 
     ScriptComponentRef<Transform> keyboardGamepadButton;

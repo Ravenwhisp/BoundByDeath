@@ -8,15 +8,13 @@ class Transform;
 
 class TriggerArea final : public Script
 {
-    DECLARE_SCRIPT(TriggerArea)
-
 public:
     TriggerArea(GameObject* owner);
 
     void Start() override;
     void Update() override;
 
-    ScriptFieldList getExposedFields() const override;
+    ExposedFieldList getExposedFields() const override;
 
 public:
     float m_xWidth = 2.0f;
