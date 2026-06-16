@@ -37,7 +37,7 @@ void TestingButton::Update()
 
 }
 
-void TestingButton::onFieldEdited(const ExposedFieldInfo& field)
+void TestingButton::onFieldEdited(const ScriptFieldInfo& field)
 {
 
 }

@@ -26,6 +26,11 @@ void CameraFollow::Start()
 
 void CameraFollow::Update()
 {
+    if (!m_followEnabled)
+    {
+        return;
+    }
+
     Transform* firstTarget = m_firstTarget.getReferencedComponent();
     if (!firstTarget)
     {
