@@ -7,7 +7,6 @@
 class Transform;
 class GameObject;
 class IArchive;
-
 class SceneReferenceResolver;
 
 class IDebugDrawable;

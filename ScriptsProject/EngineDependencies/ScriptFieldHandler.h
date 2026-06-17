@@ -1,6 +1,5 @@
 #pragma once
 
-
 class Script;
 class ScriptComponent;
 class SceneReferenceResolver;
