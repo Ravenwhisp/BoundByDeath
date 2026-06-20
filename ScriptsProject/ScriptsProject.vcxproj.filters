@@ -125,20 +125,8 @@
   <ItemGroup>
     <ClInclude Include="pch.h" />
     <ClInclude Include="framework.h" />
-    <ClInclude Include="..\Engine\Assets\Scripts\CameraFollow.h">
-      <Filter>Camera</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Engine\Assets\Scripts\CameraSwitcher.h">
-      <Filter>Camera</Filter>
-    </ClInclude>
     <ClInclude Include="DebugDrawTest.h">
       <Filter>Tests</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Engine\Assets\Scripts\TestingButton.h">
-      <Filter>Tests</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Engine\Assets\Scripts\PlayerController.h">
-      <Filter>Player</Filter>
     </ClInclude>
     <ClInclude Include="PlayerDamageable.h">
       <Filter>Player</Filter>
@@ -166,9 +154,6 @@
     </ClInclude>
     <ClInclude Include="PlayerMovement.h">
       <Filter>Player\Transform</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Engine\Assets\Scripts\LocalMultiplayerSetup.h">
-      <Filter>Systems</Filter>
     </ClInclude>
     <ClInclude Include="Damageable.h">
       <Filter>Combat</Filter>
@@ -286,9 +271,6 @@
     </ClInclude>
     <ClInclude Include="EnemyAttackExecutor.h">
       <Filter>Enemies</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Engine\Assets\Scripts\TriggerArea.h">
-      <Filter>Interaction/Gameplay</Filter>
     </ClInclude>
     <ClInclude Include="DestroyParticles.h">
       <Filter>Interaction/Gameplay</Filter>
@@ -446,25 +428,32 @@
     <ClInclude Include="PaladinChargeState.h">
       <Filter>Enemies\Paladin\States</Filter>
     </ClInclude>
+    <ClInclude Include="HUDFader.h" />
+    <ClInclude Include="CameraFollow.h">
+      <Filter>Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraSwitcher.h">
+      <Filter>Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="LocalMultiplayerSetup.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerController.h">
+      <Filter>Player</Filter>
+    </ClInclude>
+    <ClInclude Include="TestingButton.h">
+      <Filter>Tests</Filter>
+    </ClInclude>
+    <ClInclude Include="TriggerArea.h">
+      <Filter>Interaction/Gameplay</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="EngineDependencies\SimpleMath.cpp" />
-    <ClCompile Include="..\Engine\Assets\Scripts\CameraFollow.cpp">
-      <Filter>Camera</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Engine\Assets\Scripts\CameraSwitcher.cpp">
-      <Filter>Camera</Filter>
-    </ClCompile>
     <ClCompile Include="DebugDrawTest.cpp">
       <Filter>Tests</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Engine\Assets\Scripts\TestingButton.cpp">
-      <Filter>Tests</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Engine\Assets\Scripts\PlayerController.cpp">
-      <Filter>Player</Filter>
     </ClCompile>
     <ClCompile Include="PlayerDamageable.cpp">
       <Filter>Player</Filter>
@@ -492,9 +481,6 @@
     </ClCompile>
     <ClCompile Include="PlayerMovement.cpp">
       <Filter>Player\Transform</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Engine\Assets\Scripts\LocalMultiplayerSetup.cpp">
-      <Filter>Systems</Filter>
     </ClCompile>
     <ClCompile Include="Damageable.cpp">
       <Filter>Combat</Filter>
@@ -612,9 +598,6 @@
     </ClCompile>
     <ClCompile Include="EnemyAttackExecutor.cpp">
       <Filter>Enemies</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Engine\Assets\Scripts\TriggerArea.cpp">
-      <Filter>Interaction/Gameplay</Filter>
     </ClCompile>
     <ClCompile Include="DestroyParticles.cpp">
       <Filter>Interaction/Gameplay</Filter>
@@ -768,6 +751,25 @@
     </ClCompile>
     <ClCompile Include="CameraTransitionController.cpp">
       <Filter>Interaction/Gameplay\Events\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="HUDFader.cpp" />
+    <ClCompile Include="CameraFollow.cpp">
+      <Filter>Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraSwitcher.cpp">
+      <Filter>Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="LocalMultiplayerSetup.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerController.cpp">
+      <Filter>Player</Filter>
+    </ClCompile>
+    <ClCompile Include="TestingButton.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="TriggerArea.cpp">
+      <Filter>Interaction/Gameplay</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

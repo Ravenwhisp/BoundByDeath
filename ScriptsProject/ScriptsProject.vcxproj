@@ -120,7 +120,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)../Engine/Assets/;$(SolutionDir)EngineDependencies;$(ProjectDir)../Engine/Assets/Scripts</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)../Engine/Assets/;$(SolutionDir)EngineDependencies</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -143,7 +143,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)../Engine/Assets/;$(SolutionDir)EngineDependencies;$(ProjectDir)../Engine/Assets/Scripts</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)../Engine/Assets/;$(SolutionDir)EngineDependencies</AdditionalIncludeDirectories>
       <AdditionalHeaderUnitDependencies>
       </AdditionalHeaderUnitDependencies>
       <LanguageStandard>stdcpp20</LanguageStandard>
@@ -158,12 +158,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\Engine\Assets\Scripts\CameraFollow.h" />
-    <ClInclude Include="..\Engine\Assets\Scripts\CameraSwitcher.h" />
-    <ClInclude Include="..\Engine\Assets\Scripts\LocalMultiplayerSetup.h" />
-    <ClInclude Include="..\Engine\Assets\Scripts\PlayerController.h" />
-    <ClInclude Include="..\Engine\Assets\Scripts\TestingButton.h" />
-    <ClInclude Include="..\Engine\Assets\Scripts\TriggerArea.h" />
     <ClInclude Include="AbilityBase.h" />
     <ClInclude Include="ArcherArrowBarrageState.h" />
     <ClInclude Include="ArcherAttackConfig.h" />
@@ -173,6 +167,8 @@
     <ClInclude Include="ArthurAttackConfig.h" />
     <ClInclude Include="ArthurAttackDebugDraw.h" />
     <ClInclude Include="ArthurUI.h" />
+    <ClInclude Include="CameraFollow.h" />
+    <ClInclude Include="CameraSwitcher.h" />
     <ClInclude Include="CameraTransitionController.h" />
     <ClInclude Include="CameraTransitionEvent.h" />
     <ClInclude Include="EnemyAttackState.h" />
@@ -211,6 +207,7 @@
     <ClInclude Include="GameplayEventAction.h" />
     <ClInclude Include="GameplayEventTrigger.h" />
     <ClInclude Include="HUDFader.h" />
+    <ClInclude Include="LocalMultiplayerSetup.h" />
     <ClInclude Include="LyrielConfig.h" />
     <ClInclude Include="EnemyStunnedState.h" />
     <ClInclude Include="LyrielSound.h" />
@@ -235,6 +232,7 @@
     <ClInclude Include="PaladinChargeState.h" />
     <ClInclude Include="PaladinChaseState.h" />
     <ClInclude Include="PersistingPowerupState.h" />
+    <ClInclude Include="PlayerController.h" />
     <ClInclude Include="PowerupCollectible.h" />
     <ClInclude Include="Pickup.h" />
     <ClInclude Include="PlayerStunState.h" />
@@ -265,17 +263,13 @@
     <ClInclude Include="PlayerState.h" />
     <ClInclude Include="PlayerTargetController.h" />
     <ClInclude Include="TargetIndicatorUI.h" />
+    <ClInclude Include="TestingButton.h" />
+    <ClInclude Include="TriggerArea.h" />
     <ClInclude Include="UIController.h" />
     <ClInclude Include="UIPause.h" />
     <ClInclude Include="UISplashScreen.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Engine\Assets\Scripts\CameraFollow.cpp" />
-    <ClCompile Include="..\Engine\Assets\Scripts\CameraSwitcher.cpp" />
-    <ClCompile Include="..\Engine\Assets\Scripts\LocalMultiplayerSetup.cpp" />
-    <ClCompile Include="..\Engine\Assets\Scripts\PlayerController.cpp" />
-    <ClCompile Include="..\Engine\Assets\Scripts\TestingButton.cpp" />
-    <ClCompile Include="..\Engine\Assets\Scripts\TriggerArea.cpp" />
     <ClCompile Include="AbilityBase.cpp" />
     <ClCompile Include="ArcherArrowBarrageState.cpp" />
     <ClCompile Include="ArcherAttackConfig.cpp" />
@@ -285,6 +279,8 @@
     <ClCompile Include="ArthurAttackConfig.cpp" />
     <ClCompile Include="ArthurAttackDebugDraw.cpp" />
     <ClCompile Include="ArthurUI.cpp" />
+    <ClCompile Include="CameraFollow.cpp" />
+    <ClCompile Include="CameraSwitcher.cpp" />
     <ClCompile Include="CameraTransitionController.cpp" />
     <ClCompile Include="CameraTransitionEvent.cpp" />
     <ClCompile Include="EnemyAttackState.cpp" />
@@ -322,6 +318,7 @@
     <ClCompile Include="EnemyBaseController.cpp" />
     <ClCompile Include="GameplayEventTrigger.cpp" />
     <ClCompile Include="HUDFader.cpp" />
+    <ClCompile Include="LocalMultiplayerSetup.cpp" />
     <ClCompile Include="LyrielConfig.cpp" />
     <ClCompile Include="EnemyStunnedState.cpp" />
     <ClCompile Include="LyrielSound.cpp" />
@@ -347,6 +344,7 @@
     <ClCompile Include="PaladinChargeState.cpp" />
     <ClCompile Include="PaladinChaseState.cpp" />
     <ClCompile Include="PersistingPowerupState.cpp" />
+    <ClCompile Include="PlayerController.cpp" />
     <ClCompile Include="PowerupCollectible.cpp" />
     <ClCompile Include="Pickup.cpp" />
     <ClCompile Include="PlayerStunState.cpp" />
@@ -385,6 +383,8 @@
     <ClCompile Include="PlayerState.cpp" />
     <ClCompile Include="PlayerTargetController.cpp" />
     <ClCompile Include="TargetIndicatorUI.cpp" />
+    <ClCompile Include="TestingButton.cpp" />
+    <ClCompile Include="TriggerArea.cpp" />
     <ClCompile Include="UIController.cpp" />
     <ClCompile Include="UIPause.cpp" />
     <ClCompile Include="UISplashScreen.cpp" />

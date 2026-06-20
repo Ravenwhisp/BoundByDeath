@@ -6,15 +6,13 @@ class Transform;
 
 class CameraFollow : public Script
 {
-    DECLARE_SCRIPT(CameraFollow)
-
 public:
     explicit CameraFollow(GameObject* owner);
 
     void Start() override;
     void Update() override;
 
-    ScriptFieldList getExposedFields() const override;
+    ExposedFieldList getExposedFields() const override;
 
 public:
     ScriptComponentRef<Transform> m_firstTarget;

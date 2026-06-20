@@ -9,15 +9,13 @@ class AbilityBase;
 
 class PlayerController : public Script
 {
-    DECLARE_SCRIPT(PlayerController)
-
 public:
     explicit PlayerController(GameObject* owner);
 
     void Start() override;
     void Update() override;
 
-    ScriptFieldList getExposedFields() const override;
+    ExposedFieldList getExposedFields() const override;
 
     bool getGodMode() const { return m_godMode; }
     int getPlayerIndex() const { return m_playerIndex; }

@@ -4,8 +4,6 @@
 
 class TestingButton : public Script
 {
-    DECLARE_SCRIPT(TestingButton)
-
 public:
     explicit TestingButton(GameObject* owner);
 
@@ -14,7 +12,7 @@ public:
 
     ScriptMethodList getExposedMethods() const override;
 
-    void onFieldEdited(const ScriptFieldInfo& field) override;
+    void onFieldEdited(const ExposedFieldInfo& field) override;
     void onAfterDeserialize() override;
 
 public:
