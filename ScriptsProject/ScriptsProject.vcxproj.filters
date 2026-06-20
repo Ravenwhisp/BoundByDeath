@@ -124,6 +124,9 @@
     <Filter Include="Enemies\Spider">
       <UniqueIdentifier>{2756d9fe-4d41-4d85-a715-98bb1ff81954}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Enemies\Spider\States">
+      <UniqueIdentifier>{70c0d2f4-bb1c-4722-94b0-9a8fdd52a250}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -451,6 +454,9 @@
       <Filter>Interaction/Gameplay</Filter>
     </ClInclude>
     <ClInclude Include="SpiderChaseState.h">
+      <Filter>Enemies\Spider\States</Filter>
+    </ClInclude>
+    <ClInclude Include="SpiderEnemyController.h">
       <Filter>Enemies\Spider</Filter>
     </ClInclude>
   </ItemGroup>
@@ -778,6 +784,9 @@
       <Filter>Interaction/Gameplay</Filter>
     </ClCompile>
     <ClCompile Include="SpiderChaseState.cpp">
+      <Filter>Enemies\Spider\States</Filter>
+    </ClCompile>
+    <ClCompile Include="SpiderEnemyController.cpp">
       <Filter>Enemies\Spider</Filter>
     </ClCompile>
   </ItemGroup>

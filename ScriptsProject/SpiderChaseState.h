@@ -3,7 +3,7 @@
 #include "ScriptAPI.h"
 #include "StateMachineScript.h"
 
-class EnemyBaseController;
+class SpiderEnemyController;
 class AnimationComponent;
 
 class SpiderChaseState : public StateMachineScript
@@ -18,6 +18,6 @@ public:
 	void OnStateExit() override;
 
 private:
-	EnemyBaseController* m_spiderController = nullptr;
+	SpiderEnemyController* m_spiderController = nullptr;
 	AnimationComponent* m_animation = nullptr;
 };

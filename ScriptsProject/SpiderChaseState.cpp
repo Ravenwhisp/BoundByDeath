@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "SpiderChaseState.h"
 
-#include "EnemyBaseController.h"
+#include "SpiderEnemyController.h"
 
 SpiderChaseState::SpiderChaseState(GameObject* owner)
 	: StateMachineScript(owner)
@@ -10,12 +10,12 @@ SpiderChaseState::SpiderChaseState(GameObject* owner)
 
 void SpiderChaseState::OnStateEnter()
 {
-	m_spiderController = GameObjectAPI::findScript<EnemyBaseController>(getOwner());
+	m_spiderController = GameObjectAPI::findScript<SpiderEnemyController>(getOwner());
 	m_animation = AnimationAPI::getAnimationComponent(getOwner());
 
 	if (!m_spiderController)
 	{
-		Debug::error("[SpiderChaseState] EnemyBaseController not found.");
+		Debug::error("[SpiderChaseState] SpiderEnemyController not found.");
 		return;
 	}
 
