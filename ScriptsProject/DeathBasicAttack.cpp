@@ -372,6 +372,12 @@ void DeathBasicAttack::snapFaceTarget(GameObject* target)
         return;
     }
 
+    const float rangeSq = m_config->m_basicCloseGapRange * m_config->m_basicCloseGapRange;
+    if (dir.LengthSquared() > rangeSq)
+    {
+        return;
+    }
+
     dir.Normalize();
 
     constexpr float k_radToDeg = 180.0f / 3.14159265f;
@@ -437,6 +443,13 @@ void DeathBasicAttack::faceTarget(GameObject* target)
     {
         return;
     }
+
+    const float rangeSq = m_config->m_basicCloseGapRange * m_config->m_basicCloseGapRange;
+    if (dir.LengthSquared() > rangeSq)
+    {
+        return;
+    }
+
     dir.Normalize();
 
     playerRotation->applyFacingFromDirection(getOwner(), dir, Time::getDeltaTime());
