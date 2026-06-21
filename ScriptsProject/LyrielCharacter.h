@@ -35,7 +35,6 @@ public:
 private:
     ArrowPool*         m_arrowPool   = nullptr;
     LyrielDash*        m_dash        = nullptr;
-    LyrielArrowVolley* m_arrowVolley = nullptr;
     LyrielSound*       m_sound       = nullptr;
     PlayerMovement*    m_movement    = nullptr;
     LyrielConfig*      m_config = nullptr;

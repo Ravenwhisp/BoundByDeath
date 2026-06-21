@@ -206,6 +206,7 @@ void DeathTaunt::releaseAimAndCast()
         }
 
         applyTauntToEnemiesInCone(finalDirection);
+        notifyAbilitySuccessfullyStarted();
         m_debugConeTimer = 0.25f;
     }
 

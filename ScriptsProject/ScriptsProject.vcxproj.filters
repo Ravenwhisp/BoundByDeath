@@ -121,6 +121,12 @@
     <Filter Include="Interaction/Gameplay\Events\Camera">
       <UniqueIdentifier>{4f36a9ae-6441-4cb1-a5b0-d1d06d4dc161}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Interaction/Gameplay\Events\PopUp">
+      <UniqueIdentifier>{f5133925-52af-42ef-9418-8a5323556ee6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Interaction/Gameplay\Events\PlayerObjectives">
+      <UniqueIdentifier>{7a51092b-902d-4bdd-9711-bbb01813d5fd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -447,6 +453,18 @@
     <ClInclude Include="TriggerArea.h">
       <Filter>Interaction/Gameplay</Filter>
     </ClInclude>
+    <ClInclude Include="PopUpEvent.h">
+      <Filter>Interaction/Gameplay\Events\PopUp</Filter>
+    </ClInclude>
+    <ClInclude Include="PopUpController.h">
+      <Filter>Interaction/Gameplay\Events\PopUp</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectiveTypes.h">
+      <Filter>Interaction/Gameplay\Events\PlayerObjectives</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectiveEvent.h">
+      <Filter>Interaction/Gameplay\Events\PlayerObjectives</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
@@ -770,6 +788,15 @@
     </ClCompile>
     <ClCompile Include="TriggerArea.cpp">
       <Filter>Interaction/Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="PopUpEvent.cpp">
+      <Filter>Interaction/Gameplay\Events\PopUp</Filter>
+    </ClCompile>
+    <ClCompile Include="PopUpController.cpp">
+      <Filter>Interaction/Gameplay\Events\PopUp</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectiveEvent.cpp">
+      <Filter>Interaction/Gameplay\Events\PlayerObjectives</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
