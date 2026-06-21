@@ -13,12 +13,10 @@ public:
 
 public:
 	// Teleport
-	float m_teleportCooldown = 5.0f;
+	float m_teleportCooldown = 12.0f;
 
 	// Energy Ball
-	float m_energyBallRange = 8.0f;
-	float m_energyBallDamage = 25.0f;
-	float m_energyBallCooldown = 4.0f;
+	float m_energyBallSpeed = 8.0f;
 
 	// Summon
 	float m_summonCooldown = 8.0f;

@@ -8,9 +8,7 @@ IMPLEMENT_SCRIPT_FIELDS_INHERITED(SummonerAttackConfig, EnemyBaseAttackConfig,
 	),
 	// Energy Ball
 	FIELD_GROUP_COLLAPSE("Energy Ball", 
-		SERIALIZED_FLOAT(m_energyBallRange, "Energy Ball Range", 0.0f, 100.0f, 1.0f),
-		SERIALIZED_FLOAT(m_energyBallDamage, "Energy Ball Damage", 0.0f, 50.0, 1.0f),
-		SERIALIZED_FLOAT(m_energyBallCooldown, "Energy Ball Cooldown", 0.0f, 30.0f, 0.1f)
+		SERIALIZED_FLOAT(m_energyBallSpeed, "Energy Ball Speed", 0.0f, 10.0f, 0.1f)
 	),
 	// Summon
 	FIELD_GROUP_COLLAPSE("Summon",
