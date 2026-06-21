@@ -51,8 +51,8 @@ void ShadowExecution::Update()
 
     if (m_isActive)
     {
-        updateExecution(dt);
         updateUI();
+        updateExecution(dt);
         return;
     }
 
