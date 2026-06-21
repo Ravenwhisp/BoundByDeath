@@ -93,6 +93,61 @@ void SummonerEnemyController::consumeTeleportCooldown()
 	m_teleportCooldownTimer = m_attackConfig->m_teleportCooldown;
 }
 
+bool SummonerEnemyController::tryGetTeleportPosition(Vector3& outPosition) const
+{
+	constexpr int MaxTeleportAttempts = 10;
+
+	if (!m_attackConfig || !hasValidTarget())
+	{
+		return false;
+	}
+
+	Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
+	Transform* targetTransform = getCurrentTarget();
+
+	if (!ownerTransform || !targetTransform)
+	{
+		return false;
+	}
+
+	const Vector3 ownerPosition = TransformAPI::getPosition(ownerTransform);
+	const Vector3 targetPosition = TransformAPI::getPosition(targetTransform);
+
+	const Vector3 searchExtents = Vector3(5.0f, 5.0f, 5.0f);
+
+	for (int i = 0; i < MaxTeleportAttempts; ++i)
+	{
+		Vector3 candidatePosition;
+
+		const bool found = NavigationAPI::findRandomReachablePointAround(
+			ownerPosition,
+			m_attackConfig->m_teleportRadius,
+			candidatePosition,
+			searchExtents,
+			1
+		);
+
+		if (!found)
+		{
+			continue;
+		}
+
+		Vector3 difference = candidatePosition - targetPosition;
+		difference.y = 0.0f;
+
+		const float distanceSquared = difference.LengthSquared();
+		const float attackRangeSquared = m_attackConfig->m_basicAttackRange * m_attackConfig->m_basicAttackRange;
+
+		if (distanceSquared <= attackRangeSquared)
+		{
+			outPosition = candidatePosition;
+			return true;
+		}
+	}
+
+	return false;
+}
+
 void SummonerEnemyController::updateTeleportCooldown(float dt)
 {
 	if (m_teleportCooldownTimer <= 0.0f)

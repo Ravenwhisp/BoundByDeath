@@ -130,6 +130,9 @@
     <Filter Include="Enemies\Summoner">
       <UniqueIdentifier>{40f7a28b-a4c4-4292-a8a2-0beb5186ca95}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Enemies\Summoner\States">
+      <UniqueIdentifier>{beb2a869-b60a-4dd2-a54c-ca787632f525}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -468,6 +471,9 @@
     <ClInclude Include="SummonerEnemyController.h">
       <Filter>Enemies\Summoner</Filter>
     </ClInclude>
+    <ClInclude Include="SummonerIdleState.h">
+      <Filter>Enemies\Summoner\States</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
@@ -803,6 +809,9 @@
     </ClCompile>
     <ClCompile Include="SummonerEnemyController.cpp">
       <Filter>Enemies\Summoner</Filter>
+    </ClCompile>
+    <ClCompile Include="SummonerIdleState.cpp">
+      <Filter>Enemies\Summoner\States</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

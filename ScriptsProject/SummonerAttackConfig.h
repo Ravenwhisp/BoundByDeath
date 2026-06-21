@@ -14,6 +14,7 @@ public:
 public:
 	// Teleport
 	float m_teleportCooldown = 12.0f;
+	float m_teleportRadius = 6.0f;
 
 	// Energy Ball
 	float m_energyBallSpeed = 8.0f;
