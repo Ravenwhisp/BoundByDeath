@@ -127,6 +127,9 @@
     <Filter Include="Enemies\Spider\States">
       <UniqueIdentifier>{70c0d2f4-bb1c-4722-94b0-9a8fdd52a250}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Enemies\Summoner">
+      <UniqueIdentifier>{40f7a28b-a4c4-4292-a8a2-0beb5186ca95}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -459,6 +462,9 @@
     <ClInclude Include="SpiderEnemyController.h">
       <Filter>Enemies\Spider</Filter>
     </ClInclude>
+    <ClInclude Include="SummonerAttackConfig.h">
+      <Filter>Enemies\Summoner</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
@@ -788,6 +794,9 @@
     </ClCompile>
     <ClCompile Include="SpiderEnemyController.cpp">
       <Filter>Enemies\Spider</Filter>
+    </ClCompile>
+    <ClCompile Include="SummonerAttackConfig.cpp">
+      <Filter>Enemies\Summoner</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
