@@ -6,8 +6,6 @@
 
 class CameraSwitcher : public Script
 {
-    DECLARE_SCRIPT(CameraSwitcher)
-
 public:
     explicit CameraSwitcher(GameObject* owner);
 
