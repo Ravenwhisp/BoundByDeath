@@ -72,7 +72,7 @@ void EnemyDetectionAggro::drawGizmo()
 
 	if (m_currentTargetTransform)
 	{
-		Vector3 targetPosition = TransformAPI::getPosition(m_currentTargetTransform);
+		Vector3 targetPosition = TransformAPI::getGlobalPosition(m_currentTargetTransform);
 		if (m_canSeeTarget)
 		{
 			DebugDrawAPI::drawLine(debugPosition, targetPosition, red, 0, true);
@@ -100,7 +100,7 @@ void EnemyDetectionAggro::enterAggro(Transform* target)
 	m_isAggro = true;
 	m_canSeeTarget = true;
 	m_currentTargetTransform = target;
-	m_lastKnownTargetPosition = TransformAPI::getPosition(target);
+	m_lastKnownTargetPosition = TransformAPI::getGlobalPosition(target);
 }
 
 void EnemyDetectionAggro::updateAggroState()
@@ -416,7 +416,7 @@ Vector3 EnemyDetectionAggro::getOwnerPosition() const
 		return Vector3(0.0f, 0.0f, 0.0f);
 	}
 
-	return TransformAPI::getPosition(ownerTransform);
+	return TransformAPI::getGlobalPosition(ownerTransform);
 }
 
 Vector3 EnemyDetectionAggro::getLyrielPosition() const
@@ -427,7 +427,7 @@ Vector3 EnemyDetectionAggro::getLyrielPosition() const
 		return Vector3(0.0f, 0.0f, 0.0f);
 	}
 
-	return TransformAPI::getPosition(lyrielTransform);
+	return TransformAPI::getGlobalPosition(lyrielTransform);
 }
 
 Vector3 EnemyDetectionAggro::getDeathPosition() const
@@ -438,7 +438,7 @@ Vector3 EnemyDetectionAggro::getDeathPosition() const
 		return Vector3(0.0f, 0.0f, 0.0f);
 	}
 
-	return TransformAPI::getPosition(deathTransform);
+	return TransformAPI::getGlobalPosition(deathTransform);
 }
 
 float EnemyDetectionAggro::getDistanceToLyriel() const
