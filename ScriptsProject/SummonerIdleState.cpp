@@ -52,6 +52,13 @@ void SummonerIdleState::OnStateUpdate()
 	}
 
 	m_controller->faceCurrentTarget();
+
+	// Summon State
+	if (m_controller->isSummonReady())
+	{
+		AnimationAPI::sendTrigger(m_animation, "ToSummon");
+		return;
+	}
 	
 	// Teleport State
 	if (m_controller->isTeleportReady())
@@ -60,15 +67,8 @@ void SummonerIdleState::OnStateUpdate()
 		return;
 	}
 
-	// Summon State
-	if (m_controller->isSummonReady())
-	{
-		AnimationAPI::sendTrigger(m_animation, "ToSummon");
-		return;
-	}
-
 	// Attack/Energy Ball State
-	if (m_controller->isTargetInAttackRange())
+	if (m_controller->isTargetInAttackRange() && m_controller->isAttackReady())
 	{
 		AnimationAPI::sendTrigger(m_animation, "ToEnergyBall");
 		return;

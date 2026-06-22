@@ -39,6 +39,7 @@ void SummonerEnemyController::Update()
 
 	updateTeleportCooldown(dt);
 	updateSummonCooldown(dt);
+	updateAttackCooldown(dt);
 
 	updateStun(dt);
 }
@@ -113,6 +114,9 @@ bool SummonerEnemyController::tryGetTeleportPosition(Vector3& outPosition) const
 	const Vector3 ownerPosition = TransformAPI::getPosition(ownerTransform);
 	const Vector3 targetPosition = TransformAPI::getPosition(targetTransform);
 
+	const bool targetInAttackRange = isCurrentTargetInRange(m_attackConfig->m_basicAttackRange);
+	const Vector3 searchCenter = targetInAttackRange ? ownerPosition : targetPosition;
+
 	const Vector3 searchExtents = Vector3(5.0f, 5.0f, 5.0f);
 
 	for (int i = 0; i < MaxTeleportAttempts; ++i)
@@ -120,7 +124,7 @@ bool SummonerEnemyController::tryGetTeleportPosition(Vector3& outPosition) const
 		Vector3 candidatePosition;
 
 		const bool found = NavigationAPI::findRandomReachablePointAround(
-			ownerPosition,
+			searchCenter,
 			m_attackConfig->m_teleportRadius,
 			candidatePosition,
 			searchExtents,
@@ -242,6 +246,36 @@ float SummonerEnemyController::getRecoveryDuration() const
 	}
 
 	return m_attackConfig->m_summonRecoverDuration;
+}
+
+bool SummonerEnemyController::isAttackReady() const
+{
+	return m_attackCooldownTimer <= 0.0f;
+}
+
+void SummonerEnemyController::consumeAttackCooldown()
+{
+	if (!m_attackConfig)
+	{
+		return;
+	}
+
+	m_attackCooldownTimer = m_attackConfig->m_basicAttackCooldown;
+}
+
+void SummonerEnemyController::updateAttackCooldown(float dt)
+{
+	if (m_attackCooldownTimer <= 0.0f)
+	{
+		return;
+	}
+
+	m_attackCooldownTimer -= dt;
+
+	if (m_attackCooldownTimer < 0.0f)
+	{
+		m_attackCooldownTimer = 0.0f;
+	}
 }
 
 IMPLEMENT_SCRIPT(SummonerEnemyController)

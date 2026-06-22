@@ -65,6 +65,7 @@ void SummonerEnergyBallState::OnStateUpdate()
 	if (!m_hasFiredEnergyBall && m_stateTimer >= m_attackConfig->m_basicAttackWindupTime)
 	{
 		spawnEnergyBall();
+		m_controller->consumeAttackCooldown();
 		m_hasFiredEnergyBall = true;
 	}
 
@@ -142,8 +143,6 @@ void SummonerEnergyBallState::spawnEnergyBall()
 		targetObject,
 		m_attackConfig->m_basicAttackDamage
 	);
-
-	Debug::log("[SummonerEnergyBallState] Energy Ball spawned");
 }
 
 IMPLEMENT_SCRIPT(SummonerEnergyBallState)

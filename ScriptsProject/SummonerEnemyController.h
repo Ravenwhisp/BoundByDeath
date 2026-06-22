@@ -28,6 +28,9 @@ public:
 
 	float getRecoveryDuration() const;
 
+	bool isAttackReady() const;
+	void consumeAttackCooldown();
+
 protected:
 	Transform* acquireCurrentTarget() override;
 	bool isTargetDowned(Transform* target) const override;
@@ -35,11 +38,13 @@ protected:
 private:
 	void updateTeleportCooldown(float dt);
 	void updateSummonCooldown(float dt);
+	void updateAttackCooldown(float dt);
 
 private:
 	EnemyDetectionAggro* m_enemyDetectionAggro = nullptr;
 	SummonerAttackConfig* m_attackConfig = nullptr;
 
+	float m_attackCooldownTimer = 0.0f;
 	float m_teleportCooldownTimer = 0.0f;
 	float m_summonCooldownTimer = 0.0f;
 };
