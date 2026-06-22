@@ -18,8 +18,8 @@ public:
 
 	// Energy Ball
 	std::string m_energyBallPrefabPath = "";
-	float m_energyBallSpeed = 8.0f;
-	float m_energyBallSpawnOffset = 1.0f;
+	float m_energyBallSpeed = 6.0f;
+	float m_energyBallLifetime = 2.0f;
 
 	// Summon
 	std::string m_spiderPrefabPath = "";

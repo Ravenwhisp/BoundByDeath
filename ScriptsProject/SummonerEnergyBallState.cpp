@@ -98,8 +98,8 @@ void SummonerEnergyBallState::spawnEnergyBall()
 		return;
 	}
 
-	const Vector3 ownerPosition = TransformAPI::getPosition(ownerTransform);
-	const Vector3 targetPosition = TransformAPI::getPosition(targetTransform);
+	const Vector3 ownerPosition = TransformAPI::getGlobalPosition(ownerTransform);
+	const Vector3 targetPosition = TransformAPI::getGlobalPosition(targetTransform);
 
 	Vector3 direction = targetPosition - ownerPosition;
 	direction.y = 0.0f;
@@ -111,7 +111,7 @@ void SummonerEnergyBallState::spawnEnergyBall()
 
 	direction.Normalize();
 
-	const Vector3 spawnPosition = ownerPosition + direction * m_attackConfig->m_energyBallSpawnOffset;
+	const Vector3 spawnPosition = ownerPosition + direction;
 
 	GameObject* projectileObject = GameObjectAPI::instantiatePrefab(
 		m_attackConfig->m_energyBallPrefabPath.c_str(),
@@ -121,6 +121,7 @@ void SummonerEnergyBallState::spawnEnergyBall()
 
 	if (!projectileObject)
 	{
+		Debug::error("[SummonerEnergyBallState] Failed to instantiate energy ball.");
 		return;
 	}
 
@@ -131,9 +132,14 @@ void SummonerEnergyBallState::spawnEnergyBall()
 		return;
 	}
 
+	GameObject* targetObject = targetTransform->getOwner();
+
 	projectile->launch(
+		spawnPosition,
 		direction,
 		m_attackConfig->m_energyBallSpeed,
+		m_attackConfig->m_energyBallLifetime,
+		targetObject,
 		m_attackConfig->m_basicAttackDamage
 	);
 
