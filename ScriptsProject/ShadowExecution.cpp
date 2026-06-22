@@ -279,6 +279,9 @@ void ShadowExecution::endExecution()
     m_currentRadius  = 0.0f;
     m_hitEnemies.clear();
 
+    Transform2DAPI::setAlpha(m_executionTransform2D, 0);
+    Transform2DAPI::setScale(m_executionTransform2D, Vector2(0.0f, 0.0f));
+
     if (m_executionTransform)
     {
 		GameObjectAPI::setActive(m_executionTransform->getOwner(), false);
