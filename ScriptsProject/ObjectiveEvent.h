@@ -32,6 +32,7 @@ private:
     bool isAutoAttackCompleted() const;
     bool isChargedAttackCompleted() const;
     bool isAbilityCompleted() const;
+    bool isDashCompleted() const;
 
     void findTargetPlayer();
     PopUpController* findPopUpController() const;
@@ -53,4 +54,7 @@ private:
     int m_initialBasicAttackUseCount = 0;
     int m_initialChargedAttackUseCount = 0;
     int m_initialSpecialAbilityUseCount = 0;
+
+    AbilityBase* m_targetDash = nullptr;
+    int m_initialDashUseCount = 0;
 };

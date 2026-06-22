@@ -7,6 +7,8 @@
 #include "CharacterBase.h"
 #include "PlayerMovement.h"
 #include "AbilityBase.h"
+#include "LyrielDash.h"
+#include "DeathDash.h"
 
 static const char* objectiveTypeNames[] =
 {
@@ -14,10 +16,11 @@ static const char* objectiveTypeNames[] =
     "Movement",
     "Auto Attack",
     "Charged Attack",
-    "Ability"
+    "Ability",
+    "Dash"
 };
 
-constexpr int objectiveTypeCount = 5;
+constexpr int objectiveTypeCount = 6;
 
 IMPLEMENT_SCRIPT_FIELDS(ObjectiveEvent,
     SERIALIZED_ENUM_INT(m_objectiveType, "Objective Type", objectiveTypeNames, objectiveTypeCount),
@@ -38,6 +41,8 @@ void ObjectiveEvent::executeEvent(GameplayEventTrigger* trigger)
     m_initialChargedAttackUseCount = m_targetChargedAttack != nullptr ? m_targetChargedAttack->getSuccessfulUse() : 0;
 
     m_initialSpecialAbilityUseCount = m_targetSpecialAbility != nullptr ? m_targetSpecialAbility->getSuccessfulUse() : 0;
+
+    m_initialDashUseCount = m_targetDash != nullptr ? m_targetDash->getSuccessfulUse() : 0;
 
     m_isActive = true;
     m_hasCompleted = false;
@@ -92,6 +97,9 @@ bool ObjectiveEvent::isObjectiveCompleted() const
     case ObjectiveType::Ability:
         return isAbilityCompleted();
 
+    case ObjectiveType::Dash:
+        return isDashCompleted();
+
     case ObjectiveType::None:
     default:
         return false;
@@ -138,6 +146,16 @@ bool ObjectiveEvent::isAbilityCompleted() const
     return m_targetSpecialAbility->getSuccessfulUse() > m_initialSpecialAbilityUseCount;
 }
 
+bool ObjectiveEvent::isDashCompleted() const
+{
+    if (m_targetDash == nullptr)
+    {
+        return false;
+    }
+
+    return m_targetDash->getSuccessfulUse() > m_initialDashUseCount;
+}
+
 void ObjectiveEvent::findTargetPlayer()
 {
     m_targetCharacter = nullptr;
@@ -172,6 +190,12 @@ void ObjectiveEvent::findTargetPlayer()
         m_targetBasicAttack = character->getBasicAttack();
         m_targetChargedAttack = character->getChargedAttack();
         m_targetSpecialAbility = character->getSpecialAbility();
+
+        m_targetDash = GameObjectAPI::findScript<LyrielDash>(player);
+        if (m_targetDash == nullptr)
+        {
+            m_targetDash = GameObjectAPI::findScript<DeathDash>(player);
+        }
 
         return;
     }

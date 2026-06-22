@@ -105,6 +105,8 @@ void AbilityDash::startDash()
 
     m_isDashing = true;
 
+    notifyAbilitySuccessfullyStarted();
+
     setAbilityLocked(true);
     startCooldown();
 
