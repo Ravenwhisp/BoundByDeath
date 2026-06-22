@@ -24,6 +24,7 @@ public:
 
 	bool isSummonReady() const;
 	void consumeSummonCooldown();
+	void summonSpidersAroundSelf();
 
 	float getRecoveryDuration() const;
 

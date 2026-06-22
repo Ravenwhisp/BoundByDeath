@@ -70,7 +70,7 @@ void SummonerIdleState::OnStateUpdate()
 	// Attack/Energy Ball State
 	if (m_controller->isTargetInAttackRange())
 	{
-		AnimationAPI::sendTrigger(m_animation, "ToAttack");
+		AnimationAPI::sendTrigger(m_animation, "ToEnergyBall");
 		return;
 	}
 }

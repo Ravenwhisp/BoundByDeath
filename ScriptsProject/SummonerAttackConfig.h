@@ -17,9 +17,16 @@ public:
 	float m_teleportRadius = 6.0f;
 
 	// Energy Ball
+	std::string m_energyBallPrefabPath = "";
 	float m_energyBallSpeed = 8.0f;
+	float m_energyBallSpawnOffset = 1.0f;
 
 	// Summon
+	std::string m_spiderPrefabPath = "";
+	int m_summonCount = 3;
+	float m_summonRadius = 2.0f;
+	float m_summonCastTime = 0.5f;
+	float m_summonTotalDuration = 1.0f;
 	float m_summonCooldown = 8.0f;
 	float m_summonRecoverDuration = 3.0f;
 };

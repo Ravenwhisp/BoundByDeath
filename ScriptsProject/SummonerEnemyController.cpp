@@ -178,6 +178,47 @@ void SummonerEnemyController::consumeSummonCooldown()
 	m_summonCooldownTimer = m_attackConfig->m_summonCooldown;
 }
 
+void SummonerEnemyController::summonSpidersAroundSelf()
+{
+	if (!m_attackConfig)
+	{
+		return;
+	}
+
+	Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
+	if (!ownerTransform)
+	{
+		return;
+	}
+
+	const Vector3 ownerPosition = TransformAPI::getPosition(ownerTransform);
+	const Vector3 searchExtents = Vector3(5.0f, 5.0f, 5.0f);
+
+	for (int i = 0; i < m_attackConfig->m_summonCount; ++i)
+	{
+		Vector3 spawnPosition;
+
+		const bool found = NavigationAPI::findRandomReachablePointAround(
+			ownerPosition,
+			m_attackConfig->m_summonRadius,
+			spawnPosition,
+			searchExtents,
+			10
+		);
+
+		if (!found)
+		{
+			continue;
+		}
+
+		GameObjectAPI::instantiatePrefab(
+			m_attackConfig->m_spiderPrefabPath.c_str(),
+			spawnPosition,
+			Vector3(0.0f, 0.0f, 0.0f)
+		);
+	}
+}
+
 void SummonerEnemyController::updateSummonCooldown(float dt)
 {
 	if (m_summonCooldownTimer <= 0.0f)
