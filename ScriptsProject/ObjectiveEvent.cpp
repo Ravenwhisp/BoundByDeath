@@ -9,6 +9,7 @@
 #include "AbilityBase.h"
 #include "LyrielDash.h"
 #include "DeathDash.h"
+#include "BreakableObject.h"
 
 static const char* objectiveTypeNames[] =
 {
@@ -17,14 +18,16 @@ static const char* objectiveTypeNames[] =
     "Auto Attack",
     "Charged Attack",
     "Ability",
-    "Dash"
+    "Dash",
+    "Breakables"
 };
 
-constexpr int objectiveTypeCount = 6;
+constexpr int objectiveTypeCount = 7;
 
 IMPLEMENT_SCRIPT_FIELDS(ObjectiveEvent,
     SERIALIZED_ENUM_INT(m_objectiveType, "Objective Type", objectiveTypeNames, objectiveTypeCount),
-    SERIALIZED_INT(m_targetPlayerIndex, "Target Player Index")
+    SERIALIZED_INT(m_targetPlayerIndex, "Target Player Index"),
+    SERIALIZED_INT(m_targetBreakableCount, "Target Breakables Count")
 )
 
 ObjectiveEvent::ObjectiveEvent(GameObject* owner)
@@ -43,6 +46,8 @@ void ObjectiveEvent::executeEvent(GameplayEventTrigger* trigger)
     m_initialSpecialAbilityUseCount = m_targetSpecialAbility != nullptr ? m_targetSpecialAbility->getSuccessfulUse() : 0;
 
     m_initialDashUseCount = m_targetDash != nullptr ? m_targetDash->getSuccessfulUse() : 0;
+
+    m_initialBrokenCount = countBrokenBreakables();
 
     m_isActive = true;
     m_hasCompleted = false;
@@ -100,6 +105,9 @@ bool ObjectiveEvent::isObjectiveCompleted() const
     case ObjectiveType::Dash:
         return isDashCompleted();
 
+    case ObjectiveType::BreakableObjects:
+        return isBreakableObjectsCompleted();
+
     case ObjectiveType::None:
     default:
         return false;
@@ -154,6 +162,40 @@ bool ObjectiveEvent::isDashCompleted() const
     }
 
     return m_targetDash->getSuccessfulUse() > m_initialDashUseCount;
+}
+
+bool ObjectiveEvent::isBreakableObjectsCompleted() const
+{
+    return countBrokenBreakables() >= m_initialBrokenCount + m_targetBreakableCount;
+}
+
+int ObjectiveEvent::countBrokenBreakables() const
+{
+    int count = 0;
+
+    const std::vector<GameObject*> breakableObjects = SceneAPI::findAllGameObjectsByTag(Tag::BREAKABLE, true);
+
+    for (GameObject* obj : breakableObjects)
+    {
+        if (obj == nullptr)
+        {
+            continue;
+        }
+
+        BreakableObject* breakable = GameObjectAPI::findScript<BreakableObject>(obj);
+
+        if (breakable == nullptr)
+        {
+            continue;
+        }
+
+        if (breakable->isBroken())
+        {
+            ++count;
+        }
+    }
+
+    return count;
 }
 
 void ObjectiveEvent::findTargetPlayer()

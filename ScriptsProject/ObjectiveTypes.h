@@ -7,5 +7,6 @@ enum class ObjectiveType
     AutoAttack,
     ChargedAttack,
     Ability,
-    Dash
+    Dash,
+    BreakableObjects
 };

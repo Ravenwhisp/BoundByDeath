@@ -33,6 +33,9 @@ private:
     bool isChargedAttackCompleted() const;
     bool isAbilityCompleted() const;
     bool isDashCompleted() const;
+    bool isBreakableObjectsCompleted() const;
+
+    int countBrokenBreakables() const;
 
     void findTargetPlayer();
     PopUpController* findPopUpController() const;
@@ -40,6 +43,7 @@ private:
 public:
     int m_objectiveType = static_cast<int>(ObjectiveType::Movement);
     int m_targetPlayerIndex = 0;
+    int m_targetBreakableCount = 1;
 
 private:
     CharacterBase* m_targetCharacter = nullptr;
@@ -57,4 +61,6 @@ private:
 
     AbilityBase* m_targetDash = nullptr;
     int m_initialDashUseCount = 0;
+
+    int m_initialBrokenCount = 0;
 };
