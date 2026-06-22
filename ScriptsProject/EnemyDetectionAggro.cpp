@@ -124,7 +124,7 @@ void EnemyDetectionAggro::updateAggroState()
 			m_isAggro = true;
 			m_canSeeTarget = true;
 			m_currentTargetTransform = m_tauntTargetTransform;
-			m_lastKnownTargetPosition = TransformAPI::getPosition(m_tauntTargetTransform);
+			m_lastKnownTargetPosition = TransformAPI::getGlobalPosition(m_tauntTargetTransform);
 			return;
 		}
 	}
@@ -152,7 +152,7 @@ void EnemyDetectionAggro::updateAggroState()
 	if (currentTargetStillDetected)
 	{
 		m_canSeeTarget = true;
-		m_lastKnownTargetPosition = TransformAPI::getPosition(m_currentTargetTransform);
+		m_lastKnownTargetPosition = TransformAPI::getGlobalPosition(m_currentTargetTransform);
 	}
 	else
 	{
@@ -166,7 +166,7 @@ void EnemyDetectionAggro::updateAggroState()
 		if (reevaluatedTarget && reevaluatedTarget != m_currentTargetTransform)
 		{
 			m_currentTargetTransform = reevaluatedTarget;
-			m_lastKnownTargetPosition = TransformAPI::getPosition(m_currentTargetTransform);
+			m_lastKnownTargetPosition = TransformAPI::getGlobalPosition(m_currentTargetTransform);
 		}
 
 		const bool lyrielAggroing = isLyrielAggroing();
@@ -381,7 +381,7 @@ void EnemyDetectionAggro::clearTaunt(Transform* playerTransform)
 	if (fallbackTarget != nullptr)
 	{
 		m_currentTargetTransform = fallbackTarget;
-		m_lastKnownTargetPosition = TransformAPI::getPosition(fallbackTarget);
+		m_lastKnownTargetPosition = TransformAPI::getGlobalPosition(fallbackTarget);
 		m_canSeeTarget = true;
 		m_isAggro = true;
 	}
