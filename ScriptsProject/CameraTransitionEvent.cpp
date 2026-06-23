@@ -123,10 +123,10 @@ void CameraTransitionEvent::findTargetPoints()
 
         GameObject* pointObject = ComponentAPI::getOwner(point);
         CameraTransitionStep* transitionStep = GameObjectAPI::findScript<CameraTransitionStep>(pointObject);
+
         if (transitionStep == nullptr)
         {
             Debug::warn("CameraTransitionEvent on '%s' found camera point '%s' without CameraTransitionStep.", GameObjectAPI::getName(getOwner()), pointName);
-            continue;
         }
 
         m_transitionSteps.push_back(transitionStep);

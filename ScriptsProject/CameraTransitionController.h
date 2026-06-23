@@ -49,6 +49,7 @@ private:
 
     Vector3 evaluateStepPosition(float alpha) const;
     Vector3 evaluateStepRotation(float alpha) const;
+    Vector3 evaluateCatmullRomStepPosition(float alpha) const;
 
     void finishTransition();
 

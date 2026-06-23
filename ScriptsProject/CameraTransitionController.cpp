@@ -245,16 +245,20 @@ void CameraTransitionController::updateMovingStep(float dt)
 
 void CameraTransitionController::updateHoldingStep(float dt)
 {
-    const float duration = m_currentEvent->getHoldDuration();
+    if (m_stepHoldDuration <= 0.0001f)
+    {
+        finishCurrentStepHold();
+        return;
+    }
 
     m_timer += dt;
 
-    if (m_timer < duration)
+    if (m_timer < m_stepHoldDuration)
     {
         return;
     }
 
-    startReturning();
+    finishCurrentStepHold();
 }
 
 void CameraTransitionController::updateReturning(float dt)
@@ -268,10 +272,9 @@ void CameraTransitionController::updateReturning(float dt)
     const float normalizedTime = m_timer / duration;
     const float alpha = MathAPI::smoothStep(0.0f, 1.0f, normalizedTime);
 
-    if (m_camera != nullptr && m_currentEvent->usesFovTransition())
+    if (m_camera != nullptr)
     {
         const float newFov = MathAPI::lerp(m_returnStartFov, m_originalFov, alpha);
-
         CameraAPI::setFov(m_camera, newFov);
     }
 
@@ -296,7 +299,7 @@ void CameraTransitionController::updateReturning(float dt)
         TransformAPI::setGlobalPosition(cameraTransform, targetPosition);
         TransformAPI::setGlobalRotationEuler(cameraTransform, targetRotation);
 
-        if (m_camera != nullptr && m_currentEvent->usesFovTransition())
+        if (m_camera != nullptr)
         {
             CameraAPI::setFov(m_camera, m_originalFov);
         }
@@ -307,7 +310,7 @@ void CameraTransitionController::updateReturning(float dt)
 
 bool CameraTransitionController::hasValidStepSequence() const
 {
-    return m_currentEvent != nullptr && m_currentEvent->getTransitionStepCount() > 0;
+    return m_currentEvent->getTargetPointCount() > 0 && m_currentEvent->getTransitionStep(0) != nullptr;
 }
 
 void CameraTransitionController::finishCurrentStepMovement()
@@ -363,7 +366,7 @@ Vector3 CameraTransitionController::evaluateStepPosition(float alpha) const
         return MathAPI::lerp(m_stepStartPosition, m_stepTargetPosition, MathAPI::smoothStep(0.0f, 1.0f, alpha));
 
     case CameraStepMoveMode::CatmullRom:
-        return MathAPI::lerp(m_stepStartPosition, m_stepTargetPosition, MathAPI::smoothStep(0.0f, 1.0f, alpha));
+        return evaluateCatmullRomStepPosition(alpha);
 
     default:
         return MathAPI::lerp(m_stepStartPosition, m_stepTargetPosition, alpha);
@@ -390,6 +393,39 @@ Vector3 CameraTransitionController::evaluateStepRotation(float alpha) const
     default:
         return MathAPI::lerp(m_stepStartRotation, m_stepTargetRotation, alpha);
     }
+}
+
+Vector3 CameraTransitionController::evaluateCatmullRomStepPosition(float alpha) const
+{
+    if (m_currentEvent == nullptr)
+    {
+        return m_stepTargetPosition;
+    }
+
+    const int previousStepIndex = m_currentStepIndex - 1;
+    const int nextStepIndex = m_currentStepIndex + 1;
+
+    Vector3 p0 = m_stepStartPosition;
+    Vector3 p1 = m_stepStartPosition;
+    Vector3 p2 = m_stepTargetPosition;
+    Vector3 p3 = m_stepTargetPosition;
+
+    if (previousStepIndex >= 0)
+    {
+        Transform* previousPoint = m_currentEvent->getTargetPoint(previousStepIndex);
+        if (previousPoint != nullptr)
+        {
+            p0 = TransformAPI::getGlobalPosition(previousPoint);
+        }
+    }
+
+    Transform* nextPoint = m_currentEvent->getTargetPoint(nextStepIndex);
+    if (nextPoint != nullptr)
+    {
+        p3 = TransformAPI::getGlobalPosition(nextPoint);
+    }
+
+    return catmullRom(p0, p1, p2, p3, alpha);
 }
 
 void CameraTransitionController::finishTransition()
