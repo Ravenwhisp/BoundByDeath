@@ -56,6 +56,8 @@ private:
 
     void findHUDFader();
 
+    bool getCameraFollowReturnTarget(Vector3& outPosition, Vector3& outRotation);
+
 private:
     CameraFollow* m_cameraFollow = nullptr;
     CameraComponent* m_camera = nullptr;

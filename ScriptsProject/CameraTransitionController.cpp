@@ -238,16 +238,26 @@ void CameraTransitionController::updateReturning(float dt)
         CameraAPI::setFov(m_camera, newFov);
     }
 
-    const Vector3 newPosition = MathAPI::lerp(m_returnStartPosition, m_transitionStartPosition, alpha);
-    const Vector3 newRotation = MathAPI::lerp(m_returnStartRotation, m_transitionStartRotation, alpha);
+    Vector3 targetPosition = m_transitionStartPosition;
+    Vector3 targetRotation = m_transitionStartRotation;
+
+    getCameraFollowReturnTarget(targetPosition, targetRotation);
+
+    const Vector3 newPosition = MathAPI::lerp(m_returnStartPosition, targetPosition, alpha);
+    const Vector3 newRotation = MathAPI::lerp(m_returnStartRotation, targetRotation, alpha);
 
     TransformAPI::setGlobalPosition(cameraTransform, newPosition);
     TransformAPI::setGlobalRotationEuler(cameraTransform, newRotation);
 
     if (m_timer >= duration)
     {
-        TransformAPI::setGlobalPosition(cameraTransform, m_transitionStartPosition);
-        TransformAPI::setGlobalRotationEuler(cameraTransform, m_transitionStartRotation);
+        Vector3 targetPosition = m_transitionStartPosition;
+        Vector3 targetRotation = m_transitionStartRotation;
+
+        getCameraFollowReturnTarget(targetPosition, targetRotation);
+
+        TransformAPI::setGlobalPosition(cameraTransform, targetPosition);
+        TransformAPI::setGlobalRotationEuler(cameraTransform, targetRotation);
 
         if (m_camera != nullptr && m_currentEvent->usesFovTransition())
         {
@@ -424,6 +434,16 @@ void CameraTransitionController::findHUDFader()
     }
 
     m_hudFader = GameObjectAPI::findScript<HUDFader>(hudFaderObjects[0]);
+}
+
+bool CameraTransitionController::getCameraFollowReturnTarget(Vector3& outPosition, Vector3& outRotation)
+{
+    if (m_cameraFollow == nullptr)
+    {
+        return false;
+    }
+
+    return m_cameraFollow->getDesiredCameraTransform(outPosition, outRotation);
 }
 
 IMPLEMENT_SCRIPT(CameraTransitionController)

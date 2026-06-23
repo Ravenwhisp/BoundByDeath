@@ -75,6 +75,46 @@ void CameraFollow::Update()
     TransformAPI::setPosition(cameraTransform, smoothedCameraPosition);
 }
 
+bool CameraFollow::getDesiredCameraTransform(Vector3& outPosition, Vector3& outRotation)
+{
+    Transform* firstTarget = m_firstTarget.getReferencedComponent();
+    if (firstTarget == nullptr)
+    {
+        return false;
+    }
+
+    GameObject* camera = getOwner();
+    Transform* cameraTransform = GameObjectAPI::getTransform(camera);
+
+    Transform* secondTarget = m_secondTarget.getReferencedComponent();
+    const bool hasSecondTarget = secondTarget != nullptr;
+
+    const float dt = Time::getDeltaTime();
+
+    Vector3 followPoint = computeFollowPoint();
+
+    float targetExtraHeight = 0.0f;
+    if (hasSecondTarget)
+    {
+        const Vector3 p1 = TransformAPI::getPosition(firstTarget);
+        const Vector3 p2 = TransformAPI::getPosition(secondTarget);
+        targetExtraHeight = computeTargetExtraHeight(p1, p2);
+    }
+
+    m_currentExtraHeight = smoothExtraHeight(m_currentExtraHeight, targetExtraHeight, m_zoomSharpness, dt);
+
+    const Vector3 previousRotation = TransformAPI::getEulerDegrees(cameraTransform);
+
+    TransformAPI::setRotationEuler(cameraTransform, m_rotationOffset);
+
+    outPosition = computeDesiredCameraPosition(followPoint, cameraTransform);
+    outRotation = m_rotationOffset;
+
+    TransformAPI::setRotationEuler(cameraTransform, previousRotation);
+
+    return true;
+}
+
 Vector3 CameraFollow::computeFollowPoint() const
 {
     Transform* firstTarget = m_firstTarget.getReferencedComponent();
