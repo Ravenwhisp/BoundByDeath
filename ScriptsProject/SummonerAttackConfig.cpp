@@ -10,7 +10,6 @@ IMPLEMENT_SCRIPT_FIELDS_INHERITED(SummonerAttackConfig, EnemyBaseAttackConfig,
 	),
 	// Energy Ball
 	FIELD_GROUP_COLLAPSE("Energy Ball",
-		SERIALIZED_STRING(m_energyBallPrefabPath, "Energy Ball Prefab Path"),
 		SERIALIZED_FLOAT(m_energyBallSpeed, "Energy Ball Speed", 0.0f, 10.0f, 0.1f),
 		SERIALIZED_FLOAT(m_energyBallLifetime, "Energy Ball Lifetime", 0.1f, 10.0f, 0.1f)
 	),

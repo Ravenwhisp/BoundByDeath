@@ -133,6 +133,9 @@
     <Filter Include="Enemies\Summoner\States">
       <UniqueIdentifier>{beb2a869-b60a-4dd2-a54c-ca787632f525}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Combat\Projectiles">
+      <UniqueIdentifier>{90bff8f3-21b4-4d10-b4a9-921262cc9328}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -228,9 +231,6 @@
       <Filter>Character\Lyriel</Filter>
     </ClInclude>
     <ClInclude Include="LyrielSound.h">
-      <Filter>Character\Lyriel</Filter>
-    </ClInclude>
-    <ClInclude Include="LyrielArrowProjectile.h">
       <Filter>Character\Lyriel</Filter>
     </ClInclude>
     <ClInclude Include="ArrowPool.h">
@@ -489,6 +489,15 @@
     <ClInclude Include="EnergyBallProjectile.h">
       <Filter>Enemies\Summoner</Filter>
     </ClInclude>
+    <ClInclude Include="ProjectileBase.h">
+      <Filter>Combat\Projectiles</Filter>
+    </ClInclude>
+    <ClInclude Include="ProjectilePool.h">
+      <Filter>Combat\Projectiles</Filter>
+    </ClInclude>
+    <ClInclude Include="LyrielArrowProjectile.h">
+      <Filter>Combat\Projectiles</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
@@ -585,9 +594,6 @@
       <Filter>Character\Lyriel</Filter>
     </ClCompile>
     <ClCompile Include="LyrielSound.cpp">
-      <Filter>Character\Lyriel</Filter>
-    </ClCompile>
-    <ClCompile Include="LyrielArrowProjectile.cpp">
       <Filter>Character\Lyriel</Filter>
     </ClCompile>
     <ClCompile Include="ArrowPool.cpp">
@@ -842,6 +848,15 @@
     </ClCompile>
     <ClCompile Include="EnergyBallProjectile.cpp">
       <Filter>Enemies\Summoner</Filter>
+    </ClCompile>
+    <ClCompile Include="ProjectileBase.cpp">
+      <Filter>Combat\Projectiles</Filter>
+    </ClCompile>
+    <ClCompile Include="ProjectilePool.cpp">
+      <Filter>Combat\Projectiles</Filter>
+    </ClCompile>
+    <ClCompile Include="LyrielArrowProjectile.cpp">
+      <Filter>Combat\Projectiles</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

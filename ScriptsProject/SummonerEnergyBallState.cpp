@@ -4,9 +4,7 @@
 #include "SummonerEnemyController.h"
 #include "SummonerAttackConfig.h"
 #include "EnergyBallProjectile.h"
-
-#include "Damageable.h"
-#include "PlayerState.h"
+#include "ProjectilePool.h"
 
 SummonerEnergyBallState::SummonerEnergyBallState(GameObject* owner)
 	: StateMachineScript(owner)
@@ -114,24 +112,21 @@ void SummonerEnergyBallState::spawnEnergyBall()
 
 	const Vector3 spawnPosition = ownerPosition + direction;
 
-	GameObject* projectileObject = GameObjectAPI::instantiatePrefab(
-		m_attackConfig->m_energyBallPrefabPath.c_str(),
-		spawnPosition,
-		Vector3::Zero
-	);
-
-	if (!projectileObject)
+	ProjectilePool* projectilePool = GameObjectAPI::findScript<ProjectilePool>(getOwner());
+	if (!projectilePool)
 	{
-		Debug::error("[SummonerEnergyBallState] Failed to instantiate energy ball.");
+		Debug::error("[SummonerEnergyBallState] ProjectilePool not found.");
 		return;
 	}
 
-	EnergyBallProjectile* projectile = GameObjectAPI::findScript<EnergyBallProjectile>(projectileObject);
-	if (!projectile)
+	ProjectileBase* pooledProjectile = projectilePool->acquireProjectile();
+	if (!pooledProjectile)
 	{
-		Debug::error("[SummonerEnergyBallState] EnergyBallProjectile script not found.");
+		Debug::warn("[SummonerEnergyBallState] No available energy ball projectile.");
 		return;
 	}
+
+	EnergyBallProjectile* projectile = static_cast<EnergyBallProjectile*>(pooledProjectile);
 
 	GameObject* targetObject = targetTransform->getOwner();
 

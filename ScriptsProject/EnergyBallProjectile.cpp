@@ -5,7 +5,7 @@
 #include "PlayerState.h"
 
 EnergyBallProjectile::EnergyBallProjectile(GameObject* owner)
-	: Script(owner)
+	: ProjectileBase(owner)
 {
 }
 
@@ -24,6 +24,9 @@ void EnergyBallProjectile::launch(const Vector3& startPosition, const Vector3& d
 	m_target = target;
 	m_damage = damage;
 	m_isLaunched = true;
+	m_inUse = true;
+	
+	GameObjectAPI::setActive(getOwner(), true);
 
 	Transform* transform = GameObjectAPI::getTransform(getOwner());
 	if (transform)
@@ -31,6 +34,21 @@ void EnergyBallProjectile::launch(const Vector3& startPosition, const Vector3& d
 		TransformAPI::setGlobalPosition(transform, startPosition);
 		TransformAPI::lookAt(transform, startPosition + m_direction);
 	}
+}
+
+void EnergyBallProjectile::resetProjectile()
+{
+	m_direction = Vector3::Zero;
+
+	m_speed = 0.0f;
+	m_lifetime = 0.0f;
+	m_aliveTimer = 0.0f;
+	m_damage = 0.0f;
+
+	m_target = nullptr;
+	m_isLaunched = false;
+
+	ProjectileBase::resetProjectile();
 }
 
 void EnergyBallProjectile::Update()
@@ -44,13 +62,13 @@ void EnergyBallProjectile::Update()
 
 	if (m_aliveTimer >= m_lifetime)
 	{
-		GameObjectAPI::removeGameObject(getOwner());
+		returnToPool();
 		return;
 	}
 
 	if (!m_target)
 	{
-		GameObjectAPI::removeGameObject(getOwner());
+		returnToPool();
 		return;
 	}
 
@@ -59,7 +77,7 @@ void EnergyBallProjectile::Update()
 
 	if (!projectileTransform || !targetTransform)
 	{
-		GameObjectAPI::removeGameObject(getOwner());
+		returnToPool();
 		return;
 	}
 
@@ -75,7 +93,7 @@ void EnergyBallProjectile::Update()
 	if (distanceSquared <= hitRadiusSquared)
 	{
 		applyImpactDamage();
-		GameObjectAPI::removeGameObject(getOwner());
+		returnToPool();
 		return;
 	}
 

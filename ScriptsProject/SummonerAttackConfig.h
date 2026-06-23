@@ -18,7 +18,6 @@ public:
 	float m_teleportMinPlayerDistance = 5.0f;
 
 	// Energy Ball
-	std::string m_energyBallPrefabPath = "";
 	float m_energyBallSpeed = 6.0f;
 	float m_energyBallLifetime = 2.0f;
 

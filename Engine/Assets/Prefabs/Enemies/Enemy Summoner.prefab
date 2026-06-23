@@ -1,6 +1,6 @@
 {
     "Version": 2,
-    "sourcePath": "Assets\\Enemy Summoner.prefab",
+    "sourcePath": "Assets\\Prefabs\\Enemies\\Enemy Summoner.prefab",
     "Name": "Enemy Summoner",
     "Active": true,
     "Static": false,
@@ -8,9 +8,9 @@
     "Tag": "ENEMY",
     "Transform": {
         "Position": [
-            -7.225006103515625,
-            -1.7522646188735962,
-            11.70819091796875
+            0.0,
+            0.0,
+            0.0
         ],
         "Rotation": [
             -0.0,
@@ -88,10 +88,9 @@
                 "Teleport Cooldown": 10.0,
                 "Teleport Radius": 6.0,
                 "Min Player Distance": 5.0,
-                "Energy Ball Prefab Path": "Assets/Models/orbs/EnergyBallPrefab.prefab",
                 "Energy Ball Speed": 6.0,
                 "Energy Ball Lifetime": 2.0,
-                "Spider Prefab Path": "Assets/Models/Characters/AnimatedCharacters/Spider/Enemy Brood Spider.prefab",
+                "Spider Prefab Path": "Assets/Prefabs/Enemies/Enemy Spider.prefab",
                 "Summon Count": 3,
                 "Summon Radius": 2.0,
                 "Summon Cast Time": 1.0,
@@ -117,6 +116,16 @@
                 "Health Slider": 0,
                 "Health Slider 2": 0,
                 "UI Update Time (Slider 2)": 1.0
+            }
+        },
+        {
+            "UID": 3191529452939319777,
+            "ComponentType": "SCRIPT",
+            "Active": true,
+            "ScriptName": "ProjectilePool",
+            "ScriptFields": {
+                "Max Projectiles": 8,
+                "Projectile Prefab Path": "Assets/Prefabs/Particles/EnergyBall.prefab"
             }
         }
     ],

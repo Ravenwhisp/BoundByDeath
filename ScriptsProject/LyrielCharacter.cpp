@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "LyrielCharacter.h"
-#include "ArrowPool.h"
+#include "ProjectilePool.h"
 #include "LyrielDash.h"
 #include "LyrielArrowVolley.h"
 #include "LyrielSound.h"
@@ -20,7 +20,7 @@ void LyrielCharacter::Start()
 {
     CharacterBase::Start();
 
-    m_arrowPool     = GameObjectAPI::findScript<ArrowPool>(getOwner());
+    m_arrowPool     = GameObjectAPI::findScript<ProjectilePool>(getOwner());
     m_dash          = GameObjectAPI::findScript<LyrielDash>(getOwner());
     m_arrowVolley   = GameObjectAPI::findScript<LyrielArrowVolley>(getOwner());
     m_sound         = GameObjectAPI::findScript<LyrielSound>(getOwner());

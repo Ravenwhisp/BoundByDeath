@@ -4,7 +4,7 @@
 #include "LyrielCharacter.h"
 #include "LyrielSound.h"
 #include "CharacterBase.h"
-#include "ArrowPool.h"
+#include "ProjectilePool.h"
 #include "LyrielArrowProjectile.h"
 #include "EnemyDamageable.h"
 #include "EnemyShadowMark.h"
@@ -398,18 +398,20 @@ void LyrielChargedAttack::spawnChargedArrow(const Vector3& origin, const Vector3
         return;
     }
 
-    ArrowPool* arrowPool = m_lyrielCharacter->getArrowPool();
-    if (arrowPool == nullptr)
+    ProjectilePool* projectilePool = m_lyrielCharacter->getArrowPool();
+    if (!projectilePool)
     {
         return;
     }
 
-    LyrielArrowProjectile* arrow = arrowPool->acquireArrow();
-    if (arrow == nullptr)
+    ProjectileBase* projectile = projectilePool->acquireProjectile();
+    if (!projectile)
     {
-        Debug::log("[LyrielChargedAttack] No available arrow in pool for charged shot visual.");
+        Debug::log("[LyrielChargedAttack] No available projectile in pool for charged shot visual.");
         return;
     }
+
+    LyrielArrowProjectile* arrow = static_cast<LyrielArrowProjectile*>(projectile);
 
     Vector3 flatForward = forward;
     flatForward.y = 0.0f;

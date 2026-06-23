@@ -1,8 +1,8 @@
 #pragma once
 
-#include "ScriptAPI.h"
+#include "ProjectileBase.h"
 
-class EnergyBallProjectile : public Script
+class EnergyBallProjectile : public ProjectileBase
 {
 	DECLARE_SCRIPT(EnergyBallProjectile)
 
@@ -12,6 +12,7 @@ public:
 	void Update() override;
 
 	void launch(const Vector3& startPosition, const Vector3& direction, float speed, float lifetime, GameObject* target, float damage);
+	void resetProjectile() override;
 
 private:
 	void applyImpactDamage();
