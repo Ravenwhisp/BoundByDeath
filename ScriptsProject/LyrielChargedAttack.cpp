@@ -219,6 +219,7 @@ void LyrielChargedAttack::releaseChargeAndShoot()
     collectEnemiesInLine(origin, forward, targets);
     const bool anyMarkExploited = applyChargedDamage(targets, damage);
     spawnChargedArrow(origin, forward);
+    notifyAbilitySuccessfullyStarted();
 
     if (sound != nullptr)
     {

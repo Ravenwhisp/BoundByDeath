@@ -153,6 +153,11 @@ void AbilityBase::updateAttackWindow(float dt)
     }
 }
 
+void AbilityBase::notifyAbilitySuccessfullyStarted()
+{
+    ++m_successfulUseCount;
+}
+
 bool AbilityBase::canStartAbility() const
 {
     if (m_character == nullptr)

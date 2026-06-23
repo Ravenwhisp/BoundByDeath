@@ -1,111 +1,104 @@
 {
-  "SourcePath": "Assets\\Prefabs\\UI\\DeathSlashUI.prefab",
+  "sourcePath": "Assets\\Prefabs\\UI\\DeathSlashUI.prefab",
   "Name": "DeathSlashUI",
-  "Version": 2,
-  "GameObject": {
-    "Name": "DeathSlashUI",
-    "Active": true,
-    "Tag": "DEFAULT",
-    "Layer": "DEFAULT",
-    "Transform": {
-      "position": [
+  "Active": true,
+  "Static": false,
+  "Layer": "DEFAULT",
+  "Tag": "DEFAULT",
+  "Transform": {
+    "Position": [
+      0.0,
+      0.20000000298023224,
+      0.0
+    ],
+    "Rotation": [
+      0.7071068286895752,
+      0.0,
+      -0.0,
+      0.7071067690849304
+    ],
+    "Scale": [
+      1.0,
+      1.0,
+      1.0
+    ]
+  },
+  "Components": [
+    {
+      "UID": 4008206316334465883,
+      "ComponentType": "CANVAS",
+      "Active": true,
+      "RenderMode": 1,
+      "ZTest": true
+    },
+    {
+      "UID": 13677169490139793849,
+      "ComponentType": "TRANSFORM2D",
+      "Active": true,
+      "Position": [
         0.0,
-        0.20000000298023224,
+        -45.0,
         0.0
       ],
-      "rotation": [
-        0.7071068286895752,
-        0.0,
-        -0.0,
-        0.7071067690849304
+      "Scale": [
+        0.12999999523162842,
+        0.12999999523162842,
+        0.0
       ],
-      "scale": [
-        1.0,
-        1.0,
-        1.0
-      ]
+      "Pivot": [
+        0.5,
+        0.5,
+        0.0
+      ],
+      "AnchorMin": [
+        0.5,
+        0.5,
+        0.0
+      ],
+      "AnchorMax": [
+        0.5,
+        0.5,
+        0.0
+      ],
+      "BaseSize": [
+        920.0,
+        920.0,
+        0.0
+      ],
+      "StretchMode": 0,
+      "SizingMode": 0,
+      "AspectRatio": 1.0,
+      "Alpha": 1.0
     },
-    "Components": [
-      {
-        "Type": 6,
-        "Data": {
-          "UID": 4008206316334465883,
-          "ComponentType": 6,
-          "Active": true,
-          "RenderMode": 1,
-          "ZTest": true
-        }
+    {
+      "UID": 8711873838527040860,
+      "ComponentType": "UIIMAGE",
+      "Active": true,
+      "TextureAssetId": {
+        "uid": 16960041604559691189,
+        "libId": "9a840043d0b7925d097fea1b2cb3aeaa",
+        "type": "TEXTURE"
       },
-      {
-        "Type": 5,
-        "Data": {
-          "UID": 13677169490139793849,
-          "ComponentType": 5,
-          "Active": true,
-          "Position": [
-            0.0,
-            -45.0
-          ],
-          "Scale": [
-            0.12999999523162842,
-            0.12999999523162842
-          ],
-          "Pivot": [
-            0.5,
-            0.5
-          ],
-          "AnchorMin": [
-            0.5,
-            0.5
-          ],
-          "AnchorMax": [
-            0.5,
-            0.5
-          ],
-          "BaseSize": [
-            920.0,
-            920.0
-          ],
-          "StretchMode": 0,
-          "SizingMode": 0,
-          "AspectRatio": 1.0,
-          "Alpha": 1.0
-        }
-      },
-      {
-        "Type": 7,
-        "Data": {
-          "UID": 8711873838527040860,
-          "ComponentType": 7,
-          "Active": true,
-          "TextureAssetId": {
-            "uid": 16960041604559691189,
-            "libId": "9a840043d0b7925d097fea1b2cb3aeaa"
-          },
-          "FillAmount": 1.0,
-          "FillMethod": 3,
-          "FillOrigin": 0,
-          "SheetColumns": 1,
-          "SheetRows": 1,
-          "SheetOffset": [
-            0.0,
-            0.0
-          ],
-          "StretchDrawMode": 0
-        }
-      },
-      {
-        "Type": 14,
-        "Data": {
-          "UID": 11670032742466130541,
-          "ComponentType": 14,
-          "Active": true,
-          "FillAmount": 1.0,
-          "FillMethod": 3,
-          "FillOrigin": 0
-        }
-      }
-    ],
-    "Children": []
-  }
+      "FillAmount": 1.0,
+      "FillMethod": 3,
+      "FillOrigin": 0,
+      "SheetColumns": 1,
+      "SheetRows": 1,
+      "SheetOffset": [
+        0.0,
+        0.0
+      ],
+      "StretchDrawMode": 0
+    },
+    {
+      "UID": 11670032742466130541,
+      "ComponentType": "UIIMAGE",
+      "Active": true,
+      "FillAmount": 1.0,
+      "FillMethod": 3,
+      "FillOrigin": 0
+    }
+  ],
+  "Children": [],
+  "Version": 2
 }
