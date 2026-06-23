@@ -5,7 +5,8 @@ IMPLEMENT_SCRIPT_FIELDS_INHERITED(SummonerAttackConfig, EnemyBaseAttackConfig,
 	// Teleport
 	FIELD_GROUP_COLLAPSE("Teleport",
 		SERIALIZED_FLOAT(m_teleportCooldown, "Teleport Cooldown", 0.0f, 30.0f, 0.1f),
-		SERIALIZED_FLOAT(m_teleportRadius, "Teleport Radius", 0.0f, 30.0f, 0.1f)
+		SERIALIZED_FLOAT(m_teleportRadius, "Teleport Radius", 0.0f, 30.0f, 0.1f),
+		SERIALIZED_FLOAT(m_teleportMinPlayerDistance, "Min Player Distance", 0.0f, 20.0f, 0.1f)
 	),
 	// Energy Ball
 	FIELD_GROUP_COLLAPSE("Energy Ball",

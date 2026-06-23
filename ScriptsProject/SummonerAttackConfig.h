@@ -15,6 +15,7 @@ public:
 	// Teleport
 	float m_teleportCooldown = 12.0f;
 	float m_teleportRadius = 6.0f;
+	float m_teleportMinPlayerDistance = 5.0f;
 
 	// Energy Ball
 	std::string m_energyBallPrefabPath = "";

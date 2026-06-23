@@ -96,7 +96,7 @@ void SummonerEnemyController::consumeTeleportCooldown()
 
 bool SummonerEnemyController::tryGetTeleportPosition(Vector3& outPosition) const
 {
-	constexpr int MaxTeleportAttempts = 10;
+	constexpr int MaxTeleportAttempts = 20;
 
 	if (!m_attackConfig || !hasValidTarget())
 	{
@@ -106,18 +106,30 @@ bool SummonerEnemyController::tryGetTeleportPosition(Vector3& outPosition) const
 	Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
 	Transform* targetTransform = getCurrentTarget();
 
-	if (!ownerTransform || !targetTransform)
+	if (!ownerTransform || !targetTransform || !m_enemyDetectionAggro)
 	{
 		return false;
 	}
 
-	const Vector3 ownerPosition = TransformAPI::getPosition(ownerTransform);
-	const Vector3 targetPosition = TransformAPI::getPosition(targetTransform);
+	const Vector3 ownerPosition = TransformAPI::getGlobalPosition(ownerTransform);
+	const Vector3 targetPosition = TransformAPI::getGlobalPosition(targetTransform);
 
-	const bool targetInAttackRange = isCurrentTargetInRange(m_attackConfig->m_basicAttackRange);
-	const Vector3 searchCenter = targetInAttackRange ? ownerPosition : targetPosition;
+	const bool targetInAttackRange =
+		isCurrentTargetInRange(m_attackConfig->m_basicAttackRange);
+
+	const Vector3 searchCenter =
+		targetInAttackRange ? ownerPosition : targetPosition;
+
+	Transform* lyrielTransform = m_enemyDetectionAggro->getLyrielTransform();
+	Transform* deathTransform = m_enemyDetectionAggro->getDeathTransform();
 
 	const Vector3 searchExtents = Vector3(5.0f, 5.0f, 5.0f);
+	const float attackRangeSquared =
+		m_attackConfig->m_basicAttackRange * m_attackConfig->m_basicAttackRange;
+
+	float bestScore = -FLT_MAX;
+	bool foundPosition = false;
+	Vector3 bestPosition;
 
 	for (int i = 0; i < MaxTeleportAttempts; ++i)
 	{
@@ -128,25 +140,87 @@ bool SummonerEnemyController::tryGetTeleportPosition(Vector3& outPosition) const
 			m_attackConfig->m_teleportRadius,
 			candidatePosition,
 			searchExtents,
-			1
-		);
+			1);
 
 		if (!found)
 		{
 			continue;
 		}
 
-		Vector3 difference = candidatePosition - targetPosition;
-		difference.y = 0.0f;
+		Vector3 toTarget = candidatePosition - targetPosition;
+		toTarget.y = 0.0f;
 
-		const float distanceSquared = difference.LengthSquared();
-		const float attackRangeSquared = m_attackConfig->m_basicAttackRange * m_attackConfig->m_basicAttackRange;
+		const float targetDistance = toTarget.Length();
 
-		if (distanceSquared <= attackRangeSquared)
+		if (targetDistance * targetDistance > attackRangeSquared)
 		{
-			outPosition = candidatePosition;
-			return true;
+			continue;
 		}
+
+		float closestPlayerDistance = FLT_MAX;
+
+		if (lyrielTransform)
+		{
+			Vector3 toLyriel =
+				candidatePosition - TransformAPI::getGlobalPosition(lyrielTransform);
+
+			toLyriel.y = 0.0f;
+
+			const float distanceToLyriel = toLyriel.Length();
+			if (distanceToLyriel < closestPlayerDistance)
+			{
+				closestPlayerDistance = distanceToLyriel;
+			}
+		}
+
+		if (deathTransform)
+		{
+			Vector3 toDeath =
+				candidatePosition - TransformAPI::getGlobalPosition(deathTransform);
+
+			toDeath.y = 0.0f;
+
+			const float distanceToDeath = toDeath.Length();
+			if (distanceToDeath < closestPlayerDistance)
+			{
+				closestPlayerDistance = distanceToDeath;
+			}
+		}
+
+		if (closestPlayerDistance == FLT_MAX)
+		{
+			continue;
+		}
+
+		if (!targetInAttackRange &&
+			closestPlayerDistance < m_attackConfig->m_teleportMinPlayerDistance)
+		{
+			continue;
+		}
+
+		float score = 0.0f;
+
+		if (targetInAttackRange)
+		{
+			score = closestPlayerDistance;
+		}
+		else
+		{
+			score = -targetDistance;
+		}
+
+		if (score > bestScore)
+		{
+			bestScore = score;
+			bestPosition = candidatePosition;
+			foundPosition = true;
+		}
+	}
+
+	if (foundPosition)
+	{
+		outPosition = bestPosition;
+		return true;
 	}
 
 	return false;
