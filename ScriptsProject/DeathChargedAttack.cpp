@@ -152,6 +152,7 @@ void DeathChargedAttack::fireAttack()
     const float angle = isChargedShot ? m_config->m_chargedShotArcAngle : m_config->m_chargedArcAngle;
 
     dealDamageInArc(damage, range, angle, isChargedShot, isMaxCharge);
+    notifyAbilitySuccessfullyStarted();
 
     // Max charge (auto-fired at full charge, always step 0) gets longer combo window
     const float window = (isChargedShot && isMaxCharge)
