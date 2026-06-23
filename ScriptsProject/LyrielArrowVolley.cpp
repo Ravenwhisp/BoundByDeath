@@ -192,6 +192,7 @@ void LyrielArrowVolley::releaseAimAndCast()
     collectEnemiesInCone(origin, forward, targets);
     const bool anyMarkExploited = applyVolleyDamage(targets);
     spawnVolleyArrows(origin, forward);
+    notifyAbilitySuccessfullyStarted();
 
     LyrielSound* sound = m_lyrielCharacter != nullptr ? m_lyrielCharacter->getSound() : nullptr;
     if (sound != nullptr)
