@@ -4,12 +4,27 @@
 #include "GameplayEventTrigger.h"
 #include "CameraTransitionController.h"
 
+static const char* cameraTransitionModeNames[] =
+{
+    "Timed Cinematic",
+    "Hold While Triggered"
+};
+
+constexpr int cameraTransitionModeCount = 2;
+
 IMPLEMENT_SCRIPT_FIELDS(CameraTransitionEvent,
+    SERIALIZED_ENUM_INT(m_transitionMode, "Transition Mode", cameraTransitionModeNames, cameraTransitionModeCount),
+    SERIALIZED_BOOL(m_lockGameplayInput, "Lock Gameplay Input"),
+    SERIALIZED_BOOL(m_makePlayersInvulnerable, "Make Players Invulnerable"),
+    SERIALIZED_BOOL(m_fadeHud, "Fade HUD"),
     SERIALIZED_FLOAT(m_pathDuration, "Path Duration", 0.0f, 20.0f, 0.05f),
-    SERIALIZED_FLOAT(m_holdDuration, "Hold Duration", 0.0f, 20.0f, 0.05f),
     SERIALIZED_FLOAT(m_returnDuration, "Return Duration", 0.0f, 20.0f, 0.05f),
     SERIALIZED_BOOL(m_useFovTransition, "Use FOV Transition"),
-    SERIALIZED_FLOAT(m_targetFov, "Target FOV", 5.0f, 120.0f, 0.1f)
+    SERIALIZED_FLOAT(m_targetFov, "Target FOV", 5.0f, 120.0f, 0.1f),
+
+    FIELD_GROUP_LABEL("Timed event specific"),
+        SERIALIZED_FLOAT(m_holdDuration, "Hold Duration", 0.0f, 20.0f, 0.05f)
+
 )
 
 CameraTransitionEvent::CameraTransitionEvent(GameObject* owner)
@@ -42,6 +57,23 @@ void CameraTransitionEvent::executeEvent(GameplayEventTrigger* trigger)
     }
 
     cameraTransitionController->startTransition(this);
+}
+
+void CameraTransitionEvent::stopEvent(GameplayEventTrigger* trigger)
+{
+    if (!isHoldWhileTriggeredMode())
+    {
+        return;
+    }
+
+    CameraTransitionController* cameraTransitionController = findCameraTransitionController();
+    if (cameraTransitionController == nullptr)
+    {
+        Debug::warn("CameraTransitionEvent on '%s' could not find CameraTransitionController on the default camera.", GameObjectAPI::getName(getOwner()));
+        return;
+    }
+
+    cameraTransitionController->releaseTransition(this);
 }
 
 Transform* CameraTransitionEvent::getTargetPoint(int index) const

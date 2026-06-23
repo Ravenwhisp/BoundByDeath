@@ -71,6 +71,10 @@ void CameraTransitionController::startTransition(CameraTransitionEvent* event)
     startMovingToTarget(event);
 }
 
+void CameraTransitionController::releaseTransition(CameraTransitionEvent* event)
+{
+}
+
 void CameraTransitionController::startMovingToTarget(CameraTransitionEvent* event)
 {
     Transform* cameraTransform = GameObjectAPI::getTransform(getOwner());

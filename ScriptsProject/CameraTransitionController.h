@@ -20,6 +20,7 @@ public:
     void Update() override;
 
     void startTransition(CameraTransitionEvent* event);
+    void releaseTransition(CameraTransitionEvent* event);
 
     bool isTransitioning() const { return m_isTransitioning; }
 

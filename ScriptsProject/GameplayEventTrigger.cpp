@@ -189,4 +189,21 @@ void GameplayEventTrigger::activateEvent()
     }
 }
 
+void GameplayEventTrigger::deactivateEvent()
+{
+    Debug::log("GameplayEventTrigger '%s' deactivated.", GameObjectAPI::getName(getOwner()));
+
+    for (GameplayEventAction* eventAction : m_eventActions)
+    {
+        if (eventAction == nullptr)
+        {
+            continue;
+        }
+
+        eventAction->stopEvent(this);
+    }
+
+    m_isActive = false;
+}
+
 IMPLEMENT_SCRIPT(GameplayEventTrigger)
