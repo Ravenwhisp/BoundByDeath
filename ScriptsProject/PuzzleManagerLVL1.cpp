@@ -36,9 +36,9 @@ void PuzzleManagerLVL1::puzzle2Solved()
 {
 	Debug::log("Puzzle 2 solved!");
 	TransformAPI::setRotationEuler(m_bridge1.getReferencedComponent(), Vector3(0.0f, 0.0f, 0.0f));
-	TransformAPI::setPosition(m_bridge1.getReferencedComponent(), Vector3(11.477f, 0.136f, -0.912f));
+	TransformAPI::setPosition(m_bridge1.getReferencedComponent(), Vector3(12.161f, 0.136f, -0.912f));
 	TransformAPI::setRotationEuler(m_bridge2.getReferencedComponent(), Vector3(0.0f, 180.0f, 0.0f));
-	TransformAPI::setPosition(m_bridge2.getReferencedComponent(), Vector3(8.896f, 0.091f, -0.894f));
+	TransformAPI::setPosition(m_bridge2.getReferencedComponent(), Vector3(8.0f, 0.076f, -0.894f));
 }
 
 void PuzzleManagerLVL1::puzzle3Solved()
