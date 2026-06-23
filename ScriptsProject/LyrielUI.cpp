@@ -202,18 +202,6 @@ void LyrielUI::updateDashChargesUI(int currentCharges, int maxCharges, float dt)
 	}
 }
 
-float LyrielUI::moveTowards(float current, float target, float maxDelta)
-{
-	const float delta = target - current;
-
-	if (std::fabs(delta) <= maxDelta)
-	{
-		return target;
-	}
-
-	return current + (delta > 0.0f ? maxDelta : -maxDelta);
-}
-
 void LyrielUI::updateChargeVisual(Transform2D* transform, float& currentScale, float targetScale, float dt)
 {
 	if (!transform)
@@ -221,7 +209,7 @@ void LyrielUI::updateChargeVisual(Transform2D* transform, float& currentScale, f
 		return;
 	}
 
-	currentScale = moveTowards(currentScale, targetScale, m_uiScaleSpeed * dt);
+	currentScale = MathAPI::moveTowards(currentScale, targetScale, m_uiScaleSpeed * dt);
 	Transform2DAPI::setScale(transform, Vector2(currentScale, currentScale));
 }
 
