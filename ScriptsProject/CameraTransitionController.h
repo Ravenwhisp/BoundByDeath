@@ -89,8 +89,6 @@ private:
     float m_hudFadeOutDuration = 0.35f;
     float m_hudFadeInDuration = 0.35f;
 
-    // ------
-
     int m_currentStepIndex = -1;
 
     Vector3 m_stepStartPosition = Vector3(0.0f, 0.0f, 0.0f);
