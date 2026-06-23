@@ -51,6 +51,9 @@ void CameraTransitionController::Update()
         updateHolding(dt);
         break;
 
+    case TransitionState::WaitingForRelease:
+        break;
+
     case TransitionState::Returning:
         updateReturning(dt);
         break;
@@ -73,6 +76,25 @@ void CameraTransitionController::startTransition(CameraTransitionEvent* event)
 
 void CameraTransitionController::releaseTransition(CameraTransitionEvent* event)
 {
+    if (!m_isTransitioning)
+    {
+        return;
+    }
+
+    if (m_currentEvent != event)
+    {
+        return;
+    }
+
+    if (!m_currentEvent->isHoldWhileTriggeredMode())
+    {
+        return;
+    }
+
+    if (m_state == TransitionState::WaitingForRelease || m_state == TransitionState::MovingToTarget)
+    {
+        startReturning();
+    }
 }
 
 void CameraTransitionController::startMovingToTarget(CameraTransitionEvent* event)
@@ -106,13 +128,36 @@ void CameraTransitionController::startMovingToTarget(CameraTransitionEvent* even
         m_cameraFollow->setFollowEnabled(false);
     }
 
-    setPlayersGameplayInputLocked(true);
-    setPlayersInvulnerable(true);
+    if (m_currentEvent->shouldLockGameplayInput())
+    {
+        setPlayersGameplayInputLocked(true);
+    }
 
-    if (m_hudFader != nullptr)
+    if (m_currentEvent->shouldMakePlayersInvulnerable())
+    {
+        setPlayersInvulnerable(true);
+    }
+
+    if (m_currentEvent->shouldFadeHud() && m_hudFader != nullptr)
     {
         m_hudFader->fadeTo(0.0f, m_hudFadeOutDuration);
     }
+}
+
+void CameraTransitionController::startReturning()
+{
+    Transform* cameraTransform = GameObjectAPI::getTransform(getOwner());
+
+    m_returnStartPosition = TransformAPI::getGlobalPosition(cameraTransform);
+    m_returnStartRotation = TransformAPI::getGlobalEulerDegrees(cameraTransform);
+
+    if (m_camera != nullptr)
+    {
+        m_returnStartFov = CameraAPI::getFov(m_camera);
+    }
+
+    m_state = TransitionState::Returning;
+    m_timer = 0.0f;
 }
 
 void CameraTransitionController::updateMovingToTarget(float dt)
@@ -148,7 +193,15 @@ void CameraTransitionController::updateMovingToTarget(float dt)
             CameraAPI::setFov(m_camera, m_currentEvent->getTargetFov());
         }
 
-        m_state = TransitionState::Holding;
+        if (m_currentEvent->isHoldWhileTriggeredMode())
+        {
+            m_state = TransitionState::WaitingForRelease;
+        }
+        else
+        {
+            m_state = TransitionState::Holding;
+        }
+
         m_timer = 0.0f;
     }
 }
@@ -164,18 +217,7 @@ void CameraTransitionController::updateHolding(float dt)
         return;
     }
 
-    Transform* cameraTransform = GameObjectAPI::getTransform(getOwner());
-
-    m_returnStartPosition = TransformAPI::getGlobalPosition(cameraTransform);
-    m_returnStartRotation = TransformAPI::getGlobalEulerDegrees(cameraTransform);
-
-    if (m_camera != nullptr)
-    {
-        m_returnStartFov = CameraAPI::getFov(m_camera);
-    }
-
-    m_state = TransitionState::Returning;
-    m_timer = 0.0f;
+    startReturning();
 }
 
 void CameraTransitionController::updateReturning(float dt)
@@ -223,10 +265,17 @@ void CameraTransitionController::finishTransition()
         m_cameraFollow->setFollowEnabled(true);
     }
 
-    setPlayersGameplayInputLocked(false);
-    setPlayersInvulnerable(false);
+    if (m_currentEvent->shouldLockGameplayInput())
+    {
+        setPlayersGameplayInputLocked(false);
+    }
 
-    if (m_hudFader != nullptr)
+    if (m_currentEvent->shouldMakePlayersInvulnerable())
+    {
+        setPlayersInvulnerable(false);
+    }
+
+    if (m_currentEvent->shouldFadeHud() && m_hudFader != nullptr)
     {
         m_hudFader->fadeTo(1.0f, m_hudFadeInDuration);
     }

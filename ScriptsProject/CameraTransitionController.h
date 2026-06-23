@@ -30,14 +30,18 @@ private:
         None,
         MovingToTarget,
         Holding,
+        WaitingForRelease,
         Returning
     };
 
 private:
     void startMovingToTarget(CameraTransitionEvent* event);
+    void startReturning();
+
     void updateMovingToTarget(float dt);
     void updateHolding(float dt);
     void updateReturning(float dt);
+
     void finishTransition();
 
     void buildPathFromCurrentEvent();
