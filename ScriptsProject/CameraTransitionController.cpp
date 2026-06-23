@@ -4,6 +4,7 @@
 #include "PlayerController.h"
 #include "CameraFollow.h"
 #include "CameraTransitionEvent.h"
+#include "CameraTransitionStep.h"
 #include "Damageable.h"
 #include "HUDFader.h"
 
@@ -43,12 +44,12 @@ void CameraTransitionController::Update()
 
     switch (m_state)
     {
-    case TransitionState::MovingToTarget:
-        updateMovingToTarget(dt);
+    case TransitionState::MovingStep:
+        updateMovingStep(dt);
         break;
 
-    case TransitionState::Holding:
-        updateHolding(dt);
+    case TransitionState::HoldingStep:
+        updateHoldingStep(dt);
         break;
 
     case TransitionState::WaitingForRelease:
@@ -71,7 +72,7 @@ void CameraTransitionController::startTransition(CameraTransitionEvent* event)
         return;
     }
 
-    startMovingToTarget(event);
+    startTransitionSequence(event);
 }
 
 void CameraTransitionController::releaseTransition(CameraTransitionEvent* event)
@@ -91,20 +92,20 @@ void CameraTransitionController::releaseTransition(CameraTransitionEvent* event)
         return;
     }
 
-    if (m_state == TransitionState::WaitingForRelease || m_state == TransitionState::MovingToTarget)
+    if (m_state == TransitionState::WaitingForRelease || m_state == TransitionState::MovingStep || m_state == TransitionState::HoldingStep)
     {
         startReturning();
     }
 }
 
-void CameraTransitionController::startMovingToTarget(CameraTransitionEvent* event)
+void CameraTransitionController::startTransitionSequence(CameraTransitionEvent* event)
 {
     Transform* cameraTransform = GameObjectAPI::getTransform(getOwner());
 
     m_currentEvent = event;
     m_isTransitioning = true;
-    m_state = TransitionState::MovingToTarget;
     m_timer = 0.0f;
+    m_currentStepIndex = -1;
 
     m_transitionStartPosition = TransformAPI::getGlobalPosition(cameraTransform);
     m_transitionStartRotation = TransformAPI::getGlobalEulerDegrees(cameraTransform);
@@ -115,10 +116,10 @@ void CameraTransitionController::startMovingToTarget(CameraTransitionEvent* even
         m_returnStartFov = m_originalFov;
     }
 
-    buildPathFromCurrentEvent();
-
-    if (m_pathPositions.size() < 2)
+    if (!hasValidStepSequence())
     {
+        Debug::warn("CameraTransitionController could not start transition '%s' because it has no CameraTransitionStep points.", GameObjectAPI::getName(event->getOwner()));
+
         finishTransition();
         return;
     }
@@ -142,6 +143,52 @@ void CameraTransitionController::startMovingToTarget(CameraTransitionEvent* even
     {
         m_hudFader->fadeTo(0.0f, m_hudFadeOutDuration);
     }
+
+    startStep(0);
+}
+
+void CameraTransitionController::startStep(int stepIndex)
+{
+    if (m_currentEvent == nullptr)
+    {
+        finishTransition();
+        return;
+    }
+
+    CameraTransitionStep* step = m_currentEvent->getTransitionStep(stepIndex);
+    Transform* point = m_currentEvent->getTargetPoint(stepIndex);
+
+    if (step == nullptr || point == nullptr)
+    {
+        Debug::warn("CameraTransitionController could not start step %d for transition '%s'.", stepIndex, GameObjectAPI::getName(m_currentEvent->getOwner()));
+
+        startReturning();
+        return;
+    }
+
+    Transform* cameraTransform = GameObjectAPI::getTransform(getOwner());
+
+    m_currentStepIndex = stepIndex;
+    m_timer = 0.0f;
+
+    m_stepStartPosition = TransformAPI::getGlobalPosition(cameraTransform);
+    m_stepStartRotation = TransformAPI::getGlobalEulerDegrees(cameraTransform);
+
+    m_stepTargetPosition = TransformAPI::getGlobalPosition(point);
+    m_stepTargetRotation = TransformAPI::getGlobalEulerDegrees(point);
+
+    m_stepMoveDuration = step->getMoveDuration();
+    m_stepHoldDuration = step->getHoldDuration();
+
+    m_stepUsesFovTransition = step->usesFovTransition();
+
+    if (m_camera != nullptr)
+    {
+        m_stepStartFov = CameraAPI::getFov(m_camera);
+        m_stepTargetFov = m_stepUsesFovTransition ? step->getTargetFov() : m_stepStartFov;
+    }
+
+    m_state = TransitionState::MovingStep;
 }
 
 void CameraTransitionController::startReturning()
@@ -160,53 +207,43 @@ void CameraTransitionController::startReturning()
     m_timer = 0.0f;
 }
 
-void CameraTransitionController::updateMovingToTarget(float dt)
+void CameraTransitionController::updateMovingStep(float dt)
 {
     Transform* cameraTransform = GameObjectAPI::getTransform(getOwner());
 
-    const float totalDuration = m_currentEvent->getPathDuration();
+    if (m_stepMoveDuration <= 0.0001f)
+    {
+        finishCurrentStepMovement();
+        return;
+    }
 
     m_timer += dt;
 
-    const float normalizedTime = m_timer / totalDuration;
-
-    if (m_camera != nullptr && m_currentEvent->usesFovTransition())
+    float normalizedTime = m_timer / m_stepMoveDuration;
+    if (normalizedTime > 1.0f)
     {
-        const float newFov = MathAPI::lerp(m_originalFov, m_currentEvent->getTargetFov(), normalizedTime);
-
-        CameraAPI::setFov(m_camera, newFov);
+        normalizedTime = 1.0f;
     }
 
-    const Vector3 newPosition = evaluateCatmullRomPath(normalizedTime);
-    const Vector3 newRotation = evaluateRotationPath(normalizedTime);
+    const Vector3 newPosition = evaluateStepPosition(normalizedTime);
+    const Vector3 newRotation = evaluateStepRotation(normalizedTime);
 
     TransformAPI::setGlobalPosition(cameraTransform, newPosition);
     TransformAPI::setGlobalRotationEuler(cameraTransform, newRotation);
 
-    if (m_timer >= totalDuration)
+    if (m_camera != nullptr && m_stepUsesFovTransition)
     {
-        TransformAPI::setGlobalPosition(cameraTransform, m_pathPositions.back());
-        TransformAPI::setGlobalRotationEuler(cameraTransform, m_pathRotations.back());
+        const float newFov = MathAPI::lerp(m_stepStartFov, m_stepTargetFov, normalizedTime);
+        CameraAPI::setFov(m_camera, newFov);
+    }
 
-        if (m_camera != nullptr && m_currentEvent->usesFovTransition())
-        {
-            CameraAPI::setFov(m_camera, m_currentEvent->getTargetFov());
-        }
-
-        if (m_currentEvent->isHoldWhileTriggeredMode())
-        {
-            m_state = TransitionState::WaitingForRelease;
-        }
-        else
-        {
-            m_state = TransitionState::Holding;
-        }
-
-        m_timer = 0.0f;
+    if (m_timer >= m_stepMoveDuration)
+    {
+        finishCurrentStepMovement();
     }
 }
 
-void CameraTransitionController::updateHolding(float dt)
+void CameraTransitionController::updateHoldingStep(float dt)
 {
     const float duration = m_currentEvent->getHoldDuration();
 
@@ -265,6 +302,93 @@ void CameraTransitionController::updateReturning(float dt)
         }
 
         finishTransition();
+    }
+}
+
+bool CameraTransitionController::hasValidStepSequence() const
+{
+    return m_currentEvent != nullptr && m_currentEvent->getTransitionStepCount() > 0;
+}
+
+void CameraTransitionController::finishCurrentStepMovement()
+{
+    Transform* cameraTransform = GameObjectAPI::getTransform(getOwner());
+
+    TransformAPI::setGlobalPosition(cameraTransform, m_stepTargetPosition);
+    TransformAPI::setGlobalRotationEuler(cameraTransform, m_stepTargetRotation);
+
+    if (m_camera != nullptr && m_stepUsesFovTransition)
+    {
+        CameraAPI::setFov(m_camera, m_stepTargetFov);
+    }
+
+    m_state = TransitionState::HoldingStep;
+    m_timer = 0.0f;
+}
+
+void CameraTransitionController::finishCurrentStepHold()
+{
+    const int nextStepIndex = m_currentStepIndex + 1;
+
+    if (nextStepIndex < m_currentEvent->getTransitionStepCount())
+    {
+        startStep(nextStepIndex);
+        return;
+    }
+
+    if (m_currentEvent->isHoldWhileTriggeredMode())
+    {
+        m_state = TransitionState::WaitingForRelease;
+        m_timer = 0.0f;
+        return;
+    }
+
+    startReturning();
+}
+
+Vector3 CameraTransitionController::evaluateStepPosition(float alpha) const
+{
+    CameraTransitionStep* step = m_currentEvent->getTransitionStep(m_currentStepIndex);
+    if (step == nullptr)
+    {
+        return m_stepTargetPosition;
+    }
+
+    switch (step->getMoveMode())
+    {
+    case CameraStepMoveMode::Linear:
+        return MathAPI::lerp(m_stepStartPosition, m_stepTargetPosition, alpha);
+
+    case CameraStepMoveMode::Smooth:
+        return MathAPI::lerp(m_stepStartPosition, m_stepTargetPosition, MathAPI::smoothStep(0.0f, 1.0f, alpha));
+
+    case CameraStepMoveMode::CatmullRom:
+        return MathAPI::lerp(m_stepStartPosition, m_stepTargetPosition, MathAPI::smoothStep(0.0f, 1.0f, alpha));
+
+    default:
+        return MathAPI::lerp(m_stepStartPosition, m_stepTargetPosition, alpha);
+    }
+}
+
+Vector3 CameraTransitionController::evaluateStepRotation(float alpha) const
+{
+    CameraTransitionStep* step = m_currentEvent->getTransitionStep(m_currentStepIndex);
+    if (step == nullptr)
+    {
+        return m_stepTargetRotation;
+    }
+
+    switch (step->getMoveMode())
+    {
+    case CameraStepMoveMode::Linear:
+        return MathAPI::lerp(m_stepStartRotation, m_stepTargetRotation, alpha);
+
+    case CameraStepMoveMode::Smooth:
+    case CameraStepMoveMode::CatmullRom:
+        return MathAPI::lerp(m_stepStartRotation, m_stepTargetRotation, MathAPI::smoothStep(0.0f, 1.0f, alpha));
+
+    default:
+        return MathAPI::lerp(m_stepStartRotation, m_stepTargetRotation, alpha);
     }
 }
 

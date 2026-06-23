@@ -3,6 +3,7 @@
 
 #include "GameplayEventTrigger.h"
 #include "CameraTransitionController.h"
+#include "CameraTransitionStep.h"
 
 static const char* cameraTransitionModeNames[] =
 {
@@ -86,9 +87,20 @@ Transform* CameraTransitionEvent::getTargetPoint(int index) const
     return m_targetPoints[index];
 }
 
+CameraTransitionStep* CameraTransitionEvent::getTransitionStep(int index) const
+{
+    if (index < 0 || index >= static_cast<int>(m_transitionSteps.size()))
+    {
+        return nullptr;
+    }
+
+    return m_transitionSteps[index];
+}
+
 void CameraTransitionEvent::findTargetPoints()
 {
     m_targetPoints.clear();
+    m_transitionSteps.clear();
 
     Transform* cameraPointsRoot = findCameraPointsRoot();
     if (cameraPointsRoot == nullptr)
@@ -108,6 +120,16 @@ void CameraTransitionEvent::findTargetPoints()
         }
 
         m_targetPoints.push_back(point);
+
+        GameObject* pointObject = ComponentAPI::getOwner(point);
+        CameraTransitionStep* transitionStep = GameObjectAPI::findScript<CameraTransitionStep>(pointObject);
+        if (transitionStep == nullptr)
+        {
+            Debug::warn("CameraTransitionEvent on '%s' found camera point '%s' without CameraTransitionStep.", GameObjectAPI::getName(getOwner()), pointName);
+            continue;
+        }
+
+        m_transitionSteps.push_back(transitionStep);
     }
 }
 

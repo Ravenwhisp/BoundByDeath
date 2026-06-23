@@ -28,19 +28,27 @@ private:
     enum class TransitionState
     {
         None,
-        MovingToTarget,
-        Holding,
+        MovingStep,
+        HoldingStep,
         WaitingForRelease,
         Returning
     };
 
 private:
-    void startMovingToTarget(CameraTransitionEvent* event);
+    void startTransitionSequence(CameraTransitionEvent* event);
+    void startStep(int stepIndex);
     void startReturning();
 
-    void updateMovingToTarget(float dt);
-    void updateHolding(float dt);
+    void updateMovingStep(float dt);
+    void updateHoldingStep(float dt);
     void updateReturning(float dt);
+
+    bool hasValidStepSequence() const;
+    void finishCurrentStepMovement();
+    void finishCurrentStepHold();
+
+    Vector3 evaluateStepPosition(float alpha) const;
+    Vector3 evaluateStepRotation(float alpha) const;
 
     void finishTransition();
 
@@ -86,5 +94,22 @@ private:
 
     float m_hudFadeOutDuration = 0.35f;
     float m_hudFadeInDuration = 0.35f;
+
+    // ------
+
+    int m_currentStepIndex = -1;
+
+    Vector3 m_stepStartPosition = Vector3(0.0f, 0.0f, 0.0f);
+    Vector3 m_stepStartRotation = Vector3(0.0f, 0.0f, 0.0f);
+
+    Vector3 m_stepTargetPosition = Vector3(0.0f, 0.0f, 0.0f);
+    Vector3 m_stepTargetRotation = Vector3(0.0f, 0.0f, 0.0f);
+
+    float m_stepMoveDuration = 0.0f;
+    float m_stepHoldDuration = 0.0f;
+
+    float m_stepStartFov = 90.0f;
+    float m_stepTargetFov = 90.0f;
+    bool m_stepUsesFovTransition = false;
 
 };

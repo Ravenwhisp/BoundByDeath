@@ -5,6 +5,7 @@
 
 class CameraTransitionController;
 class GameplayEventTrigger;
+class CameraTransitionStep;
 
 enum class CameraTransitionMode
 {
@@ -29,6 +30,9 @@ public:
     const std::vector<Transform*>& getTargetPoints() const { return m_targetPoints; }
     Transform* getTargetPoint(int index) const;
     int getTargetPointCount() const { return static_cast<int>(m_targetPoints.size()); }
+
+    CameraTransitionStep* getTransitionStep(int index) const;
+    int getTransitionStepCount() const { return static_cast<int>(m_transitionSteps.size()); }
 
     float getPathDuration() const { return m_pathDuration; }
     float getHoldDuration() const { return m_holdDuration; }
@@ -66,4 +70,5 @@ public:
 
 private:
     std::vector<Transform*> m_targetPoints;
+    std::vector<CameraTransitionStep*> m_transitionSteps;
 };
