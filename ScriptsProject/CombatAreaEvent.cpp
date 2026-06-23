@@ -22,7 +22,9 @@ void CombatAreaEvent::Update()
         return;
     }
 
-    if (!areAllEnemiesDead())
+    removeDeadEnemies();
+
+    if (!m_remainingEnemies.empty())
     {
         return;
     }
@@ -39,6 +41,8 @@ void CombatAreaEvent::executeEvent(GameplayEventTrigger* trigger)
     {
         return;
     }
+
+    m_remainingEnemies = m_enemies;
 
     closeArea();
 
@@ -85,20 +89,22 @@ void CombatAreaEvent::setBlockerState(const ScriptComponentRef<Transform>& block
     NavigationAPI::setBlocked(runtimeBlocker, blocked);
 }
 
-bool CombatAreaEvent::areAllEnemiesDead() const
+void CombatAreaEvent::removeDeadEnemies()
 {
-    for (const ScriptComponentRef<Transform>& enemyTransformRef : m_enemies)
+    for (auto it = m_remainingEnemies.begin(); it != m_remainingEnemies.end();)
     {
-        if (!isEnemyDead(enemyTransformRef))
+        if (shouldRemoveEnemy(*it))
         {
-            return false;
+            it = m_remainingEnemies.erase(it);
+        }
+        else
+        {
+            ++it;
         }
     }
-
-    return true;
 }
 
-bool CombatAreaEvent::isEnemyDead(const ScriptComponentRef<Transform>& enemyTransformRef) const
+bool CombatAreaEvent::shouldRemoveEnemy(const ScriptComponentRef<Transform>& enemyTransformRef) const
 {
     Transform* enemyTransform = enemyTransformRef.getReferencedComponent();
 

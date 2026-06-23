@@ -101,7 +101,7 @@ void DeathTaunt::drawGizmo()
         return;
     }
 
-    const Vector3 ownerPosition = TransformAPI::getPosition(ownerTransform);
+    const Vector3 ownerPosition = TransformAPI::getGlobalPosition(ownerTransform);
 
     Vector3 ownerForward = m_currentAimDirection;
     if (ownerForward.LengthSquared() <= 0.0001f)
@@ -224,7 +224,7 @@ void DeathTaunt::applyTauntToEnemiesInCone(const Vector3& ownerForward) const
         return;
     }
 
-    const Vector3 ownerPosition = TransformAPI::getPosition(ownerTransform);
+    const Vector3 ownerPosition = TransformAPI::getGlobalPosition(ownerTransform);
 
     const std::vector<GameObject*> enemies = SceneAPI::findAllGameObjectsByTag(Tag::ENEMY);
     Debug::log("[DeathTaunt] Enemies with Tag::ENEMY found: %d", (int)enemies.size());
@@ -318,7 +318,7 @@ bool DeathTaunt::isEnemyInsideTauntCone(GameObject* enemy, const Vector3& ownerP
         return false;
     }
 
-    Vector3 directionToEnemy = TransformAPI::getPosition(enemyTransform) - ownerPosition;
+    Vector3 directionToEnemy = TransformAPI::getGlobalPosition(enemyTransform) - ownerPosition;
     directionToEnemy.y = 0.0f;
 
     const float distanceToEnemy = directionToEnemy.Length();
