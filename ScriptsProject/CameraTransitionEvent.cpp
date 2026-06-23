@@ -18,14 +18,7 @@ IMPLEMENT_SCRIPT_FIELDS(CameraTransitionEvent,
     SERIALIZED_BOOL(m_lockGameplayInput, "Lock Gameplay Input"),
     SERIALIZED_BOOL(m_makePlayersInvulnerable, "Make Players Invulnerable"),
     SERIALIZED_BOOL(m_fadeHud, "Fade HUD"),
-    SERIALIZED_FLOAT(m_pathDuration, "Path Duration", 0.0f, 20.0f, 0.05f),
-    SERIALIZED_FLOAT(m_returnDuration, "Return Duration", 0.0f, 20.0f, 0.05f),
-    SERIALIZED_BOOL(m_useFovTransition, "Use FOV Transition"),
-    SERIALIZED_FLOAT(m_targetFov, "Target FOV", 5.0f, 120.0f, 0.1f),
-
-    FIELD_GROUP_LABEL("Timed event specific"),
-        SERIALIZED_FLOAT(m_holdDuration, "Hold Duration", 0.0f, 20.0f, 0.05f)
-
+    SERIALIZED_FLOAT(m_returnDuration, "Return Duration", 0.0f, 20.0f, 0.05f)
 )
 
 CameraTransitionEvent::CameraTransitionEvent(GameObject* owner)

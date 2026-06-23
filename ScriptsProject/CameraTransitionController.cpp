@@ -456,68 +456,6 @@ void CameraTransitionController::finishTransition()
     m_timer = 0.0f;
 }
 
-void CameraTransitionController::buildPathFromCurrentEvent()
-{
-    m_pathPositions.clear();
-    m_pathRotations.clear();
-
-    m_pathPositions.push_back(m_transitionStartPosition);
-    m_pathRotations.push_back(m_transitionStartRotation);
-
-    const int pointCount = m_currentEvent->getTargetPointCount();
-
-    for (int i = 0; i < pointCount; ++i)
-    {
-        Transform* point = m_currentEvent->getTargetPoint(i);
-
-        m_pathPositions.push_back(TransformAPI::getGlobalPosition(point));
-        m_pathRotations.push_back(TransformAPI::getGlobalEulerDegrees(point));
-    }
-}
-
-Vector3 CameraTransitionController::evaluateCatmullRomPath(float normalizedTime) const
-{
-    const int pointCount = static_cast<int>(m_pathPositions.size());
-    const int segmentCount = pointCount - 1;
-
-    const float scaledTime = normalizedTime * static_cast<float>(segmentCount);
-
-    int segmentIndex = static_cast<int>(scaledTime);
-    float localAlpha = scaledTime - static_cast<float>(segmentIndex);
-
-    if (segmentIndex >= segmentCount)
-    {
-        segmentIndex = segmentCount - 1;
-        localAlpha = 1.0f;
-    }
-
-    const int p0Index = segmentIndex > 0 ? segmentIndex - 1 : segmentIndex;
-    const int p1Index = segmentIndex;
-    const int p2Index = segmentIndex + 1;
-    const int p3Index = segmentIndex + 2 < pointCount ? segmentIndex + 2 : segmentIndex + 1;
-
-    return catmullRom(m_pathPositions[p0Index], m_pathPositions[p1Index], m_pathPositions[p2Index], m_pathPositions[p3Index], localAlpha);
-}
-
-Vector3 CameraTransitionController::evaluateRotationPath(float normalizedTime) const
-{
-    const int pointCount = static_cast<int>(m_pathRotations.size());
-    const int segmentCount = pointCount - 1;
-
-    const float scaledTime = normalizedTime * static_cast<float>(segmentCount);
-
-    int segmentIndex = static_cast<int>(scaledTime);
-    float localAlpha = scaledTime - static_cast<float>(segmentIndex);
-
-    if (segmentIndex >= segmentCount)
-    {
-        segmentIndex = segmentCount - 1;
-        localAlpha = 1.0f;
-    }
-
-    return MathAPI::lerp(m_pathRotations[segmentIndex], m_pathRotations[segmentIndex + 1], localAlpha);
-}
-
 Vector3 CameraTransitionController::catmullRom(const Vector3& p0, const Vector3& p1, const Vector3& p2, const Vector3& p3, float t) const
 {
     const float t2 = t * t;

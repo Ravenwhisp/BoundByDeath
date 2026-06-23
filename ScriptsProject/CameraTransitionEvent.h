@@ -34,12 +34,7 @@ public:
     CameraTransitionStep* getTransitionStep(int index) const;
     int getTransitionStepCount() const { return static_cast<int>(m_transitionSteps.size()); }
 
-    float getPathDuration() const { return m_pathDuration; }
-    float getHoldDuration() const { return m_holdDuration; }
     float getReturnDuration() const { return m_returnDuration; }
-
-    bool usesFovTransition() const { return m_useFovTransition; }
-    float getTargetFov() const { return m_targetFov; }
 
     CameraTransitionMode getTransitionMode() const { return static_cast<CameraTransitionMode>(m_transitionMode); }
     bool isTimedCinematicMode() const { return getTransitionMode() == CameraTransitionMode::TimedCinematic; }
@@ -57,12 +52,7 @@ private:
 public:
     int m_transitionMode = static_cast<int>(CameraTransitionMode::TimedCinematic);
 
-    float m_pathDuration = 1.5f;
-    float m_holdDuration = 1.0f;
     float m_returnDuration = 1.5f;
-
-    bool m_useFovTransition = false;
-    float m_targetFov = 90.0f;
 
     bool m_lockGameplayInput = true;
     bool m_makePlayersInvulnerable = true;

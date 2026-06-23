@@ -53,10 +53,6 @@ private:
 
     void finishTransition();
 
-    void buildPathFromCurrentEvent();
-    Vector3 evaluateCatmullRomPath(float normalizedTime) const;
-    Vector3 evaluateRotationPath(float normalizedTime) const;
-
     Vector3 catmullRom(const Vector3& p0, const Vector3& p1, const Vector3& p2, const Vector3& p3, float t) const;
 
     void findPlayerControllers();
@@ -86,9 +82,6 @@ private:
 
     Vector3 m_returnStartPosition = Vector3(0.0f, 0.0f, 0.0f);
     Vector3 m_returnStartRotation = Vector3(0.0f, 0.0f, 0.0f);
-
-    std::vector<Vector3> m_pathPositions;
-    std::vector<Vector3> m_pathRotations;
 
     float m_originalFov = 90.0f;
     float m_returnStartFov = 90.0f;
