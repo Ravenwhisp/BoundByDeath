@@ -133,6 +133,9 @@
     <Filter Include="Enemies\Spider\States">
       <UniqueIdentifier>{70c0d2f4-bb1c-4722-94b0-9a8fdd52a250}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Enemies\Skeleton">
+      <UniqueIdentifier>{9f830825-78bb-44ef-a04a-021d01fc5fa8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -477,6 +480,11 @@
     <ClInclude Include="SpiderEnemyController.h">
       <Filter>Enemies\Spider</Filter>
     </ClInclude>
+    <ClInclude Include="CameraTransitionStep.h" />
+    <ClInclude Include="CombatAreaEvent.h" />
+    <ClInclude Include="SkeletonAttackConfig.h">
+      <Filter>Enemies\Skeleton</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
@@ -815,6 +823,11 @@
     </ClCompile>
     <ClCompile Include="SpiderEnemyController.cpp">
       <Filter>Enemies\Spider</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraTransitionStep.cpp" />
+    <ClCompile Include="CombatAreaEvent.cpp" />
+    <ClCompile Include="SkeletonAttackConfig.cpp">
+      <Filter>Enemies\Skeleton</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
