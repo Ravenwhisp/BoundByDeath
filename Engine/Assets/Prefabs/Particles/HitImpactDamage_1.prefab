@@ -1,21 +1,21 @@
 {
     "Version": 2,
-    "sourcePath": "Assets\\Prefabs\\Particles\\Archer\\ArcherGuardImpact.prefab",
-    "Name": "ArcherGuardImpact",
+    "sourcePath": "Assets\\Prefabs\\Particles\\HitImpactDamage_1.prefab",
+    "Name": "HitImpactDamage",
     "Active": true,
     "Static": false,
     "Layer": "DEFAULT",
     "Tag": "DEFAULT",
     "Transform": {
         "Position": [
-            1.1517804861068726,
+            0.0,
             0.0,
             0.0
         ],
         "Rotation": [
-            -0.0,
             0.0,
-            -0.0,
+            0.0,
+            0.0,
             1.0
         ],
         "Scale": [
@@ -26,12 +26,12 @@
     },
     "Components": [
         {
-            "UID": 10597971095329016403,
+            "UID": 15032653812794528342,
             "ComponentType": "PARTICLE_SYSTEM",
             "Active": true,
             "TextureAssetId": {
-                "uid": 7930543677389543952,
-                "libId": "a5ecfc04cffb7d7d58f18e7957374ecf",
+                "uid": 12947316424740063385,
+                "libId": "a6acc35a09babe130f350de4884f4c8e",
                 "type": "TEXTURE"
             },
             "ParticleEmitters": [
@@ -40,14 +40,14 @@
                         {
                             "ModuleType": 2,
                             "Looping": false,
-                            "Duration": 1.0,
+                            "Duration": 0.20000000298023224,
                             "RateOverTime": 1.0,
                             "RateOverDistance": 0.0
                         },
                         {
                             "ModuleType": 4,
                             "LifeTimeType": "CONSTANT",
-                            "StartLifeTime": 0.20000000298023224
+                            "StartLifeTime": 0.10000000149011612
                         },
                         {
                             "ModuleType": 1,
@@ -61,16 +61,7 @@
                             "ColorOverTime": [
                                 {
                                     "IsAlphaMark": false,
-                                    "Position": 0.023102305829524994,
-                                    "Color": [
-                                        1.0,
-                                        1.0,
-                                        1.0
-                                    ]
-                                },
-                                {
-                                    "IsAlphaMark": false,
-                                    "Position": 0.14851485192775726,
+                                    "Position": 0.0,
                                     "Color": [
                                         1.0,
                                         1.0,
@@ -79,29 +70,52 @@
                                 },
                                 {
                                     "IsAlphaMark": true,
-                                    "Position": 0.8184818625450134,
+                                    "Position": 0.016393441706895828,
                                     "Alpha": 1.0
                                 },
                                 {
-                                    "IsAlphaMark": true,
-                                    "Position": 0.9967213273048401,
-                                    "Alpha": 0.0
+                                    "IsAlphaMark": false,
+                                    "Position": 0.24752475321292877,
+                                    "Color": [
+                                        0.9884169697761536,
+                                        0.7013706564903259,
+                                        0.3739956319332123
+                                    ]
                                 },
                                 {
                                     "IsAlphaMark": false,
-                                    "Position": 1.0,
+                                    "Position": 0.5544555187225342,
                                     "Color": [
                                         1.0,
-                                        1.0,
-                                        1.0
+                                        0.0,
+                                        0.0
                                     ]
+                                },
+                                {
+                                    "IsAlphaMark": true,
+                                    "Position": 0.8524585962295532,
+                                    "Alpha": 1.0
+                                },
+                                {
+                                    "IsAlphaMark": false,
+                                    "Position": 0.9636963605880737,
+                                    "Color": [
+                                        0.16602319478988647,
+                                        0.0,
+                                        0.0
+                                    ]
+                                },
+                                {
+                                    "IsAlphaMark": true,
+                                    "Position": 0.9900990128517151,
+                                    "Alpha": 0.0
                                 }
                             ],
                             "ColorCurve": [
-                                0.4699999988079071,
-                                0.0,
-                                0.7450000047683716,
-                                0.7149999737739563
+                                0.4449999928474426,
+                                0.05000000074505806,
+                                0.550000011920929,
+                                0.949999988079071
                             ]
                         },
                         {
@@ -113,15 +127,15 @@
                             "ModuleType": 6,
                             "StartScaleType": "CONSTANT",
                             "StartScale": [
-                                0.0,
-                                0.0,
+                                1.0,
+                                1.0,
                                 0.0
                             ],
                             "ChangeSizeOverTime": true,
                             "EndScaleType": "CONSTANT",
                             "EndScale": [
-                                1.0,
-                                1.0,
+                                1.2999999523162842,
+                                1.2999999523162842,
                                 0.0
                             ]
                         },
@@ -153,7 +167,7 @@
     ],
     "Children": [
         {
-            "Name": "Impactembers",
+            "Name": "ember",
             "Active": true,
             "Static": false,
             "Layer": "DEFAULT",
@@ -178,7 +192,7 @@
             },
             "Components": [
                 {
-                    "UID": 10357033677303263580,
+                    "UID": 1845220552136679233,
                     "ComponentType": "PARTICLE_SYSTEM",
                     "Active": true,
                     "TextureAssetId": {
@@ -199,12 +213,12 @@
                                 {
                                     "ModuleType": 4,
                                     "LifeTimeType": "CONSTANT",
-                                    "StartLifeTime": 0.30000001192092896
+                                    "StartLifeTime": 1.0
                                 },
                                 {
                                     "ModuleType": 1,
                                     "ShapeType": "SPHERE",
-                                    "Radius": 0.20000000298023224,
+                                    "Radius": 0.10000000149011612,
                                     "RadiusThickness": 1.0,
                                     "RadiusScale": 3.0
                                 },
@@ -222,46 +236,59 @@
                                         },
                                         {
                                             "IsAlphaMark": true,
-                                            "Position": 0.04918032884597778,
-                                            "Alpha": 0.0
-                                        },
-                                        {
-                                            "IsAlphaMark": true,
-                                            "Position": 0.08580858260393143,
-                                            "Alpha": 1.0
-                                        },
-                                        {
-                                            "IsAlphaMark": true,
-                                            "Position": 0.7758805751800537,
+                                            "Position": 0.03606557473540306,
                                             "Alpha": 1.0
                                         },
                                         {
                                             "IsAlphaMark": false,
-                                            "Position": 0.9009903073310852,
+                                            "Position": 0.3135312795639038,
                                             "Color": [
-                                                0.5135135054588318,
+                                                0.8494208455085754,
+                                                0.43290945887565613,
+                                                0.0
+                                            ]
+                                        },
+                                        {
+                                            "IsAlphaMark": false,
+                                            "Position": 0.6983606815338135,
+                                            "Color": [
+                                                1.0,
                                                 0.0,
                                                 0.0
                                             ]
                                         },
                                         {
                                             "IsAlphaMark": true,
-                                            "Position": 0.9836065769195557,
+                                            "Position": 0.800000011920929,
+                                            "Alpha": 1.0
+                                        },
+                                        {
+                                            "IsAlphaMark": true,
+                                            "Position": 0.9768977165222168,
                                             "Alpha": 0.0
+                                        },
+                                        {
+                                            "IsAlphaMark": false,
+                                            "Position": 1.0,
+                                            "Color": [
+                                                0.3436293601989746,
+                                                0.0,
+                                                0.0
+                                            ]
                                         }
                                     ],
                                     "ColorCurve": [
-                                        0.4699999988079071,
                                         0.0,
-                                        0.7450000047683716,
-                                        0.7149999737739563
+                                        0.0,
+                                        1.0,
+                                        1.0
                                     ]
                                 },
                                 {
                                     "ModuleType": 5,
                                     "VelocityType": "CURVE",
-                                    "InitialVelocity": 5.0,
-                                    "InitialVelocity2": 1.0,
+                                    "InitialVelocity": 3.0,
+                                    "InitialVelocity2": 2.0,
                                     "VelocityCurve": [
                                         0.38999998569488525,
                                         0.574999988079071,
@@ -271,8 +298,13 @@
                                 },
                                 {
                                     "ModuleType": 6,
-                                    "StartScaleType": "CONSTANT",
+                                    "StartScaleType": "RANDOM_BETWEEN_TWO",
                                     "StartScale": [
+                                        0.4000000059604645,
+                                        0.4000000059604645,
+                                        0.0
+                                    ],
+                                    "StartScale2": [
                                         0.5,
                                         0.5,
                                         0.0
@@ -285,8 +317,8 @@
                                         0.0
                                     ],
                                     "EndScale2": [
-                                        0.30000001192092896,
-                                        0.30000001192092896,
+                                        0.20000000298023224,
+                                        0.20000000298023224,
                                         0.0
                                     ]
                                 },

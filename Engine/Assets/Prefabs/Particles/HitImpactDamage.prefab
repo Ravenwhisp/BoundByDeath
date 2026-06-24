@@ -1,21 +1,21 @@
 {
     "Version": 2,
-    "sourcePath": "Assets\\Prefabs\\Particles\\Archer\\ArcherGuardCharge.prefab",
-    "Name": "ArcherGuardCharge",
+    "sourcePath": "Assets\\Prefabs\\Particles\\HitImpactDamage.prefab",
+    "Name": "HitImpactDamage",
     "Active": true,
     "Static": false,
     "Layer": "DEFAULT",
     "Tag": "DEFAULT",
     "Transform": {
         "Position": [
-            -0.6138437986373901,
+            0.0,
             0.0,
             0.0
         ],
         "Rotation": [
-            -0.0,
             0.0,
-            -0.0,
+            0.0,
+            0.0,
             1.0
         ],
         "Scale": [
@@ -26,12 +26,12 @@
     },
     "Components": [
         {
-            "UID": 18445496350723629794,
+            "UID": 15510423027532711719,
             "ComponentType": "PARTICLE_SYSTEM",
             "Active": true,
             "TextureAssetId": {
-                "uid": 4380675350421491452,
-                "libId": "905768d99beecfb4fcc4d8b87cc52809",
+                "uid": 12947316424740063385,
+                "libId": "a6acc35a09babe130f350de4884f4c8e",
                 "type": "TEXTURE"
             },
             "ParticleEmitters": [
@@ -39,15 +39,15 @@
                     "Modules": [
                         {
                             "ModuleType": 2,
-                            "Looping": false,
-                            "Duration": 1.0,
+                            "Looping": true,
+                            "Duration": 0.20000000298023224,
                             "RateOverTime": 1.0,
                             "RateOverDistance": 0.0
                         },
                         {
                             "ModuleType": 4,
                             "LifeTimeType": "CONSTANT",
-                            "StartLifeTime": 1.0
+                            "StartLifeTime": 0.10000000149011612
                         },
                         {
                             "ModuleType": 1,
@@ -69,20 +69,53 @@
                                     ]
                                 },
                                 {
+                                    "IsAlphaMark": true,
+                                    "Position": 0.016393441706895828,
+                                    "Alpha": 1.0
+                                },
+                                {
                                     "IsAlphaMark": false,
-                                    "Position": 1.0,
+                                    "Position": 0.24752475321292877,
+                                    "Color": [
+                                        0.9884169697761536,
+                                        0.7013706564903259,
+                                        0.3739956319332123
+                                    ]
+                                },
+                                {
+                                    "IsAlphaMark": false,
+                                    "Position": 0.5544555187225342,
                                     "Color": [
                                         1.0,
-                                        1.0,
-                                        1.0
+                                        0.0,
+                                        0.0
                                     ]
+                                },
+                                {
+                                    "IsAlphaMark": true,
+                                    "Position": 0.8524585962295532,
+                                    "Alpha": 1.0
+                                },
+                                {
+                                    "IsAlphaMark": false,
+                                    "Position": 0.9636963605880737,
+                                    "Color": [
+                                        0.16602319478988647,
+                                        0.0,
+                                        0.0
+                                    ]
+                                },
+                                {
+                                    "IsAlphaMark": true,
+                                    "Position": 0.9900990128517151,
+                                    "Alpha": 0.0
                                 }
                             ],
                             "ColorCurve": [
-                                0.0,
-                                0.0,
-                                1.0,
-                                1.0
+                                0.4449999928474426,
+                                0.05000000074505806,
+                                0.550000011920929,
+                                0.949999988079071
                             ]
                         },
                         {
@@ -94,15 +127,15 @@
                             "ModuleType": 6,
                             "StartScaleType": "CONSTANT",
                             "StartScale": [
-                                0.0,
-                                0.0,
+                                1.0,
+                                1.0,
                                 0.0
                             ],
                             "ChangeSizeOverTime": true,
                             "EndScaleType": "CONSTANT",
                             "EndScale": [
-                                1.0,
-                                1.0,
+                                1.2999999523162842,
+                                1.2999999523162842,
                                 0.0
                             ]
                         },
