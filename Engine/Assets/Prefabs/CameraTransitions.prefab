@@ -1,0 +1,1352 @@
+{
+    "Version": 2,
+    "sourcePath": "Assets\\Prefabs\\CameraTransitions.prefab",
+    "Name": "CameraTransitions",
+    "Active": true,
+    "Static": false,
+    "Layer": "DEFAULT",
+    "Tag": "DEFAULT",
+    "Transform": {
+        "Position": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "Rotation": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ],
+        "Scale": [
+            1.0,
+            1.0,
+            1.0
+        ]
+    },
+    "Components": [],
+    "Children": [
+        {
+            "Name": "TestCameraTransition1",
+            "Active": true,
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    28.115875244140625,
+                    2.004348039627075,
+                    -13.486897468566895
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0,
+                    1.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [
+                {
+                    "UID": 17155940810247100518,
+                    "ComponentType": "TRIGGER",
+                    "Active": true,
+                    "Shape": "Box",
+                    "Center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Size": [
+                        8.050000190734863,
+                        4.599999904632568,
+                        12.149999618530273
+                    ]
+                },
+                {
+                    "UID": 16416127541914188335,
+                    "ComponentType": "SCRIPT",
+                    "Active": true,
+                    "ScriptName": "GameplayEventTrigger",
+                    "ScriptFields": {
+                        "Trigger Only Once": true
+                    }
+                },
+                {
+                    "UID": 7530694036374423656,
+                    "ComponentType": "SCRIPT",
+                    "Active": true,
+                    "ScriptName": "CameraTransitionEvent",
+                    "ScriptFields": {
+                        "Transition Mode": 0,
+                        "Lock Gameplay Input": true,
+                        "Make Players Invulnerable": true,
+                        "Fade HUD": true,
+                        "Return Duration": 1.5
+                    }
+                }
+            ],
+            "Children": [
+                {
+                    "Name": "CameraPoints",
+                    "Active": true,
+                    "Static": false,
+                    "Layer": "DEFAULT",
+                    "Tag": "DEFAULT",
+                    "Transform": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "Rotation": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "Components": [],
+                    "Children": [
+                        {
+                            "Name": "Point1",
+                            "Active": true,
+                            "Static": false,
+                            "Layer": "DEFAULT",
+                            "Tag": "DEFAULT",
+                            "Transform": {
+                                "Position": [
+                                    1.2000007629394531,
+                                    4.300347328186035,
+                                    -1.5
+                                ],
+                                "Rotation": [
+                                    -0.21263110637664795,
+                                    0.6743797659873962,
+                                    -0.21263112127780914,
+                                    -0.6743797063827515
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ]
+                            },
+                            "Components": [
+                                {
+                                    "UID": 15862304605508204173,
+                                    "ComponentType": "SCRIPT",
+                                    "Active": true,
+                                    "ScriptName": "CameraTransitionStep",
+                                    "ScriptFields": {
+                                        "Move Mode": 2,
+                                        "Move Duration": 3.0,
+                                        "Hold Duration": 5.0,
+                                        "Use FOV Transition": true,
+                                        "Target FOV": 90.0
+                                    }
+                                }
+                            ],
+                            "Children": [
+                                {
+                                    "Name": "DebugCameraP1",
+                                    "Active": true,
+                                    "Static": false,
+                                    "Layer": "DEFAULT",
+                                    "Tag": "DEFAULT",
+                                    "Transform": {
+                                        "Position": [
+                                            0.0,
+                                            -0.000286102294921875,
+                                            0.0001983642578125
+                                        ],
+                                        "Rotation": [
+                                            -7.450577932388569e-9,
+                                            3.1086234101592542e-15,
+                                            -8.881784197001252e-16,
+                                            1.0
+                                        ],
+                                        "Scale": [
+                                            1.000000238418579,
+                                            1.0,
+                                            1.0000003576278687
+                                        ]
+                                    },
+                                    "Components": [
+                                        {
+                                            "UID": 8907873282452377359,
+                                            "ComponentType": "CAMERA",
+                                            "Active": true,
+                                            "HorizontalFOV": 90.0,
+                                            "NearPlane": 0.5,
+                                            "FarPlane": 25.0,
+                                            "AspectRatio": 1.7777777910232544
+                                        }
+                                    ],
+                                    "Children": []
+                                }
+                            ]
+                        },
+                        {
+                            "Name": "Point2",
+                            "Active": true,
+                            "Static": false,
+                            "Layer": "DEFAULT",
+                            "Tag": "DEFAULT",
+                            "Transform": {
+                                "Position": [
+                                    -4.082551956176758,
+                                    4.994936943054199,
+                                    -6.5129194259643555
+                                ],
+                                "Rotation": [
+                                    0.10397110134363174,
+                                    -0.5454769134521484,
+                                    0.06842619925737381,
+                                    0.82883220911026
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ]
+                            },
+                            "Components": [
+                                {
+                                    "UID": 14246547109387062459,
+                                    "ComponentType": "SCRIPT",
+                                    "Active": true,
+                                    "ScriptName": "CameraTransitionStep",
+                                    "ScriptFields": {
+                                        "Move Mode": 2,
+                                        "Move Duration": 1.5,
+                                        "Hold Duration": 0.0,
+                                        "Use FOV Transition": true,
+                                        "Target FOV": 90.0
+                                    }
+                                }
+                            ],
+                            "Children": [
+                                {
+                                    "Name": "New Camera",
+                                    "Active": true,
+                                    "Static": false,
+                                    "Layer": "DEFAULT",
+                                    "Tag": "DEFAULT",
+                                    "Transform": {
+                                        "Position": [
+                                            0.0000743865966796875,
+                                            1.5675439834594727,
+                                            -0.7994422912597656
+                                        ],
+                                        "Rotation": [
+                                            -0.0,
+                                            4.0978784809908575e-9,
+                                            2.166455104202214e-8,
+                                            1.0
+                                        ],
+                                        "Scale": [
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ]
+                                    },
+                                    "Components": [
+                                        {
+                                            "UID": 10886527499278314877,
+                                            "ComponentType": "CAMERA",
+                                            "Active": true,
+                                            "HorizontalFOV": 90.0,
+                                            "NearPlane": 0.5,
+                                            "FarPlane": 25.0,
+                                            "AspectRatio": 1.7777777910232544
+                                        }
+                                    ],
+                                    "Children": []
+                                }
+                            ]
+                        },
+                        {
+                            "Name": "Point3",
+                            "Active": true,
+                            "Static": false,
+                            "Layer": "DEFAULT",
+                            "Tag": "DEFAULT",
+                            "Transform": {
+                                "Position": [
+                                    -13.083999633789063,
+                                    5.178999900817871,
+                                    -7.360827445983887
+                                ],
+                                "Rotation": [
+                                    0.3240230083465576,
+                                    -0.2743016183376312,
+                                    0.09875466674566269,
+                                    0.900008499622345
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ]
+                            },
+                            "Components": [
+                                {
+                                    "UID": 8501213384938066441,
+                                    "ComponentType": "SCRIPT",
+                                    "Active": true,
+                                    "ScriptName": "CameraTransitionStep",
+                                    "ScriptFields": {
+                                        "Move Mode": 2,
+                                        "Move Duration": 1.5,
+                                        "Hold Duration": 3.0,
+                                        "Use FOV Transition": true,
+                                        "Target FOV": 90.0
+                                    }
+                                }
+                            ],
+                            "Children": [
+                                {
+                                    "Name": "New Camera",
+                                    "Active": true,
+                                    "Static": false,
+                                    "Layer": "DEFAULT",
+                                    "Tag": "DEFAULT",
+                                    "Transform": {
+                                        "Position": [
+                                            0.0,
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Rotation": [
+                                            0.0,
+                                            0.0,
+                                            0.0,
+                                            1.0
+                                        ],
+                                        "Scale": [
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ]
+                                    },
+                                    "Components": [
+                                        {
+                                            "UID": 8473522705287525890,
+                                            "ComponentType": "CAMERA",
+                                            "Active": true,
+                                            "HorizontalFOV": 90.0,
+                                            "NearPlane": 0.5,
+                                            "FarPlane": 25.0,
+                                            "AspectRatio": 1.7777777910232544
+                                        }
+                                    ],
+                                    "Children": []
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "Name": "TestCameraTransition2",
+            "Active": true,
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    17.01923179626465,
+                    -1.9013254642486572,
+                    4.960491180419922
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0,
+                    1.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [
+                {
+                    "UID": 2476779225415264635,
+                    "ComponentType": "TRIGGER",
+                    "Active": true,
+                    "Shape": "Box",
+                    "Center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Size": [
+                        20.850000381469727,
+                        1.5,
+                        12.050000190734863
+                    ]
+                },
+                {
+                    "UID": 11105411921161575405,
+                    "ComponentType": "SCRIPT",
+                    "Active": true,
+                    "ScriptName": "GameplayEventTrigger",
+                    "ScriptFields": {
+                        "Trigger Only Once": false
+                    }
+                },
+                {
+                    "UID": 16756553488194701110,
+                    "ComponentType": "SCRIPT",
+                    "Active": true,
+                    "ScriptName": "CameraTransitionEvent",
+                    "ScriptFields": {
+                        "Transition Mode": 1,
+                        "Lock Gameplay Input": false,
+                        "Make Players Invulnerable": false,
+                        "Fade HUD": false,
+                        "Return Duration": 1.5
+                    }
+                }
+            ],
+            "Children": [
+                {
+                    "Name": "CameraPoints",
+                    "Active": true,
+                    "Static": false,
+                    "Layer": "DEFAULT",
+                    "Tag": "DEFAULT",
+                    "Transform": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "Rotation": [
+                            -0.0,
+                            0.0,
+                            -0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "Components": [],
+                    "Children": [
+                        {
+                            "Name": "Point1",
+                            "Active": true,
+                            "Static": false,
+                            "Layer": "DEFAULT",
+                            "Tag": "DEFAULT",
+                            "Transform": {
+                                "Position": [
+                                    1.7259999513626099,
+                                    10.529999732971191,
+                                    -5.920000076293945
+                                ],
+                                "Rotation": [
+                                    0.5,
+                                    0.0,
+                                    0.0,
+                                    0.8660253882408142
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ]
+                            },
+                            "Components": [
+                                {
+                                    "UID": 2744818471802520338,
+                                    "ComponentType": "SCRIPT",
+                                    "Active": true,
+                                    "ScriptName": "CameraTransitionStep",
+                                    "ScriptFields": {
+                                        "Move Mode": 1,
+                                        "Move Duration": 1.5,
+                                        "Hold Duration": 0.0,
+                                        "Use FOV Transition": true,
+                                        "Target FOV": 90.0
+                                    }
+                                }
+                            ],
+                            "Children": [
+                                {
+                                    "Name": "New Camera",
+                                    "Active": true,
+                                    "Static": false,
+                                    "Layer": "DEFAULT",
+                                    "Tag": "DEFAULT",
+                                    "Transform": {
+                                        "Position": [
+                                            0.0,
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Rotation": [
+                                            0.0,
+                                            0.0,
+                                            0.0,
+                                            1.0
+                                        ],
+                                        "Scale": [
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ]
+                                    },
+                                    "Components": [
+                                        {
+                                            "UID": 6236684213307949433,
+                                            "ComponentType": "CAMERA",
+                                            "Active": true,
+                                            "HorizontalFOV": 90.0,
+                                            "NearPlane": 0.5,
+                                            "FarPlane": 25.0,
+                                            "AspectRatio": 1.7777777910232544
+                                        }
+                                    ],
+                                    "Children": []
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "Name": "[CT] First Crystal Puzzle",
+            "Active": true,
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0,
+                    1.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [
+                {
+                    "UID": 5707843305399606542,
+                    "ComponentType": "TRIGGER",
+                    "Active": true,
+                    "Shape": "Box",
+                    "Center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Size": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                },
+                {
+                    "UID": 4889433001270880568,
+                    "ComponentType": "SCRIPT",
+                    "Active": true,
+                    "ScriptName": "GameplayEventTrigger",
+                    "ScriptFields": {
+                        "Trigger Only Once": true
+                    }
+                },
+                {
+                    "UID": 7918695382331704818,
+                    "ComponentType": "SCRIPT",
+                    "Active": true,
+                    "ScriptName": "CameraTransitionEvent",
+                    "ScriptFields": {
+                        "Transition Mode": 0,
+                        "Lock Gameplay Input": true,
+                        "Make Players Invulnerable": true,
+                        "Fade HUD": true,
+                        "Return Duration": 1.5
+                    }
+                }
+            ],
+            "Children": [
+                {
+                    "Name": "CameraPoints",
+                    "Active": true,
+                    "Static": false,
+                    "Layer": "DEFAULT",
+                    "Tag": "DEFAULT",
+                    "Transform": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "Rotation": [
+                            -0.0,
+                            0.0,
+                            -0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "Components": [],
+                    "Children": [
+                        {
+                            "Name": "Point1",
+                            "Active": true,
+                            "Static": false,
+                            "Layer": "DEFAULT",
+                            "Tag": "DEFAULT",
+                            "Transform": {
+                                "Position": [
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "Rotation": [
+                                    -0.0,
+                                    0.0,
+                                    -0.0,
+                                    1.0
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ]
+                            },
+                            "Components": [
+                                {
+                                    "UID": 9667436384427282012,
+                                    "ComponentType": "SCRIPT",
+                                    "Active": true,
+                                    "ScriptName": "CameraTransitionStep",
+                                    "ScriptFields": {
+                                        "Move Mode": 1,
+                                        "Move Duration": 1.0,
+                                        "Hold Duration": 0.0,
+                                        "Use FOV Transition": false,
+                                        "Target FOV": 90.0
+                                    }
+                                }
+                            ],
+                            "Children": []
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "Name": "[CT] Present First Enemy",
+            "Active": true,
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0,
+                    1.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [
+                {
+                    "UID": 5547499174391350117,
+                    "ComponentType": "TRIGGER",
+                    "Active": true,
+                    "Shape": "Box",
+                    "Center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Size": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                },
+                {
+                    "UID": 3420103305072195730,
+                    "ComponentType": "SCRIPT",
+                    "Active": true,
+                    "ScriptName": "GameplayEventTrigger",
+                    "ScriptFields": {
+                        "Trigger Only Once": true
+                    }
+                },
+                {
+                    "UID": 10566637582926783059,
+                    "ComponentType": "SCRIPT",
+                    "Active": true,
+                    "ScriptName": "CameraTransitionEvent",
+                    "ScriptFields": {
+                        "Transition Mode": 0,
+                        "Lock Gameplay Input": true,
+                        "Make Players Invulnerable": true,
+                        "Fade HUD": true,
+                        "Return Duration": 1.5
+                    }
+                }
+            ],
+            "Children": [
+                {
+                    "Name": "CameraPoints",
+                    "Active": true,
+                    "Static": false,
+                    "Layer": "DEFAULT",
+                    "Tag": "DEFAULT",
+                    "Transform": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "Rotation": [
+                            -0.0,
+                            0.0,
+                            -0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "Components": [],
+                    "Children": [
+                        {
+                            "Name": "Point1",
+                            "Active": true,
+                            "Static": false,
+                            "Layer": "DEFAULT",
+                            "Tag": "DEFAULT",
+                            "Transform": {
+                                "Position": [
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "Rotation": [
+                                    -0.0,
+                                    0.0,
+                                    -0.0,
+                                    1.0
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ]
+                            },
+                            "Components": [
+                                {
+                                    "UID": 12298860409958990494,
+                                    "ComponentType": "SCRIPT",
+                                    "Active": true,
+                                    "ScriptName": "CameraTransitionStep",
+                                    "ScriptFields": {
+                                        "Move Mode": 1,
+                                        "Move Duration": 1.0,
+                                        "Hold Duration": 0.0,
+                                        "Use FOV Transition": false,
+                                        "Target FOV": 90.0
+                                    }
+                                }
+                            ],
+                            "Children": []
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "Name": "[CT] Bridge Puzzle",
+            "Active": true,
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0,
+                    1.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [
+                {
+                    "UID": 11670491373910294534,
+                    "ComponentType": "TRIGGER",
+                    "Active": true,
+                    "Shape": "Box",
+                    "Center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Size": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                },
+                {
+                    "UID": 2889873208839903127,
+                    "ComponentType": "SCRIPT",
+                    "Active": true,
+                    "ScriptName": "GameplayEventTrigger",
+                    "ScriptFields": {
+                        "Trigger Only Once": false
+                    }
+                },
+                {
+                    "UID": 17618337904162908999,
+                    "ComponentType": "SCRIPT",
+                    "Active": true,
+                    "ScriptName": "CameraTransitionEvent",
+                    "ScriptFields": {
+                        "Transition Mode": 1,
+                        "Lock Gameplay Input": false,
+                        "Make Players Invulnerable": false,
+                        "Fade HUD": false,
+                        "Return Duration": 1.5
+                    }
+                }
+            ],
+            "Children": [
+                {
+                    "Name": "CameraPoints",
+                    "Active": true,
+                    "Static": false,
+                    "Layer": "DEFAULT",
+                    "Tag": "DEFAULT",
+                    "Transform": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "Rotation": [
+                            -0.0,
+                            0.0,
+                            -0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "Components": [],
+                    "Children": [
+                        {
+                            "Name": "Point1",
+                            "Active": true,
+                            "Static": false,
+                            "Layer": "DEFAULT",
+                            "Tag": "DEFAULT",
+                            "Transform": {
+                                "Position": [
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "Rotation": [
+                                    -0.0,
+                                    0.0,
+                                    -0.0,
+                                    1.0
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ]
+                            },
+                            "Components": [
+                                {
+                                    "UID": 2975632544424561012,
+                                    "ComponentType": "SCRIPT",
+                                    "Active": true,
+                                    "ScriptName": "CameraTransitionStep",
+                                    "ScriptFields": {
+                                        "Move Mode": 1,
+                                        "Move Duration": 1.0,
+                                        "Hold Duration": 0.0,
+                                        "Use FOV Transition": false,
+                                        "Target FOV": 90.0
+                                    }
+                                }
+                            ],
+                            "Children": []
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "Name": "[CT] Chapel View",
+            "Active": true,
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0,
+                    1.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [
+                {
+                    "UID": 9289032876977436288,
+                    "ComponentType": "TRIGGER",
+                    "Active": true,
+                    "Shape": "Box",
+                    "Center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Size": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                },
+                {
+                    "UID": 748551602044397234,
+                    "ComponentType": "SCRIPT",
+                    "Active": true,
+                    "ScriptName": "GameplayEventTrigger",
+                    "ScriptFields": {
+                        "Trigger Only Once": false
+                    }
+                },
+                {
+                    "UID": 8494172918356338563,
+                    "ComponentType": "SCRIPT",
+                    "Active": true,
+                    "ScriptName": "CameraTransitionEvent",
+                    "ScriptFields": {
+                        "Transition Mode": 1,
+                        "Lock Gameplay Input": false,
+                        "Make Players Invulnerable": false,
+                        "Fade HUD": false,
+                        "Return Duration": 1.5
+                    }
+                }
+            ],
+            "Children": [
+                {
+                    "Name": "CameraPoints",
+                    "Active": true,
+                    "Static": false,
+                    "Layer": "DEFAULT",
+                    "Tag": "DEFAULT",
+                    "Transform": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "Rotation": [
+                            -0.0,
+                            0.0,
+                            -0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "Components": [],
+                    "Children": [
+                        {
+                            "Name": "Point1",
+                            "Active": true,
+                            "Static": false,
+                            "Layer": "DEFAULT",
+                            "Tag": "DEFAULT",
+                            "Transform": {
+                                "Position": [
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "Rotation": [
+                                    -0.0,
+                                    0.0,
+                                    -0.0,
+                                    1.0
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ]
+                            },
+                            "Components": [
+                                {
+                                    "UID": 560875918567030913,
+                                    "ComponentType": "SCRIPT",
+                                    "Active": true,
+                                    "ScriptName": "CameraTransitionStep",
+                                    "ScriptFields": {
+                                        "Move Mode": 1,
+                                        "Move Duration": 1.0,
+                                        "Hold Duration": 0.0,
+                                        "Use FOV Transition": false,
+                                        "Target FOV": 90.0
+                                    }
+                                }
+                            ],
+                            "Children": []
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "Name": "[CT] Banquet Room",
+            "Active": true,
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0,
+                    1.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [
+                {
+                    "UID": 15865264770917590837,
+                    "ComponentType": "TRIGGER",
+                    "Active": true,
+                    "Shape": "Box",
+                    "Center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Size": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                },
+                {
+                    "UID": 16142238068998734983,
+                    "ComponentType": "SCRIPT",
+                    "Active": true,
+                    "ScriptName": "GameplayEventTrigger",
+                    "ScriptFields": {
+                        "Trigger Only Once": true
+                    }
+                },
+                {
+                    "UID": 11064739194569899484,
+                    "ComponentType": "SCRIPT",
+                    "Active": true,
+                    "ScriptName": "CameraTransitionEvent",
+                    "ScriptFields": {
+                        "Transition Mode": 0,
+                        "Lock Gameplay Input": true,
+                        "Make Players Invulnerable": true,
+                        "Fade HUD": true,
+                        "Return Duration": 1.5
+                    }
+                }
+            ],
+            "Children": [
+                {
+                    "Name": "CameraPoints",
+                    "Active": true,
+                    "Static": false,
+                    "Layer": "DEFAULT",
+                    "Tag": "DEFAULT",
+                    "Transform": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "Rotation": [
+                            -0.0,
+                            0.0,
+                            -0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "Components": [],
+                    "Children": [
+                        {
+                            "Name": "Point1",
+                            "Active": true,
+                            "Static": false,
+                            "Layer": "DEFAULT",
+                            "Tag": "DEFAULT",
+                            "Transform": {
+                                "Position": [
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "Rotation": [
+                                    -0.0,
+                                    0.0,
+                                    -0.0,
+                                    1.0
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ]
+                            },
+                            "Components": [
+                                {
+                                    "UID": 9893361427597220917,
+                                    "ComponentType": "SCRIPT",
+                                    "Active": true,
+                                    "ScriptName": "CameraTransitionStep",
+                                    "ScriptFields": {
+                                        "Move Mode": 1,
+                                        "Move Duration": 1.0,
+                                        "Hold Duration": 0.0,
+                                        "Use FOV Transition": false,
+                                        "Target FOV": 90.0
+                                    }
+                                }
+                            ],
+                            "Children": []
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "Name": "[CT] Forge",
+            "Active": true,
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0,
+                    1.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [
+                {
+                    "UID": 11279029068457676759,
+                    "ComponentType": "TRIGGER",
+                    "Active": true,
+                    "Shape": "Box",
+                    "Center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Size": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                },
+                {
+                    "UID": 2835228772387422227,
+                    "ComponentType": "SCRIPT",
+                    "Active": true,
+                    "ScriptName": "GameplayEventTrigger",
+                    "ScriptFields": {
+                        "Trigger Only Once": false
+                    }
+                },
+                {
+                    "UID": 13874363073002412773,
+                    "ComponentType": "SCRIPT",
+                    "Active": true,
+                    "ScriptName": "CameraTransitionEvent",
+                    "ScriptFields": {
+                        "Transition Mode": 1,
+                        "Lock Gameplay Input": false,
+                        "Make Players Invulnerable": false,
+                        "Fade HUD": false,
+                        "Return Duration": 1.5
+                    }
+                }
+            ],
+            "Children": [
+                {
+                    "Name": "CameraPoints",
+                    "Active": true,
+                    "Static": false,
+                    "Layer": "DEFAULT",
+                    "Tag": "DEFAULT",
+                    "Transform": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "Rotation": [
+                            -0.0,
+                            0.0,
+                            -0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "Components": [],
+                    "Children": [
+                        {
+                            "Name": "Point1",
+                            "Active": true,
+                            "Static": false,
+                            "Layer": "DEFAULT",
+                            "Tag": "DEFAULT",
+                            "Transform": {
+                                "Position": [
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "Rotation": [
+                                    -0.0,
+                                    0.0,
+                                    -0.0,
+                                    1.0
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ]
+                            },
+                            "Components": [
+                                {
+                                    "UID": 13621910402731669952,
+                                    "ComponentType": "SCRIPT",
+                                    "Active": true,
+                                    "ScriptName": "CameraTransitionStep",
+                                    "ScriptFields": {
+                                        "Move Mode": 1,
+                                        "Move Duration": 1.0,
+                                        "Hold Duration": 0.0,
+                                        "Use FOV Transition": false,
+                                        "Target FOV": 90.0
+                                    }
+                                }
+                            ],
+                            "Children": []
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
