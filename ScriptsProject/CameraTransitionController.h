@@ -35,7 +35,7 @@ private:
     };
 
 private:
-    void startTransitionSequence(CameraTransitionEvent* event);
+    void startTransitionSequence(CameraTransitionEvent* event, bool preserveOriginalFov);
     void startStep(int stepIndex);
     void startReturning();
 
