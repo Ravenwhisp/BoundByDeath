@@ -106,24 +106,39 @@
     <Filter Include="Character\Death\UI">
       <UniqueIdentifier>{c0d34b51-4e99-4a88-847b-b50081a02770}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Player\Targeting\Lyriel">
+      <UniqueIdentifier>{f1d67fa5-e3f2-45e4-9809-bb393a7f43f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Player\Targeting\Death">
+      <UniqueIdentifier>{f0ae8d07-3265-48a1-985a-fbc989dd6a40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Enemies\Paladin\States">
+      <UniqueIdentifier>{354fd5fd-3f85-4b65-a21e-b65564c3e224}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Interaction/Gameplay\Events">
+      <UniqueIdentifier>{baef95a7-49dc-4f68-9fbe-d1220cdade01}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Interaction/Gameplay\Events\Camera">
+      <UniqueIdentifier>{4f36a9ae-6441-4cb1-a5b0-d1d06d4dc161}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Interaction/Gameplay\Events\PopUp">
+      <UniqueIdentifier>{f5133925-52af-42ef-9418-8a5323556ee6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Interaction/Gameplay\Events\PlayerObjectives">
+      <UniqueIdentifier>{7a51092b-902d-4bdd-9711-bbb01813d5fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Enemies\Spider">
+      <UniqueIdentifier>{2756d9fe-4d41-4d85-a715-98bb1ff81954}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Enemies\Spider\States">
+      <UniqueIdentifier>{70c0d2f4-bb1c-4722-94b0-9a8fdd52a250}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
     <ClInclude Include="framework.h" />
-    <ClInclude Include="..\Engine\Assets\Scripts\CameraFollow.h">
-      <Filter>Camera</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Engine\Assets\Scripts\CameraSwitcher.h">
-      <Filter>Camera</Filter>
-    </ClInclude>
     <ClInclude Include="DebugDrawTest.h">
       <Filter>Tests</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Engine\Assets\Scripts\TestingButton.h">
-      <Filter>Tests</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Engine\Assets\Scripts\PlayerController.h">
-      <Filter>Player</Filter>
     </ClInclude>
     <ClInclude Include="PlayerDamageable.h">
       <Filter>Player</Filter>
@@ -152,9 +167,6 @@
     <ClInclude Include="PlayerMovement.h">
       <Filter>Player\Transform</Filter>
     </ClInclude>
-    <ClInclude Include="..\Engine\Assets\Scripts\LocalMultiplayerSetup.h">
-      <Filter>Systems</Filter>
-    </ClInclude>
     <ClInclude Include="Damageable.h">
       <Filter>Combat</Filter>
     </ClInclude>
@@ -181,15 +193,6 @@
     </ClInclude>
     <ClInclude Include="EnemyDetectionAggro.h">
       <Filter>Enemies</Filter>
-    </ClInclude>
-    <ClInclude Include="EnemyController.h">
-      <Filter>Enemies</Filter>
-    </ClInclude>
-    <ClInclude Include="EnemyIDLE.h">
-      <Filter>Enemies\Paladin</Filter>
-    </ClInclude>
-    <ClInclude Include="EnemyCHASE.h">
-      <Filter>Enemies\Paladin</Filter>
     </ClInclude>
     <ClInclude Include="CharacterBase.h">
       <Filter>Character</Filter>
@@ -263,15 +266,6 @@
     <ClInclude Include="ArthurAttackDebugDraw.h">
       <Filter>Enemies\Arthur</Filter>
     </ClInclude>
-    <ClInclude Include="EnemyATTACK.h">
-      <Filter>Enemies\Paladin</Filter>
-    </ClInclude>
-    <ClInclude Include="EnemyCHARGE.h">
-      <Filter>Enemies\Paladin</Filter>
-    </ClInclude>
-    <ClInclude Include="EnemyRECOVER.h">
-      <Filter>Enemies\Paladin</Filter>
-    </ClInclude>
     <ClInclude Include="PlayerStunState.h">
       <Filter>Player\States</Filter>
     </ClInclude>
@@ -289,9 +283,6 @@
     </ClInclude>
     <ClInclude Include="EnemyAttackExecutor.h">
       <Filter>Enemies</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Engine\Assets\Scripts\TriggerArea.h">
-      <Filter>Interaction/Gameplay</Filter>
     </ClInclude>
     <ClInclude Include="DestroyParticles.h">
       <Filter>Interaction/Gameplay</Filter>
@@ -365,9 +356,6 @@
     <ClInclude Include="EnemyDeathState.h">
       <Filter>Enemies\BaseStates</Filter>
     </ClInclude>
-    <ClInclude Include="EnemySTUN.h">
-      <Filter>Enemies\Paladin</Filter>
-    </ClInclude>
     <ClInclude Include="EnemyIdleState.h">
       <Filter>Enemies\BaseStates</Filter>
     </ClInclude>
@@ -375,9 +363,6 @@
       <Filter>Enemies\BaseStates</Filter>
     </ClInclude>
     <ClInclude Include="ArcherArrowBarrageState.h">
-      <Filter>Enemies\Archer\States</Filter>
-    </ClInclude>
-    <ClInclude Include="ArcherAttackState.h">
       <Filter>Enemies\Archer\States</Filter>
     </ClInclude>
     <ClInclude Include="ArcherSomersaultState.h">
@@ -416,25 +401,89 @@
     <ClInclude Include="DeathConfig.h">
       <Filter>Character\Death</Filter>
     </ClInclude>
+    <ClInclude Include="LyrielTargetIndicatorUI.h">
+      <Filter>Player\Targeting\Lyriel</Filter>
+    </ClInclude>
+    <ClInclude Include="DeathTargetIndicatorUI.h">
+      <Filter>Player\Targeting\Death</Filter>
+    </ClInclude>
+    <ClInclude Include="GameplayEventTrigger.h">
+      <Filter>Interaction/Gameplay\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="GameplayEventAction.h">
+      <Filter>Interaction/Gameplay\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraTransitionEvent.h">
+      <Filter>Interaction/Gameplay\Events\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraTransitionController.h">
+      <Filter>Interaction/Gameplay\Events\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyStunnedState.h">
+      <Filter>Enemies\BaseStates</Filter>
+    </ClInclude>
+    <ClInclude Include="PaladinChaseState.h">
+      <Filter>Enemies\Paladin\States</Filter>
+    </ClInclude>
+    <ClInclude Include="PaladinAttackConfig.h">
+      <Filter>Enemies\Paladin</Filter>
+    </ClInclude>
+    <ClInclude Include="MeleeEnemyController.h">
+      <Filter>Enemies\Paladin</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyBaseAttackConfig.h">
+      <Filter>Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyAttackState.h">
+      <Filter>Enemies\BaseStates</Filter>
+    </ClInclude>
+    <ClInclude Include="PaladinChargeState.h">
+      <Filter>Enemies\Paladin\States</Filter>
+    </ClInclude>
+    <ClInclude Include="HUDFader.h" />
+    <ClInclude Include="CameraFollow.h">
+      <Filter>Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraSwitcher.h">
+      <Filter>Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="LocalMultiplayerSetup.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerController.h">
+      <Filter>Player</Filter>
+    </ClInclude>
+    <ClInclude Include="TestingButton.h">
+      <Filter>Tests</Filter>
+    </ClInclude>
+    <ClInclude Include="TriggerArea.h">
+      <Filter>Interaction/Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="PopUpEvent.h">
+      <Filter>Interaction/Gameplay\Events\PopUp</Filter>
+    </ClInclude>
+    <ClInclude Include="PopUpController.h">
+      <Filter>Interaction/Gameplay\Events\PopUp</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectiveTypes.h">
+      <Filter>Interaction/Gameplay\Events\PlayerObjectives</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectiveEvent.h">
+      <Filter>Interaction/Gameplay\Events\PlayerObjectives</Filter>
+    </ClInclude>
+    <ClInclude Include="SpiderChaseState.h">
+      <Filter>Enemies\Spider\States</Filter>
+    </ClInclude>
+    <ClInclude Include="SpiderEnemyController.h">
+      <Filter>Enemies\Spider</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="EngineDependencies\SimpleMath.cpp" />
-    <ClCompile Include="..\Engine\Assets\Scripts\CameraFollow.cpp">
-      <Filter>Camera</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Engine\Assets\Scripts\CameraSwitcher.cpp">
-      <Filter>Camera</Filter>
-    </ClCompile>
     <ClCompile Include="DebugDrawTest.cpp">
       <Filter>Tests</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Engine\Assets\Scripts\TestingButton.cpp">
-      <Filter>Tests</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Engine\Assets\Scripts\PlayerController.cpp">
-      <Filter>Player</Filter>
     </ClCompile>
     <ClCompile Include="PlayerDamageable.cpp">
       <Filter>Player</Filter>
@@ -463,9 +512,6 @@
     <ClCompile Include="PlayerMovement.cpp">
       <Filter>Player\Transform</Filter>
     </ClCompile>
-    <ClCompile Include="..\Engine\Assets\Scripts\LocalMultiplayerSetup.cpp">
-      <Filter>Systems</Filter>
-    </ClCompile>
     <ClCompile Include="Damageable.cpp">
       <Filter>Combat</Filter>
     </ClCompile>
@@ -492,15 +538,6 @@
     </ClCompile>
     <ClCompile Include="EnemyDetectionAggro.cpp">
       <Filter>Enemies</Filter>
-    </ClCompile>
-    <ClCompile Include="EnemyController.cpp">
-      <Filter>Enemies</Filter>
-    </ClCompile>
-    <ClCompile Include="EnemyIDLE.cpp">
-      <Filter>Enemies\Paladin</Filter>
-    </ClCompile>
-    <ClCompile Include="EnemyCHASE.cpp">
-      <Filter>Enemies\Paladin</Filter>
     </ClCompile>
     <ClCompile Include="CharacterBase.cpp">
       <Filter>Character</Filter>
@@ -574,15 +611,6 @@
     <ClCompile Include="ArthurAttackDebugDraw.cpp">
       <Filter>Enemies\Arthur</Filter>
     </ClCompile>
-    <ClCompile Include="EnemyATTACK.cpp">
-      <Filter>Enemies\Paladin</Filter>
-    </ClCompile>
-    <ClCompile Include="EnemyCHARGE.cpp">
-      <Filter>Enemies\Paladin</Filter>
-    </ClCompile>
-    <ClCompile Include="EnemyRECOVER.cpp">
-      <Filter>Enemies\Paladin</Filter>
-    </ClCompile>
     <ClCompile Include="PlayerStunState.cpp">
       <Filter>Player\States</Filter>
     </ClCompile>
@@ -600,9 +628,6 @@
     </ClCompile>
     <ClCompile Include="EnemyAttackExecutor.cpp">
       <Filter>Enemies</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Engine\Assets\Scripts\TriggerArea.cpp">
-      <Filter>Interaction/Gameplay</Filter>
     </ClCompile>
     <ClCompile Include="DestroyParticles.cpp">
       <Filter>Interaction/Gameplay</Filter>
@@ -676,9 +701,6 @@
     <ClCompile Include="EnemyDeathState.cpp">
       <Filter>Enemies\BaseStates</Filter>
     </ClCompile>
-    <ClCompile Include="EnemySTUN.cpp">
-      <Filter>Enemies\Paladin</Filter>
-    </ClCompile>
     <ClCompile Include="EnemyIdleState.cpp">
       <Filter>Enemies\BaseStates</Filter>
     </ClCompile>
@@ -686,9 +708,6 @@
       <Filter>Enemies\BaseStates</Filter>
     </ClCompile>
     <ClCompile Include="ArcherArrowBarrageState.cpp">
-      <Filter>Enemies\Archer\States</Filter>
-    </ClCompile>
-    <ClCompile Include="ArcherAttackState.cpp">
       <Filter>Enemies\Archer\States</Filter>
     </ClCompile>
     <ClCompile Include="ArcherSomersaultState.cpp">
@@ -721,11 +740,81 @@
     <ClCompile Include="DeathUI.cpp">
       <Filter>Character\Death\UI</Filter>
     </ClCompile>
+    <ClCompile Include="EnemyStunnedState.cpp">
+      <Filter>Enemies\BaseStates</Filter>
+    </ClCompile>
+    <ClCompile Include="PaladinChaseState.cpp">
+      <Filter>Enemies\Paladin\States</Filter>
+    </ClCompile>
+    <ClCompile Include="MeleeEnemyController.cpp">
+      <Filter>Enemies\Paladin</Filter>
+    </ClCompile>
+    <ClCompile Include="PaladinAttackConfig.cpp">
+      <Filter>Enemies\Paladin</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyBaseAttackConfig.cpp">
+      <Filter>Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyAttackState.cpp">
+      <Filter>Enemies\BaseStates</Filter>
+    </ClCompile>
+    <ClCompile Include="PaladinChargeState.cpp">
+      <Filter>Enemies\Paladin\States</Filter>
+    </ClCompile>
     <ClCompile Include="LyrielConfig.cpp">
       <Filter>Character\Lyriel</Filter>
     </ClCompile>
     <ClCompile Include="DeathConfig.cpp">
       <Filter>Character\Death</Filter>
+    </ClCompile>
+    <ClCompile Include="LyrielTargetIndicatorUI.cpp">
+      <Filter>Player\Targeting\Lyriel</Filter>
+    </ClCompile>
+    <ClCompile Include="DeathTargetIndicatorUI.cpp">
+      <Filter>Player\Targeting\Death</Filter>
+    </ClCompile>
+    <ClCompile Include="GameplayEventTrigger.cpp">
+      <Filter>Interaction/Gameplay\Events</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraTransitionEvent.cpp">
+      <Filter>Interaction/Gameplay\Events\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraTransitionController.cpp">
+      <Filter>Interaction/Gameplay\Events\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="HUDFader.cpp" />
+    <ClCompile Include="CameraFollow.cpp">
+      <Filter>Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraSwitcher.cpp">
+      <Filter>Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="LocalMultiplayerSetup.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerController.cpp">
+      <Filter>Player</Filter>
+    </ClCompile>
+    <ClCompile Include="TestingButton.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="TriggerArea.cpp">
+      <Filter>Interaction/Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="PopUpEvent.cpp">
+      <Filter>Interaction/Gameplay\Events\PopUp</Filter>
+    </ClCompile>
+    <ClCompile Include="PopUpController.cpp">
+      <Filter>Interaction/Gameplay\Events\PopUp</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectiveEvent.cpp">
+      <Filter>Interaction/Gameplay\Events\PlayerObjectives</Filter>
+    </ClCompile>
+    <ClCompile Include="SpiderChaseState.cpp">
+      <Filter>Enemies\Spider\States</Filter>
+    </ClCompile>
+    <ClCompile Include="SpiderEnemyController.cpp">
+      <Filter>Enemies\Spider</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

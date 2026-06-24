@@ -77,6 +77,11 @@ void ArcherArrowBarrageState::OnStateUpdate()
         return;
     }
 
+    if (m_archerController->trySendStunTrigger(m_animation))
+    {
+        return;
+    }
+
     m_stateTimer += Time::getDeltaTime();
 
     if (!m_hasLockedImpactPosition && m_stateTimer >= m_attackConfig->m_arrowBarrageThrowTime)

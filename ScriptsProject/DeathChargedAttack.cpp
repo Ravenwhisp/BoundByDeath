@@ -9,6 +9,7 @@
 #include "EnemyShadowMark.h"
 #include "BreakableDamageable.h"
 #include "DeathUI.h"
+#include "EnemyBaseController.h"
 #include "DeathConfig.h"
 
 #include <cmath>
@@ -150,7 +151,8 @@ void DeathChargedAttack::fireAttack()
     const float range = isChargedShot ? m_config->m_chargedShotArcRange : m_config->m_chargedArcRange;
     const float angle = isChargedShot ? m_config->m_chargedShotArcAngle : m_config->m_chargedArcAngle;
 
-    dealDamageInArc(damage, range, angle, isChargedShot);
+    dealDamageInArc(damage, range, angle, isChargedShot, isMaxCharge);
+    notifyAbilitySuccessfullyStarted();
 
     // Max charge (auto-fired at full charge, always step 0) gets longer combo window
     const float window = (isChargedShot && isMaxCharge)
@@ -173,7 +175,7 @@ void DeathChargedAttack::fireAttack()
     startCooldown();
 }
 
-void DeathChargedAttack::dealDamageInArc(float damage, float range, float angle, bool isChargedShot) const
+void DeathChargedAttack::dealDamageInArc(float damage, float range, float angle, bool isChargedShot, bool isMaxCharge) const
 {
     const Transform* myTransform = GameObjectAPI::getTransform(m_owner);
     if (myTransform == nullptr)
@@ -181,7 +183,7 @@ void DeathChargedAttack::dealDamageInArc(float damage, float range, float angle,
         return;
     }
 
-    Vector3 myPos = TransformAPI::getPosition(myTransform);
+    Vector3 myPos = TransformAPI::getGlobalPosition(myTransform);
     Vector3 myForward = TransformAPI::getForward(myTransform);
 
     myForward.y = 0.0f;
@@ -218,7 +220,7 @@ void DeathChargedAttack::dealDamageInArc(float damage, float range, float angle,
 
         scanned++;
 
-        Vector3 toEnemy = TransformAPI::getPosition(enemyTr) - myPos;
+        Vector3 toEnemy = TransformAPI::getGlobalPosition(enemyTr) - myPos;
         toEnemy.y = 0.0f;
 
         const float distSq = toEnemy.LengthSquared();
@@ -259,6 +261,13 @@ void DeathChargedAttack::dealDamageInArc(float damage, float range, float angle,
 
         }
         hit++;
+
+        EnemyBaseController* enemyController = GameObjectAPI::findScript<EnemyBaseController>(target);
+
+        if (enemyController != nullptr && isMaxCharge)
+        {
+            enemyController->useStun();
+        }
 
         EnemyShadowMark* shadowMark = GameObjectAPI::findScript<EnemyShadowMark>(target);
         if (shadowMark != nullptr)
@@ -322,8 +331,8 @@ void DeathChargedAttack::snapFaceAimDirection()
 
     constexpr float k_radToDeg = 180.0f / 3.14159265f;
     const float     yaw        = atan2f(dir.x, dir.z) * k_radToDeg;
-    const Vector3   euler      = TransformAPI::getEulerDegrees(myTransform);
-    TransformAPI::setRotationEuler(myTransform, Vector3(euler.x, yaw, euler.z));
+    const Vector3   euler      = TransformAPI::getGlobalEulerDegrees(myTransform);
+    TransformAPI::setGlobalRotationEuler(myTransform, Vector3(euler.x, yaw, euler.z));
 }
 
 void DeathChargedAttack::onAttackWindowUpdate()
@@ -355,7 +364,7 @@ void DeathChargedAttack::drawGizmo()
     if (t == nullptr)
         return;
 
-    const Vector3 pos   = TransformAPI::getPosition(t);
+    const Vector3 pos   = TransformAPI::getGlobalPosition(t);
     const float   range = m_config->m_chargedArcRange;
 
     // While charging with stick input, show arc in aim direction; otherwise use character forward

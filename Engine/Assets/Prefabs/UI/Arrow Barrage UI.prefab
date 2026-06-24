@@ -1,249 +1,251 @@
 {
-  "SourcePath": "Assets\\Prefabs\\UI\\Arrow Barrage UI.prefab",
+  "sourcePath": "Assets\\Prefabs\\UI\\Arrow Barrage UI.prefab",
   "Name": "Arrow Barrage UI",
-  "Version": 2,
-  "GameObject": {
-    "Name": "Arrow Barrage UI",
-    "Active": true,
-    "Tag": "DEFAULT",
-    "Layer": "DEFAULT",
-    "Transform": {
-      "position": [
+  "Active": true,
+  "Static": false,
+  "Layer": "DEFAULT",
+  "Tag": "DEFAULT",
+  "Transform": {
+    "Position": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "Rotation": [
+      0.7071068286895752,
+      0.0,
+      0.0,
+      0.7071067094802856
+    ],
+    "Scale": [
+      1.000059723854065,
+      1.0000331401824951,
+      1.0000265836715698
+    ]
+  },
+  "Components": [
+    {
+      "UID": 17139982571976575701,
+      "ComponentType": "CANVAS",
+      "Active": true,
+      "RenderMode": 1,
+      "ZTest": true
+    },
+    {
+      "UID": 8452028802539945623,
+      "ComponentType": "TRANSFORM2D",
+      "Active": true,
+      "Position": [
         0.0,
         0.0,
         0.0
       ],
-      "rotation": [
-        0.7071068286895752,
-        0.0,
-        0.0,
-        0.7071067094802856
+      "Scale": [
+        1.0,
+        1.0,
+        0.0
       ],
-      "scale": [
-        1.000059723854065,
-        1.0000331401824951,
-        1.0000265836715698
-      ]
-    },
-    "Components": [
-      {
-        "Type": 6,
-        "Data": {
-          "UID": 17139982571976575701,
-          "ComponentType": 6,
-          "Active": true,
-          "RenderMode": 1,
-          "ZTest": true
-        }
+      "Pivot": [
+        0.5,
+        0.5,
+        0.0
+      ],
+      "AnchorMin": [
+        0.5,
+        0.5,
+        0.0
+      ],
+      "AnchorMax": [
+        0.5,
+        0.5,
+        0.0
+      ],
+      "BaseSize": [
+        100.0,
+        100.0,
+        0.0
+      ],
+      "StretchMode": 0,
+      "SizingMode": 0,
+      "AspectRatio": 1.0,
+      "Alpha": 1.0
+    }
+  ],
+  "Children": [
+    {
+      "Name": "Background",
+      "Active": true,
+      "Static": false,
+      "Layer": "DEFAULT",
+      "Tag": "DEFAULT",
+      "Transform": {
+        "Position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "Rotation": [
+          -0.0,
+          0.0,
+          -0.0,
+          1.0
+        ],
+        "Scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
       },
-      {
-        "Type": 5,
-        "Data": {
-          "UID": 8452028802539945623,
-          "ComponentType": 5,
+      "Components": [
+        {
+          "UID": 14167793923526306562,
+          "ComponentType": "TRANSFORM2D",
           "Active": true,
           "Position": [
+            0.0,
             0.0,
             0.0
           ],
           "Scale": [
             1.0,
-            1.0
+            1.0,
+            0.0
           ],
           "Pivot": [
             0.5,
-            0.5
+            0.5,
+            0.0
           ],
           "AnchorMin": [
             0.5,
-            0.5
+            0.5,
+            0.0
           ],
           "AnchorMax": [
             0.5,
-            0.5
+            0.5,
+            0.0
           ],
           "BaseSize": [
             100.0,
-            100.0
+            100.0,
+            0.0
           ],
           "StretchMode": 0,
           "SizingMode": 0,
           "AspectRatio": 1.0,
           "Alpha": 1.0
+        },
+        {
+          "UID": 16528377985805069904,
+          "ComponentType": "UIIMAGE",
+          "Active": true,
+          "TextureAssetId": {
+            "uid": 14028292152440818002,
+            "libId": "f43ac8c6731db9a833178a3c3f1abddf",
+            "type": "TEXTURE"
+          },
+          "FillAmount": 1.0,
+          "FillMethod": 0,
+          "FillOrigin": 0,
+          "SheetColumns": 1,
+          "SheetRows": 1,
+          "SheetOffset": [
+            0.0,
+            0.0
+          ],
+          "StretchDrawMode": 0
         }
-      }
-    ],
-    "Children": [
-      {
-        "Name": "Background",
-        "Active": true,
-        "Tag": "DEFAULT",
-        "Layer": "DEFAULT",
-        "Transform": {
-          "position": [
-            0.0,
-            0.0,
-            0.0
-          ],
-          "rotation": [
-            -0.0,
-            0.0,
-            -0.0,
-            1.0
-          ],
-          "scale": [
-            1.0,
-            1.0,
-            1.0
-          ]
-        },
-        "Components": [
-          {
-            "Type": 5,
-            "Data": {
-              "UID": 14167793923526306562,
-              "ComponentType": 5,
-              "Active": true,
-              "Position": [
-                0.0,
-                0.0
-              ],
-              "Scale": [
-                1.0,
-                1.0
-              ],
-              "Pivot": [
-                0.5,
-                0.5
-              ],
-              "AnchorMin": [
-                0.5,
-                0.5
-              ],
-              "AnchorMax": [
-                0.5,
-                0.5
-              ],
-              "BaseSize": [
-                100.0,
-                100.0
-              ],
-              "StretchMode": 0,
-              "SizingMode": 0,
-              "AspectRatio": 1.0,
-              "Alpha": 1.0
-            }
-          },
-          {
-            "Type": 7,
-            "Data": {
-              "UID": 16528377985805069904,
-              "ComponentType": 7,
-              "Active": true,
-              "TextureAssetId": {
-                "uid": 14028292152440818002,
-                "libId": "f43ac8c6731db9a833178a3c3f1abddf"
-              },
-              "FillAmount": 1.0,
-              "FillMethod": 0,
-              "FillOrigin": 0,
-              "SheetColumns": 1,
-              "SheetRows": 1,
-              "SheetOffset": [
-                0.0,
-                0.0
-              ],
-              "StretchDrawMode": 0
-            }
-          }
+      ],
+      "Children": []
+    },
+    {
+      "Name": "Glow",
+      "Active": true,
+      "Static": false,
+      "Layer": "DEFAULT",
+      "Tag": "DEFAULT",
+      "Transform": {
+        "Position": [
+          0.0,
+          0.0,
+          0.0
         ],
-        "Children": []
+        "Rotation": [
+          5.9604641222676946e-08,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "Scale": [
+          1.0000265836715698,
+          0.9999734163284302,
+          1.0
+        ]
       },
-      {
-        "Name": "Glow",
-        "Active": true,
-        "Tag": "DEFAULT",
-        "Layer": "DEFAULT",
-        "Transform": {
-          "position": [
+      "Components": [
+        {
+          "UID": 12494993090591962997,
+          "ComponentType": "TRANSFORM2D",
+          "Active": true,
+          "Position": [
             0.0,
             0.0,
             0.0
           ],
-          "rotation": [
-            5.9604641222676946e-8,
-            0.0,
-            0.0,
-            1.0
+          "Scale": [
+            1.0,
+            1.0,
+            0.0
           ],
-          "scale": [
-            1.0000265836715698,
-            0.9999734163284302,
-            1.0
-          ]
+          "Pivot": [
+            0.5,
+            0.5,
+            0.0
+          ],
+          "AnchorMin": [
+            0.5,
+            0.5,
+            0.0
+          ],
+          "AnchorMax": [
+            0.5,
+            0.5,
+            0.0
+          ],
+          "BaseSize": [
+            100.0,
+            100.0,
+            0.0
+          ],
+          "StretchMode": 0,
+          "SizingMode": 0,
+          "AspectRatio": 1.0,
+          "Alpha": 1.0
         },
-        "Components": [
-          {
-            "Type": 5,
-            "Data": {
-              "UID": 12494993090591962997,
-              "ComponentType": 5,
-              "Active": true,
-              "Position": [
-                0.0,
-                0.0
-              ],
-              "Scale": [
-                1.0,
-                1.0
-              ],
-              "Pivot": [
-                0.5,
-                0.5
-              ],
-              "AnchorMin": [
-                0.5,
-                0.5
-              ],
-              "AnchorMax": [
-                0.5,
-                0.5
-              ],
-              "BaseSize": [
-                100.0,
-                100.0
-              ],
-              "StretchMode": 0,
-              "SizingMode": 0,
-              "AspectRatio": 1.0,
-              "Alpha": 1.0
-            }
+        {
+          "UID": 11800488164651745670,
+          "ComponentType": "UIIMAGE",
+          "Active": true,
+          "TextureAssetId": {
+            "uid": 5418711115811689343,
+            "libId": "40ee2518f8e28c45376c94d99a3e2cd3",
+            "type": "TEXTURE"
           },
-          {
-            "Type": 7,
-            "Data": {
-              "UID": 11800488164651745670,
-              "ComponentType": 7,
-              "Active": true,
-              "TextureAssetId": {
-                "uid": 5418711115811689343,
-                "libId": "40ee2518f8e28c45376c94d99a3e2cd3"
-              },
-              "FillAmount": 1.0,
-              "FillMethod": 0,
-              "FillOrigin": 0,
-              "SheetColumns": 1,
-              "SheetRows": 1,
-              "SheetOffset": [
-                0.0,
-                0.0
-              ],
-              "StretchDrawMode": 0
-            }
-          }
-        ],
-        "Children": []
-      }
-    ]
-  }
+          "FillAmount": 1.0,
+          "FillMethod": 0,
+          "FillOrigin": 0,
+          "SheetColumns": 1,
+          "SheetRows": 1,
+          "SheetOffset": [
+            0.0,
+            0.0
+          ],
+          "StretchDrawMode": 0
+        }
+      ],
+      "Children": []
+    }
+  ],
+  "Version": 2
 }

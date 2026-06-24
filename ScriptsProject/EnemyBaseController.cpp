@@ -68,8 +68,8 @@ float EnemyBaseController::getDistanceToCurrentTarget() const
         return FLT_MAX;
     }
 
-    Vector3 ownerPosition = TransformAPI::getPosition(ownerTransform);
-    Vector3 targetPosition = TransformAPI::getPosition(m_currentTarget);
+    Vector3 ownerPosition = TransformAPI::getGlobalPosition(ownerTransform);
+    Vector3 targetPosition = TransformAPI::getGlobalPosition(m_currentTarget);
 
     Vector3 difference = targetPosition - ownerPosition;
     difference.y = 0.0f;
@@ -101,8 +101,8 @@ void EnemyBaseController::faceCurrentTarget()
         return;
     }
 
-    Vector3 ownerPosition = TransformAPI::getPosition(ownerTransform);
-    Vector3 targetPosition = TransformAPI::getPosition(m_currentTarget);
+    Vector3 ownerPosition = TransformAPI::getGlobalPosition(ownerTransform);
+    Vector3 targetPosition = TransformAPI::getGlobalPosition(m_currentTarget);
 
     Vector3 direction = targetPosition - ownerPosition;
     direction.y = 0.0f;
@@ -124,7 +124,7 @@ void EnemyBaseController::facePosition(const Vector3& worldPosition)
         return;
     }
 
-    Vector3 ownerPosition = TransformAPI::getPosition(ownerTransform);
+    Vector3 ownerPosition = TransformAPI::getGlobalPosition(ownerTransform);
 
     Vector3 direction = worldPosition - ownerPosition;
     direction.y = 0.0f;
@@ -222,6 +222,78 @@ void EnemyBaseController::setRecoveryDuration(float recoveryDuration)
     m_recoveryDuration = recoveryDuration;
 }
 
+void EnemyBaseController::setStunnedDuration(float stunnedDuration)
+{
+    m_stunnedDuration = stunnedDuration;
+}
+
+void EnemyBaseController::useStun()
+{
+    m_isStunned = true;
+    m_stunnedTriggerSent = false;
+    m_stunnedTimer = m_stunnedDuration;
+    clearPath();
+}
+
+bool EnemyBaseController::trySendStunTrigger(AnimationComponent* animation)
+{
+    if (m_stunnedTriggerSent)
+    {
+        return false;
+    }
+
+    if (!m_isStunned)
+    {
+        return false;
+    }
+
+    if (isDead())
+    {
+        return false;
+    }
+
+    if (!animation)
+    {
+        return false;
+    }
+
+    clearPath();
+
+    const bool sent = AnimationAPI::sendTrigger(animation, "ToStun");
+
+    if (!sent)
+    {
+        return false;
+    }
+
+    m_stunnedTriggerSent = true;
+
+    Debug::log("[EnemyBaseController] ToStun trigger sent.");
+
+    return true;
+}
+
+void EnemyBaseController::clearStun()
+{
+    m_isStunned = false;
+    m_stunnedTriggerSent = false;
+}
+
+void EnemyBaseController::updateStun(float dt)
+{
+    if (!m_isStunned)
+    {
+        return;
+    }
+
+    m_stunnedTimer -= dt;
+
+    if (m_stunnedTimer <= 0.0f)
+    {
+        clearStun();
+    }
+}
+
 void EnemyBaseController::rotateTowardsDirection(const Vector3& direction)
 {
     Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
@@ -241,7 +313,7 @@ void EnemyBaseController::rotateTowardsDirection(const Vector3& direction)
 
     desiredDirection.Normalize();
 
-    Vector3 currentEuler = TransformAPI::getEulerDegrees(ownerTransform);
+    Vector3 currentEuler = TransformAPI::getGlobalEulerDegrees(ownerTransform);
 
     constexpr float radiansToDegrees = 180.0f / 3.14159265f;
 
@@ -274,7 +346,7 @@ void EnemyBaseController::rotateTowardsDirection(const Vector3& direction)
 
     currentEuler.y += deltaYaw;
 
-    TransformAPI::setRotationEuler(ownerTransform, currentEuler);
+    TransformAPI::setGlobalRotationEuler(ownerTransform, currentEuler);
 }
 
 bool EnemyBaseController::buildPathToTarget()
@@ -291,7 +363,7 @@ bool EnemyBaseController::buildPathToTarget()
         return false;
     }
 
-    const Vector3 start = TransformAPI::getPosition(ownerTransform);
+    const Vector3 start = TransformAPI::getGlobalPosition(ownerTransform);
     const Vector3 destination = getPathDestination();
 
     Vector3 pathPoints[MAX_PATH_POINTS];
@@ -331,7 +403,7 @@ bool EnemyBaseController::followPath()
         return false;
     }
 
-    Vector3 ownerPosition = TransformAPI::getPosition(ownerTransform);
+    Vector3 ownerPosition = TransformAPI::getGlobalPosition(ownerTransform);
     Vector3 currentPathPoint = m_path[m_currentPathIndex];
 
     Vector3 toPoint = currentPathPoint - ownerPosition;
@@ -383,7 +455,7 @@ bool EnemyBaseController::followPath()
 
     facePosition(nextPosition);
 
-    TransformAPI::setPosition(ownerTransform, nextPosition);
+    TransformAPI::setGlobalPosition(ownerTransform, nextPosition);
 
     return true;
 }
@@ -399,8 +471,8 @@ Vector3 EnemyBaseController::getPathDestination() const
             return Vector3::Zero;
         }
 
-        return TransformAPI::getPosition(ownerTransform);
+        return TransformAPI::getGlobalPosition(ownerTransform);
     }
 
-    return TransformAPI::getPosition(m_currentTarget);
+    return TransformAPI::getGlobalPosition(m_currentTarget);
 }

@@ -27,6 +27,8 @@ class UISheet;
 class Transform2D;
 class ParticleSystemComponent;
 class ComponentSoundSource;
+class CameraComponent;
+class NavRuntimeBlockerComponent;
 
 struct HapticEffectDefinition;
 
@@ -236,6 +238,21 @@ namespace Debug
     ENGINE_API void error(const char* message, ...);
 }
 
+namespace CameraAPI
+{
+    ENGINE_API CameraComponent* getCameraComponent(GameObject* gameObject);
+    ENGINE_API const CameraComponent* getCameraComponent(const GameObject* gameObject);
+
+    ENGINE_API float getFov(const CameraComponent* camera);
+    ENGINE_API void setFov(CameraComponent* camera, float fov);
+
+    ENGINE_API float getNearPlane(const CameraComponent* camera);
+    ENGINE_API void setNearPlane(CameraComponent* camera, float nearPlane);
+
+    ENGINE_API float getFarPlane(const CameraComponent* camera);
+    ENGINE_API void setFarPlane(CameraComponent* camera, float farPlane);
+}
+
 namespace NavigationAPI
 {
     ENGINE_API bool hasNavMesh();
@@ -245,6 +262,14 @@ namespace NavigationAPI
     ENGINE_API bool canReachTarget(const Vector3& startPosition, const Vector3& endPosition, const Vector3& searchExtents, NavAgentProfile profile = NavAgentProfile::PlayerNormal);
     ENGINE_API float getPathLength(const Vector3* pathPoints, int pointCount);
     ENGINE_API bool findRandomReachablePointAround(const Vector3& centerPosition, float radius, Vector3& outPoint, const Vector3& searchExtents, int maxAttempts, NavAgentProfile profile = NavAgentProfile::PlayerNormal);
+    ENGINE_API bool isSegmentBlocked(const Vector3& from, const Vector3& to);
+    ENGINE_API bool canMoveSegment(const Vector3& from, const Vector3& to);
+
+    ENGINE_API NavRuntimeBlockerComponent* getRuntimeBlockerComponent(GameObject* gameObject);
+    ENGINE_API const NavRuntimeBlockerComponent* getRuntimeBlockerComponent(const GameObject* gameObject);
+
+    ENGINE_API bool isBlocked(const NavRuntimeBlockerComponent* blocker);
+    ENGINE_API void setBlocked(NavRuntimeBlockerComponent* blocker, bool blocked);
 }
 
 namespace MathAPI
@@ -309,10 +334,12 @@ namespace SliderAPI
 {
     ENGINE_API float getFillAmount(const UISlider* slider);
     ENGINE_API void setFillAmount(UISlider* slider, const float amount);
-	ENGINE_API FillMethod getFillMethod(const UISlider* slider);
+    ENGINE_API Vector2 getFillAmountVec(const UISlider* slider);
+    ENGINE_API void setFillAmountVec(UISlider* slider, const Vector2& amount);
+    ENGINE_API FillMethod getFillMethod(const UISlider* slider);
     ENGINE_API void setFillMethod(UISlider* slider, FillMethod method);
     ENGINE_API FillOrigin getFillOrigin(const UISlider* slider);
-	ENGINE_API void setFillOrigin(UISlider* slider, FillOrigin origin);
+    ENGINE_API void setFillOrigin(UISlider* slider, FillOrigin origin);
 }
 
 namespace UISheetAPI
@@ -325,6 +352,7 @@ namespace UISheetAPI
     ENGINE_API bool isPlaying(UISheet* sheet);
     ENGINE_API Vector2 getOffset(UISheet* sheet);
     ENGINE_API void setOffset(UISheet* sheet, const Vector2& offset);
+    ENGINE_API void reset(UISheet* sheet);
 }
 
 namespace DebugDrawAPI

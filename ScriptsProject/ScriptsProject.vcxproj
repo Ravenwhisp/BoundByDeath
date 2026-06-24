@@ -71,7 +71,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(SolutionDir)..\Engine</OutDir>
+    <OutDir>$(SolutionDir)..\Engine\</OutDir>
     <TargetName>GameScripts</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -120,7 +120,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)../Engine/Assets/;$(SolutionDir)EngineDependencies;$(ProjectDir)../Engine/Assets/Scripts</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)../Engine/Assets/;$(SolutionDir)EngineDependencies</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -129,7 +129,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalLibraryDirectories>$(SolutionDir)..\Engine;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\Engine\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>Engine.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -143,7 +143,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)../Engine/Assets/;$(SolutionDir)EngineDependencies;$(ProjectDir)../Engine/Assets/Scripts</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)../Engine/Assets/;$(SolutionDir)EngineDependencies</AdditionalIncludeDirectories>
       <AdditionalHeaderUnitDependencies>
       </AdditionalHeaderUnitDependencies>
       <LanguageStandard>stdcpp20</LanguageStandard>
@@ -153,17 +153,11 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalLibraryDirectories>$(SolutionDir)..\Game;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\Game\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>Engine.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\Engine\Assets\Scripts\CameraFollow.h" />
-    <ClInclude Include="..\Engine\Assets\Scripts\CameraSwitcher.h" />
-    <ClInclude Include="..\Engine\Assets\Scripts\LocalMultiplayerSetup.h" />
-    <ClInclude Include="..\Engine\Assets\Scripts\PlayerController.h" />
-    <ClInclude Include="..\Engine\Assets\Scripts\TestingButton.h" />
-    <ClInclude Include="..\Engine\Assets\Scripts\TriggerArea.h" />
     <ClInclude Include="AbilityBase.h" />
     <ClInclude Include="ArcherArrowBarrageState.h" />
     <ClInclude Include="ArcherAttackConfig.h" />
@@ -173,8 +167,16 @@
     <ClInclude Include="ArthurAttackConfig.h" />
     <ClInclude Include="ArthurAttackDebugDraw.h" />
     <ClInclude Include="ArthurUI.h" />
+    <ClInclude Include="CameraFollow.h" />
+    <ClInclude Include="CameraSwitcher.h" />
+    <ClInclude Include="CameraTransitionController.h" />
+    <ClInclude Include="CameraTransitionEvent.h" />
+    <ClInclude Include="CombatAreaEvent.h" />
+    <ClInclude Include="EnemyAttackState.h" />
+    <ClInclude Include="EnemyBaseAttackConfig.h" />
     <ClInclude Include="CharacterUI.h" />
     <ClInclude Include="DeathConfig.h" />
+    <ClInclude Include="DeathTargetIndicatorUI.h" />
     <ClInclude Include="DeathUI.h" />
     <ClInclude Include="DestroyParticles.h" />
     <ClInclude Include="EnemyAttackExecutor.h" />
@@ -203,14 +205,15 @@
     <ClInclude Include="DeathSound.h" />
     <ClInclude Include="DeathTaunt.h" />
     <ClInclude Include="EnemyBaseController.h" />
+    <ClInclude Include="GameplayEventAction.h" />
+    <ClInclude Include="GameplayEventTrigger.h" />
+    <ClInclude Include="HUDFader.h" />
+    <ClInclude Include="LocalMultiplayerSetup.h" />
     <ClInclude Include="LyrielConfig.h" />
+    <ClInclude Include="EnemyStunnedState.h" />
     <ClInclude Include="LyrielSound.h" />
     <ClInclude Include="DebugDamageTrigger.h" />
     <ClInclude Include="DebugDrawTest.h" />
-    <ClInclude Include="EnemyATTACK.h" />
-    <ClInclude Include="ArcherAttackState.h" />
-    <ClInclude Include="EnemyCHARGE.h" />
-    <ClInclude Include="EnemyCHASE.h" />
     <ClInclude Include="BarrierEnemyDamageable.h" />
     <ClInclude Include="ArcherChaseState.h" />
     <ClInclude Include="EnemyDamageable.h" />
@@ -223,8 +226,19 @@
     <ClInclude Include="HeartbeatHaptic.h" />
     <ClInclude Include="LightZoneManager.h" />
     <ClInclude Include="LightZoneTrigger.h" />
+    <ClInclude Include="LyrielTargetIndicatorUI.h" />
     <ClInclude Include="LyrielUI.h" />
+    <ClInclude Include="MeleeEnemyController.h" />
+    <ClInclude Include="ObjectiveEvent.h" />
+    <ClInclude Include="PaladinAttackConfig.h" />
+    <ClInclude Include="PaladinChargeState.h" />
+    <ClInclude Include="PaladinChaseState.h" />
     <ClInclude Include="PersistingPowerupState.h" />
+    <ClInclude Include="PlayerController.h" />
+    <ClInclude Include="PopUpController.h" />
+    <ClInclude Include="PopUpEvent.h" />
+    <ClInclude Include="ObjectiveTypes.h" />
+
     <ClInclude Include="PowerupCollectible.h" />
     <ClInclude Include="Pickup.h" />
     <ClInclude Include="PlayerStunState.h" />
@@ -233,10 +247,6 @@
     <ClInclude Include="ReaperGauge.h" />
     <ClInclude Include="ShadowExecution.h" />
     <ClInclude Include="EnemyDetectionAggro.h" />
-    <ClInclude Include="EnemyController.h" />
-    <ClInclude Include="EnemyIDLE.h" />
-    <ClInclude Include="EnemyRECOVER.h" />
-    <ClInclude Include="EnemySTUN.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="DefeatConditionManager.h" />
     <ClInclude Include="HealthPickup.h" />
@@ -250,6 +260,8 @@
     <ClInclude Include="AbilityDash.h" />
     <ClInclude Include="LyrielDash.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="SpiderChaseState.h" />
+    <ClInclude Include="SpiderEnemyController.h" />
     <ClInclude Include="SpikeTrap.h" />
     <ClInclude Include="PlayerAnimationController.h" />
     <ClInclude Include="PlayerDamageable.h" />
@@ -259,17 +271,13 @@
     <ClInclude Include="PlayerState.h" />
     <ClInclude Include="PlayerTargetController.h" />
     <ClInclude Include="TargetIndicatorUI.h" />
+    <ClInclude Include="TestingButton.h" />
+    <ClInclude Include="TriggerArea.h" />
     <ClInclude Include="UIController.h" />
     <ClInclude Include="UIPause.h" />
     <ClInclude Include="UISplashScreen.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Engine\Assets\Scripts\CameraFollow.cpp" />
-    <ClCompile Include="..\Engine\Assets\Scripts\CameraSwitcher.cpp" />
-    <ClCompile Include="..\Engine\Assets\Scripts\LocalMultiplayerSetup.cpp" />
-    <ClCompile Include="..\Engine\Assets\Scripts\PlayerController.cpp" />
-    <ClCompile Include="..\Engine\Assets\Scripts\TestingButton.cpp" />
-    <ClCompile Include="..\Engine\Assets\Scripts\TriggerArea.cpp" />
     <ClCompile Include="AbilityBase.cpp" />
     <ClCompile Include="ArcherArrowBarrageState.cpp" />
     <ClCompile Include="ArcherAttackConfig.cpp" />
@@ -279,8 +287,16 @@
     <ClCompile Include="ArthurAttackConfig.cpp" />
     <ClCompile Include="ArthurAttackDebugDraw.cpp" />
     <ClCompile Include="ArthurUI.cpp" />
+    <ClCompile Include="CameraFollow.cpp" />
+    <ClCompile Include="CameraSwitcher.cpp" />
+    <ClCompile Include="CameraTransitionController.cpp" />
+    <ClCompile Include="CameraTransitionEvent.cpp" />
+    <ClCompile Include="CombatAreaEvent.cpp" />
+    <ClCompile Include="EnemyAttackState.cpp" />
+    <ClCompile Include="EnemyBaseAttackConfig.cpp" />
     <ClCompile Include="CharacterUI.cpp" />
     <ClCompile Include="DeathConfig.cpp" />
+    <ClCompile Include="DeathTargetIndicatorUI.cpp" />
     <ClCompile Include="DeathUI.cpp" />
     <ClCompile Include="DestroyParticles.cpp" />
     <ClCompile Include="EnemyAttackExecutor.cpp" />
@@ -309,15 +325,15 @@
     <ClCompile Include="DeathSound.cpp" />
     <ClCompile Include="DeathTaunt.cpp" />
     <ClCompile Include="EnemyBaseController.cpp" />
+    <ClCompile Include="GameplayEventTrigger.cpp" />
+    <ClCompile Include="HUDFader.cpp" />
+    <ClCompile Include="LocalMultiplayerSetup.cpp" />
     <ClCompile Include="LyrielConfig.cpp" />
+    <ClCompile Include="EnemyStunnedState.cpp" />
     <ClCompile Include="LyrielSound.cpp" />
     <ClCompile Include="DebugDamageTrigger.cpp" />
     <ClCompile Include="DebugDrawTest.cpp" />
     <ClCompile Include="dllmain.cpp" />
-    <ClCompile Include="EnemyATTACK.cpp" />
-    <ClCompile Include="ArcherAttackState.cpp" />
-    <ClCompile Include="EnemyCHARGE.cpp" />
-    <ClCompile Include="EnemyCHASE.cpp" />
     <ClCompile Include="BarrierEnemyDamageable.cpp" />
     <ClCompile Include="ArcherChaseState.cpp" />
     <ClCompile Include="EnemyDamageable.cpp" />
@@ -330,8 +346,18 @@
     <ClCompile Include="HeartbeatHaptic.cpp" />
     <ClCompile Include="LightZoneManager.cpp" />
     <ClCompile Include="LightZoneTrigger.cpp" />
+    <ClCompile Include="LyrielTargetIndicatorUI.cpp" />
     <ClCompile Include="LyrielUI.cpp" />
+    <ClCompile Include="MeleeEnemyController.cpp" />
+    <ClCompile Include="ObjectiveEvent.cpp" />
+    <ClCompile Include="PaladinAttackConfig.cpp" />
+    <ClCompile Include="PaladinChargeState.cpp" />
+    <ClCompile Include="PaladinChaseState.cpp" />
     <ClCompile Include="PersistingPowerupState.cpp" />
+    <ClCompile Include="PlayerController.cpp" />
+    <ClCompile Include="PopUpController.cpp" />
+    <ClCompile Include="PopUpEvent.cpp" />
+
     <ClCompile Include="PowerupCollectible.cpp" />
     <ClCompile Include="Pickup.cpp" />
     <ClCompile Include="PlayerStunState.cpp" />
@@ -342,10 +368,6 @@
     <ClCompile Include="EnemyDetectionAggro.cpp" />
     <ClCompile Include="DefeatConditionManager.cpp" />
     <ClCompile Include="HealthPickup.cpp" />
-    <ClCompile Include="EnemyController.cpp" />
-    <ClCompile Include="EnemyIDLE.cpp" />
-    <ClCompile Include="EnemyRECOVER.cpp" />
-    <ClCompile Include="EnemySTUN.cpp" />
     <ClCompile Include="EngineDependencies\SimpleMath.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
@@ -365,6 +387,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="SpiderChaseState.cpp" />
+    <ClCompile Include="SpiderEnemyController.cpp" />
     <ClCompile Include="SpikeTrap.cpp" />
     <ClCompile Include="PlayerAnimationController.cpp" />
     <ClCompile Include="PlayerDamageable.cpp" />
@@ -374,6 +398,8 @@
     <ClCompile Include="PlayerState.cpp" />
     <ClCompile Include="PlayerTargetController.cpp" />
     <ClCompile Include="TargetIndicatorUI.cpp" />
+    <ClCompile Include="TestingButton.cpp" />
+    <ClCompile Include="TriggerArea.cpp" />
     <ClCompile Include="UIController.cpp" />
     <ClCompile Include="UIPause.cpp" />
     <ClCompile Include="UISplashScreen.cpp" />

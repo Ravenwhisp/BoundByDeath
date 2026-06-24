@@ -15,7 +15,7 @@ void EnemyRecoverState::OnStateEnter()
 
 	if (!m_controller)
 	{
-		Debug::error("[EnemyRecoverState] EnemyRecoverState not found.");
+		Debug::error("[EnemyRecoverState] EnemyController not found.");
 		return;
 	}
 
@@ -40,6 +40,11 @@ void EnemyRecoverState::OnStateUpdate()
 	}
 
 	if (m_controller->trySendDeathTrigger(m_animation))
+	{
+		return;
+	}
+
+	if (m_controller->trySendStunTrigger(m_animation))
 	{
 		return;
 	}
