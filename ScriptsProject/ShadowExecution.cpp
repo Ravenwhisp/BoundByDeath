@@ -222,31 +222,26 @@ void ShadowExecution::applyAoEDamage()
         const float maxHp     = damageable->getMaxHp();
         const float hpPercent = damageable->getHpPercent();
 
+        EnemyHitContext ctx;
         if (hpPercent <= m_instaKillThreshold)
         {
-            {
-                EnemyHitContext ctx;
-                ctx.damage = damageable->getCurrentHp();
-                ctx.attacker = nullptr;
-                ctx.attackType = EnemyAttackType::ShadowExecution;
-                damageable->takeDamage(ctx);
-            }
+            ctx.damage = damageable->getCurrentHp();
+
             Debug::log("[ShadowExecution] Enemy '%s' below %.0f%% HP -> instant kill.",
-                GameObjectAPI::getName(enemy), m_instaKillThreshold * 100.0f);
+            GameObjectAPI::getName(enemy), m_instaKillThreshold * 100.0f);
         }
         else
         {
             const float damage = maxHp * m_standardDamage;
-            {
-                EnemyHitContext ctx;
-                ctx.damage = damage;
-                ctx.attacker = nullptr;
-                ctx.attackType = EnemyAttackType::ShadowExecution;
-                damageable->takeDamage(ctx);
-            }
+            EnemyHitContext ctx;
+
             Debug::log("[ShadowExecution] Enemy '%s' took %.1f damage (%.0f%% of max HP).",
-                GameObjectAPI::getName(enemy), damage, m_standardDamage * 100.0f);
+            GameObjectAPI::getName(enemy), damage, m_standardDamage * 100.0f);
         }
+
+        ctx.attacker = nullptr;
+        ctx.attackType = EnemyAttackType::ShadowExecution;
+        damageable->takeDamage(ctx);
 
         m_hitEnemies.push_back(enemy);
     }

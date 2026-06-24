@@ -364,22 +364,25 @@ bool LyrielChargedAttack::applyChargedDamage(const std::vector<GameObject*>& tar
 
         if (damageable != nullptr)
         {
-            {
-                EnemyHitContext ctx;
-                ctx.damage = damage;
-                ctx.attacker = GameObjectAPI::getTransform(getOwner());
-                ctx.attackType = EnemyAttackType::LyrielCharged;
-                damageable->takeDamage(ctx);
-            }
-
+            EnemyHitContext ctx;
+            ctx.damage = damage;
+            ctx.attacker = GameObjectAPI::getTransform(getOwner());
+            
             EnemyShadowMark* mark = GameObjectAPI::findScript<EnemyShadowMark>(target);
             if (mark != nullptr && mark->isExploitable())
             {
                 mark->exploit();
+                ctx.attackType = EnemyAttackType::ShadowMarkExploit;
                 anyMarkExploited = true;
                 if (m_lyrielCharacter != nullptr)
                     m_lyrielCharacter->onMarkExploited();
             }
+            else
+            {
+                ctx.attackType = EnemyAttackType::LyrielCharged;
+            }
+
+            damageable->takeDamage(ctx);
             continue;
         }
         BreakableDamageable* breakableDamageable = GameObjectAPI::findScript<BreakableDamageable>(target);

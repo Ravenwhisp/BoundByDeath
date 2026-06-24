@@ -142,18 +142,15 @@ void LyrielArrowProjectile::applyImpactDamage()
 
     if (damageable != nullptr)
     {
-        {
-            EnemyHitContext ctx;
-            ctx.damage = m_damage;
-            ctx.attacker = m_arrowOwner;
-            ctx.attackType = EnemyAttackType::LyrielArrow;
-            damageable->takeDamage(ctx);
-        }
+        EnemyHitContext ctx;
+        ctx.damage = m_damage;
+        ctx.attacker = m_arrowOwner;
 
         EnemyShadowMark* mark = GameObjectAPI::findScript<EnemyShadowMark>(m_target);
         if (mark != nullptr && mark->isExploitable())
         {
             mark->exploit();
+			ctx.attackType = EnemyAttackType::ShadowMarkExploit;
 
             if (sound != nullptr)
             {
@@ -171,6 +168,12 @@ void LyrielArrowProjectile::applyImpactDamage()
                 }
             }
         }
+        else
+        {
+            ctx.attackType = EnemyAttackType::LyrielArrow;
+        }
+
+        damageable->takeDamage(ctx);
     }
 
 	BreakableDamageable* breakableDamageable = GameObjectAPI::findScript<BreakableDamageable>(m_target);

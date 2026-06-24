@@ -313,49 +313,37 @@ bool LyrielArrowVolley::applyVolleyDamage(const std::vector<Damageable*>& target
             continue;
         }
 
-        ////habra q hacer refactor de damageable pq esto no es del todo eficiente
-        //EnemyDamageable* damageable = GameObjectAPI::findScript<EnemyDamageable>(target);
-
-        //if (damageable != nullptr)
-        //{
-        //    damageable->takeDamageEnemy(m_volleyDamage, GameObjectAPI::getTransform(getOwner()));
-        //}
-
-        //else
-        //{
-        //    BreakableDamageable* breakableDamageable = GameObjectAPI::findScript<BreakableDamageable>(target);
-
-        //    if (breakableDamageable != nullptr)
-        //    {
-        //        breakableDamageable->takeDamage(m_volleyDamage);
-        //    }
-        //}
-
         if(EnemyDamageable* enemyDamageable = dynamic_cast<EnemyDamageable*>(target))
         {
             EnemyHitContext ctx;
             ctx.damage = m_config->m_volleyDamage;
             ctx.attacker = GameObjectAPI::getTransform(getOwner());
-            ctx.attackType = EnemyAttackType::LyrielVolley;
+
+            if (PersistingPowerupState::isUnlocked(PowerupId::LyrielPowerup1))
+            {
+                EnemyShadowMark* mark = GameObjectAPI::findScript<EnemyShadowMark>(target->getOwner());
+
+                if (mark != nullptr && mark->isExploitable())
+                {
+                    mark->exploit();
+					ctx.attackType = EnemyAttackType::ShadowMarkExploit;
+                    anyMarkExploited = true;
+                    if (m_lyrielCharacter != nullptr)
+                        m_lyrielCharacter->onMarkExploited();
+                }
+                else
+                {
+                    ctx.attackType = EnemyAttackType::LyrielVolley;
+                }
+            }
+
             enemyDamageable->takeDamage(ctx);
+            continue;
         }
         else if(BreakableDamageable* breakableDamageable = dynamic_cast<BreakableDamageable*>(target))
         {
             breakableDamageable->takeDamage(m_config->m_volleyDamage);
-		}
-
-        if (PersistingPowerupState::isUnlocked(PowerupId::LyrielPowerup1))
-        {
-            EnemyShadowMark* mark = GameObjectAPI::findScript<EnemyShadowMark>(target->getOwner());
-
-            if (mark != nullptr && mark->isExploitable())
-            {
-                mark->exploit();
-                anyMarkExploited = true;
-                if (m_lyrielCharacter != nullptr)
-                    m_lyrielCharacter->onMarkExploited();
-            }
-        }
+		} 
     }
 
     return anyMarkExploited;
