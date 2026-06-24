@@ -63,7 +63,6 @@ void ShadowExecution::Update()
 
     if (m_isActive)
     {
-        updateUI();
         updateExecution(dt);
         return;
     }
@@ -167,11 +166,10 @@ void ShadowExecution::beginExecution()
     if (deathTransform == nullptr || lyrielTransform == nullptr)
         return;
 
-    const Vector3 deathPos  = TransformAPI::getPosition(deathTransform);
-    const Vector3 lyrielPos = TransformAPI::getPosition(lyrielTransform);
+    const Vector3 deathPos  = TransformAPI::getGlobalPosition(deathTransform);
+    const Vector3 lyrielPos = TransformAPI::getGlobalPosition(lyrielTransform);
 
     m_center         = (deathPos + lyrielPos) * 0.5f;
-    //m_maxRadius      = Vector3::Distance(deathPos, lyrielPos) * 0.5f;
     m_currentRadius  = 0.0f;
     m_executionTimer = 0.0f;
     m_p0WindowTimer  = 0.0f;
@@ -210,7 +208,13 @@ void ShadowExecution::updateExecution(float dt)
     applyAoEDamage();
 
     if (m_executionTimer >= m_executionDuration)
+    {
         endExecution();
+    }
+    else
+    {
+        updateUI();
+    }
 }
 
 void ShadowExecution::applyAoEDamage()
@@ -237,7 +241,7 @@ void ShadowExecution::applyAoEDamage()
         if (enemyTransform == nullptr)
             continue;
 
-        const Vector3 enemyPos = TransformAPI::getPosition(enemyTransform);
+        const Vector3 enemyPos = TransformAPI::getGlobalPosition(enemyTransform);
         const float   distance = Vector3::Distance(m_center, enemyPos);
         if (distance > m_currentRadius)
             continue;

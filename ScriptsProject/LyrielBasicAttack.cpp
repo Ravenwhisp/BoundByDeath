@@ -66,6 +66,8 @@ void LyrielBasicAttack::startAbility()
         return;
     }
 
+    notifyAbilitySuccessfullyStarted();
+
     LyrielSound* sound = m_lyrielCharacter != nullptr ? m_lyrielCharacter->getSound() : nullptr;
     if (sound != nullptr)
     {
