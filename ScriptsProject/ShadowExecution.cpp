@@ -8,6 +8,7 @@
 #include "PlayerState.h"
 #include "PlayerAnimationController.h"
 #include "EnemyDamageable.h"
+#include "Bound.h"
 
 IMPLEMENT_SCRIPT_FIELDS(ShadowExecution,
     SERIALIZED_FLOAT(m_timeWindow,         "Co-op Window (s)",      0.1f, 10.0f, 0.1f),
@@ -41,6 +42,17 @@ void ShadowExecution::Start()
     }
 
     m_sound = GameObjectAPI::findScript<CooperativeSound>(getOwner());
+
+	Bound* bound = GameObjectAPI::findScript<Bound>(getOwner());
+
+    if(!bound)
+    {
+        Debug::warn("[ShadowExecution] Bound not found on GameController. Add it as a sibling script.");
+    }
+    else
+    {
+        m_maxRadius = bound->m_distanceDamage * 0.5f;
+	}
 
     cachePlayers();
 }
@@ -159,7 +171,7 @@ void ShadowExecution::beginExecution()
     const Vector3 lyrielPos = TransformAPI::getPosition(lyrielTransform);
 
     m_center         = (deathPos + lyrielPos) * 0.5f;
-    m_maxRadius      = Vector3::Distance(deathPos, lyrielPos) * 0.5f;
+    //m_maxRadius      = Vector3::Distance(deathPos, lyrielPos) * 0.5f;
     m_currentRadius  = 0.0f;
     m_executionTimer = 0.0f;
     m_p0WindowTimer  = 0.0f;
