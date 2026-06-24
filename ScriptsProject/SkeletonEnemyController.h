@@ -20,6 +20,9 @@ public:
 	bool isGuardReady() const;
 	void consumeGuardCooldown();
 	void updateGuardCooldown(float dt);
+	bool shouldUseGuard() const;
+	bool isGuarding() const;
+	void setGuarding(bool guarding);
 
 protected:
 	Transform* acquireCurrentTarget() override;
@@ -30,4 +33,5 @@ private:
 	SkeletonAttackConfig* m_attackConfig = nullptr;
 
 	float m_guardCooldownTimer = 0.0f;
+	bool m_isGuarding = false;
 };

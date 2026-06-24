@@ -4,6 +4,8 @@
 #include "EnemyDetectionAggro.h"
 #include "SkeletonAttackConfig.h"
 
+#include <cmath>
+
 SkeletonEnemyController::SkeletonEnemyController(GameObject* owner)
 	: EnemyBaseController(owner)
 {
@@ -103,6 +105,69 @@ void SkeletonEnemyController::updateGuardCooldown(float dt)
 	{
 		m_guardCooldownTimer = 0.0f;
 	}
+}
+
+bool SkeletonEnemyController::shouldUseGuard() const
+{
+	if (!hasValidTarget() || !m_attackConfig)
+	{
+		return false;
+	}
+
+	if (!isGuardReady())
+	{
+		return false;
+	}
+
+	if (!isCurrentTargetInRange(m_attackConfig->m_guardRange))
+	{
+		return false;
+	}
+
+	Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
+	if (!ownerTransform || !m_currentTarget)
+	{
+		return false;
+	}
+
+	Vector3 ownerPosition = TransformAPI::getGlobalPosition(ownerTransform);
+	Vector3 targetPosition = TransformAPI::getGlobalPosition(m_currentTarget);
+
+	Vector3 toTarget = targetPosition - ownerPosition;
+	toTarget.y = 0.0f;
+
+	if (toTarget.LengthSquared() <= 0.0001f)
+	{
+		return true;
+	}
+
+	Vector3 forward = TransformAPI::getForward(ownerTransform);
+	forward.y = 0.0f;
+
+	if (forward.LengthSquared() <= 0.0001f)
+	{
+		return false;
+	}
+
+	toTarget.Normalize();
+	forward.Normalize();
+
+	float dot = forward.Dot(toTarget);
+
+	constexpr float degreesToRadians = 3.14159265f / 180.0f;
+	const float minDot = std::cos(m_attackConfig->m_guardHalfAngleDegrees * degreesToRadians);
+
+	return dot >= minDot;
+}
+
+bool SkeletonEnemyController::isGuarding() const
+{
+	return m_isGuarding;
+}
+
+void SkeletonEnemyController::setGuarding(bool guarding)
+{
+	m_isGuarding = guarding;
 }
 
 IMPLEMENT_SCRIPT(SkeletonEnemyController)

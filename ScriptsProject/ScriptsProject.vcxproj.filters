@@ -136,6 +136,9 @@
     <Filter Include="Enemies\Skeleton">
       <UniqueIdentifier>{9f830825-78bb-44ef-a04a-021d01fc5fa8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Enemies\Skeleton\States">
+      <UniqueIdentifier>{bc286e52-cb18-45f6-abc8-a9d535777077}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -488,6 +491,9 @@
     <ClInclude Include="SkeletonEnemyController.h">
       <Filter>Enemies\Skeleton</Filter>
     </ClInclude>
+    <ClInclude Include="SkeletonChaseState.h">
+      <Filter>Enemies\Skeleton\States</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
@@ -834,6 +840,9 @@
     </ClCompile>
     <ClCompile Include="SkeletonEnemyController.cpp">
       <Filter>Enemies\Skeleton</Filter>
+    </ClCompile>
+    <ClCompile Include="SkeletonChaseState.cpp">
+      <Filter>Enemies\Skeleton\States</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

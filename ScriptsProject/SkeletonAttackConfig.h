@@ -30,4 +30,5 @@ public:
 	float m_guardCooldown = 3.0f;
 	float m_guardRange = 3.5f;
 	float m_guardHealPerSecond = 5.0f;
+	float m_guardHalfAngleDegrees = 60.0f;
 };
