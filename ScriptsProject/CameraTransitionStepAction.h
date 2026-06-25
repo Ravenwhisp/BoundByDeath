@@ -5,6 +5,13 @@
 class CameraTransitionController;
 class CameraTransitionStep;
 
+enum class CameraTransitionStepActionTrigger
+{
+    StepStarted = 0,
+    StepReached,
+    StepFinished
+};
+
 class CameraTransitionStepAction : public Script
 {
 public:
@@ -13,15 +20,25 @@ public:
     {
     }
 
-    virtual void onStepStarted(CameraTransitionController* controller, CameraTransitionStep* step)
+    virtual void onStepStarted(CameraTransitionController* controller, CameraTransitionStep* step) {}
+
+    virtual void onStepReached(CameraTransitionController* controller, CameraTransitionStep* step) {}
+
+    virtual void onStepFinished(CameraTransitionController* controller, CameraTransitionStep* step) {}
+
+protected:
+    bool shouldRunOnStepStarted(int triggerMoment) const
     {
+        return static_cast<CameraTransitionStepActionTrigger>(triggerMoment) == CameraTransitionStepActionTrigger::StepStarted;
     }
 
-    virtual void onStepReached(CameraTransitionController* controller, CameraTransitionStep* step)
+    bool shouldRunOnStepReached(int triggerMoment) const
     {
+        return static_cast<CameraTransitionStepActionTrigger>(triggerMoment) == CameraTransitionStepActionTrigger::StepReached;
     }
 
-    virtual void onStepFinished(CameraTransitionController* controller, CameraTransitionStep* step)
+    bool shouldRunOnStepFinished(int triggerMoment) const
     {
+        return static_cast<CameraTransitionStepActionTrigger>(triggerMoment) == CameraTransitionStepActionTrigger::StepFinished;
     }
 };
