@@ -7,7 +7,7 @@
 #include "PlayerTargetController.h"
 #include "PlayerState.h"
 #include "PlayerRotation.h"
-#include "ArrowPool.h"
+#include "ProjectilePool.h"
 #include "LyrielArrowProjectile.h"
 #include "LyrielConfig.h"
 
@@ -89,17 +89,19 @@ bool LyrielBasicAttack::spawnArrowToTarget(GameObject* target)
         return false;
     }
 
-    ArrowPool* arrowPool = m_lyrielCharacter->getArrowPool();
-    if (arrowPool == nullptr)
+    ProjectilePool* projectilePool = m_lyrielCharacter->getArrowPool();
+    if (!projectilePool)
     {
         return false;
     }
 
-    LyrielArrowProjectile* arrow = arrowPool->acquireArrow();
-    if (arrow == nullptr)
+    ProjectileBase* projectile = projectilePool->acquireProjectile();
+    if (!projectile)
     {
         return false;
     }
+
+    LyrielArrowProjectile* arrow = static_cast<LyrielArrowProjectile*>(projectile);
 
     Transform* spawnTransform = findArrowSpawnTransform();
     Transform* targetTransform = GameObjectAPI::getTransform(target);

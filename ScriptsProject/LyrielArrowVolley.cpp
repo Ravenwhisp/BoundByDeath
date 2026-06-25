@@ -4,7 +4,7 @@
 #include "LyrielCharacter.h"
 #include "LyrielSound.h"
 #include "CharacterBase.h"
-#include "ArrowPool.h"
+#include "ProjectilePool.h"
 #include "LyrielArrowProjectile.h"
 #include "EnemyDamageable.h"
 #include "PlayerState.h"
@@ -368,8 +368,8 @@ void LyrielArrowVolley::spawnVolleyArrows(const Vector3& origin, const Vector3& 
         return;
     }
 
-    ArrowPool* arrowPool = m_lyrielCharacter->getArrowPool();
-    if (arrowPool == nullptr)
+    ProjectilePool* projectilePool = m_lyrielCharacter->getArrowPool();
+    if (projectilePool == nullptr)
     {
         return;
     }
@@ -394,12 +394,14 @@ void LyrielArrowVolley::spawnVolleyArrows(const Vector3& origin, const Vector3& 
 
     for (int i = 0; i < m_config->m_volleyNumVisualArrows; ++i)
     {
-        LyrielArrowProjectile* arrow = arrowPool->acquireArrow();
-        if (arrow == nullptr)
+        ProjectileBase* projectile = projectilePool->acquireProjectile();
+        if (!projectile)
         {
-            Debug::log("[LyrielArrowVolley] No available arrow in pool for visual arrow %d.", i);
+            Debug::log("[LyrielArrowVolley] No available projectile in pool for visual arrow %d.", i);
             return;
         }
+
+        LyrielArrowProjectile* arrow = static_cast<LyrielArrowProjectile*>(projectile);
 
         float t = 0.5f;
         if (m_config->m_volleyNumVisualArrows > 1)
