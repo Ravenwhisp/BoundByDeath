@@ -8,6 +8,7 @@
 #include "PlayerState.h"
 #include "PlayerAnimationController.h"
 #include "EnemyDamageable.h"
+#include "Bound.h"
 
 IMPLEMENT_SCRIPT_FIELDS(ShadowExecution,
     SERIALIZED_FLOAT(m_timeWindow,         "Co-op Window (s)",      0.1f, 10.0f, 0.1f),
@@ -42,6 +43,17 @@ void ShadowExecution::Start()
 
     m_sound = GameObjectAPI::findScript<CooperativeSound>(getOwner());
 
+	Bound* bound = GameObjectAPI::findScript<Bound>(getOwner());
+
+    if(!bound)
+    {
+        Debug::warn("[ShadowExecution] Bound not found on GameController. Add it as a sibling script.");
+    }
+    else
+    {
+        m_maxRadius = bound->m_distanceDamage * 0.5f;
+	}
+
     cachePlayers();
 }
 
@@ -55,29 +67,65 @@ void ShadowExecution::Update()
         return;
     }
 
-    const bool p0WasOpen = m_p0Timer > 0.0f;
-    const bool p1WasOpen = m_p1Timer > 0.0f;
+    if (m_p0WindowTimer > 0.0f)
+    {
+        if (m_reaperGauge->isFull())
+        {
+            m_p0WindowTimer -= dt;
+        }
+        else
+        {
+            m_p0WindowTimer = 0.0f;
+		}
+    }
+    if (m_p1WindowTimer > 0.0f)
+    {
+        if (m_reaperGauge->isFull())
+        {
+            m_p1WindowTimer -= dt;
+        }
+        else
+        {
+            m_p1WindowTimer = 0.0f;
+        }
+    }
 
-    if (m_p0Timer > 0.0f) m_p0Timer -= dt;
-    if (m_p1Timer > 0.0f) m_p1Timer -= dt;
+    const bool p0IsOpen = m_p0WindowTimer > 0.0f;
+    const bool p1IsOpen = m_p1WindowTimer > 0.0f;
 
-    if (p0WasOpen && m_p0Timer <= 0.0f)
+    if (p0IsOpen && m_p0WindowTimer <= 0.0f)
         Debug::log("[ShadowExecution] Player 0 window expired.");
-    if (p1WasOpen && m_p1Timer <= 0.0f)
+    if (p1IsOpen && m_p1WindowTimer <= 0.0f)
         Debug::log("[ShadowExecution] Player 1 window expired.");
+
 
     if (Input::isFaceButtonTopJustPressed(0))
     {
-        m_p0Timer = m_timeWindow;
-        Debug::log("[ShadowExecution] Player 0 pressed Triangle. Window open for %.1fs.", m_timeWindow);
+        if (m_reaperGauge->isFull())
+        {
+            m_p0WindowTimer = m_timeWindow;
+            Debug::log("[ShadowExecution] Player 0 pressed Triangle. Window open for %.1fs.", m_timeWindow);
+        }
+        else
+        {
+            Debug::log("[ShadowExecution] Player 0 pressed Triangle but gauge not full (%.0f%%). Keep exploiting marks!",
+				m_reaperGauge->getGaugePercent() * 100.0f);
+        }
     }
     if (Input::isFaceButtonTopJustPressed(1))
     {
-        m_p1Timer = m_timeWindow;
-        Debug::log("[ShadowExecution] Player 1 pressed Triangle. Window open for %.1fs.", m_timeWindow);
+        if (m_reaperGauge->isFull())
+        {
+            m_p1WindowTimer = m_timeWindow;
+            Debug::log("[ShadowExecution] Player 1 pressed Triangle. Window open for %.1fs.", m_timeWindow);
+        }
+        else
+        {
+            Debug::log("[ShadowExecution] Player 1 pressed Triangle but gauge not full (%.0f%%). Keep exploiting marks!",
+                m_reaperGauge->getGaugePercent() * 100.0f);
+        }
     }
-
-    if (m_p0Timer > 0.0f && m_p1Timer > 0.0f)
+    if (m_p0WindowTimer > 0.0f && m_p1WindowTimer > 0.0f && m_reaperGauge->isFull())
         tryTrigger();
 }
 
@@ -100,19 +148,6 @@ void ShadowExecution::cachePlayers()
 
 void ShadowExecution::tryTrigger()
 {
-    if (m_reaperGauge == nullptr)
-    {
-        Debug::warn("[ShadowExecution] Cannot trigger: ReaperGauge is null.");
-        return;
-    }
-
-    if (!m_reaperGauge->isFull())
-    {
-        Debug::log("[ShadowExecution] Both players ready but gauge not full (%.0f%%). Keep exploiting marks!",
-            m_reaperGauge->getGaugePercent() * 100.0f);
-        return;
-    }
-
     cachePlayers();
 
     if (m_deathCharacter == nullptr || m_lyrielCharacter == nullptr)
@@ -135,11 +170,10 @@ void ShadowExecution::beginExecution()
     const Vector3 lyrielPos = TransformAPI::getGlobalPosition(lyrielTransform);
 
     m_center         = (deathPos + lyrielPos) * 0.5f;
-    m_maxRadius      = Vector3::Distance(deathPos, lyrielPos) * 0.5f;
     m_currentRadius  = 0.0f;
     m_executionTimer = 0.0f;
-    m_p0Timer        = 0.0f;
-    m_p1Timer        = 0.0f;
+    m_p0WindowTimer  = 0.0f;
+    m_p1WindowTimer  = 0.0f;
     m_hitEnemies.clear();
 
     m_reaperGauge->consume();
@@ -255,6 +289,9 @@ void ShadowExecution::endExecution()
     m_executionTimer = 0.0f;
     m_currentRadius  = 0.0f;
     m_hitEnemies.clear();
+
+    Transform2DAPI::setAlpha(m_executionTransform2D, 0);
+    Transform2DAPI::setScale(m_executionTransform2D, Vector2(0.0f, 0.0f));
 
     if (m_executionTransform)
     {
