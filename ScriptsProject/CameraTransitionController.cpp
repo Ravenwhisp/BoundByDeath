@@ -194,6 +194,8 @@ void CameraTransitionController::startStep(int stepIndex)
     }
 
     m_state = TransitionState::MovingStep;
+
+    step->executeStepStartedActions(this);
 }
 
 void CameraTransitionController::startReturning()
@@ -330,12 +332,24 @@ void CameraTransitionController::finishCurrentStepMovement()
         CameraAPI::setFov(m_camera, m_stepTargetFov);
     }
 
+    CameraTransitionStep* step = m_currentEvent->getTransitionStep(m_currentStepIndex);
+    if (step != nullptr)
+    {
+        step->executeStepReachedActions(this);
+    }
+
     m_state = TransitionState::HoldingStep;
     m_timer = 0.0f;
 }
 
 void CameraTransitionController::finishCurrentStepHold()
 {
+    CameraTransitionStep* step = m_currentEvent->getTransitionStep(m_currentStepIndex);
+    if (step != nullptr)
+    {
+        step->executeStepFinishedActions(this);
+    }
+
     const int nextStepIndex = m_currentStepIndex + 1;
 
     if (nextStepIndex < m_currentEvent->getTransitionStepCount())
