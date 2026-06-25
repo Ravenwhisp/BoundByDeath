@@ -20,6 +20,8 @@ public:
     {
     }
 
+    ScriptFieldList getExposedFields() const override;
+
     virtual void onStepStarted(CameraTransitionController* controller, CameraTransitionStep* step) {}
 
     virtual void onStepReached(CameraTransitionController* controller, CameraTransitionStep* step) {}
@@ -27,18 +29,21 @@ public:
     virtual void onStepFinished(CameraTransitionController* controller, CameraTransitionStep* step) {}
 
 protected:
-    bool shouldRunOnStepStarted(int triggerMoment) const
+    bool shouldRunOnStepStarted() const
     {
-        return static_cast<CameraTransitionStepActionTrigger>(triggerMoment) == CameraTransitionStepActionTrigger::StepStarted;
+        return static_cast<CameraTransitionStepActionTrigger>(m_triggerMoment) == CameraTransitionStepActionTrigger::StepStarted;
     }
 
-    bool shouldRunOnStepReached(int triggerMoment) const
+    bool shouldRunOnStepReached() const
     {
-        return static_cast<CameraTransitionStepActionTrigger>(triggerMoment) == CameraTransitionStepActionTrigger::StepReached;
+        return static_cast<CameraTransitionStepActionTrigger>(m_triggerMoment) == CameraTransitionStepActionTrigger::StepReached;
     }
 
-    bool shouldRunOnStepFinished(int triggerMoment) const
+    bool shouldRunOnStepFinished() const
     {
-        return static_cast<CameraTransitionStepActionTrigger>(triggerMoment) == CameraTransitionStepActionTrigger::StepFinished;
+        return static_cast<CameraTransitionStepActionTrigger>(m_triggerMoment) == CameraTransitionStepActionTrigger::StepFinished;
     }
+
+public:
+    int m_triggerMoment = static_cast<int>(CameraTransitionStepActionTrigger::StepReached);
 };

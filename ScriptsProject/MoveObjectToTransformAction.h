@@ -26,13 +26,18 @@ private:
     void updateMove(float dt);
     void finishMove();
 
+    void playAnimationState(const std::string& stateName, float transitionTimeSeconds);
+
 public:
     ScriptComponentRef<Transform> m_objectToMove;
     ScriptComponentRef<Transform> m_targetTransform;
 
-    int m_triggerMoment = static_cast<int>(CameraTransitionStepActionTrigger::StepReached);
-
     float m_moveDuration = 1.0f;
+
+    bool m_playAnimationWhileMoving = false;
+    std::string m_movingStateName = "Walk";
+    bool m_playAnimationOnFinish = false;
+    std::string m_finishStateName = "Idle";
 
 private:
     bool m_isMoving = false;
