@@ -22,6 +22,9 @@ IMPLEMENT_SCRIPT_FIELDS_INHERITED(SkeletonAttackConfig, EnemyBaseAttackConfig,
 		SERIALIZED_FLOAT(m_guardRange, "Guard Range", 0.0f, 20.0f, 0.1f),
 		SERIALIZED_FLOAT(m_guardHealPerSecond, "Guard Heal Per Second", 0.0f, 100.0f, 1.0f),
 		SERIALIZED_FLOAT(m_guardBlockHalfAngleDegrees, "Guard Half Angle Degrees", 0.0f, 180.0f, 1.0f)
+	),
+	FIELD_GROUP_COLLAPSE("Revive",
+		SERIALIZED_FLOAT(m_reviveDuration, "Revive Duration", 0.0f, 20.0f, 0.01f)
 	)
 )
 

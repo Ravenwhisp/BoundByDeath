@@ -3,6 +3,7 @@
 
 #include "EnemyDetectionAggro.h"
 #include "SkeletonAttackConfig.h"
+#include "SkeletonDamageable.h"
 
 #include <cmath>
 
@@ -15,6 +16,7 @@ void SkeletonEnemyController::Start()
 {
 	m_enemyDetectionAggro = GameObjectAPI::findScript<EnemyDetectionAggro>(getOwner());
 	m_attackConfig = GameObjectAPI::findScript<SkeletonAttackConfig>(getOwner());
+	m_damageable = GameObjectAPI::findScript<SkeletonDamageable>(getOwner());
 
 	if (!m_enemyDetectionAggro)
 	{
@@ -24,6 +26,11 @@ void SkeletonEnemyController::Start()
 	if (!m_attackConfig)
 	{
 		Debug::warn("[SkeletonEnemyController] SkeletonAttackConfig not found on '%s'.", GameObjectAPI::getName(getOwner()));
+	}
+
+	if (!m_damageable)
+	{
+		Debug::warn("[SkeletonEnemyController] SkeletonDamageable not found on '%s'.", GameObjectAPI::getName(getOwner()));
 	}
 
 	m_currentTarget = nullptr;
@@ -168,6 +175,41 @@ bool SkeletonEnemyController::isGuarding() const
 void SkeletonEnemyController::setGuarding(bool guarding)
 {
 	m_isGuarding = guarding;
+}
+
+bool SkeletonEnemyController::isDowned() const
+{
+	return m_damageable && m_damageable->isDowned();
+}
+
+bool SkeletonEnemyController::isPermanentlyDead() const
+{
+	return m_damageable && m_damageable->isPermanentlyDead();
+}
+
+bool SkeletonEnemyController::trySendReviveTrigger(AnimationComponent* animation)
+{
+	if (!animation)
+	{
+		return false;
+	}
+
+	if (!isDowned())
+	{
+		return false;
+	}
+
+	if (!AnimationAPI::sendTrigger(animation, "ToRevive"))
+	{
+		return false;
+	}
+
+	clearPath();
+	resetRepathTimer();
+
+	Debug::log("[SkeletonEnemyController] ToRevive trigger sent.");
+
+	return true;
 }
 
 IMPLEMENT_SCRIPT(SkeletonEnemyController)

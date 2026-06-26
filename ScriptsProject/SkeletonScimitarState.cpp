@@ -58,7 +58,7 @@ void SkeletonScimitarState::OnStateUpdate()
 	}
 
 	// To Death State
-	if (m_controller->trySendDeathTrigger(m_animation))
+	if (m_controller->trySendReviveTrigger(m_animation))
 	{
 		return;
 	}

@@ -14,11 +14,31 @@ public:
 
 	void Start() override;
 	void takeDamage(const HitContext& ctx) override;
+	
+	bool isDowned() const;
+	bool isPermanentlyDead() const;
+
+	void completeRevive();
+
+protected:
+	void onHpDepleted() override;
 
 private:
+	enum class SkeletonLifeState
+	{
+		Alive,
+		Downed,
+		PermanentlyDead
+	};
+
 	bool shouldBlockDamage(const EnemyHitContext& enemyCtx) const;
+	void startDowned();
+	void confirmKill();
 
 private:
 	SkeletonEnemyController* m_skeletonController = nullptr;
 	SkeletonAttackConfig* m_attackConfig = nullptr;
+	SkeletonLifeState m_lifeState = SkeletonLifeState::Alive;
+
+	float m_downedHP = 1.0f;
 };

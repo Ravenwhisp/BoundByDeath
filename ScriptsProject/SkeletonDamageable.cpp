@@ -32,6 +32,12 @@ void SkeletonDamageable::takeDamage(const HitContext& ctx)
 {
 	const EnemyHitContext& enemyCtx = static_cast<const EnemyHitContext&>(ctx);
 
+	if (isDowned())
+	{
+		confirmKill();
+		return;
+	}
+
 	if (shouldBlockDamage(enemyCtx))
 	{
 		Debug::log("[SkeletonDamageable] Damage blocked by Guard.");
@@ -39,6 +45,54 @@ void SkeletonDamageable::takeDamage(const HitContext& ctx)
 	}
 
 	EnemyDamageable::takeDamage(ctx);
+}
+
+void SkeletonDamageable::onHpDepleted()
+{
+	if (m_lifeState == SkeletonLifeState::Alive)
+	{
+		startDowned();
+		return;
+	}
+
+	confirmKill();
+}
+
+bool SkeletonDamageable::isDowned() const
+{
+	return m_lifeState == SkeletonLifeState::Downed;
+}
+
+bool SkeletonDamageable::isPermanentlyDead() const
+{
+	return m_lifeState == SkeletonLifeState::PermanentlyDead;
+}
+
+void SkeletonDamageable::startDowned()
+{
+	m_lifeState = SkeletonLifeState::Downed;
+	m_currentHp = m_downedHP;
+	m_isDead = false;
+
+	Debug::log("[SkeletonDamageable] Skeleton downed. Waiting for confirm kill.");
+}
+
+void SkeletonDamageable::confirmKill()
+{
+	m_lifeState = SkeletonLifeState::PermanentlyDead;
+}
+
+void SkeletonDamageable::completeRevive()
+{
+	if (m_lifeState != SkeletonLifeState::Downed)
+	{
+		return;
+	}
+
+	m_lifeState = SkeletonLifeState::Alive;
+	revive(getMaxHp() * 0.5f);
+
+	Debug::log("[SkeletonDamageable] Skeleton revived at 50% HP.");
 }
 
 bool SkeletonDamageable::shouldBlockDamage(const EnemyHitContext& enemyCtx) const

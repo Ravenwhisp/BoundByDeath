@@ -4,6 +4,7 @@
 
 class EnemyDetectionAggro;
 class SkeletonAttackConfig;
+class SkeletonDamageable;
 
 class SkeletonEnemyController : public EnemyBaseController
 {
@@ -24,6 +25,11 @@ public:
 	bool isGuarding() const;
 	void setGuarding(bool guarding);
 
+	bool isDowned() const;
+	bool isPermanentlyDead() const;
+
+	bool trySendReviveTrigger(AnimationComponent* animation);
+
 protected:
 	Transform* acquireCurrentTarget() override;
 	bool isTargetDowned(Transform* target) const override;
@@ -31,6 +37,7 @@ protected:
 private:
 	EnemyDetectionAggro* m_enemyDetectionAggro = nullptr;
 	SkeletonAttackConfig* m_attackConfig = nullptr;
+	SkeletonDamageable* m_damageable = nullptr;
 
 	float m_guardCooldownTimer = 0.0f;
 	bool m_isGuarding = false;

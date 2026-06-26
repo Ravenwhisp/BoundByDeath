@@ -57,8 +57,8 @@ void SkeletonGuardState::OnStateUpdate()
 		return;
 	}
 
-	// Go into Death State
-	if (m_skeletonController->trySendDeathTrigger(m_animation))
+	// Go into Revive State
+	if (m_skeletonController->trySendReviveTrigger(m_animation))
 	{
 		return;
 	}

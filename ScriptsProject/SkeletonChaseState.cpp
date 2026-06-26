@@ -38,7 +38,7 @@ void SkeletonChaseState::OnStateUpdate()
 		return;
 	}
 
-	if (m_skeletonController->trySendDeathTrigger(m_animation))
+	if (m_skeletonController->trySendReviveTrigger(m_animation))
 	{
 		return;
 	}
