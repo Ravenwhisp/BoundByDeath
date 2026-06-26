@@ -14,6 +14,8 @@ public:
 public:
 	// --- Scimitar Strike --- //
 	// Dash
+	float m_scimitarStartRange = 4.5f;
+	float m_scimitarDashStopRange = 1.5f;
 	float m_scimitarDashDuration = 0.2f;
 	float m_scimitarDashSpeed = 5.0f;
 

@@ -4,6 +4,8 @@
 IMPLEMENT_SCRIPT_FIELDS_INHERITED(SkeletonAttackConfig, EnemyBaseAttackConfig,
 	// Scimitar Strike
 	FIELD_GROUP_COLLAPSE("Scimitar Strike",
+		SERIALIZED_FLOAT(m_scimitarStartRange, "Scimitar Start Range", 0.0f, 20.0f, 0.1f),
+		SERIALIZED_FLOAT(m_scimitarDashStopRange, "Scimitar Dash Stop Range", 0.0f, 20.0f, 0.1f),
 		SERIALIZED_FLOAT(m_scimitarDashDuration, "Scimitar Dash Duration", 0.0f, 5.0f, 0.1f),
 		SERIALIZED_FLOAT(m_scimitarDashSpeed, "Scimitar Dash Speed", 0.0f, 20.0f, 0.1f),
 		SERIALIZED_FLOAT(m_attackClipDuration, "Attack Clip Duration", 0.0f, 5.0f, 0.05f),

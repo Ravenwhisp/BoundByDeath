@@ -46,8 +46,6 @@ private:
 	EnemyAttackExecutor* m_attackExecutor = nullptr;
 	AnimationComponent* m_animation = nullptr;
 
-	Transform* m_committedTarget = nullptr;
-
 	Phase m_phase = Phase::Dash;
 	float m_phaseTimer = 0.0f;
 	bool m_hasAppliedHit = false;

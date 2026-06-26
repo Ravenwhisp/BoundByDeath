@@ -74,7 +74,7 @@ bool SkeletonEnemyController::isTargetInScimitarRange() const
 		return false;
 	}
 
-	return isCurrentTargetInRange(m_attackConfig->m_basicAttackRange);
+	return isCurrentTargetInRange(m_attackConfig->m_scimitarStartRange);
 }
 
 bool SkeletonEnemyController::isGuardReady() const
