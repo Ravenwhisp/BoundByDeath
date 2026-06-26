@@ -5,6 +5,7 @@
 class ArcherAttackConfig;
 class RangedEnemyController;
 class AnimationComponent;
+class ArcherGuardParticles;
 
 class ArcherArrowShooter : public Script
 {
@@ -16,16 +17,15 @@ public:
     ScriptFieldList getExposedFields() const override;
 
     std::string m_arrowPrefab = "Assets/Prefabs/Projectiles/ArcherArrow.prefab";
-    std::string m_trailPrefab = "Assets/Prefabs/Particles/Archer/ArcherGuardVFX.prefab";
 
 private:
     ArcherAttackConfig*    m_config     = nullptr;
     RangedEnemyController* m_controller = nullptr;
     AnimationComponent*    m_animation  = nullptr;
+    ArcherGuardParticles*  m_particles  = nullptr;
 
-    bool        m_inAttack   = false;
-    float       m_timer      = 0.0f;
-    bool        m_fired      = false;
-    GameObject* m_arrowGO    = nullptr;
-    GameObject* m_trailGO    = nullptr;
+    bool        m_inAttack = false;
+    float       m_timer    = 0.0f;
+    bool        m_fired    = false;
+    GameObject* m_arrowGO  = nullptr;
 };

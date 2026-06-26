@@ -3,10 +3,10 @@
 #include "ArcherAttackConfig.h"
 #include "RangedEnemyController.h"
 #include "ArcherArrowProjectile.h"
+#include "ArcherGuardParticles.h"
 
 IMPLEMENT_SCRIPT_FIELDS(ArcherArrowShooter,
-    SERIALIZED_STRING(m_arrowPrefab, "Arrow Prefab"),
-    SERIALIZED_STRING(m_trailPrefab, "Trail Particle Prefab")
+    SERIALIZED_STRING(m_arrowPrefab, "Arrow Prefab")
 )
 
 ArcherArrowShooter::ArcherArrowShooter(GameObject* owner) : Script(owner) {}
@@ -16,15 +16,7 @@ void ArcherArrowShooter::Start()
     m_config     = GameObjectAPI::findScript<ArcherAttackConfig>(getOwner());
     m_controller = GameObjectAPI::findScript<RangedEnemyController>(getOwner());
     m_animation  = AnimationAPI::getAnimationComponent(getOwner());
-}
-
-static void removeIfValid(GameObject*& go)
-{
-    if (go)
-    {
-        GameObjectAPI::removeGameObject(go);
-        go = nullptr;
-    }
+    m_particles  = GameObjectAPI::findScript<ArcherGuardParticles>(getOwner());
 }
 
 void ArcherArrowShooter::Update()
@@ -45,8 +37,8 @@ void ArcherArrowShooter::Update()
 
     if (!nowInAttack && m_inAttack)
     {
-        removeIfValid(m_arrowGO);
-        removeIfValid(m_trailGO);
+        if (m_arrowGO) { GameObjectAPI::removeGameObject(m_arrowGO); m_arrowGO = nullptr; }
+        if (m_particles) m_particles->stopBasicAttackTrail();
         m_inAttack = false;
     }
 
@@ -54,6 +46,7 @@ void ArcherArrowShooter::Update()
 
     m_timer += Time::getDeltaTime();
 
+    // ── Fire arrow at windup time ─────────────────────────────────────────────
     if (!m_fired && m_timer >= m_config->m_basicAttackWindupTime)
     {
         Transform* archerT = GameObjectAPI::getTransform(getOwner());
@@ -68,13 +61,13 @@ void ArcherArrowShooter::Update()
             toTarget.y = 0.0f;
             if (toTarget.LengthSquared() > 0.0001f) toTarget.Normalize();
 
-            Vector3 spawnPos  = archerPos;
-            spawnPos.x       += toTarget.x * 0.5f;
-            spawnPos.y       += 1.2f;
-            spawnPos.z       += toTarget.z * 0.5f;
+            Vector3 spawnPos = archerPos;
+            spawnPos.x      += toTarget.x * 0.5f;
+            spawnPos.y      += 1.2f;
+            spawnPos.z      += toTarget.z * 0.5f;
 
-            Vector3 dest  = targetPos;
-            dest.y       += 1.0f;
+            Vector3 dest = targetPos;
+            dest.y      += 1.0f;
 
             m_arrowGO = GameObjectAPI::instantiatePrefab(m_arrowPrefab.c_str(), spawnPos, Vector3::Zero);
             if (m_arrowGO)
@@ -83,30 +76,32 @@ void ArcherArrowShooter::Update()
                 if (arrow) arrow->launch(spawnPos, dest, 10.0f);
             }
 
-            if (!m_trailPrefab.empty())
-                m_trailGO = GameObjectAPI::instantiatePrefab(m_trailPrefab.c_str(), spawnPos, Vector3::Zero);
+            if (m_particles) m_particles->spawnBasicAttackTrail(spawnPos);
         }
         m_fired = true;
     }
 
-    if (m_arrowGO && m_trailGO)
+    // ── Sync trail to arrow each frame ────────────────────────────────────────
+    if (m_arrowGO && m_particles)
     {
         Transform* arrowT = GameObjectAPI::getTransform(m_arrowGO);
-        Transform* trailT = GameObjectAPI::getTransform(m_trailGO);
-        if (arrowT && trailT)
+        if (arrowT)
         {
-            TransformAPI::setGlobalPosition(trailT, TransformAPI::getGlobalPosition(arrowT));
-            TransformAPI::setGlobalRotationEuler(trailT, TransformAPI::getGlobalEulerDegrees(arrowT));
+            m_particles->syncBasicAttackTrail(
+                TransformAPI::getGlobalPosition(arrowT),
+                TransformAPI::getGlobalEulerDegrees(arrowT));
         }
     }
 
+    // ── Remove arrow + trail once it arrives ──────────────────────────────────
     if (m_arrowGO)
     {
         ArcherArrowProjectile* arrow = GameObjectAPI::findScript<ArcherArrowProjectile>(m_arrowGO);
         if (arrow && arrow->hasArrived())
         {
-            removeIfValid(m_arrowGO);
-            removeIfValid(m_trailGO);
+            GameObjectAPI::removeGameObject(m_arrowGO);
+            m_arrowGO = nullptr;
+            if (m_particles) m_particles->stopBasicAttackTrail();
         }
     }
 }
