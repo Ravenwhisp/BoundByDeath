@@ -163,7 +163,6 @@
     <ClInclude Include="ArcherAttackConfig.h" />
     <ClInclude Include="ArcherSomersaultState.h" />
     <ClInclude Include="ArcherUI.h" />
-    <ClInclude Include="ArrowPool.h" />
     <ClInclude Include="ArthurAttackConfig.h" />
     <ClInclude Include="ArthurAttackDebugDraw.h" />
     <ClInclude Include="ArthurUI.h" />
@@ -207,6 +206,7 @@
     <ClInclude Include="DeathSound.h" />
     <ClInclude Include="DeathTaunt.h" />
     <ClInclude Include="EnemyBaseController.h" />
+    <ClInclude Include="EnergyBallProjectile.h" />
     <ClInclude Include="GameplayEventAction.h" />
     <ClInclude Include="GameplayEventTrigger.h" />
     <ClInclude Include="HUDFader.h" />
@@ -245,6 +245,8 @@
     <ClInclude Include="PowerupCollectible.h" />
     <ClInclude Include="Pickup.h" />
     <ClInclude Include="PlayerStunState.h" />
+    <ClInclude Include="ProjectileBase.h" />
+    <ClInclude Include="ProjectilePool.h" />
     <ClInclude Include="PuzzleManagerLVL1.h" />
     <ClInclude Include="RangedEnemyController.h" />
     <ClInclude Include="ReaperGauge.h" />
@@ -273,6 +275,13 @@
     <ClInclude Include="PlayerRotation.h" />
     <ClInclude Include="PlayerState.h" />
     <ClInclude Include="PlayerTargetController.h" />
+    <ClInclude Include="SummonerAttackConfig.h" />
+    <ClInclude Include="SummonerEnergyBallState.h" />
+    <ClInclude Include="SummonerEnemyController.h" />
+    <ClInclude Include="SummonerIdleState.h" />
+    <ClInclude Include="SummonerRecoverState.h" />
+    <ClInclude Include="SummonerSummonState.h" />
+    <ClInclude Include="SummonerTeleportState.h" />
     <ClInclude Include="TargetIndicatorUI.h" />
     <ClInclude Include="TestingButton.h" />
     <ClInclude Include="TriggerArea.h" />
@@ -286,7 +295,6 @@
     <ClCompile Include="ArcherAttackConfig.cpp" />
     <ClCompile Include="ArcherSomersaultState.cpp" />
     <ClCompile Include="ArcherUI.cpp" />
-    <ClCompile Include="ArrowPool.cpp" />
     <ClCompile Include="ArthurAttackConfig.cpp" />
     <ClCompile Include="ArthurAttackDebugDraw.cpp" />
     <ClCompile Include="ArthurUI.cpp" />
@@ -330,6 +338,7 @@
     <ClCompile Include="DeathSound.cpp" />
     <ClCompile Include="DeathTaunt.cpp" />
     <ClCompile Include="EnemyBaseController.cpp" />
+    <ClCompile Include="EnergyBallProjectile.cpp" />
     <ClCompile Include="GameplayEventTrigger.cpp" />
     <ClCompile Include="HUDFader.cpp" />
     <ClCompile Include="LocalMultiplayerSetup.cpp" />
@@ -367,6 +376,8 @@
     <ClCompile Include="PowerupCollectible.cpp" />
     <ClCompile Include="Pickup.cpp" />
     <ClCompile Include="PlayerStunState.cpp" />
+    <ClCompile Include="ProjectileBase.cpp" />
+    <ClCompile Include="ProjectilePool.cpp" />
     <ClCompile Include="PuzzleManagerLVL1.cpp" />
     <ClCompile Include="RangedEnemyController.cpp" />
     <ClCompile Include="ReaperGauge.cpp" />
@@ -403,6 +414,13 @@
     <ClCompile Include="PlayerRotation.cpp" />
     <ClCompile Include="PlayerState.cpp" />
     <ClCompile Include="PlayerTargetController.cpp" />
+    <ClCompile Include="SummonerAttackConfig.cpp" />
+    <ClCompile Include="SummonerEnergyBallState.cpp" />
+    <ClCompile Include="SummonerEnemyController.cpp" />
+    <ClCompile Include="SummonerIdleState.cpp" />
+    <ClCompile Include="SummonerRecoverState.cpp" />
+    <ClCompile Include="SummonerSummonState.cpp" />
+    <ClCompile Include="SummonerTeleportState.cpp" />
     <ClCompile Include="TargetIndicatorUI.cpp" />
     <ClCompile Include="TestingButton.cpp" />
     <ClCompile Include="TriggerArea.cpp" />

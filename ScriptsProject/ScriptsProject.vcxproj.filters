@@ -133,6 +133,15 @@
     <Filter Include="Enemies\Spider\States">
       <UniqueIdentifier>{70c0d2f4-bb1c-4722-94b0-9a8fdd52a250}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Enemies\Summoner">
+      <UniqueIdentifier>{40f7a28b-a4c4-4292-a8a2-0beb5186ca95}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Enemies\Summoner\States">
+      <UniqueIdentifier>{beb2a869-b60a-4dd2-a54c-ca787632f525}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Combat\Projectiles">
+      <UniqueIdentifier>{90bff8f3-21b4-4d10-b4a9-921262cc9328}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -228,9 +237,6 @@
       <Filter>Character\Lyriel</Filter>
     </ClInclude>
     <ClInclude Include="LyrielSound.h">
-      <Filter>Character\Lyriel</Filter>
-    </ClInclude>
-    <ClInclude Include="LyrielArrowProjectile.h">
       <Filter>Character\Lyriel</Filter>
     </ClInclude>
     <ClInclude Include="ArrowPool.h">
@@ -477,6 +483,39 @@
     <ClInclude Include="SpiderEnemyController.h">
       <Filter>Enemies\Spider</Filter>
     </ClInclude>
+    <ClInclude Include="SummonerAttackConfig.h">
+      <Filter>Enemies\Summoner</Filter>
+    </ClInclude>
+    <ClInclude Include="SummonerEnemyController.h">
+      <Filter>Enemies\Summoner</Filter>
+    </ClInclude>
+    <ClInclude Include="SummonerIdleState.h">
+      <Filter>Enemies\Summoner\States</Filter>
+    </ClInclude>
+    <ClInclude Include="SummonerTeleportState.h">
+      <Filter>Enemies\Summoner\States</Filter>
+    </ClInclude>
+    <ClInclude Include="SummonerSummonState.h">
+      <Filter>Enemies\Summoner\States</Filter>
+    </ClInclude>
+    <ClInclude Include="SummonerRecoverState.h">
+      <Filter>Enemies\Summoner\States</Filter>
+    </ClInclude>
+    <ClInclude Include="SummonerEnergyBallState.h">
+      <Filter>Enemies\Summoner\States</Filter>
+    </ClInclude>
+    <ClInclude Include="EnergyBallProjectile.h">
+      <Filter>Enemies\Summoner</Filter>
+    </ClInclude>
+    <ClInclude Include="ProjectileBase.h">
+      <Filter>Combat\Projectiles</Filter>
+    </ClInclude>
+    <ClInclude Include="ProjectilePool.h">
+      <Filter>Combat\Projectiles</Filter>
+    </ClInclude>
+    <ClInclude Include="LyrielArrowProjectile.h">
+      <Filter>Combat\Projectiles</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
@@ -573,9 +612,6 @@
       <Filter>Character\Lyriel</Filter>
     </ClCompile>
     <ClCompile Include="LyrielSound.cpp">
-      <Filter>Character\Lyriel</Filter>
-    </ClCompile>
-    <ClCompile Include="LyrielArrowProjectile.cpp">
       <Filter>Character\Lyriel</Filter>
     </ClCompile>
     <ClCompile Include="ArrowPool.cpp">
@@ -815,6 +851,39 @@
     </ClCompile>
     <ClCompile Include="SpiderEnemyController.cpp">
       <Filter>Enemies\Spider</Filter>
+    </ClCompile>
+    <ClCompile Include="SummonerAttackConfig.cpp">
+      <Filter>Enemies\Summoner</Filter>
+    </ClCompile>
+    <ClCompile Include="SummonerEnemyController.cpp">
+      <Filter>Enemies\Summoner</Filter>
+    </ClCompile>
+    <ClCompile Include="SummonerIdleState.cpp">
+      <Filter>Enemies\Summoner\States</Filter>
+    </ClCompile>
+    <ClCompile Include="SummonerTeleportState.cpp">
+      <Filter>Enemies\Summoner\States</Filter>
+    </ClCompile>
+    <ClCompile Include="SummonerSummonState.cpp">
+      <Filter>Enemies\Summoner\States</Filter>
+    </ClCompile>
+    <ClCompile Include="SummonerRecoverState.cpp">
+      <Filter>Enemies\Summoner\States</Filter>
+    </ClCompile>
+    <ClCompile Include="SummonerEnergyBallState.cpp">
+      <Filter>Enemies\Summoner\States</Filter>
+    </ClCompile>
+    <ClCompile Include="EnergyBallProjectile.cpp">
+      <Filter>Enemies\Summoner</Filter>
+    </ClCompile>
+    <ClCompile Include="ProjectileBase.cpp">
+      <Filter>Combat\Projectiles</Filter>
+    </ClCompile>
+    <ClCompile Include="ProjectilePool.cpp">
+      <Filter>Combat\Projectiles</Filter>
+    </ClCompile>
+    <ClCompile Include="LyrielArrowProjectile.cpp">
+      <Filter>Combat\Projectiles</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
