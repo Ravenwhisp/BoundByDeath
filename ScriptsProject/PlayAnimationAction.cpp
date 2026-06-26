@@ -18,6 +18,8 @@ PlayAnimationAction::PlayAnimationAction(GameObject* owner)
 
 void PlayAnimationAction::Update()
 {
+    CameraTransitionStepAction::Update();
+
     if (!m_waitingToClear)
     {
         return;
@@ -26,37 +28,7 @@ void PlayAnimationAction::Update()
     updateClearTimer(Time::getDeltaTime());
 }
 
-void PlayAnimationAction::onStepStarted(CameraTransitionController* controller, CameraTransitionStep* step)
-{
-    if (!shouldRunOnStepStarted())
-    {
-        return;
-    }
-
-    tryPlayAnimation();
-}
-
-void PlayAnimationAction::onStepReached(CameraTransitionController* controller, CameraTransitionStep* step)
-{
-    if (!shouldRunOnStepReached())
-    {
-        return;
-    }
-
-    tryPlayAnimation();
-}
-
-void PlayAnimationAction::onStepFinished(CameraTransitionController* controller, CameraTransitionStep* step)
-{
-    if (!shouldRunOnStepFinished())
-    {
-        return;
-    }
-
-    tryPlayAnimation();
-}
-
-void PlayAnimationAction::tryPlayAnimation()
+void PlayAnimationAction::executeAction(CameraTransitionController* controller, CameraTransitionStep* step)
 {
     if (m_clipName.empty())
     {

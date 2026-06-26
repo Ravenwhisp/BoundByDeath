@@ -17,12 +17,8 @@ public:
 
     ScriptFieldList getExposedFields() const override;
 
-    void onStepStarted(CameraTransitionController* controller, CameraTransitionStep* step) override;
-    void onStepReached(CameraTransitionController* controller, CameraTransitionStep* step) override;
-    void onStepFinished(CameraTransitionController* controller, CameraTransitionStep* step) override;
-
 private:
-    void tryPlayAnimation();
+    void executeAction(CameraTransitionController* controller, CameraTransitionStep* step) override;
     void updateClearTimer(float dt);
 
     AnimationComponent* findAnimationComponent() const;

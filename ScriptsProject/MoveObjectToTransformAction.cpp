@@ -23,6 +23,8 @@ MoveObjectToTransformAction::MoveObjectToTransformAction(GameObject* owner)
 
 void MoveObjectToTransformAction::Update()
 {
+    CameraTransitionStepAction::Update();
+
     if (!m_isMoving)
     {
         return;
@@ -32,37 +34,7 @@ void MoveObjectToTransformAction::Update()
     updateMove(dt);
 }
 
-void MoveObjectToTransformAction::onStepStarted(CameraTransitionController* controller, CameraTransitionStep* step)
-{
-    if (!shouldRunOnStepStarted())
-    {
-        return;
-    }
-
-    tryStartMove(controller, step);
-}
-
-void MoveObjectToTransformAction::onStepReached(CameraTransitionController* controller, CameraTransitionStep* step)
-{
-    if (!shouldRunOnStepReached())
-    {
-        return;
-    }
-
-    tryStartMove(controller, step);
-}
-
-void MoveObjectToTransformAction::onStepFinished(CameraTransitionController* controller, CameraTransitionStep* step)
-{
-    if (!shouldRunOnStepFinished())
-    {
-        return;
-    }
-
-    tryStartMove(controller, step);
-}
-
-void MoveObjectToTransformAction::tryStartMove(CameraTransitionController* controller, CameraTransitionStep* step)
+void MoveObjectToTransformAction::executeAction(CameraTransitionController* controller, CameraTransitionStep* step)
 {
     Transform* objectToMove = m_objectToMove.getReferencedComponent();
     Transform* targetTransform = m_targetTransform.getReferencedComponent();

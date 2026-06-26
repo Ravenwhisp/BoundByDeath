@@ -15,35 +15,35 @@ enum class CameraTransitionStepActionTrigger
 class CameraTransitionStepAction : public Script
 {
 public:
-    explicit CameraTransitionStepAction(GameObject* owner)
-        : Script(owner)
-    {
-    }
+    explicit CameraTransitionStepAction(GameObject* owner);
+
+    void Update() override;
+
 
     ScriptFieldList getExposedFields() const override;
 
-    virtual void onStepStarted(CameraTransitionController* controller, CameraTransitionStep* step) {}
-
-    virtual void onStepReached(CameraTransitionController* controller, CameraTransitionStep* step) {}
-
-    virtual void onStepFinished(CameraTransitionController* controller, CameraTransitionStep* step) {}
+    void onStepStarted(CameraTransitionController* controller, CameraTransitionStep* step);
+    void onStepReached(CameraTransitionController* controller, CameraTransitionStep* step);
+    void onStepFinished(CameraTransitionController* controller, CameraTransitionStep* step);
 
 protected:
-    bool shouldRunOnStepStarted() const
-    {
-        return static_cast<CameraTransitionStepActionTrigger>(m_triggerMoment) == CameraTransitionStepActionTrigger::StepStarted;
-    }
+    virtual void executeAction(CameraTransitionController* controller, CameraTransitionStep* step) {}
 
-    bool shouldRunOnStepReached() const
-    {
-        return static_cast<CameraTransitionStepActionTrigger>(m_triggerMoment) == CameraTransitionStepActionTrigger::StepReached;
-    }
+private:
+    void tryTriggerAction(CameraTransitionStepActionTrigger trigger, CameraTransitionController* controller, CameraTransitionStep* step);
 
-    bool shouldRunOnStepFinished() const
-    {
-        return static_cast<CameraTransitionStepActionTrigger>(m_triggerMoment) == CameraTransitionStepActionTrigger::StepFinished;
-    }
+    bool shouldRunOnTrigger(CameraTransitionStepActionTrigger trigger) const;
+    void startDelay(CameraTransitionController* controller, CameraTransitionStep* step);
+    void executeDelayedAction();
 
 public:
     int m_triggerMoment = static_cast<int>(CameraTransitionStepActionTrigger::StepReached);
+    float m_startDelay = 0.0f;
+
+private:
+    bool m_waitingForDelay = false;
+    float m_delayTimer = 0.0f;
+
+    CameraTransitionController* m_pendingController = nullptr;
+    CameraTransitionStep* m_pendingStep = nullptr;
 };
