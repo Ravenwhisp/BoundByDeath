@@ -444,7 +444,7 @@ Vector3 CameraTransitionController::evaluateCatmullRomStepPosition(float alpha) 
         p3 = TransformAPI::getGlobalPosition(nextPoint);
     }
 
-    return catmullRom(p0, p1, p2, p3, alpha);
+    return MathAPI::catmullRom(p0, p1, p2, p3, alpha);
 }
 
 void CameraTransitionController::finishTransition()
@@ -473,14 +473,6 @@ void CameraTransitionController::finishTransition()
     m_state = TransitionState::None;
     m_isTransitioning = false;
     m_timer = 0.0f;
-}
-
-Vector3 CameraTransitionController::catmullRom(const Vector3& p0, const Vector3& p1, const Vector3& p2, const Vector3& p3, float t) const
-{
-    const float t2 = t * t;
-    const float t3 = t2 * t;
-
-    return (p1 * 2.0f + (p2 - p0) * t + (p0 * 2.0f - p1 * 5.0f + p2 * 4.0f - p3) * t2 + (p1 * 3.0f - p0 - p2 * 3.0f + p3) * t3) * 0.5f;
 }
 
 void CameraTransitionController::findPlayerControllers()
