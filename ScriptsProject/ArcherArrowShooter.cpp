@@ -17,6 +17,7 @@ void ArcherArrowShooter::Start()
     m_controller = GameObjectAPI::findScript<RangedEnemyController>(getOwner());
     m_animation  = AnimationAPI::getAnimationComponent(getOwner());
     m_particles  = GameObjectAPI::findScript<ArcherGuardParticles>(getOwner());
+
 }
 
 void ArcherArrowShooter::Update()

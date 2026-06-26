@@ -3,6 +3,7 @@
 #include "ArcherArrowProjectile.h"
 
 IMPLEMENT_SCRIPT_FIELDS(ArcherGuardParticles,
+    SERIALIZED_STRING(m_trailPrefab,  "Trail Particle Prefab"),
     SERIALIZED_STRING(m_volleyPrefab, "Volley Particle Prefab"),
     SERIALIZED_STRING(m_chargePrefab, "Charge Particle Prefab"),
     SERIALIZED_STRING(m_arrowPrefab,  "Barrage Arrow Prefab")
@@ -17,8 +18,8 @@ void ArcherGuardParticles::Start() {}
 void ArcherGuardParticles::spawnBasicAttackTrail(const Vector3& pos)
 {
     stopBasicAttackTrail();
-    if (!m_volleyPrefab.empty())
-        m_trailGO = GameObjectAPI::instantiatePrefab(m_volleyPrefab.c_str(), pos, Vector3::Zero);
+    if (m_trailPrefab.empty()) return;
+    m_trailGO = GameObjectAPI::instantiatePrefab(m_trailPrefab.c_str(), pos, Vector3::Zero);
 }
 
 void ArcherGuardParticles::syncBasicAttackTrail(const Vector3& pos, const Vector3& eulerDeg)
