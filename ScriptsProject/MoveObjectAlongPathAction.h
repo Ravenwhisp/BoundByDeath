@@ -29,7 +29,9 @@ private:
     void updateMove(float dt);
     void finishMove();
 
-    Vector3 evaluatePath(float alpha) const;
+    void calculatePathLengths();
+
+    Vector3 evaluatePathByDistance(float normalizedDistance) const;
     Vector3 evaluatePathSegment(int segmentIndex, float localAlpha) const;
 
     void updateFacingDirection(const Vector3& previousPosition, const Vector3& newPosition);
@@ -55,4 +57,8 @@ private:
     std::vector<Transform*> m_pathPoints;
 
     Vector3 m_previousPosition = Vector3(0.0f, 0.0f, 0.0f);
+
+    std::vector<float> m_segmentLengths;
+    std::vector<float> m_accumulatedLengths;
+    float m_totalPathLength = 0.0f;
 };

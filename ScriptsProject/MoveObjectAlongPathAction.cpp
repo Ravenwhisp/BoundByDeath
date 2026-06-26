@@ -65,6 +65,8 @@ void MoveObjectAlongPathAction::executeAction(CameraTransitionController* contro
         return;
     }
 
+    calculatePathLengths();
+
     startMove();
 }
 
@@ -135,7 +137,7 @@ void MoveObjectAlongPathAction::updateMove(float dt)
 
     alpha = MathAPI::smoothStep(0.0f, 1.0f, alpha);
 
-    const Vector3 newPosition = evaluatePath(alpha);
+    const Vector3 newPosition = evaluatePathByDistance(alpha);
 
     TransformAPI::setGlobalPosition(objectToMove, newPosition);
 
@@ -179,32 +181,32 @@ void MoveObjectAlongPathAction::finishMove()
     m_timer = 0.0f;
 }
 
-Vector3 MoveObjectAlongPathAction::evaluatePath(float alpha) const
+void MoveObjectAlongPathAction::calculatePathLengths()
 {
-    if (m_pathPoints.empty())
+    m_segmentLengths.clear();
+    m_accumulatedLengths.clear();
+    m_totalPathLength = 0.0f;
+
+    if (m_pathPoints.size() < 2)
     {
-        return Vector3(0.0f, 0.0f, 0.0f);
+        return;
     }
 
-    if (m_pathPoints.size() == 1)
+    m_accumulatedLengths.push_back(0.0f);
+
+    for (size_t i = 0; i + 1 < m_pathPoints.size(); ++i)
     {
-        return TransformAPI::getGlobalPosition(m_pathPoints[0]);
+        const Vector3 current = TransformAPI::getGlobalPosition(m_pathPoints[i]);
+        const Vector3 next = TransformAPI::getGlobalPosition(m_pathPoints[i + 1]);
+
+        const Vector3 delta = next - current;
+        const float length = delta.Length();
+
+        m_segmentLengths.push_back(length);
+
+        m_totalPathLength += length;
+        m_accumulatedLengths.push_back(m_totalPathLength);
     }
-
-    const int segmentCount = static_cast<int>(m_pathPoints.size()) - 1;
-
-    float scaledAlpha = alpha * static_cast<float>(segmentCount);
-    int segmentIndex = static_cast<int>(std::floor(scaledAlpha));
-
-    if (segmentIndex >= segmentCount)
-    {
-        segmentIndex = segmentCount - 1;
-        scaledAlpha = static_cast<float>(segmentCount);
-    }
-
-    const float localAlpha = scaledAlpha - static_cast<float>(segmentIndex);
-
-    return evaluatePathSegment(segmentIndex, localAlpha);
 }
 
 Vector3 MoveObjectAlongPathAction::evaluatePathSegment(int segmentIndex, float localAlpha) const
@@ -223,6 +225,57 @@ Vector3 MoveObjectAlongPathAction::evaluatePathSegment(int segmentIndex, float l
     const Vector3 p3 = TransformAPI::getGlobalPosition(m_pathPoints[p3Index]);
 
     return MathAPI::catmullRom(p0, p1, p2, p3, localAlpha);
+}
+
+Vector3 MoveObjectAlongPathAction::evaluatePathByDistance(float normalizedDistance) const
+{
+    if (m_pathPoints.empty())
+    {
+        return Vector3(0.0f, 0.0f, 0.0f);
+    }
+
+    if (m_pathPoints.size() == 1 || m_totalPathLength <= 0.0001f)
+    {
+        return TransformAPI::getGlobalPosition(m_pathPoints[0]);
+    }
+
+    float targetDistance = normalizedDistance * m_totalPathLength;
+
+    if (targetDistance <= 0.0f)
+    {
+        return TransformAPI::getGlobalPosition(m_pathPoints.front());
+    }
+
+    if (targetDistance >= m_totalPathLength)
+    {
+        return TransformAPI::getGlobalPosition(m_pathPoints.back());
+    }
+
+    int segmentIndex = 0;
+
+    for (int i = 0; i < static_cast<int>(m_segmentLengths.size()); ++i)
+    {
+        const float segmentStartDistance = m_accumulatedLengths[i];
+        const float segmentEndDistance = m_accumulatedLengths[i + 1];
+
+        if (targetDistance >= segmentStartDistance && targetDistance <= segmentEndDistance)
+        {
+            segmentIndex = i;
+            break;
+        }
+    }
+
+    const float segmentStartDistance = m_accumulatedLengths[segmentIndex];
+    const float segmentLength = m_segmentLengths[segmentIndex];
+
+    if (segmentLength <= 0.0001f)
+    {
+        return TransformAPI::getGlobalPosition(m_pathPoints[segmentIndex]);
+    }
+
+    const float localAlpha = (targetDistance - segmentStartDistance) / segmentLength;
+
+    return evaluatePathSegment(segmentIndex, localAlpha);
 }
 
 void MoveObjectAlongPathAction::updateFacingDirection(const Vector3& previousPosition, const Vector3& newPosition)
