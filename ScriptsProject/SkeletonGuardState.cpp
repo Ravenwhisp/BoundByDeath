@@ -3,6 +3,7 @@
 
 #include "SkeletonEnemyController.h"
 #include "SkeletonAttackConfig.h"
+#include "SkeletonDamageable.h"
 
 SkeletonGuardState::SkeletonGuardState(GameObject* owner)
 	: StateMachineScript(owner)
@@ -13,6 +14,7 @@ void SkeletonGuardState::OnStateEnter()
 {
 	m_skeletonController = GameObjectAPI::findScript<SkeletonEnemyController>(getOwner());
 	m_attackConfig = GameObjectAPI::findScript<SkeletonAttackConfig>(getOwner());
+	m_damageable = GameObjectAPI::findScript<SkeletonDamageable>(getOwner());
 	m_animation = AnimationAPI::getAnimationComponent(getOwner());
 
 	if (!m_skeletonController)
@@ -27,6 +29,12 @@ void SkeletonGuardState::OnStateEnter()
 		return;
 	}
 
+	if (!m_damageable)
+	{
+		Debug::error("[SkeletonGuardState] SkeletonDamageable not found.");
+		return;
+	}
+
 	if (!m_animation)
 	{
 		Debug::error("[SkeletonGuardState] AnimationComponent not found.");
@@ -37,16 +45,19 @@ void SkeletonGuardState::OnStateEnter()
 	m_skeletonController->resetRepathTimer();
 	m_skeletonController->setGuarding(true);
 
+	m_stateTimer = 0.0f;
+
 	Debug::log("[SkeletonGuardState] ENTER");
 }
 
 void SkeletonGuardState::OnStateUpdate()
 {
-	if (!m_skeletonController || !m_attackConfig || !m_animation)
+	if (!m_skeletonController || !m_attackConfig || !m_damageable || !m_animation)
 	{
 		return;
 	}
 
+	// Go into Death State
 	if (m_skeletonController->trySendDeathTrigger(m_animation))
 	{
 		return;
@@ -54,8 +65,15 @@ void SkeletonGuardState::OnStateUpdate()
 
 	m_skeletonController->faceCurrentTarget();
 
-	m_stateTimer += Time::getDeltaTime();
+	const float dt = Time::getDeltaTime();
 
+	m_stateTimer += dt;
+
+	// Heal over time
+	const float healAmount = m_attackConfig->m_guardHealPerSecond * dt;
+	m_damageable->heal(healAmount);
+
+	// End GuardState
 	if (m_stateTimer >= m_attackConfig->m_guardDuration)
 	{
 		m_skeletonController->consumeGuardCooldown();

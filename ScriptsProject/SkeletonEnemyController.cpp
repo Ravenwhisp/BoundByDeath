@@ -155,7 +155,7 @@ bool SkeletonEnemyController::shouldUseGuard() const
 	float dot = forward.Dot(toTarget);
 
 	constexpr float degreesToRadians = 3.14159265f / 180.0f;
-	const float minDot = std::cos(m_attackConfig->m_guardHalfAngleDegrees * degreesToRadians);
+	const float minDot = std::cos(m_attackConfig->m_guardBlockHalfAngleDegrees * degreesToRadians);
 
 	return dot >= minDot;
 }

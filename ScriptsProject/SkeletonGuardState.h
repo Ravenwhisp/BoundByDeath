@@ -5,6 +5,7 @@
 
 class SkeletonEnemyController;
 class SkeletonAttackConfig;
+class SkeletonDamageable;
 class AnimationComponent;
 
 class SkeletonGuardState : public StateMachineScript
@@ -21,6 +22,7 @@ public:
 private:
 	SkeletonEnemyController* m_skeletonController = nullptr;
 	SkeletonAttackConfig* m_attackConfig = nullptr;
+	SkeletonDamageable* m_damageable = nullptr;
 	AnimationComponent* m_animation = nullptr;
 
 	float m_stateTimer = 0.0f;
