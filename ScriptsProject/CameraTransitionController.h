@@ -20,6 +20,7 @@ public:
     void Update() override;
 
     void startTransition(CameraTransitionEvent* event);
+    void releaseTransition(CameraTransitionEvent* event);
 
     bool isTransitioning() const { return m_isTransitioning; }
 
@@ -27,21 +28,30 @@ private:
     enum class TransitionState
     {
         None,
-        MovingToTarget,
-        Holding,
+        MovingStep,
+        HoldingStep,
+        WaitingForRelease,
         Returning
     };
 
 private:
-    void startMovingToTarget(CameraTransitionEvent* event);
-    void updateMovingToTarget(float dt);
-    void updateHolding(float dt);
-    void updateReturning(float dt);
-    void finishTransition();
+    void startTransitionSequence(CameraTransitionEvent* event);
+    void startStep(int stepIndex);
+    void startReturning();
 
-    void buildPathFromCurrentEvent();
-    Vector3 evaluateCatmullRomPath(float normalizedTime) const;
-    Vector3 evaluateRotationPath(float normalizedTime) const;
+    void updateMovingStep(float dt);
+    void updateHoldingStep(float dt);
+    void updateReturning(float dt);
+
+    bool hasValidStepSequence() const;
+    void finishCurrentStepMovement();
+    void finishCurrentStepHold();
+
+    Vector3 evaluateStepPosition(float alpha) const;
+    Vector3 evaluateStepRotation(float alpha) const;
+    Vector3 evaluateCatmullRomStepPosition(float alpha) const;
+
+    void finishTransition();
 
     Vector3 catmullRom(const Vector3& p0, const Vector3& p1, const Vector3& p2, const Vector3& p3, float t) const;
 
@@ -50,6 +60,8 @@ private:
     void setPlayersInvulnerable(bool invulnerable);
 
     void findHUDFader();
+
+    bool getCameraFollowReturnTarget(Vector3& outPosition, Vector3& outRotation);
 
 private:
     CameraFollow* m_cameraFollow = nullptr;
@@ -71,13 +83,25 @@ private:
     Vector3 m_returnStartPosition = Vector3(0.0f, 0.0f, 0.0f);
     Vector3 m_returnStartRotation = Vector3(0.0f, 0.0f, 0.0f);
 
-    std::vector<Vector3> m_pathPositions;
-    std::vector<Vector3> m_pathRotations;
-
     float m_originalFov = 90.0f;
     float m_returnStartFov = 90.0f;
 
     float m_hudFadeOutDuration = 0.35f;
     float m_hudFadeInDuration = 0.35f;
+
+    int m_currentStepIndex = -1;
+
+    Vector3 m_stepStartPosition = Vector3(0.0f, 0.0f, 0.0f);
+    Vector3 m_stepStartRotation = Vector3(0.0f, 0.0f, 0.0f);
+
+    Vector3 m_stepTargetPosition = Vector3(0.0f, 0.0f, 0.0f);
+    Vector3 m_stepTargetRotation = Vector3(0.0f, 0.0f, 0.0f);
+
+    float m_stepMoveDuration = 0.0f;
+    float m_stepHoldDuration = 0.0f;
+
+    float m_stepStartFov = 90.0f;
+    float m_stepTargetFov = 90.0f;
+    bool m_stepUsesFovTransition = false;
 
 };
