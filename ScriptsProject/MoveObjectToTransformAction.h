@@ -26,7 +26,8 @@ private:
     void updateMove(float dt);
     void finishMove();
 
-    void playAnimationState(const std::string& stateName, float transitionTimeSeconds);
+    void playOverrideClip(const std::string& clipName, float transitionTimeSeconds, bool loop);
+    void clearOverrideClip(float transitionTimeSeconds);
 
 public:
     ScriptComponentRef<Transform> m_objectToMove;
@@ -35,9 +36,8 @@ public:
     float m_moveDuration = 1.0f;
 
     bool m_playAnimationWhileMoving = false;
-    std::string m_movingStateName = "Walk";
-    bool m_playAnimationOnFinish = false;
-    std::string m_finishStateName = "Idle";
+    std::string m_movingClipName = "Walk";
+    bool m_clearAnimationOnFinish = false;
 
 private:
     bool m_isMoving = false;

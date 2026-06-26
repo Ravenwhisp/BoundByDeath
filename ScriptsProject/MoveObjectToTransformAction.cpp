@@ -11,9 +11,8 @@ IMPLEMENT_SCRIPT_FIELDS_INHERITED(MoveObjectToTransformAction, CameraTransitionS
 
     FIELD_GROUP_COLLAPSE("Animations",
         SERIALIZED_BOOL(m_playAnimationWhileMoving, "Play Animation While Moving"),
-        SERIALIZED_STRING(m_movingStateName, "Moving State Name"),
-        SERIALIZED_BOOL(m_playAnimationOnFinish, "Play Animation On Finish"),
-        SERIALIZED_STRING(m_finishStateName, "Finish State Name")
+        SERIALIZED_STRING(m_movingClipName, "Moving Clip Name"),
+        SERIALIZED_BOOL(m_clearAnimationOnFinish, "Clear Animation On Finish")
     )
 )
 
@@ -104,7 +103,7 @@ void MoveObjectToTransformAction::startMove()
 
     if (m_playAnimationWhileMoving)
     {
-        playAnimationState(m_movingStateName, 0.15);
+        playOverrideClip(m_movingClipName, 0.15, true);
     }
 
     if (m_moveDuration <= 0.0001f)
@@ -156,18 +155,18 @@ void MoveObjectToTransformAction::finishMove()
     TransformAPI::setGlobalPosition(objectToMove, m_targetPosition);
     TransformAPI::setGlobalRotationEuler(objectToMove, m_targetRotation);
 
-    if (m_playAnimationOnFinish)
+    if (m_clearAnimationOnFinish)
     {
-        playAnimationState(m_finishStateName, 0.15);
+        clearOverrideClip(0.15);
     }
 
     m_isMoving = false;
     m_timer = 0.0f;
 }
 
-void MoveObjectToTransformAction::playAnimationState(const std::string& stateName, float transitionTimeSeconds)
+void MoveObjectToTransformAction::playOverrideClip(const std::string& clipName, float transitionTimeSeconds, bool loop)
 {
-    if (stateName.empty())
+    if (clipName.empty())
     {
         return;
     }
@@ -187,12 +186,31 @@ void MoveObjectToTransformAction::playAnimationState(const std::string& stateNam
         return;
     }
 
-    const bool success = AnimationAPI::playState(animation, stateName.c_str(), transitionTimeSeconds);
+    const bool success = AnimationAPI::playOverrideClip(animation, clipName.c_str(), transitionTimeSeconds, loop);
 
     if (!success)
     {
-        Debug::warn("MoveObjectToTransformAction on '%s' failed to play animation state '%s'.", GameObjectAPI::getName(getOwner()), stateName.c_str());
+        Debug::warn("MoveObjectToTransformAction on '%s' failed to play override clip '%s'.", GameObjectAPI::getName(getOwner()), clipName.c_str());
     }
+}
+
+void MoveObjectToTransformAction::clearOverrideClip(float transitionTimeSeconds)
+{
+    Transform* objectToMove = m_objectToMove.getReferencedComponent();
+    if (objectToMove == nullptr)
+    {
+        return;
+    }
+
+    GameObject* object = ComponentAPI::getOwner(objectToMove);
+
+    AnimationComponent* animation = AnimationAPI::getAnimationComponent(object);
+    if (animation == nullptr)
+    {
+        return;
+    }
+
+    AnimationAPI::clearOverrideClip(animation, transitionTimeSeconds);
 }
 
 IMPLEMENT_SCRIPT(MoveObjectToTransformAction)

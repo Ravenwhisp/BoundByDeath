@@ -6,12 +6,24 @@
 
 IMPLEMENT_SCRIPT_FIELDS_INHERITED(PlayAnimationAction, CameraTransitionStepAction,
     SERIALIZED_COMPONENT_REF(m_animationTarget, "Animation Target", ComponentType::TRANSFORM),
-    SERIALIZED_STRING(m_stateName, "State Name")
+    SERIALIZED_STRING(m_clipName, "Clip Name"),
+    SERIALIZED_BOOL(m_loop, "Loop"),
+    SERIALIZED_FLOAT(m_duration, "Duration", 0.0f, 20.0f, 0.05f)
 )
 
 PlayAnimationAction::PlayAnimationAction(GameObject* owner)
     : CameraTransitionStepAction(owner)
 {
+}
+
+void PlayAnimationAction::Update()
+{
+    if (!m_waitingToClear)
+    {
+        return;
+    }
+
+    updateClearTimer(Time::getDeltaTime());
 }
 
 void PlayAnimationAction::onStepStarted(CameraTransitionController* controller, CameraTransitionStep* step)
@@ -46,9 +58,8 @@ void PlayAnimationAction::onStepFinished(CameraTransitionController* controller,
 
 void PlayAnimationAction::tryPlayAnimation()
 {
-    if (m_stateName.empty())
+    if (m_clipName.empty())
     {
-        Debug::warn("PlayAnimationAction on '%s' has no State Name assigned.", GameObjectAPI::getName(getOwner()));
         return;
     }
 
@@ -59,12 +70,41 @@ void PlayAnimationAction::tryPlayAnimation()
         return;
     }
 
-    const bool success = AnimationAPI::playState(animation, m_stateName.c_str(), 0.15f);
+    const bool success = AnimationAPI::playOverrideClip(animation, m_clipName.c_str(), 0.15, m_loop);
 
     if (!success)
     {
-        Debug::warn("PlayAnimationAction on '%s' failed to play animation state '%s'.", GameObjectAPI::getName(getOwner()), m_stateName.c_str());
+        Debug::warn("PlayAnimationAction on '%s' failed to play animation clip '%s'.", GameObjectAPI::getName(getOwner()), m_clipName.c_str());
+        return;
     }
+
+    m_waitingToClear = true;
+    m_timer = 0.0f;
+
+    if (m_duration <= 0.0001f)
+    {
+        AnimationAPI::clearOverrideClip(animation, 0.15);
+        m_waitingToClear = false;
+    }
+}
+
+void PlayAnimationAction::updateClearTimer(float dt)
+{
+    m_timer += dt;
+
+    if (m_timer < m_duration)
+    {
+        return;
+    }
+
+    AnimationComponent* animation = findAnimationComponent();
+    if (animation != nullptr)
+    {
+        AnimationAPI::clearOverrideClip(animation, 0.15);
+    }
+
+    m_waitingToClear = false;
+    m_timer = 0.0f;
 }
 
 AnimationComponent* PlayAnimationAction::findAnimationComponent() const

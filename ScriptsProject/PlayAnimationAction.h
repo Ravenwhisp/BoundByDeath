@@ -13,6 +13,8 @@ class PlayAnimationAction : public CameraTransitionStepAction
 public:
     explicit PlayAnimationAction(GameObject* owner);
 
+    void Update() override;
+
     ScriptFieldList getExposedFields() const override;
 
     void onStepStarted(CameraTransitionController* controller, CameraTransitionStep* step) override;
@@ -21,10 +23,19 @@ public:
 
 private:
     void tryPlayAnimation();
+    void updateClearTimer(float dt);
+
     AnimationComponent* findAnimationComponent() const;
 
 public:
     ScriptComponentRef<Transform> m_animationTarget;
 
-    std::string m_stateName = "";
+    std::string m_clipName = "";
+    bool m_loop = false;
+
+    float m_duration = 1.0f;
+
+private:
+    bool m_waitingToClear = false;
+    float m_timer = 0.0f;
 };
