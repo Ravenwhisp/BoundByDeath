@@ -70,14 +70,17 @@ void SkeletonGuardState::OnStateUpdate()
 	m_stateTimer += dt;
 
 	// Heal over time
-	const float healAmount = m_attackConfig->m_guardHealPerSecond * dt;
-	m_damageable->heal(healAmount);
+	if (m_damageable->getCurrentHp() < m_damageable->getMaxHp())
+	{
+		const float healAmount = m_attackConfig->m_guardHealPerSecond * dt;
+		m_damageable->heal(healAmount);
+	}
 
 	// End GuardState
 	if (m_stateTimer >= m_attackConfig->m_guardDuration)
 	{
 		m_skeletonController->consumeGuardCooldown();
-		AnimationAPI::sendTrigger(m_animation, "ToRecover");
+		AnimationAPI::sendTrigger(m_animation, "ToChase");
 		return;
 	}
 }
