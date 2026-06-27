@@ -149,6 +149,8 @@ void AbilityBase::updateAttackWindow(float dt)
     m_attackStateTimer -= dt;
     if (m_attackStateTimer <= 0.0f)
     {
+        const char* slotName = (m_uiSlot >= 0 && m_uiSlot < abilityUISlotCount) ? abilityUISlotNames[m_uiSlot] : "Unknown";
+        Debug::log("[%s] finishAttackWindow called, timer=%.3f", slotName, m_attackStateTimer);
         finishAttackWindow();
     }
 }
@@ -160,36 +162,45 @@ void AbilityBase::notifyAbilitySuccessfullyStarted()
 
 bool AbilityBase::canStartAbility() const
 {
+    const char* slotName = (m_uiSlot >= 0 && m_uiSlot < abilityUISlotCount) ? abilityUISlotNames[m_uiSlot] : "Unknown";
+
     if (m_character == nullptr)
     {
+        Debug::log("[%s] canStartAbility blocked: character null", slotName);
         return false;
     }
 
     if (!m_isEnabled)
     {
+        Debug::log("[%s] canStartAbility blocked: not enabled", slotName);
         return false;
     }
 
     if (!isCooldownReady())
     {
+        Debug::log("[%s] canStartAbility blocked: cooldown=%.2f", slotName, m_cooldownTimer);
         return false;
     }
 
     if (m_character->isDowned())
     {
+        Debug::log("[%s] canStartAbility blocked: downed", slotName);
         return false;
     }
 
     if (m_character->isUsingAbility())
     {
+        Debug::log("[%s] canStartAbility blocked: using ability", slotName);
         return false;
     }
 
     if (!canStartSpecificAbility())
     {
+        Debug::log("[%s] canStartAbility blocked: specific ability check", slotName);
         return false;
     }
 
+    Debug::log("[%s] canStartAbility PASSED", slotName);
     return true;
 }
 

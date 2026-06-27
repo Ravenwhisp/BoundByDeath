@@ -35,4 +35,6 @@ private:
     DeathUI* m_deathUI = nullptr;
 
     GameObject* m_attackFacingTarget = nullptr;
+
+    int m_currentComboStep = 0;
 };

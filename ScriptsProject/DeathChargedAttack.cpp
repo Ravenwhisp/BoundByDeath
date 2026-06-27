@@ -339,7 +339,7 @@ void DeathChargedAttack::onAttackWindowUpdate()
 {
     PlayerAnimationController* anim = m_character ? m_character->getAnimationController() : nullptr;
     if (anim != nullptr)
-        anim->requestAttack();
+        anim->requestChargedAttack();
 }
 
 void DeathChargedAttack::onAttackWindowFinished()

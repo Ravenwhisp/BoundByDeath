@@ -33,6 +33,8 @@ public:
     void setDead(bool dead);
 
     void requestAttack();
+    void requestBasicAttack(int comboStep);
+    void requestChargedAttack();
     void requestDamaged();
 
 private:
@@ -44,7 +46,12 @@ public:
 	std::string m_moveStateName = "";
 	std::string m_dashStateName = "";
 	std::string m_attackStateName = "";
+	std::string m_attack2StateName = "";
+	std::string m_chargeAttackStateName = "";
 	std::string m_damagedStateName = "";
+	std::string m_harm1StateName = "";
+	std::string m_harm2StateName = "";
+	std::string m_harm3StateName = "";
     std::string m_downedStateName = "";
 	std::string m_deathStateName = "";
 
@@ -62,8 +69,10 @@ private:
     bool m_isDowned = false;
     bool m_isDead = false;
 
-    bool m_attackRequested = false;
     bool m_damagedRequested = false;
+
+    std::string m_pendingAttackStateName;
+    std::string m_pendingDamageStateName;
 
     AnimState m_currentState = AnimState::Idle;
 };

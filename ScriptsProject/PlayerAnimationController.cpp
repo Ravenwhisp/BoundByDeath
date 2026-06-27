@@ -6,7 +6,12 @@ IMPLEMENT_SCRIPT_FIELDS(PlayerAnimationController,
     SERIALIZED_STRING(m_moveStateName, "Move state name"),
     SERIALIZED_STRING(m_dashStateName, "Dash state name"),
     SERIALIZED_STRING(m_attackStateName, "Attack state name"),
+    SERIALIZED_STRING(m_attack2StateName, "Attack 2 state name"),
+    SERIALIZED_STRING(m_chargeAttackStateName, "Charge attack state name"),
     SERIALIZED_STRING(m_damagedStateName, "Damaged state name"),
+    SERIALIZED_STRING(m_harm1StateName, "Harm 1 state name"),
+    SERIALIZED_STRING(m_harm2StateName, "Harm 2 state name"),
+    SERIALIZED_STRING(m_harm3StateName, "Harm 3 state name"),
     SERIALIZED_STRING(m_downedStateName, "Downed state name"),
     SERIALIZED_STRING(m_deathStateName, "Death state name"),
     SERIALIZED_FLOAT(m_defaultBlendTime, "Default blend time", 0.0f, 2.0f, 0.01f),
@@ -51,7 +56,7 @@ void PlayerAnimationController::Update()
         desiredState = AnimState::Damaged;
         blendTime = m_damagedBlendTime;
     }
-    else if (m_attackRequested)
+    else if (!m_pendingAttackStateName.empty())
     {
         desiredState = AnimState::Attack;
         blendTime = m_attackBlendTime;
@@ -77,7 +82,7 @@ void PlayerAnimationController::Update()
         }
     }
 
-    m_attackRequested = false;
+    m_pendingAttackStateName.clear();
     m_damagedRequested = false;
 }
 
@@ -103,11 +108,40 @@ void PlayerAnimationController::setDead(bool dead)
 
 void PlayerAnimationController::requestAttack()
 {
-    m_attackRequested = true;
+    m_pendingAttackStateName = m_attackStateName;
+}
+
+void PlayerAnimationController::requestBasicAttack(int comboStep)
+{
+    m_pendingAttackStateName = (comboStep >= 2) ? m_attack2StateName : m_attackStateName;
+}
+
+void PlayerAnimationController::requestChargedAttack()
+{
+    m_pendingAttackStateName = m_chargeAttackStateName;
 }
 
 void PlayerAnimationController::requestDamaged()
 {
+    std::string harmNames[3] = { m_harm1StateName, m_harm2StateName, m_harm3StateName };
+    int validCount = 0;
+    for (int i = 0; i < 3; ++i)
+    {
+        if (!harmNames[i].empty())
+        {
+            harmNames[validCount++] = harmNames[i];
+        }
+    }
+
+    if (validCount > 0)
+    {
+        m_pendingDamageStateName = harmNames[rand() % validCount];
+    }
+    else
+    {
+        m_pendingDamageStateName = m_damagedStateName;
+    }
+
     m_damagedRequested = true;
 }
 
@@ -131,9 +165,9 @@ bool PlayerAnimationController::playAnimState(AnimState state, float blendTime)
     case AnimState::Idle:    stateName = m_idleStateName.c_str(); break;
     case AnimState::Move:    stateName = m_moveStateName.c_str(); break;
     case AnimState::Dash:    stateName = m_dashStateName.c_str(); break;
-    case AnimState::Attack:  stateName = m_attackStateName.c_str(); break;
-    case AnimState::Damaged: stateName = m_damagedStateName.c_str(); break;
-    case AnimState::Downed: stateName = m_downedStateName.c_str(); break;
+    case AnimState::Attack:  stateName = m_pendingAttackStateName.empty() ? m_attackStateName.c_str() : m_pendingAttackStateName.c_str(); break;
+    case AnimState::Damaged: stateName = m_pendingDamageStateName.empty() ? m_damagedStateName.c_str() : m_pendingDamageStateName.c_str(); break;
+    case AnimState::Downed:  stateName = m_downedStateName.c_str(); break;
     case AnimState::Death:   stateName = m_deathStateName.c_str(); break;
     default: return false;
     }

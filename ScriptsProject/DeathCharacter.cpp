@@ -137,7 +137,11 @@ void DeathCharacter::advanceCombo(bool isR2, float comboWindowOverride)
     {
         resetCombo();
         m_comboCooldownTimer = m_config->m_comboCooldown;
+        Debug::log("[COMBO] combo complete, cooldown=%.2f", m_comboCooldownTimer);
     }
+
+    Debug::log("[COMBO] advanceCombo isR2=%d step=%d cooldownTimer=%.2f activeWindow=%.2f",
+        isR2 ? 1 : 0, m_comboStep, m_comboCooldownTimer, m_activeComboWindow);
 }
 
 void DeathCharacter::resetCombo()

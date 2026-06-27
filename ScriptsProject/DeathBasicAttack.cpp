@@ -60,7 +60,7 @@ void DeathBasicAttack::startAbility()
     snapFaceTarget(target);
     m_attackFacingTarget = target;
 
-    const int comboStep = m_deathCharacter->getComboStep();
+    m_currentComboStep = m_deathCharacter->getComboStep();
 
     DeathSound* sound = m_deathCharacter->getSound();
     if (sound != nullptr)
@@ -73,16 +73,17 @@ void DeathBasicAttack::startAbility()
 
     m_deathCharacter->advanceCombo(false);
 
-    const bool  isFinalHit  = (comboStep >= 2);
+    const bool  isFinalHit  = (m_currentComboStep >= 2);
     const float lockDuration = isFinalHit ? m_config->m_basicFinalHitLockDuration : m_config->m_basicAttackLockDuration;
 
     beginAttackPresentation();
     beginAttackWindow(lockDuration);
+    Debug::log("[BasicAttack] startCooldown value=%.2f", getCooldown());
     startCooldown();
 
     if (!isFinalHit)
     {
-        Debug::log("[R1] step %d/3", comboStep + 1);
+        Debug::log("[R1] step %d/3", m_currentComboStep + 1);
     }
     else
     {
@@ -97,7 +98,7 @@ void DeathBasicAttack::onAttackWindowUpdate()
     PlayerAnimationController* anim = m_character ? m_character->getAnimationController() : nullptr;
     if (anim != nullptr)
     {
-        anim->requestAttack();
+        anim->requestBasicAttack(m_currentComboStep);
     }
 }
 
