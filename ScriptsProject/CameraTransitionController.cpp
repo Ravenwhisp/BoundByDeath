@@ -69,10 +69,15 @@ void CameraTransitionController::startTransition(CameraTransitionEvent* event)
 {
     if (m_isTransitioning)
     {
+        if (m_currentEvent == event && event->isHoldWhileTriggeredMode() && m_state == TransitionState::Returning)
+        {
+            startTransitionSequence(event, true);
+        }
+
         return;
     }
 
-    startTransitionSequence(event);
+    startTransitionSequence(event, false);
 }
 
 void CameraTransitionController::releaseTransition(CameraTransitionEvent* event)
@@ -98,7 +103,7 @@ void CameraTransitionController::releaseTransition(CameraTransitionEvent* event)
     }
 }
 
-void CameraTransitionController::startTransitionSequence(CameraTransitionEvent* event)
+void CameraTransitionController::startTransitionSequence(CameraTransitionEvent* event, bool preserveOriginalFov)
 {
     Transform* cameraTransform = GameObjectAPI::getTransform(getOwner());
 
@@ -110,7 +115,7 @@ void CameraTransitionController::startTransitionSequence(CameraTransitionEvent* 
     m_transitionStartPosition = TransformAPI::getGlobalPosition(cameraTransform);
     m_transitionStartRotation = TransformAPI::getGlobalEulerDegrees(cameraTransform);
 
-    if (m_camera != nullptr)
+    if (m_camera != nullptr && !preserveOriginalFov)
     {
         m_originalFov = CameraAPI::getFov(m_camera);
         m_returnStartFov = m_originalFov;
