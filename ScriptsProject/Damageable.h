@@ -6,6 +6,10 @@
 struct HitContext
 {
     float damage = 0.0f;
+    // Continuous = damage applied every frame by a sustained source (Bound
+    // separation, DoTs, environmental). Lets reaction feedback (hurt SFX, flinch)
+    // treat it differently from discrete hits instead of firing every frame.
+    bool  continuous = false;
 };
 
 class Damageable : public Script
@@ -34,6 +38,10 @@ public:
     void setInvulnerable(bool invulnerable) { m_invulnerable = invulnerable; }
     bool isInvulnerable() const { return m_invulnerable; }
 
+    // True if the most recent damage came from a continuous source. Valid inside
+    // onDamaged() and right after a takeDamage() call.
+    bool isLastDamageContinuous() const { return m_damageIsContinuous; }
+
     bool m_isGaugeExecution = false;
 
 protected:
@@ -44,6 +52,7 @@ protected:
     virtual void onRevive();
 
 private:
+    void applyDamage(float amount, bool continuous);
     void clampHp();
     void updateUI();
 
@@ -57,6 +66,7 @@ protected:
     float m_currentHp   = 100.0f;
     bool  m_invulnerable = false;
     bool  m_isDead       = false;
+    bool  m_damageIsContinuous = false;
 
 	UISlider* m_healthBarSlider = nullptr;
 	UISlider* m_healthBar2Slider = nullptr;
