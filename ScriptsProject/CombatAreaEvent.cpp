@@ -7,7 +7,9 @@
 IMPLEMENT_SCRIPT_FIELDS(CombatAreaEvent,
     SERIALIZED_COMPONENT_REF_VECTOR(m_enemies, "Enemies", ComponentType::TRANSFORM),
     SERIALIZED_COMPONENT_REF(m_entranceBlocker, "Entrance Blocker", ComponentType::TRANSFORM),
-    SERIALIZED_COMPONENT_REF(m_exitBlocker, "Exit Blocker", ComponentType::TRANSFORM)
+    SERIALIZED_COMPONENT_REF(m_exitBlocker, "Exit Blocker", ComponentType::TRANSFORM),
+	SERIALIZED_COMPONENT_REF(m_entranceVisuals, "Entrance Visuals", ComponentType::TRANSFORM),
+	SERIALIZED_COMPONENT_REF(m_exitVisuals, "Exit Visuals", ComponentType::TRANSFORM)
 )
 
 CombatAreaEvent::CombatAreaEvent(GameObject* owner)
@@ -22,7 +24,9 @@ void CombatAreaEvent::Update()
         return;
     }
 
-    if (!areAllEnemiesDead())
+    removeDeadEnemies();
+
+    if (!m_remainingEnemies.empty())
     {
         return;
     }
@@ -40,6 +44,8 @@ void CombatAreaEvent::executeEvent(GameplayEventTrigger* trigger)
         return;
     }
 
+    m_remainingEnemies = m_enemies;
+
     closeArea();
 
     m_isActive = true;
@@ -49,12 +55,17 @@ void CombatAreaEvent::closeArea()
 {
     setBlockerState(m_entranceBlocker, true);
     setBlockerState(m_exitBlocker, true);
+	setVisualsState(m_entranceVisuals, true);
+	setVisualsState(m_exitVisuals, true);
+    
 }
 
 void CombatAreaEvent::openArea()
 {
     setBlockerState(m_entranceBlocker, false);
     setBlockerState(m_exitBlocker, false);
+	setVisualsState(m_entranceVisuals, false);
+	setVisualsState(m_exitVisuals, false);
 }
 
 void CombatAreaEvent::setBlockerState(const ScriptComponentRef<Transform>& blockerTransformRef, bool blocked)
@@ -85,20 +96,38 @@ void CombatAreaEvent::setBlockerState(const ScriptComponentRef<Transform>& block
     NavigationAPI::setBlocked(runtimeBlocker, blocked);
 }
 
-bool CombatAreaEvent::areAllEnemiesDead() const
+void CombatAreaEvent::setVisualsState(const ScriptComponentRef<Transform>& visualsTransformRef, bool active)
 {
-    for (const ScriptComponentRef<Transform>& enemyTransformRef : m_enemies)
+    Transform* visualsTransform = visualsTransformRef.getReferencedComponent();
+    if (visualsTransform == nullptr)
     {
-        if (!isEnemyDead(enemyTransformRef))
-        {
-            return false;
-        }
+        Debug::warn("CombatAreaEvent on '%s' has a missing visuals reference.", GameObjectAPI::getName(getOwner()));
+        return;
     }
-
-    return true;
+    GameObject* visualsObject = ComponentAPI::getOwner(visualsTransform);
+    if (visualsObject == nullptr)
+    {
+        return;
+    }
+    GameObjectAPI::setActive(visualsObject, active);
 }
 
-bool CombatAreaEvent::isEnemyDead(const ScriptComponentRef<Transform>& enemyTransformRef) const
+void CombatAreaEvent::removeDeadEnemies()
+{
+    for (auto it = m_remainingEnemies.begin(); it != m_remainingEnemies.end();)
+    {
+        if (shouldRemoveEnemy(*it))
+        {
+            it = m_remainingEnemies.erase(it);
+        }
+        else
+        {
+            ++it;
+        }
+    }
+}
+
+bool CombatAreaEvent::shouldRemoveEnemy(const ScriptComponentRef<Transform>& enemyTransformRef) const
 {
     Transform* enemyTransform = enemyTransformRef.getReferencedComponent();
 
