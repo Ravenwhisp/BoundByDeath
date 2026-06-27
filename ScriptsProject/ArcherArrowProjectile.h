@@ -1,7 +1,7 @@
 #pragma once
-#include "ScriptAPI.h"
+#include "ProjectileBase.h"
 
-class ArcherArrowProjectile : public Script
+class ArcherArrowProjectile : public ProjectileBase
 {
     DECLARE_SCRIPT(ArcherArrowProjectile)
 public:
@@ -10,6 +10,8 @@ public:
 
     void launch(const Vector3& from, const Vector3& to, float speed);
     bool hasArrived() const { return m_arrived; }
+
+    void resetProjectile() override;
 
 private:
     Vector3 m_direction = Vector3::Zero;
