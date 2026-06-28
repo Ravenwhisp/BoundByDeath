@@ -173,6 +173,12 @@ void DeathChargedAttack::fireAttack()
     beginAttackPresentation();
     beginAttackWindow(lockDuration);
     startCooldown();
+
+    PlayerAnimationController* anim = m_character ? m_character->getAnimationController() : nullptr;
+    if (anim != nullptr)
+    {
+        anim->requestChargedAttack();
+    }
 }
 
 void DeathChargedAttack::dealDamageInArc(float damage, float range, float angle, bool isChargedShot, bool isMaxCharge) const
@@ -337,9 +343,7 @@ void DeathChargedAttack::snapFaceAimDirection()
 
 void DeathChargedAttack::onAttackWindowUpdate()
 {
-    PlayerAnimationController* anim = m_character ? m_character->getAnimationController() : nullptr;
-    if (anim != nullptr)
-        anim->requestChargedAttack();
+
 }
 
 void DeathChargedAttack::onAttackWindowFinished()

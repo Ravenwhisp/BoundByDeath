@@ -18,7 +18,8 @@ IMPLEMENT_SCRIPT_FIELDS(PlayerAnimationController,
     SERIALIZED_FLOAT(m_attackBlendTime, "Attack blend time", 0.0f, 2.0f, 0.01f),
     SERIALIZED_FLOAT(m_damagedBlendTime, "Damaged blend time", 0.0f, 2.0f, 0.01f),
     SERIALIZED_FLOAT(m_downedBlendTime, "Downed blend time", 0.0f, 2.0f, 0.01f),
-    SERIALIZED_FLOAT(m_deathBlendTime, "Death blend time", 0.0f, 2.0f, 0.01f)
+    SERIALIZED_FLOAT(m_deathBlendTime, "Death blend time", 0.0f, 2.0f, 0.01f),
+    SERIALIZED_FLOAT(m_attackLockDuration, "Attack lock duration", 0.0f, 3.0f, 0.01f)
 )
 
 PlayerAnimationController::PlayerAnimationController(GameObject* owner)
@@ -33,10 +34,17 @@ void PlayerAnimationController::Start()
 
 void PlayerAnimationController::Update()
 {
-	if (!m_animationComponent)
-	{
-		return;
-	}
+    if (!m_animationComponent)
+    {
+        return;
+    }
+
+    const float dt = Time::getDeltaTime();
+
+    if (m_attackLockTimer > 0.0f)
+    {
+        m_attackLockTimer -= dt;
+    }
 
     AnimState desiredState = AnimState::Idle;
     float blendTime = m_defaultBlendTime;
@@ -60,6 +68,11 @@ void PlayerAnimationController::Update()
     {
         desiredState = AnimState::Attack;
         blendTime = m_attackBlendTime;
+    }
+    else if (m_currentState == AnimState::Attack && m_attackLockTimer > 0.0f)
+    {
+        m_damagedRequested = false;
+        return;
     }
     else if (m_isDashing)
     {
@@ -108,17 +121,20 @@ void PlayerAnimationController::setDead(bool dead)
 
 void PlayerAnimationController::requestAttack()
 {
+    Debug::log("attack");
     m_pendingAttackStateName = m_attackStateName;
 }
 
 void PlayerAnimationController::requestBasicAttack(int comboStep)
 {
     m_pendingAttackStateName = (comboStep >= 2) ? m_attack2StateName : m_attackStateName;
+    m_attackLockTimer = m_attackLockDuration;
 }
 
 void PlayerAnimationController::requestChargedAttack()
 {
     m_pendingAttackStateName = m_chargeAttackStateName;
+    m_attackLockTimer = m_attackLockDuration;
 }
 
 void PlayerAnimationController::requestDamaged()

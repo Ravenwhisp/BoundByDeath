@@ -61,6 +61,9 @@ public:
     float m_downedBlendTime = 0.10f;
     float m_deathBlendTime = 0.10f;
 
+    float m_attackLockTimer = 0.0f;
+    float m_attackLockDuration = 0.45f;
+
 private:
     AnimationComponent* m_animationComponent = nullptr;
 

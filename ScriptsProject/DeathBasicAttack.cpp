@@ -62,6 +62,12 @@ void DeathBasicAttack::startAbility()
 
     m_currentComboStep = m_deathCharacter->getComboStep();
 
+    PlayerAnimationController* anim = m_character ? m_character->getAnimationController() : nullptr;
+    if (anim != nullptr)
+    {
+        anim->requestBasicAttack(m_currentComboStep);
+    }
+
     DeathSound* sound = m_deathCharacter->getSound();
     if (sound != nullptr)
     {
@@ -94,12 +100,6 @@ void DeathBasicAttack::startAbility()
 void DeathBasicAttack::onAttackWindowUpdate()
 {
     faceTarget(m_attackFacingTarget);
-
-    PlayerAnimationController* anim = m_character ? m_character->getAnimationController() : nullptr;
-    if (anim != nullptr)
-    {
-        anim->requestBasicAttack(m_currentComboStep);
-    }
 }
 
 void DeathBasicAttack::onAttackWindowFinished()
