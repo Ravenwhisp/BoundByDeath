@@ -7,7 +7,9 @@
 IMPLEMENT_SCRIPT_FIELDS(CombatAreaEvent,
     SERIALIZED_COMPONENT_REF_VECTOR(m_enemies, "Enemies", ComponentType::TRANSFORM),
     SERIALIZED_COMPONENT_REF(m_entranceBlocker, "Entrance Blocker", ComponentType::TRANSFORM),
-    SERIALIZED_COMPONENT_REF(m_exitBlocker, "Exit Blocker", ComponentType::TRANSFORM)
+    SERIALIZED_COMPONENT_REF(m_exitBlocker, "Exit Blocker", ComponentType::TRANSFORM),
+	SERIALIZED_COMPONENT_REF(m_entranceVisuals, "Entrance Visuals", ComponentType::TRANSFORM),
+	SERIALIZED_COMPONENT_REF(m_exitVisuals, "Exit Visuals", ComponentType::TRANSFORM)
 )
 
 CombatAreaEvent::CombatAreaEvent(GameObject* owner)
@@ -53,12 +55,17 @@ void CombatAreaEvent::closeArea()
 {
     setBlockerState(m_entranceBlocker, true);
     setBlockerState(m_exitBlocker, true);
+	setVisualsState(m_entranceVisuals, true);
+	setVisualsState(m_exitVisuals, true);
+    
 }
 
 void CombatAreaEvent::openArea()
 {
     setBlockerState(m_entranceBlocker, false);
     setBlockerState(m_exitBlocker, false);
+	setVisualsState(m_entranceVisuals, false);
+	setVisualsState(m_exitVisuals, false);
 }
 
 void CombatAreaEvent::setBlockerState(const ScriptComponentRef<Transform>& blockerTransformRef, bool blocked)
@@ -87,6 +94,22 @@ void CombatAreaEvent::setBlockerState(const ScriptComponentRef<Transform>& block
     }
 
     NavigationAPI::setBlocked(runtimeBlocker, blocked);
+}
+
+void CombatAreaEvent::setVisualsState(const ScriptComponentRef<Transform>& visualsTransformRef, bool active)
+{
+    Transform* visualsTransform = visualsTransformRef.getReferencedComponent();
+    if (visualsTransform == nullptr)
+    {
+        Debug::warn("CombatAreaEvent on '%s' has a missing visuals reference.", GameObjectAPI::getName(getOwner()));
+        return;
+    }
+    GameObject* visualsObject = ComponentAPI::getOwner(visualsTransform);
+    if (visualsObject == nullptr)
+    {
+        return;
+    }
+    GameObjectAPI::setActive(visualsObject, active);
 }
 
 void CombatAreaEvent::removeDeadEnemies()

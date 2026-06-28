@@ -35,7 +35,7 @@ private:
     };
 
 private:
-    void startTransitionSequence(CameraTransitionEvent* event);
+    void startTransitionSequence(CameraTransitionEvent* event, bool preserveOriginalFov);
     void startStep(int stepIndex);
     void startReturning();
 
@@ -52,8 +52,6 @@ private:
     Vector3 evaluateCatmullRomStepPosition(float alpha) const;
 
     void finishTransition();
-
-    Vector3 catmullRom(const Vector3& p0, const Vector3& p1, const Vector3& p2, const Vector3& p3, float t) const;
 
     void findPlayerControllers();
     void setPlayersGameplayInputLocked(bool locked);

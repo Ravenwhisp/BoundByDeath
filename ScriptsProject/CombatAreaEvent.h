@@ -24,6 +24,8 @@ private:
 
     void setBlockerState(const ScriptComponentRef<Transform>& blockerTransformRef, bool blocked);
 
+	void setVisualsState(const ScriptComponentRef<Transform>& visualsTransformRef, bool active);
+
     void removeDeadEnemies();
     bool shouldRemoveEnemy(const ScriptComponentRef<Transform>& enemyTransformRef) const;
 
@@ -32,6 +34,9 @@ public:
 
     ScriptComponentRef<Transform> m_entranceBlocker;
     ScriptComponentRef<Transform> m_exitBlocker;
+
+	ScriptComponentRef<Transform> m_entranceVisuals;
+	ScriptComponentRef<Transform> m_exitVisuals;
 
 private:
     std::vector<ScriptComponentRef<Transform>> m_remainingEnemies;
