@@ -82,6 +82,24 @@ void ArthurBossController::Update()
 		}
 	}
 
+	// Arthur derrotado: la música vuelve a la capilla (una sola vez).
+	if (m_hasStartedEncounter && !m_bossDefeated)
+	{
+		if (m_damageable == nullptr)
+		{
+			m_damageable = GameObjectAPI::findScript<Damageable>(getOwner());
+		}
+
+		if (m_damageable != nullptr && m_damageable->isDead())
+		{
+			m_bossDefeated = true;
+			if (MusicManager* music = MusicManager::Get())
+			{
+				music->SetState_Level1Chapel();
+			}
+		}
+	}
+
 	updateAttackCooldowns(Time::getDeltaTime());
 
 	updateBossPhase();

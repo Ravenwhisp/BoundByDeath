@@ -52,7 +52,7 @@ public:
 
     // Campos serializados (public por las macros offsetof).
     int  m_sceneBaseState   = 0;     // índice en kMusicStateNames; estado al cargar la escena
-    bool m_playMusicOnStart = true;  // postear Play_Music al cargar (una vez por proceso)
+    bool m_playMusicOnStart = true;  // (re)arrancar la música al cargar esta escena
 
 private:
     uint32_t postEvent(const char* eventName);
@@ -61,8 +61,6 @@ private:
     uint32_t              m_musicPlayingId = 0;
 
     static MusicManager* s_instance;
-    // La música Wwise es global y persiste entre escenas mientras viva el proceso,
-    // así que Play_Music se postea una sola vez. Si en runtime se ve que el audio
-    // se reinicia por escena, hay que revisar este guard (ver .cpp).
+    // Wwise es global y persiste entre escenas: Play_Music se postea una sola vez.
     static bool s_musicStarted;
 };

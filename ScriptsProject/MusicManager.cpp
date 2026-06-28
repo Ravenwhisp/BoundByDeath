@@ -37,9 +37,9 @@ void MusicManager::Start()
                      GameObjectAPI::getName(getOwner()));
     }
 
-    // Arrancar la música una sola vez por proceso (el motor de sonido Wwise es global
-    // y persiste entre escenas). Si en runtime se observa que el audio se reinicia al
-    // cambiar de escena, cambiar este guard por un PlayMusic() incondicional por escena.
+    // Arranca la música una sola vez (guard estático). El motor de sonido Wwise es
+    // global y persiste entre escenas, así que solo se cambia el State -> Wwise hace
+    // el crossfade entre canciones.
     if (m_playMusicOnStart && !s_musicStarted)
     {
         PlayMusic();
@@ -65,7 +65,7 @@ void MusicManager::PlayMusic()
 {
     if (s_musicStarted)
     {
-        return; // ya está sonando (persistente entre escenas)
+        return;
     }
     m_musicPlayingId = postEvent(k_playMusic);
     s_musicStarted = true;
@@ -85,15 +85,11 @@ void MusicManager::SetMusicState(const char* stateValue)
         return;
     }
 
-    // ===========================================================================
-    // PENDIENTE DEL ENGINE: el AudioAPI actual NO expone SetState de Wwise.
-    // En cuanto el engine añada AudioAPI::setState, descomentar la línea de abajo
-    // (y quitar el Debug::log). Ver Downloads/PETICION_ENGINE_SetState.md
-    //
-    // AudioAPI::setState(k_stateGroup, stateValue);
-    // ===========================================================================
+    // Cambia el State Group "MusicState"; el Music Switch Container (MUS_Main)
+    // transiciona solo a la canción asociada (crossfade horneado en el bank).
+    AudioAPI::setState(k_stateGroup, stateValue);
 
-    Debug::log("[MusicManager] (PENDIENTE setState) %s -> %s", k_stateGroup, stateValue);
+    Debug::log("[MusicManager] MusicState -> %s", stateValue);
 }
 
 void MusicManager::SetState_None()           { SetMusicState("None"); }

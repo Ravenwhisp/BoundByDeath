@@ -3,7 +3,7 @@
 // Nombres EXACTOS de los States del State Group "MusicState" de Wwise.
 // Fuente autoritativa: Engine/Assets/Audio/MusicBoundByDeath.json
 // El orden define el índice usado por los dropdowns (SERIALIZED_ENUM_INT)
-// en MusicManager (m_sceneBaseState) y MusicZoneTrigger (m_targetState / m_stateOnExit).
+// en MusicManager (m_sceneBaseState) y MusicStateEvent (m_stateOnEnter / m_stateOnExit).
 //
 // `static` => enlace interno por unidad de traducción (sin violar la ODR si se
 // incluye en varios .cpp). Es el mismo patrón que usan otros enums del proyecto.
