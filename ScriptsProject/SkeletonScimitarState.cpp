@@ -45,6 +45,9 @@ void SkeletonScimitarState::OnStateEnter()
 	m_controller->resetRepathTimer();
 	m_controller->updateCurrentTarget();
 
+	m_previousAnimationSpeed = AnimationAPI::getSpeedMultiplier(m_animation);
+	AnimationAPI::setSpeedMultiplier(m_animation, m_attackConfig->m_attackAnimationSpeed);
+
 	changePhase(Phase::Dash);
 
 	Debug::log("[SkeletonScimitarState] ENTER");
@@ -101,6 +104,7 @@ void SkeletonScimitarState::OnStateExit()
 
 	m_phaseTimer = 0.0f;
 	m_hasAppliedHit = false;
+	AnimationAPI::setSpeedMultiplier(m_animation, m_previousAnimationSpeed);
 
 	Debug::log("[SkeletonScimitarState] EXIT");
 }
@@ -118,7 +122,7 @@ void SkeletonScimitarState::changePhase(Phase phase)
 
 	if (phase == Phase::Attack1 || phase == Phase::Attack2 || phase == Phase::Attack3)
 	{
-		AnimationAPI::playOverrideClip(m_animation, "Skeleton_Attak", m_attackConfig->m_attackAnimationBlendTime, false);
+		AnimationAPI::playOverrideClip(m_animation, "Skeleton_Attak", 0.05, false);
 	}
 }
 
@@ -146,14 +150,14 @@ void SkeletonScimitarState::updateDash()
 void SkeletonScimitarState::updateAttack()
 {
 	// Last Attack can stun
-	if (!m_hasAppliedHit && m_phaseTimer >= m_attackConfig->m_attackHitTime)
+	if (!m_hasAppliedHit && m_phaseTimer >= getScimitarAttackHitTime())
 	{
 		const bool shouldStun = m_phase == Phase::Attack3;
 		applyHit(shouldStun);
 		m_hasAppliedHit = true;
 	}
 
-	if (m_phaseTimer < m_attackConfig->m_attackClipDuration)
+	if (m_phaseTimer < getScimitarAttackClipDuration())
 	{
 		return;
 	}
@@ -218,7 +222,7 @@ void SkeletonScimitarState::applyHit(bool shouldStun)
 		m_attackExecutor->tryDamageAndStunTargetInRadius(
 			currentTarget,
 			center,
-			m_attackConfig->m_basicAttackRange + 1.5f,
+			m_attackConfig->m_scimitarStunHitRange,
 			m_attackConfig->m_basicAttackDamage,
 			m_attackConfig->m_scimitarStunDuration,
 			"SkeletonScimitar"
@@ -272,6 +276,16 @@ void SkeletonScimitarState::goToChase()
 
 	AnimationAPI::clearOverrideClip(m_animation, 0.0f);
 	AnimationAPI::sendTrigger(m_animation, "ToChase");
+}
+
+float SkeletonScimitarState::getScimitarAttackClipDuration() const
+{
+	return m_attackConfig->m_attackClipDuration / m_attackConfig->m_attackAnimationSpeed;
+}
+
+float SkeletonScimitarState::getScimitarAttackHitTime() const
+{
+	return getScimitarAttackClipDuration() * m_attackConfig->m_attackHitTime;
 }
 
 IMPLEMENT_SCRIPT(SkeletonScimitarState)

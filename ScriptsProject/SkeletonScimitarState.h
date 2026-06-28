@@ -40,6 +40,9 @@ private:
 	void moveInDirection(const Vector3& direction, float speed);
 	void goToChase();
 
+	float getScimitarAttackClipDuration() const;
+	float getScimitarAttackHitTime() const;
+
 private:
 	SkeletonEnemyController* m_controller = nullptr;
 	SkeletonAttackConfig* m_attackConfig = nullptr;
@@ -49,4 +52,5 @@ private:
 	Phase m_phase = Phase::Dash;
 	float m_phaseTimer = 0.0f;
 	bool m_hasAppliedHit = false;
+	float m_previousAnimationSpeed = 1.0f;
 };

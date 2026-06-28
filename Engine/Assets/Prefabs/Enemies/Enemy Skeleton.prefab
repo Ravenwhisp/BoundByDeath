@@ -91,9 +91,10 @@
                 "Scimitar Dash Speed": 10.0,
                 "Attack Clip Duration": 1.3300000429153442,
                 "Attack Hit Time": 0.44999998807907104,
-                "Attack Animation Blend Time": 0.05000000074505806,
+                "Attack Animation Speed": 1.2999999523162842,
                 "Step Back Duration": 0.15000000596046448,
                 "Step Back Speed": 4.0,
+                "Scimitar Stun Hit Range": 1.5,
                 "Scimitar Stun Duration": 3.0,
                 "Guard Duration": 5.0,
                 "Guard Cooldown": 10.0,
@@ -123,6 +124,20 @@
             "Active": true,
             "ScriptName": "EnemyAttackExecutor",
             "ScriptFields": {}
+        },
+        {
+            "UID": 12916355165380072307,
+            "ComponentType": "SCRIPT",
+            "Active": true,
+            "ScriptName": "SkeletonAttackDebugDraw",
+            "ScriptFields": {
+                "Debug Enabled": true,
+                "Draw Scimitar Start Range": true,
+                "Draw Dash Stop Range": true,
+                "Draw Basic Attack Range": true,
+                "Draw Final Hit Range": true,
+                "Height Offset": 0.15000000596046448
+            }
         }
     ],
     "Children": [

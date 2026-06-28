@@ -22,13 +22,14 @@ public:
 	// Attack
 	float m_attackClipDuration = 1.33f;
 	float m_attackHitTime = 0.45f;
-	float m_attackAnimationBlendTime = 0.05f;
+	float m_attackAnimationSpeed = 1.3f;
 
 	// Backstep
 	float m_stepBackDuration = 0.15f;
 	float m_stepBackSpeed = 4.0f;
 
 	// Final Strike
+	float m_scimitarStunHitRange = 1.5f;
 	float m_scimitarStunDuration = 3.0f;
 
 	// --- Guard --- //

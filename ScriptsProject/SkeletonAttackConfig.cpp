@@ -10,9 +10,10 @@ IMPLEMENT_SCRIPT_FIELDS_INHERITED(SkeletonAttackConfig, EnemyBaseAttackConfig,
 		SERIALIZED_FLOAT(m_scimitarDashSpeed, "Scimitar Dash Speed", 0.0f, 20.0f, 0.1f),
 		SERIALIZED_FLOAT(m_attackClipDuration, "Attack Clip Duration", 0.0f, 5.0f, 0.05f),
 		SERIALIZED_FLOAT(m_attackHitTime, "Attack Hit Time", 0.0f, 5.0f, 0.05f),
-		SERIALIZED_FLOAT(m_attackAnimationBlendTime, "Attack Animation Blend Time", 0.0f, 5.0f, 0.05f),
+		SERIALIZED_FLOAT(m_attackAnimationSpeed, "Attack Animation Speed", 0.0f, 5.0f, 0.05f),
 		SERIALIZED_FLOAT(m_stepBackDuration, "Step Back Duration", 0.0f, 5.0f, 0.1f),
 		SERIALIZED_FLOAT(m_stepBackSpeed, "Step Back Speed", 0.0f, 20.0f, 0.1f),
+		SERIALIZED_FLOAT(m_scimitarStunHitRange, "Scimitar Stun Hit Range", 0.0f, 10.0f, 0.1f),
 		SERIALIZED_FLOAT(m_scimitarStunDuration, "Scimitar Stun Duration", 0.0f, 5.0f, 0.1f)
 	),
 	// Guard
