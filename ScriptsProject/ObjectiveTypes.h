@@ -6,5 +6,7 @@ enum class ObjectiveType
     Movement,
     AutoAttack,
     ChargedAttack,
-    Ability
+    Ability,
+    Dash,
+    BreakableObjects
 };

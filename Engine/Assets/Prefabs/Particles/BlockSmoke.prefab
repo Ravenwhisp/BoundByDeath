@@ -1,0 +1,129 @@
+{
+    "Version": 2,
+    "sourcePath": "Assets\\Prefabs\\Particles\\BlockSmoke.prefab",
+    "Name": "BlockSmoke",
+    "Active": true,
+    "Static": false,
+    "Layer": "DEFAULT",
+    "Tag": "DEFAULT",
+    "Transform": {
+        "Position": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "Rotation": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ],
+        "Scale": [
+            1.0,
+            1.0,
+            1.0
+        ]
+    },
+    "Components": [
+        {
+            "UID": 9442731520943332582,
+            "ComponentType": "PARTICLE_SYSTEM",
+            "Active": true,
+            "TextureAssetId": {
+                "uid": 8611505141713682000,
+                "libId": "0dd58b075da06283f5204cd90fbc3451",
+                "type": "TEXTURE"
+            },
+            "ParticleEmitters": [
+                {
+                    "Modules": [
+                        {
+                            "ModuleType": 2,
+                            "Looping": true,
+                            "Duration": 20.0,
+                            "RateOverTime": 10.0,
+                            "RateOverDistance": 0.0
+                        },
+                        {
+                            "ModuleType": 4,
+                            "LifeTimeType": "CONSTANT",
+                            "StartLifeTime": 5.0
+                        },
+                        {
+                            "ModuleType": 1,
+                            "ShapeType": "HEMISPHERE",
+                            "Radius": 2.0,
+                            "RadiusThickness": 0.30000001192092896,
+                            "RadiusScale": 1.0
+                        },
+                        {
+                            "ModuleType": 3,
+                            "ColorOverTime": [
+                                {
+                                    "IsAlphaMark": false,
+                                    "Position": 0.0,
+                                    "Color": [
+                                        0.0,
+                                        0.0,
+                                        0.0
+                                    ]
+                                },
+                                {
+                                    "IsAlphaMark": false,
+                                    "Position": 1.0,
+                                    "Color": [
+                                        0.5137115716934204,
+                                        0.11401143670082092,
+                                        0.92277991771698
+                                    ]
+                                }
+                            ],
+                            "ColorCurve": [
+                                0.0,
+                                0.0,
+                                0.859375,
+                                1.0078125
+                            ]
+                        },
+                        {
+                            "ModuleType": 5,
+                            "VelocityType": "CONSTANT",
+                            "InitialVelocity": 0.5
+                        },
+                        {
+                            "ModuleType": 6,
+                            "StartScaleType": "CONSTANT",
+                            "StartScale": [
+                                5.0,
+                                5.0,
+                                0.0
+                            ],
+                            "ChangeSizeOverTime": true,
+                            "EndScaleType": "CONSTANT",
+                            "EndScale": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "ModuleType": 7,
+                            "RotationType": "CONSTANT",
+                            "StartRotation": 0.0,
+                            "VelocityType": "CONSTANT",
+                            "AngularVelocity": 0.0,
+                            "FlipRotation": 0.0
+                        },
+                        {
+                            "ModuleType": 8
+                        },
+                        {
+                            "ModuleType": 9
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "Children": []
+}

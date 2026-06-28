@@ -1,0 +1,71 @@
+{
+    "Version": 2,
+    "sourcePath": "Assets\\Prefabs\\[EVENT] Spectral Path.prefab",
+    "Name": "[EVENT] Spectral Path",
+    "Active": true,
+    "Static": false,
+    "Layer": "DEFAULT",
+    "Tag": "DEFAULT",
+    "Transform": {
+        "Position": [
+            8.492613792419434,
+            -2.4922842979431152,
+            9.557063102722168
+        ],
+        "Rotation": [
+            -0.0,
+            0.0,
+            -0.0,
+            1.0
+        ],
+        "Scale": [
+            1.0,
+            1.0,
+            1.0
+        ]
+    },
+    "Components": [
+        {
+            "UID": 18387540836909655423,
+            "ComponentType": "TRIGGER",
+            "Active": true,
+            "Shape": "Box",
+            "Center": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Size": [
+                4.949999809265137,
+                5.400000095367432,
+                5.099999904632568
+            ]
+        },
+        {
+            "UID": 16637153029723060875,
+            "ComponentType": "SCRIPT",
+            "Active": true,
+            "ScriptName": "GameplayEventTrigger",
+            "ScriptFields": {
+                "Trigger Only Once": true
+            }
+        },
+        {
+            "UID": 6138858596328681707,
+            "ComponentType": "SCRIPT",
+            "Active": true,
+            "ScriptName": "PopUpEvent",
+            "ScriptFields": {
+                "PopUp Images": [
+                    1080983497701231949
+                ],
+                "Transition Type": 0,
+                "Close Mode": 0,
+                "Lock Gameplay": true,
+                "Show Duration": 0.25,
+                "Hide Duration": 0.25
+            }
+        }
+    ],
+    "Children": []
+}

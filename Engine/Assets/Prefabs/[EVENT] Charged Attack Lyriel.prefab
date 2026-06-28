@@ -1,0 +1,81 @@
+{
+    "Version": 2,
+    "sourcePath": "Assets\\Prefabs\\[EVENT] Charged Attack Lyriel.prefab",
+    "Name": "[EVENT] Charged Attack Lyriel",
+    "Active": true,
+    "Static": false,
+    "Layer": "DEFAULT",
+    "Tag": "DEFAULT",
+    "Transform": {
+        "Position": [
+            19.45184326171875,
+            0.9554417133331299,
+            -15.56322193145752
+        ],
+        "Rotation": [
+            -0.0,
+            0.0,
+            -0.0,
+            1.0
+        ],
+        "Scale": [
+            1.0,
+            1.0,
+            1.0
+        ]
+    },
+    "Components": [
+        {
+            "UID": 15286368269657766555,
+            "ComponentType": "TRIGGER",
+            "Active": true,
+            "Shape": "Box",
+            "Center": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Size": [
+                4.949999809265137,
+                5.400000095367432,
+                5.099999904632568
+            ]
+        },
+        {
+            "UID": 15078954591528489022,
+            "ComponentType": "SCRIPT",
+            "Active": true,
+            "ScriptName": "GameplayEventTrigger",
+            "ScriptFields": {
+                "Trigger Only Once": true
+            }
+        },
+        {
+            "UID": 12572182707523889283,
+            "ComponentType": "SCRIPT",
+            "Active": true,
+            "ScriptName": "PopUpEvent",
+            "ScriptFields": {
+                "PopUp Images": [
+                    1080983497701231949
+                ],
+                "Transition Type": 1,
+                "Close Mode": 1,
+                "Lock Gameplay": true,
+                "Show Duration": 0.25,
+                "Hide Duration": 0.25
+            }
+        },
+        {
+            "UID": 14922874505057090892,
+            "ComponentType": "SCRIPT",
+            "Active": true,
+            "ScriptName": "ObjectiveEvent",
+            "ScriptFields": {
+                "Objective Type": 3,
+                "Target Player Index": 0
+            }
+        }
+    ],
+    "Children": []
+}
