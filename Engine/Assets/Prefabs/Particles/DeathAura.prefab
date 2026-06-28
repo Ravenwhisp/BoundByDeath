@@ -1,0 +1,111 @@
+{
+    "Version": 2,
+    "sourcePath": "Assets\\Prefabs\\Particles\\DeathAura.prefab",
+    "Name": "DeathAura",
+    "Active": true,
+    "Static": false,
+    "Layer": "DEFAULT",
+    "Tag": "DEFAULT",
+    "Transform": {
+        "Position": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "Rotation": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ],
+        "Scale": [
+            1.0,
+            1.0,
+            1.0
+        ]
+    },
+    "Components": [
+        {
+            "UID": 14000000000000000001,
+            "ComponentType": "PARTICLE_SYSTEM",
+            "Active": true,
+            "TextureAssetId": {
+                "uid": 8611505141713682000,
+                "libId": "0dd58b075da06283f5204cd90fbc3451",
+                "type": "TEXTURE"
+            },
+            "ParticleEmitters": [
+                {
+                    "Modules": [
+                        {
+                            "ModuleType": 2,
+                            "Looping": true,
+                            "Duration": 2.0,
+                            "RateOverTime": 18.0,
+                            "RateOverDistance": 0.0
+                        },
+                        {
+                            "ModuleType": 4,
+                            "StartLifeTime": 1.6
+                        },
+                        {
+                            "ModuleType": 1,
+                            "ShapeType": "CONE",
+                            "Radius": 0.45,
+                            "RadiusThickness": 1.0,
+                            "RadiusScale": 1.0,
+                            "ConeAngle": 0.35
+                        },
+                        {
+                            "ModuleType": 3,
+                            "StartColor": [
+                                0.3,
+                                0.9,
+                                0.5,
+                                0.7
+                            ],
+                            "EndColor": [
+                                0.05,
+                                0.25,
+                                0.12,
+                                0.0
+                            ]
+                        },
+                        {
+                            "ModuleType": 5,
+                            "InitialVelocity": 1.2
+                        },
+                        {
+                            "ModuleType": 6,
+                            "StartScaleType": "RANDOM_BETWEEN_TWO",
+                            "StartScale": [
+                                0.3,
+                                0.3,
+                                0.0
+                            ],
+                            "StartScale2": [
+                                0.55,
+                                0.55,
+                                0.0
+                            ],
+                            "ChangeSizeOverTime": true,
+                            "EndScale": [
+                                0.1,
+                                0.1,
+                                0.0
+                            ]
+                        },
+                        {
+                            "ModuleType": 7,
+                            "StartRotation": 0.0,
+                            "VelocityType": "CONSTANT",
+                            "AngularVelocity": 0.2,
+                            "FlipRotation": 0.5
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "Children": []
+}

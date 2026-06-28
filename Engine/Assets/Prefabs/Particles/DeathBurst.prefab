@@ -1,0 +1,119 @@
+{
+    "Version": 2,
+    "sourcePath": "Assets\\Prefabs\\Particles\\DeathBurst.prefab",
+    "Name": "DeathBurst",
+    "Active": true,
+    "Static": false,
+    "Layer": "DEFAULT",
+    "Tag": "DEFAULT",
+    "Transform": {
+        "Position": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "Rotation": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ],
+        "Scale": [
+            1.0,
+            1.0,
+            1.0
+        ]
+    },
+    "Components": [
+        {
+            "UID": 11000000000000000001,
+            "ComponentType": "PARTICLE_SYSTEM",
+            "Active": true,
+            "TextureAssetId": {
+                "uid": 18397412372386409293,
+                "libId": "daec75fabdc85d041af40097e2ac1b24",
+                "type": "TEXTURE"
+            },
+            "ParticleEmitters": [
+                {
+                    "Modules": [
+                        {
+                            "ModuleType": 2,
+                            "Looping": false,
+                            "Duration": 0.25,
+                            "RateOverTime": 160.0,
+                            "RateOverDistance": 0.0
+                        },
+                        {
+                            "ModuleType": 4,
+                            "StartLifeTime": 0.7
+                        },
+                        {
+                            "ModuleType": 1,
+                            "ShapeType": "SPHERE",
+                            "Radius": 0.15,
+                            "RadiusThickness": 1.0,
+                            "RadiusScale": 1.0
+                        },
+                        {
+                            "ModuleType": 3,
+                            "StartColor": [
+                                0.6,
+                                1.0,
+                                0.7,
+                                1.0
+                            ],
+                            "EndColor": [
+                                0.05,
+                                0.35,
+                                0.15,
+                                0.0
+                            ]
+                        },
+                        {
+                            "ModuleType": 5,
+                            "InitialVelocity": 4.5
+                        },
+                        {
+                            "ModuleType": 6,
+                            "StartScaleType": "RANDOM_BETWEEN_TWO",
+                            "StartScale": [
+                                0.35,
+                                0.35,
+                                0.0
+                            ],
+                            "StartScale2": [
+                                0.6,
+                                0.6,
+                                0.0
+                            ],
+                            "ChangeSizeOverTime": true,
+                            "EndScale": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "ModuleType": 7,
+                            "StartRotation": 0.0,
+                            "VelocityType": "CONSTANT",
+                            "AngularVelocity": 0.5,
+                            "FlipRotation": 0.5
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 11000000000000000002,
+            "ComponentType": "SCRIPT",
+            "Active": true,
+            "ScriptName": "DestroyParticles",
+            "ScriptFields": {
+                "Lifetime": 1.0
+            }
+        }
+    ],
+    "Children": []
+}
