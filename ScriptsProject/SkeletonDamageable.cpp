@@ -32,7 +32,7 @@ void SkeletonDamageable::takeDamage(const HitContext& ctx)
 {
 	const EnemyHitContext& enemyCtx = static_cast<const EnemyHitContext&>(ctx);
 
-	if (isDowned())
+	if (isDowned() && m_currentHp <= 0.0f)
 	{
 		confirmKill();
 		return;
@@ -71,10 +71,10 @@ bool SkeletonDamageable::isPermanentlyDead() const
 void SkeletonDamageable::startDowned()
 {
 	m_lifeState = SkeletonLifeState::Downed;
-	m_currentHp = m_downedHP;
+	m_currentHp = m_attackConfig->m_downedHP;
 	m_isDead = false;
 
-	Debug::log("[SkeletonDamageable] Skeleton downed. Waiting for confirm kill.");
+	Debug::log("[SkeletonDamageable] Skeleton downed.");
 }
 
 void SkeletonDamageable::confirmKill()

@@ -42,4 +42,5 @@ public:
 
 	// Revive
 	float m_reviveDuration = 4.0f;
+	float m_downedHP = 40.0f;
 };

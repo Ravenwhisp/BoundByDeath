@@ -26,7 +26,8 @@ IMPLEMENT_SCRIPT_FIELDS_INHERITED(SkeletonAttackConfig, EnemyBaseAttackConfig,
 		SERIALIZED_FLOAT(m_guardBlockHalfAngleDegrees, "Guard Half Angle Degrees", 0.0f, 180.0f, 1.0f)
 	),
 	FIELD_GROUP_COLLAPSE("Revive",
-		SERIALIZED_FLOAT(m_reviveDuration, "Revive Duration", 0.0f, 20.0f, 0.01f)
+		SERIALIZED_FLOAT(m_reviveDuration, "Revive Duration", 0.0f, 20.0f, 0.01f),
+		SERIALIZED_FLOAT(m_downedHP, "Downed HP", 1.0f, 150.0f, 1.0f)
 	)
 )
 
