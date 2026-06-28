@@ -11,8 +11,7 @@ namespace
     constexpr const char* k_stopMusic  = "Stop_Music";
 }
 
-MusicManager* MusicManager::s_instance     = nullptr;
-bool          MusicManager::s_musicStarted = false;
+MusicManager* MusicManager::s_instance = nullptr;
 
 IMPLEMENT_SCRIPT(MusicManager)
 
@@ -37,12 +36,14 @@ void MusicManager::Start()
                      GameObjectAPI::getName(getOwner()));
     }
 
-    // Arranca la música una sola vez (guard estático). El motor de sonido Wwise es
-    // global y persiste entre escenas, así que solo se cambia el State -> Wwise hace
-    // el crossfade entre canciones.
-    if (m_playMusicOnStart && !s_musicStarted)
+    // Arranca la música UNA sola vez por sesión de play. El flag vive en el engine
+    // (AudioAPI::isMusicStarted) y se resetea al parar (StopAll en el Stop del editor):
+    //  - Entre escenas NO se reinicia (solo cambia el State -> crossfade de Wwise).
+    //  - Tras un Stop, el flag vuelve a false, así que al re-dar Play suena de nuevo.
+    if (m_playMusicOnStart && !AudioAPI::isMusicStarted())
     {
         PlayMusic();
+        AudioAPI::setMusicStarted(true);
     }
 
     // Estado base de esta escena (configurable por escena desde el inspector).
@@ -63,19 +64,14 @@ uint32_t MusicManager::postEvent(const char* eventName)
 
 void MusicManager::PlayMusic()
 {
-    if (s_musicStarted)
-    {
-        return;
-    }
     m_musicPlayingId = postEvent(k_playMusic);
-    s_musicStarted = true;
 }
 
 void MusicManager::StopMusic()
 {
     postEvent(k_stopMusic);
-    s_musicStarted   = false;
     m_musicPlayingId = 0;
+    AudioAPI::setMusicStarted(false);
 }
 
 void MusicManager::SetMusicState(const char* stateValue)

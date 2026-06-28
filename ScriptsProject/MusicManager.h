@@ -61,6 +61,4 @@ private:
     uint32_t              m_musicPlayingId = 0;
 
     static MusicManager* s_instance;
-    // Wwise es global y persiste entre escenas: Play_Music se postea una sola vez.
-    static bool s_musicStarted;
 };
