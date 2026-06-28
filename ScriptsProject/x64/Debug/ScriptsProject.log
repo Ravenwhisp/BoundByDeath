@@ -1,10 +1,8 @@
-﻿  pch.cpp
-  AbilityBase.cpp
+﻿  AbilityBase.cpp
   ArcherArrowBarrageState.cpp
   ArcherAttackConfig.cpp
   ArcherSomersaultState.cpp
   ArcherUI.cpp
-  ArrowPool.cpp
   ArthurAttackConfig.cpp
   ArthurAttackDebugDraw.cpp
   ArthurUI.cpp
@@ -12,11 +10,15 @@
   CameraSwitcher.cpp
   CameraTransitionController.cpp
   CameraTransitionEvent.cpp
+  CameraTransitionStep.cpp
+  CameraTransitionStepAction.cpp
+  CombatAreaEvent.cpp
   EnemyAttackState.cpp
   EnemyBaseAttackConfig.cpp
   CharacterUI.cpp
   DeathConfig.cpp
   DeathTargetIndicatorUI.cpp
+C:\Users\INVICTUS\Documents\GitHub\BoundByDeath\ScriptsProject\CharacterUI.cpp(104,50): warning C4305: 'argumento': truncamiento de 'double' a 'float'
   DeathUI.cpp
   DestroyParticles.cpp
   EnemyAttackExecutor.cpp
@@ -45,73 +47,43 @@
   DeathSound.cpp
   DeathTaunt.cpp
   EnemyBaseController.cpp
-  GameplayEventTrigger.cpp
-  HUDFader.cpp
-  LocalMultiplayerSetup.cpp
-  LyrielConfig.cpp
+  EnergyBallProjectile.cpp
   EnemyStunnedState.cpp
-  LyrielSound.cpp
   DebugDamageTrigger.cpp
   DebugDrawTest.cpp
-  dllmain.cpp
   BarrierEnemyDamageable.cpp
   ArcherChaseState.cpp
   EnemyDamageable.cpp
   EnemyDeathState.cpp
-  Level2Cheats.cpp
-  LinkedDeathEnemyState.cpp
-C:\Users\INVICTUS\Documents\GitHub\BoundByDeath\ScriptsProject\Level2Cheats.h(33,22): warning C4305: 'argumento': truncamiento de 'double' a 'float' (compilando archivo de origen Level2Cheats.cpp)
   EnemyIdleState.cpp
   EnemyShadowMark.cpp
-  HealthDropSpawner.cpp
-  HeartbeatHaptic.cpp
-  LightZoneManager.cpp
-  LightZoneTrigger.cpp
-  LyrielTargetIndicatorUI.cpp
-  LyrielUI.cpp
-  MeleeEnemyController.cpp
-  ObjectiveEvent.cpp
-  PaladinAttackConfig.cpp
-  PaladinChargeState.cpp
-  PaladinChaseState.cpp
-  PersistingPowerupState.cpp
-  PlayerController.cpp
-  PopUpController.cpp
-  PopUpEvent.cpp
-  PowerupCollectible.cpp
-  Pickup.cpp
-  PlayerStunState.cpp
-  PuzzleManagerLVL1.cpp
-C:\Users\INVICTUS\Documents\GitHub\BoundByDeath\ScriptsProject\LightZoneManager.cpp(7,1): warning C4003: no hay suficientes argumentos para la invocación de macro "SERIALIZED_COMPONENT_REF" de tipo función
-  RangedEnemyController.cpp
-  ReaperGauge.cpp
+  MoveObjectAlongPathAction.cpp
+  MoveObjectToTransformAction.cpp
+C:\Users\INVICTUS\Documents\GitHub\BoundByDeath\ScriptsProject\MoveObjectToTransformAction.cpp(78,44): warning C4305: 'argumento': truncamiento de 'double' a 'float'
+C:\Users\INVICTUS\Documents\GitHub\BoundByDeath\ScriptsProject\MoveObjectToTransformAction.cpp(132,27): warning C4305: 'argumento': truncamiento de 'double' a 'float'
+  PlayAnimationAction.cpp
+  ProjectileBase.cpp
+  ProjectilePool.cpp
   ShadowExecution.cpp
   EnemyDetectionAggro.cpp
   DefeatConditionManager.cpp
-  HealthPickup.cpp
-  LevelCheats.cpp
-  LyrielAbilityBase.cpp
   LyrielArrowProjectile.cpp
   LyrielArrowVolley.cpp
   LyrielBasicAttack.cpp
   LyrielCharacter.cpp
   LyrielChargedAttack.cpp
   AbilityDash.cpp
-  LyrielDash.cpp
-  SpikeTrap.cpp
-  PlayerAnimationController.cpp
-  PlayerDamageable.cpp
-  PlayerDownState.cpp
-  PlayerMovement.cpp
-  PlayerRotation.cpp
-  PlayerState.cpp
-  PlayerTargetController.cpp
-  TargetIndicatorUI.cpp
-  TestingButton.cpp
-  TriggerArea.cpp
-  UIController.cpp
-  UIPause.cpp
-  UISplashScreen.cpp
-C:\Users\INVICTUS\Documents\GitHub\BoundByDeath\ScriptsProject\UISplashScreen.cpp(30,8): warning C4551: la llamada a la función no tiene lista de argumentos
-  SimpleMath.cpp
+  SpiderChaseState.cpp
+  SpiderEnemyController.cpp
+  SummonerAttackConfig.cpp
+  SummonerEnergyBallState.cpp
+  SummonerEnemyController.cpp
+  SummonerIdleState.cpp
+  SummonerRecoverState.cpp
+  SummonerSummonState.cpp
+C:\Users\INVICTUS\Documents\GitHub\BoundByDeath\ScriptsProject\PlayAnimationAction.cpp(45,88): warning C4305: 'argumento': truncamiento de 'double' a 'float'
+C:\Users\INVICTUS\Documents\GitHub\BoundByDeath\ScriptsProject\PlayAnimationAction.cpp(58,52): warning C4305: 'argumento': truncamiento de 'double' a 'float'
+C:\Users\INVICTUS\Documents\GitHub\BoundByDeath\ScriptsProject\PlayAnimationAction.cpp(75,52): warning C4305: 'argumento': truncamiento de 'double' a 'float'
+  SummonerTeleportState.cpp
+  LINK : no se encontró C:\Users\INVICTUS\Documents\GitHub\BoundByDeath\ScriptsProject\..\Engine\GameScripts.dll o no lo generó el último vínculo incremental; ejecutando vínculo completo
   ScriptsProject.vcxproj -> C:\Users\INVICTUS\Documents\GitHub\BoundByDeath\Engine\GameScripts.dll
