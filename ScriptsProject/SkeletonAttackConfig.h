@@ -18,6 +18,7 @@ public:
 	float m_scimitarDashStopRange = 1.5f;
 	float m_scimitarDashDuration = 2.0f;
 	float m_scimitarDashSpeed = 10.0f;
+	float m_scimitarHalfAngleDegrees = 55.0f;
 
 	// Attack
 	float m_attackClipDuration = 1.33f;

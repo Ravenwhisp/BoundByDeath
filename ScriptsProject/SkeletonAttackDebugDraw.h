@@ -21,11 +21,18 @@ public:
 
 	bool m_drawScimitarStartRange = true;
 	bool m_drawDashStopRange = true;
-	bool m_drawBasicAttackRange = true;
-	bool m_drawFinalHitRange = true;
+	bool m_drawScimitarAttackArea = true;
+	bool m_drawScimitarStunArea = true;
 
 	float m_heightOffset = 0.15f;
 
 private:
 	SkeletonAttackConfig* m_attackConfig = nullptr;
+
+private:
+	void drawScimitarAttackCone() const;
+	void drawScimitarStunCone() const;
+	void drawScimitarCone(float range, float halfAngleDegrees, const Vector3& color) const;
+
+	Vector3 rotateAroundY(const Vector3& vector, float radians) const;
 };

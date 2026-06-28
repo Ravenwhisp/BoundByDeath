@@ -14,7 +14,8 @@ IMPLEMENT_SCRIPT_FIELDS_INHERITED(SkeletonAttackConfig, EnemyBaseAttackConfig,
 		SERIALIZED_FLOAT(m_stepBackDuration, "Step Back Duration", 0.0f, 5.0f, 0.1f),
 		SERIALIZED_FLOAT(m_stepBackSpeed, "Step Back Speed", 0.0f, 20.0f, 0.1f),
 		SERIALIZED_FLOAT(m_scimitarStunHitRange, "Scimitar Stun Hit Range", 0.0f, 10.0f, 0.1f),
-		SERIALIZED_FLOAT(m_scimitarStunDuration, "Scimitar Stun Duration", 0.0f, 5.0f, 0.1f)
+		SERIALIZED_FLOAT(m_scimitarStunDuration, "Scimitar Stun Duration", 0.0f, 5.0f, 0.1f),
+		SERIALIZED_FLOAT(m_scimitarHalfAngleDegrees, "Scimitar Half Angle Degrees", 0.0f, 18.0f, 1.0f)
 	),
 	// Guard
 	FIELD_GROUP_COLLAPSE("Guard",

@@ -216,13 +216,16 @@ void SkeletonScimitarState::applyHit(bool shouldStun)
 	}
 
 	const Vector3 center = TransformAPI::getGlobalPosition(ownerTransform);
+	const Vector3 forward = TransformAPI::getForward(ownerTransform);
 
 	if (shouldStun)
 	{
-		m_attackExecutor->tryDamageAndStunTargetInRadius(
+		m_attackExecutor->tryDamageAndStunSingleTargetInCone(
 			currentTarget,
 			center,
+			forward,
 			m_attackConfig->m_scimitarStunHitRange,
+			m_attackConfig->m_scimitarHalfAngleDegrees,
 			m_attackConfig->m_basicAttackDamage,
 			m_attackConfig->m_scimitarStunDuration,
 			"SkeletonScimitar"
@@ -230,10 +233,12 @@ void SkeletonScimitarState::applyHit(bool shouldStun)
 	}
 	else
 	{
-		m_attackExecutor->tryDamageTargetInRadius(
+		m_attackExecutor->tryDamageTargetInCone(
 			currentTarget,
 			center,
+			forward,
 			m_attackConfig->m_basicAttackRange,
+			m_attackConfig->m_scimitarHalfAngleDegrees,
 			m_attackConfig->m_basicAttackDamage,
 			"SkeletonScimitar"
 		);
