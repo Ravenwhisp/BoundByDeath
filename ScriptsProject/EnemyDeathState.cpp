@@ -2,6 +2,7 @@
 #include "EnemyDeathState.h"
 #include "HealthPickup.h"
 #include "HealthDropSpawner.h"
+#include "EnemySound.h"
 
 IMPLEMENT_SCRIPT_FIELDS(EnemyDeathState,
 	SERIALIZED_FLOAT(m_destroyDelay, "Destroy Delay", 0.0f, 30.0f, 0.1f),
@@ -21,6 +22,14 @@ EnemyDeathState::EnemyDeathState(GameObject* owner)
 void EnemyDeathState::OnStateEnter()
 {
 	Debug::log("[EnemyDeathState] ENTER");
+
+	EnemySound* enemySound = GameObjectAPI::findScript<EnemySound>(getOwner());
+	if (enemySound)
+	{
+		enemySound->stopAllLoops();   // kill charge loop / footsteps before the death sting
+		enemySound->playDeath();
+	}
+
 	onDeathStarted();
 
 	if (m_shouldDropHealth)

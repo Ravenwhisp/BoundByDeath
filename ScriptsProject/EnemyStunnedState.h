@@ -5,6 +5,7 @@
 
 class EnemyBaseController;
 class AnimationComponent;
+class EnemySound;
 
 class EnemyStunnedState : public StateMachineScript
 {
@@ -20,5 +21,6 @@ public:
 private:
 	EnemyBaseController* m_controller = nullptr;
 	AnimationComponent* m_animation = nullptr;
+	EnemySound* m_enemySound = nullptr;
 	float m_stateTimer = 0.0f;
 };

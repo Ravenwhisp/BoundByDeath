@@ -5,6 +5,7 @@
 #include "ArcherAttackConfig.h"
 #include "EnemyAttackExecutor.h"
 #include "ArcherUI.h"
+#include "ArcherSound.h"
 
 ArcherArrowBarrageState::ArcherArrowBarrageState(GameObject* owner)
     : StateMachineScript(owner)
@@ -18,6 +19,7 @@ void ArcherArrowBarrageState::OnStateEnter()
     m_attackExecutor = GameObjectAPI::findScript<EnemyAttackExecutor>(getOwner());
     m_animation = AnimationAPI::getAnimationComponent(getOwner());
     m_archerUI = GameObjectAPI::findScript<ArcherUI>(getOwner());
+    m_archerSound = GameObjectAPI::findScript<ArcherSound>(getOwner());
 
     m_stateTimer = 0.0f;
     m_impactPosition = Vector3(0.0f, 0.0f, 0.0f);
@@ -87,6 +89,12 @@ void ArcherArrowBarrageState::OnStateUpdate()
     if (!m_hasLockedImpactPosition && m_stateTimer >= m_attackConfig->m_arrowBarrageThrowTime)
     {
         lockImpactPosition();
+
+        if (m_archerSound)
+        {
+            m_archerSound->playBarrageReleaseVolley();   // 4 staggered bow releases
+        }
+
         m_hasLockedImpactPosition = true;
     }
 
@@ -95,6 +103,12 @@ void ArcherArrowBarrageState::OnStateUpdate()
     if (m_hasLockedImpactPosition && !m_hasAppliedImpact && m_stateTimer >= impactTime)
     {
         applyImpact();
+
+        if (m_archerSound)
+        {
+            m_archerSound->playBarrageImpactVolley();   // 4 staggered arrow impacts
+        }
+
         m_hasAppliedImpact = true;
     }
 

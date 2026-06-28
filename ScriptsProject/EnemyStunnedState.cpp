@@ -2,6 +2,7 @@
 #include "EnemyStunnedState.h"
 
 #include "EnemyBaseController.h"
+#include "EnemySound.h"
 
 EnemyStunnedState::EnemyStunnedState(GameObject* owner)
 	: StateMachineScript(owner)
@@ -28,7 +29,13 @@ void EnemyStunnedState::OnStateEnter()
 	m_controller->clearPath();
 	m_controller->resetRepathTimer();
 	m_stateTimer = 0.0f;
-	
+
+	m_enemySound = GameObjectAPI::findScript<EnemySound>(getOwner());
+	if (m_enemySound)
+	{
+		m_enemySound->playStun();
+	}
+
 	Debug::log("[EnemyStunnedState] ENTER");
 }
 

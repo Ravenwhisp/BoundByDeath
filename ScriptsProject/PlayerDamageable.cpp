@@ -7,13 +7,6 @@
 #include "PlayerDownState.h"
 #include "PlayerAnimationController.h"
 
-namespace
-{
-    // Gap with no continuous damage after which the "grunt on entry" re-arms.
-    // Must exceed one frame so per-frame continuous damage keeps it armed.
-    constexpr float k_continuousReArmDelay = 0.2f;
-}
-
 IMPLEMENT_SCRIPT_FIELDS_INHERITED(PlayerDamageable, Damageable,
     SERIALIZED_FLOAT(m_heartbeatThreshold, "Heartbeat Threshold", 0.5f, 0.25f, 0.0f)
 )
@@ -48,18 +41,6 @@ void PlayerDamageable::Update()
 {
     Damageable::Update();
 
-    // Continuous damage refreshes m_continuousDamageTimer every frame. Once it lapses
-    // (player left the continuous source, e.g. back within Bound range), re-arm the
-    // entry grunt so the next separation grunts once again.
-    if (m_continuousDamageTimer > 0.0f)
-    {
-        m_continuousDamageTimer -= Time::getDeltaTime();
-        if (m_continuousDamageTimer <= 0.0f)
-        {
-            m_continuousDamageActive = false;
-        }
-    }
-
     if (!m_haptic) return;
 
     if (isDead())
@@ -87,14 +68,9 @@ void PlayerDamageable::onDamaged(float amount)
 
     if (isLastDamageContinuous())
     {
-        // Continuous source (Bound separation, DoTs): grunt ONCE on entry, then let
-        // the escalating heartbeat carry the tension. Never machine-gun the grunt.
-        m_continuousDamageTimer = k_continuousReArmDelay;
-        if (!m_continuousDamageActive)
-        {
-            m_continuousDamageActive = true;
-            playHurtSfx();
-        }
+        // Continuous source (Bound separation): no per-hit grunt. The Cooperative
+        // Bound-Damage loop (started by Bound) conveys the ongoing separation, and the
+        // escalating heartbeat carries the tension.
         return;
     }
 
@@ -174,6 +150,15 @@ void PlayerDamageable::onRevive()
     if (m_haptic)
     {
         m_haptic->stop();
+    }
+
+    if (m_deathSound != nullptr)
+    {
+        m_deathSound->playRevived();
+    }
+    if (m_lyrielSound != nullptr)
+    {
+        m_lyrielSound->playRevived();
     }
 }
 
