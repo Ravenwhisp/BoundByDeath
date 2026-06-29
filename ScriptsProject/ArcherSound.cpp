@@ -10,10 +10,12 @@ namespace
     constexpr const char* k_death        = "Play_Archer_Death";
     constexpr const char* k_footstep     = "Play_ArcherFootsteps";
 
-    // Volley: 4 shots staggered. The random container picks a different variation per
-    // shot, so the reused basic-shot SFX doesn't sound cloned.
-    constexpr int   k_barrageShots   = 4;
-    constexpr float k_barrageStagger = 0.08f; // 80 ms between shots → ~240 ms volley
+    // Volley timing. The arrows reuse the basic shot (Wwise random container → a distinct
+    // sample each time), so the only thing that made it sound mechanical was the perfectly
+    // even spacing. These UNEVEN offsets (gaps that widen slightly) read as a natural
+    // flurry of looses, then a spread-out rain of impacts — not a "ta-ta-ta-ta" stutter.
+    constexpr float k_releaseOffsets[] = { 0.0f, 0.05f, 0.11f, 0.18f }; // quick loose (~180 ms)
+    constexpr float k_impactOffsets[]  = { 0.0f, 0.09f, 0.20f, 0.34f }; // arrows raining (~340 ms)
 }
 
 ArcherSound::ArcherSound(GameObject* owner)
@@ -30,17 +32,17 @@ const char* ArcherSound::evFootstep()       const { return k_footstep; }
 
 void ArcherSound::playBarrageReleaseVolley()
 {
-    for (int i = 0; i < k_barrageShots; ++i)
+    for (const float offset : k_releaseOffsets)
     {
-        postEventDelayed(k_basicRelease, i * k_barrageStagger);
+        postEventDelayed(k_basicRelease, offset);
     }
 }
 
 void ArcherSound::playBarrageImpactVolley()
 {
-    for (int i = 0; i < k_barrageShots; ++i)
+    for (const float offset : k_impactOffsets)
     {
-        postEventDelayed(k_basicImpact, i * k_barrageStagger);
+        postEventDelayed(k_basicImpact, offset);
     }
 }
 
