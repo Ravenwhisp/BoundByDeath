@@ -170,6 +170,26 @@ bool EnemyAttackExecutor::tryDamageTargetInCone(Transform* targetTransform, cons
     return applyDamageToTarget(targetTransform, damage, sourceName);
 }
 
+void EnemyAttackExecutor::tryDamageAndStunSingleTargetInCone(Transform* targetTransform, const Vector3& center, const Vector3& direction, float range, float halfAngleDegrees, float damage, float stunDuration, const char* sourceName)
+{
+    const bool damaged = tryDamageTargetInCone(
+        targetTransform,
+        center,
+        direction,
+        range,
+        halfAngleDegrees,
+        damage,
+        sourceName
+    );
+
+    if (!damaged)
+    {
+        return;
+    }
+
+    applyStunToTarget(targetTransform, stunDuration, sourceName);
+}
+
 bool EnemyAttackExecutor::applyDamageToTarget(Transform* targetTransform, float damage, const char* sourceName)
 {
     if (!targetTransform)

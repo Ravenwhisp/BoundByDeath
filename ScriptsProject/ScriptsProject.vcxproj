@@ -233,6 +233,9 @@
     <ClInclude Include="MeleeEnemyController.h" />
     <ClInclude Include="MoveObjectAlongPathAction.h" />
     <ClInclude Include="MoveObjectToTransformAction.h" />
+    <ClInclude Include="MusicManager.h" />
+    <ClInclude Include="MusicStates.h" />
+    <ClInclude Include="MusicStateEvent.h" />
     <ClInclude Include="ObjectiveEvent.h" />
     <ClInclude Include="PaladinAttackConfig.h" />
     <ClInclude Include="PaladinChargeState.h" />
@@ -266,6 +269,14 @@
     <ClInclude Include="AbilityDash.h" />
     <ClInclude Include="LyrielDash.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="SkeletonAttackConfig.h" />
+    <ClInclude Include="SkeletonAttackDebugDraw.h" />
+    <ClInclude Include="SkeletonChaseState.h" />
+    <ClInclude Include="SkeletonDamageable.h" />
+    <ClInclude Include="SkeletonEnemyController.h" />
+    <ClInclude Include="SkeletonGuardState.h" />
+    <ClInclude Include="SkeletonReviveState.h" />
+    <ClInclude Include="SkeletonScimitarState.h" />
     <ClInclude Include="SpiderChaseState.h" />
     <ClInclude Include="SpiderEnemyController.h" />
     <ClInclude Include="SpikeTrap.h" />
@@ -366,6 +377,8 @@
     <ClCompile Include="MeleeEnemyController.cpp" />
     <ClCompile Include="MoveObjectAlongPathAction.cpp" />
     <ClCompile Include="MoveObjectToTransformAction.cpp" />
+    <ClCompile Include="MusicManager.cpp" />
+    <ClCompile Include="MusicStateEvent.cpp" />
     <ClCompile Include="ObjectiveEvent.cpp" />
     <ClCompile Include="PaladinAttackConfig.cpp" />
     <ClCompile Include="PaladinChargeState.cpp" />
@@ -406,6 +419,14 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="SkeletonAttackConfig.cpp" />
+    <ClCompile Include="SkeletonAttackDebugDraw.cpp" />
+    <ClCompile Include="SkeletonChaseState.cpp" />
+    <ClCompile Include="SkeletonDamageable.cpp" />
+    <ClCompile Include="SkeletonEnemyController.cpp" />
+    <ClCompile Include="SkeletonGuardState.cpp" />
+    <ClCompile Include="SkeletonReviveState.cpp" />
+    <ClCompile Include="SkeletonScimitarState.cpp" />
     <ClCompile Include="SpiderChaseState.cpp" />
     <ClCompile Include="SpiderEnemyController.cpp" />
     <ClCompile Include="SpikeTrap.cpp" />
