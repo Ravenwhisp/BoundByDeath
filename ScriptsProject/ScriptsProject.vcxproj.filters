@@ -7,6 +7,9 @@
     <Filter Include="Systems">
       <UniqueIdentifier>{b253a0ac-b25d-4893-96c3-e43c1186a91c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Systems\Music">
+      <UniqueIdentifier>{f1a2b3c4-d5e6-47a8-9b0c-1d2e3f4a5b6c}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Tests">
       <UniqueIdentifier>{c31886a9-4077-449c-804f-6fcf551707ca}</UniqueIdentifier>
     </Filter>
@@ -142,6 +145,12 @@
     <Filter Include="Combat\Projectiles">
       <UniqueIdentifier>{90bff8f3-21b4-4d10-b4a9-921262cc9328}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Enemies\Skeleton">
+      <UniqueIdentifier>{30f114ea-79b4-442b-9bb2-9dfc8072e06d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Enemies\Skeleton\States">
+      <UniqueIdentifier>{bee86649-753b-4746-bc39-122ddb51888b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -239,9 +248,6 @@
     <ClInclude Include="LyrielSound.h">
       <Filter>Character\Lyriel</Filter>
     </ClInclude>
-    <ClInclude Include="ArrowPool.h">
-      <Filter>Character\Lyriel</Filter>
-    </ClInclude>
     <ClInclude Include="LyrielAbilityBase.h">
       <Filter>Character\Lyriel\Abilities</Filter>
     </ClInclude>
@@ -305,6 +311,15 @@
     <ClInclude Include="LightZoneTrigger.h">
       <Filter>Interaction/Gameplay</Filter>
     </ClInclude>
+    <ClInclude Include="MusicManager.h">
+      <Filter>Systems\Music</Filter>
+    </ClInclude>
+    <ClInclude Include="MusicStates.h">
+      <Filter>Systems\Music</Filter>
+    </ClInclude>
+    <ClInclude Include="MusicStateEvent.h">
+      <Filter>Interaction/Gameplay\Events</Filter>
+    </ClInclude>
     <ClInclude Include="Pickup.h">
       <Filter>Interaction/Gameplay</Filter>
     </ClInclude>
@@ -359,6 +374,9 @@
     <ClInclude Include="EnemyBaseController.h">
       <Filter>Enemies</Filter>
     </ClInclude>
+    <ClInclude Include="EnemyStunParticles.h">
+      <Filter>Enemies</Filter>
+    </ClInclude>
     <ClInclude Include="EnemyDeathState.h">
       <Filter>Enemies\BaseStates</Filter>
     </ClInclude>
@@ -370,6 +388,15 @@
     </ClInclude>
     <ClInclude Include="ArcherArrowBarrageState.h">
       <Filter>Enemies\Archer\States</Filter>
+    </ClInclude>
+    <ClInclude Include="ArcherArrowProjectile.h">
+      <Filter>Enemies\Archer</Filter>
+    </ClInclude>
+    <ClInclude Include="ArcherArrowShooter.h">
+      <Filter>Enemies\Archer</Filter>
+    </ClInclude>
+    <ClInclude Include="ArcherGuardParticles.h">
+      <Filter>Enemies\Archer</Filter>
     </ClInclude>
     <ClInclude Include="ArcherSomersaultState.h">
       <Filter>Enemies\Archer\States</Filter>
@@ -516,6 +543,32 @@
     <ClInclude Include="LyrielArrowProjectile.h">
       <Filter>Combat\Projectiles</Filter>
     </ClInclude>
+    <ClInclude Include="CameraTransitionStep.h" />
+    <ClInclude Include="CombatAreaEvent.h" />
+    <ClInclude Include="SkeletonAttackConfig.h">
+      <Filter>Enemies\Skeleton</Filter>
+    </ClInclude>
+    <ClInclude Include="SkeletonDamageable.h">
+      <Filter>Enemies\Skeleton</Filter>
+    </ClInclude>
+    <ClInclude Include="SkeletonEnemyController.h">
+      <Filter>Enemies\Skeleton</Filter>
+    </ClInclude>
+    <ClInclude Include="SkeletonScimitarState.h">
+      <Filter>Enemies\Skeleton\States</Filter>
+    </ClInclude>
+    <ClInclude Include="SkeletonReviveState.h">
+      <Filter>Enemies\Skeleton\States</Filter>
+    </ClInclude>
+    <ClInclude Include="SkeletonGuardState.h">
+      <Filter>Enemies\Skeleton\States</Filter>
+    </ClInclude>
+    <ClInclude Include="SkeletonChaseState.h">
+      <Filter>Enemies\Skeleton\States</Filter>
+    </ClInclude>
+    <ClInclude Include="SkeletonAttackDebugDraw.h">
+      <Filter>Enemies\Skeleton</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
@@ -614,9 +667,6 @@
     <ClCompile Include="LyrielSound.cpp">
       <Filter>Character\Lyriel</Filter>
     </ClCompile>
-    <ClCompile Include="ArrowPool.cpp">
-      <Filter>Character\Lyriel</Filter>
-    </ClCompile>
     <ClCompile Include="LyrielAbilityBase.cpp">
       <Filter>Character\Lyriel\Abilities</Filter>
     </ClCompile>
@@ -680,6 +730,12 @@
     <ClCompile Include="LightZoneTrigger.cpp">
       <Filter>Interaction/Gameplay</Filter>
     </ClCompile>
+    <ClCompile Include="MusicManager.cpp">
+      <Filter>Systems\Music</Filter>
+    </ClCompile>
+    <ClCompile Include="MusicStateEvent.cpp">
+      <Filter>Interaction/Gameplay\Events</Filter>
+    </ClCompile>
     <ClCompile Include="Pickup.cpp">
       <Filter>Interaction/Gameplay</Filter>
     </ClCompile>
@@ -734,6 +790,9 @@
     <ClCompile Include="EnemyBaseController.cpp">
       <Filter>Enemies</Filter>
     </ClCompile>
+    <ClCompile Include="EnemyStunParticles.cpp">
+      <Filter>Enemies</Filter>
+    </ClCompile>
     <ClCompile Include="EnemyDeathState.cpp">
       <Filter>Enemies\BaseStates</Filter>
     </ClCompile>
@@ -745,6 +804,15 @@
     </ClCompile>
     <ClCompile Include="ArcherArrowBarrageState.cpp">
       <Filter>Enemies\Archer\States</Filter>
+    </ClCompile>
+    <ClCompile Include="ArcherArrowProjectile.cpp">
+      <Filter>Enemies\Archer</Filter>
+    </ClCompile>
+    <ClCompile Include="ArcherArrowShooter.cpp">
+      <Filter>Enemies\Archer</Filter>
+    </ClCompile>
+    <ClCompile Include="ArcherGuardParticles.cpp">
+      <Filter>Enemies\Archer</Filter>
     </ClCompile>
     <ClCompile Include="ArcherSomersaultState.cpp">
       <Filter>Enemies\Archer\States</Filter>
@@ -884,6 +952,32 @@
     </ClCompile>
     <ClCompile Include="LyrielArrowProjectile.cpp">
       <Filter>Combat\Projectiles</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraTransitionStep.cpp" />
+    <ClCompile Include="CombatAreaEvent.cpp" />
+    <ClCompile Include="SkeletonAttackConfig.cpp">
+      <Filter>Enemies\Skeleton</Filter>
+    </ClCompile>
+    <ClCompile Include="SkeletonDamageable.cpp">
+      <Filter>Enemies\Skeleton</Filter>
+    </ClCompile>
+    <ClCompile Include="SkeletonEnemyController.cpp">
+      <Filter>Enemies\Skeleton</Filter>
+    </ClCompile>
+    <ClCompile Include="SkeletonScimitarState.cpp">
+      <Filter>Enemies\Skeleton\States</Filter>
+    </ClCompile>
+    <ClCompile Include="SkeletonReviveState.cpp">
+      <Filter>Enemies\Skeleton\States</Filter>
+    </ClCompile>
+    <ClCompile Include="SkeletonGuardState.cpp">
+      <Filter>Enemies\Skeleton\States</Filter>
+    </ClCompile>
+    <ClCompile Include="SkeletonChaseState.cpp">
+      <Filter>Enemies\Skeleton\States</Filter>
+    </ClCompile>
+    <ClCompile Include="SkeletonAttackDebugDraw.cpp">
+      <Filter>Enemies\Skeleton</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

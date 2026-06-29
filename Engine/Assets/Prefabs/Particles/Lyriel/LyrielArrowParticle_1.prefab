@@ -1,0 +1,252 @@
+{
+    "Version": 2,
+    "sourcePath": "Assets\\Prefabs\\Particles\\LyrielArrowParticle_1.prefab",
+    "Name": "LyrielArrowParticle",
+    "Active": true,
+    "Static": false,
+    "Layer": "DEFAULT",
+    "Tag": "DEFAULT",
+    "Transform": {
+        "Position": [
+            1.3509068489074707,
+            0.0,
+            1.4901161193847656e-8
+        ],
+        "Rotation": [
+            -0.0,
+            0.0,
+            -0.0,
+            1.0
+        ],
+        "Scale": [
+            2.0,
+            2.0,
+            1.0
+        ]
+    },
+    "Components": [
+        {
+            "UID": 3987175032056748499,
+            "ComponentType": "MODEL",
+            "Active": true,
+            "MeshAssetId": {
+                "uid": 3818099652335832123,
+                "libId": "d27b3af32329d9da3d584f2ae8d03c93",
+                "type": "MESH"
+            },
+            "SkinAssetId": {
+                "uid": 0,
+                "libId": "",
+                "type": "SKIN"
+            },
+            "Materials": [
+                {
+                    "uid": 371651012915832828,
+                    "libId": "2b551e2f8b9f3d842ae7273c86ade10d",
+                    "type": "MATERIAL"
+                }
+            ]
+        },
+        {
+            "UID": 8984635181051135307,
+            "ComponentType": "SCRIPT",
+            "Active": true,
+            "ScriptName": "LyrielArrowProjectile",
+            "ScriptFields": {
+                "Particle Prefab Path": ""
+            }
+        }
+    ],
+    "Children": [
+        {
+            "Name": "ParticleLyrielArrow",
+            "Active": true,
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    0.0011545419692993164,
+                    0.0022326360922306776,
+                    1.3609610505227465e-7
+                ],
+                "Rotation": [
+                    0.5000000596046448,
+                    0.5,
+                    0.5,
+                    0.4999999403953552
+                ],
+                "Scale": [
+                    0.5007719993591309,
+                    0.5151686668395996,
+                    1.0470174551010132
+                ]
+            },
+            "Components": [
+                {
+                    "UID": 16478178068782899005,
+                    "ComponentType": "UIIMAGE",
+                    "Active": true,
+                    "TextureAssetId": {
+                        "uid": 18397412372386409293,
+                        "libId": "daec75fabdc85d041af40097e2ac1b24",
+                        "type": "TEXTURE"
+                    },
+                    "FillAmount": [
+                        0.0,
+                        1.0
+                    ],
+                    "FillMethod": "Horizontal",
+                    "FillOrigin": 0,
+                    "SheetColumns": 1,
+                    "SheetRows": 1,
+                    "SheetOffset": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "StretchDrawMode": "Stretch"
+                },
+                {
+                    "UID": 15565634263503456296,
+                    "ComponentType": "PARTICLE_SYSTEM",
+                    "Active": true,
+                    "TextureAssetId": {
+                        "uid": 18397412372386409293,
+                        "libId": "daec75fabdc85d041af40097e2ac1b24",
+                        "type": "TEXTURE"
+                    },
+                    "ParticleEmitters": [
+                        {
+                            "Modules": [
+                                {
+                                    "ModuleType": 2,
+                                    "Looping": true,
+                                    "Duration": 20.0,
+                                    "RateOverTime": 10.0,
+                                    "RateOverDistance": 0.0
+                                },
+                                {
+                                    "ModuleType": 4,
+                                    "LifeTimeType": "CONSTANT",
+                                    "StartLifeTime": 1.0
+                                },
+                                {
+                                    "ModuleType": 1,
+                                    "ShapeType": "CONE",
+                                    "Radius": 0.10000000149011612,
+                                    "RadiusThickness": 1.0,
+                                    "RadiusScale": 3.0
+                                },
+                                {
+                                    "ModuleType": 3,
+                                    "ColorOverTime": [
+                                        {
+                                            "IsAlphaMark": false,
+                                            "Position": 0.0,
+                                            "Color": [
+                                                0.7174609303474426,
+                                                0.9350626468658447,
+                                                0.9884169697761536
+                                            ]
+                                        },
+                                        {
+                                            "IsAlphaMark": true,
+                                            "Position": 0.016393441706895828,
+                                            "Alpha": 1.0
+                                        },
+                                        {
+                                            "IsAlphaMark": true,
+                                            "Position": 0.2655734121799469,
+                                            "Alpha": 1.0
+                                        },
+                                        {
+                                            "IsAlphaMark": true,
+                                            "Position": 0.7755775451660156,
+                                            "Alpha": 0.9350000023841858
+                                        },
+                                        {
+                                            "IsAlphaMark": true,
+                                            "Position": 0.9868852496147156,
+                                            "Alpha": 0.0
+                                        },
+                                        {
+                                            "IsAlphaMark": false,
+                                            "Position": 1.0,
+                                            "Color": [
+                                                0.0,
+                                                0.14048698544502258,
+                                                0.47876447439193726
+                                            ]
+                                        }
+                                    ],
+                                    "ColorCurve": [
+                                        0.4449999928474426,
+                                        0.05000000074505806,
+                                        0.550000011920929,
+                                        0.949999988079071
+                                    ]
+                                },
+                                {
+                                    "ModuleType": 5,
+                                    "VelocityType": "CURVE",
+                                    "InitialVelocity": 5.0,
+                                    "InitialVelocity2": 1.0,
+                                    "VelocityCurve": [
+                                        0.4699999988079071,
+                                        0.0,
+                                        0.7450000047683716,
+                                        0.7149999737739563
+                                    ]
+                                },
+                                {
+                                    "ModuleType": 6,
+                                    "StartScaleType": "RANDOM_BETWEEN_TWO",
+                                    "StartScale": [
+                                        0.5,
+                                        0.5,
+                                        0.0
+                                    ],
+                                    "StartScale2": [
+                                        0.75,
+                                        0.75,
+                                        0.0
+                                    ],
+                                    "ChangeSizeOverTime": true,
+                                    "EndScaleType": "CONSTANT",
+                                    "EndScale": [
+                                        0.20000000298023224,
+                                        0.20000000298023224,
+                                        0.0
+                                    ]
+                                },
+                                {
+                                    "ModuleType": 7,
+                                    "RotationType": "CONSTANT",
+                                    "StartRotation": 0.0,
+                                    "VelocityType": "CONSTANT",
+                                    "AngularVelocity": 0.0,
+                                    "FlipRotation": 0.0
+                                },
+                                {
+                                    "ModuleType": 8,
+                                    "TileRows": 1,
+                                    "TileColumns": 1,
+                                    "FPS": 0.0,
+                                    "StartFrameType": "CONSTANT",
+                                    "StartFrame": 0.0
+                                },
+                                {
+                                    "ModuleType": 9,
+                                    "RenderMode": "BILLBOARD",
+                                    "RenderLayer": 0
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "Children": []
+        }
+    ]
+}

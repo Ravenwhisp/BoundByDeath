@@ -52,16 +52,32 @@ void CrystalShadowMark::Update()
 
 void CrystalShadowMark::exploit()
 {
+    if (m_activated)
+    {
+        Debug::log("[CrystalMark] Crystal already activated, ignoring exploit.");
+        return;
+	}
+
     EnemyShadowMark::exploit(); 
 
     if (managerScript != nullptr)
     {
         managerScript->onCrystalsActivated(m_puzzleID);
+		m_activated = true;
     }
     else
     {
 		Debug::log("[CrystalMark] WARNING: PuzzleManagerLVL1 not found!");
     }
+}
+
+void CrystalShadowMark::notifyDeathHit()
+{
+    if (m_activated)
+    {
+        return;
+    }
+    EnemyShadowMark::notifyDeathHit();
 }
 
 IMPLEMENT_SCRIPT(CrystalShadowMark)

@@ -6,6 +6,7 @@
 #include "ArthurUI.h"
 
 #include "Damageable.h"
+#include "MusicManager.h"
 
 #include <cmath>
 
@@ -71,6 +72,31 @@ void ArthurBossController::Update()
 		if (m_arthurUI)
 		{
 			m_arthurUI->showHealthUI(true);
+		}
+
+		// Música de boss. Si Arthur está en su propia escena con el MusicManager
+		// configurado a Level1_Boss, esto setea el mismo estado (inocuo).
+		if (MusicManager* music = MusicManager::Get())
+		{
+			music->SetState_Level1Boss();
+		}
+	}
+
+	// Arthur derrotado: la música vuelve a la capilla (una sola vez).
+	if (m_hasStartedEncounter && !m_bossDefeated)
+	{
+		if (m_damageable == nullptr)
+		{
+			m_damageable = GameObjectAPI::findScript<Damageable>(getOwner());
+		}
+
+		if (m_damageable != nullptr && m_damageable->isDead())
+		{
+			m_bossDefeated = true;
+			if (MusicManager* music = MusicManager::Get())
+			{
+				music->SetState_Level1Chapel();
+			}
 		}
 	}
 

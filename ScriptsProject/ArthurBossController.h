@@ -5,6 +5,7 @@
 class ArthurDetectionAggro;
 class ArthurAttackConfig;
 class ArthurUI;
+class Damageable;
 
 enum class ArthurBossPhase
 {
@@ -75,6 +76,10 @@ private:
 	ArthurBossPhase m_phase = ArthurBossPhase::Phase1;
 
 	bool m_hasStartedEncounter = false;
+
+	// Música: al morir Arthur se vuelve a Level1_Chapel (una sola vez).
+	bool m_bossDefeated = false;
+	Damageable* m_damageable = nullptr;
 
 	const float RADIANS_TO_DEGREES = 180.0f / 3.14159265f;
 

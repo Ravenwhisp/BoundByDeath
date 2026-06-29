@@ -26,6 +26,7 @@ protected:
     bool canDash() const override;
     void onDashStarted() override;
     void onDashUpdate(float dt) override;
+    void onDashEnded() override;
     bool validateDashTarget() override;
     void drawGizmo() override;
 

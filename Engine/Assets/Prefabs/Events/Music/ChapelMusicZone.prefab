@@ -1,0 +1,66 @@
+{
+    "Version": 2,
+    "sourcePath": "Assets\\Prefabs\\Events\\Music\\ChapelMusicZone.prefab",
+    "Name": "ChapelMusicZone",
+    "Active": true,
+    "Static": false,
+    "Layer": "DEFAULT",
+    "Tag": "DEFAULT",
+    "Transform": {
+        "Position": [
+            -71.41061401367188,
+            -11.61996078491211,
+            19.334789276123047
+        ],
+        "Rotation": [
+            -0.0,
+            0.0,
+            -0.0,
+            1.0
+        ],
+        "Scale": [
+            23.998064041137695,
+            26.151906967163086,
+            14.742650985717773
+        ]
+    },
+    "Components": [
+        {
+            "UID": 12333412478902947600,
+            "ComponentType": "TRIGGER",
+            "Active": true,
+            "Shape": "Box",
+            "Center": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Size": [
+                1.0,
+                1.0,
+                1.0
+            ]
+        },
+        {
+            "UID": 11617459996464412498,
+            "ComponentType": "SCRIPT",
+            "Active": true,
+            "ScriptName": "GameplayEventTrigger",
+            "ScriptFields": {
+                "Trigger Only Once": true
+            }
+        },
+        {
+            "UID": 14478935957345541050,
+            "ComponentType": "SCRIPT",
+            "Active": true,
+            "ScriptName": "MusicStateEvent",
+            "ScriptFields": {
+                "State On Enter": 3,
+                "Change State On Exit": false,
+                "State On Exit": 0
+            }
+        }
+    ],
+    "Children": []
+}

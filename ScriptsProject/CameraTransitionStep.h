@@ -2,6 +2,9 @@
 
 #include "ScriptAPI.h"
 
+class CameraTransitionController;
+class CameraTransitionStepAction;
+
 enum class CameraStepMoveMode
 {
     Linear = 0,
@@ -16,6 +19,8 @@ class CameraTransitionStep : public Script
 public:
     explicit CameraTransitionStep(GameObject* owner);
 
+    void Start() override;
+
     ScriptFieldList getExposedFields() const override;
 
     CameraStepMoveMode getMoveMode() const { return static_cast<CameraStepMoveMode>(m_moveMode); }
@@ -26,6 +31,13 @@ public:
     bool usesFovTransition() const { return m_useFovTransition; }
     float getTargetFov() const { return m_targetFov; }
 
+    void executeStepStartedActions(CameraTransitionController* controller);
+    void executeStepReachedActions(CameraTransitionController* controller);
+    void executeStepFinishedActions(CameraTransitionController* controller);
+
+private:
+    void findStepActions();
+
 public:
     int m_moveMode = static_cast<int>(CameraStepMoveMode::Smooth);
 
@@ -34,4 +46,7 @@ public:
 
     bool m_useFovTransition = false;
     float m_targetFov = 90.0f;
+
+private:
+    std::vector<CameraTransitionStepAction*> m_stepActions;
 };

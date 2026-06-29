@@ -160,6 +160,9 @@
   <ItemGroup>
     <ClInclude Include="AbilityBase.h" />
     <ClInclude Include="ArcherArrowBarrageState.h" />
+    <ClInclude Include="ArcherArrowProjectile.h" />
+    <ClInclude Include="ArcherArrowShooter.h" />
+    <ClInclude Include="ArcherGuardParticles.h" />
     <ClInclude Include="ArcherAttackConfig.h" />
     <ClInclude Include="ArcherSomersaultState.h" />
     <ClInclude Include="ArcherUI.h" />
@@ -171,6 +174,7 @@
     <ClInclude Include="CameraTransitionController.h" />
     <ClInclude Include="CameraTransitionEvent.h" />
     <ClInclude Include="CameraTransitionStep.h" />
+    <ClInclude Include="CameraTransitionStepAction.h" />
     <ClInclude Include="CombatAreaEvent.h" />
     <ClInclude Include="EnemyAttackState.h" />
     <ClInclude Include="EnemyBaseAttackConfig.h" />
@@ -205,6 +209,7 @@
     <ClInclude Include="DeathSound.h" />
     <ClInclude Include="DeathTaunt.h" />
     <ClInclude Include="EnemyBaseController.h" />
+    <ClInclude Include="EnemyStunParticles.h" />
     <ClInclude Include="EnergyBallProjectile.h" />
     <ClInclude Include="GameplayEventAction.h" />
     <ClInclude Include="GameplayEventTrigger.h" />
@@ -230,11 +235,17 @@
     <ClInclude Include="LyrielTargetIndicatorUI.h" />
     <ClInclude Include="LyrielUI.h" />
     <ClInclude Include="MeleeEnemyController.h" />
+    <ClInclude Include="MoveObjectAlongPathAction.h" />
+    <ClInclude Include="MoveObjectToTransformAction.h" />
+    <ClInclude Include="MusicManager.h" />
+    <ClInclude Include="MusicStates.h" />
+    <ClInclude Include="MusicStateEvent.h" />
     <ClInclude Include="ObjectiveEvent.h" />
     <ClInclude Include="PaladinAttackConfig.h" />
     <ClInclude Include="PaladinChargeState.h" />
     <ClInclude Include="PaladinChaseState.h" />
     <ClInclude Include="PersistingPowerupState.h" />
+    <ClInclude Include="PlayAnimationAction.h" />
     <ClInclude Include="PlayerController.h" />
     <ClInclude Include="PopUpController.h" />
     <ClInclude Include="PopUpEvent.h" />
@@ -262,6 +273,14 @@
     <ClInclude Include="AbilityDash.h" />
     <ClInclude Include="LyrielDash.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="SkeletonAttackConfig.h" />
+    <ClInclude Include="SkeletonAttackDebugDraw.h" />
+    <ClInclude Include="SkeletonChaseState.h" />
+    <ClInclude Include="SkeletonDamageable.h" />
+    <ClInclude Include="SkeletonEnemyController.h" />
+    <ClInclude Include="SkeletonGuardState.h" />
+    <ClInclude Include="SkeletonReviveState.h" />
+    <ClInclude Include="SkeletonScimitarState.h" />
     <ClInclude Include="SpiderChaseState.h" />
     <ClInclude Include="SpiderEnemyController.h" />
     <ClInclude Include="SpikeTrap.h" />
@@ -289,6 +308,9 @@
   <ItemGroup>
     <ClCompile Include="AbilityBase.cpp" />
     <ClCompile Include="ArcherArrowBarrageState.cpp" />
+    <ClCompile Include="ArcherArrowProjectile.cpp" />
+    <ClCompile Include="ArcherArrowShooter.cpp" />
+    <ClCompile Include="ArcherGuardParticles.cpp" />
     <ClCompile Include="ArcherAttackConfig.cpp" />
     <ClCompile Include="ArcherSomersaultState.cpp" />
     <ClCompile Include="ArcherUI.cpp" />
@@ -300,6 +322,7 @@
     <ClCompile Include="CameraTransitionController.cpp" />
     <ClCompile Include="CameraTransitionEvent.cpp" />
     <ClCompile Include="CameraTransitionStep.cpp" />
+    <ClCompile Include="CameraTransitionStepAction.cpp" />
     <ClCompile Include="CombatAreaEvent.cpp" />
     <ClCompile Include="EnemyAttackState.cpp" />
     <ClCompile Include="EnemyBaseAttackConfig.cpp" />
@@ -334,6 +357,7 @@
     <ClCompile Include="DeathSound.cpp" />
     <ClCompile Include="DeathTaunt.cpp" />
     <ClCompile Include="EnemyBaseController.cpp" />
+    <ClCompile Include="EnemyStunParticles.cpp" />
     <ClCompile Include="EnergyBallProjectile.cpp" />
     <ClCompile Include="GameplayEventTrigger.cpp" />
     <ClCompile Include="HUDFader.cpp" />
@@ -359,11 +383,16 @@
     <ClCompile Include="LyrielTargetIndicatorUI.cpp" />
     <ClCompile Include="LyrielUI.cpp" />
     <ClCompile Include="MeleeEnemyController.cpp" />
+    <ClCompile Include="MoveObjectAlongPathAction.cpp" />
+    <ClCompile Include="MoveObjectToTransformAction.cpp" />
+    <ClCompile Include="MusicManager.cpp" />
+    <ClCompile Include="MusicStateEvent.cpp" />
     <ClCompile Include="ObjectiveEvent.cpp" />
     <ClCompile Include="PaladinAttackConfig.cpp" />
     <ClCompile Include="PaladinChargeState.cpp" />
     <ClCompile Include="PaladinChaseState.cpp" />
     <ClCompile Include="PersistingPowerupState.cpp" />
+    <ClCompile Include="PlayAnimationAction.cpp" />
     <ClCompile Include="PlayerController.cpp" />
     <ClCompile Include="PopUpController.cpp" />
     <ClCompile Include="PopUpEvent.cpp" />
@@ -398,6 +427,14 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="SkeletonAttackConfig.cpp" />
+    <ClCompile Include="SkeletonAttackDebugDraw.cpp" />
+    <ClCompile Include="SkeletonChaseState.cpp" />
+    <ClCompile Include="SkeletonDamageable.cpp" />
+    <ClCompile Include="SkeletonEnemyController.cpp" />
+    <ClCompile Include="SkeletonGuardState.cpp" />
+    <ClCompile Include="SkeletonReviveState.cpp" />
+    <ClCompile Include="SkeletonScimitarState.cpp" />
     <ClCompile Include="SpiderChaseState.cpp" />
     <ClCompile Include="SpiderEnemyController.cpp" />
     <ClCompile Include="SpikeTrap.cpp" />

@@ -266,11 +266,10 @@ void ShadowExecution::applyAoEDamage()
         }
         else
         {
-            const float damage = maxHp * m_standardDamage;
-            EnemyHitContext ctx;
+            ctx.damage = maxHp * m_standardDamage;
 
             Debug::log("[ShadowExecution] Enemy '%s' took %.1f damage (%.0f%% of max HP).",
-            GameObjectAPI::getName(enemy), damage, m_standardDamage * 100.0f);
+            GameObjectAPI::getName(enemy), ctx.damage, m_standardDamage * 100.0f);
         }
 
         ctx.attacker = nullptr;
