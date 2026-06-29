@@ -71,6 +71,8 @@ bool SkeletonDamageable::isPermanentlyDead() const
 void SkeletonDamageable::startDowned()
 {
 	m_lifeState = SkeletonLifeState::Downed;
+	m_previousMaxHp = getMaxHp();
+	m_maxHp = m_attackConfig->m_downedHP;
 	m_currentHp = m_attackConfig->m_downedHP;
 	m_isDead = false;
 
@@ -89,8 +91,9 @@ void SkeletonDamageable::completeRevive()
 		return;
 	}
 
+	m_maxHp = m_previousMaxHp;
 	m_lifeState = SkeletonLifeState::Alive;
-	revive(getMaxHp() * 0.5f);
+	revive(m_previousMaxHp * 0.5f);
 
 	Debug::log("[SkeletonDamageable] Skeleton revived at 50% HP.");
 }
