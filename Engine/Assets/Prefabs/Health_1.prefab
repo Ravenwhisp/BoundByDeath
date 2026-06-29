@@ -26,7 +26,7 @@
     },
     "Components": [
         {
-            "UID": 5064479095336605348,
+            "UID": 9653487526393105231,
             "ComponentType": "PARTICLE_SYSTEM",
             "Active": true,
             "TextureAssetId": {
@@ -39,7 +39,7 @@
                     "Modules": [
                         {
                             "ModuleType": 2,
-                            "Looping": true,
+                            "Looping": false,
                             "Duration": 5.0,
                             "RateOverTime": 15.0,
                             "RateOverDistance": 0.0
@@ -170,6 +170,15 @@
                     ]
                 }
             ]
+        },
+        {
+            "UID": 5329678495211578833,
+            "ComponentType": "SCRIPT",
+            "Active": true,
+            "ScriptName": "DestroyParticles",
+            "ScriptFields": {
+                "Lifetime": 2.0
+            }
         }
     ],
     "Children": [
@@ -199,7 +208,7 @@
             },
             "Components": [
                 {
-                    "UID": 1400803316547997041,
+                    "UID": 17902870117304728805,
                     "ComponentType": "PARTICLE_SYSTEM",
                     "Active": true,
                     "TextureAssetId": {

@@ -1,6 +1,13 @@
 #include "pch.h"
 #include "BreakableObject.h"
 
+#include "EnvironmentSound.h"
+
+namespace
+{
+    constexpr const char* k_barrelBreak = "Play_Environment_Barrel_Break";
+}
+
 IMPLEMENT_SCRIPT_FIELDS(BreakableObject,
     SERIALIZED_STRING(m_dustEffectParticle, "Dust Effect Particle")
 )
@@ -46,6 +53,12 @@ void BreakableObject::Start()
     {
         NavigationAPI::setBlocked(m_navBlocker, true);
     }
+}
+
+void BreakableObject::onBreak()
+{
+    breakObject();
+    EnvironmentSound::play(getOwner(), k_barrelBreak);   // barrels & crates (same prefab)
 }
 
 void BreakableObject::breakObject()

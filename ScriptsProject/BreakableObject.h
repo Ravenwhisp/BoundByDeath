@@ -16,7 +16,7 @@ public:
 
     ScriptFieldList getExposedFields() const override;
 
-    virtual void onBreak() { breakObject(); }
+    virtual void onBreak();
     bool isBroken() const { return m_isBroken; }
 
 protected:
