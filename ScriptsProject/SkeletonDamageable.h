@@ -39,4 +39,5 @@ private:
 	SkeletonEnemyController* m_skeletonController = nullptr;
 	SkeletonAttackConfig* m_attackConfig = nullptr;
 	SkeletonLifeState m_lifeState = SkeletonLifeState::Alive;
+	float m_previousMaxHp = 0.0f;
 };
