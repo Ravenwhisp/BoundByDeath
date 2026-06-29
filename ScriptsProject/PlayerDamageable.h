@@ -32,9 +32,6 @@ private:
     HeartbeatHaptic* m_haptic = nullptr;
     DeathSound*  m_deathSound  = nullptr;
     LyrielSound* m_lyrielSound = nullptr;
-    PlayerRenderBufferComponent* m_playerRenderBuffer = nullptr;
-
-    ScriptComponentRef<Transform> m_renderer;
 
     // Continuous-damage (Bound separation, DoTs) hurt handling: play the grunt once
     // on ENTERING the continuous damage, then stay silent (the heartbeat conveys the
@@ -43,10 +40,5 @@ private:
     bool  m_continuousDamageActive = false;
     float m_continuousDamageTimer  = 0.0f;
 
-    bool  m_damageHighlightActive = false;
-    float m_damageHighlightTimer = 0.0f;
-    float m_damageHighlightSpeed = 1.0f;
-
     void playHurtSfx();
-    void playHurtVfx();
 };
