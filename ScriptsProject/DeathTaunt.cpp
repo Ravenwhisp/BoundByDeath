@@ -8,6 +8,7 @@
 #include "EnemyShadowMark.h"
 #include "DeathUI.h"
 #include "DeathConfig.h"
+#include "DeathParticles.h"
 
 #include <cmath>
 
@@ -30,6 +31,13 @@ void DeathTaunt::Start()
     if (!m_deathUI)
     {
         Debug::warn("[DeathTaunt] DeathUI not found.");
+    }
+
+    m_deathParticles = GameObjectAPI::findScript<DeathParticles>(getOwner());
+
+    if (!m_deathParticles)
+    {
+        Debug::warn("[DeathTaunt] DeathParticles not found.");
     }
 }
 
@@ -203,6 +211,11 @@ void DeathTaunt::releaseAimAndCast()
         if (sound != nullptr)
         {
             sound->playTauntShout();
+        }
+
+        if (m_deathParticles != nullptr)
+        {
+            m_deathParticles->SetTauntActive(finalDirection);
         }
 
         applyTauntToEnemiesInCone(finalDirection);

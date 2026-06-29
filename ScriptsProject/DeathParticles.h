@@ -2,7 +2,6 @@
 #include <Script.h>
 #include "ScriptAPI.h"
 
-
 class DeathParticles : public Script
 {
 	DECLARE_SCRIPT(DeathParticles)
@@ -10,13 +9,17 @@ public:
 
 	explicit DeathParticles(GameObject* owner);
 
+	void Update() override;
+
 	ScriptComponentRef<Transform> m_dashTrail;
 	ScriptComponentRef<Transform> m_scytheTrail;
-	ScriptComponentRef<Transform> m_tauntParticle;
+	std::string m_tauntParticlePath = "Assets/Prefabs/Particles/Death/DeathTaunt.prefab";
+
+	GameObject* m_activeTauntParticle = nullptr;
+	float m_tauntParticleLifetime = 0.0f;
 
 	Transform* m_dashTrailController = nullptr;
 	Transform* m_scytheTrailController = nullptr;
-	Transform* m_tauntParticle = nullptr;
 
 	ScriptFieldList getExposedFields() const override;
 
@@ -26,7 +29,7 @@ public:
 	void SetScytheActive();
 	void SetScytheInactive();
 
-	void SetTauntActive();
+	void SetTauntActive(const Vector3& direction);
 	void SetTauntInactive();
 
 private:
