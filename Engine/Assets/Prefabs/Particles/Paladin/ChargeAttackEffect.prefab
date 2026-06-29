@@ -1,6 +1,6 @@
 {
     "Version": 2,
-    "sourcePath": "Assets\\Prefabs\\Particles\\Paladin\\ChargeAttackEffect_1.prefab",
+    "sourcePath": "Assets\\Prefabs\\Particles\\Paladin\\ChargeAttackEffect.prefab",
     "Name": "ChargeAttackEffect",
     "Active": true,
     "Static": false,
@@ -26,12 +26,12 @@
     },
     "Components": [
         {
-            "UID": 14717802567811102004,
+            "UID": 15273877533212645400,
             "ComponentType": "PARTICLE_SYSTEM",
             "Active": true,
             "TextureAssetId": {
-                "uid": 10764966982965910805,
-                "libId": "79aa7d0194ab9b0020aa064e26131741",
+                "uid": 1565918568553857097,
+                "libId": "513fcfde217bc216a51bc58182281874",
                 "type": "TEXTURE"
             },
             "ParticleEmitters": [
@@ -42,12 +42,12 @@
                             "Looping": false,
                             "Duration": 1.0,
                             "RateOverTime": 30.0,
-                            "RateOverDistance": 0.0
+                            "RateOverDistance": 5.0
                         },
                         {
                             "ModuleType": 4,
                             "LifeTimeType": "CONSTANT",
-                            "StartLifeTime": 0.4000000059604645
+                            "StartLifeTime": 0.6000000238418579
                         },
                         {
                             "ModuleType": 1,
@@ -84,19 +84,19 @@
                         {
                             "ModuleType": 5,
                             "VelocityType": "CONSTANT",
-                            "InitialVelocity": 5.0
+                            "InitialVelocity": 0.0
                         },
                         {
                             "ModuleType": 6,
                             "StartScaleType": "RANDOM_BETWEEN_TWO",
                             "StartScale": [
-                                0.5,
                                 0.6000000238418579,
+                                0.5,
                                 0.0
                             ],
                             "StartScale2": [
-                                1.0,
                                 1.2000000476837158,
+                                1.0,
                                 0.0
                             ],
                             "ChangeSizeOverTime": false

@@ -3,121 +3,151 @@
 
 #include "MeleeEnemyController.h"
 #include "PaladinAttackConfig.h"
+#include "PaladinVFX.h"
 
 PaladinChargeState::PaladinChargeState(GameObject* owner)
-	: StateMachineScript(owner)
+    : StateMachineScript(owner)
 {
 }
 
 void PaladinChargeState::OnStateEnter()
 {
-	m_paladinController = GameObjectAPI::findScript<MeleeEnemyController>(getOwner());
-	m_attackConfig = GameObjectAPI::findScript<PaladinAttackConfig>(getOwner());
-	m_animation = AnimationAPI::getAnimationComponent(getOwner());
+    m_paladinController = GameObjectAPI::findScript<MeleeEnemyController>(getOwner());
+    m_attackConfig = GameObjectAPI::findScript<PaladinAttackConfig>(getOwner());
+    m_paladinVFX = GameObjectAPI::findScript<PaladinVFX>(getOwner());
+    m_animation = AnimationAPI::getAnimationComponent(getOwner());
 
-	m_stateTimer = 0.0f;
+    m_stateTimer = 0.0f;
 
-	if (!m_paladinController)
-	{
-		Debug::error("[PaladinChargeState] MeleeEnemyController not found.");
-		return;
-	}
+    if (!m_paladinController)
+    {
+        Debug::error("[PaladinChargeState] MeleeEnemyController not found.");
+        return;
+    }
 
-	if (!m_attackConfig)
-	{
-		Debug::error("[PaladinChargeState] PaladinAttackConfig not found.");
-		return;
-	}
+    if (!m_attackConfig)
+    {
+        Debug::error("[PaladinChargeState] PaladinAttackConfig not found.");
+        return;
+    }
 
-	if (!m_animation)
-	{
-		Debug::error("[PaladinChargeState] AnimationComponent not found.");
-		return;
-	}
+    if (!m_animation)
+    {
+        Debug::error("[PaladinChargeState] AnimationComponent not found.");
+        return;
+    }
 
-	m_paladinController->clearPath();
-	m_paladinController->resetRepathTimer();
+    if (!m_paladinVFX)
+    {
+        Debug::warn("[PaladinChargeState] PaladinVFX not found.");
+    }
 
-	m_chargeDirection = m_paladinController->getChargeDirection();
+    m_paladinController->clearPath();
+    m_paladinController->resetRepathTimer();
 
-	Debug::log("[PaladinChargeState] ENTER");
+    m_chargeDirection = m_paladinController->getChargeDirection();
+
+    if (m_paladinVFX)
+    {
+        m_paladinVFX->startChargeAttackEffect();
+    }
+
+    Debug::log("[PaladinChargeState] ENTER");
 }
 
 void PaladinChargeState::OnStateUpdate()
 {
-	if (!m_paladinController || !m_attackConfig || !m_animation)
-	{
-		return;
-	}
+    if (!m_paladinController || !m_attackConfig || !m_animation)
+    {
+        stopChargeAttackEffect();
+        return;
+    }
 
-	if (m_paladinController->trySendDeathTrigger(m_animation))
-	{
-		return;
-	}
+    if (m_paladinController->trySendDeathTrigger(m_animation))
+    {
+        stopChargeAttackEffect();
+        return;
+    }
 
-	if (m_paladinController->trySendStunTrigger(m_animation))
-	{
-		return;
-	}
+    if (m_paladinController->trySendStunTrigger(m_animation))
+    {
+        stopChargeAttackEffect();
+        return;
+    }
 
-	m_stateTimer += Time::getDeltaTime();
+    m_stateTimer += Time::getDeltaTime();
 
-	moveCharge();
+    moveCharge();
 
-	if (m_stateTimer >= m_attackConfig->m_chargeDuration || m_paladinController->isTargetInAttackRange())
-	{
-		finishCharge();
-		return;
-	}
+    if (m_stateTimer >= m_attackConfig->m_chargeDuration || m_paladinController->isTargetInAttackRange())
+    {
+        finishCharge();
+        return;
+    }
 }
 
 void PaladinChargeState::OnStateExit()
 {
-	Debug::log("[PaladinChargeState] EXIT");
+    Debug::log("[PaladinChargeState] EXIT");
+
+    stopChargeAttackEffect();
 }
 
 void PaladinChargeState::moveCharge()
 {
-	if (!m_attackConfig)
-	{
-		return;
-	}
+    if (!m_attackConfig)
+    {
+        return;
+    }
 
-	if (m_chargeDirection.LengthSquared() <= 0.0001f)
-	{
-		return;
-	}
+    if (m_chargeDirection.LengthSquared() <= 0.0001f)
+    {
+        return;
+    }
 
-	Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
-	if (!ownerTransform)
-	{
-		return;
-	}
+    Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
 
-	Vector3 ownerPosition = TransformAPI::getGlobalPosition(ownerTransform);
-	Vector3 desiredPosition = ownerPosition;
+    if (!ownerTransform)
+    {
+        return;
+    }
 
-	desiredPosition += m_chargeDirection * m_attackConfig->m_chargeSpeed * Time::getDeltaTime();
+    Vector3 ownerPosition = TransformAPI::getGlobalPosition(ownerTransform);
+    Vector3 desiredPosition = ownerPosition;
 
-	Vector3 nextPosition;
-	if (NavigationAPI::moveAlongSurface(ownerPosition, desiredPosition, nextPosition, Vector3(5.0f, 5.0f, 5.0f)))
-	{
-		TransformAPI::setGlobalPosition(ownerTransform, nextPosition);
-	}
+    desiredPosition += m_chargeDirection * m_attackConfig->m_chargeSpeed * Time::getDeltaTime();
+
+    Vector3 nextPosition;
+
+    if (NavigationAPI::moveAlongSurface(ownerPosition, desiredPosition, nextPosition, Vector3(5.0f, 5.0f, 5.0f)))
+    {
+        TransformAPI::setGlobalPosition(ownerTransform, nextPosition);
+    }
 }
 
 void PaladinChargeState::finishCharge()
 {
-	if (!m_paladinController || !m_animation)
-	{
-		return;
-	}
+    if (!m_paladinController || !m_animation)
+    {
+        stopChargeAttackEffect();
+        return;
+    }
 
-	m_paladinController->consumeChargeCooldown();
+    stopChargeAttackEffect();
 
-	AnimationAPI::sendTrigger(m_animation, "ToChase");
+    m_paladinController->consumeChargeCooldown();
 
-	Debug::log("[PaladinChargeState] Finished, Chase trigger sent");
+    AnimationAPI::sendTrigger(m_animation, "ToChase");
+
+    Debug::log("[PaladinChargeState] Finished, Chase trigger sent");
+}
+
+void PaladinChargeState::stopChargeAttackEffect()
+{
+    if (m_paladinVFX)
+    {
+        m_paladinVFX->stopChargeAttackEffect();
+    }
 }
 
 IMPLEMENT_SCRIPT(PaladinChargeState)

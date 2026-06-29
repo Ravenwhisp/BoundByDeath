@@ -5,6 +5,9 @@ namespace
 {
     constexpr const char* WALKING_DUST_PREFAB_PATH =
         "Assets/Prefabs/Particles/WalkingDust.prefab";
+
+    constexpr const char* CHARGE_ATTACK_EFFECT_PREFAB_PATH =
+        "Assets/Prefabs/Particles/Paladin/ChargeAttackEffect.prefab";
 }
 
 IMPLEMENT_SCRIPT_FIELDS(PaladinVFX,
@@ -21,6 +24,9 @@ void PaladinVFX::Start()
 {
     walkingDustEffect = nullptr;
     walkingDustActive = false;
+
+    chargeAttackEffect = nullptr;
+    chargeAttackEffectActive = false;
 }
 
 void PaladinVFX::Update()
@@ -28,6 +34,11 @@ void PaladinVFX::Update()
     if (walkingDustActive && walkingDustEffect)
     {
         updateWalkingDustPosition();
+    }
+
+    if (chargeAttackEffectActive && chargeAttackEffect)
+    {
+        updateChargeAttackEffectPosition();
     }
 }
 
@@ -56,6 +67,23 @@ void PaladinVFX::stopWalkingDust()
     removeWalkingDust();
 }
 
+void PaladinVFX::startChargeAttackEffect()
+{
+    if (chargeAttackEffectActive)
+    {
+        return;
+    }
+
+    chargeAttackEffectActive = true;
+    addChargeAttackEffect();
+}
+
+void PaladinVFX::stopChargeAttackEffect()
+{
+    chargeAttackEffectActive = false;
+    removeChargeAttackEffect();
+}
+
 Vector3 PaladinVFX::getWalkingDustPosition() const
 {
     GameObject* owner = getOwner();
@@ -73,6 +101,26 @@ Vector3 PaladinVFX::getWalkingDustPosition() const
         ownerPosition.x + ownerForward.x * walkingDustForwardOffset,
         ownerPosition.y + walkingDustYOffset,
         ownerPosition.z + ownerForward.z * walkingDustForwardOffset
+    );
+}
+
+Vector3 PaladinVFX::getChargeAttackEffectPosition() const
+{
+    GameObject* owner = getOwner();
+    Transform* ownerTransform = GameObjectAPI::getTransform(owner);
+
+    if (!ownerTransform)
+    {
+        return Vector3(0.0f, 0.0f, 0.0f);
+    }
+
+    const Vector3 ownerPosition = TransformAPI::getGlobalPosition(ownerTransform);
+    const Vector3 ownerForward = TransformAPI::getForward(ownerTransform);
+
+    return Vector3(
+        ownerPosition.x + ownerForward.x * chargeAttackForwardOffset,
+        ownerPosition.y + chargeAttackYOffset,
+        ownerPosition.z + ownerForward.z * chargeAttackForwardOffset
     );
 }
 
@@ -133,6 +181,54 @@ void PaladinVFX::updateWalkingDustPosition()
 
     TransformAPI::setGlobalRotationEuler(
         walkingDustTransform,
+        getOwnerRotation()
+    );
+}
+
+void PaladinVFX::addChargeAttackEffect()
+{
+    removeChargeAttackEffect();
+
+    chargeAttackEffect = GameObjectAPI::instantiatePrefab(
+        CHARGE_ATTACK_EFFECT_PREFAB_PATH,
+        getChargeAttackEffectPosition(),
+        getOwnerRotation()
+    );
+
+    if (!chargeAttackEffect)
+    {
+        Debug::warn("[PaladinVFX] Could not instantiate ChargeAttackEffect prefab.");
+        chargeAttackEffectActive = false;
+    }
+}
+
+void PaladinVFX::removeChargeAttackEffect()
+{
+    if (!chargeAttackEffect)
+    {
+        return;
+    }
+
+    GameObjectAPI::removeGameObject(chargeAttackEffect);
+    chargeAttackEffect = nullptr;
+}
+
+void PaladinVFX::updateChargeAttackEffectPosition()
+{
+    Transform* chargeAttackEffectTransform = GameObjectAPI::getTransform(chargeAttackEffect);
+
+    if (!chargeAttackEffectTransform)
+    {
+        return;
+    }
+
+    TransformAPI::setGlobalPosition(
+        chargeAttackEffectTransform,
+        getChargeAttackEffectPosition()
+    );
+
+    TransformAPI::setGlobalRotationEuler(
+        chargeAttackEffectTransform,
         getOwnerRotation()
     );
 }
