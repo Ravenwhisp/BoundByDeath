@@ -12,9 +12,11 @@ public:
 
 	ScriptComponentRef<Transform> m_dashTrail;
 	ScriptComponentRef<Transform> m_scytheTrail;
+	ScriptComponentRef<Transform> m_tauntParticle;
 
 	Transform* m_dashTrailController = nullptr;
 	Transform* m_scytheTrailController = nullptr;
+	Transform* m_tauntParticle = nullptr;
 
 	ScriptFieldList getExposedFields() const override;
 
@@ -23,6 +25,9 @@ public:
 
 	void SetScytheActive();
 	void SetScytheInactive();
+
+	void SetTauntActive();
+	void SetTauntInactive();
 
 private:
 

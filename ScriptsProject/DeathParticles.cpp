@@ -5,6 +5,7 @@
 IMPLEMENT_SCRIPT_FIELDS(DeathParticles,
     SERIALIZED_COMPONENT_REF(m_dashTrail, "Dash", ComponentType::TRANSFORM),
     SERIALIZED_COMPONENT_REF(m_scytheTrail, "Scythe", ComponentType::TRANSFORM)
+    SERIALIZED_COMPONENT_REF(M_tauntParticle, "Taunt", ComponentType::TRANSFORM)
 )
 
 DeathParticles::DeathParticles(GameObject* owner) : Script(owner)
@@ -61,6 +62,24 @@ void DeathParticles::SetScytheActive()
     TrailAPI::generateTrail(trailComponent, true);
 }
 
+void DeathParticles::SetTauntActive()
+{
+    if (m_tauntParticle == nullptr)
+    {
+        m_tauntParticle = getTransform(m_tauntParticle);
+
+        if (m_tauntParticle == nullptr)
+        {
+            Debug::warn("Taunt particle controller not found on Death Particles.");
+            return;
+        }
+
+    }
+
+    ParticleSystemComponent* particleSystem = ParticleAPI::getParticleSystemComponent(ComponentAPI::getOwner(m_tauntParticle));
+    ParticleAPI::play(particleSystem);
+}
+
 void DeathParticles::SetDashInactive()
 {
     if (m_dashTrailController == nullptr)
@@ -95,6 +114,24 @@ void DeathParticles::SetScytheInactive()
 
     TrailComponent* trailComponent = TrailAPI::getTrailComponent(ComponentAPI::getOwner(m_scytheTrailController));
     TrailAPI::generateTrail(trailComponent, false);
+}
+
+void DeathParticles::SetTauntInactive()
+{
+    if (m_tauntParticle == nullptr)
+    {
+        m_tauntParticle = getTransform(m_tauntParticle);
+
+        if (m_tauntParticle == nullptr)
+        {
+            Debug::warn("Taunt particle controller not found on Death Particles.");
+            return;
+        }
+
+    }
+
+    ParticleSystemComponent* particleSystem = ParticleAPI::getParticleSystemComponent(ComponentAPI::getOwner(m_tauntParticle));
+    ParticleAPI::stop(particleSystem);
 }
 
 IMPLEMENT_SCRIPT(DeathParticles)
