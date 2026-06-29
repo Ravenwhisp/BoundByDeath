@@ -7,6 +7,7 @@
 
 #include "Damageable.h"
 #include "PlayerState.h"
+#include "PaladinVFX.h"
 
 EnemyAttackState::EnemyAttackState(GameObject* owner)
     : StateMachineScript(owner)
@@ -18,6 +19,7 @@ void EnemyAttackState::OnStateEnter()
     m_controller = GameObjectAPI::findScript<EnemyBaseController>(getOwner());
     m_attackConfig = GameObjectAPI::findScript<EnemyBaseAttackConfig>(getOwner());
     m_animation = AnimationAPI::getAnimationComponent(getOwner());
+    m_paladinVFX = GameObjectAPI::findScript<PaladinVFX>(getOwner());
 
     m_stateTimer = 0.0f;
     m_hasAppliedDamage = false;
@@ -79,6 +81,7 @@ void EnemyAttackState::OnStateUpdate()
 
     if (!m_hasAppliedDamage && m_stateTimer >= m_attackConfig->m_basicAttackWindupTime)
     {
+        playBasicAttackEffect();
         tryDamageTarget(m_committedTarget);
 
         if (m_enemySound)
@@ -146,6 +149,14 @@ void EnemyAttackState::tryDamageTarget(Transform* targetTransform)
     damageable->takeDamage(m_attackConfig->m_basicAttackDamage);
 
     Debug::log("[EnemyAttackState] Damaged '%s' for %.2f.", GameObjectAPI::getName(targetObject), m_attackConfig->m_basicAttackDamage);
+}
+
+void EnemyAttackState::playBasicAttackEffect()
+{
+    if (m_paladinVFX)
+    {
+        m_paladinVFX->playBasicAttackEffect();
+    }
 }
 
 IMPLEMENT_SCRIPT(EnemyAttackState)
