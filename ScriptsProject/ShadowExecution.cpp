@@ -201,16 +201,10 @@ void ShadowExecution::beginExecution()
         m_sound->playShadowExecution();
     }
 
-    GameObject* fxDeath = GameObjectAPI::instantiatePrefab(m_particlePrefabPath, deathPos, Vector3::Zero);
-    if (fxDeath)
+    GameObject* fxCenter = GameObjectAPI::instantiatePrefab(m_particlePrefabPath, m_center, Vector3::Zero);
+    if (fxCenter)
     {
-        m_temporaryPrefabs.push_back({ fxDeath, 1.0f });
-    }
-
-    GameObject* fxLyriel = GameObjectAPI::instantiatePrefab(m_particlePrefabPath, lyrielPos, Vector3::Zero);
-    if (fxLyriel)
-    {
-        m_temporaryPrefabs.push_back({ fxLyriel, 1.0f });
+        m_temporaryPrefabs.push_back({ fxCenter, 1.0f });
     }
 
     lockPlayers(true);
