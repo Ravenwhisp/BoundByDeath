@@ -12,7 +12,7 @@ public:
 
 	ScriptComponentRef<Transform> m_dashTrail;
 
-	GameObject* dashTrailController = nullptr;
+	Transform* m_dashTrailController = nullptr;
 
 	ScriptFieldList getExposedFields() const override;
 
@@ -21,6 +21,6 @@ public:
 
 private:
 
-	GameObject* getObject(ScriptComponentRef<Transform> controller);
+	Transform* getTransform(ScriptComponentRef<Transform> controller);
 
 };

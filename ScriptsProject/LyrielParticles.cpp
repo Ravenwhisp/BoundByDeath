@@ -10,7 +10,7 @@ LyrielParticles::LyrielParticles(GameObject* owner) : Script(owner)
 {
 }
 
-GameObject* LyrielParticles::getObject(ScriptComponentRef<Transform> controller)
+Transform* LyrielParticles::getTransform(ScriptComponentRef<Transform> controller)
 {
     Transform* particleTransform = controller.getReferencedComponent();
 
@@ -20,24 +20,17 @@ GameObject* LyrielParticles::getObject(ScriptComponentRef<Transform> controller)
         return nullptr;
     }
 
-    GameObject* particleObject = ComponentAPI::getOwner(particleTransform);
-
-    if (particleObject == nullptr)
-    {
-        return nullptr;
-    }
-
-    return particleObject;
+    return particleTransform;
 
 }
 
 void LyrielParticles::SetDashActive()
 {
-    if (dashTrailController == nullptr)
+    if (m_dashTrailController == nullptr)
     {
-        dashTrailController = getObject(m_dashTrail);
+        m_dashTrailController = getTransform(m_dashTrail);
 
-        if (dashTrailController == nullptr)
+        if (m_dashTrailController == nullptr)
         {
             Debug::warn("Dash trail controller not found on Lyriel Particles.");
             return;
@@ -45,16 +38,24 @@ void LyrielParticles::SetDashActive()
 
     }
 
-    GameObjectAPI::setActive(dashTrailController, true);
+    int childCount = TransformAPI::getChildCount(m_dashTrailController);
+
+    for (int i = 0; i < childCount; i++)
+    {
+        Transform* child = TransformAPI::getChild(m_dashTrailController, i);
+
+        TrailComponent* trailComponent = TrailAPI::getTrailComponent(ComponentAPI::getOwner(child));
+        TrailAPI::generateTrail(trailComponent, true);
+    }
 }
 
 void LyrielParticles::SetDashInactive()
 {
-    if (dashTrailController == nullptr)
+    if (m_dashTrailController == nullptr)
     {
-        dashTrailController = getObject(m_dashTrail);
+        m_dashTrailController = getTransform(m_dashTrail);
 
-        if (dashTrailController == nullptr)
+        if (m_dashTrailController == nullptr)
         {
             Debug::warn("Dash trail controller not found on Lyriel Particles.");
             return;
@@ -62,7 +63,15 @@ void LyrielParticles::SetDashInactive()
 
     }
 
-    GameObjectAPI::setActive(dashTrailController, false);
+    int childCount = TransformAPI::getChildCount(m_dashTrailController);
+
+    for (int i = 0; i < childCount; i++)
+    {
+        Transform* child = TransformAPI::getChild(m_dashTrailController, i);
+
+        TrailComponent* trailComponent = TrailAPI::getTrailComponent(ComponentAPI::getOwner(child));
+        TrailAPI::generateTrail(trailComponent, false);
+    }
 }
 
 IMPLEMENT_SCRIPT(LyrielParticles)
