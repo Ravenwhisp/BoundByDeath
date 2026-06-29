@@ -60,7 +60,7 @@ void SpikeTrap::Update()
 				TransformAPI::setPosition(m_normalSpike, normalSpikePosition);
                 state = ACTIVE;
                 currentTime = 0.0f;
-				addEffect(spikeType);
+				addEffect(0);
             }
 			else if(currentTime >= p_duration && spikeType == 1)
             {
@@ -68,7 +68,7 @@ void SpikeTrap::Update()
                 TransformAPI::setPosition(m_spectralSpike, spectralSpikePosition);
                 state = ACTIVE;
 				currentTime = 0.0f;
-				addEffect(spikeType);
+				addEffect(1);
             }
             break;
 
