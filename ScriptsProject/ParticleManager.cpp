@@ -16,8 +16,8 @@ void ParticleManager::Start()
 {
     m_timer = 0.0f;
     refreshParticleCache();
-    Debug::log("[ParticleManager] Initialized with %zu particle objects, distance=%.1f, interval=%.2fs.",
-        m_particleObjects.size(), m_activationDistance, m_checkIntervalSeconds);
+    Debug::log("[ParticleManager] Cached %zu initially-active particle objects, distance=%.1f, interval=%.2fs.",
+        m_managedParticles.size(), m_activationDistance, m_checkIntervalSeconds);
 }
 
 void ParticleManager::Update()
@@ -32,13 +32,21 @@ void ParticleManager::Update()
 
 void ParticleManager::refreshParticleCache()
 {
-    m_particleObjects = SceneAPI::findAllGameObjectsByComponent(ComponentType::PARTICLE_SYSTEM, false);
+    std::vector<GameObject*> all = SceneAPI::findAllGameObjectsByComponent(
+        ComponentType::PARTICLE_SYSTEM, false);
 
     GameObject* self = getOwner();
-    m_particleObjects.erase(
-        std::remove(m_particleObjects.begin(), m_particleObjects.end(), self),
-        m_particleObjects.end()
-    );
+
+    for (GameObject* obj : all)
+    {
+        if (!obj) continue;
+        if (obj == self) continue;
+        if (!GameObjectAPI::isActiveSelf(obj)) continue;
+
+        ManagedParticle entry;
+        entry.gameObject = obj;
+        m_managedParticles.push_back(entry);
+    }
 }
 
 void ParticleManager::updateActivity()
@@ -48,19 +56,31 @@ void ParticleManager::updateActivity()
 
     const Vector3 playerPos = TransformAPI::getGlobalPosition(playerT);
 
-    for (GameObject* obj : m_particleObjects)
+    for (ManagedParticle& mp : m_managedParticles)
     {
+        GameObject* obj = mp.gameObject;
         if (!obj) continue;
 
         Transform* t = GameObjectAPI::getTransform(obj);
         if (!t) continue;
 
-        const float distance = Vector3::Distance(playerPos, TransformAPI::getGlobalPosition(t));
-        const bool  shouldBeActive = (distance <= m_activationDistance);
+        const float distance       = Vector3::Distance(playerPos, TransformAPI::getGlobalPosition(t));
+        const bool  withinRange    = (distance <= m_activationDistance);
+        const bool  isActive       = GameObjectAPI::isActiveSelf(obj);
 
-        if (GameObjectAPI::isActiveSelf(obj) != shouldBeActive)
+        if (isActive && !withinRange)
         {
-            GameObjectAPI::setActive(obj, shouldBeActive);
+            GameObjectAPI::setActive(obj, false);
+            mp.deactivatedByManager = true;
+        }
+        else if (!isActive && withinRange && mp.deactivatedByManager)
+        {
+            GameObjectAPI::setActive(obj, true);
+            mp.deactivatedByManager = false;
+        }
+        else if (isActive && withinRange)
+        {
+            mp.deactivatedByManager = false;
         }
     }
 }
