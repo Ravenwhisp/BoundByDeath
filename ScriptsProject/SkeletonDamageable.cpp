@@ -3,7 +3,13 @@
 
 #include "SkeletonEnemyController.h"
 #include "SkeletonAttackConfig.h"
+#include "Transform2D.h"
 #include <cmath>
+
+IMPLEMENT_SCRIPT_FIELDS_INHERITED(SkeletonDamageable, EnemyDamageable,
+	SERIALIZED_FLOAT(m_downedHealthBarScale.x, "Downed Health Bar Scale X", 0.0f, 10.0f, 0.1f),
+	SERIALIZED_FLOAT(m_downedHealthBarScale.y, "Downed Health Bar Scale Y", 0.0f, 10.0f, 0.1f)
+)
 
 SkeletonDamageable::SkeletonDamageable(GameObject* owner)
 	: EnemyDamageable(owner)
@@ -26,6 +32,9 @@ void SkeletonDamageable::Start()
 	{
 		Debug::warn("[SkeletonDamageable] SkeletonAttackConfig not found.");
 	}
+
+	cacheHealthBarBackgroundTransform();
+	applyHealthBarScaleForState();
 }
 
 void SkeletonDamageable::takeDamage(const HitContext& ctx)
@@ -76,6 +85,8 @@ void SkeletonDamageable::startDowned()
 	m_currentHp = m_attackConfig->m_downedHP;
 	m_isDead = false;
 
+	applyHealthBarScaleForState();
+
 	Debug::log("[SkeletonDamageable] Skeleton downed.");
 }
 
@@ -95,7 +106,68 @@ void SkeletonDamageable::completeRevive()
 	m_lifeState = SkeletonLifeState::Alive;
 	revive(m_previousMaxHp * 0.5f);
 
+	applyHealthBarScaleForState();
+
 	Debug::log("[SkeletonDamageable] Skeleton revived at 50% HP.");
+}
+
+void SkeletonDamageable::cacheHealthBarBackgroundTransform()
+{
+	Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
+
+	if (!ownerTransform)
+	{
+		return;
+	}
+
+	Transform* healthBarTransform = TransformAPI::findChildByName(ownerTransform, "Health Bar");
+
+	if (!healthBarTransform)
+	{
+		Debug::warn("[SkeletonDamageable] Health Bar child not found.");
+		return;
+	}
+
+	Transform* backgroundTransform = TransformAPI::findChildByName(healthBarTransform, "Background");
+
+	if (!backgroundTransform)
+	{
+		Debug::warn("[SkeletonDamageable] Health Bar Background child not found.");
+		return;
+	}
+
+	GameObject* backgroundObject = ComponentAPI::getOwner(backgroundTransform);
+
+	if (!backgroundObject)
+	{
+		return;
+	}
+
+	m_healthBarBackgroundTransform2D = static_cast<Transform2D*>(GameObjectAPI::getComponent(backgroundObject, ComponentType::TRANSFORM2D));
+
+	if (!m_healthBarBackgroundTransform2D)
+	{
+		Debug::warn("[SkeletonDamageable] Health Bar Background Transform2D not found.");
+		return;
+	}
+
+	m_originalHealthBarScale = Transform2DAPI::getScale(m_healthBarBackgroundTransform2D);
+}
+
+void SkeletonDamageable::applyHealthBarScaleForState()
+{
+	if (!m_healthBarBackgroundTransform2D)
+	{
+		return;
+	}
+
+	if (m_lifeState == SkeletonLifeState::Downed)
+	{
+		Transform2DAPI::setScale(m_healthBarBackgroundTransform2D, m_downedHealthBarScale);
+		return;
+	}
+
+	Transform2DAPI::setScale(m_healthBarBackgroundTransform2D, m_originalHealthBarScale);
 }
 
 bool SkeletonDamageable::shouldBlockDamage(const EnemyHitContext& enemyCtx) const
