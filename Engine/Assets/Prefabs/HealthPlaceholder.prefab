@@ -1,83 +1,83 @@
 {
-  "sourcePath": "Assets\\Prefabs\\HealthPlaceholder.prefab",
-  "Name": "HealthPlaceholder",
-  "Active": true,
-  "Static": false,
-  "Layer": "DEFAULT",
-  "Tag": "DEFAULT",
-  "Transform": {
-    "Position": [
-      -44.439998626708984,
-      2.881999969482422,
-      1.9079999923706057
-    ],
-    "Rotation": [
-      0.0,
-      0.0,
-      0.0,
-      1.0
-    ],
-    "Scale": [
-      0.2928979694843292,
-      0.2928979694843292,
-      0.2928979694843292
-    ]
-  },
-  "Components": [
-    {
-      "UID": 17284316049402714986,
-      "ComponentType": "MODEL",
-      "Active": true,
-      "MeshAssetId": {
-        "uid": 7216509819157143983,
-        "libId": "68dccb0c527b73c4a9907f70298dfb48",
-        "type": "MESH"
-      },
-      "SkinAssetId": {
-        "uid": 0,
-        "libId": "",
-        "type": "SKIN"
-      },
-      "Materials": [
+    "Version": 2,
+    "sourcePath": "Assets\\Prefabs\\HealthPlaceholder.prefab",
+    "Name": "HealthPlaceholder",
+    "Active": true,
+    "Static": false,
+    "Layer": "DEFAULT",
+    "Tag": "DEFAULT",
+    "Transform": {
+        "Position": [
+            -44.439998626708984,
+            2.881999969482422,
+            1.9079999923706055
+        ],
+        "Rotation": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ],
+        "Scale": [
+            0.2928979694843292,
+            0.2928979694843292,
+            0.2928979694843292
+        ]
+    },
+    "Components": [
         {
-          "uid": 5515184839933692502,
-          "libId": "d558ea3acc98aa9599e52151509bf9ed",
-          "type": "MATERIAL"
+            "UID": 8401299060080819646,
+            "ComponentType": "MODEL",
+            "Active": true,
+            "MeshAssetId": {
+                "uid": 7216509819157143983,
+                "libId": "68dccb0c527b73c4a9907f70298dfb48",
+                "type": "MESH"
+            },
+            "SkinAssetId": {
+                "uid": 0,
+                "libId": "",
+                "type": "SKIN"
+            },
+            "Materials": [
+                {
+                    "uid": 5515184839933692502,
+                    "libId": "d558ea3acc98aa9599e52151509bf9ed",
+                    "type": "MATERIAL"
+                }
+            ]
+        },
+        {
+            "UID": 16286840345114935336,
+            "ComponentType": "SCRIPT",
+            "Active": true,
+            "ScriptName": "HealthPickup",
+            "ScriptFields": {
+                "Heal Amount": 10.0,
+                "Collect Particle Prefab Path": "Assets/Prefabs/Particles/Health_2.prefab",
+                "Spawn Height": 2.5,
+                "Fall Gravity": 8.0,
+                "Idle Speed": 0.20000000298023224,
+                "Horizontal Amplitude": 0.10000000149011612,
+                "Vertical Amplitude": 0.20000000298023224
+            }
+        },
+        {
+            "UID": 16195617886346993967,
+            "ComponentType": "TRIGGER",
+            "Active": true,
+            "Shape": "Box",
+            "Center": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Size": [
+                1.100000023841858,
+                1.100000023841858,
+                1.100000023841858
+            ]
         }
-      ]
-    },
-    {
-      "UID": 8100406804761680030,
-      "ComponentType": "SCRIPT",
-      "Active": true,
-      "ScriptName": "HealthPickup",
-      "ScriptFields": {
-        "Heal Amount": 10.0,
-        "Collect Particle Prefab Path": "Assets/Prefabs/Particles/Health_2.prefab",
-        "Spawn Height": 1.5,
-        "Fall Gravity": 8.0,
-        "Idle Speed": 0.20000000298023224,
-        "Horizontal Amplitude": 0.10000000149011612,
-        "Vertical Amplitude": 0.20000000298023224
-      }
-    },
-    {
-      "UID": 15649613748945817043,
-      "ComponentType": "TRIGGER",
-      "Active": true,
-      "Shape": 0,
-      "Center": [
-        0.0,
-        0.0,
-        0.0
-      ],
-      "Size": [
-        1.100000023841858,
-        1.100000023841858,
-        1.100000023841858
-      ]
-    }
-  ],
-  "Children": [],
-  "Version": 2
+    ],
+    "Children": []
 }
