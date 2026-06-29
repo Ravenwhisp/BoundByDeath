@@ -21,11 +21,14 @@ public:
 
     void Start()  override;
     void Update() override;
+    ScriptFieldList getExposedFields() const override;
 
     void drawGizmo() override;
 
 public:
     const char* m_tauntParticlePath = "Assets/Prefabs/Particles/Death/DeathTaunt_1.prefab";
+
+  
 
 protected:
 	void startAbility() override;

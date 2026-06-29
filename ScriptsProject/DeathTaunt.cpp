@@ -11,9 +11,6 @@
 
 #include <cmath>
 
-// ===================================================================================
-//Añadimos SERIALIZED_STRING para que puedas modificar la ruta del prefab desde el Engine
-// ===================================================================================
 IMPLEMENT_SCRIPT_FIELDS(DeathTaunt,
     SERIALIZED_STRING(m_tauntParticlePath, "Taunt Particle Prefab Path"),
 )
