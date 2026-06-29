@@ -70,6 +70,10 @@ void ParticleManager::updateActivity()
 
         if (isActive && !withinRange)
         {
+            ParticleSystemComponent* ps = ParticleSystemAPI::getParticleSystemComponent(obj);
+            if (ps)
+                ParticleSystemAPI::reset(ps);
+
             GameObjectAPI::setActive(obj, false);
             mp.deactivatedByManager = true;
         }

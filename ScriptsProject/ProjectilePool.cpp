@@ -5,7 +5,7 @@
 
 IMPLEMENT_SCRIPT_FIELDS(ProjectilePool,
 	SERIALIZED_INT(m_maxProjectiles, "Max Projectiles"),
-	SERIALIZED_STRING(m_projectilePrefabPath, "Projectile Prefab Path")
+	SERIALIZED_STRING(m_projectilePrefabPath, "Assets/Prefabs/Particles/Lyriel/LyrielArrowParticle_1.prefab")
 )
 
 ProjectilePool::ProjectilePool(GameObject* owner)
