@@ -76,7 +76,7 @@ void BreakableObject::breakObject()
     {
         GameObject* brokenObject = ComponentAPI::getOwner(m_brokenObjectTransform);
         GameObjectAPI::setActive(brokenObject, true);
-		GameObject* dustEffect = GameObjectAPI::instantiatePrefab("Assets/Prefabs/Particles/Dust_1.prefab", TransformAPI::getGlobalPosition(m_brokenObjectTransform), Vector3(0.0f, 0.0f, 0.0f));
+		GameObject* dustEffect = GameObjectAPI::instantiatePrefab("Assets/Prefabs/Particles/BarrelBreaking.prefab", TransformAPI::getGlobalPosition(m_brokenObjectTransform), Vector3(0.0f, 0.0f, 0.0f));
     }
 
     if (m_navBlocker != nullptr)

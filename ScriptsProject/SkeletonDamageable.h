@@ -4,6 +4,7 @@
 
 class SkeletonEnemyController;
 class SkeletonAttackConfig;
+class Transform2D;
 
 class SkeletonDamageable final : public EnemyDamageable
 {
@@ -13,12 +14,18 @@ public:
 	explicit SkeletonDamageable(GameObject* owner);
 
 	void Start() override;
+
+	ScriptFieldList getExposedFields() const override;
+
 	void takeDamage(const HitContext& ctx) override;
 	
 	bool isDowned() const;
 	bool isPermanentlyDead() const;
 
 	void completeRevive();
+
+	void cacheHealthBarBackgroundTransform();
+	void applyHealthBarScaleForState();
 
 protected:
 	void onHpDepleted() override;
@@ -38,5 +45,11 @@ private:
 private:
 	SkeletonEnemyController* m_skeletonController = nullptr;
 	SkeletonAttackConfig* m_attackConfig = nullptr;
+
+	Transform2D* m_healthBarBackgroundTransform2D = nullptr;
+	Vector2 m_originalHealthBarScale = Vector2(1.0f, 1.0f);
+	Vector2 m_downedHealthBarScale = Vector2(0.6f, 1.0f);
+
 	SkeletonLifeState m_lifeState = SkeletonLifeState::Alive;
+	float m_previousMaxHp = 0.0f;
 };

@@ -42,7 +42,7 @@ void EnemyDeathState::OnStateEnter()
 
 void EnemyDeathState::OnStateUpdate()
 {
-	if (!m_waitingToDestroy || m_deathFinished)
+	if (!m_waitingToDestroy || m_deathFinished || m_deathPaused)
 	{
 		return;
 	}
@@ -108,6 +108,34 @@ void EnemyDeathState::dropRewards()
                                 m_dropRadius,
                                 m_dropHeight);
     }
+}
+
+void EnemyDeathState::pauseDeathCountdown()
+{
+	m_deathPaused = true;
+}
+
+void EnemyDeathState::resumeDeathCountdown()
+{
+	m_deathPaused = false;
+}
+
+void EnemyDeathState::finalizeDeathNow()
+{
+	m_deathPaused = false;
+	if (m_shouldDropHealth)
+	{
+		dropRewards();
+	}
+	startDestroyCountdown(m_destroyDelay);
+}
+
+void EnemyDeathState::abortDeathForRevival()
+{
+	m_deathPaused = false;
+	m_waitingToDestroy = false;
+	m_deathFinished = false;
+	m_deathTimer = 0.0f;
 }
 
 IMPLEMENT_SCRIPT(EnemyDeathState)

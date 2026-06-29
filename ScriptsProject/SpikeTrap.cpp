@@ -61,7 +61,7 @@ void SpikeTrap::Update()
 				TransformAPI::setPosition(m_normalSpike, normalSpikePosition);
                 state = ACTIVE;
                 currentTime = 0.0f;
-
+				addEffect(spikeType);
             }
 			else if(currentTime >= p_duration && spikeType == 1)
             {
@@ -69,6 +69,7 @@ void SpikeTrap::Update()
                 TransformAPI::setPosition(m_spectralSpike, spectralSpikePosition);
                 state = ACTIVE;
 				currentTime = 0.0f;
+				addEffect(spikeType);
             }
             break;
 
@@ -84,6 +85,7 @@ void SpikeTrap::Update()
                 state = WAIT;
                 currentTime = 0.0f;
 				damagedPlayers.clear();
+				removeEffect(0);
             }
 			else if (currentTime >= a_duration && spikeType == 1)
 			{
@@ -95,6 +97,7 @@ void SpikeTrap::Update()
 				state = WAIT;
 				currentTime = 0.0f;
                 damagedPlayers.clear();
+				removeEffect(1);
             }
             break;
 
@@ -184,6 +187,32 @@ void SpikeTrap::triggerBoxDamage()
             }
 		}
         
+    }
+}
+
+void SpikeTrap::addEffect(int type)
+{
+    if (type == 0)
+    {
+        normalEffect = GameObjectAPI::instantiatePrefab("Assets/Prefabs/Particles/SpikesShine.prefab", TransformAPI::getGlobalPosition(m_normalSpike) + Vector3(0.0f, 1.0f, 0.0f), Vector3(0.0f, 0.0f, 0.0f));
+    }
+    else if (type == 1)
+    {
+        spectralEffect = GameObjectAPI::instantiatePrefab("Assets/Prefabs/Particles/SpectralSpikesAura.prefab", TransformAPI::getGlobalPosition(m_spectralSpike), Vector3(0.0f, 0.0f, 0.0f));
+    }
+}
+
+void SpikeTrap::removeEffect(int type)
+{
+    if (type == 0)
+    {
+        GameObjectAPI::removeGameObject(normalEffect);
+        normalEffect = nullptr;
+    }
+    else if (type == 1 && spectralEffect)
+    {
+        GameObjectAPI::removeGameObject(spectralEffect);
+        spectralEffect = nullptr;
     }
 }
 

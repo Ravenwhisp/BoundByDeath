@@ -61,6 +61,24 @@ void ShadowExecution::Update()
 {
     const float dt = Time::getDeltaTime();
 
+    // Actualizar y eliminar los prefabs de partículas cuando pase 1 segundo
+    for (auto it = m_temporaryPrefabs.begin(); it != m_temporaryPrefabs.end(); )
+    {
+        it->lifetimeRemaining -= dt;
+        if (it->lifetimeRemaining <= 0.0f)
+        {
+            if (it->gameObject != nullptr)
+            {
+                GameObjectAPI::removeGameObject(it->gameObject);
+            }
+            it = m_temporaryPrefabs.erase(it);
+        }
+        else
+        {
+            ++it;
+        }
+    }
+
     if (m_isActive)
     {
         updateExecution(dt);
@@ -183,6 +201,18 @@ void ShadowExecution::beginExecution()
         m_sound->playShadowExecution();
     }
 
+    GameObject* fxDeath = GameObjectAPI::instantiatePrefab(m_particlePrefabPath, deathPos, Vector3::Zero);
+    if (fxDeath)
+    {
+        m_temporaryPrefabs.push_back({ fxDeath, 1.0f });
+    }
+
+    GameObject* fxLyriel = GameObjectAPI::instantiatePrefab(m_particlePrefabPath, lyrielPos, Vector3::Zero);
+    if (fxLyriel)
+    {
+        m_temporaryPrefabs.push_back({ fxLyriel, 1.0f });
+    }
+
     lockPlayers(true);
 
     m_isActive = true;
@@ -266,11 +296,10 @@ void ShadowExecution::applyAoEDamage()
         }
         else
         {
-            const float damage = maxHp * m_standardDamage;
-            EnemyHitContext ctx;
+            ctx.damage = maxHp * m_standardDamage;
 
             Debug::log("[ShadowExecution] Enemy '%s' took %.1f damage (%.0f%% of max HP).",
-            GameObjectAPI::getName(enemy), damage, m_standardDamage * 100.0f);
+            GameObjectAPI::getName(enemy), ctx.damage, m_standardDamage * 100.0f);
         }
 
         ctx.attacker = nullptr;

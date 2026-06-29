@@ -33,6 +33,11 @@ private:
 
 	float m_activationTimer = 0.0f;
 
+	GameObject* effectObject = nullptr;
+
+	void activeEffect();
+	void deactivateEffect();
+
 	GameObject* managerObject = nullptr;
 	PuzzleManagerLVL1* managerScript = nullptr;
 

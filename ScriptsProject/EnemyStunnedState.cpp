@@ -3,6 +3,7 @@
 
 #include "EnemyBaseController.h"
 #include "EnemySound.h"
+#include "EnemyStunParticles.h"
 
 EnemyStunnedState::EnemyStunnedState(GameObject* owner)
 	: StateMachineScript(owner)
@@ -11,8 +12,9 @@ EnemyStunnedState::EnemyStunnedState(GameObject* owner)
 
 void EnemyStunnedState::OnStateEnter()
 {
-	m_controller = GameObjectAPI::findScript<EnemyBaseController>(getOwner());
-	m_animation = AnimationAPI::getAnimationComponent(getOwner());
+	m_controller    = GameObjectAPI::findScript<EnemyBaseController>(getOwner());
+	m_animation     = AnimationAPI::getAnimationComponent(getOwner());
+	m_stunParticles = GameObjectAPI::findScript<EnemyStunParticles>(getOwner());
 
 	if (!m_controller)
 	{
@@ -30,6 +32,8 @@ void EnemyStunnedState::OnStateEnter()
 	m_controller->resetRepathTimer();
 	m_stateTimer = 0.0f;
 
+	if (m_stunParticles) m_stunParticles->startStunParticle();
+	
 	m_enemySound = GameObjectAPI::findScript<EnemySound>(getOwner());
 	if (m_enemySound)
 	{
@@ -52,6 +56,7 @@ void EnemyStunnedState::OnStateUpdate()
 	}
 
 	m_stateTimer += Time::getDeltaTime();
+	if (m_stunParticles) m_stunParticles->updateStunParticle();
 	m_controller->updateCurrentTarget();
 
 	if (!m_controller->hasValidTarget())
@@ -70,6 +75,7 @@ void EnemyStunnedState::OnStateUpdate()
 void EnemyStunnedState::OnStateExit()
 {
 	m_stateTimer = 0.0f;
+	if (m_stunParticles) m_stunParticles->stopStunParticle();
 	Debug::log("[EnemyStunnedState] EXIT");
 }
 

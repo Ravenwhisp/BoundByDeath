@@ -386,6 +386,9 @@
     <ClInclude Include="EnemyBaseController.h">
       <Filter>Enemies</Filter>
     </ClInclude>
+    <ClInclude Include="EnemyStunParticles.h">
+      <Filter>Enemies</Filter>
+    </ClInclude>
     <ClInclude Include="EnemyDeathState.h">
       <Filter>Enemies\BaseStates</Filter>
     </ClInclude>
@@ -397,6 +400,15 @@
     </ClInclude>
     <ClInclude Include="ArcherArrowBarrageState.h">
       <Filter>Enemies\Archer\States</Filter>
+    </ClInclude>
+    <ClInclude Include="ArcherArrowProjectile.h">
+      <Filter>Enemies\Archer</Filter>
+    </ClInclude>
+    <ClInclude Include="ArcherArrowShooter.h">
+      <Filter>Enemies\Archer</Filter>
+    </ClInclude>
+    <ClInclude Include="ArcherGuardParticles.h">
+      <Filter>Enemies\Archer</Filter>
     </ClInclude>
     <ClInclude Include="EnemySound.h">
       <Filter>Enemies</Filter>
@@ -556,6 +568,16 @@
       <Filter>Combat\Projectiles</Filter>
     </ClInclude>
     <ClInclude Include="CameraTransitionStep.h" />
+    <ClInclude Include="CameraTransitionStepAction.h" />
+    <ClInclude Include="MoveObjectAlongPathAction.h" />
+    <ClInclude Include="MoveObjectToTransformAction.h" />
+    <ClInclude Include="PlayAnimationAction.h" />
+    <ClInclude Include="DeathParticles.h">
+      <Filter>Character\Death</Filter>
+    </ClInclude>
+    <ClInclude Include="LyrielParticles.h">
+      <Filter>Character\Lyriel</Filter>
+    </ClInclude>
     <ClInclude Include="CombatAreaEvent.h" />
     <ClInclude Include="SkeletonAttackConfig.h">
       <Filter>Enemies\Skeleton</Filter>
@@ -823,6 +845,9 @@
     <ClCompile Include="EnemyBaseController.cpp">
       <Filter>Enemies</Filter>
     </ClCompile>
+    <ClCompile Include="EnemyStunParticles.cpp">
+      <Filter>Enemies</Filter>
+    </ClCompile>
     <ClCompile Include="EnemyDeathState.cpp">
       <Filter>Enemies\BaseStates</Filter>
     </ClCompile>
@@ -834,6 +859,15 @@
     </ClCompile>
     <ClCompile Include="ArcherArrowBarrageState.cpp">
       <Filter>Enemies\Archer\States</Filter>
+    </ClCompile>
+    <ClCompile Include="ArcherArrowProjectile.cpp">
+      <Filter>Enemies\Archer</Filter>
+    </ClCompile>
+    <ClCompile Include="ArcherArrowShooter.cpp">
+      <Filter>Enemies\Archer</Filter>
+    </ClCompile>
+    <ClCompile Include="ArcherGuardParticles.cpp">
+      <Filter>Enemies\Archer</Filter>
     </ClCompile>
     <ClCompile Include="ArcherSomersaultState.cpp">
       <Filter>Enemies\Archer\States</Filter>
@@ -978,6 +1012,16 @@
       <Filter>Combat\Projectiles</Filter>
     </ClCompile>
     <ClCompile Include="CameraTransitionStep.cpp" />
+    <ClCompile Include="CameraTransitionStepAction.cpp" />
+    <ClCompile Include="MoveObjectAlongPathAction.cpp" />
+    <ClCompile Include="MoveObjectToTransformAction.cpp" />
+    <ClCompile Include="PlayAnimationAction.cpp" />
+    <ClCompile Include="DeathParticles.cpp">
+      <Filter>Character\Death</Filter>
+    </ClCompile>
+    <ClCompile Include="LyrielParticles.cpp">
+      <Filter>Character\Lyriel</Filter>
+    </ClCompile>
     <ClCompile Include="CombatAreaEvent.cpp" />
     <ClCompile Include="SkeletonAttackConfig.cpp">
       <Filter>Enemies\Skeleton</Filter>
