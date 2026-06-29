@@ -239,9 +239,6 @@
     <ClInclude Include="LyrielSound.h">
       <Filter>Character\Lyriel</Filter>
     </ClInclude>
-    <ClInclude Include="ArrowPool.h">
-      <Filter>Character\Lyriel</Filter>
-    </ClInclude>
     <ClInclude Include="LyrielAbilityBase.h">
       <Filter>Character\Lyriel\Abilities</Filter>
     </ClInclude>
@@ -516,6 +513,18 @@
     <ClInclude Include="LyrielArrowProjectile.h">
       <Filter>Combat\Projectiles</Filter>
     </ClInclude>
+    <ClInclude Include="CameraTransitionStep.h" />
+    <ClInclude Include="CameraTransitionStepAction.h" />
+    <ClInclude Include="CombatAreaEvent.h" />
+    <ClInclude Include="MoveObjectAlongPathAction.h" />
+    <ClInclude Include="MoveObjectToTransformAction.h" />
+    <ClInclude Include="PlayAnimationAction.h" />
+    <ClInclude Include="DeathParticles.h">
+      <Filter>Character\Death</Filter>
+    </ClInclude>
+    <ClInclude Include="LyrielParticles.h">
+      <Filter>Character\Lyriel</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
@@ -612,9 +621,6 @@
       <Filter>Character\Lyriel</Filter>
     </ClCompile>
     <ClCompile Include="LyrielSound.cpp">
-      <Filter>Character\Lyriel</Filter>
-    </ClCompile>
-    <ClCompile Include="ArrowPool.cpp">
       <Filter>Character\Lyriel</Filter>
     </ClCompile>
     <ClCompile Include="LyrielAbilityBase.cpp">
@@ -884,6 +890,18 @@
     </ClCompile>
     <ClCompile Include="LyrielArrowProjectile.cpp">
       <Filter>Combat\Projectiles</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraTransitionStep.cpp" />
+    <ClCompile Include="CameraTransitionStepAction.cpp" />
+    <ClCompile Include="CombatAreaEvent.cpp" />
+    <ClCompile Include="MoveObjectAlongPathAction.cpp" />
+    <ClCompile Include="MoveObjectToTransformAction.cpp" />
+    <ClCompile Include="PlayAnimationAction.cpp" />
+    <ClCompile Include="DeathParticles.cpp">
+      <Filter>Character\Death</Filter>
+    </ClCompile>
+    <ClCompile Include="LyrielParticles.cpp">
+      <Filter>Character\Lyriel</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
