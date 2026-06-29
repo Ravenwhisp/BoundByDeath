@@ -8,6 +8,9 @@ namespace
 
     constexpr const char* CHARGE_ATTACK_EFFECT_PREFAB_PATH =
         "Assets/Prefabs/Particles/Paladin/ChargeAttackEffect.prefab";
+
+    constexpr const char* BASIC_ATTACK_EFFECT_PREFAB_PATH =
+        "Assets/Prefabs/Particles/Paladin/BasicAttackEffect.prefab";
 }
 
 IMPLEMENT_SCRIPT_FIELDS(PaladinVFX,
@@ -27,6 +30,9 @@ void PaladinVFX::Start()
 
     chargeAttackEffect = nullptr;
     chargeAttackEffectActive = false;
+
+    basicAttackEffect = nullptr;
+    basicAttackEffectTimer = 0.0f;
 }
 
 void PaladinVFX::Update()
@@ -40,6 +46,8 @@ void PaladinVFX::Update()
     {
         updateChargeAttackEffectPosition();
     }
+
+    updateBasicAttackEffectLifetime(Time::getDeltaTime());
 }
 
 void PaladinVFX::setWalkingDustActive(bool active)
@@ -84,6 +92,22 @@ void PaladinVFX::stopChargeAttackEffect()
     removeChargeAttackEffect();
 }
 
+void PaladinVFX::playBasicAttackEffect()
+{
+    removeBasicAttackEffect();
+
+    addBasicAttackEffect();
+
+    if (basicAttackEffect)
+    {
+        basicAttackEffectTimer = basicAttackEffectLifetime;
+    }
+    else
+    {
+        basicAttackEffectTimer = 0.0f;
+    }
+}
+
 Vector3 PaladinVFX::getWalkingDustPosition() const
 {
     GameObject* owner = getOwner();
@@ -121,6 +145,26 @@ Vector3 PaladinVFX::getChargeAttackEffectPosition() const
         ownerPosition.x + ownerForward.x * chargeAttackForwardOffset,
         ownerPosition.y + chargeAttackYOffset,
         ownerPosition.z + ownerForward.z * chargeAttackForwardOffset
+    );
+}
+
+Vector3 PaladinVFX::getBasicAttackEffectPosition() const
+{
+    GameObject* owner = getOwner();
+    Transform* ownerTransform = GameObjectAPI::getTransform(owner);
+
+    if (!ownerTransform)
+    {
+        return Vector3(0.0f, 0.0f, 0.0f);
+    }
+
+    const Vector3 ownerPosition = TransformAPI::getGlobalPosition(ownerTransform);
+    const Vector3 ownerForward = TransformAPI::getForward(ownerTransform);
+
+    return Vector3(
+        ownerPosition.x + ownerForward.x * basicAttackForwardOffset,
+        ownerPosition.y + basicAttackYOffset,
+        ownerPosition.z + ownerForward.z * basicAttackForwardOffset
     );
 }
 
@@ -231,6 +275,47 @@ void PaladinVFX::updateChargeAttackEffectPosition()
         chargeAttackEffectTransform,
         getOwnerRotation()
     );
+}
+
+void PaladinVFX::addBasicAttackEffect()
+{
+    basicAttackEffect = GameObjectAPI::instantiatePrefab(
+        BASIC_ATTACK_EFFECT_PREFAB_PATH,
+        getBasicAttackEffectPosition(),
+        getOwnerRotation()
+    );
+
+    if (!basicAttackEffect)
+    {
+        Debug::warn("[PaladinVFX] Could not instantiate BasicAttackEffect prefab.");
+    }
+}
+
+void PaladinVFX::removeBasicAttackEffect()
+{
+    if (!basicAttackEffect)
+    {
+        return;
+    }
+
+    GameObjectAPI::removeGameObject(basicAttackEffect);
+    basicAttackEffect = nullptr;
+}
+
+void PaladinVFX::updateBasicAttackEffectLifetime(float deltaTime)
+{
+    if (!basicAttackEffect)
+    {
+        return;
+    }
+
+    basicAttackEffectTimer -= deltaTime;
+
+    if (basicAttackEffectTimer <= 0.0f)
+    {
+        removeBasicAttackEffect();
+        basicAttackEffectTimer = 0.0f;
+    }
 }
 
 IMPLEMENT_SCRIPT(PaladinVFX)

@@ -21,10 +21,13 @@ public:
     void startChargeAttackEffect();
     void stopChargeAttackEffect();
 
+    void playBasicAttackEffect();
+
 private:
 
     Vector3 getWalkingDustPosition() const;
     Vector3 getChargeAttackEffectPosition() const;
+    Vector3 getBasicAttackEffectPosition() const;
 
     Vector3 getOwnerRotation() const;
 
@@ -35,6 +38,10 @@ private:
     void addChargeAttackEffect();
     void removeChargeAttackEffect();
     void updateChargeAttackEffectPosition();
+
+    void addBasicAttackEffect();
+    void removeBasicAttackEffect();
+    void updateBasicAttackEffectLifetime(float deltaTime);
 
 public:
 
@@ -49,6 +56,13 @@ private:
     GameObject* chargeAttackEffect = nullptr;
     bool chargeAttackEffectActive = false;
 
+    GameObject* basicAttackEffect = nullptr;
+
     float chargeAttackYOffset = 0.5f;
     float chargeAttackForwardOffset = 0.0f;
+
+    float basicAttackYOffset = 0.05f;
+    float basicAttackForwardOffset = 0.75f;
+    float basicAttackEffectLifetime = 1.0f;
+    float basicAttackEffectTimer = 0.0f;
 };
