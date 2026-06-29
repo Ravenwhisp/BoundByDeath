@@ -29,6 +29,7 @@ class ParticleSystemComponent;
 class ComponentSoundSource;
 class CameraComponent;
 class NavRuntimeBlockerComponent;
+class PlayerRenderBufferComponent;
 
 struct HapticEffectDefinition;
 
@@ -433,6 +434,21 @@ namespace AudioAPI
     // la música persista (solo cambia el State -> crossfade).
     ENGINE_API bool isMusicStarted();
     ENGINE_API void setMusicStarted(bool started);
+}
+
+namespace Shaders
+{
+    ENGINE_API PlayerRenderBufferComponent* getPlayerRenderBufferComponent(GameObject* gameObject);
+    ENGINE_API const PlayerRenderBufferComponent* getPlayerRenderBufferComponent(const GameObject* gameObject);
+
+    ENGINE_API float   getDamageHighlightIntensity(PlayerRenderBufferComponent* component);
+    ENGINE_API void    setDamageHighlightIntensity(PlayerRenderBufferComponent* component, float value);
+    ENGINE_API Vector3 getDamageHighlightCenterColor(PlayerRenderBufferComponent* component);
+    ENGINE_API void    setDamageHighlightCenterColor(PlayerRenderBufferComponent* component, Vector3 value);
+    ENGINE_API Vector3 getDamageHighlightRimColor(PlayerRenderBufferComponent* component);
+    ENGINE_API void    setDamageHighlightRimColor(PlayerRenderBufferComponent* component, Vector3 value);
+    ENGINE_API float   getDamageHighlightRimIntensity(PlayerRenderBufferComponent* component);
+    ENGINE_API void    setDamageHighlightRimIntensity(PlayerRenderBufferComponent* component, float value);
 }
 
 #include "EngineAPI.inl"
