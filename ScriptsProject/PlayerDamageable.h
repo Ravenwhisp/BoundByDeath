@@ -45,6 +45,7 @@ private:
 
     bool  m_damageHighlightActive = false;
     float m_damageHighlightTimer = 0.0f;
+    float m_damageHighlightSpeed = 1.0f;
 
     void playHurtSfx();
     void playHurtVfx();

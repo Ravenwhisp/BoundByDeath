@@ -16,7 +16,8 @@ namespace
 
 IMPLEMENT_SCRIPT_FIELDS_INHERITED(PlayerDamageable, Damageable,
     SERIALIZED_FLOAT(m_heartbeatThreshold, "Heartbeat Threshold", 0.5f, 0.25f, 0.0f),
-    SERIALIZED_COMPONENT_REF(m_renderer, "Mesh Renderer", ComponentType::TRANSFORM)
+    SERIALIZED_COMPONENT_REF(m_renderer, "Mesh Renderer", ComponentType::TRANSFORM),
+    SERIALIZED_FLOAT(m_damageHighlightSpeed, "Damage Highlight Speed", 0.1f, 5.0f, 0.0f)
 )
 
 PlayerDamageable::PlayerDamageable(GameObject* owner)
@@ -45,7 +46,20 @@ void PlayerDamageable::Start()
     m_lyrielSound = GameObjectAPI::findScript<LyrielSound>(m_owner);
 
     Transform* rendererTransform = m_renderer.getReferencedComponent();
-    m_playerRenderBuffer = Shaders::getPlayerRenderBufferComponent(rendererTransform->getOwner());
+
+    if (rendererTransform == nullptr)
+    {
+        Debug::warn("PlayerDamageable on '%s' has a missing renderer reference.", GameObjectAPI::getName(getOwner()));
+    }
+    else
+    {
+        m_playerRenderBuffer = Shaders::getPlayerRenderBufferComponent(ComponentAPI::getOwner(rendererTransform));
+
+        if (m_playerRenderBuffer == nullptr)
+        {
+            Debug::warn("Renderer referenced in PlayerDamageable on '%s' does not have a PlayerRenderbuffer component.", GameObjectAPI::getName(getOwner()));
+        }
+    }
 }
 
 void PlayerDamageable::Update()
@@ -66,7 +80,7 @@ void PlayerDamageable::Update()
 
     if (m_damageHighlightActive)
     {
-        m_damageHighlightTimer -= Time::getDeltaTime();
+        m_damageHighlightTimer -= (Time::getDeltaTime() * m_damageHighlightSpeed);
         if (m_damageHighlightTimer <= 0.0f)
         {
             m_damageHighlightTimer = 0.0f;
