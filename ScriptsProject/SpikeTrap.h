@@ -51,8 +51,8 @@ public:
 	float waitPositionY = -0.7f;
 	float activePositionY = 0.0f;
 
-    std::string m_spikeShine = "Assets/Prefabs/Particles/SpikesShine.prefab";
-    std::string m_spectralAura = "Assets/Prefabs/Particles/SpectralSpikeAura.prefab";
+    ScriptComponentRef<Transform> m_spikeShineT;
+    ScriptComponentRef<Transform> m_spectralAuraT;
 
 private:
     
@@ -65,9 +65,6 @@ private:
 
     void addEffect(int type);
 	void removeEffect(int type);
-
-	GameObject* normalEffect = nullptr;
-	GameObject* spectralEffect = nullptr;
 
 	int spikeType = 0; // 0 for normal, 1 for spectral
 

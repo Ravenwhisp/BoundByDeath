@@ -10,8 +10,8 @@ IMPLEMENT_SCRIPT_FIELDS(SpikeTrap,
     SERIALIZED_FLOAT(waitPositionY, "Wait Position Y", -10.0f, 10.0f, 0.1f),
     SERIALIZED_FLOAT(activePositionY, "Active Position Y", -10.0f, 10.0f, 0.1f),
     SERIALIZED_FLOAT(trapDamage, "Trap Damage", 0.0f, 1000.0f, 1.0f),
-    SERIALIZED_STRING(m_spikeShine, "SpikeShine Particle"),
-    SERIALIZED_STRING(m_spectralAura, "Spectral Aura Particle")
+    SERIALIZED_COMPONENT_REF(m_spikeShineT, "Spike Shine Particle", ComponentType::TRANSFORM),
+    SERIALIZED_COMPONENT_REF(m_spectralAuraT, "Spectral Aura Particle", ComponentType::TRANSFORM)
 )
 
 SpikeTrap::SpikeTrap(GameObject* owner)
@@ -180,11 +180,11 @@ void SpikeTrap::addEffect(int type)
 {
     if (type == 0)
     {
-        normalEffect = GameObjectAPI::instantiatePrefab(m_spikeShine.c_str(), TransformAPI::getGlobalPosition(m_normalSpike) + Vector3(0.0f, 1.0f, 0.0f), Vector3(0.0f, 0.0f, 0.0f));
+        GameObjectAPI::setActive(ComponentAPI::getOwner(m_spikeShineT.getReferencedComponent()), true);
     }
     else if (type == 1)
     {
-        spectralEffect = GameObjectAPI::instantiatePrefab(m_spectralAura.c_str(), TransformAPI::getGlobalPosition(m_spectralSpike), Vector3(0.0f, 0.0f, 0.0f));
+        GameObjectAPI::setActive(ComponentAPI::getOwner(m_spectralAuraT.getReferencedComponent()), true);
     }
 }
 
@@ -192,13 +192,11 @@ void SpikeTrap::removeEffect(int type)
 {
     if (type == 0)
     {
-        GameObjectAPI::removeGameObject(normalEffect);
-        normalEffect = nullptr;
+        GameObjectAPI::setActive(ComponentAPI::getOwner(m_spikeShineT.getReferencedComponent()), false);
     }
-    else if (type == 1 && spectralEffect)
+    else if (type == 1)
     {
-        GameObjectAPI::removeGameObject(spectralEffect);
-        spectralEffect = nullptr;
+        GameObjectAPI::setActive(ComponentAPI::getOwner(m_spectralAuraT.getReferencedComponent()), false);
     }
 }
 
