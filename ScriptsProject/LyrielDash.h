@@ -28,6 +28,7 @@ protected:
     void onDashStarted() override;
     void onDashEnded() override;
     void onDashUpdate(float dt) override;
+    void onDashEnded() override;
     bool validateDashTarget() override;
     void drawGizmo() override;
 

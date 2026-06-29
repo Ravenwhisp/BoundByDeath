@@ -26,6 +26,10 @@ namespace
     // Approximate walking cadence. No animation hook is available yet, so we
     // tick footstep events on a timer while the player is moving.
     constexpr float k_footstepInterval = 0.45f;
+
+    // Minimum time between consecutive hurt one-shots. Guarantees the hurt SFX can
+    // never machine-gun under continuous damage, regardless of how often it's called.
+    constexpr float k_hurtRetriggerCooldown = 0.25f;
 }
 
 LyrielSound::LyrielSound(GameObject* owner)
@@ -67,6 +71,11 @@ void LyrielSound::Update()
             m_footstepTimer = k_footstepInterval;
         }
     }
+
+    if (m_hurtCooldownTimer > 0.0f)
+    {
+        m_hurtCooldownTimer -= dt;
+    }
 }
 
 uint32_t LyrielSound::postEvent(const char* eventName)
@@ -85,7 +94,15 @@ void LyrielSound::playChargedImpact()   { postEvent(k_chargedImpact); }
 void LyrielSound::playDashWhoosh()      { postEvent(k_dashWhoosh); }
 void LyrielSound::playVolleyRelease()   { postEvent(k_volleyRelease); }
 void LyrielSound::playMarkExploit()     { postEvent(k_markExploit); }
-void LyrielSound::playHurt()            { postEvent(k_hurt); }
+void LyrielSound::playHurt()
+{
+    if (m_hurtCooldownTimer > 0.0f)
+    {
+        return; // debounced: continuous damage can't machine-gun the hurt SFX
+    }
+    postEvent(k_hurt);
+    m_hurtCooldownTimer = k_hurtRetriggerCooldown;
+}
 void LyrielSound::playDown()            { postEvent(k_down); }
 void LyrielSound::playLockTarget()      { postEvent(k_lockTarget); }
 void LyrielSound::playSwitchTarget()    { postEvent(k_switchTarget); }

@@ -69,6 +69,11 @@ private:
     // Hover loop
     uint32_t m_hoverLoopID = 0;
 
+    // Hurt SFX debounce: a one-shot reaction sound must never re-fire every frame
+    // when damage is continuous (Bound separation, DoTs, traps). Counts down in
+    // Update; playHurt() only fires when <= 0.
+    float m_hurtCooldownTimer = 0.0f;
+
     struct PendingEvent
     {
         const char* eventName;

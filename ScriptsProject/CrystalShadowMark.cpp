@@ -42,6 +42,7 @@ void CrystalShadowMark::Update()
         if (managerScript != nullptr)
         {
             managerScript->onCrystalsDeactivated(m_puzzleID);
+			deactivateEffect();
         }
         else
         {
@@ -52,15 +53,49 @@ void CrystalShadowMark::Update()
 
 void CrystalShadowMark::exploit()
 {
+    if (m_activated)
+    {
+        Debug::log("[CrystalMark] Crystal already activated, ignoring exploit.");
+        return;
+	}
+
     EnemyShadowMark::exploit(); 
 
     if (managerScript != nullptr)
     {
         managerScript->onCrystalsActivated(m_puzzleID);
+		activeEffect();
+		m_activated = true;
     }
     else
     {
 		Debug::log("[CrystalMark] WARNING: PuzzleManagerLVL1 not found!");
+    }
+}
+
+void CrystalShadowMark::notifyDeathHit()
+{
+    if (m_activated)
+    {
+        return;
+    }
+    EnemyShadowMark::notifyDeathHit();
+}
+
+void CrystalShadowMark::activeEffect()
+{
+    if (effectObject == nullptr)
+    {
+        effectObject = GameObjectAPI::instantiatePrefab("Assets/Prefabs/Particles/CrystalSparks.prefab", TransformAPI::getGlobalPosition(GameObjectAPI::getTransform(getOwner())) + Vector3(0.0f, 1.0f, 0.0f), Vector3(0.0f, 0.0f, 0.0f));
+    }
+}
+
+void CrystalShadowMark::deactivateEffect()
+{
+    if (effectObject != nullptr)
+    {
+        GameObjectAPI::removeGameObject(effectObject);
+        effectObject = nullptr;
     }
 }
 

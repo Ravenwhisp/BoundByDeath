@@ -89,8 +89,10 @@ void Bound::Update()
 
         const float damage = damagePerSecond * Time::getDeltaTime();
 
-        m_firstDamageable->takeDamage(damage);
-        m_secondDamageable->takeDamage(damage);
+        // Continuous: the players grunt once on entering separation damage, not every
+        // frame; the escalating heartbeat handles the ongoing tension.
+        m_firstDamageable->takeDamage(HitContext{ damage, /*continuous=*/true });
+        m_secondDamageable->takeDamage(HitContext{ damage, /*continuous=*/true });
 
         const bool p1LowHp = m_firstDamageable->getHpPercent() < m_separationHapticHpGate;
         const bool p2LowHp = m_secondDamageable->getHpPercent() < m_separationHapticHpGate;
