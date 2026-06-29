@@ -34,6 +34,8 @@ private:
     LyrielSound* m_lyrielSound = nullptr;
     PlayerRenderBufferComponent* m_playerRenderBuffer = nullptr;
 
+    ScriptComponentRef<Transform> m_renderer;
+
     // Continuous-damage (Bound separation, DoTs) hurt handling: play the grunt once
     // on ENTERING the continuous damage, then stay silent (the heartbeat conveys the
     // ongoing tension). Re-arms only after a short gap with no continuous damage, so

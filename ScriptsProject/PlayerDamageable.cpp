@@ -6,7 +6,6 @@
 
 #include "PlayerDownState.h"
 #include "PlayerAnimationController.h"
-#include "PlayerRenderBufferComponent.h"
 
 namespace
 {
@@ -16,7 +15,8 @@ namespace
 }
 
 IMPLEMENT_SCRIPT_FIELDS_INHERITED(PlayerDamageable, Damageable,
-    SERIALIZED_FLOAT(m_heartbeatThreshold, "Heartbeat Threshold", 0.5f, 0.25f, 0.0f)
+    SERIALIZED_FLOAT(m_heartbeatThreshold, "Heartbeat Threshold", 0.5f, 0.25f, 0.0f),
+    SERIALIZED_COMPONENT_REF(m_renderer, "Mesh Renderer", ComponentType::TRANSFORM)
 )
 
 PlayerDamageable::PlayerDamageable(GameObject* owner)
@@ -44,7 +44,8 @@ void PlayerDamageable::Start()
     m_deathSound  = GameObjectAPI::findScript<DeathSound>(m_owner);
     m_lyrielSound = GameObjectAPI::findScript<LyrielSound>(m_owner);
 
-    m_playerRenderBuffer = Shaders::getPlayerRenderBufferComponent(getOwner());
+    Transform* rendererTransform = m_renderer.getReferencedComponent();
+    m_playerRenderBuffer = Shaders::getPlayerRenderBufferComponent(rendererTransform->getOwner());
 }
 
 void PlayerDamageable::Update()
@@ -72,7 +73,7 @@ void PlayerDamageable::Update()
             m_damageHighlightActive = false;
         }
 
-        Shaders::setDamageHighlight(m_damageHighlightTimer);
+        Shaders::setDamageHighlightIntensity(m_playerRenderBuffer, m_damageHighlightTimer);
     }
 
 
@@ -111,12 +112,14 @@ void PlayerDamageable::onDamaged(float amount)
         {
             m_continuousDamageActive = true;
             playHurtSfx();
+            playHurtVfx();
         }
         return;
     }
 
     // Discrete hit: one grunt per hit (the sound layer debounces overlaps).
     playHurtSfx();
+    playHurtVfx();
 }
 
 void PlayerDamageable::playHurtSfx()
@@ -133,6 +136,11 @@ void PlayerDamageable::playHurtSfx()
 
 void PlayerDamageable::playHurtVfx()
 {
+    if (m_playerRenderBuffer == nullptr)
+    {
+        return;
+    }
+
     m_damageHighlightActive = true;
     m_damageHighlightTimer = 1;
 }
