@@ -1,9 +1,16 @@
 #pragma once
 #include "DeathAbilityBase.h"
+#include <vector>
 
 class EnemyDetectionAggro;
 class PlayerRotation;
 class DeathUI;
+
+
+struct TauntSpawnedPrefab {
+    GameObject* gameObject;
+    float lifetimeRemaining;
+};
 
 class DeathTaunt : public DeathAbilityBase
 {
@@ -17,11 +24,12 @@ public:
 
     void drawGizmo() override;
 
+public:
+    const char* m_tauntParticlePath = "Assets/Prefabs/Particles/Death/DeathTaunt_1.prefab";
+
 protected:
 	void startAbility() override;
-
 	bool canStartSpecificAbility() const override;
-
     float getCooldown() const override;
 
 private:
@@ -43,4 +51,7 @@ private:
     float m_debugConeTimer = 0.0f;
     bool m_isAiming = false;
     Vector3 m_currentAimDirection = Vector3::Zero;
+
+    // Contenedor para controlar el borrado tras 1 segundo
+    std::vector<TauntSpawnedPrefab> m_temporaryTauntPrefabs;
 };

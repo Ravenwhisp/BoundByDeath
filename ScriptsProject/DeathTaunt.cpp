@@ -11,6 +11,13 @@
 
 #include <cmath>
 
+// ===================================================================================
+//Añadimos SERIALIZED_STRING para que puedas modificar la ruta del prefab desde el Engine
+// ===================================================================================
+IMPLEMENT_SCRIPT_FIELDS(DeathTaunt,
+    SERIALIZED_STRING(m_tauntParticlePath, "Taunt Particle Prefab Path"),
+)
+
 DeathTaunt::DeathTaunt(GameObject* owner)
     : DeathAbilityBase(owner)
 {
@@ -36,6 +43,26 @@ void DeathTaunt::Start()
 void DeathTaunt::Update()
 {
     DeathAbilityBase::Update();
+
+
+    const float dt = Time::getDeltaTime();
+    for (auto it = m_temporaryTauntPrefabs.begin(); it != m_temporaryTauntPrefabs.end(); )
+    {
+        it->lifetimeRemaining -= dt;
+        if (it->lifetimeRemaining <= 0.0f)
+        {
+            if (it->gameObject != nullptr)
+            {
+                GameObjectAPI::removeGameObject(it->gameObject);
+            }
+            it = m_temporaryTauntPrefabs.erase(it);
+        }
+        else
+        {
+            ++it;
+        }
+    }
+   
 
     if (m_character == nullptr || m_character->isDowned())
     {
@@ -65,7 +92,7 @@ void DeathTaunt::Update()
 
     if (!m_isAiming && m_debugConeTimer > 0.0f)
     {
-        m_debugConeTimer -= Time::getDeltaTime();
+        m_debugConeTimer -= dt; // Reutilizamos el dt calculado arriba
         if (m_debugConeTimer < 0.0f)
         {
             m_debugConeTimer = 0.0f;
@@ -205,6 +232,20 @@ void DeathTaunt::releaseAimAndCast()
             sound->playTauntShout();
         }
 
+        Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
+        if (ownerTransform != nullptr)
+        {
+            Vector3 ownerPos = TransformAPI::getGlobalPosition(ownerTransform);
+            
+            // Instanciamos el prefab con el path variable, su posición y rotación a cero
+            GameObject* fxTaunt = GameObjectAPI::instantiatePrefab(m_tauntParticlePath, ownerPos, Vector3::Zero);
+            if (fxTaunt != nullptr)
+            {
+                m_temporaryTauntPrefabs.push_back({ fxTaunt, 1.0f }); // 1 segundo de vida
+            }
+        }
+       
+
         applyTauntToEnemiesInCone(finalDirection);
         notifyAbilitySuccessfullyStarted();
         m_debugConeTimer = 0.25f;
@@ -339,7 +380,6 @@ bool DeathTaunt::isEnemyInsideTauntCone(GameObject* enemy, const Vector3& ownerP
     const float halfAngleRadians = m_config->m_tauntHalfAngleDegrees * (3.14159265f / 180.0f);
     const float coneThreshold = std::cos(halfAngleRadians);
 
-    // TODO: Add a line-of-sight / wall check before confirming the taunt hit.
     return flattenedForward.Dot(directionToEnemy) >= coneThreshold;
 }
 
