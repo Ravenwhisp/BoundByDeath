@@ -86,6 +86,14 @@ bool DeathTaunt::canStartSpecificAbility() const
     return !m_isAiming;
 }
 
+void DeathTaunt::onAttackWindowFinished()
+{
+    if (m_movementLockedForCombo)
+    {
+        releaseComboMoveLock();
+    }
+}
+
 float DeathTaunt::getCooldown() const
 {
     return m_config->m_tauntCooldown;
@@ -221,6 +229,10 @@ void DeathTaunt::releaseAimAndCast()
         applyTauntToEnemiesInCone(finalDirection);
         notifyAbilitySuccessfullyStarted();
         m_debugConeTimer = 0.25f;
+
+        m_movementLockedForCombo = true;
+        beginAttackPresentation();
+        beginAttackWindow(m_config->m_tauntLockDuration);
     }
 
     m_currentAimDirection = Vector3::Zero;

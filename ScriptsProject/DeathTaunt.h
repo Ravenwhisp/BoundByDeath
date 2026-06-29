@@ -22,6 +22,7 @@ protected:
 	void startAbility() override;
 
 	bool canStartSpecificAbility() const override;
+    void onAttackWindowFinished() override;
 
     float getCooldown() const override;
 
