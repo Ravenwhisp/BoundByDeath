@@ -6,6 +6,7 @@
 
 #include "PlayerDownState.h"
 #include "PlayerAnimationController.h"
+#include "PlayerRenderBufferComponent.h"
 
 namespace
 {
@@ -42,6 +43,8 @@ void PlayerDamageable::Start()
 
     m_deathSound  = GameObjectAPI::findScript<DeathSound>(m_owner);
     m_lyrielSound = GameObjectAPI::findScript<LyrielSound>(m_owner);
+
+    m_playerRenderBuffer = Shaders::getPlayerRenderBufferComponent(getOwner());
 }
 
 void PlayerDamageable::Update()
@@ -59,6 +62,20 @@ void PlayerDamageable::Update()
             m_continuousDamageActive = false;
         }
     }
+
+    if (m_damageHighlightActive)
+    {
+        m_damageHighlightTimer -= Time::getDeltaTime();
+        if (m_damageHighlightTimer <= 0.0f)
+        {
+            m_damageHighlightTimer = 0.0f;
+            m_damageHighlightActive = false;
+        }
+
+        Shaders::setDamageHighlight(m_damageHighlightTimer);
+    }
+
+
 
     if (!m_haptic) return;
 
@@ -112,6 +129,12 @@ void PlayerDamageable::playHurtSfx()
     {
         m_lyrielSound->playHurt();
     }
+}
+
+void PlayerDamageable::playHurtVfx()
+{
+    m_damageHighlightActive = true;
+    m_damageHighlightTimer = 1;
 }
 
 void PlayerDamageable::onHpDepleted()
