@@ -69,10 +69,15 @@ void CameraTransitionController::startTransition(CameraTransitionEvent* event)
 {
     if (m_isTransitioning)
     {
+        if (m_currentEvent == event && event->isHoldWhileTriggeredMode() && m_state == TransitionState::Returning)
+        {
+            startTransitionSequence(event, true);
+        }
+
         return;
     }
 
-    startTransitionSequence(event);
+    startTransitionSequence(event, false);
 }
 
 void CameraTransitionController::releaseTransition(CameraTransitionEvent* event)
@@ -98,7 +103,7 @@ void CameraTransitionController::releaseTransition(CameraTransitionEvent* event)
     }
 }
 
-void CameraTransitionController::startTransitionSequence(CameraTransitionEvent* event)
+void CameraTransitionController::startTransitionSequence(CameraTransitionEvent* event, bool preserveOriginalFov)
 {
     Transform* cameraTransform = GameObjectAPI::getTransform(getOwner());
 
@@ -110,7 +115,7 @@ void CameraTransitionController::startTransitionSequence(CameraTransitionEvent* 
     m_transitionStartPosition = TransformAPI::getGlobalPosition(cameraTransform);
     m_transitionStartRotation = TransformAPI::getGlobalEulerDegrees(cameraTransform);
 
-    if (m_camera != nullptr)
+    if (m_camera != nullptr && !preserveOriginalFov)
     {
         m_originalFov = CameraAPI::getFov(m_camera);
         m_returnStartFov = m_originalFov;
@@ -189,6 +194,8 @@ void CameraTransitionController::startStep(int stepIndex)
     }
 
     m_state = TransitionState::MovingStep;
+
+    step->executeStepStartedActions(this);
 }
 
 void CameraTransitionController::startReturning()
@@ -325,12 +332,24 @@ void CameraTransitionController::finishCurrentStepMovement()
         CameraAPI::setFov(m_camera, m_stepTargetFov);
     }
 
+    CameraTransitionStep* step = m_currentEvent->getTransitionStep(m_currentStepIndex);
+    if (step != nullptr)
+    {
+        step->executeStepReachedActions(this);
+    }
+
     m_state = TransitionState::HoldingStep;
     m_timer = 0.0f;
 }
 
 void CameraTransitionController::finishCurrentStepHold()
 {
+    CameraTransitionStep* step = m_currentEvent->getTransitionStep(m_currentStepIndex);
+    if (step != nullptr)
+    {
+        step->executeStepFinishedActions(this);
+    }
+
     const int nextStepIndex = m_currentStepIndex + 1;
 
     if (nextStepIndex < m_currentEvent->getTransitionStepCount())
@@ -425,7 +444,7 @@ Vector3 CameraTransitionController::evaluateCatmullRomStepPosition(float alpha) 
         p3 = TransformAPI::getGlobalPosition(nextPoint);
     }
 
-    return catmullRom(p0, p1, p2, p3, alpha);
+    return MathAPI::catmullRom(p0, p1, p2, p3, alpha);
 }
 
 void CameraTransitionController::finishTransition()
@@ -454,14 +473,6 @@ void CameraTransitionController::finishTransition()
     m_state = TransitionState::None;
     m_isTransitioning = false;
     m_timer = 0.0f;
-}
-
-Vector3 CameraTransitionController::catmullRom(const Vector3& p0, const Vector3& p1, const Vector3& p2, const Vector3& p3, float t) const
-{
-    const float t2 = t * t;
-    const float t3 = t2 * t;
-
-    return (p1 * 2.0f + (p2 - p0) * t + (p0 * 2.0f - p1 * 5.0f + p2 * 4.0f - p3) * t2 + (p1 * 3.0f - p0 - p2 * 3.0f + p3) * t3) * 0.5f;
 }
 
 void CameraTransitionController::findPlayerControllers()

@@ -1,0 +1,166 @@
+{
+    "Version": 2,
+    "sourcePath": "Assets\\Prefabs\\Breakable Barrel (Explosive).prefab",
+    "Name": "Breakable Barrel (Explosive)",
+    "Active": true,
+    "Static": false,
+    "Layer": "DEFAULT",
+    "Tag": "BREAKABLE",
+    "Transform": {
+        "Position": [
+            -48.95802688598633,
+            2.7974870204925537,
+            -5.157968521118164
+        ],
+        "Rotation": [
+            -0.0,
+            0.0,
+            -0.0,
+            1.0
+        ],
+        "Scale": [
+            1.0,
+            1.0,
+            1.0
+        ]
+    },
+    "Components": [
+        {
+            "UID": 5672664893657710316,
+            "ComponentType": "SCRIPT",
+            "Active": true,
+            "ScriptName": "BreakableExplosive",
+            "ScriptFields": {
+                "Explosion Radius": 5.0,
+                "Explosion Damage": 30.0
+            }
+        },
+        {
+            "UID": 17842304327580340190,
+            "ComponentType": "SCRIPT",
+            "Active": true,
+            "ScriptName": "BreakableDamageable",
+            "ScriptFields": {
+                "Max HP": 1.0,
+                "Health Slider": 0,
+                "Health Slider 2": 0,
+                "Health Glow": 0,
+                "UI Update Time (Slider 2)": 1.0,
+                "UI Wait Time (Slider 2)": 0.6000000238418579
+            }
+        },
+        {
+            "UID": 6384727181775449261,
+            "ComponentType": "NAV_RUNTIME_BLOCKER",
+            "Active": true,
+            "HalfExtents": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "Blocked": false
+        }
+    ],
+    "Children": [
+        {
+            "Name": "Normal",
+            "Active": true,
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.7071068286895752,
+                    0.0,
+                    0.0,
+                    0.7071068286895752
+                ],
+                "Scale": [
+                    0.009999999776482582,
+                    0.010000000707805157,
+                    0.010000000707805157
+                ]
+            },
+            "Components": [
+                {
+                    "UID": 9255521313810856586,
+                    "ComponentType": "MODEL",
+                    "Active": true,
+                    "MeshAssetId": {
+                        "uid": 195768552811033379,
+                        "libId": "4e2d8758a2a8312bb21d1115efe1c0f3",
+                        "type": "MESH"
+                    },
+                    "SkinAssetId": {
+                        "uid": 0,
+                        "libId": "",
+                        "type": "SKIN"
+                    },
+                    "Materials": [
+                        {
+                            "uid": 2403703750103720078,
+                            "libId": "80684dc5a55f1f4701c35913770c344b",
+                            "type": "MATERIAL"
+                        }
+                    ]
+                }
+            ],
+            "Children": []
+        },
+        {
+            "Name": "Broken",
+            "Active": true,
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0,
+                    1.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [
+                {
+                    "UID": 17056969836767083501,
+                    "ComponentType": "MODEL",
+                    "Active": true,
+                    "MeshAssetId": {
+                        "uid": 11678468528292670682,
+                        "libId": "cf82f8b20a2276fe147d3c22df5b34ba",
+                        "type": "MESH"
+                    },
+                    "SkinAssetId": {
+                        "uid": 0,
+                        "libId": "",
+                        "type": "SKIN"
+                    },
+                    "Materials": [
+                        {
+                            "uid": 10422386566006367085,
+                            "libId": "04f0e20aff8a46adc8a3953ec5e37386",
+                            "type": "MATERIAL"
+                        }
+                    ]
+                }
+            ],
+            "Children": []
+        }
+    ]
+}
