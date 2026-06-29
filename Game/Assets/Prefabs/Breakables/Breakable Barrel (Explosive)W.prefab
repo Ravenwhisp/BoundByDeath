@@ -1,0 +1,310 @@
+{
+    "Version": 2,
+    "sourcePath": "Assets\\Prefabs\\Breakables\\Breakable Barrel (Explosive)W.prefab",
+    "Name": "Breakable Barrel (Explosive)W",
+    "Active": true,
+    "Static": false,
+    "Layer": "DEFAULT",
+    "Tag": "BREAKABLE",
+    "Transform": {
+        "Position": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "Rotation": [
+            -0.0,
+            0.0,
+            -0.0,
+            1.0
+        ],
+        "Scale": [
+            1.0,
+            1.0,
+            1.0
+        ]
+    },
+    "Components": [
+        {
+            "UID": 18296356631719547020,
+            "ComponentType": "SCRIPT",
+            "Active": true,
+            "ScriptName": "BreakableExplosive",
+            "ScriptFields": {
+                "Explosion Radius": 5.0,
+                "Explosion Damage": 30.0
+            }
+        },
+        {
+            "UID": 6110481656530574451,
+            "ComponentType": "SCRIPT",
+            "Active": true,
+            "ScriptName": "BreakableDamageable",
+            "ScriptFields": {
+                "Max HP": 1.0,
+                "Health Slider": 0,
+                "Health Slider 2": 0,
+                "Health Glow": 0,
+                "UI Update Time (Slider 2)": 1.0,
+                "UI Wait Time (Slider 2)": 0.6000000238418579
+            }
+        },
+        {
+            "UID": 16316825274487014022,
+            "ComponentType": "NAV_RUNTIME_BLOCKER",
+            "Active": true,
+            "HalfExtents": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "Blocked": false
+        }
+    ],
+    "Children": [
+        {
+            "Name": "Normal",
+            "Active": true,
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.7071068286895752,
+                    0.0,
+                    0.0,
+                    0.7071068286895752
+                ],
+                "Scale": [
+                    0.009999999776482582,
+                    0.010000000707805157,
+                    0.010000000707805157
+                ]
+            },
+            "Components": [
+                {
+                    "UID": 7639156653247827621,
+                    "ComponentType": "MODEL",
+                    "Active": true,
+                    "MeshAssetId": {
+                        "uid": 195768552811033379,
+                        "libId": "4e2d8758a2a8312bb21d1115efe1c0f3",
+                        "type": "MESH"
+                    },
+                    "SkinAssetId": {
+                        "uid": 0,
+                        "libId": "",
+                        "type": "SKIN"
+                    },
+                    "Materials": [
+                        {
+                            "uid": 2403703750103720078,
+                            "libId": "80684dc5a55f1f4701c35913770c344b",
+                            "type": "MATERIAL"
+                        }
+                    ]
+                }
+            ],
+            "Children": [
+                {
+                    "Name": "New GameObject",
+                    "Active": true,
+                    "Static": false,
+                    "Layer": "DEFAULT",
+                    "Tag": "DEFAULT",
+                    "Transform": {
+                        "Position": [
+                            0.0,
+                            -0.000003956966793339234,
+                            -33.19285202026367
+                        ],
+                        "Rotation": [
+                            0.7071068286895752,
+                            0.0,
+                            0.0,
+                            -0.7071068286895752
+                        ],
+                        "Scale": [
+                            100.0,
+                            100.00004577636719,
+                            100.00004577636719
+                        ]
+                    },
+                    "Components": [
+                        {
+                            "UID": 7909633575305724058,
+                            "ComponentType": "PARTICLE_SYSTEM",
+                            "Active": true,
+                            "TextureAssetId": {
+                                "uid": 18397412372386409293,
+                                "libId": "daec75fabdc85d041af40097e2ac1b24",
+                                "type": "TEXTURE"
+                            },
+                            "ParticleEmitters": [
+                                {
+                                    "Modules": [
+                                        {
+                                            "ModuleType": 2,
+                                            "Looping": true,
+                                            "Duration": 20.0,
+                                            "RateOverTime": 10.0,
+                                            "RateOverDistance": 0.0
+                                        },
+                                        {
+                                            "ModuleType": 4,
+                                            "LifeTimeType": "CONSTANT",
+                                            "StartLifeTime": 1.0
+                                        },
+                                        {
+                                            "ModuleType": 1,
+                                            "ShapeType": "CONE",
+                                            "Radius": 1.600000023841858,
+                                            "RadiusThickness": 0.5,
+                                            "RadiusScale": 1.7000000476837158
+                                        },
+                                        {
+                                            "ModuleType": 3,
+                                            "ColorOverTime": [
+                                                {
+                                                    "IsAlphaMark": false,
+                                                    "Position": 0.0,
+                                                    "Color": [
+                                                        0.12355214357376099,
+                                                        0.1225980743765831,
+                                                        0.1225980743765831
+                                                    ]
+                                                },
+                                                {
+                                                    "IsAlphaMark": false,
+                                                    "Position": 0.14191436767578125,
+                                                    "Color": [
+                                                        0.6602316498756409,
+                                                        0.056081462651491165,
+                                                        0.056081462651491165
+                                                    ]
+                                                },
+                                                {
+                                                    "IsAlphaMark": false,
+                                                    "Position": 1.0,
+                                                    "Color": [
+                                                        0.92277991771698,
+                                                        0.028502846136689186,
+                                                        0.028502846136689186
+                                                    ]
+                                                }
+                                            ],
+                                            "ColorCurve": [
+                                                -0.046875,
+                                                0.7734375,
+                                                1.0,
+                                                1.0
+                                            ]
+                                        },
+                                        {
+                                            "ModuleType": 5,
+                                            "VelocityType": "CONSTANT",
+                                            "InitialVelocity": 1.0
+                                        },
+                                        {
+                                            "ModuleType": 6,
+                                            "StartScaleType": "CONSTANT",
+                                            "StartScale": [
+                                                1.0,
+                                                1.0,
+                                                0.0
+                                            ],
+                                            "ChangeSizeOverTime": true,
+                                            "EndScaleType": "CONSTANT",
+                                            "EndScale": [
+                                                0.10000000149011612,
+                                                0.10000000149011612,
+                                                0.0
+                                            ]
+                                        },
+                                        {
+                                            "ModuleType": 7,
+                                            "RotationType": "CONSTANT",
+                                            "StartRotation": 0.0,
+                                            "VelocityType": "CONSTANT",
+                                            "AngularVelocity": 0.0,
+                                            "FlipRotation": 0.0
+                                        },
+                                        {
+                                            "ModuleType": 8,
+                                            "TileRows": 1,
+                                            "TileColumns": 1,
+                                            "FPS": 0.0,
+                                            "StartFrameType": "CONSTANT",
+                                            "StartFrame": 0.0
+                                        },
+                                        {
+                                            "ModuleType": 9,
+                                            "RenderMode": "BILLBOARD",
+                                            "RenderLayer": 0
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ],
+                    "Children": []
+                }
+            ]
+        },
+        {
+            "Name": "Broken",
+            "Active": true,
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0,
+                    1.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [
+                {
+                    "UID": 13078594323578725441,
+                    "ComponentType": "MODEL",
+                    "Active": true,
+                    "MeshAssetId": {
+                        "uid": 11678468528292670682,
+                        "libId": "cf82f8b20a2276fe147d3c22df5b34ba",
+                        "type": "MESH"
+                    },
+                    "SkinAssetId": {
+                        "uid": 0,
+                        "libId": "",
+                        "type": "SKIN"
+                    },
+                    "Materials": [
+                        {
+                            "uid": 10422386566006367085,
+                            "libId": "04f0e20aff8a46adc8a3953ec5e37386",
+                            "type": "MATERIAL"
+                        }
+                    ]
+                }
+            ],
+            "Children": []
+        }
+    ]
+}

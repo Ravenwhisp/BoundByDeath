@@ -6,13 +6,18 @@ class Transform;
 
 class CameraFollow : public Script
 {
+    DECLARE_SCRIPT(CameraFollow)
+
 public:
     explicit CameraFollow(GameObject* owner);
 
     void Start() override;
     void Update() override;
 
-    ExposedFieldList getExposedFields() const override;
+    ScriptFieldList getExposedFields() const override;
+
+    void setFollowEnabled(bool enabled) { m_followEnabled = enabled; }
+    bool isFollowEnabled() const { return m_followEnabled; }
 
 public:
     ScriptComponentRef<Transform> m_firstTarget;
@@ -41,5 +46,6 @@ private:
 private:
     bool m_firstUpdateAfterResolve = true;
 
+    bool m_followEnabled = true;
     float m_currentExtraHeight = 0.0f;
 };

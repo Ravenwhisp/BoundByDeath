@@ -26,7 +26,7 @@
   "Components": [
     {
       "UID": 5287961243417179322,
-      "ComponentType": 3,
+      "ComponentType": "SCRIPT",
       "Active": true,
       "ScriptName": "TargetIndicatorUI",
       "ScriptFields": {
@@ -69,7 +69,7 @@
       "Components": [
         {
           "UID": 16466196599519362278,
-          "ComponentType": 6,
+          "ComponentType": "CANVAS",
           "Active": true,
           "RenderMode": 1,
           "ZTest": true
@@ -103,7 +103,7 @@
           "Components": [
             {
               "UID": 4889723806647224110,
-              "ComponentType": 5,
+              "ComponentType": "TRANSFORM2D",
               "Active": true,
               "Position": [
                 0.0,
@@ -142,11 +142,12 @@
             },
             {
               "UID": 7162433314195793007,
-              "ComponentType": 7,
+              "ComponentType": "UIIMAGE",
               "Active": true,
               "TextureAssetId": {
                 "uid": 13916510673653165836,
-                "libId": "0ff59fa623b7b5e8ce39fcc9b871dcd9"
+                "libId": "0ff59fa623b7b5e8ce39fcc9b871dcd9",
+                "type": "TEXTURE"
               },
               "FillAmount": 1.0,
               "FillMethod": 0,
@@ -164,5 +165,7 @@
         }
       ]
     }
-  ]
+  ],
+  "Version": 2,
+  "VariantOf": "Assets\\Prefabs\\Target Lyriel.prefab"
 }

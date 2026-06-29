@@ -1,0 +1,2483 @@
+{
+    "Version": 2,
+    "sourcePath": "Assets\\Prefabs\\Events\\Popups\\PopupCanvas.prefab",
+    "Name": "PopupCanvas",
+    "Active": true,
+    "Static": false,
+    "Layer": "DEFAULT",
+    "Tag": "DEFAULT",
+    "Transform": {
+        "Position": [
+            8.290781021118164,
+            -1.0127075910568237,
+            10.047758102416992
+        ],
+        "Rotation": [
+            -0.0,
+            0.0,
+            -0.0,
+            1.0
+        ],
+        "Scale": [
+            1.0,
+            1.0,
+            1.0
+        ]
+    },
+    "Components": [
+        {
+            "UID": 3267776990353789848,
+            "ComponentType": "CANVAS",
+            "Active": true,
+            "RenderMode": "SCREEN_SPACE",
+            "ZTest": false
+        },
+        {
+            "UID": 3426843752051229620,
+            "ComponentType": "SCRIPT",
+            "Active": true,
+            "ScriptName": "PopUpController",
+            "ScriptFields": {}
+        }
+    ],
+    "Children": [
+        {
+            "Name": "Images",
+            "Active": true,
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    -8.290781021118164,
+                    1.0127075910568237,
+                    -10.047758102416992
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0,
+                    1.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [],
+            "Children": [
+                {
+                    "Name": "TargetSystem 1",
+                    "Active": true,
+                    "Static": false,
+                    "Layer": "DEFAULT",
+                    "Tag": "DEFAULT",
+                    "Transform": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "Rotation": [
+                            -0.0,
+                            0.0,
+                            -0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "Components": [
+                        {
+                            "UID": 10777714159356962371,
+                            "ComponentType": "TRANSFORM2D",
+                            "Active": true,
+                            "Position": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "Scale": [
+                                1.0,
+                                1.0,
+                                0.0
+                            ],
+                            "Pivot": [
+                                0.5,
+                                0.5,
+                                0.0
+                            ],
+                            "AnchorMin": [
+                                0.5,
+                                0.5,
+                                0.0
+                            ],
+                            "AnchorMax": [
+                                0.5,
+                                0.5,
+                                0.0
+                            ],
+                            "BaseSize": [
+                                354.0,
+                                254.0,
+                                0.0
+                            ],
+                            "StretchMode": "NONE",
+                            "SizingMode": "KEEP_ASPECT_RATIO",
+                            "AspectRatio": 1.0,
+                            "Alpha": 0.0
+                        },
+                        {
+                            "UID": 8001029300762119016,
+                            "ComponentType": "UIIMAGE",
+                            "Active": true,
+                            "TextureAssetId": {
+                                "uid": 14032699650325958063,
+                                "libId": "63e6ce277a93936d4be0496c6f3f68c7",
+                                "type": "TEXTURE"
+                            },
+                            "FillAmount": [
+                                0.0,
+                                1.0
+                            ],
+                            "FillMethod": "Horizontal",
+                            "FillOrigin": 0,
+                            "SheetColumns": 1,
+                            "SheetRows": 1,
+                            "SheetOffset": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "StretchDrawMode": "Stretch"
+                        }
+                    ],
+                    "Children": []
+                },
+                {
+                    "Name": "Shadow execution 1",
+                    "Active": true,
+                    "Static": false,
+                    "Layer": "DEFAULT",
+                    "Tag": "DEFAULT",
+                    "Transform": {
+                        "Position": [
+                            0.07978057861328125,
+                            0.0,
+                            0.2997579574584961
+                        ],
+                        "Rotation": [
+                            -0.0,
+                            0.0,
+                            -0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "Components": [
+                        {
+                            "UID": 10659233102310326812,
+                            "ComponentType": "TRANSFORM2D",
+                            "Active": true,
+                            "Position": [
+                                -27.0,
+                                -135.0,
+                                0.0
+                            ],
+                            "Scale": [
+                                1.0,
+                                1.0,
+                                0.0
+                            ],
+                            "Pivot": [
+                                0.41999998688697815,
+                                0.5,
+                                0.0
+                            ],
+                            "AnchorMin": [
+                                0.5,
+                                0.4699999988079071,
+                                0.0
+                            ],
+                            "AnchorMax": [
+                                0.9100000262260437,
+                                1.0,
+                                0.0
+                            ],
+                            "BaseSize": [
+                                100.0,
+                                60.0,
+                                0.0
+                            ],
+                            "StretchMode": "VERTICAL",
+                            "SizingMode": "KEEP_ASPECT_RATIO",
+                            "AspectRatio": 1.0,
+                            "Alpha": 0.0
+                        },
+                        {
+                            "UID": 14328984485695835067,
+                            "ComponentType": "UIIMAGE",
+                            "Active": true,
+                            "TextureAssetId": {
+                                "uid": 14032699650325958063,
+                                "libId": "63e6ce277a93936d4be0496c6f3f68c7",
+                                "type": "TEXTURE"
+                            },
+                            "FillAmount": [
+                                0.0,
+                                1.0
+                            ],
+                            "FillMethod": "Horizontal",
+                            "FillOrigin": 0,
+                            "SheetColumns": 1,
+                            "SheetRows": 1,
+                            "SheetOffset": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "StretchDrawMode": "Stretch"
+                        }
+                    ],
+                    "Children": []
+                },
+                {
+                    "Name": "Shadow execution 2",
+                    "Active": true,
+                    "Static": false,
+                    "Layer": "DEFAULT",
+                    "Tag": "DEFAULT",
+                    "Transform": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "Rotation": [
+                            -0.0,
+                            0.0,
+                            -0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "Components": [
+                        {
+                            "UID": 3582711256455267899,
+                            "ComponentType": "TRANSFORM2D",
+                            "Active": true,
+                            "Position": [
+                                0.0,
+                                64.0,
+                                0.0
+                            ],
+                            "Scale": [
+                                1.0,
+                                1.0,
+                                0.0
+                            ],
+                            "Pivot": [
+                                0.5,
+                                0.5,
+                                0.0
+                            ],
+                            "AnchorMin": [
+                                0.5,
+                                0.0,
+                                0.0
+                            ],
+                            "AnchorMax": [
+                                0.8700000047683716,
+                                0.5099999904632568,
+                                0.0
+                            ],
+                            "BaseSize": [
+                                110.0,
+                                61.0,
+                                0.0
+                            ],
+                            "StretchMode": "VERTICAL",
+                            "SizingMode": "KEEP_ASPECT_RATIO",
+                            "AspectRatio": 1.0,
+                            "Alpha": 0.0
+                        },
+                        {
+                            "UID": 4448381507019935113,
+                            "ComponentType": "UIIMAGE",
+                            "Active": true,
+                            "TextureAssetId": {
+                                "uid": 14032699650325958063,
+                                "libId": "63e6ce277a93936d4be0496c6f3f68c7",
+                                "type": "TEXTURE"
+                            },
+                            "FillAmount": [
+                                0.0,
+                                1.0
+                            ],
+                            "FillMethod": "Horizontal",
+                            "FillOrigin": 0,
+                            "SheetColumns": 1,
+                            "SheetRows": 1,
+                            "SheetOffset": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "StretchDrawMode": "Stretch"
+                        }
+                    ],
+                    "Children": []
+                },
+                {
+                    "Name": "Piercing Arrow",
+                    "Active": true,
+                    "Static": false,
+                    "Layer": "DEFAULT",
+                    "Tag": "DEFAULT",
+                    "Transform": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "Rotation": [
+                            -0.0,
+                            0.0,
+                            -0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "Components": [
+                        {
+                            "UID": 2000178815088503322,
+                            "ComponentType": "TRANSFORM2D",
+                            "Active": true,
+                            "Position": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "Scale": [
+                                1.0,
+                                1.0,
+                                0.0
+                            ],
+                            "Pivot": [
+                                0.0,
+                                0.5,
+                                0.0
+                            ],
+                            "AnchorMin": [
+                                0.0,
+                                0.5,
+                                0.0
+                            ],
+                            "AnchorMax": [
+                                0.0,
+                                0.5,
+                                0.0
+                            ],
+                            "BaseSize": [
+                                143.0,
+                                25.0,
+                                0.0
+                            ],
+                            "StretchMode": "NONE",
+                            "SizingMode": "KEEP_ASPECT_RATIO",
+                            "AspectRatio": 1.0,
+                            "Alpha": 0.0
+                        },
+                        {
+                            "UID": 12989207156271520669,
+                            "ComponentType": "UIIMAGE",
+                            "Active": true,
+                            "TextureAssetId": {
+                                "uid": 16117985816032907351,
+                                "libId": "411eab4be3ba32ed1f1daa5f8d4227da",
+                                "type": "TEXTURE"
+                            },
+                            "FillAmount": [
+                                0.0,
+                                1.0
+                            ],
+                            "FillMethod": "Horizontal",
+                            "FillOrigin": 0,
+                            "SheetColumns": 1,
+                            "SheetRows": 1,
+                            "SheetOffset": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "StretchDrawMode": "Stretch"
+                        }
+                    ],
+                    "Children": []
+                },
+                {
+                    "Name": "Taunt",
+                    "Active": true,
+                    "Static": false,
+                    "Layer": "DEFAULT",
+                    "Tag": "DEFAULT",
+                    "Transform": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "Rotation": [
+                            -0.0,
+                            0.0,
+                            -0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "Components": [
+                        {
+                            "UID": 9021148202561797097,
+                            "ComponentType": "TRANSFORM2D",
+                            "Active": true,
+                            "Position": [
+                                0.0,
+                                1.0,
+                                0.0
+                            ],
+                            "Scale": [
+                                1.0,
+                                1.0,
+                                0.0
+                            ],
+                            "Pivot": [
+                                1.0,
+                                0.5,
+                                0.0
+                            ],
+                            "AnchorMin": [
+                                1.0,
+                                0.5,
+                                0.0
+                            ],
+                            "AnchorMax": [
+                                1.0,
+                                0.5,
+                                0.0
+                            ],
+                            "BaseSize": [
+                                139.0,
+                                23.0,
+                                0.0
+                            ],
+                            "StretchMode": "NONE",
+                            "SizingMode": "KEEP_ASPECT_RATIO",
+                            "AspectRatio": 1.0,
+                            "Alpha": 0.0
+                        },
+                        {
+                            "UID": 10606168843152971203,
+                            "ComponentType": "UIIMAGE",
+                            "Active": true,
+                            "TextureAssetId": {
+                                "uid": 16117985816032907351,
+                                "libId": "411eab4be3ba32ed1f1daa5f8d4227da",
+                                "type": "TEXTURE"
+                            },
+                            "FillAmount": [
+                                0.0,
+                                1.0
+                            ],
+                            "FillMethod": "Horizontal",
+                            "FillOrigin": 0,
+                            "SheetColumns": 1,
+                            "SheetRows": 1,
+                            "SheetOffset": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "StretchDrawMode": "Stretch"
+                        }
+                    ],
+                    "Children": []
+                },
+                {
+                    "Name": "Dash Tutorial Death",
+                    "Active": true,
+                    "Static": false,
+                    "Layer": "DEFAULT",
+                    "Tag": "DEFAULT",
+                    "Transform": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "Rotation": [
+                            -0.0,
+                            0.0,
+                            -0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "Components": [
+                        {
+                            "UID": 11140675626278173200,
+                            "ComponentType": "TRANSFORM2D",
+                            "Active": true,
+                            "Position": [
+                                0.0,
+                                -22.0,
+                                0.0
+                            ],
+                            "Scale": [
+                                1.0,
+                                1.0,
+                                0.0
+                            ],
+                            "Pivot": [
+                                1.0,
+                                0.5,
+                                0.0
+                            ],
+                            "AnchorMin": [
+                                1.0,
+                                0.5,
+                                0.0
+                            ],
+                            "AnchorMax": [
+                                1.0,
+                                0.5,
+                                0.0
+                            ],
+                            "BaseSize": [
+                                144.0,
+                                26.0,
+                                0.0
+                            ],
+                            "StretchMode": "NONE",
+                            "SizingMode": "KEEP_ASPECT_RATIO",
+                            "AspectRatio": 1.0,
+                            "Alpha": 0.0
+                        },
+                        {
+                            "UID": 15889274491533022676,
+                            "ComponentType": "UIIMAGE",
+                            "Active": true,
+                            "TextureAssetId": {
+                                "uid": 16117985816032907351,
+                                "libId": "411eab4be3ba32ed1f1daa5f8d4227da",
+                                "type": "TEXTURE"
+                            },
+                            "FillAmount": [
+                                0.0,
+                                1.0
+                            ],
+                            "FillMethod": "Horizontal",
+                            "FillOrigin": 0,
+                            "SheetColumns": 1,
+                            "SheetRows": 1,
+                            "SheetOffset": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "StretchDrawMode": "Stretch"
+                        }
+                    ],
+                    "Children": []
+                },
+                {
+                    "Name": "Spectral Path",
+                    "Active": true,
+                    "Static": false,
+                    "Layer": "DEFAULT",
+                    "Tag": "DEFAULT",
+                    "Transform": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "Rotation": [
+                            -0.0,
+                            0.0,
+                            -0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "Components": [
+                        {
+                            "UID": 7286417199723099650,
+                            "ComponentType": "TRANSFORM2D",
+                            "Active": true,
+                            "Position": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "Scale": [
+                                1.0,
+                                1.0,
+                                0.0
+                            ],
+                            "Pivot": [
+                                0.5,
+                                0.5,
+                                0.0
+                            ],
+                            "AnchorMin": [
+                                0.5,
+                                0.5,
+                                0.0
+                            ],
+                            "AnchorMax": [
+                                0.5,
+                                0.5,
+                                0.0
+                            ],
+                            "BaseSize": [
+                                356.0,
+                                255.0,
+                                0.0
+                            ],
+                            "StretchMode": "NONE",
+                            "SizingMode": "KEEP_ASPECT_RATIO",
+                            "AspectRatio": 1.0,
+                            "Alpha": 0.0
+                        },
+                        {
+                            "UID": 14835475857626420022,
+                            "ComponentType": "UIIMAGE",
+                            "Active": true,
+                            "TextureAssetId": {
+                                "uid": 14032699650325958063,
+                                "libId": "63e6ce277a93936d4be0496c6f3f68c7",
+                                "type": "TEXTURE"
+                            },
+                            "FillAmount": [
+                                0.0,
+                                1.0
+                            ],
+                            "FillMethod": "Horizontal",
+                            "FillOrigin": 0,
+                            "SheetColumns": 1,
+                            "SheetRows": 1,
+                            "SheetOffset": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "StretchDrawMode": "Stretch"
+                        }
+                    ],
+                    "Children": []
+                },
+                {
+                    "Name": "Dash Tutorial Lyriel",
+                    "Active": true,
+                    "Static": false,
+                    "Layer": "DEFAULT",
+                    "Tag": "DEFAULT",
+                    "Transform": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "Rotation": [
+                            -0.0,
+                            0.0,
+                            -0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "Components": [
+                        {
+                            "UID": 9635161582327903487,
+                            "ComponentType": "TRANSFORM2D",
+                            "Active": true,
+                            "Position": [
+                                0.0,
+                                31.0,
+                                0.0
+                            ],
+                            "Scale": [
+                                1.0,
+                                1.0,
+                                0.0
+                            ],
+                            "Pivot": [
+                                0.0,
+                                0.5,
+                                0.0
+                            ],
+                            "AnchorMin": [
+                                0.0,
+                                0.5,
+                                0.0
+                            ],
+                            "AnchorMax": [
+                                0.0,
+                                0.5,
+                                0.0
+                            ],
+                            "BaseSize": [
+                                144.0,
+                                25.0,
+                                0.0
+                            ],
+                            "StretchMode": "NONE",
+                            "SizingMode": "KEEP_ASPECT_RATIO",
+                            "AspectRatio": 1.0,
+                            "Alpha": 0.0
+                        },
+                        {
+                            "UID": 7891039865357083649,
+                            "ComponentType": "UIIMAGE",
+                            "Active": true,
+                            "TextureAssetId": {
+                                "uid": 16117985816032907351,
+                                "libId": "411eab4be3ba32ed1f1daa5f8d4227da",
+                                "type": "TEXTURE"
+                            },
+                            "FillAmount": [
+                                0.0,
+                                1.0
+                            ],
+                            "FillMethod": "Horizontal",
+                            "FillOrigin": 0,
+                            "SheetColumns": 1,
+                            "SheetRows": 1,
+                            "SheetOffset": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "StretchDrawMode": "Stretch"
+                        }
+                    ],
+                    "Children": []
+                },
+                {
+                    "Name": "Target System 2",
+                    "Active": true,
+                    "Static": false,
+                    "Layer": "DEFAULT",
+                    "Tag": "DEFAULT",
+                    "Transform": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "Rotation": [
+                            -0.0,
+                            0.0,
+                            -0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "Components": [
+                        {
+                            "UID": 17547340120538695667,
+                            "ComponentType": "TRANSFORM2D",
+                            "Active": true,
+                            "Position": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "Scale": [
+                                1.0,
+                                1.0,
+                                0.0
+                            ],
+                            "Pivot": [
+                                0.5,
+                                0.5,
+                                0.0
+                            ],
+                            "AnchorMin": [
+                                0.5,
+                                0.5,
+                                0.0
+                            ],
+                            "AnchorMax": [
+                                0.5,
+                                0.5,
+                                0.0
+                            ],
+                            "BaseSize": [
+                                352.0,
+                                256.0,
+                                0.0
+                            ],
+                            "StretchMode": "NONE",
+                            "SizingMode": "KEEP_ASPECT_RATIO",
+                            "AspectRatio": 1.0,
+                            "Alpha": 0.0
+                        },
+                        {
+                            "UID": 5689876236200848271,
+                            "ComponentType": "UIIMAGE",
+                            "Active": true,
+                            "TextureAssetId": {
+                                "uid": 14032699650325958063,
+                                "libId": "63e6ce277a93936d4be0496c6f3f68c7",
+                                "type": "TEXTURE"
+                            },
+                            "FillAmount": [
+                                0.0,
+                                1.0
+                            ],
+                            "FillMethod": "Horizontal",
+                            "FillOrigin": 0,
+                            "SheetColumns": 1,
+                            "SheetRows": 1,
+                            "SheetOffset": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "StretchDrawMode": "Stretch"
+                        }
+                    ],
+                    "Children": []
+                },
+                {
+                    "Name": "Shadow Mark 1",
+                    "Active": true,
+                    "Static": false,
+                    "Layer": "DEFAULT",
+                    "Tag": "DEFAULT",
+                    "Transform": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "Rotation": [
+                            -0.0,
+                            0.0,
+                            -0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "Components": [
+                        {
+                            "UID": 16105285934996292076,
+                            "ComponentType": "TRANSFORM2D",
+                            "Active": true,
+                            "Position": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "Scale": [
+                                1.0,
+                                1.0,
+                                0.0
+                            ],
+                            "Pivot": [
+                                0.5,
+                                0.5,
+                                0.0
+                            ],
+                            "AnchorMin": [
+                                0.5,
+                                0.5,
+                                0.0
+                            ],
+                            "AnchorMax": [
+                                0.5,
+                                0.5,
+                                0.0
+                            ],
+                            "BaseSize": [
+                                360.0,
+                                259.0,
+                                0.0
+                            ],
+                            "StretchMode": "NONE",
+                            "SizingMode": "KEEP_ASPECT_RATIO",
+                            "AspectRatio": 1.0,
+                            "Alpha": 0.0
+                        },
+                        {
+                            "UID": 17948013759307383585,
+                            "ComponentType": "UIIMAGE",
+                            "Active": true,
+                            "TextureAssetId": {
+                                "uid": 14032699650325958063,
+                                "libId": "63e6ce277a93936d4be0496c6f3f68c7",
+                                "type": "TEXTURE"
+                            },
+                            "FillAmount": [
+                                0.0,
+                                1.0
+                            ],
+                            "FillMethod": "Horizontal",
+                            "FillOrigin": 0,
+                            "SheetColumns": 1,
+                            "SheetRows": 1,
+                            "SheetOffset": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "StretchDrawMode": "Stretch"
+                        }
+                    ],
+                    "Children": []
+                },
+                {
+                    "Name": "Shadow Mark 2",
+                    "Active": true,
+                    "Static": false,
+                    "Layer": "DEFAULT",
+                    "Tag": "DEFAULT",
+                    "Transform": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "Rotation": [
+                            -0.0,
+                            0.0,
+                            -0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "Components": [
+                        {
+                            "UID": 7990272325298083655,
+                            "ComponentType": "TRANSFORM2D",
+                            "Active": true,
+                            "Position": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "Scale": [
+                                1.0,
+                                1.0,
+                                0.0
+                            ],
+                            "Pivot": [
+                                0.5,
+                                0.5,
+                                0.0
+                            ],
+                            "AnchorMin": [
+                                0.5,
+                                0.5,
+                                0.0
+                            ],
+                            "AnchorMax": [
+                                0.5,
+                                0.5,
+                                0.0
+                            ],
+                            "BaseSize": [
+                                358.0,
+                                258.0,
+                                0.0
+                            ],
+                            "StretchMode": "NONE",
+                            "SizingMode": "KEEP_ASPECT_RATIO",
+                            "AspectRatio": 1.0,
+                            "Alpha": 0.0
+                        },
+                        {
+                            "UID": 11113306615260388301,
+                            "ComponentType": "UIIMAGE",
+                            "Active": true,
+                            "TextureAssetId": {
+                                "uid": 14032699650325958063,
+                                "libId": "63e6ce277a93936d4be0496c6f3f68c7",
+                                "type": "TEXTURE"
+                            },
+                            "FillAmount": [
+                                0.0,
+                                1.0
+                            ],
+                            "FillMethod": "Horizontal",
+                            "FillOrigin": 0,
+                            "SheetColumns": 1,
+                            "SheetRows": 1,
+                            "SheetOffset": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "StretchDrawMode": "Stretch"
+                        }
+                    ],
+                    "Children": []
+                },
+                {
+                    "Name": "Charged Attack Death",
+                    "Active": true,
+                    "Static": false,
+                    "Layer": "DEFAULT",
+                    "Tag": "DEFAULT",
+                    "Transform": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "Rotation": [
+                            -0.0,
+                            0.0,
+                            -0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "Components": [
+                        {
+                            "UID": 708742809984138825,
+                            "ComponentType": "TRANSFORM2D",
+                            "Active": true,
+                            "Position": [
+                                0.0,
+                                26.0,
+                                0.0
+                            ],
+                            "Scale": [
+                                1.0,
+                                1.0,
+                                0.0
+                            ],
+                            "Pivot": [
+                                1.0,
+                                0.5,
+                                0.0
+                            ],
+                            "AnchorMin": [
+                                1.0,
+                                0.5,
+                                0.0
+                            ],
+                            "AnchorMax": [
+                                1.0,
+                                0.5,
+                                0.0
+                            ],
+                            "BaseSize": [
+                                141.0,
+                                25.0,
+                                0.0
+                            ],
+                            "StretchMode": "NONE",
+                            "SizingMode": "KEEP_ASPECT_RATIO",
+                            "AspectRatio": 1.0,
+                            "Alpha": 0.0
+                        },
+                        {
+                            "UID": 14341909286325803584,
+                            "ComponentType": "UIIMAGE",
+                            "Active": true,
+                            "TextureAssetId": {
+                                "uid": 16117985816032907351,
+                                "libId": "411eab4be3ba32ed1f1daa5f8d4227da",
+                                "type": "TEXTURE"
+                            },
+                            "FillAmount": [
+                                0.0,
+                                1.0
+                            ],
+                            "FillMethod": "Horizontal",
+                            "FillOrigin": 0,
+                            "SheetColumns": 1,
+                            "SheetRows": 1,
+                            "SheetOffset": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "StretchDrawMode": "Stretch"
+                        }
+                    ],
+                    "Children": []
+                },
+                {
+                    "Name": "Charged Attack Lyriel",
+                    "Active": true,
+                    "Static": false,
+                    "Layer": "DEFAULT",
+                    "Tag": "DEFAULT",
+                    "Transform": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "Rotation": [
+                            -0.0,
+                            0.0,
+                            -0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "Components": [
+                        {
+                            "UID": 16629170224800762487,
+                            "ComponentType": "TRANSFORM2D",
+                            "Active": true,
+                            "Position": [
+                                0.0,
+                                -29.0,
+                                0.0
+                            ],
+                            "Scale": [
+                                1.0,
+                                1.0,
+                                0.0
+                            ],
+                            "Pivot": [
+                                0.0,
+                                0.5,
+                                0.0
+                            ],
+                            "AnchorMin": [
+                                0.0,
+                                0.5,
+                                0.0
+                            ],
+                            "AnchorMax": [
+                                0.0,
+                                0.5,
+                                0.0
+                            ],
+                            "BaseSize": [
+                                145.0,
+                                28.0,
+                                0.0
+                            ],
+                            "StretchMode": "NONE",
+                            "SizingMode": "KEEP_ASPECT_RATIO",
+                            "AspectRatio": 1.0,
+                            "Alpha": 0.0
+                        },
+                        {
+                            "UID": 6722621909397595255,
+                            "ComponentType": "UIIMAGE",
+                            "Active": true,
+                            "TextureAssetId": {
+                                "uid": 16117985816032907351,
+                                "libId": "411eab4be3ba32ed1f1daa5f8d4227da",
+                                "type": "TEXTURE"
+                            },
+                            "FillAmount": [
+                                0.0,
+                                1.0
+                            ],
+                            "FillMethod": "Horizontal",
+                            "FillOrigin": 0,
+                            "SheetColumns": 1,
+                            "SheetRows": 1,
+                            "SheetOffset": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "StretchDrawMode": "Stretch"
+                        }
+                    ],
+                    "Children": []
+                },
+                {
+                    "Name": "Autoattack Death",
+                    "Active": true,
+                    "Static": false,
+                    "Layer": "DEFAULT",
+                    "Tag": "DEFAULT",
+                    "Transform": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "Rotation": [
+                            -0.0,
+                            0.0,
+                            -0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "Components": [
+                        {
+                            "UID": 13188383122412138133,
+                            "ComponentType": "TRANSFORM2D",
+                            "Active": true,
+                            "Position": [
+                                0.0,
+                                -49.0,
+                                0.0
+                            ],
+                            "Scale": [
+                                1.0,
+                                1.0,
+                                0.0
+                            ],
+                            "Pivot": [
+                                1.0,
+                                0.5,
+                                0.0
+                            ],
+                            "AnchorMin": [
+                                1.0,
+                                0.5,
+                                0.0
+                            ],
+                            "AnchorMax": [
+                                1.0,
+                                0.5,
+                                0.0
+                            ],
+                            "BaseSize": [
+                                148.0,
+                                28.0,
+                                0.0
+                            ],
+                            "StretchMode": "NONE",
+                            "SizingMode": "KEEP_ASPECT_RATIO",
+                            "AspectRatio": 1.0,
+                            "Alpha": 0.0
+                        },
+                        {
+                            "UID": 16690946781192886431,
+                            "ComponentType": "UIIMAGE",
+                            "Active": true,
+                            "TextureAssetId": {
+                                "uid": 16117985816032907351,
+                                "libId": "411eab4be3ba32ed1f1daa5f8d4227da",
+                                "type": "TEXTURE"
+                            },
+                            "FillAmount": [
+                                0.0,
+                                1.0
+                            ],
+                            "FillMethod": "Horizontal",
+                            "FillOrigin": 0,
+                            "SheetColumns": 1,
+                            "SheetRows": 1,
+                            "SheetOffset": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "StretchDrawMode": "Stretch"
+                        }
+                    ],
+                    "Children": []
+                },
+                {
+                    "Name": "Autoattack Lyriel",
+                    "Active": true,
+                    "Static": false,
+                    "Layer": "DEFAULT",
+                    "Tag": "DEFAULT",
+                    "Transform": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "Rotation": [
+                            -0.0,
+                            0.0,
+                            -0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "Components": [
+                        {
+                            "UID": 7257470304357536767,
+                            "ComponentType": "TRANSFORM2D",
+                            "Active": true,
+                            "Position": [
+                                0.0,
+                                -55.0,
+                                0.0
+                            ],
+                            "Scale": [
+                                1.0,
+                                1.0,
+                                0.0
+                            ],
+                            "Pivot": [
+                                0.0,
+                                0.5,
+                                0.0
+                            ],
+                            "AnchorMin": [
+                                0.0,
+                                0.5,
+                                0.0
+                            ],
+                            "AnchorMax": [
+                                0.0,
+                                0.5,
+                                0.0
+                            ],
+                            "BaseSize": [
+                                144.0,
+                                25.0,
+                                0.0
+                            ],
+                            "StretchMode": "NONE",
+                            "SizingMode": "KEEP_ASPECT_RATIO",
+                            "AspectRatio": 1.0,
+                            "Alpha": 0.009999999776482582
+                        },
+                        {
+                            "UID": 96538692009932587,
+                            "ComponentType": "UIIMAGE",
+                            "Active": true,
+                            "TextureAssetId": {
+                                "uid": 16117985816032907351,
+                                "libId": "411eab4be3ba32ed1f1daa5f8d4227da",
+                                "type": "TEXTURE"
+                            },
+                            "FillAmount": [
+                                0.0,
+                                1.0
+                            ],
+                            "FillMethod": "Horizontal",
+                            "FillOrigin": 0,
+                            "SheetColumns": 1,
+                            "SheetRows": 1,
+                            "SheetOffset": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "StretchDrawMode": "Stretch"
+                        }
+                    ],
+                    "Children": []
+                }
+            ]
+        },
+        {
+            "Name": "Events",
+            "Active": true,
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    -8.290781021118164,
+                    1.0127075910568237,
+                    -10.047758102416992
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0,
+                    1.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [],
+            "Children": [
+                {
+                    "Name": "[EVENT] Shadow Execution",
+                    "Active": true,
+                    "Static": false,
+                    "Layer": "DEFAULT",
+                    "Tag": "DEFAULT",
+                    "Transform": {
+                        "Position": [
+                            -39.92229080200195,
+                            3.128923177719116,
+                            -15.34891128540039
+                        ],
+                        "Rotation": [
+                            -0.0,
+                            0.0,
+                            -0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "Components": [
+                        {
+                            "UID": 3096196556874276569,
+                            "ComponentType": "TRIGGER",
+                            "Active": true,
+                            "Shape": "Box",
+                            "Center": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "Size": [
+                                12.149999618530273,
+                                5.949999809265137,
+                                8.699999809265137
+                            ]
+                        },
+                        {
+                            "UID": 14164748832544577254,
+                            "ComponentType": "SCRIPT",
+                            "Active": true,
+                            "ScriptName": "GameplayEventTrigger",
+                            "ScriptFields": {
+                                "Trigger Only Once": true
+                            }
+                        },
+                        {
+                            "UID": 8315912370622117975,
+                            "ComponentType": "SCRIPT",
+                            "Active": true,
+                            "ScriptName": "PopUpEvent",
+                            "ScriptFields": {
+                                "PopUp Images": [
+                                    10659233102310326812,
+                                    3582711256455267899
+                                ],
+                                "Transition Type": 0,
+                                "Close Mode": 0,
+                                "Lock Gameplay": true,
+                                "Show Duration": 0.25,
+                                "Hide Duration": 0.25
+                            }
+                        },
+                        {
+                            "UID": 2826311690724400519,
+                            "ComponentType": "PREFAB_INSTANCE",
+                            "Active": true,
+                            "sourcePath": "Assets\\Prefabs\\[EVENT] Spectral Path.prefab",
+                            "assetUID": 3748738070465554816
+                        }
+                    ],
+                    "Children": []
+                },
+                {
+                    "Name": "[EVENT] Piercing Arrow",
+                    "Active": true,
+                    "Static": false,
+                    "Layer": "DEFAULT",
+                    "Tag": "DEFAULT",
+                    "Transform": {
+                        "Position": [
+                            19.45184326171875,
+                            0.9554417133331299,
+                            -15.563222885131836
+                        ],
+                        "Rotation": [
+                            -0.0,
+                            0.0,
+                            -0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "Components": [
+                        {
+                            "UID": 8833019028833444774,
+                            "ComponentType": "TRIGGER",
+                            "Active": true,
+                            "Shape": "Box",
+                            "Center": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "Size": [
+                                4.949999809265137,
+                                5.400000095367432,
+                                5.099999904632568
+                            ]
+                        },
+                        {
+                            "UID": 8770941580295748414,
+                            "ComponentType": "SCRIPT",
+                            "Active": true,
+                            "ScriptName": "GameplayEventTrigger",
+                            "ScriptFields": {
+                                "Trigger Only Once": true
+                            }
+                        },
+                        {
+                            "UID": 10764041684788535877,
+                            "ComponentType": "SCRIPT",
+                            "Active": true,
+                            "ScriptName": "PopUpEvent",
+                            "ScriptFields": {
+                                "PopUp Images": [
+                                    2000178815088503322
+                                ],
+                                "Transition Type": 1,
+                                "Close Mode": 1,
+                                "Lock Gameplay": false,
+                                "Show Duration": 0.25,
+                                "Hide Duration": 0.25
+                            }
+                        },
+                        {
+                            "UID": 391154854750837422,
+                            "ComponentType": "SCRIPT",
+                            "Active": true,
+                            "ScriptName": "ObjectiveEvent",
+                            "ScriptFields": {
+                                "Objective Type": 4,
+                                "Target Player Index": 1,
+                                "Target Breakables Count": 1
+                            }
+                        },
+                        {
+                            "UID": 9227381426785064872,
+                            "ComponentType": "PREFAB_INSTANCE",
+                            "Active": true,
+                            "sourcePath": "Assets\\Prefabs\\[EVENT] Charged Attack Lyriel.prefab",
+                            "assetUID": 1345673072656318223
+                        }
+                    ],
+                    "Children": []
+                },
+                {
+                    "Name": "[EVENT] Taunt Tuto",
+                    "Active": true,
+                    "Static": false,
+                    "Layer": "DEFAULT",
+                    "Tag": "DEFAULT",
+                    "Transform": {
+                        "Position": [
+                            19.45184326171875,
+                            0.9554417133331299,
+                            -15.563222885131836
+                        ],
+                        "Rotation": [
+                            -0.0,
+                            0.0,
+                            -0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "Components": [
+                        {
+                            "UID": 10131604386426913914,
+                            "ComponentType": "TRIGGER",
+                            "Active": true,
+                            "Shape": "Box",
+                            "Center": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "Size": [
+                                4.949999809265137,
+                                5.400000095367432,
+                                5.099999904632568
+                            ]
+                        },
+                        {
+                            "UID": 11267663395806856580,
+                            "ComponentType": "SCRIPT",
+                            "Active": true,
+                            "ScriptName": "GameplayEventTrigger",
+                            "ScriptFields": {
+                                "Trigger Only Once": true
+                            }
+                        },
+                        {
+                            "UID": 1457241269903533382,
+                            "ComponentType": "SCRIPT",
+                            "Active": true,
+                            "ScriptName": "PopUpEvent",
+                            "ScriptFields": {
+                                "PopUp Images": [
+                                    9021148202561797097
+                                ],
+                                "Transition Type": 2,
+                                "Close Mode": 1,
+                                "Lock Gameplay": false,
+                                "Show Duration": 0.25,
+                                "Hide Duration": 0.25
+                            }
+                        },
+                        {
+                            "UID": 4244241407132143147,
+                            "ComponentType": "SCRIPT",
+                            "Active": true,
+                            "ScriptName": "ObjectiveEvent",
+                            "ScriptFields": {
+                                "Objective Type": 4,
+                                "Target Player Index": 0,
+                                "Target Breakables Count": 1
+                            }
+                        },
+                        {
+                            "UID": 11877766719640479919,
+                            "ComponentType": "PREFAB_INSTANCE",
+                            "Active": true,
+                            "sourcePath": "Assets\\Prefabs\\[EVENT] Charged Attack Lyriel.prefab",
+                            "assetUID": 1345673072656318223
+                        }
+                    ],
+                    "Children": []
+                },
+                {
+                    "Name": "[EVENT] Dash Tutorial Death",
+                    "Active": true,
+                    "Static": false,
+                    "Layer": "DEFAULT",
+                    "Tag": "DEFAULT",
+                    "Transform": {
+                        "Position": [
+                            8.492613792419434,
+                            -2.4922842979431152,
+                            9.557063102722168
+                        ],
+                        "Rotation": [
+                            -0.0,
+                            0.0,
+                            -0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "Components": [
+                        {
+                            "UID": 11648046935574426793,
+                            "ComponentType": "TRIGGER",
+                            "Active": true,
+                            "Shape": "Box",
+                            "Center": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "Size": [
+                                4.949999809265137,
+                                5.400000095367432,
+                                5.099999904632568
+                            ]
+                        },
+                        {
+                            "UID": 11385883799324999008,
+                            "ComponentType": "SCRIPT",
+                            "Active": true,
+                            "ScriptName": "GameplayEventTrigger",
+                            "ScriptFields": {
+                                "Trigger Only Once": true
+                            }
+                        },
+                        {
+                            "UID": 6103893066550377788,
+                            "ComponentType": "SCRIPT",
+                            "Active": true,
+                            "ScriptName": "PopUpEvent",
+                            "ScriptFields": {
+                                "PopUp Images": [
+                                    11140675626278173200
+                                ],
+                                "Transition Type": 2,
+                                "Close Mode": 1,
+                                "Lock Gameplay": false,
+                                "Show Duration": 0.25,
+                                "Hide Duration": 0.25
+                            }
+                        },
+                        {
+                            "UID": 15726890322511374914,
+                            "ComponentType": "PREFAB_INSTANCE",
+                            "Active": true,
+                            "sourcePath": "Assets\\Prefabs\\[EVENT] Spectral Path.prefab",
+                            "assetUID": 3748738070465554816
+                        },
+                        {
+                            "UID": 8522212114664819182,
+                            "ComponentType": "SCRIPT",
+                            "Active": true,
+                            "ScriptName": "ObjectiveEvent",
+                            "ScriptFields": {
+                                "Objective Type": 5,
+                                "Target Player Index": 0,
+                                "Target Breakables Count": 1
+                            }
+                        }
+                    ],
+                    "Children": []
+                },
+                {
+                    "Name": "[EVENT] Spectral Path",
+                    "Active": true,
+                    "Static": false,
+                    "Layer": "DEFAULT",
+                    "Tag": "DEFAULT",
+                    "Transform": {
+                        "Position": [
+                            7.538806438446045,
+                            -2.4922842979431152,
+                            12.054981231689453
+                        ],
+                        "Rotation": [
+                            -0.0,
+                            0.0,
+                            -0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "Components": [
+                        {
+                            "UID": 13511923490071165809,
+                            "ComponentType": "TRIGGER",
+                            "Active": true,
+                            "Shape": "Box",
+                            "Center": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "Size": [
+                                4.949999809265137,
+                                5.400000095367432,
+                                5.099999904632568
+                            ]
+                        },
+                        {
+                            "UID": 5720502313207175124,
+                            "ComponentType": "SCRIPT",
+                            "Active": true,
+                            "ScriptName": "GameplayEventTrigger",
+                            "ScriptFields": {
+                                "Trigger Only Once": true
+                            }
+                        },
+                        {
+                            "UID": 17503417879068350930,
+                            "ComponentType": "SCRIPT",
+                            "Active": true,
+                            "ScriptName": "PopUpEvent",
+                            "ScriptFields": {
+                                "PopUp Images": [
+                                    7286417199723099650
+                                ],
+                                "Transition Type": 0,
+                                "Close Mode": 0,
+                                "Lock Gameplay": true,
+                                "Show Duration": 0.25,
+                                "Hide Duration": 0.25
+                            }
+                        },
+                        {
+                            "UID": 11628617283533162005,
+                            "ComponentType": "PREFAB_INSTANCE",
+                            "Active": true,
+                            "sourcePath": "Assets\\Prefabs\\[EVENT] Spectral Path.prefab",
+                            "assetUID": 3748738070465554816
+                        }
+                    ],
+                    "Children": []
+                },
+                {
+                    "Name": "[EVENT] Dash Tutorial Lyriel",
+                    "Active": true,
+                    "Static": false,
+                    "Layer": "DEFAULT",
+                    "Tag": "DEFAULT",
+                    "Transform": {
+                        "Position": [
+                            8.492613792419434,
+                            -2.4922842979431152,
+                            9.557063102722168
+                        ],
+                        "Rotation": [
+                            -0.0,
+                            0.0,
+                            -0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "Components": [
+                        {
+                            "UID": 2851765606301403473,
+                            "ComponentType": "TRIGGER",
+                            "Active": true,
+                            "Shape": "Box",
+                            "Center": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "Size": [
+                                4.949999809265137,
+                                5.400000095367432,
+                                5.099999904632568
+                            ]
+                        },
+                        {
+                            "UID": 17350613270760946071,
+                            "ComponentType": "SCRIPT",
+                            "Active": true,
+                            "ScriptName": "GameplayEventTrigger",
+                            "ScriptFields": {
+                                "Trigger Only Once": true
+                            }
+                        },
+                        {
+                            "UID": 2228419485460498345,
+                            "ComponentType": "SCRIPT",
+                            "Active": true,
+                            "ScriptName": "PopUpEvent",
+                            "ScriptFields": {
+                                "PopUp Images": [
+                                    9635161582327903487
+                                ],
+                                "Transition Type": 1,
+                                "Close Mode": 1,
+                                "Lock Gameplay": false,
+                                "Show Duration": 0.25,
+                                "Hide Duration": 0.25
+                            }
+                        },
+                        {
+                            "UID": 18436169630470270611,
+                            "ComponentType": "PREFAB_INSTANCE",
+                            "Active": true,
+                            "sourcePath": "Assets\\Prefabs\\[EVENT] Spectral Path.prefab",
+                            "assetUID": 3748738070465554816
+                        },
+                        {
+                            "UID": 58826010226435296,
+                            "ComponentType": "SCRIPT",
+                            "Active": true,
+                            "ScriptName": "ObjectiveEvent",
+                            "ScriptFields": {
+                                "Objective Type": 5,
+                                "Target Player Index": 1,
+                                "Target Breakables Count": 1
+                            }
+                        }
+                    ],
+                    "Children": []
+                },
+                {
+                    "Name": "[EVENT] Target System",
+                    "Active": true,
+                    "Static": false,
+                    "Layer": "DEFAULT",
+                    "Tag": "DEFAULT",
+                    "Transform": {
+                        "Position": [
+                            30.38113784790039,
+                            -2.4922900199890137,
+                            3.6365137100219727
+                        ],
+                        "Rotation": [
+                            -0.0,
+                            0.0,
+                            -0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "Components": [
+                        {
+                            "UID": 4357432560269649027,
+                            "ComponentType": "TRIGGER",
+                            "Active": true,
+                            "Shape": "Box",
+                            "Center": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "Size": [
+                                4.949999809265137,
+                                5.400000095367432,
+                                5.099999904632568
+                            ]
+                        },
+                        {
+                            "UID": 2247730480436214674,
+                            "ComponentType": "SCRIPT",
+                            "Active": true,
+                            "ScriptName": "GameplayEventTrigger",
+                            "ScriptFields": {
+                                "Trigger Only Once": true
+                            }
+                        },
+                        {
+                            "UID": 5683340417313648502,
+                            "ComponentType": "SCRIPT",
+                            "Active": true,
+                            "ScriptName": "PopUpEvent",
+                            "ScriptFields": {
+                                "PopUp Images": [
+                                    10777714159356962371,
+                                    17547340120538695667
+                                ],
+                                "Transition Type": 0,
+                                "Close Mode": 0,
+                                "Lock Gameplay": true,
+                                "Show Duration": 0.25,
+                                "Hide Duration": 0.25
+                            }
+                        },
+                        {
+                            "UID": 5791408536809406733,
+                            "ComponentType": "PREFAB_INSTANCE",
+                            "Active": true,
+                            "sourcePath": "Assets\\Prefabs\\[EVENT] Spectral Path.prefab",
+                            "assetUID": 3748738070465554816
+                        }
+                    ],
+                    "Children": []
+                },
+                {
+                    "Name": "[EVENT] Shadow Mark",
+                    "Active": true,
+                    "Static": false,
+                    "Layer": "DEFAULT",
+                    "Tag": "DEFAULT",
+                    "Transform": {
+                        "Position": [
+                            26.388437271118164,
+                            0.8114326000213623,
+                            -13.965995788574219
+                        ],
+                        "Rotation": [
+                            -0.0,
+                            0.0,
+                            -0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "Components": [
+                        {
+                            "UID": 14353748474597252377,
+                            "ComponentType": "TRIGGER",
+                            "Active": true,
+                            "Shape": "Box",
+                            "Center": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "Size": [
+                                4.949999809265137,
+                                5.400000095367432,
+                                5.099999904632568
+                            ]
+                        },
+                        {
+                            "UID": 11797829167392824689,
+                            "ComponentType": "SCRIPT",
+                            "Active": true,
+                            "ScriptName": "GameplayEventTrigger",
+                            "ScriptFields": {
+                                "Trigger Only Once": true
+                            }
+                        },
+                        {
+                            "UID": 16063318140517282061,
+                            "ComponentType": "SCRIPT",
+                            "Active": true,
+                            "ScriptName": "PopUpEvent",
+                            "ScriptFields": {
+                                "PopUp Images": [
+                                    16105285934996292076,
+                                    7990272325298083655
+                                ],
+                                "Transition Type": 0,
+                                "Close Mode": 0,
+                                "Lock Gameplay": true,
+                                "Show Duration": 0.25,
+                                "Hide Duration": 0.25
+                            }
+                        },
+                        {
+                            "UID": 2848997193666357610,
+                            "ComponentType": "PREFAB_INSTANCE",
+                            "Active": true,
+                            "sourcePath": "Assets\\Prefabs\\[EVENT] Spectral Path.prefab",
+                            "assetUID": 3748738070465554816
+                        }
+                    ],
+                    "Children": []
+                },
+                {
+                    "Name": "[EVENT] Charged Attack Death",
+                    "Active": true,
+                    "Static": false,
+                    "Layer": "DEFAULT",
+                    "Tag": "DEFAULT",
+                    "Transform": {
+                        "Position": [
+                            19.45184326171875,
+                            0.9554417133331299,
+                            -15.563222885131836
+                        ],
+                        "Rotation": [
+                            -0.0,
+                            0.0,
+                            -0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "Components": [
+                        {
+                            "UID": 1356607295063554415,
+                            "ComponentType": "TRIGGER",
+                            "Active": true,
+                            "Shape": "Box",
+                            "Center": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "Size": [
+                                4.949999809265137,
+                                5.400000095367432,
+                                5.099999904632568
+                            ]
+                        },
+                        {
+                            "UID": 385687185688086829,
+                            "ComponentType": "SCRIPT",
+                            "Active": true,
+                            "ScriptName": "GameplayEventTrigger",
+                            "ScriptFields": {
+                                "Trigger Only Once": true
+                            }
+                        },
+                        {
+                            "UID": 9009242655376165162,
+                            "ComponentType": "SCRIPT",
+                            "Active": true,
+                            "ScriptName": "PopUpEvent",
+                            "ScriptFields": {
+                                "PopUp Images": [
+                                    708742809984138825
+                                ],
+                                "Transition Type": 2,
+                                "Close Mode": 1,
+                                "Lock Gameplay": false,
+                                "Show Duration": 0.25,
+                                "Hide Duration": 0.25
+                            }
+                        },
+                        {
+                            "UID": 11514269195452556382,
+                            "ComponentType": "PREFAB_INSTANCE",
+                            "Active": true,
+                            "sourcePath": "Assets\\Prefabs\\[EVENT] Spectral Path.prefab",
+                            "assetUID": 3748738070465554816
+                        },
+                        {
+                            "UID": 4197220195828057456,
+                            "ComponentType": "PREFAB_INSTANCE",
+                            "Active": true,
+                            "sourcePath": "Assets\\Prefabs\\[EVENT] Charged Attack.prefab",
+                            "assetUID": 9807748947965129642
+                        },
+                        {
+                            "UID": 900665131616054223,
+                            "ComponentType": "SCRIPT",
+                            "Active": true,
+                            "ScriptName": "ObjectiveEvent",
+                            "ScriptFields": {
+                                "Objective Type": 3,
+                                "Target Player Index": 0,
+                                "Target Breakables Count": 1
+                            }
+                        }
+                    ],
+                    "Children": []
+                },
+                {
+                    "Name": "[EVENT] Charged Attack Lyriel",
+                    "Active": true,
+                    "Static": false,
+                    "Layer": "DEFAULT",
+                    "Tag": "DEFAULT",
+                    "Transform": {
+                        "Position": [
+                            19.45184326171875,
+                            0.9554417133331299,
+                            -15.563222885131836
+                        ],
+                        "Rotation": [
+                            -0.0,
+                            0.0,
+                            -0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "Components": [
+                        {
+                            "UID": 5452516953887219464,
+                            "ComponentType": "TRIGGER",
+                            "Active": true,
+                            "Shape": "Box",
+                            "Center": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "Size": [
+                                4.949999809265137,
+                                5.400000095367432,
+                                5.099999904632568
+                            ]
+                        },
+                        {
+                            "UID": 17081833147829285963,
+                            "ComponentType": "SCRIPT",
+                            "Active": true,
+                            "ScriptName": "GameplayEventTrigger",
+                            "ScriptFields": {
+                                "Trigger Only Once": true
+                            }
+                        },
+                        {
+                            "UID": 195732671615847874,
+                            "ComponentType": "SCRIPT",
+                            "Active": true,
+                            "ScriptName": "PopUpEvent",
+                            "ScriptFields": {
+                                "PopUp Images": [
+                                    16629170224800762487
+                                ],
+                                "Transition Type": 1,
+                                "Close Mode": 1,
+                                "Lock Gameplay": false,
+                                "Show Duration": 0.25,
+                                "Hide Duration": 0.25
+                            }
+                        },
+                        {
+                            "UID": 10598043022026968726,
+                            "ComponentType": "PREFAB_INSTANCE",
+                            "Active": true,
+                            "sourcePath": "Assets\\Prefabs\\[EVENT] Charged Attack.prefab",
+                            "assetUID": 9807748947965129642
+                        },
+                        {
+                            "UID": 18438586226805174514,
+                            "ComponentType": "SCRIPT",
+                            "Active": true,
+                            "ScriptName": "ObjectiveEvent",
+                            "ScriptFields": {
+                                "Objective Type": 3,
+                                "Target Player Index": 1,
+                                "Target Breakables Count": 1
+                            }
+                        },
+                        {
+                            "UID": 16263061390957074333,
+                            "ComponentType": "PREFAB_INSTANCE",
+                            "Active": true,
+                            "sourcePath": "Assets\\Prefabs\\[EVENT] Charged Attack Lyriel.prefab",
+                            "assetUID": 1345673072656318223
+                        }
+                    ],
+                    "Children": []
+                },
+                {
+                    "Name": "[EVENT] Autoattack Death",
+                    "Active": true,
+                    "Static": false,
+                    "Layer": "DEFAULT",
+                    "Tag": "DEFAULT",
+                    "Transform": {
+                        "Position": [
+                            29.426616668701172,
+                            -2.492288112640381,
+                            0.48975276947021484
+                        ],
+                        "Rotation": [
+                            -0.0,
+                            0.0,
+                            -0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "Components": [
+                        {
+                            "UID": 3508148370558689855,
+                            "ComponentType": "TRIGGER",
+                            "Active": true,
+                            "Shape": "Box",
+                            "Center": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "Size": [
+                                4.949999809265137,
+                                5.400000095367432,
+                                5.099999904632568
+                            ]
+                        },
+                        {
+                            "UID": 15437843966421160341,
+                            "ComponentType": "SCRIPT",
+                            "Active": true,
+                            "ScriptName": "GameplayEventTrigger",
+                            "ScriptFields": {
+                                "Trigger Only Once": true
+                            }
+                        },
+                        {
+                            "UID": 11886000475618122013,
+                            "ComponentType": "SCRIPT",
+                            "Active": true,
+                            "ScriptName": "PopUpEvent",
+                            "ScriptFields": {
+                                "PopUp Images": [
+                                    13188383122412138133
+                                ],
+                                "Transition Type": 2,
+                                "Close Mode": 1,
+                                "Lock Gameplay": false,
+                                "Show Duration": 0.25,
+                                "Hide Duration": 0.25
+                            }
+                        },
+                        {
+                            "UID": 14018881587393782148,
+                            "ComponentType": "PREFAB_INSTANCE",
+                            "Active": true,
+                            "sourcePath": "Assets\\Prefabs\\[EVENT] Spectral Path.prefab",
+                            "assetUID": 3748738070465554816
+                        },
+                        {
+                            "UID": 4146072606578032313,
+                            "ComponentType": "SCRIPT",
+                            "Active": true,
+                            "ScriptName": "ObjectiveEvent",
+                            "ScriptFields": {
+                                "Objective Type": 2,
+                                "Target Player Index": 0,
+                                "Target Breakables Count": 1
+                            }
+                        }
+                    ],
+                    "Children": []
+                },
+                {
+                    "Name": "[EVENT] Autoattack Lyriel",
+                    "Active": true,
+                    "Static": false,
+                    "Layer": "DEFAULT",
+                    "Tag": "DEFAULT",
+                    "Transform": {
+                        "Position": [
+                            30.199674606323242,
+                            -1.1438963413238525,
+                            1.0402698516845703
+                        ],
+                        "Rotation": [
+                            -0.0,
+                            0.0,
+                            -0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "Components": [
+                        {
+                            "UID": 17759755818126000100,
+                            "ComponentType": "TRIGGER",
+                            "Active": true,
+                            "Shape": "Box",
+                            "Center": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "Size": [
+                                4.949999809265137,
+                                5.400000095367432,
+                                5.099999904632568
+                            ]
+                        },
+                        {
+                            "UID": 6124495140447637776,
+                            "ComponentType": "SCRIPT",
+                            "Active": true,
+                            "ScriptName": "GameplayEventTrigger",
+                            "ScriptFields": {
+                                "Trigger Only Once": true
+                            }
+                        },
+                        {
+                            "UID": 11459058815747958365,
+                            "ComponentType": "SCRIPT",
+                            "Active": true,
+                            "ScriptName": "PopUpEvent",
+                            "ScriptFields": {
+                                "PopUp Images": [
+                                    7257470304357536767
+                                ],
+                                "Transition Type": 1,
+                                "Close Mode": 1,
+                                "Lock Gameplay": false,
+                                "Show Duration": 0.25,
+                                "Hide Duration": 0.25
+                            }
+                        },
+                        {
+                            "UID": 14031891815502820727,
+                            "ComponentType": "SCRIPT",
+                            "Active": true,
+                            "ScriptName": "ObjectiveEvent",
+                            "ScriptFields": {
+                                "Objective Type": 2,
+                                "Target Player Index": 1,
+                                "Target Breakables Count": 1
+                            }
+                        },
+                        {
+                            "UID": 6513752634184786066,
+                            "ComponentType": "PREFAB_INSTANCE",
+                            "Active": true,
+                            "sourcePath": "Assets\\Prefabs\\[EVENT] Charged Attack Lyriel.prefab",
+                            "assetUID": 1345673072656318223
+                        }
+                    ],
+                    "Children": []
+                }
+            ]
+        }
+    ]
+}

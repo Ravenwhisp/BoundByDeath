@@ -26,7 +26,7 @@
   "Components": [
     {
       "UID": 10542032392621974284,
-      "ComponentType": 3,
+      "ComponentType": "SCRIPT",
       "Active": true,
       "ScriptName": "BreakableHealingDrop",
       "ScriptFields": {
@@ -39,7 +39,7 @@
     },
     {
       "UID": 8177232130819869396,
-      "ComponentType": 3,
+      "ComponentType": "SCRIPT",
       "Active": true,
       "ScriptName": "BreakableDamageable",
       "ScriptFields": {
@@ -78,21 +78,23 @@
       "Components": [
         {
           "UID": 16643735502336123870,
-          "ComponentType": 1,
+          "ComponentType": "MODEL",
           "Active": true,
           "MeshAssetId": {
             "uid": 14829200032389246696,
-            "libId": "9f4868fb6638bd6a23e7594d34967fa4"
+            "libId": "9f4868fb6638bd6a23e7594d34967fa4",
+            "type": "MESH"
           },
           "SkinAssetId": {
             "uid": 0,
-            "libId": ""
+            "libId": "",
+            "type": "SKIN"
           },
           "Materials": [
             {
               "uid": 11456131738561966568,
               "libId": "a813bf686b7836e1488f7659cf9f13e9",
-              "type": 2
+              "type": "MATERIAL"
             }
           ]
         }
@@ -125,11 +127,12 @@
           "Components": [
             {
               "UID": 310918437156261424,
-              "ComponentType": 17,
+              "ComponentType": "UIIMAGE",
               "Active": true,
               "TextureAssetId": {
                 "uid": 18397412372386409293,
-                "libId": "daec75fabdc85d041af40097e2ac1b24"
+                "libId": "daec75fabdc85d041af40097e2ac1b24",
+                "type": "TEXTURE"
               },
               "ParticleEmitters": [
                 {
@@ -217,26 +220,30 @@
       "Components": [
         {
           "UID": 15560020212847909810,
-          "ComponentType": 1,
+          "ComponentType": "MODEL",
           "Active": true,
           "MeshAssetId": {
             "uid": 6299683042699325039,
-            "libId": "4f7c175ea56089a23aeac258d85358a6"
+            "libId": "4f7c175ea56089a23aeac258d85358a6",
+            "type": "MESH"
           },
           "SkinAssetId": {
             "uid": 0,
-            "libId": ""
+            "libId": "",
+            "type": "SKIN"
           },
           "Materials": [
             {
               "uid": 1348871275559094111,
               "libId": "f0c0200c65a1c6c7050e05d2d7d6f5b3",
-              "type": 2
+              "type": "MATERIAL"
             }
           ]
         }
       ],
       "Children": []
     }
-  ]
+  ],
+  "Version": 2,
+  "VariantOf": "Assets\\Prefabs\\Breakables\\Breakable Box (HealthDrop).prefab"
 }

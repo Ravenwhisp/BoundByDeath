@@ -49,7 +49,7 @@
       "Components": [
         {
           "UID": 777568061396113041,
-          "ComponentType": 4,
+          "ComponentType": "CAMERA",
           "Active": true,
           "HorizontalFOV": 90.0,
           "NearPlane": 0.5,
@@ -88,7 +88,7 @@
       "Components": [
         {
           "UID": 6785760412981131921,
-          "ComponentType": 2,
+          "ComponentType": "LIGHT",
           "Active": true,
           "LightType": 0,
           "Color": [
@@ -130,7 +130,7 @@
       "Components": [
         {
           "UID": 10125534998612243731,
-          "ComponentType": 3,
+          "ComponentType": "SCRIPT",
           "Active": true,
           "ScriptName": "EnemyController",
           "ScriptFields": {
@@ -146,7 +146,7 @@
         },
         {
           "UID": 4240978045989907323,
-          "ComponentType": 3,
+          "ComponentType": "SCRIPT",
           "Active": true,
           "ScriptName": "EnemyDamageable",
           "ScriptFields": {
@@ -158,7 +158,7 @@
         },
         {
           "UID": 4422286912556555841,
-          "ComponentType": 3,
+          "ComponentType": "SCRIPT",
           "Active": true,
           "ScriptName": "EnemyDeathHandler",
           "ScriptFields": {
@@ -173,15 +173,17 @@
         },
         {
           "UID": 5026658740142161231,
-          "ComponentType": 13,
+          "ComponentType": "ANIMATION",
           "Active": true,
           "StateMachineUID": {
             "uid": 11588540065910136440,
-            "libId": "dd9904de2bb2cb58b145284f1da9c980"
+            "libId": "dd9904de2bb2cb58b145284f1da9c980",
+            "type": "ANIMATION_STATE_MACHINE"
           },
           "AnimationSourceUID": {
             "uid": 0,
-            "libId": ""
+            "libId": "",
+            "type": "ANIMATION"
           },
           "PlayOnStart": true,
           "ApplyScale": false,
@@ -189,7 +191,7 @@
         },
         {
           "UID": 13768135561667352816,
-          "ComponentType": 3,
+          "ComponentType": "SCRIPT",
           "Active": true,
           "ScriptName": "EnemyShadowMark",
           "ScriptFields": {
@@ -204,7 +206,7 @@
         },
         {
           "UID": 12885330339927802520,
-          "ComponentType": 3,
+          "ComponentType": "SCRIPT",
           "Active": true,
           "ScriptName": "EnemyDetectionAggro",
           "ScriptFields": {
@@ -1175,7 +1177,7 @@
       "Components": [
         {
           "UID": 15565632664076609529,
-          "ComponentType": 6,
+          "ComponentType": "CANVAS",
           "Active": true,
           "RenderMode": 2,
           "ZTest": true
@@ -1212,37 +1214,31 @@
       "Components": [
         {
           "UID": 13395655601256589394,
-          "ComponentType": 5,
+          "ComponentType": "TRANSFORM2D",
           "Active": true,
           "Position": [
-            0.0,
             0.0,
             0.0
           ],
           "Scale": [
             1.0,
-            1.0,
-            0.0
+            1.0
           ],
           "Pivot": [
             0.5,
-            0.5,
-            0.0
+            0.5
           ],
           "AnchorMin": [
-            0.0,
             0.0,
             0.0
           ],
           "AnchorMax": [
             0.0,
-            0.0,
             0.0
           ],
           "BaseSize": [
             189.0,
-            25.0,
-            0.0
+            25.0
           ],
           "StretchMode": 0,
           "SizingMode": 0,
@@ -1251,11 +1247,12 @@
         },
         {
           "UID": 18298582079420680175,
-          "ComponentType": 7,
+          "ComponentType": "UIIMAGE",
           "Active": true,
           "TextureAssetId": {
             "uid": 14538694312607389381,
-            "libId": "2d5f24fa27461cdba4e38a08f027dbfa"
+            "libId": "2d5f24fa27461cdba4e38a08f027dbfa",
+            "type": "TEXTURE"
           },
           "FillAmount": 1.0,
           "FillMethod": 0,
@@ -1293,37 +1290,31 @@
       "Components": [
         {
           "UID": 10411328151175763683,
-          "ComponentType": 5,
+          "ComponentType": "TRANSFORM2D",
           "Active": true,
           "Position": [
-            0.0,
             0.0,
             0.0
           ],
           "Scale": [
             1.0,
-            1.0,
-            0.0
+            1.0
           ],
           "Pivot": [
             0.5,
-            0.5,
-            0.0
+            0.5
           ],
           "AnchorMin": [
             0.5,
-            0.5,
-            0.0
+            0.5
           ],
           "AnchorMax": [
             0.5,
-            0.5,
-            0.0
+            0.5
           ],
           "BaseSize": [
             189.0,
-            25.0,
-            0.0
+            25.0
           ],
           "StretchMode": 0,
           "SizingMode": 0,
@@ -1332,11 +1323,12 @@
         },
         {
           "UID": 6303071736311070423,
-          "ComponentType": 7,
+          "ComponentType": "UIIMAGE",
           "Active": true,
           "TextureAssetId": {
             "uid": 1546006715103161491,
-            "libId": "70ac6644b69e35b4c1e2a2e364921877"
+            "libId": "70ac6644b69e35b4c1e2a2e364921877",
+            "type": "TEXTURE"
           },
           "FillAmount": 1.0,
           "FillMethod": 0,
@@ -1344,7 +1336,7 @@
         },
         {
           "UID": 12784403813056622249,
-          "ComponentType": 14,
+          "ComponentType": "UISLIDER",
           "Active": true,
           "TargetGraphicUID": 11200729202078420256,
           "FillAmount": 1.0,
@@ -1383,21 +1375,23 @@
       "Components": [
         {
           "UID": 5313655957630711284,
-          "ComponentType": 1,
+          "ComponentType": "MODEL",
           "Active": true,
           "MeshAssetId": {
             "uid": 6555910244077164144,
-            "libId": "5cf7e613a915887267ae6b86f8b3b125"
+            "libId": "5cf7e613a915887267ae6b86f8b3b125",
+            "type": "MESH"
           },
           "SkinAssetId": {
             "uid": 3439490537757966537,
-            "libId": "dc4d1ed50d40fd248d03a05ff7ea5783"
+            "libId": "dc4d1ed50d40fd248d03a05ff7ea5783",
+            "type": "SKIN"
           },
           "Materials": [
             {
               "uid": 3959442199544834904,
               "libId": "6203352cb3b758b2777ab3942c38647a",
-              "type": 2
+              "type": "MATERIAL"
             }
           ]
         }

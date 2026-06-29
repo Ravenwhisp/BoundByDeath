@@ -1,0 +1,209 @@
+{
+  "sourcePath": "Assets\\Prefabs\\Particles\\Health_2.prefab",
+  "Name": "Health",
+  "Active": true,
+  "Static": false,
+  "Layer": "DEFAULT",
+  "Tag": "DEFAULT",
+  "Transform": {
+    "Position": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "Rotation": [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ],
+    "Scale": [
+      1.0,
+      1.0,
+      1.0
+    ]
+  },
+  "Components": [
+    {
+      "UID": 3166080639567508961,
+      "ComponentType": "UIIMAGE",
+      "Active": true,
+      "TextureAssetId": {
+        "uid": 10764966982965910805,
+        "libId": "79aa7d0194ab9b0020aa064e26131741",
+        "type": "TEXTURE"
+      },
+      "ParticleEmitters": [
+        {
+          "Modules": [
+            {
+              "ModuleType": 2,
+              "Looping": true,
+              "Duration": 20.0,
+              "RateOverTime": 20.0,
+              "RateOverDistance": 0.0
+            },
+            {
+              "ModuleType": 4,
+              "StartLifeTime": 0.5
+            },
+            {
+              "ModuleType": 1,
+              "ShapeType": 1,
+              "Radius": 0.5,
+              "RadiusThickness": 0.5,
+              "RadiusScale": 1.0
+            },
+            {
+              "ModuleType": 3,
+              "StartColor": [
+                0.5445067286491394,
+                0.9652509689331056,
+                0.4584010243415833,
+                1.0
+              ],
+              "EndColor": [
+                0.1750977486371994,
+                0.4324324131011963,
+                0.08348116278648376,
+                1.0
+              ]
+            },
+            {
+              "ModuleType": 5,
+              "InitialVelocity": 5.0
+            },
+            {
+              "ModuleType": 6,
+              "StartScale": [
+                0.4000000059604645,
+                0.4000000059604645
+              ],
+              "EndScale": [
+                0.0,
+                0.0
+              ]
+            },
+            {
+              "ModuleType": 7,
+              "StartRotation": 0.0,
+              "VelocityType": 0,
+              "AngularVelocity": 0.0,
+              "FlipRotation": 0.0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "UID": 5853264471643380518,
+      "ComponentType": "SCRIPT",
+      "Active": true,
+      "ScriptName": "DestroyParticles",
+      "ScriptFields": {
+        "Lifetime": 1.0
+      }
+    }
+  ],
+  "Children": [
+    {
+      "Name": "FlashHealth",
+      "Active": true,
+      "Static": false,
+      "Layer": "DEFAULT",
+      "Tag": "DEFAULT",
+      "Transform": {
+        "Position": [
+          0.007951319217681885,
+          0.5323936343193054,
+          0.2646116316318512
+        ],
+        "Rotation": [
+          -0.0,
+          0.0,
+          -0.0,
+          1.0
+        ],
+        "Scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "Components": [
+        {
+          "UID": 7467779160521046383,
+          "ComponentType": "UIIMAGE",
+          "Active": true,
+          "TextureAssetId": {
+            "uid": 18397412372386409293,
+            "libId": "daec75fabdc85d041af40097e2ac1b24",
+            "type": "TEXTURE"
+          },
+          "ParticleEmitters": [
+            {
+              "Modules": [
+                {
+                  "ModuleType": 2,
+                  "Looping": false,
+                  "Duration": 1.0,
+                  "RateOverTime": 1.0,
+                  "RateOverDistance": 0.0
+                },
+                {
+                  "ModuleType": 4,
+                  "StartLifeTime": 0.10000000149011612
+                },
+                {
+                  "ModuleType": 1,
+                  "ShapeType": 0,
+                  "Radius": 0.10000000149011612,
+                  "RadiusThickness": 1.0
+                },
+                {
+                  "ModuleType": 3,
+                  "StartColor": [
+                    0.46539679169654846,
+                    0.984555959701538,
+                    0.4219525158405304,
+                    1.0
+                  ],
+                  "EndColor": [
+                    0.35232648253440857,
+                    0.7104247212409973,
+                    0.29075297713279724,
+                    1.0
+                  ]
+                },
+                {
+                  "ModuleType": 5,
+                  "InitialVelocity": 0.0
+                },
+                {
+                  "ModuleType": 6,
+                  "StartScale": [
+                    2.0,
+                    2.0
+                  ],
+                  "EndScale": [
+                    0.0,
+                    0.0
+                  ]
+                },
+                {
+                  "ModuleType": 7,
+                  "StartRotation": 0.0,
+                  "VelocityType": 0,
+                  "AngularVelocity": 0.0,
+                  "FlipRotation": 0.0
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "Children": []
+    }
+  ],
+  "Version": 2
+}
