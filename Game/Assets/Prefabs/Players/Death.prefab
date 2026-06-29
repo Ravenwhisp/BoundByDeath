@@ -26,7 +26,7 @@
   "Components": [
     {
       "UID": 4272590025491650878,
-      "ComponentType": 3,
+      "ComponentType": "SCRIPT",
       "Active": true,
       "ScriptName": "PlayerController",
       "ScriptFields": {
@@ -36,7 +36,7 @@
     },
     {
       "UID": 15085830115801481576,
-      "ComponentType": 3,
+      "ComponentType": "SCRIPT",
       "Active": true,
       "ScriptName": "PlayerMovement",
       "ScriptFields": {
@@ -51,7 +51,7 @@
     },
     {
       "UID": 8148192466942318931,
-      "ComponentType": 3,
+      "ComponentType": "SCRIPT",
       "Active": true,
       "ScriptName": "PlayerRotation",
       "ScriptFields": {
@@ -60,7 +60,7 @@
     },
     {
       "UID": 17338994059859998078,
-      "ComponentType": 3,
+      "ComponentType": "SCRIPT",
       "Active": true,
       "ScriptName": "PlayerDamageable",
       "ScriptFields": {
@@ -70,7 +70,7 @@
     },
     {
       "UID": 12919264086853632052,
-      "ComponentType": 3,
+      "ComponentType": "SCRIPT",
       "Active": true,
       "ScriptName": "PlayerTargetController",
       "ScriptFields": {
@@ -79,7 +79,7 @@
     },
     {
       "UID": 10244676202847172320,
-      "ComponentType": 3,
+      "ComponentType": "SCRIPT",
       "Active": true,
       "ScriptName": "PlayerAnimationController",
       "ScriptFields": {
@@ -99,23 +99,27 @@
     },
     {
       "UID": 2943065786453658217,
-      "ComponentType": 16,
+      "ComponentType": "ANIMATION",
       "Active": true,
-      "StateMachineUID": "3afeb210935d60f23e0c384fdbf1bfb6",
+      "StateMachineUID": {
+        "uid": 0,
+        "libId": "3afeb210935d60f23e0c384fdbf1bfb6",
+        "type": "ANIMATION_STATE_MACHINE"
+      },
       "PlayOnStart": true,
       "ApplyScale": false,
       "ForceWorldAfterApply": true
     },
     {
       "UID": 4100399193021514376,
-      "ComponentType": 3,
+      "ComponentType": "SCRIPT",
       "Active": true,
       "ScriptName": "PlayerState",
       "ScriptFields": {}
     },
     {
       "UID": 13939132762052268986,
-      "ComponentType": 3,
+      "ComponentType": "SCRIPT",
       "Active": true,
       "ScriptName": "PlayerDownState",
       "ScriptFields": {
@@ -128,7 +132,7 @@
     },
     {
       "UID": 3123712441530750329,
-      "ComponentType": 3,
+      "ComponentType": "SCRIPT",
       "Active": true,
       "ScriptName": "DeathCharacter",
       "ScriptFields": {
@@ -149,7 +153,7 @@
     },
     {
       "UID": 4120083263154730854,
-      "ComponentType": 3,
+      "ComponentType": "SCRIPT",
       "Active": true,
       "ScriptName": "DeathBasicAttack",
       "ScriptFields": {
@@ -159,7 +163,7 @@
     },
     {
       "UID": 7354856666804956451,
-      "ComponentType": 3,
+      "ComponentType": "SCRIPT",
       "Active": true,
       "ScriptName": "DeathChargedAttack",
       "ScriptFields": {
@@ -173,7 +177,7 @@
     },
     {
       "UID": 7355421007829205384,
-      "ComponentType": 3,
+      "ComponentType": "SCRIPT",
       "Active": true,
       "ScriptName": "DeathTaunt",
       "ScriptFields": {
@@ -186,7 +190,7 @@
     },
     {
       "UID": 17144690807543981489,
-      "ComponentType": 3,
+      "ComponentType": "SCRIPT",
       "Active": true,
       "ScriptName": "DeathDash",
       "ScriptFields": {
@@ -226,23 +230,23 @@
       "Components": [
         {
           "UID": 6734631350956598535,
-          "ComponentType": 1,
+          "ComponentType": "MODEL",
           "Active": true,
           "MeshAssetId": {
             "uid": 0,
             "libId": "95b959f6c45cb0499d98317040b939f9",
-            "type": 3
+            "type": "MESH"
           },
           "SkinAssetId": {
             "uid": 0,
             "libId": "66e92236c916336b4796bfc281171a4d",
-            "type": 7
+            "type": "SKIN"
           },
           "Materials": [
             {
               "uid": 0,
               "libId": "2b531aa193df7aa5cc5a6f41b085892f",
-              "type": 0
+              "type": "MATERIAL"
             }
           ]
         }
@@ -2104,5 +2108,6 @@
         }
       ]
     }
-  ]
+  ],
+  "Version": 2
 }

@@ -26,7 +26,7 @@
   "Components": [
     {
       "UID": 10907477473237870019,
-      "ComponentType": 3,
+      "ComponentType": "SCRIPT",
       "Active": true,
       "ScriptName": "BreakableObject",
       "ScriptFields": {
@@ -36,7 +36,7 @@
     },
     {
       "UID": 10770459701721604368,
-      "ComponentType": 3,
+      "ComponentType": "SCRIPT",
       "Active": true,
       "ScriptName": "BreakableDamageable",
       "ScriptFields": {
@@ -75,21 +75,23 @@
       "Components": [
         {
           "UID": 427429212332323787,
-          "ComponentType": 1,
+          "ComponentType": "MODEL",
           "Active": true,
           "MeshAssetId": {
             "uid": 14829200032389246696,
-            "libId": "2ee75ef6753a00109a85aeb4ec132434"
+            "libId": "2ee75ef6753a00109a85aeb4ec132434",
+            "type": "MESH"
           },
           "SkinAssetId": {
             "uid": 0,
-            "libId": ""
+            "libId": "",
+            "type": "SKIN"
           },
           "Materials": [
             {
               "uid": 11456131738561966568,
               "libId": "a813bf686b7836e1488f7659cf9f13e9",
-              "type": 2
+              "type": "MATERIAL"
             }
           ]
         }
@@ -123,26 +125,30 @@
       "Components": [
         {
           "UID": 16261389144472684574,
-          "ComponentType": 1,
+          "ComponentType": "MODEL",
           "Active": true,
           "MeshAssetId": {
             "uid": 6299683042699325039,
-            "libId": "e8372cadc22ce013dc2db1487dad24e6"
+            "libId": "e8372cadc22ce013dc2db1487dad24e6",
+            "type": "MESH"
           },
           "SkinAssetId": {
             "uid": 0,
-            "libId": ""
+            "libId": "",
+            "type": "SKIN"
           },
           "Materials": [
             {
               "uid": 1348871275559094111,
               "libId": "f0c0200c65a1c6c7050e05d2d7d6f5b3",
-              "type": 2
+              "type": "MATERIAL"
             }
           ]
         }
       ],
       "Children": []
     }
-  ]
+  ],
+  "Version": 2,
+  "VariantOf": "Assets\\Prefabs\\Breakables\\Breakable Box (HealthDrop).prefab"
 }
