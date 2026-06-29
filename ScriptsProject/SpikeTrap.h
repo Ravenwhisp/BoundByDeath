@@ -60,6 +60,12 @@ private:
 
     void triggerBoxDamage();
 
+    void addEffect(int type);
+	void removeEffect(int type);
+
+	GameObject* normalEffect = nullptr;
+	GameObject* spectralEffect = nullptr;
+
 	int spikeType = 0; // 0 for normal, 1 for spectral
 
     std::unordered_set<GameObject*> damagedPlayers;
