@@ -1,0 +1,468 @@
+{
+    "Version": 2,
+    "sourcePath": "Assets\\Prefabs\\Environment\\P_PROP_torch_standing_dungeon (1).prefab",
+    "Name": "P_PROP_torch_standing_dungeon (1)",
+    "Active": true,
+    "Static": false,
+    "Layer": "NAVMESH",
+    "Tag": "DEFAULT",
+    "Transform": {
+        "Position": [
+            -9.6899995803833,
+            0.49000000953674316,
+            7.75
+        ],
+        "Rotation": [
+            -0.0,
+            0.0,
+            -0.0,
+            1.0
+        ],
+        "Scale": [
+            1.0,
+            1.0,
+            1.0
+        ]
+    },
+    "Components": [
+        {
+            "UID": 16972638869263479744,
+            "ComponentType": "MODEL",
+            "Active": true,
+            "MeshAssetId": {
+                "uid": 14886407145630380841,
+                "libId": "18b02d44d36682d6b62ac82be6428d3e",
+                "type": "MESH"
+            },
+            "SkinAssetId": {
+                "uid": 0,
+                "libId": "",
+                "type": "UNKNOWN"
+            },
+            "Materials": [
+                {
+                    "uid": 4685276484862899887,
+                    "libId": "359c8b453745d176981dd9bab20d3ebe",
+                    "type": "MATERIAL"
+                }
+            ]
+        }
+    ],
+    "Children": [
+        {
+            "Name": "P_FX_fire_v2_dungeon",
+            "Active": true,
+            "Static": false,
+            "Layer": "NAVMESH",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    0.0,
+                    1.6299999952316284,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [],
+            "Children": [
+                {
+                    "Name": "Particle_fire_v2_dungeon",
+                    "Active": true,
+                    "Static": false,
+                    "Layer": "NAVMESH",
+                    "Tag": "DEFAULT",
+                    "Transform": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "Rotation": [
+                            -0.7071068286895752,
+                            0.0,
+                            0.0,
+                            0.7071068286895752
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "Components": [],
+                    "Children": []
+                },
+                {
+                    "Name": "FireN",
+                    "Active": true,
+                    "Static": false,
+                    "Layer": "DEFAULT",
+                    "Tag": "DEFAULT",
+                    "Transform": {
+                        "Position": [
+                            0.0,
+                            0.04044628143310547,
+                            0.0
+                        ],
+                        "Rotation": [
+                            -0.0,
+                            0.0,
+                            -0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "Components": [
+                        {
+                            "UID": 12641032217811825534,
+                            "ComponentType": "PREFAB_INSTANCE",
+                            "Active": true,
+                            "sourcePath": "Assets\\Prefabs\\Particles\\enviroment\\FireN.prefab",
+                            "assetUID": 15785986653994316478
+                        }
+                    ],
+                    "Children": [
+                        {
+                            "Name": "FireP",
+                            "Active": true,
+                            "Static": false,
+                            "Layer": "DEFAULT",
+                            "Tag": "DEFAULT",
+                            "Transform": {
+                                "Position": [
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "Rotation": [
+                                    -0.0,
+                                    0.0,
+                                    -0.0,
+                                    1.0
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ]
+                            },
+                            "Components": [
+                                {
+                                    "UID": 11965281440753998602,
+                                    "ComponentType": "PARTICLE_SYSTEM",
+                                    "Active": true,
+                                    "TextureAssetId": {
+                                        "uid": 8611505141713682000,
+                                        "libId": "0dd58b075da06283f5204cd90fbc3451",
+                                        "type": "TEXTURE"
+                                    },
+                                    "ParticleEmitters": [
+                                        {
+                                            "Modules": [
+                                                {
+                                                    "ModuleType": 2,
+                                                    "Looping": true,
+                                                    "Duration": 19.799999237060547,
+                                                    "RateOverTime": 13.699999809265137,
+                                                    "RateOverDistance": 0.0
+                                                },
+                                                {
+                                                    "ModuleType": 4,
+                                                    "LifeTimeType": "CONSTANT",
+                                                    "StartLifeTime": 0.5
+                                                },
+                                                {
+                                                    "ModuleType": 1,
+                                                    "ShapeType": "CONE",
+                                                    "Radius": 0.5,
+                                                    "RadiusThickness": 0.10000000149011612,
+                                                    "RadiusScale": 1.0
+                                                },
+                                                {
+                                                    "ModuleType": 3,
+                                                    "ColorOverTime": [
+                                                        {
+                                                            "IsAlphaMark": false,
+                                                            "Position": 0.0,
+                                                            "Color": [
+                                                                0.9652509689331055,
+                                                                0.10514288395643234,
+                                                                0.06335622817277908
+                                                            ]
+                                                        },
+                                                        {
+                                                            "IsAlphaMark": false,
+                                                            "Position": 1.0,
+                                                            "Color": [
+                                                                1.0,
+                                                                0.49639981985092163,
+                                                                0.019304990768432617
+                                                            ]
+                                                        }
+                                                    ],
+                                                    "ColorCurve": [
+                                                        0.0,
+                                                        0.0,
+                                                        1.0,
+                                                        1.0
+                                                    ]
+                                                },
+                                                {
+                                                    "ModuleType": 5,
+                                                    "VelocityType": "CONSTANT",
+                                                    "InitialVelocity": 0.5
+                                                },
+                                                {
+                                                    "ModuleType": 6,
+                                                    "StartScaleType": "CONSTANT",
+                                                    "StartScale": [
+                                                        0.15000000596046448,
+                                                        0.30000001192092896,
+                                                        0.0
+                                                    ],
+                                                    "ChangeSizeOverTime": true,
+                                                    "EndScaleType": "CONSTANT",
+                                                    "EndScale": [
+                                                        0.10000000149011612,
+                                                        0.25,
+                                                        0.0
+                                                    ]
+                                                },
+                                                {
+                                                    "ModuleType": 7,
+                                                    "RotationType": "CONSTANT",
+                                                    "StartRotation": 0.027925267815589905,
+                                                    "VelocityType": "CONSTANT",
+                                                    "AngularVelocity": 0.3874630928039551,
+                                                    "FlipRotation": 0.0
+                                                },
+                                                {
+                                                    "ModuleType": 8,
+                                                    "TileRows": 1,
+                                                    "TileColumns": 1,
+                                                    "FPS": 0.0,
+                                                    "StartFrameType": "CONSTANT",
+                                                    "StartFrame": 0.0
+                                                },
+                                                {
+                                                    "ModuleType": 9,
+                                                    "RenderMode": "BILLBOARD",
+                                                    "RenderLayer": 3
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ],
+                            "Children": []
+                        },
+                        {
+                            "Name": "Smoke",
+                            "Active": true,
+                            "Static": false,
+                            "Layer": "DEFAULT",
+                            "Tag": "DEFAULT",
+                            "Transform": {
+                                "Position": [
+                                    0.0,
+                                    0.28006821870803833,
+                                    0.0
+                                ],
+                                "Rotation": [
+                                    -0.0,
+                                    0.0,
+                                    -0.0,
+                                    1.0
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ]
+                            },
+                            "Components": [
+                                {
+                                    "UID": 6429800594731489715,
+                                    "ComponentType": "PARTICLE_SYSTEM",
+                                    "Active": true,
+                                    "TextureAssetId": {
+                                        "uid": 8611505141713682000,
+                                        "libId": "0dd58b075da06283f5204cd90fbc3451",
+                                        "type": "TEXTURE"
+                                    },
+                                    "ParticleEmitters": [
+                                        {
+                                            "Modules": [
+                                                {
+                                                    "ModuleType": 2,
+                                                    "Looping": true,
+                                                    "Duration": 20.0,
+                                                    "RateOverTime": 10.0,
+                                                    "RateOverDistance": 0.0
+                                                },
+                                                {
+                                                    "ModuleType": 4,
+                                                    "LifeTimeType": "CONSTANT",
+                                                    "StartLifeTime": 0.25
+                                                },
+                                                {
+                                                    "ModuleType": 1,
+                                                    "ShapeType": "CONE",
+                                                    "Radius": 0.4000000059604645,
+                                                    "RadiusThickness": 0.30000001192092896,
+                                                    "RadiusScale": 3.0
+                                                },
+                                                {
+                                                    "ModuleType": 3,
+                                                    "ColorOverTime": [
+                                                        {
+                                                            "IsAlphaMark": false,
+                                                            "Position": 0.0,
+                                                            "Color": [
+                                                                0.6679536700248718,
+                                                                0.6576377749443054,
+                                                                0.6576377749443054
+                                                            ]
+                                                        },
+                                                        {
+                                                            "IsAlphaMark": false,
+                                                            "Position": 1.0,
+                                                            "Color": [
+                                                                0.2509652376174927,
+                                                                0.2509652376174927,
+                                                                0.2509652376174927
+                                                            ]
+                                                        }
+                                                    ],
+                                                    "ColorCurve": [
+                                                        0.0,
+                                                        0.0,
+                                                        1.0,
+                                                        1.0
+                                                    ]
+                                                },
+                                                {
+                                                    "ModuleType": 5,
+                                                    "VelocityType": "RANDOM_BETWEEN_TWO",
+                                                    "InitialVelocity": 1.0,
+                                                    "InitialVelocity2": 1.2000000476837158
+                                                },
+                                                {
+                                                    "ModuleType": 6,
+                                                    "StartScaleType": "CONSTANT",
+                                                    "StartScale": [
+                                                        0.10000000149011612,
+                                                        0.10000000149011612,
+                                                        0.0
+                                                    ],
+                                                    "ChangeSizeOverTime": true,
+                                                    "EndScaleType": "CONSTANT",
+                                                    "EndScale": [
+                                                        0.0,
+                                                        0.0,
+                                                        0.0
+                                                    ]
+                                                },
+                                                {
+                                                    "ModuleType": 7,
+                                                    "RotationType": "CONSTANT",
+                                                    "StartRotation": 0.0,
+                                                    "VelocityType": "CONSTANT",
+                                                    "AngularVelocity": 0.0,
+                                                    "FlipRotation": 0.0
+                                                },
+                                                {
+                                                    "ModuleType": 8,
+                                                    "TileRows": 1,
+                                                    "TileColumns": 1,
+                                                    "FPS": 0.0,
+                                                    "StartFrameType": "CONSTANT",
+                                                    "StartFrame": 0.0
+                                                },
+                                                {
+                                                    "ModuleType": 9,
+                                                    "RenderMode": "BILLBOARD",
+                                                    "RenderLayer": 2
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ],
+                            "Children": []
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "Name": "P_pointlight_fire_anim_dungeon",
+            "Active": true,
+            "Static": false,
+            "Layer": "NAVMESH",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    0.0,
+                    1.871000051498413,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [],
+            "Children": [
+                {
+                    "Name": "pointlight_fire_dungeon",
+                    "Active": true,
+                    "Static": false,
+                    "Layer": "NAVMESH",
+                    "Tag": "DEFAULT",
+                    "Transform": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "Rotation": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "Components": [],
+                    "Children": []
+                }
+            ]
+        }
+    ]
+}
