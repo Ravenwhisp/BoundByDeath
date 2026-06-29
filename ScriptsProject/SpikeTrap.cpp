@@ -9,7 +9,9 @@ IMPLEMENT_SCRIPT_FIELDS(SpikeTrap,
     SERIALIZED_FLOAT(startPositionY, "Start Position Y", -10.0f, 10.0f, 0.1f),
     SERIALIZED_FLOAT(waitPositionY, "Wait Position Y", -10.0f, 10.0f, 0.1f),
     SERIALIZED_FLOAT(activePositionY, "Active Position Y", -10.0f, 10.0f, 0.1f),
-    SERIALIZED_FLOAT(trapDamage, "Trap Damage", 0.0f, 1000.0f, 1.0f)
+    SERIALIZED_FLOAT(trapDamage, "Trap Damage", 0.0f, 1000.0f, 1.0f),
+    SERIALIZED_STRING(m_spikeShine, "SpikeShine Particle"),
+    SERIALIZED_STRING(m_spectralAura, "Spectral Aura Particle")
 )
 
 SpikeTrap::SpikeTrap(GameObject* owner)
@@ -178,11 +180,11 @@ void SpikeTrap::addEffect(int type)
 {
     if (type == 0)
     {
-        normalEffect = GameObjectAPI::instantiatePrefab("Assets/Prefabs/Particles/SpikesShine.prefab", TransformAPI::getGlobalPosition(m_normalSpike) + Vector3(0.0f, 1.0f, 0.0f), Vector3(0.0f, 0.0f, 0.0f));
+        normalEffect = GameObjectAPI::instantiatePrefab(m_spikeShine.c_str(), TransformAPI::getGlobalPosition(m_normalSpike) + Vector3(0.0f, 1.0f, 0.0f), Vector3(0.0f, 0.0f, 0.0f));
     }
     else if (type == 1)
     {
-        spectralEffect = GameObjectAPI::instantiatePrefab("Assets/Prefabs/Particles/SpectralSpikesAura.prefab", TransformAPI::getGlobalPosition(m_spectralSpike), Vector3(0.0f, 0.0f, 0.0f));
+        spectralEffect = GameObjectAPI::instantiatePrefab(m_spectralAura.c_str(), TransformAPI::getGlobalPosition(m_spectralSpike), Vector3(0.0f, 0.0f, 0.0f));
     }
 }
 

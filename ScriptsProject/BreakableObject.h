@@ -14,6 +14,8 @@ public:
 
     void Start() override;
 
+    ScriptFieldList getExposedFields() const override;
+
     virtual void onBreak() { breakObject(); }
     bool isBroken() const { return m_isBroken; }
 
@@ -21,6 +23,9 @@ protected:
 	Transform* m_normalObjectTransform = nullptr;
 	Transform* m_brokenObjectTransform = nullptr;
     void breakObject();
+
+public:
+    std::string m_dustEffectParticle = "Assets/Prefabs/Particles/BarrelBreaking.prefab";
 
 private:
     bool m_isBroken = false;

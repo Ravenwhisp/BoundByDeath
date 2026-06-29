@@ -51,6 +51,9 @@ public:
 	float waitPositionY = -0.7f;
 	float activePositionY = 0.0f;
 
+    std::string m_spikeShine = "Assets/Prefabs/Particles/SpikesShine.prefab";
+    std::string m_spectralAura = "Assets/Prefabs/Particles/SpectralSpikeAura.prefab";
+
 private:
     
     bool containsPoint(const Vector3& triggerCenter, const Vector3& point) const;
