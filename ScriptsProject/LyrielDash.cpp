@@ -5,7 +5,6 @@
 #include "LyrielSound.h"
 #include "LyrielUI.h"
 #include "LyrielConfig.h"
-#include "LyrielParticles.h"
 #include "PlayerMovement.h"
 
 LyrielDash::LyrielDash(GameObject* owner)
@@ -41,14 +40,6 @@ void LyrielDash::Start()
     }
 
     m_sound = GameObjectAPI::findScript<LyrielSound>(getOwner());
-
-    m_particles = GameObjectAPI::findScript<LyrielParticles>(getOwner());
-
-    if (!m_particles)
-    {
-        Debug::error("[LyrielDash] LyrielParticles not found.");
-        return;
-    }
 }
 
 void LyrielDash::recoverCharge()
@@ -97,11 +88,6 @@ void LyrielDash::onDashStarted()
     {
         m_sound->playDashWhoosh();
     }
-
-    if (m_particles != nullptr)
-    {
-        m_particles->SetDashActive();
-    }
 }
 
 void LyrielDash::onDashUpdate(float dt)
@@ -132,11 +118,6 @@ void LyrielDash::onDashUpdate(float dt)
 void LyrielDash::onDashEnded()
 {
     m_playerMovement->m_playerType = static_cast<int>(NavAgentProfile::PlayerNormal);
-
-    if (m_particles != nullptr)
-    {
-        m_particles->SetDashInactive();
-    }
 }
 
 bool LyrielDash::validateDashTarget()

@@ -11,7 +11,6 @@
 #include "DeathUI.h"
 #include "EnemyBaseController.h"
 #include "DeathConfig.h"
-#include "DeathParticles.h"
 
 #include <cmath>
 
@@ -30,15 +29,6 @@ void DeathChargedAttack::Start()
     {
         Debug::warn("[DeathChargedAttack] DeathUI not found.");
     }
-
-    m_particles = GameObjectAPI::findScript<DeathParticles>(getOwner());
-
-    if (!m_particles)
-    {
-        Debug::error("[DeathChargedAttack] DeathParticles not found.");
-        return;
-    }
-
 }
 
 void DeathChargedAttack::Update()
@@ -350,11 +340,6 @@ void DeathChargedAttack::onAttackWindowUpdate()
     PlayerAnimationController* anim = m_character ? m_character->getAnimationController() : nullptr;
     if (anim != nullptr)
         anim->requestAttack();
-
-    if (m_particles != nullptr)
-    {
-        m_particles->SetScytheActive();
-    }
 }
 
 void DeathChargedAttack::onAttackWindowFinished()
@@ -362,11 +347,6 @@ void DeathChargedAttack::onAttackWindowFinished()
     if (m_movementLockedForCombo)
     {
         releaseComboMoveLock();
-    }
-
-    if (m_particles != nullptr)
-    {
-        m_particles->SetScytheInactive();
     }
 }
 

@@ -12,7 +12,6 @@
 #include "BreakableDamageable.h"
 #include "DeathUI.h"
 #include "DeathConfig.h"
-#include "DeathParticles.h"
 
 #include <cmath>
 
@@ -31,15 +30,6 @@ void DeathBasicAttack::Start()
     {
         Debug::warn("[DeathBasicAttack] DeathUI not found.");
     }
-
-    m_particles = GameObjectAPI::findScript<DeathParticles>(getOwner());
-
-    if (!m_particles)
-    {
-        Debug::error("[DeathBasicAttack] DeathParticles not found.");
-        return;
-    }
-
 }
 
 void DeathBasicAttack::Update()
@@ -109,11 +99,6 @@ void DeathBasicAttack::onAttackWindowUpdate()
     {
         anim->requestAttack();
     }
-
-    if (m_particles != nullptr)
-    {
-        m_particles->SetScytheActive();
-    }
 }
 
 void DeathBasicAttack::onAttackWindowFinished()
@@ -123,11 +108,6 @@ void DeathBasicAttack::onAttackWindowFinished()
     if (m_movementLockedForCombo)
     {
         releaseComboMoveLock();
-    }
-
-    if (m_particles != nullptr)
-    {
-        m_particles->SetScytheInactive();
     }
 }
 

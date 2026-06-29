@@ -6,7 +6,6 @@ class LyrielSound;
 class LyrielUI;
 class LyrielCharacter;
 class LyrielConfig;
-class LyrielParticles;
 
 class LyrielDash : public AbilityDash
 {
@@ -47,5 +46,4 @@ private:
     bool m_debugLastDashValid = false;
 
     LyrielSound* m_sound = nullptr;
-    LyrielParticles* m_particles = nullptr;
 };
