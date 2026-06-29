@@ -104,14 +104,6 @@ void LyrielDash::onDashStarted()
     }
 }
 
-void LyrielDash::onDashEnded()
-{
-    if (m_particles != nullptr)
-    {
-        m_particles->SetDashInactive();
-    }
-}
-
 void LyrielDash::onDashUpdate(float dt)
 {
     if (m_currentCharges < m_config->m_dashMaxCharges)
@@ -140,6 +132,11 @@ void LyrielDash::onDashUpdate(float dt)
 void LyrielDash::onDashEnded()
 {
     m_playerMovement->m_playerType = static_cast<int>(NavAgentProfile::PlayerNormal);
+
+    if (m_particles != nullptr)
+    {
+        m_particles->SetDashInactive();
+    }
 }
 
 bool LyrielDash::validateDashTarget()

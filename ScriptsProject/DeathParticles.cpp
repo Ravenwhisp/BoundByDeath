@@ -12,7 +12,7 @@ DeathParticles::DeathParticles(GameObject* owner) : Script(owner)
 
 }
 
-GameObject* DeathParticles::getObject(ScriptComponentRef<Transform> controller)
+Transform* DeathParticles::getTransform(ScriptComponentRef<Transform> controller)
 {
     Transform* particleTransform = controller.getReferencedComponent();
 
@@ -22,40 +22,34 @@ GameObject* DeathParticles::getObject(ScriptComponentRef<Transform> controller)
         return nullptr;
     }
 
-    GameObject* particleObject = ComponentAPI::getOwner(particleTransform);
-
-    if (particleObject == nullptr)
-    {
-        return nullptr;
-    }
-
-    return particleObject;
-
+    return particleTransform;
 }
+
 
 void DeathParticles::SetDashActive()
 {
-    if (dashTrailController == nullptr) 
+    if (m_dashTrailController == nullptr) 
     {
-        dashTrailController = getObject(m_dashTrail);
+        m_dashTrailController = getTransform(m_dashTrail);
 
-        if (dashTrailController == nullptr)
+        if (m_dashTrailController == nullptr)
         {
             Debug::warn("Dash trail controller not found on Death Particles.");
             return;
         }
     }
-
-    GameObjectAPI::setActive(dashTrailController, true);
+    
+    TrailComponent* trailComponent = TrailAPI::getTrailComponent(ComponentAPI::getOwner(m_dashTrailController));
+    TrailAPI::generateTrail(trailComponent, true);
 }
 
 void DeathParticles::SetScytheActive()
 {
-    if (scytheTrailController == nullptr)
+    if (m_scytheTrailController == nullptr)
     {
-        scytheTrailController = getObject(m_scytheTrail);
+        m_scytheTrailController = getTransform(m_scytheTrail);
 
-        if (scytheTrailController == nullptr)
+        if (m_scytheTrailController == nullptr)
         {
             Debug::warn("Scythe trail controller not found on Death Particles.");
             return;
@@ -63,16 +57,17 @@ void DeathParticles::SetScytheActive()
 
     }
 
-    GameObjectAPI::setActive(scytheTrailController, true);
+    TrailComponent* trailComponent = TrailAPI::getTrailComponent(ComponentAPI::getOwner(m_scytheTrailController));
+    TrailAPI::generateTrail(trailComponent, true);
 }
 
 void DeathParticles::SetDashInactive()
 {
-    if (dashTrailController == nullptr)
+    if (m_dashTrailController == nullptr)
     {
-        dashTrailController = getObject(m_dashTrail);
+        m_dashTrailController = getTransform(m_dashTrail);
 
-        if (dashTrailController == nullptr)
+        if (m_dashTrailController == nullptr)
         {
             Debug::warn("Dash trail controller not found on Death Particles.");
             return;
@@ -80,16 +75,17 @@ void DeathParticles::SetDashInactive()
 
     }
 
-    GameObjectAPI::setActive(dashTrailController, false);
+    TrailComponent* trailComponent = TrailAPI::getTrailComponent(ComponentAPI::getOwner(m_dashTrailController));
+    TrailAPI::generateTrail(trailComponent, false);
 }
 
 void DeathParticles::SetScytheInactive()
 {
-    if (scytheTrailController == nullptr)
+    if (m_scytheTrailController == nullptr)
     {
-        scytheTrailController = getObject(m_scytheTrail);
+        m_scytheTrailController = getTransform(m_scytheTrail);
 
-        if (scytheTrailController == nullptr)
+        if (m_scytheTrailController == nullptr)
         {
             Debug::warn("Scythe trail controller not found on Death Particles.");
             return;
@@ -97,7 +93,8 @@ void DeathParticles::SetScytheInactive()
 
     }
 
-    GameObjectAPI::setActive(scytheTrailController, false);
+    TrailComponent* trailComponent = TrailAPI::getTrailComponent(ComponentAPI::getOwner(m_scytheTrailController));
+    TrailAPI::generateTrail(trailComponent, false);
 }
 
 IMPLEMENT_SCRIPT(DeathParticles)
