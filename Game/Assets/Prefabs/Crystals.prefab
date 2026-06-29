@@ -26,27 +26,29 @@
   "Components": [
     {
       "UID": 1646300235569184422,
-      "ComponentType": 1,
+      "ComponentType": "MODEL",
       "Active": true,
       "MeshAssetId": {
         "uid": 14577145496971844621,
-        "libId": "62f9cd4ea5c2e59410ab5b8c39505394"
+        "libId": "62f9cd4ea5c2e59410ab5b8c39505394",
+        "type": "MESH"
       },
       "SkinAssetId": {
         "uid": 0,
-        "libId": ""
+        "libId": "",
+        "type": "SKIN"
       },
       "Materials": [
         {
           "uid": 14250986804951915234,
           "libId": "7f2d6bbc872cecd9016622ff7e939b1c",
-          "type": 2
+          "type": "MATERIAL"
         }
       ]
     },
     {
       "UID": 11806392409957964589,
-      "ComponentType": 3,
+      "ComponentType": "SCRIPT",
       "Active": true,
       "ScriptName": "EnemyDamageable",
       "ScriptFields": {
@@ -58,7 +60,7 @@
     },
     {
       "UID": 10623177258545042946,
-      "ComponentType": 3,
+      "ComponentType": "SCRIPT",
       "Active": true,
       "ScriptName": "CrystalShadowMark",
       "ScriptFields": {
@@ -68,5 +70,6 @@
       }
     }
   ],
-  "Children": []
+  "Children": [],
+  "Version": 2
 }

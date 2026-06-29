@@ -26,7 +26,7 @@
   "Components": [
     {
       "UID": 1484589094645315132,
-      "ComponentType": 3,
+      "ComponentType": "SCRIPT",
       "Active": true,
       "ScriptName": "BreakableObject",
       "ScriptFields": {
@@ -36,7 +36,7 @@
     },
     {
       "UID": 1559550874554872103,
-      "ComponentType": 3,
+      "ComponentType": "SCRIPT",
       "Active": true,
       "ScriptName": "BreakableDamageable",
       "ScriptFields": {
@@ -75,21 +75,23 @@
       "Components": [
         {
           "UID": 12457376769172077711,
-          "ComponentType": 1,
+          "ComponentType": "MODEL",
           "Active": true,
           "MeshAssetId": {
             "uid": 8827485997632395468,
-            "libId": "00e953f7b76004729e992db75ca9dac8"
+            "libId": "00e953f7b76004729e992db75ca9dac8",
+            "type": "MESH"
           },
           "SkinAssetId": {
             "uid": 0,
-            "libId": ""
+            "libId": "",
+            "type": "SKIN"
           },
           "Materials": [
             {
               "uid": 3669557967766827765,
               "libId": "aa0605c15f91e03f4bd5f585271f24bd",
-              "type": 2
+              "type": "MATERIAL"
             }
           ]
         }
@@ -123,31 +125,34 @@
       "Components": [
         {
           "UID": 1272015272914257476,
-          "ComponentType": 1,
+          "ComponentType": "MODEL",
           "Active": true,
           "MeshAssetId": {
             "uid": 5005769554318868917,
-            "libId": "0dcb007fd1a9c11075322c2d68c7ace1"
+            "libId": "0dcb007fd1a9c11075322c2d68c7ace1",
+            "type": "MESH"
           },
           "SkinAssetId": {
             "uid": 0,
-            "libId": ""
+            "libId": "",
+            "type": "SKIN"
           },
           "Materials": [
             {
               "uid": 8395065788512522984,
               "libId": "42253496e4d62d806d9a5dbdd0e032c7",
-              "type": 2
+              "type": "MATERIAL"
             },
             {
               "uid": 13300934354793628661,
               "libId": "f4f37cc3262c611166e43aef84eb7242",
-              "type": 2
+              "type": "MATERIAL"
             }
           ]
         }
       ],
       "Children": []
     }
-  ]
+  ],
+  "Version": 2
 }

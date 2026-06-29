@@ -26,15 +26,17 @@
   "Components": [
     {
       "UID": 6218299111103785094,
-      "ComponentType": 13,
+      "ComponentType": "ANIMATION",
       "Active": true,
       "StateMachineUID": {
         "uid": 16713764784269998302,
-        "libId": "b078d3f7e29309db82318dccc71b9fc3"
+        "libId": "b078d3f7e29309db82318dccc71b9fc3",
+        "type": "ANIMATION_STATE_MACHINE"
       },
       "AnimationSourceUID": {
         "uid": 0,
-        "libId": ""
+        "libId": "",
+        "type": "ANIMATION"
       },
       "PlayOnStart": true,
       "ApplyScale": false,
@@ -42,7 +44,7 @@
     },
     {
       "UID": 10539489538619215801,
-      "ComponentType": 3,
+      "ComponentType": "SCRIPT",
       "Active": true,
       "ScriptName": "ArthurBossController",
       "ScriptFields": {
@@ -60,7 +62,7 @@
     },
     {
       "UID": 14193031649565404763,
-      "ComponentType": 3,
+      "ComponentType": "SCRIPT",
       "Active": true,
       "ScriptName": "ArthurDetectionAggro",
       "ScriptFields": {
@@ -73,7 +75,7 @@
     },
     {
       "UID": 6648133459354485952,
-      "ComponentType": 3,
+      "ComponentType": "SCRIPT",
       "Active": true,
       "ScriptName": "ArthurAttackConfig",
       "ScriptFields": {
@@ -156,7 +158,7 @@
     },
     {
       "UID": 6300265092155958134,
-      "ComponentType": 3,
+      "ComponentType": "SCRIPT",
       "Active": true,
       "ScriptName": "ArthurAttackDebugDraw",
       "ScriptFields": {
@@ -171,14 +173,14 @@
     },
     {
       "UID": 8220056648384093019,
-      "ComponentType": 3,
+      "ComponentType": "SCRIPT",
       "Active": true,
       "ScriptName": "EnemyAttackExecutor",
       "ScriptFields": {}
     },
     {
       "UID": 15120528373362631339,
-      "ComponentType": 3,
+      "ComponentType": "SCRIPT",
       "Active": true,
       "ScriptName": "BarrierEnemyDamageable",
       "ScriptFields": {
@@ -1461,26 +1463,29 @@
       "Components": [
         {
           "UID": 10025087999090157658,
-          "ComponentType": 1,
+          "ComponentType": "MODEL",
           "Active": true,
           "MeshAssetId": {
             "uid": 11577563401704928346,
-            "libId": "311902f9df10424164a87b97150bb532"
+            "libId": "311902f9df10424164a87b97150bb532",
+            "type": "MESH"
           },
           "SkinAssetId": {
             "uid": 193074925351076250,
-            "libId": "6d2df8f65108efc0af080d2fe74ab03e"
+            "libId": "6d2df8f65108efc0af080d2fe74ab03e",
+            "type": "SKIN"
           },
           "Materials": [
             {
               "uid": 6832901981405145406,
               "libId": "47c3d6fc717025038c6774e8dadac7bd",
-              "type": 2
+              "type": "MATERIAL"
             }
           ]
         }
       ],
       "Children": []
     }
-  ]
+  ],
+  "Version": 2
 }
