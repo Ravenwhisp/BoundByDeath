@@ -4,6 +4,7 @@
 #include "ArthurDetectionAggro.h"
 #include "ArthurAttackConfig.h"
 #include "ArthurUI.h"
+#include "ArthurSound.h"
 
 #include "Damageable.h"
 #include "MusicManager.h"
@@ -41,6 +42,8 @@ void ArthurBossController::Start()
 		Debug::error("ArthurUI script not found.");
 	}
 
+	m_arthurSound = GameObjectAPI::findScript<ArthurSound>(getOwner());
+
 	m_currentTarget = nullptr;
 	m_deathTriggerSent = false;
 
@@ -74,6 +77,11 @@ void ArthurBossController::Update()
 			m_arthurUI->showHealthUI(true);
 		}
 
+		if (m_arthurSound)
+		{
+			m_arthurSound->playIntroRoar();
+		}
+
 		// Música de boss. Si Arthur está en su propia escena con el MusicManager
 		// configurado a Level1_Boss, esto setea el mismo estado (inocuo).
 		if (MusicManager* music = MusicManager::Get())
@@ -93,6 +101,13 @@ void ArthurBossController::Update()
 		if (m_damageable != nullptr && m_damageable->isDead())
 		{
 			m_bossDefeated = true;
+
+			if (m_arthurSound)
+			{
+				m_arthurSound->stopAllLoops();   // kill galloping/footsteps before the roar
+				m_arthurSound->playDeathRoar();
+			}
+
 			if (MusicManager* music = MusicManager::Get())
 			{
 				music->SetState_Level1Chapel();
@@ -161,6 +176,11 @@ void ArthurBossController::updateBossPhase()
 	if (damageable->getCurrentHp() <= damageable->getMaxHp() * 0.5f)
 	{
 		setPhase(ArthurBossPhase::Phase2);
+
+		if (m_arthurSound)
+		{
+			m_arthurSound->playPhase2Roar();
+		}
 
 		if (m_arthurUI)
 		{

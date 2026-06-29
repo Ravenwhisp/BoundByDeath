@@ -29,6 +29,7 @@ public:
 private:
 
     bool m_activated = false;
+    bool m_activatedLoopStarted = false;   // crystal hum loop: start once, 3D attenuation handles audibility
 
 	float m_activationTimer = 0.0f;
 

@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "CrystalShadowMark.h"
+#include "EnvironmentSound.h"
 
 IMPLEMENT_SCRIPT_FIELDS_INHERITED(CrystalShadowMark, EnemyShadowMark,
     SERIALIZED_COMPONENT_REF(m_puzzleManager, "PuzzleManager", ComponentType::TRANSFORM),
@@ -60,6 +61,16 @@ void CrystalShadowMark::exploit()
 	}
 
     EnemyShadowMark::exploit(); 
+    
+    EnvironmentSound::play(getOwner(), "Play_Environment_Crystal_Activate");   // ding on each activation
+
+    if (!m_activatedLoopStarted)
+    {
+        // Continuous hum while active. No explicit stop: the 3D attenuation silences it
+        // when you walk away, and the engine's StopAll cuts it on scene change.
+        EnvironmentSound::play(getOwner(), "Play_Environment_Crystal_Activated");
+        m_activatedLoopStarted = true;
+    }
 
     if (managerScript != nullptr)
     {

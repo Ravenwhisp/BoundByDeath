@@ -36,6 +36,16 @@ void MusicManager::Start()
                      GameObjectAPI::getName(getOwner()));
     }
 
+    // ORDEN CRÍTICO: primero el State, luego Play_Music.
+    // Play_Music es un Music Switch Container keyado por "MusicState". Si se postea
+    // mientras el estado es el default "None" (que NO tiene segmento asociado),
+    // arranca en una rama vacía = silencio, y ya no transiciona aunque cambies el
+    // estado después. Seteando el estado ANTES, arranca directo en el segmento bueno.
+    if (m_sceneBaseState >= 0 && m_sceneBaseState < kMusicStateCount)
+    {
+        SetMusicState(kMusicStateNames[m_sceneBaseState]);
+    }
+
     // Arranca la música UNA sola vez por sesión de play. El flag vive en el engine
     // (AudioAPI::isMusicStarted) y se resetea al parar (StopAll en el Stop del editor):
     //  - Entre escenas NO se reinicia (solo cambia el State -> crossfade de Wwise).
@@ -44,12 +54,6 @@ void MusicManager::Start()
     {
         PlayMusic();
         AudioAPI::setMusicStarted(true);
-    }
-
-    // Estado base de esta escena (configurable por escena desde el inspector).
-    if (m_sceneBaseState >= 0 && m_sceneBaseState < kMusicStateCount)
-    {
-        SetMusicState(kMusicStateNames[m_sceneBaseState]);
     }
 }
 

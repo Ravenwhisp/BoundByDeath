@@ -16,6 +16,7 @@ namespace
     constexpr const char* k_markApply       = "Play_Death_Mark_Apply";
     constexpr const char* k_hurt            = "Play_Death_Hurt";
     constexpr const char* k_down            = "Play_Death_Down";
+    constexpr const char* k_revived         = "Play_Death_Revived";
     constexpr const char* k_lockTarget      = "Play_Death_Lock_Target";
     constexpr const char* k_switchTarget    = "Play_Death_Switch_Target";
 
@@ -123,6 +124,7 @@ void DeathSound::playHurt()
     m_hurtCooldownTimer = k_hurtRetriggerCooldown;
 }
 void DeathSound::playDown()          { postEvent(k_down); }
+void DeathSound::playRevived()       { postEvent(k_revived); }
 void DeathSound::playLockTarget()    { postEvent(k_lockTarget); }
 void DeathSound::playSwitchTarget()  { postEvent(k_switchTarget); }
 

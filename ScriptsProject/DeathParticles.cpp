@@ -4,12 +4,29 @@
 
 IMPLEMENT_SCRIPT_FIELDS(DeathParticles,
     SERIALIZED_COMPONENT_REF(m_dashTrail, "Dash", ComponentType::TRANSFORM),
-    SERIALIZED_COMPONENT_REF(m_scytheTrail, "Scythe", ComponentType::TRANSFORM)
+    SERIALIZED_COMPONENT_REF(m_scytheTrail, "Scythe", ComponentType::TRANSFORM),
+    SERIALIZED_STRING(m_tauntParticlePath, "Taunt Particle Prefab Path")
 )
 
 DeathParticles::DeathParticles(GameObject* owner) : Script(owner)
 {
 
+}
+
+void DeathParticles::Update()
+{
+    if (m_activeTauntParticle == nullptr)
+    {
+        return;
+    }
+
+    m_tauntParticleLifetime -= Time::getDeltaTime();
+
+    if (m_tauntParticleLifetime <= 0.0f)
+    {
+        GameObjectAPI::removeGameObject(m_activeTauntParticle);
+        m_activeTauntParticle = nullptr;
+    }
 }
 
 Transform* DeathParticles::getTransform(ScriptComponentRef<Transform> controller)
@@ -61,6 +78,44 @@ void DeathParticles::SetScytheActive()
     TrailAPI::generateTrail(trailComponent, true);
 }
 
+void DeathParticles::SetTauntActive(const Vector3& direction)
+{
+    Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
+    if (ownerTransform == nullptr)
+    {
+        Debug::warn("[DeathParticles] Owner transform not found.");
+        return;
+    }
+
+    Vector3 spawnPosition = TransformAPI::getGlobalPosition(ownerTransform);
+
+    Vector3 flatDirection = direction;
+    flatDirection.y = 0.0f;
+
+    if (flatDirection.LengthSquared() <= 0.0001f)
+    {
+        Debug::warn("[DeathParticles] Invalid taunt direction.");
+        return;
+    }
+
+    flatDirection.Normalize();
+
+    const float yawRad = std::atan2(flatDirection.x, flatDirection.z);
+    const float yawDeg = yawRad * (180.0f / 3.14159265f);
+
+    Vector3 particleRootRotation(0.0f, yawDeg, 0.0f);
+
+    if (m_activeTauntParticle != nullptr)
+    {
+        GameObjectAPI::removeGameObject(m_activeTauntParticle);
+        m_activeTauntParticle = nullptr;
+    }
+
+    m_activeTauntParticle = GameObjectAPI::instantiatePrefab(m_tauntParticlePath.c_str(), spawnPosition, particleRootRotation);
+
+    m_tauntParticleLifetime = 1.0f;
+}
+
 void DeathParticles::SetDashInactive()
 {
     if (m_dashTrailController == nullptr)
@@ -95,6 +150,17 @@ void DeathParticles::SetScytheInactive()
 
     TrailComponent* trailComponent = TrailAPI::getTrailComponent(ComponentAPI::getOwner(m_scytheTrailController));
     TrailAPI::generateTrail(trailComponent, false);
+}
+
+void DeathParticles::SetTauntInactive()
+{
+    if (m_activeTauntParticle != nullptr)
+    {
+        GameObjectAPI::removeGameObject(m_activeTauntParticle);
+        m_activeTauntParticle = nullptr;
+    }
+
+    m_tauntParticleLifetime = 0.0f;
 }
 
 IMPLEMENT_SCRIPT(DeathParticles)

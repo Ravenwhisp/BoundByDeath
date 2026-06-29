@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "SpikeTrap.h"
 #include "PlayerDamageable.h"
+#include "EnvironmentSound.h"
 
 IMPLEMENT_SCRIPT_FIELDS(SpikeTrap,
     SERIALIZED_BOOL(alternativeMode, "Alternative Mode"),
@@ -37,6 +38,8 @@ void SpikeTrap::Update()
     float dt = Time::getDeltaTime();
     currentTime += dt;
 	
+    const auto previousState = state;
+
     switch (state)
     {
         case SpikeTrap::WAIT:
@@ -100,6 +103,19 @@ void SpikeTrap::Update()
 
         default:
             break;
+    }
+
+    // Single hook for all 4 transition branches (normal/spectral × extend/retract).
+    if (state != previousState)
+    {
+        if (state == ACTIVE)
+        {
+            EnvironmentSound::play(getOwner(), "Play_Environment_Extend_Spikes");
+        }
+        else if (state == WAIT)
+        {
+            EnvironmentSound::play(getOwner(), "Play_Environment_Retract_Spikes");
+        }
     }
 
     }

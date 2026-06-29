@@ -6,6 +6,7 @@
 class EnemyBaseController;
 class EnemyBaseAttackConfig;
 class AnimationComponent;
+class EnemySound;
 class PaladinVFX;
 
 class EnemyAttackState : public StateMachineScript
@@ -28,6 +29,7 @@ private:
     EnemyBaseAttackConfig* m_attackConfig = nullptr;
     AnimationComponent* m_animation = nullptr;
     PaladinVFX* m_paladinVFX = nullptr;
+    EnemySound* m_enemySound = nullptr;
 
     Transform* m_committedTarget = nullptr;
 
