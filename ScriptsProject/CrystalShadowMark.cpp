@@ -42,6 +42,7 @@ void CrystalShadowMark::Update()
         if (managerScript != nullptr)
         {
             managerScript->onCrystalsDeactivated(m_puzzleID);
+			deactivateEffect();
         }
         else
         {
@@ -63,6 +64,7 @@ void CrystalShadowMark::exploit()
     if (managerScript != nullptr)
     {
         managerScript->onCrystalsActivated(m_puzzleID);
+		activeEffect();
 		m_activated = true;
     }
     else
@@ -78,6 +80,23 @@ void CrystalShadowMark::notifyDeathHit()
         return;
     }
     EnemyShadowMark::notifyDeathHit();
+}
+
+void CrystalShadowMark::activeEffect()
+{
+    if (effectObject == nullptr)
+    {
+        effectObject = GameObjectAPI::instantiatePrefab("Assets/Prefabs/Particles/CrystalSparks.prefab", TransformAPI::getGlobalPosition(GameObjectAPI::getTransform(getOwner())) + Vector3(0.0f, 1.0f, 0.0f), Vector3(0.0f, 0.0f, 0.0f));
+    }
+}
+
+void CrystalShadowMark::deactivateEffect()
+{
+    if (effectObject != nullptr)
+    {
+        GameObjectAPI::removeGameObject(effectObject);
+        effectObject = nullptr;
+    }
 }
 
 IMPLEMENT_SCRIPT(CrystalShadowMark)
