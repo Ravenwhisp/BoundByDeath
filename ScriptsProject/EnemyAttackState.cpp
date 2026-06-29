@@ -3,6 +3,7 @@
 
 #include "EnemyBaseController.h"
 #include "EnemyBaseAttackConfig.h"
+#include "EnemySound.h"
 
 #include "Damageable.h"
 #include "PlayerState.h"
@@ -46,6 +47,12 @@ void EnemyAttackState::OnStateEnter()
     m_controller->updateCurrentTarget();
     m_committedTarget = m_controller->getCurrentTarget();
 
+    m_enemySound = GameObjectAPI::findScript<EnemySound>(getOwner());
+    if (m_enemySound)
+    {
+        m_enemySound->playBasicTelegraph();   // Paladin swing / Archer bow release
+    }
+
     Debug::log("[EnemyAttackState] ENTER");
 }
 
@@ -73,6 +80,12 @@ void EnemyAttackState::OnStateUpdate()
     if (!m_hasAppliedDamage && m_stateTimer >= m_attackConfig->m_basicAttackWindupTime)
     {
         tryDamageTarget(m_committedTarget);
+
+        if (m_enemySound)
+        {
+            m_enemySound->playBasicImpact();   // contact frame
+        }
+
         m_hasAppliedDamage = true;
     }
 

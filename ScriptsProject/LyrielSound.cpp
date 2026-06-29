@@ -16,6 +16,7 @@ namespace
     constexpr const char* k_footsteps        = "Play_Lyriel_Footsteps";
     constexpr const char* k_hurt             = "Play_Lyriel_Hurt";
     constexpr const char* k_down             = "Play_Lyriel_Down";
+    constexpr const char* k_revived          = "Play_Lyriel_Revived";
     constexpr const char* k_lockTarget       = "Play_Lyriel_Lock_Target";
     constexpr const char* k_switchTarget     = "Play_Lyriel_Switch_Target";
 
@@ -104,6 +105,7 @@ void LyrielSound::playHurt()
     m_hurtCooldownTimer = k_hurtRetriggerCooldown;
 }
 void LyrielSound::playDown()            { postEvent(k_down); }
+void LyrielSound::playRevived()         { postEvent(k_revived); }
 void LyrielSound::playLockTarget()      { postEvent(k_lockTarget); }
 void LyrielSound::playSwitchTarget()    { postEvent(k_switchTarget); }
 

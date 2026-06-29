@@ -14,7 +14,7 @@ public:
 
     void Start() override;
 
-    virtual void onBreak() { breakObject(); }
+    virtual void onBreak();   // default: breakObject() + the barrel/crate break SFX
     bool isBroken() const { return m_isBroken; }
 
 protected:

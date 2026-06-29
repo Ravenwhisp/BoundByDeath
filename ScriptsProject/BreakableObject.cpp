@@ -1,6 +1,12 @@
 #include "pch.h"
 #include "BreakableObject.h"
 #include "EngineDependencies/EngineAPI.h"
+#include "EnvironmentSound.h"
+
+namespace
+{
+    constexpr const char* k_barrelBreak = "Play_Environment_Barrel_Break";
+}
 
 BreakableObject::BreakableObject(GameObject* owner)
     : Script(owner)
@@ -43,6 +49,12 @@ void BreakableObject::Start()
     {
         NavigationAPI::setBlocked(m_navBlocker, true);
     }
+}
+
+void BreakableObject::onBreak()
+{
+    breakObject();
+    EnvironmentSound::play(getOwner(), k_barrelBreak);   // barrels & crates (same prefab)
 }
 
 void BreakableObject::breakObject()

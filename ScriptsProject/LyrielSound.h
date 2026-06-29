@@ -39,6 +39,7 @@ public:
     // Damage
     void playHurt();
     void playDown();
+    void playRevived();   // played when this player is revived from down state
 
     // Targeting
     void playLockTarget();

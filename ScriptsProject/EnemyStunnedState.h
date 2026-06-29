@@ -6,6 +6,7 @@
 class EnemyBaseController;
 class AnimationComponent;
 class EnemyStunParticles;
+class EnemySound;
 
 class EnemyStunnedState : public StateMachineScript
 {
@@ -19,8 +20,9 @@ public:
 	void OnStateExit() override;
 
 private:
-	EnemyBaseController*  m_controller   = nullptr;
-	AnimationComponent*   m_animation    = nullptr;
-	EnemyStunParticles*   m_stunParticles = nullptr;
+	EnemyBaseController* m_controller = nullptr;
+	AnimationComponent* m_animation = nullptr;
+	EnemySound* m_enemySound = nullptr;
+    EnemyStunParticles*   m_stunParticles = nullptr;
 	float m_stateTimer = 0.0f;
 };

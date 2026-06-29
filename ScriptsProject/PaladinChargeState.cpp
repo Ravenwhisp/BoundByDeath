@@ -3,6 +3,7 @@
 
 #include "MeleeEnemyController.h"
 #include "PaladinAttackConfig.h"
+#include "PaladinSound.h"
 
 PaladinChargeState::PaladinChargeState(GameObject* owner)
 	: StateMachineScript(owner)
@@ -40,6 +41,13 @@ void PaladinChargeState::OnStateEnter()
 
 	m_chargeDirection = m_paladinController->getChargeDirection();
 
+	m_paladinSound = GameObjectAPI::findScript<PaladinSound>(getOwner());
+	if (m_paladinSound)
+	{
+		m_paladinSound->playChargeStart();
+		m_paladinSound->startChargeLoop();
+	}
+
 	Debug::log("[PaladinChargeState] ENTER");
 }
 
@@ -73,6 +81,12 @@ void PaladinChargeState::OnStateUpdate()
 
 void PaladinChargeState::OnStateExit()
 {
+	// Covers every exit path (finish, death, stun) so the loop never lingers.
+	if (m_paladinSound)
+	{
+		m_paladinSound->stopChargeLoop();
+	}
+
 	Debug::log("[PaladinChargeState] EXIT");
 }
 
@@ -111,6 +125,12 @@ void PaladinChargeState::finishCharge()
 	if (!m_paladinController || !m_animation)
 	{
 		return;
+	}
+
+	// Charge impact only when the embestida actually reaches the target.
+	if (m_paladinSound && m_paladinController->isTargetInAttackRange())
+	{
+		m_paladinSound->playChargeImpact();
 	}
 
 	m_paladinController->consumeChargeCooldown();

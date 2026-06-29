@@ -36,13 +36,6 @@ private:
 
     ScriptComponentRef<Transform> m_renderer;
 
-    // Continuous-damage (Bound separation, DoTs) hurt handling: play the grunt once
-    // on ENTERING the continuous damage, then stay silent (the heartbeat conveys the
-    // ongoing tension). Re-arms only after a short gap with no continuous damage, so
-    // it's independent of script Update() ordering within a frame.
-    bool  m_continuousDamageActive = false;
-    float m_continuousDamageTimer  = 0.0f;
-
     bool  m_damageHighlightActive = false;
     float m_damageHighlightTimer = 0.0f;
     float m_damageHighlightSpeed = 1.0f;
