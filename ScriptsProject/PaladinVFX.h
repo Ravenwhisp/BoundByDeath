@@ -18,14 +18,22 @@ public:
     void setWalkingDustActive(bool active);
     void stopWalkingDust();
 
+    void startChargeAttackEffect();
+    void stopChargeAttackEffect();
+
 private:
 
     Vector3 getWalkingDustPosition() const;
     Vector3 getOwnerRotation() const;
+    Vector3 getChargeAttackEffectPosition() const;
 
     void addWalkingDust();
     void removeWalkingDust();
     void updateWalkingDustPosition();
+
+    void addChargeAttackEffect();
+    void removeChargeAttackEffect();
+    void updateChargeAttackEffectPosition();
 
 public:
 
@@ -36,5 +44,11 @@ private:
 
     GameObject* walkingDustEffect = nullptr;
     bool walkingDustActive = false;
+
+    GameObject* chargeAttackEffect = nullptr;
+    bool chargeAttackEffectActive = false;
+
+    float chargeAttackYOffset = 0.5f;
+    float chargeAttackForwardOffset = 0.0f;
 
 };

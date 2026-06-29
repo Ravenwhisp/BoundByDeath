@@ -3,6 +3,7 @@
 
 #include "MeleeEnemyController.h"
 #include "PaladinAttackConfig.h"
+#include "PaladinVFX.h"
 
 PaladinChargeState::PaladinChargeState(GameObject* owner)
 	: StateMachineScript(owner)
@@ -14,6 +15,7 @@ void PaladinChargeState::OnStateEnter()
 	m_paladinController = GameObjectAPI::findScript<MeleeEnemyController>(getOwner());
 	m_attackConfig = GameObjectAPI::findScript<PaladinAttackConfig>(getOwner());
 	m_animation = AnimationAPI::getAnimationComponent(getOwner());
+	m_paladinVFX = GameObjectAPI::findScript<PaladinVFX>(getOwner());
 
 	m_stateTimer = 0.0f;
 
@@ -35,10 +37,20 @@ void PaladinChargeState::OnStateEnter()
 		return;
 	}
 
+	if (!m_paladinVFX)
+	{
+		Debug::warn("[PaladinChargeState] PaladinVFX not found.");
+	}
+
 	m_paladinController->clearPath();
 	m_paladinController->resetRepathTimer();
 
 	m_chargeDirection = m_paladinController->getChargeDirection();
+
+	if (m_paladinVFX)
+	{
+		m_paladinVFX->startChargeAttackEffect();
+	}
 
 	Debug::log("[PaladinChargeState] ENTER");
 }
@@ -47,16 +59,29 @@ void PaladinChargeState::OnStateUpdate()
 {
 	if (!m_paladinController || !m_attackConfig || !m_animation)
 	{
+		stopChargeAttackEffect();
 		return;
 	}
 
 	if (m_paladinController->trySendDeathTrigger(m_animation))
 	{
+		stopChargeAttackEffect();
 		return;
 	}
 
 	if (m_paladinController->trySendStunTrigger(m_animation))
 	{
+		stopChargeAttackEffect();
+		return;
+	}
+
+	m_stateTimer += Time::getDeltaTime();
+
+	moveCharge();
+
+	if (m_stateTimer >= m_attackConfig->m_chargeDuration || m_paladinController->isTargetInAttackRange())
+	{
+		finishCharge();
 		return;
 	}
 
@@ -74,6 +99,8 @@ void PaladinChargeState::OnStateUpdate()
 void PaladinChargeState::OnStateExit()
 {
 	Debug::log("[PaladinChargeState] EXIT");
+
+	stopChargeAttackEffect();
 }
 
 void PaladinChargeState::moveCharge()
@@ -89,6 +116,7 @@ void PaladinChargeState::moveCharge()
 	}
 
 	Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
+
 	if (!ownerTransform)
 	{
 		return;
@@ -100,6 +128,7 @@ void PaladinChargeState::moveCharge()
 	desiredPosition += m_chargeDirection * m_attackConfig->m_chargeSpeed * Time::getDeltaTime();
 
 	Vector3 nextPosition;
+
 	if (NavigationAPI::moveAlongSurface(ownerPosition, desiredPosition, nextPosition, Vector3(5.0f, 5.0f, 5.0f)))
 	{
 		TransformAPI::setGlobalPosition(ownerTransform, nextPosition);
@@ -110,14 +139,25 @@ void PaladinChargeState::finishCharge()
 {
 	if (!m_paladinController || !m_animation)
 	{
+		stopChargeAttackEffect();
 		return;
 	}
+
+	stopChargeAttackEffect();
 
 	m_paladinController->consumeChargeCooldown();
 
 	AnimationAPI::sendTrigger(m_animation, "ToChase");
 
 	Debug::log("[PaladinChargeState] Finished, Chase trigger sent");
+}
+
+void PaladinChargeState::stopChargeAttackEffect()
+{
+	if (m_paladinVFX)
+	{
+		m_paladinVFX->stopChargeAttackEffect();
+	}
 }
 
 IMPLEMENT_SCRIPT(PaladinChargeState)
