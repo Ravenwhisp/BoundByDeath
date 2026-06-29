@@ -238,7 +238,7 @@ void DeathTaunt::releaseAimAndCast()
             GameObject* fxTaunt = GameObjectAPI::instantiatePrefab(m_tauntParticlePath, ownerPos, Vector3(90.0f, 0.0f, 0.0f));
             if (fxTaunt != nullptr)
             {
-                m_temporaryTauntPrefabs.push_back({ fxTaunt, 4.0f }); // 1 segundo de vida
+                m_temporaryTauntPrefabs.push_back({ fxTaunt, 1.0f }); 
             }
         }
        
