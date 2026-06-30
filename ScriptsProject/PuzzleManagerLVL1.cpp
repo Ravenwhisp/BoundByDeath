@@ -56,7 +56,7 @@ void PuzzleManagerLVL1::Update()
 void PuzzleManagerLVL1::puzzle1Solved()
 {
 	Debug::log("Puzzle 1 solved! Opening door...");
-	TransformAPI::setRotationEuler(m_door1.getReferencedComponent(), Vector3(0.0f, 90.0f, 0.0f));
+	TransformAPI::setRotationEuler(m_door1.getReferencedComponent(), Vector3(0.0f, -90.0f, 0.0f));
 	playDoorOpen(m_door1);
 
 	NavRuntimeBlockerComponent* blocker1Comp = NavigationAPI::getRuntimeBlockerComponent(blocker1);
