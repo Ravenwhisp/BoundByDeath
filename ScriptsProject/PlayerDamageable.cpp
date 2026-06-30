@@ -101,12 +101,14 @@ void PlayerDamageable::onDamaged(float amount)
         // Continuous source (Bound separation): no per-hit grunt. The Cooperative
         // Bound-Damage loop (started by Bound) conveys the ongoing separation, and the
         // escalating heartbeat carries the tension.
+        playHurtVfx();
         return;
     }
 
     // Discrete hit: one grunt per hit (the sound layer debounces overlaps).
     playHurtSfx();
     playHurtVfx();
+    
 }
 
 void PlayerDamageable::playHurtSfx()
