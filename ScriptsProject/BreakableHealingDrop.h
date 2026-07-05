@@ -16,6 +16,8 @@ public:
 
     ScriptFieldList getExposedFields() const override;
 
+    bool canBeTargetedDuringCombat() const override { return true; }
+
 public:
     std::string m_healthPickupPrefabPath = "";
 
