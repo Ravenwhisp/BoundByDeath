@@ -44,6 +44,8 @@ private:
     bool isTargetInRange(GameObject* target) const;
     bool isTargetAlive(GameObject* target) const;
 
+    bool canTargetBreakableDuringCombat(GameObject* target) const;
+
 public:
     float m_targetRange = 8.0f;
 
