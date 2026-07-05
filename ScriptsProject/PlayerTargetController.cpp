@@ -146,7 +146,7 @@ void PlayerTargetController::updateTargetsInRange()
             continue;
         }
 
-        if (isTargetInRange(breakable) && isTargetAlive(breakable))
+        if (!isTargetInRange(breakable) || !isTargetAlive(breakable))
         {
             continue;
         }
