@@ -32,6 +32,7 @@ IMPLEMENT_SCRIPT_FIELDS(PopUpEvent,
     SERIALIZED_ENUM_INT(m_transitionType, "Transition Type", popUpTransitionTypeNames, popUpTransitionTypeCount),
     SERIALIZED_ENUM_INT(m_closeMode, "Close Mode", popUpCloseModeNames, popUpCloseModeCount),
     SERIALIZED_BOOL(m_lockGameplay, "Lock Gameplay"),
+    SERIALIZED_BOOL(m_fadeHud, "Fade HUD"),
     SERIALIZED_FLOAT(m_showDuration, "Show Duration", 0.0f, 5.0f, 0.05f),
     SERIALIZED_FLOAT(m_hideDuration, "Hide Duration", 0.0f, 5.0f, 0.05f)
 )
@@ -63,7 +64,7 @@ void PopUpEvent::executeEvent(GameplayEventTrigger* trigger)
         return;
     }
 
-    popUpController->startPopUp(this);
+    popUpController->startEvent(this);
 }
 
 Transform2D* PopUpEvent::getPopUpImageTransform2D(int index) const

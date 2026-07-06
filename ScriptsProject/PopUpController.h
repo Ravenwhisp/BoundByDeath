@@ -6,6 +6,7 @@ class PopUpEvent;
 class PlayerController;
 class Damageable;
 class Transform2D;
+class HUDFader;
 
 class PopUpController : public Script
 {
@@ -17,7 +18,7 @@ public:
     void Start() override;
     void Update() override;
 
-    void startPopUp(PopUpEvent* event);
+    void startEvent(PopUpEvent* event);
     void notifyObjectiveCompleted(GameObject* sourceObject);
 
     bool isShowingPopUp() const { return !m_activePopUps.empty(); }
@@ -58,6 +59,9 @@ private:
     };
 
 private:
+    bool startPopUp(ActivePopUp& popUp, int imageIndex);
+    void startEventEffects(ActivePopUp& popUp);
+
     void updatePopUp(ActivePopUp& popUp, float dt);
     void removeFinishedPopUps();
 
@@ -75,10 +79,16 @@ private:
     void hideAllPopUpImages(ActivePopUp& popUp);
 
     void finishPopUp(ActivePopUp& popUp);
+    void finishEvent(ActivePopUp& popUp);
+    void finishEventEffects(ActivePopUp& popUp);
 
     void findPlayerControllers();
     void setPlayersGameplayInputLocked(bool locked);
     void setPlayersInvulnerable(bool invulnerable);
+
+    void findHUDFader();
+    void fadeHudOut(const ActivePopUp& popUp);
+    void fadeHudIn(const ActivePopUp& popUp);
 
     void setPopUpAlpha(ActivePopUp& popUp, float alpha);
     void setPopUpPosition(ActivePopUp& popUp, const Vector2& position);
@@ -96,4 +106,9 @@ private:
     std::vector<Damageable*> m_playerDamageables;
 
     float m_slideOffset = 600.0f;
+
+    HUDFader* m_hudFader = nullptr;
+
+    float m_hudFadeOutDuration = 0.35f;
+    float m_hudFadeInDuration = 0.35f;
 };

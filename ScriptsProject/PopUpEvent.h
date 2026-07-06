@@ -47,6 +47,7 @@ public:
     float getHideDuration() const { return m_hideDuration; }
 
     bool shouldLockGameplay() const { return m_lockGameplay; }
+    bool shouldFadeHud() const { return m_fadeHud; }
 
 private:
     PopUpController* findPopUpController() const;
@@ -66,4 +67,5 @@ public:
     float m_hideDuration = 0.25f;
 
     bool m_lockGameplay = true;
+    bool m_fadeHud = true;
 };
