@@ -229,6 +229,11 @@ void PopUpController::updateWaiting(ActivePopUp& popUp)
 
 void PopUpController::updateHiding(ActivePopUp& popUp, float dt)
 {
+    if (popUp.event == nullptr)
+    {
+        return;
+    }
+
     const float duration = popUp.event->getHideDuration();
 
     popUp.timer += dt;
@@ -238,24 +243,27 @@ void PopUpController::updateHiding(ActivePopUp& popUp, float dt)
 
     updateHideTransition(popUp, alpha);
 
-    if (popUp.timer >= duration)
+    if (popUp.timer < duration)
     {
-        updateHideTransition(popUp, 1.0f);
-
-        finishPopUp(popUp);
-
-        const int nextImageIndex = popUp.currentImageIndex + 1;
-
-        if (nextImageIndex < popUp.event->getPopUpImageCount())
-        {
-            if (startPopUp(popUp, nextImageIndex))
-            {
-                return;
-            }
-        }
-
-        finishEvent(popUp);
+        return;
     }
+
+    updateHideTransition(popUp, 1.0f);
+
+    const int nextImageIndex = popUp.currentImageIndex + 1;
+    const int imageCount = popUp.event->getPopUpImageCount();
+
+    finishPopUp(popUp);
+
+    if (nextImageIndex < imageCount)
+    {
+        if (startPopUp(popUp, nextImageIndex))
+        {
+            return;
+        }
+    }
+
+    finishEvent(popUp);
 }
 
 void PopUpController::prepareShowTransition(ActivePopUp& popUp)
