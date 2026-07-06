@@ -94,10 +94,11 @@ private:
     void setPopUpPosition(ActivePopUp& popUp, const Vector2& position);
     Vector2 calculateHiddenPosition(const ActivePopUp& popUp) const;
 
+    bool shouldUseConfirmationIndicators(const ActivePopUp& popUp) const;
     void setUpConfirmationIndicators(ActivePopUp& popUp);
-    void updateConfirmationIndicators(ActivePopUp& popUp);
+    void updateConfirmationIndicators(ActivePopUp& popUp, float alphaMultiplier = 1.0f);
     void hideConfirmationIndicators(ActivePopUp& popUp);
-    void setIndicatorVisible(Transform2D* indicator, bool visible);
+    void setIndicatorAlpha(Transform2D* indicator, float alpha);
 
 private:
     std::vector<ActivePopUp> m_activePopUps;

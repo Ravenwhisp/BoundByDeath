@@ -102,7 +102,7 @@ bool PopUpController::startPopUp(ActivePopUp& popUp, int imageIndex)
     popUp.player2Confirmed = false;
     popUp.objectiveCompleted = false;
 
-    updateConfirmationIndicators(popUp);
+    updateConfirmationIndicators(popUp, 0.0f);
 
     if (!setCurrentPopUpImage(popUp, popUp.currentImageIndex))
     {
@@ -334,6 +334,7 @@ void PopUpController::updateShowTransition(ActivePopUp& popUp, float alpha)
     case PopUpTransitionType::Fade:
         popUp.currentAlpha = alpha;
         setPopUpAlpha(popUp, popUp.currentAlpha);
+        updateConfirmationIndicators(popUp, alpha);
         break;
 
     case PopUpTransitionType::SlideFromLeft:
@@ -363,6 +364,7 @@ void PopUpController::updateHideTransition(ActivePopUp& popUp, float alpha)
     case PopUpTransitionType::Fade:
         popUp.currentAlpha = MathAPI::lerp(1.0f, 0.0f, alpha);
         setPopUpAlpha(popUp, popUp.currentAlpha);
+        updateConfirmationIndicators(popUp, popUp.currentAlpha);
         break;
 
     case PopUpTransitionType::SlideFromLeft:
@@ -611,6 +613,16 @@ Vector2 PopUpController::calculateHiddenPosition(const ActivePopUp& popUp) const
     }
 }
 
+bool PopUpController::shouldUseConfirmationIndicators(const ActivePopUp& popUp) const
+{
+    if (popUp.event == nullptr)
+    {
+        return false;
+    }
+
+    return popUp.event->getCloseMode() == PopUpCloseMode::BothPlayersConfirm && popUp.event->getTransitionType() == PopUpTransitionType::Fade;
+}
+
 void PopUpController::setUpConfirmationIndicators(ActivePopUp& popUp)
 {
     if (popUp.event == nullptr)
@@ -624,42 +636,37 @@ void PopUpController::setUpConfirmationIndicators(ActivePopUp& popUp)
     popUp.player2ConfirmedIndicator = popUp.event->getPlayer2ConfirmedTransform2D();
 }
 
-void PopUpController::updateConfirmationIndicators(ActivePopUp& popUp)
+void PopUpController::updateConfirmationIndicators(ActivePopUp& popUp, float alphaMultiplier)
 {
-    if (popUp.event == nullptr)
-    {
-        return;
-    }
-
-    if (popUp.event->getCloseMode() != PopUpCloseMode::BothPlayersConfirm)
+    if (!shouldUseConfirmationIndicators(popUp))
     {
         hideConfirmationIndicators(popUp);
         return;
     }
 
-    setIndicatorVisible(popUp.player1NotConfirmedIndicator, !popUp.player1Confirmed);
-    setIndicatorVisible(popUp.player1ConfirmedIndicator, popUp.player1Confirmed);
+    setIndicatorAlpha(popUp.player1NotConfirmedIndicator, !popUp.player1Confirmed ? alphaMultiplier : 0.0f);
+    setIndicatorAlpha(popUp.player1ConfirmedIndicator, popUp.player1Confirmed ? alphaMultiplier : 0.0f);
 
-    setIndicatorVisible(popUp.player2NotConfirmedIndicator, !popUp.player2Confirmed);
-    setIndicatorVisible(popUp.player2ConfirmedIndicator, popUp.player2Confirmed);
+    setIndicatorAlpha(popUp.player2NotConfirmedIndicator, !popUp.player2Confirmed ? alphaMultiplier : 0.0f);
+    setIndicatorAlpha(popUp.player2ConfirmedIndicator, popUp.player2Confirmed ? alphaMultiplier : 0.0f);
 }
 
 void PopUpController::hideConfirmationIndicators(ActivePopUp& popUp)
 {
-    setIndicatorVisible(popUp.player1NotConfirmedIndicator, false);
-    setIndicatorVisible(popUp.player1ConfirmedIndicator, false);
-    setIndicatorVisible(popUp.player2NotConfirmedIndicator, false);
-    setIndicatorVisible(popUp.player2ConfirmedIndicator, false);
+    setIndicatorAlpha(popUp.player1NotConfirmedIndicator, 0.0f);
+    setIndicatorAlpha(popUp.player1ConfirmedIndicator, 0.0f);
+    setIndicatorAlpha(popUp.player2NotConfirmedIndicator, 0.0f);
+    setIndicatorAlpha(popUp.player2ConfirmedIndicator, 0.0f);
 }
 
-void PopUpController::setIndicatorVisible(Transform2D* indicator, bool visible)
+void PopUpController::setIndicatorAlpha(Transform2D* indicator, float alpha)
 {
     if (indicator == nullptr)
     {
         return;
     }
 
-    Transform2DAPI::setAlpha(indicator, visible ? 1.0f : 0.0f);
+    Transform2DAPI::setAlpha(indicator, alpha);
 }
 
 IMPLEMENT_SCRIPT(PopUpController)
