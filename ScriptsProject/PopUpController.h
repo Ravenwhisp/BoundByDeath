@@ -39,6 +39,11 @@ private:
         Transform2D* currentImage = nullptr;
         int currentImageIndex = 0;
 
+        Transform2D* player1NotConfirmedIndicator = nullptr;
+        Transform2D* player1ConfirmedIndicator = nullptr;
+        Transform2D* player2NotConfirmedIndicator = nullptr;
+        Transform2D* player2ConfirmedIndicator = nullptr;
+
         PopUpState state = PopUpState::None;
 
         bool player1Confirmed = false;
@@ -78,6 +83,11 @@ private:
     void setPopUpAlpha(ActivePopUp& popUp, float alpha);
     void setPopUpPosition(ActivePopUp& popUp, const Vector2& position);
     Vector2 calculateHiddenPosition(const ActivePopUp& popUp) const;
+
+    void setUpConfirmationIndicators(ActivePopUp& popUp);
+    void updateConfirmationIndicators(ActivePopUp& popUp);
+    void hideConfirmationIndicators(ActivePopUp& popUp);
+    void setIndicatorVisible(Transform2D* indicator, bool visible);
 
 private:
     std::vector<ActivePopUp> m_activePopUps;

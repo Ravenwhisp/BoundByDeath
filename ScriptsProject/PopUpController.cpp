@@ -52,6 +52,9 @@ void PopUpController::startPopUp(PopUpEvent* event)
     popUp.player2Confirmed = false;
     popUp.objectiveCompleted = false;
 
+    setUpConfirmationIndicators(popUp);
+    updateConfirmationIndicators(popUp);
+
     hideAllPopUpImages(popUp);
 
     if (!setCurrentPopUpImage(popUp, popUp.currentImageIndex))
@@ -164,11 +167,13 @@ void PopUpController::updateWaiting(ActivePopUp& popUp)
         if (Input::isFaceButtonBottomJustPressed(0))
         {
             popUp.player1Confirmed = true;
+            updateConfirmationIndicators(popUp);
         }
 
         if (Input::isFaceButtonBottomJustPressed(1))
         {
             popUp.player2Confirmed = true;
+            updateConfirmationIndicators(popUp);
         }
 
         if (popUp.player1Confirmed && popUp.player2Confirmed)
@@ -217,6 +222,8 @@ void PopUpController::updateHiding(ActivePopUp& popUp, float dt)
             popUp.player1Confirmed = false;
             popUp.player2Confirmed = false;
             popUp.objectiveCompleted = false;
+
+            updateConfirmationIndicators(popUp);
 
             if (setCurrentPopUpImage(popUp, popUp.currentImageIndex))
             {
@@ -395,6 +402,8 @@ void PopUpController::finishPopUp(ActivePopUp& popUp)
         setPlayersInvulnerable(false);
     }
 
+    hideConfirmationIndicators(popUp);
+
     popUp.event = nullptr;
     popUp.currentImage = nullptr;
     popUp.currentImageIndex = 0;
@@ -505,6 +514,57 @@ Vector2 PopUpController::calculateHiddenPosition(const ActivePopUp& popUp) const
     default:
         return popUp.visiblePosition;
     }
+}
+
+void PopUpController::setUpConfirmationIndicators(ActivePopUp& popUp)
+{
+    if (popUp.event == nullptr)
+    {
+        return;
+    }
+
+    popUp.player1NotConfirmedIndicator = popUp.event->getPlayer1NotConfirmedTransform2D();
+    popUp.player1ConfirmedIndicator = popUp.event->getPlayer1ConfirmedTransform2D();
+    popUp.player2NotConfirmedIndicator = popUp.event->getPlayer2NotConfirmedTransform2D();
+    popUp.player2ConfirmedIndicator = popUp.event->getPlayer2ConfirmedTransform2D();
+}
+
+void PopUpController::updateConfirmationIndicators(ActivePopUp& popUp)
+{
+    if (popUp.event == nullptr)
+    {
+        return;
+    }
+
+    if (popUp.event->getCloseMode() != PopUpCloseMode::BothPlayersConfirm)
+    {
+        hideConfirmationIndicators(popUp);
+        return;
+    }
+
+    setIndicatorVisible(popUp.player1NotConfirmedIndicator, !popUp.player1Confirmed);
+    setIndicatorVisible(popUp.player1ConfirmedIndicator, popUp.player1Confirmed);
+
+    setIndicatorVisible(popUp.player2NotConfirmedIndicator, !popUp.player2Confirmed);
+    setIndicatorVisible(popUp.player2ConfirmedIndicator, popUp.player2Confirmed);
+}
+
+void PopUpController::hideConfirmationIndicators(ActivePopUp& popUp)
+{
+    setIndicatorVisible(popUp.player1NotConfirmedIndicator, false);
+    setIndicatorVisible(popUp.player1ConfirmedIndicator, false);
+    setIndicatorVisible(popUp.player2NotConfirmedIndicator, false);
+    setIndicatorVisible(popUp.player2ConfirmedIndicator, false);
+}
+
+void PopUpController::setIndicatorVisible(Transform2D* indicator, bool visible)
+{
+    if (indicator == nullptr)
+    {
+        return;
+    }
+
+    Transform2DAPI::setAlpha(indicator, visible ? 1.0f : 0.0f);
 }
 
 IMPLEMENT_SCRIPT(PopUpController)
