@@ -35,6 +35,11 @@ public:
     Transform2D* getPopUpImageTransform2D(int index) const;
     int getPopUpImageCount() const;
 
+    Transform2D* getPlayer1NotConfirmedTransform2D() const;
+    Transform2D* getPlayer1ConfirmedTransform2D() const;
+    Transform2D* getPlayer2NotConfirmedTransform2D() const;
+    Transform2D* getPlayer2ConfirmedTransform2D() const;
+
     PopUpTransitionType getTransitionType() const { return static_cast<PopUpTransitionType>(m_transitionType); }
     PopUpCloseMode getCloseMode() const { return static_cast<PopUpCloseMode>(m_closeMode); }
 
@@ -42,12 +47,18 @@ public:
     float getHideDuration() const { return m_hideDuration; }
 
     bool shouldLockGameplay() const { return m_lockGameplay; }
+    bool shouldFadeHud() const { return m_fadeHud; }
 
 private:
     PopUpController* findPopUpController() const;
 
 public:
     std::vector<ScriptComponentRef<Transform2D>> m_popUpImages;
+
+    ScriptComponentRef<Transform2D> m_player1NotConfirmedIndicator;
+    ScriptComponentRef<Transform2D> m_player1ConfirmedIndicator;
+    ScriptComponentRef<Transform2D> m_player2NotConfirmedIndicator;
+    ScriptComponentRef<Transform2D> m_player2ConfirmedIndicator;
 
     int m_transitionType = static_cast<int>(PopUpTransitionType::Fade);
     int m_closeMode = static_cast<int>(PopUpCloseMode::BothPlayersConfirm);
@@ -56,4 +67,5 @@ public:
     float m_hideDuration = 0.25f;
 
     bool m_lockGameplay = true;
+    bool m_fadeHud = true;
 };
