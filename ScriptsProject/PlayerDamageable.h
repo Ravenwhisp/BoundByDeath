@@ -27,6 +27,9 @@ protected:
     void onDeath() override;
     void onRevive() override;
 
+public: 
+    ScriptComponentRef<UISlider> m_healthGlow;
+
 private:
     PlayerAnimationController* m_playerAnimationController = nullptr;
     HeartbeatHaptic* m_haptic = nullptr;
@@ -36,10 +39,15 @@ private:
 
     ScriptComponentRef<Transform> m_renderer;
 
+    UISlider* m_healthGlowSlider = nullptr;
+    UISheet* m_healthGlowSheet = nullptr;
+
     bool  m_damageHighlightActive = false;
     float m_damageHighlightTimer = 0.0f;
     float m_damageHighlightSpeed = 1.0f;
 
     void playHurtSfx();
     void playHurtVfx();
+
+
 };

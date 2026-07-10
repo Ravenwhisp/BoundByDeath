@@ -5,7 +5,6 @@ IMPLEMENT_SCRIPT_FIELDS(Damageable,
     SERIALIZED_FLOAT(m_maxHp, "Max HP", 0.0f, 999999.0f, 1.0f),
     SERIALIZED_COMPONENT_REF(m_healthBar, "Health Slider", ComponentType::UISLIDER),
     SERIALIZED_COMPONENT_REF(m_healthBar2, "Health Slider 2", ComponentType::UISLIDER),
-	SERIALIZED_COMPONENT_REF(m_healthGlow, "Health Glow", ComponentType::UISLIDER),
 	SERIALIZED_FLOAT(m_uiUpdateTime, "UI Update Time (Slider 2)", 0.0f, 999999.0f, 0.1f),
 	SERIALIZED_FLOAT(m_uiWaitTime, "UI Wait Time (Slider 2)", 0.0f, 999999.0f, 0.0f)
 )
@@ -156,24 +155,28 @@ void Damageable::clampHp()
 
 void Damageable::setupUI()
 {
-    m_healthBarSlider = m_healthBar.getReferencedComponent();
-    m_healthBar2Slider = m_healthBar2.getReferencedComponent();
-	m_healthGlowSlider = m_healthGlow.getReferencedComponent();
+    if (!m_healthBarSlider)
+    {
+        m_healthBarSlider = m_healthBar.getReferencedComponent();
+    }
+
+    if (!m_healthBar2Slider)
+    {
+        m_healthBar2Slider = m_healthBar2.getReferencedComponent();
+    }
 
     m_currentDisplayedHp = m_currentHp;
-	m_healthGlowSheet = (m_healthGlowSlider) ? static_cast<UISheet*>(GameObjectAPI::getComponent(ComponentAPI::getOwner(m_healthGlowSlider), ComponentType::UISHEET)) : nullptr;
-	if (m_healthBarSlider)
+    m_previousHp = m_currentHp;
+
+    if (m_healthBarSlider)
     {
         SliderAPI::setFillAmount(m_healthBarSlider, getHpPercent());
     }
+
     if (m_healthBar2Slider)
     {
         SliderAPI::setFillAmount(m_healthBar2Slider, getHpPercent());
     }
-    if (m_healthGlowSlider)
-    {
-        SliderAPI::setFillAmount(m_healthGlowSlider, getHpPercent());
-	}
 }
 
 void Damageable::updateUI()
@@ -185,11 +188,9 @@ void Damageable::updateUI()
 
     if (m_previousHp != m_currentHp)
     {
-        if (m_healthGlowSlider && m_healthGlowSheet)
-        {
-			SliderAPI::setFillAmountVec(m_healthGlowSlider, Vector2(getHpPercent(), SliderAPI::getFillAmount(m_healthBar2Slider)));
-            UISheetAPI::play(m_healthGlowSheet);
-		}
+        const float previousHpPercent = m_maxHp > 0.0f ? m_previousHp / m_maxHp : 0.0f;
+
+        onHealthUIChanged(previousHpPercent, currentHpPercent);
 
         if (m_healthBar2Slider)
         {
