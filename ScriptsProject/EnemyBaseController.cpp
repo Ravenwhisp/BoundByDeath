@@ -368,6 +368,7 @@ void EnemyBaseController::rotateTowardsDirection(const Vector3& direction)
 
 bool EnemyBaseController::buildPathToTarget()
 {
+    Debug::log("[EnemyBaseController] Trying to build path.");
     if (!hasValidTarget())
     {
         return false;
@@ -386,6 +387,8 @@ bool EnemyBaseController::buildPathToTarget()
     Vector3 pathPoints[MAX_PATH_POINTS];
 
     const int pointCount = NavigationAPI::findStraightPath(start, destination, pathPoints, MAX_PATH_POINTS, m_pathSearchExtents, static_cast<NavAgentProfile>(m_enemyType));
+
+    Debug::log("[EnemyBaseController] point count = %i", pointCount);
 
     if (pointCount < 2)
     {
@@ -413,6 +416,31 @@ bool EnemyBaseController::followPath()
         return false;
     }
 
+    for (size_t i = 0; i < m_path.size(); ++i)
+    {
+        const Vector3 color =
+            i == m_currentPathIndex
+            ? Vector3(1.0f, 0.0f, 0.0f)
+            : Vector3(0.0f, 1.0f, 0.0f);
+
+        DebugDrawAPI::drawSphere(
+            m_path[i],
+            color,
+            0.15f,
+            1000
+        );
+
+        if (i > 0)
+        {
+            DebugDrawAPI::drawLine(
+                m_path[i - 1],
+                m_path[i],
+                Vector3(1.0f, 1.0f, 0.0f),
+                1000
+            );
+        }
+    }
+
     Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
 
     if (!ownerTransform)
@@ -434,6 +462,7 @@ bool EnemyBaseController::followPath()
 
         if (m_currentPathIndex >= m_path.size())
         {
+            Debug::log("[EnemyBaseController] Clear path: no actual movement.");
             clearPath();
             return false;
         }
@@ -457,6 +486,7 @@ bool EnemyBaseController::followPath()
     Vector3 nextPosition;
     if (!NavigationAPI::moveAlongSurface(ownerPosition, desiredStepTarget, nextPosition, m_pathSearchExtents))
     {
+        Debug::log("[EnemyBaseController] Clear path: moveAlongSurface failed.");
         clearPath();
         return false;
     }
@@ -469,36 +499,6 @@ bool EnemyBaseController::followPath()
         clearPath();
         return false;
     }
-
-    // Draw the current path.
-    for (size_t i = 0; i < m_path.size(); ++i)
-    {
-        const Vector3 color = (i == m_currentPathIndex)
-            ? Vector3(1.0f, 0.0f, 0.0f)   // current point = red
-            : Vector3(0.0f, 1.0f, 0.0f);  // other points = green
-
-        DebugDrawAPI::drawSphere(
-            m_path[i],
-            color,
-            0.15f
-        );
-
-        if (i > 0)
-        {
-            DebugDrawAPI::drawLine(
-                m_path[i - 1],
-                m_path[i],
-                Vector3(1.0f, 1.0f, 0.0f) // yellow
-            );
-        }
-    }
-
-    // Draw where we want to move this frame.
-    DebugDrawAPI::drawLine(
-        ownerPosition,
-        desiredStepTarget,
-        Vector3(0.0f, 0.0f, 1.0f) // blue
-    );
 
     facePosition(nextPosition);
 
