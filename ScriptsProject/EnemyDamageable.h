@@ -4,6 +4,7 @@
 
 class EnemyDetectionAggro;
 class EnemySound;
+class Transform2D;
 
 enum class EnemyAttackType
 {
@@ -33,16 +34,28 @@ public:
 	explicit EnemyDamageable(GameObject* owner);
 
 	void Start() override;
+	void Update() override;
 	void takeDamage(const HitContext& ctx) override;
+
+	ScriptFieldList getExposedFields() const override;
 
 protected:
 	void onDamaged(float amount) override;
 
 private: 
 	void resolveHealthBarReferences();
+	void updateHealthBarFade();
+	void setHealthBarAlpha(float alpha);
 
 private:
 	EnemyDetectionAggro* m_enemyDetectionAggro = nullptr;
 	EnemySound* m_enemySound = nullptr;
 	Transform* m_damageSource = nullptr;
+
+	ScriptComponentRef<Transform2D> m_healthBarContainer;
+	Transform2D* m_healthBarContainerTransform = nullptr;
+
+	float m_healthBarFadeTime = 0.25f;
+	float m_healthBarFadeTimer = 0.0f;
+	bool m_healthBarFadeActive = false;
 };
