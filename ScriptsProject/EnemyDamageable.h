@@ -29,14 +29,17 @@ class EnemyDamageable : public Damageable
 {
 	DECLARE_SCRIPT(EnemyDamageable)
 
-	public:
-		explicit EnemyDamageable(GameObject* owner);
+public:
+	explicit EnemyDamageable(GameObject* owner);
 
-		void Start() override;
-		void takeDamage(const HitContext& ctx) override;
+	void Start() override;
+	void takeDamage(const HitContext& ctx) override;
 
-	protected:
-		void onDamaged(float amount) override;
+protected:
+	void onDamaged(float amount) override;
+
+private: 
+	void resolveHealthBarReferences();
 
 private:
 	EnemyDetectionAggro* m_enemyDetectionAggro = nullptr;

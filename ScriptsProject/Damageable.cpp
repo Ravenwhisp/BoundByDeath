@@ -190,7 +190,7 @@ void Damageable::updateUI()
     {
         const float previousHpPercent = m_maxHp > 0.0f ? m_previousHp / m_maxHp : 0.0f;
 
-        onHealthUIChanged(previousHpPercent, currentHpPercent);
+        onHealthUIChanged(previousHpPercent, getHpPercent());
 
         if (m_healthBar2Slider)
         {
