@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Damageable.h"
+#include "UISheet.h"
 
 class PlayerAnimationController;
 class HeartbeatHaptic;

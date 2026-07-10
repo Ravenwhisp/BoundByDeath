@@ -2,7 +2,6 @@
 
 #include "ScriptAPI.h"
 #include "UISlider.h"
-#include "UISheet.h"
 
 struct HitContext
 {
@@ -79,7 +78,6 @@ protected:
 
 private:
     float m_uiTimer = 0.0f;
-    float m_currentDisplayedHp = 100.0f;
     float m_previousHp = 100.0f;
 
     float m_uiStartPercent = 1.0f;

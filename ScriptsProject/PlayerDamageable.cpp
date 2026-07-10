@@ -121,15 +121,11 @@ void PlayerDamageable::onHealthUIChanged(float previousHpPercent, float currentH
         return;
     }
 
-    float delayedBarPercent = 0.0f;
+    float delayedBarPercent = previousHpPercent;
 
     if (m_healthBar2Slider)
     {
         delayedBarPercent = SliderAPI::getFillAmount(m_healthBar2Slider);
-    }
-    else 
-    {
-        delayedBarPercent = previousHpPercent;
     }
 
     SliderAPI::setFillAmountVec(m_healthGlowSlider, Vector2(currentHpPercent, delayedBarPercent));

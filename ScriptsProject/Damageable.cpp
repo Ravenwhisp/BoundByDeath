@@ -165,7 +165,6 @@ void Damageable::setupUI()
         m_healthBar2Slider = m_healthBar2.getReferencedComponent();
     }
 
-    m_currentDisplayedHp = m_currentHp;
     m_previousHp = m_currentHp;
 
     if (m_healthBarSlider)
@@ -188,7 +187,12 @@ void Damageable::updateUI()
 
     if (m_previousHp != m_currentHp)
     {
-        const float previousHpPercent = m_maxHp > 0.0f ? m_previousHp / m_maxHp : 0.0f;
+        float previousHpPercent = 0.0;
+
+        if (m_maxHp > 0.0f)
+        {
+            previousHpPercent = m_previousHp / m_maxHp;
+        }
 
         onHealthUIChanged(previousHpPercent, getHpPercent());
 
@@ -218,11 +222,6 @@ void Damageable::updateUI()
             float value = MathAPI::lerp(m_uiStartPercent, m_uiTargetPercent, eased);
 
             SliderAPI::setFillAmount(m_healthBar2Slider, value);
-
-            if (m_uiTimer <= 0.0f)
-            {
-                m_currentDisplayedHp = m_currentHp;
-            }
         }
     }
 }
