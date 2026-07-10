@@ -470,6 +470,36 @@ bool EnemyBaseController::followPath()
         return false;
     }
 
+    // Draw the current path.
+    for (size_t i = 0; i < m_path.size(); ++i)
+    {
+        const Vector3 color = (i == m_currentPathIndex)
+            ? Vector3(1.0f, 0.0f, 0.0f)   // current point = red
+            : Vector3(0.0f, 1.0f, 0.0f);  // other points = green
+
+        DebugDrawAPI::drawSphere(
+            m_path[i],
+            color,
+            0.15f
+        );
+
+        if (i > 0)
+        {
+            DebugDrawAPI::drawLine(
+                m_path[i - 1],
+                m_path[i],
+                Vector3(1.0f, 1.0f, 0.0f) // yellow
+            );
+        }
+    }
+
+    // Draw where we want to move this frame.
+    DebugDrawAPI::drawLine(
+        ownerPosition,
+        desiredStepTarget,
+        Vector3(0.0f, 0.0f, 1.0f) // blue
+    );
+
     facePosition(nextPosition);
 
     TransformAPI::setGlobalPosition(ownerTransform, nextPosition);
