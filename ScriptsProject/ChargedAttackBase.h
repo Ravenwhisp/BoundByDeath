@@ -11,15 +11,10 @@ public:
 
     void Start() override;
 
-    ScriptFieldList getExposedFields() const override;
-
 protected:
-    void applyChargingMovementSlowdown();
+    void applyChargingMovementSlowdown(float slowdownPercentage);
     void resetChargingMovementSlowdown();
 
 private:
     PlayerMovement* m_playerMovement = nullptr;
-
-protected:
-    float m_chargeMovementSlowdownPercentage = 50.0f;
 };

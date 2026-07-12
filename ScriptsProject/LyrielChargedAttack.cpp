@@ -125,7 +125,7 @@ void LyrielChargedAttack::beginCharge()
     m_isCharging = true;
     setAbilityLocked(true);
 
-    applyChargingMovementSlowdown();
+    applyChargingMovementSlowdown(m_config->m_chargedMovementSlowdownPercentage);
 
     m_chargeTimer = 0.0f;
     m_currentAimDirection = Vector3::Zero;

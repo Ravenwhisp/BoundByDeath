@@ -3,10 +3,6 @@
 
 #include "PlayerMovement.h"
 
-IMPLEMENT_SCRIPT_FIELDS_INHERITED(ChargedAttackBase, AbilityBase,
-    SERIALIZED_FLOAT(m_chargeMovementSlowdownPercentage, "Charge Movement Slowdown (%)", 0.0f, 100.0f, 1.0f)
-)
-
 ChargedAttackBase::ChargedAttackBase(GameObject* owner)
     : AbilityBase(owner)
 {
@@ -24,14 +20,14 @@ void ChargedAttackBase::Start()
     }
 }
 
-void ChargedAttackBase::applyChargingMovementSlowdown()
+void ChargedAttackBase::applyChargingMovementSlowdown(float slowdownPercentage)
 {
     if (m_playerMovement == nullptr)
     {
         return;
     }
 
-    const float movementMultiplier = 1.0f - m_chargeMovementSlowdownPercentage / 100.0f;
+    const float movementMultiplier = 1.0f - slowdownPercentage / 100.0f;
     m_playerMovement->setMovementMultiplier(movementMultiplier);
 }
 
