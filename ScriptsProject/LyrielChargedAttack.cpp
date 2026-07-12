@@ -12,6 +12,7 @@
 #include "BreakableDamageable.h"
 #include "LyrielUI.h"
 #include "LyrielConfig.h"
+#include "PlayerRotation.h"
 
 #include <cmath>
 
@@ -124,6 +125,8 @@ void LyrielChargedAttack::beginCharge()
     m_isCharging = true;
     setAbilityLocked(true);
 
+    applyChargingMovementSlowdown();
+
     m_chargeTimer = 0.0f;
     m_currentAimDirection = Vector3::Zero;
 
@@ -180,6 +183,8 @@ void LyrielChargedAttack::updateCharge()
 void LyrielChargedAttack::releaseChargeAndShoot()
 {
     m_isCharging = false;
+
+    resetChargingMovementSlowdown();
 
     LyrielSound* sound = m_lyrielCharacter != nullptr ? m_lyrielCharacter->getSound() : nullptr;
     if (sound != nullptr)
@@ -478,6 +483,54 @@ void LyrielChargedAttack::drawChargePreview(const Vector3& origin, const Vector3
     DebugDrawAPI::drawLine(leftStart, leftEnd, previewColor, 0, true);
     DebugDrawAPI::drawLine(rightStart, rightEnd, previewColor, 0, true);
     DebugDrawAPI::drawLine(leftEnd, rightEnd, previewColor, 0, true);
+}
+
+Transform* LyrielChargedAttack::findArrowSpawnTransform() const
+{
+    Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
+
+    if (ownerTransform == nullptr || m_lyrielCharacter == nullptr)
+    {
+        return nullptr;
+    }
+
+    if (!m_lyrielCharacter->m_arrowSpawnChildName.empty())
+    {
+        Transform* spawnTransform = TransformAPI::findChildByName(ownerTransform, m_lyrielCharacter->m_arrowSpawnChildName.c_str());
+
+        if (spawnTransform != nullptr)
+        {
+            return spawnTransform;
+        }
+    }
+
+    return ownerTransform;
+}
+
+void LyrielChargedAttack::faceDirection(const Vector3& direction)
+{
+    if (m_character == nullptr)
+    {
+        return;
+    }
+
+    PlayerRotation* playerRotation = m_character->getPlayerRotation();
+
+    if (playerRotation == nullptr)
+    {
+        return;
+    }
+
+    Vector3 flatDirection = direction;
+    flatDirection.y = 0.0f;
+
+    if (flatDirection.LengthSquared() <= 0.0001f)
+    {
+        return;
+    }
+
+    flatDirection.Normalize();
+    playerRotation->applyFacingFromDirection(getOwner(), flatDirection, Time::getDeltaTime());
 }
 
 IMPLEMENT_SCRIPT(LyrielChargedAttack)

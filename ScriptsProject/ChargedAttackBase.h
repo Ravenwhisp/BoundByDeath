@@ -21,5 +21,5 @@ private:
     PlayerMovement* m_playerMovement = nullptr;
 
 protected:
-    float m_chargeMovementSlowdownPercentage = 90.0f;
+    float m_chargeMovementSlowdownPercentage = 50.0f;
 };
