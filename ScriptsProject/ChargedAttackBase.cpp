@@ -2,6 +2,7 @@
 #include "ChargedAttackBase.h"
 
 #include "PlayerMovement.h"
+#include "EnemyBaseController.h"
 
 ChargedAttackBase::ChargedAttackBase(GameObject* owner)
     : AbilityBase(owner)
@@ -40,4 +41,21 @@ void ChargedAttackBase::resetChargingMovementSlowdown()
 
     m_playerMovement->resetMovementMultiplier();
 }
+
+void ChargedAttackBase::tryStunTarget(GameObject* target, bool isMaxCharge, bool stunEnabled) const
+{
+    if (!stunEnabled || !isMaxCharge || target == nullptr)
+    {
+        return;
+    }
+
+    EnemyBaseController* enemyController = GameObjectAPI::findScript<EnemyBaseController>(target);
+
+    if (enemyController != nullptr)
+    {
+        enemyController->useStun();
+    }
+}
+
+
 

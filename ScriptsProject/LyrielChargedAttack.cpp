@@ -234,7 +234,8 @@ void LyrielChargedAttack::releaseChargeAndShoot()
 
     std::vector<GameObject*> targets;
     collectEnemiesInLine(origin, forward, targets);
-    const bool anyMarkExploited = applyChargedDamage(targets, damage);
+    const bool isMaxCharge = m_chargeTimer >= m_config->m_chargedMaxChargeTime;
+    const bool anyMarkExploited = applyChargedDamage(targets, damage, isMaxCharge);
     spawnChargedArrow(origin, forward);
     notifyAbilitySuccessfullyStarted();
 
@@ -366,7 +367,7 @@ void LyrielChargedAttack::collectEnemiesInLine(const Vector3& origin, const Vect
     }
 }
 
-bool LyrielChargedAttack::applyChargedDamage(const std::vector<GameObject*>& targets, float damage)
+bool LyrielChargedAttack::applyChargedDamage(const std::vector<GameObject*>& targets, float damage, bool isMaxCharge)
 {
     bool anyMarkExploited = false;
 
@@ -400,6 +401,7 @@ bool LyrielChargedAttack::applyChargedDamage(const std::vector<GameObject*>& tar
             }
 
             damageable->takeDamage(ctx);
+            tryStunTarget(target, isMaxCharge, m_config->m_chargedStunOnMaxCharge);
             continue;
         }
         BreakableDamageable* breakableDamageable = GameObjectAPI::findScript<BreakableDamageable>(target);

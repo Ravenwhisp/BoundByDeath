@@ -3,6 +3,7 @@
 #include "AbilityBase.h"
 
 class PlayerMovement;
+class EnemyBaseController;
 
 class ChargedAttackBase : public AbilityBase
 {
@@ -14,6 +15,8 @@ public:
 protected:
     void applyChargingMovementSlowdown(float slowdownPercentage);
     void resetChargingMovementSlowdown();
+
+    void tryStunTarget(GameObject* target, bool isMaxCharge, bool stunEnabled) const;
 
 private:
     PlayerMovement* m_playerMovement = nullptr;

@@ -8,7 +8,6 @@
 #include "EnemyShadowMark.h"
 #include "BreakableDamageable.h"
 #include "DeathUI.h"
-#include "EnemyBaseController.h"
 #include "DeathConfig.h"
 #include "DeathParticles.h"
 
@@ -272,16 +271,10 @@ void DeathChargedAttack::dealDamageInArc(float damage, float range, float angle,
             ctx.attacker = GameObjectAPI::getTransform(getOwner());
             ctx.attackType = EnemyAttackType::DeathCharged;
             damageable->takeDamage(ctx);
-
+            tryStunTarget(target, isMaxCharge, m_config->m_chargedStunOnMaxCharge);
         }
+
         hit++;
-
-        EnemyBaseController* enemyController = GameObjectAPI::findScript<EnemyBaseController>(target);
-
-        if (enemyController != nullptr && isMaxCharge)
-        {
-            enemyController->useStun();
-        }
 
         EnemyShadowMark* shadowMark = GameObjectAPI::findScript<EnemyShadowMark>(target);
         if (shadowMark != nullptr)
