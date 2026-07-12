@@ -401,7 +401,7 @@ bool LyrielChargedAttack::applyChargedDamage(const std::vector<GameObject*>& tar
             }
 
             damageable->takeDamage(ctx);
-            tryStunTarget(target, isMaxCharge, m_config->m_chargedStunOnMaxCharge);
+            tryStunTarget(target, isMaxCharge, m_config->m_chargedStunOnMaxCharge, m_config->m_chargedStunDuration);
             continue;
         }
         BreakableDamageable* breakableDamageable = GameObjectAPI::findScript<BreakableDamageable>(target);

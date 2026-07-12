@@ -42,7 +42,7 @@ void ChargedAttackBase::resetChargingMovementSlowdown()
     m_playerMovement->resetMovementMultiplier();
 }
 
-void ChargedAttackBase::tryStunTarget(GameObject* target, bool isMaxCharge, bool stunEnabled) const
+void ChargedAttackBase::tryStunTarget(GameObject* target, bool isMaxCharge, bool stunEnabled, float stunDuration) const
 {
     if (!stunEnabled || !isMaxCharge || target == nullptr)
     {
@@ -53,9 +53,6 @@ void ChargedAttackBase::tryStunTarget(GameObject* target, bool isMaxCharge, bool
 
     if (enemyController != nullptr)
     {
-        enemyController->useStun();
+        enemyController->useStun(stunDuration);
     }
 }
-
-
-

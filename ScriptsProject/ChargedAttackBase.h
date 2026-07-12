@@ -16,7 +16,7 @@ protected:
     void applyChargingMovementSlowdown(float slowdownPercentage);
     void resetChargingMovementSlowdown();
 
-    void tryStunTarget(GameObject* target, bool isMaxCharge, bool stunEnabled) const;
+    void tryStunTarget(GameObject* target, bool isMaxCharge, bool stunEnabled, float stunDuration) const;
 
 private:
     PlayerMovement* m_playerMovement = nullptr;

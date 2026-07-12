@@ -30,6 +30,7 @@ public:
 	float m_chargedCooldown = 0.0f;
 	float m_chargedMovementSlowdownPercentage = 50.0f;
 	bool m_chargedStunOnMaxCharge = true;
+	float m_chargedStunDuration = 1.0f;
 
 	// Arrow Volley
 	float m_volleyDamage = 20.0f;
