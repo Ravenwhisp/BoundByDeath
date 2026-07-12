@@ -18,6 +18,8 @@ public:
 
     ScriptFieldList getExposedFields() const override;
 
+    bool canBeTargetedDuringCombat() const override { return true; }
+
 public:
     float m_explosionRadius = 5.0f;
     float m_explosionDamage = 30.0f;
