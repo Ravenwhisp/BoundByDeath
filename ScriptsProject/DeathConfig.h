@@ -37,6 +37,7 @@ public:
 	float m_chargedShotArcRange = 3.5f;
 	float m_chargedShotArcAngle = 150.0f;
 	float m_chargedCooldown = 0.0f;
+	float m_chargedMovementSlowdownPercentage = 50.0f;
 
 	// Taunt
 	float m_tauntDuration = 3.0f;

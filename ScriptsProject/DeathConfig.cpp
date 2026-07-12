@@ -28,7 +28,8 @@ IMPLEMENT_SCRIPT_FIELDS(DeathConfig,
 		SERIALIZED_FLOAT(m_chargedFinalHitLockDuration, "Charged Final Hit Lock Duration", 0.05f, 3.0f, 0.05f),
 		SERIALIZED_FLOAT(m_chargedShotArcRange, "Charged Arc Range", 0.5f, 10.0f, 0.1f),
 		SERIALIZED_FLOAT(m_chargedShotArcAngle, "Charged Arc Angle", 10.0f, 360.0f, 5.0f),
-		SERIALIZED_FLOAT(m_chargedCooldown, "Charged Cooldown", 0.0f, 10.0f, 0.01f)
+		SERIALIZED_FLOAT(m_chargedCooldown, "Charged Cooldown", 0.0f, 10.0f, 0.01f),
+		SERIALIZED_FLOAT(m_chargedMovementSlowdownPercentage, "Charged Movement Slowdown (%)", 0.0f, 100.0f, 1.0f)
 	),
 
 	FIELD_GROUP_COLLAPSE("Taunt",

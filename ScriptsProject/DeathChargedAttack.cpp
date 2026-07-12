@@ -3,7 +3,6 @@
 
 #include "DeathCharacter.h"
 #include "DeathSound.h"
-#include "PlayerState.h"
 #include "PlayerAnimationController.h"
 #include "EnemyDamageable.h"
 #include "EnemyShadowMark.h"
@@ -16,34 +15,43 @@
 #include <cmath>
 
 DeathChargedAttack::DeathChargedAttack(GameObject* owner)
-    : DeathAbilityBase(owner)
+    : ChargedAttackBase(owner)
 {
 }
 
 void DeathChargedAttack::Start()
 {
-    DeathAbilityBase::Start();
+    ChargedAttackBase::Start();
 
+    m_deathCharacter = dynamic_cast<DeathCharacter*>(m_character);
+    m_config = GameObjectAPI::findScript<DeathConfig>(getOwner());
     m_deathUI = GameObjectAPI::findScript<DeathUI>(getOwner());
+    m_particles = GameObjectAPI::findScript<DeathParticles>(getOwner());
 
-    if (!m_deathUI)
+    if (m_deathCharacter == nullptr)
+    {
+        Debug::error("[DeathChargedAttack] Owner does not have a valid DeathCharacter.");
+    }
+
+    if (m_config == nullptr)
+    {
+        Debug::error("[DeathChargedAttack] DeathConfig not found.");
+    }
+
+    if (m_deathUI == nullptr)
     {
         Debug::warn("[DeathChargedAttack] DeathUI not found.");
     }
 
-    m_particles = GameObjectAPI::findScript<DeathParticles>(getOwner());
-
-    if (!m_particles)
+    if (m_particles == nullptr)
     {
         Debug::error("[DeathChargedAttack] DeathParticles not found.");
-        return;
     }
-
 }
 
 void DeathChargedAttack::Update()
 {
-    DeathAbilityBase::Update();
+    ChargedAttackBase::Update();
 
     if (m_isCharging)
     {
@@ -94,14 +102,9 @@ void DeathChargedAttack::startCharging()
     m_chargeTime             = 0.0f;
     m_isCharging             = true;
     m_aimDirection           = { 0.0f, 0.0f, 0.0f };
-    m_movementLockedForCombo = true;
 
     setAbilityLocked(true);
-
-    // Lock movement immediately — same Attacking state used by the basic attack combo lock
-    PlayerState* ps = m_character->getPlayerState();
-    if (ps != nullptr)
-        ps->setState(PlayerStateType::AttackRecovery);
+    applyChargingMovementSlowdown(m_config->m_chargedMovementSlowdownPercentage);
 
     DeathSound* sound = m_deathCharacter != nullptr ? m_deathCharacter->getSound() : nullptr;
     if (sound != nullptr)
@@ -174,8 +177,9 @@ void DeathChargedAttack::fireAttack()
     if (isLast)
         Debug::log("[COMBO] R2  step 3/3  COMPLETO — reset");
 
-    m_chargeTime = 0.0f;
     m_isCharging = false;
+    resetChargingMovementSlowdown();
+    m_chargeTime = 0.0f;
 
     const float lockDuration = (comboStep >= 2) ? m_config->m_chargedFinalHitLockDuration : m_config->m_chargedAttackLockDuration;
 
@@ -359,11 +363,6 @@ void DeathChargedAttack::onAttackWindowUpdate()
 
 void DeathChargedAttack::onAttackWindowFinished()
 {
-    if (m_movementLockedForCombo)
-    {
-        releaseComboMoveLock();
-    }
-
     if (m_particles != nullptr)
     {
         m_particles->SetScytheInactive();
@@ -450,8 +449,6 @@ void DeathChargedAttack::drawGizmo()
 
 void DeathChargedAttack::updateUI()
 {
-    DeathAbilityBase::updateUI();
-
     if (m_deathUI)
     {
         m_deathUI->updateChargedSlashUI(m_attackStateTimer, m_config->m_chargedAttackLockDuration);
