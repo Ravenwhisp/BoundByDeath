@@ -18,17 +18,29 @@
 static const float PI = 3.1415926535897931f;
 
 LyrielChargedAttack::LyrielChargedAttack(GameObject* owner)
-    : LyrielAbilityBase(owner)
+    : ChargedAttackBase(owner)
 {
 }
 
 void LyrielChargedAttack::Start()
 {
-    LyrielAbilityBase::Start();
+    ChargedAttackBase::Start();
 
+    m_lyrielCharacter = dynamic_cast<LyrielCharacter*>(m_character);
+    m_config = GameObjectAPI::findScript<LyrielConfig>(getOwner());
     m_lyrielUI = GameObjectAPI::findScript<LyrielUI>(getOwner());
 
-    if (!m_lyrielUI)
+    if (m_lyrielCharacter == nullptr)
+    {
+        Debug::error("[LyrielChargedAttack] Owner does not have a valid LyrielCharacter.");
+    }
+
+    if (m_config == nullptr)
+    {
+        Debug::error("[LyrielChargedAttack] LyrielConfig not found.");
+    }
+
+    if (m_lyrielUI == nullptr)
     {
         Debug::warn("[LyrielChargedAttack] LyrielUI not found.");
     }
@@ -36,7 +48,7 @@ void LyrielChargedAttack::Start()
 
 void LyrielChargedAttack::Update()
 {
-    LyrielAbilityBase::Update();
+    ChargedAttackBase::Update();
 
     if (m_isCharging)
     {

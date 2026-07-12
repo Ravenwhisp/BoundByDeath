@@ -1,11 +1,13 @@
 #pragma once
 
-#include "LyrielAbilityBase.h"
+#include "ChargedAttackBase.h"
 #include <vector>
 
+class LyrielCharacter;
+class LyrielConfig;
 class LyrielUI;
 
-class LyrielChargedAttack : public LyrielAbilityBase
+class LyrielChargedAttack : public ChargedAttackBase
 {
     DECLARE_SCRIPT(LyrielChargedAttack)
 
@@ -43,7 +45,12 @@ private:
 
     bool isAimStickValid(const Vector3& direction) const;
 
+    Transform* findArrowSpawnTransform() const;
+    void faceDirection(const Vector3& direction);
+
 private:
+    LyrielCharacter* m_lyrielCharacter = nullptr;
+    LyrielConfig* m_config = nullptr;
     LyrielUI* m_lyrielUI = nullptr;
 
     bool m_isCharging = false;
