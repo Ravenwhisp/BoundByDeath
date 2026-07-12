@@ -55,6 +55,12 @@ void DeathChargedAttack::Update()
     if (m_isCharging)
     {
         m_chargeTime += Time::getDeltaTime();
+
+        if (m_chargeTime > m_config->m_chargedMaxChargeTime)
+        {
+            m_chargeTime = m_config->m_chargedMaxChargeTime;
+        }
+
         updateAimDirection();
 
         if (m_deathUI)
@@ -69,10 +75,7 @@ void DeathChargedAttack::Update()
             }
         }
 
-        const bool maxReached = m_chargeTime >= m_config->m_chargedMaxChargeTime;
-        const bool released = Input::isRightTriggerReleased(getPlayerIndex());
-
-        if (maxReached || released)
+        if (Input::isRightTriggerReleased(getPlayerIndex()))
         {
             fireAttack();
         }
