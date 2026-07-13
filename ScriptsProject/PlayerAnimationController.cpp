@@ -51,8 +51,10 @@ void PlayerAnimationController::Update()
         desiredState = AnimState::Damaged;
         blendTime = m_damagedBlendTime;
     }
-    else if (m_attackRequested)
+    else if (m_attackRequested || m_hasAttackOverride)
     {
+        // While an ability holds an attack override the attack state is sustained for the
+        // whole window, so single-shot attacks (e.g. Lyriel's bow) no longer get cut after one frame.
         desiredState = AnimState::Attack;
         blendTime = m_attackBlendTime;
     }
@@ -111,6 +113,19 @@ void PlayerAnimationController::requestDamaged()
     m_damagedRequested = true;
 }
 
+void PlayerAnimationController::setAttackOverride(const std::string& stateName, float blendTime, float speed)
+{
+    m_attackOverrideName = stateName;
+    m_attackOverrideBlend = blendTime;
+    m_attackOverrideSpeed = speed;
+    m_hasAttackOverride = true;
+}
+
+void PlayerAnimationController::clearAttackOverride()
+{
+    m_hasAttackOverride = false;
+}
+
 AnimationComponent* PlayerAnimationController::findAnimationComponent()
 {
 	m_animationComponent = AnimationAPI::getAnimationComponent(m_owner);
@@ -138,11 +153,23 @@ bool PlayerAnimationController::playAnimState(AnimState state, float blendTime)
     default: return false;
     }
 
+    // An active ability can redirect the Attack slot to a specific clip, with its own
+    // blend and playback speed, so every attack can look and time differently.
+    float speed = 1.0f;
+    if (state == AnimState::Attack && m_hasAttackOverride && !m_attackOverrideName.empty())
+    {
+        stateName = m_attackOverrideName.c_str();
+        blendTime = m_attackOverrideBlend;
+        speed = m_attackOverrideSpeed;
+    }
+
     if (!stateName || stateName[0] == '\0')
     {
         Debug::warn("PlayerAnimationController on '%s' has empty animation state name.", GameObjectAPI::getName(m_owner));
         return false;
     }
+
+    AnimationAPI::setSpeedMultiplier(m_animationComponent, speed);
 
     const bool played = AnimationAPI::playState(m_animationComponent, stateName, blendTime);
 

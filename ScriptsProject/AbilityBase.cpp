@@ -17,7 +17,14 @@ static const char* abilityUISlotNames[] =
 constexpr int abilityUISlotCount = 4;
 
 IMPLEMENT_SCRIPT_FIELDS(AbilityBase,
-    SERIALIZED_ENUM_INT(m_uiSlot, "UI Slot", abilityUISlotNames, abilityUISlotCount)
+    SERIALIZED_ENUM_INT(m_uiSlot, "UI Slot", abilityUISlotNames, abilityUISlotCount),
+    FIELD_GROUP_LABEL("Animation Timing"),
+    SERIALIZED_BOOL(m_useAnimTiming, "Use Anim-Driven Timing"),
+    SERIALIZED_STRING(m_animStateName, "Anim State Name"),
+    SERIALIZED_FLOAT(m_animSpeed, "Anim Speed", 0.0f, 5.0f, 0.01f),
+    SERIALIZED_FLOAT(m_animBlendIn, "Anim Blend In", 0.0f, 2.0f, 0.01f),
+    SERIALIZED_FLOAT(m_hitStartPct, "Hit Point %", 0.0f, 1.0f, 0.01f),
+    SERIALIZED_FLOAT(m_recoverEndPct, "Recover End %", 0.0f, 1.0f, 0.01f)
 )
 
 AbilityBase::AbilityBase(GameObject* owner)
@@ -40,6 +47,8 @@ void AbilityBase::Start()
     {
         Debug::warn("[AbilityBase] CharacterUI not found on owner '%s'.", GameObjectAPI::getName(getOwner()));
     }
+
+    m_animComp = AnimationAPI::getAnimationComponent(getOwner());
 }
 
 void AbilityBase::Update()
@@ -139,17 +148,69 @@ void AbilityBase::startCooldown()
 
 void AbilityBase::updateAttackWindow(float dt)
 {
-    if (m_attackStateTimer <= 0.0f)
+    if (!m_attackWindowActive)
     {
         return;
     }
 
     onAttackWindowUpdate();
 
-    m_attackStateTimer -= dt;
-    if (m_attackStateTimer <= 0.0f)
+    // Keep the legacy timer ticking (still used by the slash UI as a progress hint).
+    if (m_attackStateTimer > 0.0f)
     {
-        finishAttackWindow();
+        m_attackStateTimer -= dt;
+        if (m_attackStateTimer < 0.0f)
+        {
+            m_attackStateTimer = 0.0f;
+        }
+    }
+
+    if (usesAnimHitTiming())
+    {
+        // Animation-driven window: the hit frame and the window end are derived
+        // from the clip's normalized playback, not from a fixed timer.
+        m_attackWindowElapsed += dt;
+
+        // Only time against OUR clip. Guards against (a) reading the previous idle/move
+        // clip's playback on the first frames before the attack state becomes active, and
+        // (b) a hurt/downed state interrupting us mid-attack.
+        const char* activeState = AnimationAPI::getActiveStateName(m_animComp);
+        const bool onOurClip = (activeState != nullptr && m_animStateName == activeState);
+
+        if (onOurClip)
+        {
+            const float duration = AnimationAPI::getPlaybackDuration(m_animComp);
+            const float progress = (duration > 0.0001f)
+                ? (AnimationAPI::getPlaybackTime(m_animComp) / duration)
+                : 0.0f;
+
+            if (!m_hitFired && progress >= m_hitStartPct)
+            {
+                m_hitFired = true;
+                onHitFrame();
+            }
+
+            if (progress >= m_recoverEndPct)
+            {
+                finishAttackWindow();
+                return;
+            }
+        }
+
+        // never lock forever if our clip never becomes active (e.g. interrupted or misconfigured)
+        constexpr float k_animSafetyCap = 8.0f;
+        if (m_attackWindowElapsed >= k_animSafetyCap)
+        {
+            finishAttackWindow();
+        }
+    }
+    else
+    {
+        // Legacy fixed-duration window.
+        if (m_attackStateTimer <= 0.0f)
+        {
+            finishAttackWindow();
+        }
     }
 }
 
@@ -214,16 +275,26 @@ int AbilityBase::getPlayerIndex() const //innecesario
 void AbilityBase::beginAttackWindow(float lockDuration)
 {
     m_attackStateTimer = lockDuration;
+    m_attackWindowActive = true;
+    m_hitFired = false;
+    m_attackWindowElapsed = 0.0f;
 }
 
 void AbilityBase::finishAttackWindow()
 {
     m_attackStateTimer = 0.0f;
+    m_attackWindowActive = false;
 
     setAbilityLocked(false);
 
     if (m_character != nullptr)
     {
+        PlayerAnimationController* animController = m_character->getAnimationController();
+        if (animController != nullptr)
+        {
+            animController->clearAttackOverride();
+        }
+
         PlayerState* playerState = m_character->getPlayerState();
         if (playerState != nullptr && playerState->isRecoveringAttack())
         {
@@ -232,6 +303,11 @@ void AbilityBase::finishAttackWindow()
     }
 
     onAttackWindowFinished();
+}
+
+bool AbilityBase::usesAnimHitTiming() const
+{
+    return m_useAnimTiming && m_animComp != nullptr && !m_animStateName.empty();
 }
 
 void AbilityBase::beginAttackPresentation()
@@ -255,6 +331,11 @@ void AbilityBase::beginAttackPresentation()
     PlayerAnimationController* animController = m_character->getAnimationController();
     if (animController != nullptr)
     {
+        if (m_useAnimTiming && !m_animStateName.empty())
+        {
+            animController->setAttackOverride(m_animStateName, m_animBlendIn, m_animSpeed);
+        }
+
         animController->requestAttack();
     }
 }

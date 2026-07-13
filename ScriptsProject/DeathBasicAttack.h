@@ -19,6 +19,7 @@ public:
 protected:
     void onAttackWindowUpdate()   override;
     void onAttackWindowFinished() override;
+    void onHitFrame()             override;
 
 	bool canStartSpecificAbility() const override;
 

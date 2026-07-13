@@ -4,6 +4,7 @@
 #include "CharacterUI.h"
 
 class CharacterBase;
+class AnimationComponent;
 
 class AbilityBase : public Script
 {
@@ -53,10 +54,30 @@ protected:
     virtual void onAttackWindowUpdate() {}
     virtual void onAttackWindowFinished() {}
 
+    // Called once per attack, at the hit frame (m_hitStartPct of the clip) when
+    // animation-driven timing is active. Override to apply damage / spawn projectiles.
+    virtual void onHitFrame() {}
+
+    // True while an attack/ability presentation window is running (both legacy and anim paths).
+    bool isAttackWindowActive() const { return m_attackWindowActive; }
+
+    // True when this ability should derive its hit timing from the animation clip.
+    bool usesAnimHitTiming() const;
+
     Vector3 computeCameraRelativeAimDirection(float deadzoneSq = 0.0001f) const;
 	Vector3 getFallbackFacingDirection() const;
 
     virtual void updateUI();
+
+public:
+    // --- Animation-driven timing (opt-in, tunable per-ability in the inspector) ---
+    // When m_useAnimTiming is false the ability keeps the legacy fixed-timer behavior.
+    bool        m_useAnimTiming = false;   // master switch
+    std::string m_animStateName = "";      // anim state/clip this ability plays (empty = fall back to legacy)
+    float       m_animSpeed = 1.0f;        // playback speed multiplier for the clip
+    float       m_animBlendIn = 0.15f;     // crossfade time into the clip
+    float       m_hitStartPct = 0.30f;     // normalized clip time [0..1] at which the hit lands
+    float       m_recoverEndPct = 0.90f;   // normalized clip time [0..1] at which the window ends
 
 protected:
     CharacterBase* m_character = nullptr;
@@ -71,4 +92,10 @@ protected:
     int m_successfulUseCount = 0;
 
     bool m_isEnabled = true; //esto nunca cambia?
+
+    // Animation-timing runtime state
+    AnimationComponent* m_animComp = nullptr;
+    bool  m_attackWindowActive = false;
+    bool  m_hitFired = false;
+    float m_attackWindowElapsed = 0.0f;
 };

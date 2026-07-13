@@ -39,6 +39,28 @@ void LyrielBasicAttack::onAttackWindowFinished()
     m_attackFacingTarget = nullptr;
 }
 
+void LyrielBasicAttack::onHitFrame()
+{
+    // Animation-driven release: the arrow leaves the bow at m_hitStartPct of the draw clip.
+    fireArrow(m_attackFacingTarget);
+}
+
+bool LyrielBasicAttack::fireArrow(GameObject* target)
+{
+    if (!spawnArrowToTarget(target))
+    {
+        return false;
+    }
+
+    LyrielSound* sound = m_lyrielCharacter != nullptr ? m_lyrielCharacter->getSound() : nullptr;
+    if (sound != nullptr)
+    {
+        sound->playBowRelease();
+    }
+
+    return true;
+}
+
 void LyrielBasicAttack::startAbility()
 {
     PlayerTargetController* targetController = m_character->getTargetController();
@@ -59,27 +81,25 @@ void LyrielBasicAttack::startAbility()
     faceTarget(target);
     m_attackFacingTarget = target;
 
-    if (!spawnArrowToTarget(target))
+    // Legacy timing fires the arrow immediately; animation-driven timing fires it on the release frame.
+    if (!usesAnimHitTiming())
     {
-        setAbilityLocked(false);
-        m_attackFacingTarget = nullptr;
-        return;
+        if (!fireArrow(target))
+        {
+            setAbilityLocked(false);
+            m_attackFacingTarget = nullptr;
+            return;
+        }
     }
 
     notifyAbilitySuccessfullyStarted();
-
-    LyrielSound* sound = m_lyrielCharacter != nullptr ? m_lyrielCharacter->getSound() : nullptr;
-    if (sound != nullptr)
-    {
-        sound->playBowRelease();
-    }
 
     beginAttackPresentation();
 
     beginAttackWindow(m_config->m_basicAttackLockDuration);
     startCooldown();
 
-    Debug::log("[LyrielBasicAttack] Shot arrow to target '%s'.", GameObjectAPI::getName(target));
+    Debug::log("[LyrielBasicAttack] Basic attack started (target '%s').", GameObjectAPI::getName(target));
 }
 
 bool LyrielBasicAttack::spawnArrowToTarget(GameObject* target)

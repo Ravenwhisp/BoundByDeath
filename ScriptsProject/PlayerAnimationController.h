@@ -35,6 +35,11 @@ public:
     void requestAttack();
     void requestDamaged();
 
+    // Lets an ability choose which clip the Attack slot plays, plus its blend and speed,
+    // for the duration of one attack. Cleared when the attack window ends.
+    void setAttackOverride(const std::string& stateName, float blendTime, float speed);
+    void clearAttackOverride();
+
 private:
     AnimationComponent* findAnimationComponent();
     bool playAnimState(AnimState state, float blendTime);
@@ -66,4 +71,10 @@ private:
     bool m_damagedRequested = false;
 
     AnimState m_currentState = AnimState::Idle;
+
+    // Per-attack override of the Attack slot (set by abilities via setAttackOverride).
+    std::string m_attackOverrideName = "";
+    float m_attackOverrideBlend = 0.15f;
+    float m_attackOverrideSpeed = 1.0f;
+    bool  m_hasAttackOverride = false;
 };

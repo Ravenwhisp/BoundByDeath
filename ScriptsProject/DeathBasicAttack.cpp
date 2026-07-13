@@ -47,7 +47,7 @@ void DeathBasicAttack::Update()
     DeathAbilityBase::Update();
 
     // Block new input while the attack window is still running
-    if (m_attackStateTimer > 0.0f)
+    if (isAttackWindowActive())
     {
         return;
     }
@@ -78,7 +78,11 @@ void DeathBasicAttack::startAbility()
         sound->playLightSwing();
     }
 
-    dealDamageToTarget(target);
+    // Legacy timing deals damage immediately; animation-driven timing defers it to the hit frame.
+    if (!usesAnimHitTiming())
+    {
+        dealDamageToTarget(target);
+    }
     notifyAbilitySuccessfullyStarted();
 
     m_deathCharacter->advanceCombo(false);
@@ -129,6 +133,12 @@ void DeathBasicAttack::onAttackWindowFinished()
     {
         m_particles->SetScytheInactive();
     }
+}
+
+void DeathBasicAttack::onHitFrame()
+{
+    // Animation-driven hit: damage lands at m_hitStartPct of the swing clip.
+    dealDamageToTarget(m_attackFacingTarget);
 }
 
 float DeathBasicAttack::getCooldown() const
