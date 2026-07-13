@@ -87,6 +87,11 @@ void ArthurChargingSlam::OnStateEnter()
 
     m_arthurUI->setupChargingSlamUI(m_startPosition, m_lockedTargetPosition, m_dashDirection);
 
+    if (m_arthurController)
+    {
+        m_arthurController->setForcedMovementBlocked(true);
+    }
+
     if (m_arthurSound)
     {
         m_arthurSound->playPreparingGrowl();   // wind-up growl
@@ -151,6 +156,11 @@ void ArthurChargingSlam::OnStateUpdate()
 
 void ArthurChargingSlam::OnStateExit()
 {
+    if (m_arthurController)
+    {
+        m_arthurController->setForcedMovementBlocked(false);
+    }
+
     if (m_arthurSound)
     {
         m_arthurSound->stopGallopingLoop();   // safety: covers death/interrupt mid-dash

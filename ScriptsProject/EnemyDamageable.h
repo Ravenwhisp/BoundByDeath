@@ -11,6 +11,7 @@ enum class EnemyAttackType
 	DeathBasic,
 	DeathCharged,
 	DeathDash,
+	DeathTaunt,
 	LyrielArrow,
 	LyrielVolley,
 	LyrielCharged,
