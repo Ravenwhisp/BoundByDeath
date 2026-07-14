@@ -15,17 +15,11 @@ SkeletonEnemyController::SkeletonEnemyController(GameObject* owner)
 void SkeletonEnemyController::Start()
 {
 	m_enemyDetectionAggro = GameObjectAPI::findScript<EnemyDetectionAggro>(getOwner());
-	m_attackConfig = GameObjectAPI::findScript<SkeletonAttackConfig>(getOwner());
 	m_damageable = GameObjectAPI::findScript<SkeletonDamageable>(getOwner());
 
 	if (!m_enemyDetectionAggro)
 	{
 		Debug::warn("[SkeletonEnemyController] EnemyDetectionAggro not found on '%s'.", GameObjectAPI::getName(getOwner()));
-	}
-
-	if (!m_attackConfig)
-	{
-		Debug::warn("[SkeletonEnemyController] SkeletonAttackConfig not found on '%s'.", GameObjectAPI::getName(getOwner()));
 	}
 
 	if (!m_damageable)
@@ -76,12 +70,12 @@ bool SkeletonEnemyController::isTargetDowned(Transform* target) const
 
 bool SkeletonEnemyController::isTargetInScimitarRange() const
 {
-	if (!hasValidTarget() || !m_attackConfig)
+	if (!hasValidTarget() || !m_attackConfig.get())
 	{
 		return false;
 	}
 
-	return isCurrentTargetInRange(m_attackConfig->m_scimitarStartRange);
+	return isCurrentTargetInRange(m_attackConfig.get()->m_scimitarStartRange);
 }
 
 bool SkeletonEnemyController::isGuardReady() const
@@ -91,12 +85,12 @@ bool SkeletonEnemyController::isGuardReady() const
 
 void SkeletonEnemyController::consumeGuardCooldown()
 {
-	if (!m_attackConfig)
+	if (!m_attackConfig.get())
 	{
 		return;
 	}
 
-	m_guardCooldownTimer = m_attackConfig->m_guardCooldown;
+	m_guardCooldownTimer = m_attackConfig.get()->m_guardCooldown;
 }
 
 void SkeletonEnemyController::updateGuardCooldown(float dt)
@@ -116,7 +110,7 @@ void SkeletonEnemyController::updateGuardCooldown(float dt)
 
 bool SkeletonEnemyController::shouldUseGuard() const
 {
-	if (!hasValidTarget() || !m_attackConfig)
+	if (!hasValidTarget() || !m_attackConfig.get())
 	{
 		return false;
 	}
@@ -126,7 +120,7 @@ bool SkeletonEnemyController::shouldUseGuard() const
 		return false;
 	}
 
-	if (!isCurrentTargetInRange(m_attackConfig->m_guardRange))
+	if (!isCurrentTargetInRange(m_attackConfig.get()->m_guardRange))
 	{
 		return false;
 	}
@@ -162,7 +156,7 @@ bool SkeletonEnemyController::shouldUseGuard() const
 	float dot = forward.Dot(toTarget);
 
 	constexpr float degreesToRadians = 3.14159265f / 180.0f;
-	const float minDot = std::cos(m_attackConfig->m_guardBlockHalfAngleDegrees * degreesToRadians);
+	const float minDot = std::cos(m_attackConfig.get()->m_guardBlockHalfAngleDegrees * degreesToRadians);
 
 	return dot >= minDot;
 }

@@ -13,16 +13,9 @@ RangedEnemyController::RangedEnemyController(GameObject* owner) : EnemyBaseContr
 void RangedEnemyController::Start()
 {
     m_enemyDetectionAggro = GameObjectAPI::findScript<EnemyDetectionAggro>(getOwner());
-    m_attackConfig = GameObjectAPI::findScript<ArcherAttackConfig>(getOwner());
-
     if (!m_enemyDetectionAggro)
     {
         Debug::warn("[RangedEnemyController] EnemyDetectionAggro not found on '%s'.", GameObjectAPI::getName(getOwner()));
-    }
-
-    if (!m_attackConfig)
-    {
-        Debug::warn("[RangedEnemyController] ArcherAttackConfig not found on '%s'.", GameObjectAPI::getName(getOwner()));
     }
 
     m_currentTarget = nullptr;
@@ -74,7 +67,7 @@ bool RangedEnemyController::isTargetInAttackRange() const
         return false;
     }
 
-    return isCurrentTargetInRange(m_attackConfig->m_basicAttackRange);
+    return isCurrentTargetInRange(m_attackConfig.get()->m_basicAttackRange);
 }
 
 bool RangedEnemyController::playerInSomersaultRange() const
@@ -98,7 +91,7 @@ bool RangedEnemyController::playerInSomersaultRange() const
         m_enemyDetectionAggro->getDeathTransform()
     };
 
-    const float triggerRangeSquared = m_attackConfig->m_somersaultTriggerRange * m_attackConfig->m_somersaultTriggerRange;
+    const float triggerRangeSquared = m_attackConfig.get()->m_somersaultTriggerRange * m_attackConfig.get()->m_somersaultTriggerRange;
 
     for (Transform* playerTransform : playerTransforms)
     {
@@ -138,7 +131,7 @@ void RangedEnemyController::consumeSomersaultCooldown()
         return;
     }
 
-    m_somersaultCooldownTimer = m_attackConfig->m_somersaultCooldown;
+    m_somersaultCooldownTimer = m_attackConfig.get()->m_somersaultCooldown;
 }
 
 void RangedEnemyController::updateSomersaultCooldown(float dt)
@@ -246,7 +239,7 @@ void RangedEnemyController::consumeArrowBarrageCooldown()
         return;
     }
 
-    m_arrowBarrageCooldownTimer = m_attackConfig->m_arrowBarrageCooldown;
+    m_arrowBarrageCooldownTimer = m_attackConfig.get()->m_arrowBarrageCooldown;
 }
 
 void RangedEnemyController::updateArrowBarrageCooldown(float dt)
@@ -271,7 +264,7 @@ bool RangedEnemyController::isTargetInArrowBarrageRange() const
         return false;
     }
 
-    return isCurrentTargetInRange(m_attackConfig->m_arrowBarrageRange);
+    return isCurrentTargetInRange(m_attackConfig.get()->m_arrowBarrageRange);
 }
 
 IMPLEMENT_SCRIPT(RangedEnemyController)

@@ -25,7 +25,7 @@ private:
 
 private:
     RangedEnemyController* m_archerController = nullptr;
-    ArcherAttackConfig* m_attackConfig = nullptr;
+    AssetRef<ArcherAttackConfig> m_attackConfig;
     AnimationComponent* m_animation = nullptr;
     ArcherGuardParticles* m_particles = nullptr;
 

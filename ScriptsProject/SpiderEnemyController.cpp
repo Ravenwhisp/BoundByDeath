@@ -14,16 +14,10 @@ SpiderEnemyController::SpiderEnemyController(GameObject* owner)
 void SpiderEnemyController::Start()
 {
 	m_enemyDetectionAggro = GameObjectAPI::findScript<EnemyDetectionAggro>(getOwner());
-	m_attackConfig = GameObjectAPI::findScript<EnemyBaseAttackConfig>(getOwner());
 
 	if (!m_enemyDetectionAggro)
 	{
 		Debug::warn("[SpiderEnemyController] EnemyDetectionAggro not found on '%s'.", GameObjectAPI::getName(getOwner()));
-	}
-
-	if (!m_attackConfig)
-	{
-		Debug::warn("[SpiderEnemyController] EnemyBaseAttackConfig not found on '%s'.", GameObjectAPI::getName(getOwner()));
 	}
 
 	m_currentTarget = nullptr;
@@ -65,12 +59,12 @@ bool SpiderEnemyController::isTargetDowned(Transform* target) const
 
 bool SpiderEnemyController::isTargetInAttackRange() const
 {
-	if (!hasValidTarget() || !m_attackConfig)
+	if (!hasValidTarget() || !m_attackConfig.get())
 	{
 		return false;
 	}
 	
-	return isCurrentTargetInRange(m_attackConfig->m_basicAttackRange);
+	return isCurrentTargetInRange(m_attackConfig.get()->m_basicAttackRange);
 }
 
 IMPLEMENT_SCRIPT(SpiderEnemyController)

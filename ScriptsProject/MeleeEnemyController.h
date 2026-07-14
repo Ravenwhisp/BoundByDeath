@@ -32,7 +32,7 @@ protected:
 
 private:
 	EnemyDetectionAggro* m_enemyDetectionAggro = nullptr;
-	PaladinAttackConfig* m_attackConfig = nullptr;
+	AssetRef<PaladinAttackConfig> m_attackConfig;
 
 	float m_chargeCooldownTimer = 0.0f;
 };

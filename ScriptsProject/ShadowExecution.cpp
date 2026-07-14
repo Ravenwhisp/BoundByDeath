@@ -9,6 +9,7 @@
 #include "PlayerAnimationController.h"
 #include "EnemyDamageable.h"
 #include "Bound.h"
+#include "BoundConfig.h"
 
 IMPLEMENT_SCRIPT_FIELDS(ShadowExecution,
     SERIALIZED_FLOAT(m_timeWindow,         "Co-op Window (s)",      0.1f, 10.0f, 0.1f),
@@ -52,7 +53,7 @@ void ShadowExecution::Start()
     }
     else
     {
-        m_maxRadius = bound->m_distanceDamage * 0.5f;
+        m_maxRadius = bound->m_config.get()->m_distanceDamage * 0.5f;
 	}
 
     cachePlayers();

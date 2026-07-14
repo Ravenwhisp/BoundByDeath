@@ -45,7 +45,7 @@ private:
 
 private:
 	SkeletonEnemyController* m_controller = nullptr;
-	SkeletonAttackConfig* m_attackConfig = nullptr;
+	AssetRef<SkeletonAttackConfig> m_attackConfig;
 	EnemyAttackExecutor* m_attackExecutor = nullptr;
 	AnimationComponent* m_animation = nullptr;
 

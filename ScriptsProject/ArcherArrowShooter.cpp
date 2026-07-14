@@ -13,7 +13,6 @@ ArcherArrowShooter::ArcherArrowShooter(GameObject* owner) : Script(owner) {}
 
 void ArcherArrowShooter::Start()
 {
-    m_config     = GameObjectAPI::findScript<ArcherAttackConfig>(getOwner());
     m_controller = GameObjectAPI::findScript<RangedEnemyController>(getOwner());
     m_animation  = AnimationAPI::getAnimationComponent(getOwner());
     m_particles  = GameObjectAPI::findScript<ArcherGuardParticles>(getOwner());
@@ -48,7 +47,7 @@ void ArcherArrowShooter::Update()
     m_timer += Time::getDeltaTime();
 
     // ── Fire arrow at windup time ─────────────────────────────────────────────
-    if (!m_fired && m_timer >= m_config->m_basicAttackWindupTime)
+    if (!m_fired && m_timer >= m_config.get()->m_basicAttackWindupTime)
     {
         Transform* archerT = GameObjectAPI::getTransform(getOwner());
         Transform* targetT = m_controller ? m_controller->getCurrentTarget() : nullptr;
