@@ -48,9 +48,7 @@ public:
 	float m_tauntPullDuration = 0.8f;
 	float m_tauntPullDamage = 10.0f;
 
-	float m_tauntPullFirstRowDistance = 1.5f;
-	float m_tauntPullRowSpacing = 0.7f;
-	float m_tauntPullAngleSpacingDegrees = 20.0f;
+	float m_tauntPullDestinationDistance = 1.5f;
 
 	// Dash
 	float m_dashDuration = 0.15f;

@@ -38,7 +38,7 @@ private:
     std::vector<GameObject*> collectEnemiesInCone(const Vector3& origin, const Vector3& direction) const;
     void applyTauntEffects(GameObject* enemy, Transform* deathTransform, bool& anyMark) const;
 
-    Vector3 calculatePullDestination() const;
+    Vector3 calculatePullDestination(GameObject* enemy) const;
 
     bool isEnemyInsideTauntCone(GameObject* enemy, const Vector3& ownerPosition, const Vector3& ownerForward) const;
 

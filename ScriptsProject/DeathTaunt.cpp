@@ -293,8 +293,6 @@ void DeathTaunt::resolveImpact()
     int taunted = 0;
     int pulled = 0;
 
-    const Vector3 destination = calculatePullDestination();
-
     for (GameObject* enemy : enemies)
     {
         applyTauntEffects(enemy, deathTransform, anyMark);
@@ -307,6 +305,8 @@ void DeathTaunt::resolveImpact()
             Debug::warn("[DeathTaunt] Enemy '%s' has no EnemyForcedMovement. Taunt applied without pull.", GameObjectAPI::getName(enemy));
             continue;
         }
+
+        const Vector3 destination = calculatePullDestination(enemy);
 
         const bool pullStarted = forcedMovement->startPull(destination, m_config->m_tauntPullDuration, deathTransform, m_config->m_tauntPullDamage, PlayerAttackType::DeathTaunt);
 
@@ -390,19 +390,30 @@ void DeathTaunt::applyTauntEffects(GameObject* enemy, Transform* deathTransform,
     }
 }
 
-Vector3 DeathTaunt::calculatePullDestination() const
+Vector3 DeathTaunt::calculatePullDestination(GameObject* enemy) const
 {
-    Vector3 direction = m_castDirection;
-    direction.y = 0.0f;
-
-    if (direction.LengthSquared() <= 0.0001f)
+    if (!enemy)
     {
         return m_castOrigin;
     }
 
-    direction.Normalize();
+    Transform* enemyTransform = GameObjectAPI::getTransform(enemy);
 
-    Vector3  finalDestination = m_castOrigin + direction * m_config->m_tauntPullFirstRowDistance;
+    const Vector3 enemyPosition = TransformAPI::getGlobalPosition(enemyTransform);
+
+    Vector3 directionFromOrigin = enemyPosition - m_castOrigin;
+    directionFromOrigin.y = 0.0f;
+
+    if (directionFromOrigin.LengthSquared() <= 0.0001f)
+    {
+        directionFromOrigin = m_castDirection;
+        directionFromOrigin.y = 0.0f;
+        return m_castOrigin;
+    }
+
+    directionFromOrigin.Normalize();
+
+    Vector3 finalDestination  = m_castOrigin + directionFromOrigin * m_config->m_tauntPullDestinationDistance;
 
     return finalDestination;
 }
