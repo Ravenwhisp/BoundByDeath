@@ -266,7 +266,7 @@ void DeathChargedAttack::dealDamageInArc(float damage, float range, float angle,
             EnemyHitContext ctx;
             ctx.damage = damage;
             ctx.attacker = GameObjectAPI::getTransform(getOwner());
-            ctx.attackType = EnemyAttackType::DeathCharged;
+            ctx.attackType = PlayerAttackType::DeathCharged;
             damageable->takeDamage(ctx);
 
         }

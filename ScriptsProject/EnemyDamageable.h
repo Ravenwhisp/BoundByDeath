@@ -5,7 +5,7 @@
 class EnemyDetectionAggro;
 class EnemySound;
 
-enum class EnemyAttackType
+enum class PlayerAttackType
 {
 	None = 0,
 	DeathBasic,
@@ -23,7 +23,7 @@ enum class EnemyAttackType
 struct EnemyHitContext : public HitContext
 {
 	Transform* attacker = nullptr;
-	EnemyAttackType attackType = EnemyAttackType::None;
+	PlayerAttackType attackType = PlayerAttackType::None;
 };
 
 class EnemyDamageable : public Damageable
