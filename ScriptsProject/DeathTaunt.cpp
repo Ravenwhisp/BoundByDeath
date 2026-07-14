@@ -45,6 +45,11 @@ void DeathTaunt::Update()
 {
     DeathAbilityBase::Update();
 
+    if (m_tauntState == TauntState::WaitingForImpact)
+    {
+        updateImpactDelay();
+    }
+
     if (m_character == nullptr || m_character->isDowned())
     {
         if (m_tauntState == TauntState::Aiming)
@@ -92,6 +97,11 @@ bool DeathTaunt::canStartSpecificAbility() const
 
 void DeathTaunt::onAttackWindowFinished()
 {
+    if (m_tauntState == TauntState::WaitingForImpact)
+    {
+        return;
+    }
+
     if (m_movementLockedForCombo)
     {
         releaseComboMoveLock();
@@ -201,9 +211,6 @@ void DeathTaunt::updateAim()
 
 void DeathTaunt::releaseAimAndCast()
 {
-    Debug::log("[DeathTaunt] L2 released — casting.");
-    m_tauntState = TauntState::Idle;
-
     if (m_deathUI)
     {
         m_deathUI->hideTauntUI();
@@ -213,36 +220,74 @@ void DeathTaunt::releaseAimAndCast()
     if (!isAimStickValid(finalDirection))
     {
         finalDirection = getFallbackFacingDirection();
+        m_tauntState = TauntState::Idle;
+        m_currentAimDirection = Vector3::Zero;
+        setAbilityLocked(false);
+        return;
     }
 
-    if (isAimStickValid(finalDirection))
+    finalDirection.y = 0.0f;
+    finalDirection.Normalize();
+
+    Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
+
+    faceDirection(finalDirection);
+
+    m_castOrigin = TransformAPI::getGlobalPosition(ownerTransform);
+    m_castDirection = finalDirection;
+    m_impactDelayTimer = m_config->m_tauntImpactDelay;
+    m_tauntState = TauntState::WaitingForImpact;
+
+    DeathSound* sound = m_deathCharacter != nullptr ? m_deathCharacter->getSound() : nullptr;
+    if (sound != nullptr)
     {
-        faceDirection(finalDirection);
-
-        DeathSound* sound = m_deathCharacter != nullptr ? m_deathCharacter->getSound() : nullptr;
-        if (sound != nullptr)
-        {
-            sound->playTauntShout();
-        }
-
-        if (m_deathParticles != nullptr)
-        {
-            m_deathParticles->SetTauntActive(finalDirection);
-        }
-
-        applyTauntToEnemiesInCone(finalDirection);
-        notifyAbilitySuccessfullyStarted();
-        m_debugConeTimer = 0.25f;
-
-        m_movementLockedForCombo = true;
-        beginAttackPresentation();
-        beginAttackWindow(m_config->m_tauntLockDuration);
+        sound->playTauntShout();
     }
+
+    if (m_deathParticles != nullptr)
+    {
+        m_deathParticles->SetTauntActive(finalDirection);
+    }
+
+    notifyAbilitySuccessfullyStarted();
+    m_debugConeTimer = m_config->m_tauntImpactDelay;
+
+    m_movementLockedForCombo = true;
+    beginAttackPresentation();
+    beginAttackWindow(m_config->m_tauntImpactDelay);
 
     m_currentAimDirection = Vector3::Zero;
-    startCooldown();
 
+    startCooldown();
     setAbilityLocked(false);
+}
+
+void DeathTaunt::updateImpactDelay()
+{
+    m_impactDelayTimer -= Time::getDeltaTime();
+
+    if (m_impactDelayTimer > 0.0f)
+    {
+        return;
+    }
+
+    m_impactDelayTimer = 0.0f;
+
+    resolveImpact();
+}
+
+void DeathTaunt::resolveImpact()
+{
+    applyTauntToEnemiesInCone(m_castDirection);
+
+    m_tauntState = TauntState::Idle;
+
+    if (m_movementLockedForCombo)
+    {
+        releaseComboMoveLock();
+    }
+
+    Debug::log("[DeathTaunt] Delayed impact resolved.");
 }
 
 void DeathTaunt::applyTauntToEnemiesInCone(const Vector3& ownerForward) const
@@ -264,14 +309,12 @@ void DeathTaunt::applyTauntToEnemiesInCone(const Vector3& ownerForward) const
     {
         if (!isEnemyInsideTauntCone(enemy, ownerPosition, ownerForward))
         {
-            Debug::log("[DeathTaunt] Enemy '%s' outside cone.", GameObjectAPI::getName(enemy));
             continue;
         }
 
         EnemyDetectionAggro* enemyAggro = GameObjectAPI::findScript<EnemyDetectionAggro>(enemy);
         if (enemyAggro == nullptr)
         {
-            Debug::log("[DeathTaunt] Enemy '%s' in cone but no EnemyDetectionAggro.", GameObjectAPI::getName(enemy));
             continue;
         }
 
