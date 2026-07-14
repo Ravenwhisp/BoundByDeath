@@ -298,6 +298,20 @@ void DeathTaunt::resolveImpact()
         applyTauntEffects(enemy, deathTransform, anyMark);
         ++taunted;
 
+        // This is an edge case where the enemy affected is closer to the destination distance. In this case it won't be affected by the pull
+        Transform* enemyTransform = GameObjectAPI::getTransform(enemy);
+
+        const Vector3 enemyPosition = TransformAPI::getGlobalPosition(enemyTransform);
+
+        Vector3 offsetFromOrigin = enemyPosition - m_castOrigin;
+        offsetFromOrigin.y = 0.0f;
+
+        if (offsetFromOrigin.Length() <= m_config->m_tauntPullDestinationDistance)
+        {
+            continue;
+        }
+        //
+
         EnemyForcedMovement* forcedMovement = GameObjectAPI::findScript<EnemyForcedMovement>(enemy);
 
         if (!forcedMovement)

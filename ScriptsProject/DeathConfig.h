@@ -40,12 +40,12 @@ public:
 
 	// Taunt / Pull
 	float m_tauntDuration = 3.0f;
-	float m_tauntRange = 2.5f;
-	float m_tauntHalfAngleDegrees = 35.0f;
-	float m_tauntCooldown = 0.0f;
+	float m_tauntRange = 5.0f;
+	float m_tauntHalfAngleDegrees = 70.0f;
+	float m_tauntCooldown = 7.0f;
 
 	float m_tauntImpactDelay = 1.0f;
-	float m_tauntPullDuration = 0.8f;
+	float m_tauntPullDuration = 0.5f;
 	float m_tauntPullDamage = 10.0f;
 
 	float m_tauntPullDestinationDistance = 1.5f;
