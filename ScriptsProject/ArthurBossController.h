@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "EnemyBaseController.h"
 
@@ -25,7 +25,7 @@ public:
 	void drawGizmo() override;
 	void Update() override;
 
-	ScriptFieldList getExposedFields() const override;
+	FieldList getExposedFields() const override;
 
 	// Phase helpers
 	void setPhase(ArthurBossPhase phase);

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "EnemyDamageable.h"
 
@@ -15,7 +15,7 @@ public:
 
 	void Start() override;
 
-	ScriptFieldList getExposedFields() const override;
+	FieldList getExposedFields() const override;
 
 	void takeDamage(const HitContext& ctx) override;
 	

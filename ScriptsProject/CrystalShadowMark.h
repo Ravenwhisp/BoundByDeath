@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "ScriptAPI.h"
 #include "EnemyShadowMark.h"
 #include "PuzzleManagerLVL1.h"
@@ -20,7 +20,7 @@ public:
 
     void updateUI();
 
-    ScriptComponentRef<Transform> m_puzzleManager;
+    ComponentRef<Transform> m_puzzleManager;
 
 	int m_puzzleID = 0;
 
@@ -43,6 +43,6 @@ private:
 	GameObject* managerObject = nullptr;
 	PuzzleManagerLVL1* managerScript = nullptr;
 
-ScriptFieldList getExposedFields() const override;
+FieldList getExposedFields() const override;
 };
 

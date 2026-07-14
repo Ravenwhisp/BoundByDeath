@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "ScriptAPI.h"
 
 class ArcherAttackConfig;
@@ -13,7 +13,7 @@ public:
     explicit ArcherArrowShooter(GameObject* owner);
     void Start()  override;
     void Update() override;
-    ScriptFieldList getExposedFields() const override;
+    FieldList getExposedFields() const override;
 
     PrefabRef m_arrowPrefab;
 

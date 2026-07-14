@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "EnemyDamageable.h"
 #include <vector>
@@ -11,7 +11,7 @@ public:
     explicit BarrierEnemyDamageable(GameObject* owner);
 
     void Start() override;
-    ScriptFieldList getExposedFields() const override;
+    FieldList getExposedFields() const override;
 
     void takeDamage(float amount) override;
     void takeDamage(const HitContext& ctx) override;

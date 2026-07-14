@@ -151,6 +151,9 @@
     <Filter Include="Enemies\Skeleton\States">
       <UniqueIdentifier>{bee86649-753b-4746-bc39-122ddb51888b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Configs">
+      <UniqueIdentifier>{d97415c8-9e96-449f-85a4-21d851f4a131}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -610,6 +613,10 @@
     <ClInclude Include="PaladinVFX.h">
       <Filter>Enemies\Paladin</Filter>
     </ClInclude>
+    <ClInclude Include="LinkedDeathController.h" />
+    <ClInclude Include="ParticleManager.h" />
+    <ClInclude Include="EnemyBaseDataConfig.h" />
+    <ClInclude Include="BoundConfig.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
@@ -985,9 +992,6 @@
     <ClCompile Include="SpiderEnemyController.cpp">
       <Filter>Enemies\Spider</Filter>
     </ClCompile>
-    <ClCompile Include="SummonerAttackConfig.cpp">
-      <Filter>Enemies\Summoner</Filter>
-    </ClCompile>
     <ClCompile Include="SummonerEnemyController.cpp">
       <Filter>Enemies\Summoner</Filter>
     </ClCompile>
@@ -1061,5 +1065,8 @@
     <ClCompile Include="PaladinVFX.cpp">
       <Filter>Enemies\Paladin</Filter>
     </ClCompile>
+    <ClCompile Include="LinkedDeathController.cpp" />
+    <ClCompile Include="ParticleManager.cpp" />
+    <ClCompile Include="EnemyBaseDataConfig.cpp" />
   </ItemGroup>
 </Project>

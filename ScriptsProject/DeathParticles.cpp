@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "DeathParticles.h"
 
 
@@ -29,7 +29,7 @@ void DeathParticles::Update()
     }
 }
 
-Transform* DeathParticles::getTransform(ScriptComponentRef<Transform> controller)
+Transform* DeathParticles::getTransform(ComponentRef<Transform> controller)
 {
     Transform* particleTransform = controller.getReferencedComponent();
 
