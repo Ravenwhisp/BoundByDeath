@@ -5,6 +5,7 @@ class EnemyDetectionAggro;
 class PlayerRotation;
 class DeathUI;
 class DeathParticles;
+class EnemyForcedMovement;
 
 class DeathTaunt : public DeathAbilityBase
 {
@@ -34,7 +35,11 @@ private:
     void updateImpactDelay();
     void resolveImpact();
 
-    void applyTauntToEnemiesInCone(const Vector3& ownerForward) const;
+    std::vector<GameObject*> collectEnemiesInCone(const Vector3& origin, const Vector3& direction) const;
+    void applyTauntEffects(GameObject* enemy, Transform* deathTransform, bool& anyMark) const;
+
+    Vector3 calculatePullDestination() const;
+
     bool isEnemyInsideTauntCone(GameObject* enemy, const Vector3& ownerPosition, const Vector3& ownerForward) const;
 
     Vector3 computeAimDirection() const;

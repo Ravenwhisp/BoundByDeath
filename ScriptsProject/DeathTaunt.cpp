@@ -3,6 +3,8 @@
 #include "DeathCharacter.h"
 #include "DeathSound.h"
 #include "EnemyDetectionAggro.h"
+#include "EnemyDamageable.h"
+#include "EnemyForcedMovement.h"
 #include "PlayerRotation.h"
 #include "PersistingPowerupState.h"
 #include "EnemyShadowMark.h"
@@ -131,10 +133,15 @@ void DeathTaunt::drawGizmo()
         return;
     }
 
-    const Vector3 ownerPosition = TransformAPI::getGlobalPosition(ownerTransform);
-
+    Vector3 ownerPosition = TransformAPI::getGlobalPosition(ownerTransform);
     Vector3 ownerForward = m_currentAimDirection;
-    if (ownerForward.LengthSquared() <= 0.0001f)
+
+    if (m_tauntState == TauntState::WaitingForImpact)
+    {
+        ownerPosition = m_castOrigin;
+        ownerForward = m_castDirection;
+    }
+    else if (ownerForward.LengthSquared() <= 0.0001f)
     {
         ownerForward = getFallbackFacingDirection();
     }
@@ -278,7 +285,46 @@ void DeathTaunt::updateImpactDelay()
 
 void DeathTaunt::resolveImpact()
 {
-    applyTauntToEnemiesInCone(m_castDirection);
+    Transform* deathTransform = GameObjectAPI::getTransform(getOwner());
+
+    const std::vector<GameObject*> enemies = collectEnemiesInCone(m_castOrigin, m_castDirection);
+
+    bool anyMark = false;
+    int taunted = 0;
+    int pulled = 0;
+
+    const Vector3 destination = calculatePullDestination();
+
+    for (GameObject* enemy : enemies)
+    {
+        applyTauntEffects(enemy, deathTransform, anyMark);
+        ++taunted;
+
+        EnemyForcedMovement* forcedMovement = GameObjectAPI::findScript<EnemyForcedMovement>(enemy);
+
+        if (!forcedMovement)
+        {
+            Debug::warn("[DeathTaunt] Enemy '%s' has no EnemyForcedMovement. Taunt applied without pull.", GameObjectAPI::getName(enemy));
+            continue;
+        }
+
+        const bool pullStarted = forcedMovement->startPull(destination, m_config->m_tauntPullDuration, deathTransform, m_config->m_tauntPullDamage, PlayerAttackType::DeathTaunt);
+
+        if (pullStarted)
+        {
+            ++pulled;
+        }
+    }
+
+    if (anyMark)
+    {
+        DeathSound* sound = m_deathCharacter != nullptr ? m_deathCharacter->getSound() : nullptr;
+
+        if (sound)
+        {
+            sound->playMarkApply();
+        }
+    }
 
     m_tauntState = TauntState::Idle;
 
@@ -287,63 +333,78 @@ void DeathTaunt::resolveImpact()
         releaseComboMoveLock();
     }
 
-    Debug::log("[DeathTaunt] Delayed impact resolved.");
+    Debug::log("[DeathTaunt] Impact resolved — %d taunted, %d pulled.", taunted, pulled);
 }
 
-void DeathTaunt::applyTauntToEnemiesInCone(const Vector3& ownerForward) const
+std::vector<GameObject*> DeathTaunt::collectEnemiesInCone(const Vector3& origin, const Vector3& direction) const
 {
-    Transform* ownerTransform = GameObjectAPI::getTransform(m_owner);
-    if (ownerTransform == nullptr)
+    std::vector<GameObject*> validEnemies;
+
+    const std::vector<GameObject*> enemies = SceneAPI::findAllGameObjectsByTag(Tag::ENEMY);
+
+    for (GameObject* enemy : enemies)
+    {
+        if (!isEnemyInsideTauntCone(enemy, origin, direction))
+        {
+            continue;
+        }
+
+        EnemyDamageable* damageable = GameObjectAPI::findScript<EnemyDamageable>(enemy);
+
+        if (damageable && damageable->isDead())
+        {
+            continue;
+        }
+
+        validEnemies.push_back(enemy);
+    }
+
+    return validEnemies;
+}
+
+void DeathTaunt::applyTauntEffects(GameObject* enemy, Transform* deathTransform, bool& anyMark) const
+{
+    if (!enemy || !deathTransform)
     {
         return;
     }
 
-    const Vector3 ownerPosition = TransformAPI::getGlobalPosition(ownerTransform);
+    EnemyDetectionAggro* enemyAggro = GameObjectAPI::findScript<EnemyDetectionAggro>(enemy);
 
-    const std::vector<GameObject*> enemies = SceneAPI::findAllGameObjectsByTag(Tag::ENEMY);
-    Debug::log("[DeathTaunt] Enemies with Tag::ENEMY found: %d", (int)enemies.size());
-
-    int taunted = 0;
-    bool anyMark = false;
-    for (GameObject* enemy : enemies)
+    if (enemyAggro)
     {
-        if (!isEnemyInsideTauntCone(enemy, ownerPosition, ownerForward))
-        {
-            continue;
-        }
-
-        EnemyDetectionAggro* enemyAggro = GameObjectAPI::findScript<EnemyDetectionAggro>(enemy);
-        if (enemyAggro == nullptr)
-        {
-            continue;
-        }
-
-        enemyAggro->applyTaunt(ownerTransform, m_config->m_tauntDuration);
-        Debug::log("[DeathTaunt] Taunt applied to '%s' for %.1fs.", GameObjectAPI::getName(enemy), m_config->m_tauntDuration);
-
-        if (PersistingPowerupState::isUnlocked(PowerupId::DeathPowerup1))
-        {
-            EnemyShadowMark* shadowMark = GameObjectAPI::findScript<EnemyShadowMark>(enemy);
-            if (shadowMark != nullptr)
-            {
-                shadowMark->notifyDeathHit();
-                anyMark = true;
-            }
-        }
-
-        ++taunted;
+        enemyAggro->applyTaunt(deathTransform, m_config->m_tauntDuration);
     }
 
-    if (anyMark)
+    if (!PersistingPowerupState::isUnlocked(PowerupId::DeathPowerup1))
     {
-        DeathSound* sound = m_deathCharacter != nullptr ? m_deathCharacter->getSound() : nullptr;
-        if (sound != nullptr)
-        {
-            sound->playMarkApply();
-        }
+        return;
     }
 
-    Debug::log("[DeathTaunt] Cast complete — %d enemies taunted.", taunted);
+    EnemyShadowMark* shadowMark = GameObjectAPI::findScript<EnemyShadowMark>(enemy);
+
+    if (shadowMark)
+    {
+        shadowMark->notifyDeathHit();
+        anyMark = true;
+    }
+}
+
+Vector3 DeathTaunt::calculatePullDestination() const
+{
+    Vector3 direction = m_castDirection;
+    direction.y = 0.0f;
+
+    if (direction.LengthSquared() <= 0.0001f)
+    {
+        return m_castOrigin;
+    }
+
+    direction.Normalize();
+
+    Vector3  finalDestination = m_castOrigin + direction * m_config->m_tauntPullFirstRowDistance;
+
+    return finalDestination;
 }
 
 Vector3 DeathTaunt::computeAimDirection() const
