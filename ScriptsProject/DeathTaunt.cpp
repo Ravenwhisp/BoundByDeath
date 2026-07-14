@@ -47,7 +47,11 @@ void DeathTaunt::Update()
 
     if (m_character == nullptr || m_character->isDowned())
     {
-        m_isAiming = false;
+        if (m_tauntState == TauntState::Aiming)
+        {
+            m_tauntState = TauntState::Idle;
+        }
+
         m_currentAimDirection = Vector3::Zero;
 
         if (m_deathUI)
@@ -58,7 +62,7 @@ void DeathTaunt::Update()
         return;
     }
 
-    if (m_isAiming)
+    if (m_tauntState == TauntState::Aiming)
     {
         if (Input::isLeftTriggerPressed(getPlayerIndex()))
         {
@@ -71,7 +75,7 @@ void DeathTaunt::Update()
         }
     }
 
-    if (!m_isAiming && m_debugConeTimer > 0.0f)
+    if (m_tauntState != TauntState::Aiming && m_debugConeTimer > 0.0f)
     {
         m_debugConeTimer -= Time::getDeltaTime();
         if (m_debugConeTimer < 0.0f)
@@ -83,7 +87,7 @@ void DeathTaunt::Update()
 
 bool DeathTaunt::canStartSpecificAbility() const
 {
-    return !m_isAiming;
+    return m_tauntState == TauntState::Idle;
 }
 
 void DeathTaunt::onAttackWindowFinished()
@@ -106,7 +110,7 @@ void DeathTaunt::startAbility()
 
 void DeathTaunt::drawGizmo()
 {
-    if (!m_isAiming && m_debugConeTimer <= 0.0f)
+    if (m_tauntState != TauntState::Aiming && m_debugConeTimer <= 0.0f)
     {
         return;
     }
@@ -157,7 +161,7 @@ void DeathTaunt::drawGizmo()
 void DeathTaunt::beginAim()
 {
     Debug::log("[DeathTaunt] Aim started.");
-    m_isAiming = true;
+    m_tauntState = TauntState::Aiming;
     setAbilityLocked(true);
     m_debugConeTimer = 0.25f;
     m_currentAimDirection = getFallbackFacingDirection();
@@ -198,7 +202,7 @@ void DeathTaunt::updateAim()
 void DeathTaunt::releaseAimAndCast()
 {
     Debug::log("[DeathTaunt] L2 released — casting.");
-    m_isAiming = false;
+    m_tauntState = TauntState::Idle;
 
     if (m_deathUI)
     {

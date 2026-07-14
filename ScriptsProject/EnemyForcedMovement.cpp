@@ -34,7 +34,7 @@ void EnemyForcedMovement::Start()
 void EnemyForcedMovement::Update()
 {
 	//Debug to see if it works
-	if (Input::isKeyDown(KeyCode::U))
+	/*if (Input::isKeyDown(KeyCode::U))
 	{
 		Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
 
@@ -54,7 +54,7 @@ void EnemyForcedMovement::Update()
 				);
 			}
 		}
-	}
+	}*/
 
 	if (m_isBeingPulled)
 	{
