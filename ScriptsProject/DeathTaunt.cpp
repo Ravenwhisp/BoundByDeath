@@ -308,6 +308,18 @@ void DeathTaunt::resolveImpact()
 
         if (offsetFromOrigin.Length() <= m_config->m_tauntPullDestinationDistance)
         {
+            EnemyDamageable* damageable = GameObjectAPI::findScript<EnemyDamageable>(enemy);
+
+            if (damageable)
+            {
+                EnemyHitContext hitContext;
+                hitContext.damage = m_config->m_tauntPullDamage;
+                hitContext.attacker = deathTransform;
+                hitContext.attackType = PlayerAttackType::DeathTaunt;
+
+                damageable->takeDamage(hitContext);
+            }
+
             continue;
         }
         //
