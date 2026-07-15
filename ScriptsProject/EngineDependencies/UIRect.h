@@ -1,7 +1,5 @@
 #pragma once
 
-#include "EngineAPI.h"
-
 struct Rect2D
 {
     float x = 0.0f;

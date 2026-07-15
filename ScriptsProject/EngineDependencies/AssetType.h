@@ -1,5 +1,6 @@
 #pragma once
 #include <cstdint>
+#include <cstring>
 
 #define ASSET_TYPE_LIST(X) \
     X(TEXTURE)                 \

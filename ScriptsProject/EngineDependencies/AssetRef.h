@@ -1,5 +1,8 @@
 #pragma once
 
+#include "AssetReference.h"
+#include <memory>
+
 class DataContainer;
 
 template<typename T = void>
@@ -12,8 +15,6 @@ struct AssetRef
     {
         return m_data.get();
     }
-
-    operator bool() const { return m_data != nullptr; }
 };
 
 using PrefabRef = AssetRef<struct Prefab>;

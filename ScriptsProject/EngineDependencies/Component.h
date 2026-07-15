@@ -3,7 +3,6 @@
 #include "UID.h" 
 #include "IDebugDrawable.h"
 #include "ISerializable.h"
-#include <memory>
 
 class Transform;
 class GameObject;
