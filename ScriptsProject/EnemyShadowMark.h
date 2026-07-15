@@ -27,7 +27,9 @@ public:
 
     ScriptFieldList getExposedFields() const override;
 
-    void notifyDeathHit();
+    bool processAttack(EnemyAttackType attackType);
+    // Temporal to compile
+    void notifyDeathHit() { processAttack(EnemyAttackType::DeathBasic); }
     bool isExploitable() const { return m_state == ShadowMarkState::Ready; }
     virtual void exploit();
     ShadowMarkState getState() const { return m_state; }
@@ -49,6 +51,12 @@ private:
 
     bool isDeathAttack(EnemyAttackType attackType) const;
     bool isLyrielAttack(EnemyAttackType attackType) const;
+
+    bool canApplyWith(EnemyAttackType attackType) const;
+    bool canExploitWith(EnemyAttackType attackType) const;
+
+    void applyDeathContribution();
+    void applyLyrielContribution();
 
 private:
     ShadowMarkState m_state = ShadowMarkState::None;

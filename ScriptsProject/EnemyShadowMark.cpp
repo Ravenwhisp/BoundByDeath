@@ -82,31 +82,31 @@ void EnemyShadowMark::Update()
     }
 }
 
-//This is temporal
-void EnemyShadowMark::notifyDeathHit()
+bool EnemyShadowMark::processAttack(EnemyAttackType attackType)
 {
-    switch (m_state)
+    if (m_state == ShadowMarkState::Ready && canExploitWith(attackType))
     {
-    case ShadowMarkState::None:
-        m_state = ShadowMarkState::DeathOnly;
-        break;
-
-    case ShadowMarkState::DeathOnly:
-        m_state = ShadowMarkState::LyrielOnly;
-        break;
-
-    case ShadowMarkState::LyrielOnly:
-        m_state = ShadowMarkState::Ready;
-        break;
-
-    case ShadowMarkState::Ready:
-        break;
+        exploit();
+        return true;
     }
 
-    m_timer = m_markDuration;
+    if (!canApplyWith(attackType))
+    {
+        return false;
+    }
 
-    Debug::log("[ShadowMark] Temporary state changed to %d. Timer reset.", static_cast<int>(m_state)
-    );
+    if (isDeathAttack(attackType))
+    {
+        applyDeathContribution();
+        return false;
+    }
+
+    if (isLyrielAttack(attackType))
+    {
+        applyLyrielContribution();
+    }
+
+    return false;
 }
 
 void EnemyShadowMark::exploit()
@@ -250,6 +250,45 @@ bool EnemyShadowMark::isLyrielAttack(EnemyAttackType attackType) const
     default:
         return false;
     }
+}
+
+bool EnemyShadowMark::canApplyWith(EnemyAttackType attackType) const
+{
+    switch (attackType)
+    {
+    case EnemyAttackType::DeathBasic:
+    case EnemyAttackType::DeathCharged:
+    case EnemyAttackType::DeathDash:
+    case EnemyAttackType::DeathTaunt:
+    case EnemyAttackType::LyrielArrow:
+    case EnemyAttackType::LyrielVolley:
+    case EnemyAttackType::LyrielCharged:
+        return true;
+
+    default:
+        return false;
+    }
+}
+
+bool EnemyShadowMark::canExploitWith(EnemyAttackType attackType) const
+{
+    switch (attackType)
+    {
+    case EnemyAttackType::DeathCharged:
+    case EnemyAttackType::LyrielCharged:
+        return true;
+
+    default:
+        return false;
+    }
+}
+
+void EnemyShadowMark::applyDeathContribution()
+{
+}
+
+void EnemyShadowMark::applyLyrielContribution()
+{
 }
 
 IMPLEMENT_SCRIPT(EnemyShadowMark)
