@@ -15,6 +15,7 @@ public:
 
     void Start() override;
     void Update() override;
+    FieldList getExposedFields() const override;
 
     bool isTargetInAttackRange() const;
 

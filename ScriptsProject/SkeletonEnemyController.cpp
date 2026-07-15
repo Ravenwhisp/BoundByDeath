@@ -206,4 +206,6 @@ bool SkeletonEnemyController::trySendReviveTrigger(AnimationComponent* animation
 	return true;
 }
 
-IMPLEMENT_SCRIPT(SkeletonEnemyController)
+IMPLEMENT_SCRIPT_FIELDS_INHERITED(SkeletonEnemyController, EnemyBaseController,
+    SERIALIZED_ASSET_REF(m_attackConfig, "Attack Config", AssetType::DATA_CONTAINER)
+)

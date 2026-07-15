@@ -15,7 +15,7 @@ public:
 
 	void Start() override;
 	void Update() override;
-
+	FieldList getExposedFields() const override;
 	bool isTargetInScimitarRange() const;
 
 	bool isGuardReady() const;

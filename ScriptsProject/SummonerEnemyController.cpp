@@ -345,4 +345,6 @@ void SummonerEnemyController::updateAttackCooldown(float dt)
 	}
 }
 
-IMPLEMENT_SCRIPT(SummonerEnemyController)
+IMPLEMENT_SCRIPT_FIELDS_INHERITED(SummonerEnemyController, EnemyBaseController,
+    SERIALIZED_ASSET_REF(m_attackConfig, "Attack Config", AssetType::DATA_CONTAINER)
+)

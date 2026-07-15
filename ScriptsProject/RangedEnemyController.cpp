@@ -267,4 +267,8 @@ bool RangedEnemyController::isTargetInArrowBarrageRange() const
     return isCurrentTargetInRange(m_attackConfig.get()->m_arrowBarrageRange);
 }
 
+IMPLEMENT_SCRIPT_FIELDS_INHERITED(RangedEnemyController, EnemyBaseController,
+    SERIALIZED_ASSET_REF(m_attackConfig, "Attack Config", AssetType::DATA_CONTAINER)
+)
+
 IMPLEMENT_SCRIPT(RangedEnemyController)

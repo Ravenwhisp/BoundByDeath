@@ -67,4 +67,6 @@ bool SpiderEnemyController::isTargetInAttackRange() const
 	return isCurrentTargetInRange(m_attackConfig.get()->m_basicAttackRange);
 }
 
-IMPLEMENT_SCRIPT(SpiderEnemyController)
+IMPLEMENT_SCRIPT_FIELDS_INHERITED(SpiderEnemyController, EnemyBaseController,
+    SERIALIZED_ASSET_REF(m_attackConfig, "Attack Config", AssetType::DATA_CONTAINER)
+)

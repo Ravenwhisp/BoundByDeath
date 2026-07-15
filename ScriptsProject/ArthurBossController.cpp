@@ -12,7 +12,8 @@
 #include <cmath>
 
 IMPLEMENT_SCRIPT_FIELDS_INHERITED(ArthurBossController, EnemyBaseController,
-	SERIALIZED_FLOAT(m_combatRange, "Combat Range", 0.0f, 50.0f, 0.1f)
+	SERIALIZED_FLOAT(m_combatRange, "Combat Range", 0.0f, 50.0f, 0.1f),
+	SERIALIZED_ASSET_REF(m_attackConfig, "Attack Config", AssetType::DATA_CONTAINER)
 )
 
 ArthurBossController::ArthurBossController(GameObject* owner) : EnemyBaseController(owner)
