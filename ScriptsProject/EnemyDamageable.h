@@ -5,6 +5,7 @@
 
 class EnemyDetectionAggro;
 class EnemySound;
+class EnemyShadowMark;
 
 struct EnemyHitContext : public HitContext
 {
@@ -28,5 +29,6 @@ class EnemyDamageable : public Damageable
 private:
 	EnemyDetectionAggro* m_enemyDetectionAggro = nullptr;
 	EnemySound* m_enemySound = nullptr;
+	EnemyShadowMark* m_shadowMark = nullptr;
 	Transform* m_damageSource = nullptr;
 };

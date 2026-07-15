@@ -3,6 +3,7 @@
 
 #include "EnemyDetectionAggro.h"
 #include "EnemySound.h"
+#include "EnemyShadowMark.h"
 
 EnemyDamageable::EnemyDamageable(GameObject* owner)
 	: Damageable(owner)
@@ -19,6 +20,8 @@ void EnemyDamageable::Start()
 	{
 		Debug::warn("EnemyDetectionAggro Script is missing from %s", GameObjectAPI::getName(m_owner));
 	}
+
+	m_shadowMark = GameObjectAPI::findScript<EnemyShadowMark>(m_owner);
 
 	m_enemySound = GameObjectAPI::findScript<EnemySound>(m_owner);
 
@@ -86,7 +89,17 @@ void EnemyDamageable::takeDamage(const HitContext& ctx)
 		m_damageSource = enemyCtx.attacker;
 	}
 
-	Damageable::takeDamage(enemyCtx.damage);
+	// We do it this way to ensure that even with a letal hit, the mark is still processed
+	const float hpBeforeDamage = getCurrentHp();
+
+	Damageable::takeDamage(enemyCtx);
+
+	const bool damageWasApplied = getCurrentHp() < hpBeforeDamage;
+
+	if (damageWasApplied && m_shadowMark)
+	{
+		m_shadowMark->processAttack(enemyCtx.attackType);
+	}
 
 	m_damageSource = nullptr;
 }
