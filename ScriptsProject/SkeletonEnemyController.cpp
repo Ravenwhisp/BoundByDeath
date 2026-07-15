@@ -209,3 +209,5 @@ bool SkeletonEnemyController::trySendReviveTrigger(AnimationComponent* animation
 IMPLEMENT_SCRIPT_FIELDS_INHERITED(SkeletonEnemyController, EnemyBaseController,
     SERIALIZED_ASSET_REF(m_attackConfig, "Attack Config", AssetType::DATA_CONTAINER)
 )
+
+IMPLEMENT_SCRIPT(SkeletonEnemyController)

@@ -70,3 +70,5 @@ bool SpiderEnemyController::isTargetInAttackRange() const
 IMPLEMENT_SCRIPT_FIELDS_INHERITED(SpiderEnemyController, EnemyBaseController,
     SERIALIZED_ASSET_REF(m_attackConfig, "Attack Config", AssetType::DATA_CONTAINER)
 )
+
+IMPLEMENT_SCRIPT(SpiderEnemyController)
