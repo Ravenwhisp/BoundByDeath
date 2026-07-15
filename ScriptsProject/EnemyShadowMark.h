@@ -2,6 +2,7 @@
 
 #include "ScriptAPI.h"
 #include "Transform2D.h"
+#include "EnemyAttackType.h"
 
 class ReaperGauge;
 
@@ -45,6 +46,9 @@ public:
 
 private:
     ReaperGauge* findReaperGauge();
+
+    bool isDeathAttack(EnemyAttackType attackType) const;
+    bool isLyrielAttack(EnemyAttackType attackType) const;
 
 private:
     ShadowMarkState m_state = ShadowMarkState::None;

@@ -1,25 +1,10 @@
 #pragma once
 
 #include "Damageable.h"
+#include "EnemyAttackType.h"
 
 class EnemyDetectionAggro;
 class EnemySound;
-
-enum class EnemyAttackType
-{
-	None = 0,
-	DeathBasic,
-	DeathCharged,
-	DeathDash,
-	DeathTaunt,
-	LyrielArrow,
-	LyrielVolley,
-	LyrielCharged,
-	ShadowExecution,
-	ShadowMarkExploit,
-	Environment,
-	Count
-};
 
 struct EnemyHitContext : public HitContext
 {

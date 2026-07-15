@@ -223,4 +223,33 @@ void EnemyShadowMark::drawGizmo()
     }
 }
 
+bool EnemyShadowMark::isDeathAttack(EnemyAttackType attackType) const
+{
+    switch (attackType)
+    {
+    case EnemyAttackType::DeathBasic:
+    case EnemyAttackType::DeathCharged:
+    case EnemyAttackType::DeathDash:
+    case EnemyAttackType::DeathTaunt:
+        return true;
+
+    default:
+        return false;
+    }
+}
+
+bool EnemyShadowMark::isLyrielAttack(EnemyAttackType attackType) const
+{
+    switch (attackType)
+    {
+    case EnemyAttackType::LyrielArrow:
+    case EnemyAttackType::LyrielVolley:
+    case EnemyAttackType::LyrielCharged:
+        return true;
+
+    default:
+        return false;
+    }
+}
+
 IMPLEMENT_SCRIPT(EnemyShadowMark)
