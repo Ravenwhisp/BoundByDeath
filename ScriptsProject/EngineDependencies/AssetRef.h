@@ -15,6 +15,11 @@ struct AssetRef
     {
         return m_data.get();
     }
+
+    bool operator!() const
+    {
+        return !m_ref.isValid() || !m_data;
+    }
 };
 
 using PrefabRef = AssetRef<struct Prefab>;
