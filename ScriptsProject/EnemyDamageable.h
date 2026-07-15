@@ -11,12 +11,14 @@ enum class EnemyAttackType
 	DeathBasic,
 	DeathCharged,
 	DeathDash,
+	DeathTaunt,
 	LyrielArrow,
 	LyrielVolley,
 	LyrielCharged,
 	ShadowExecution,
 	ShadowMarkExploit,
-	Environment
+	Environment,
+	Count
 };
 
 struct EnemyHitContext : public HitContext

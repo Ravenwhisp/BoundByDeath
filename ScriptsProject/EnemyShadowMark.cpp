@@ -68,7 +68,7 @@ void EnemyShadowMark::Update()
 {
     updateUI();
 
-    if (m_phase == 0)
+    if (m_state == ShadowMarkState::None)
     {
         return;
     }
@@ -76,26 +76,42 @@ void EnemyShadowMark::Update()
     m_timer -= Time::getDeltaTime();
     if (m_timer <= 0.0f)
     {
-        m_phase = 0;
+        m_state = ShadowMarkState::None;
         m_timer = 0.0f;
         Debug::log("[ShadowMark] Mark expired.");
     }
 }
 
+//This is temporal
 void EnemyShadowMark::notifyDeathHit()
 {
-    if (m_phase < 3)
+    switch (m_state)
     {
-        m_phase++;
+    case ShadowMarkState::None:
+        m_state = ShadowMarkState::DeathOnly;
+        break;
+
+    case ShadowMarkState::DeathOnly:
+        m_state = ShadowMarkState::LyrielOnly;
+        break;
+
+    case ShadowMarkState::LyrielOnly:
+        m_state = ShadowMarkState::Ready;
+        break;
+
+    case ShadowMarkState::Ready:
+        break;
     }
 
     m_timer = m_markDuration;
-    Debug::log("[ShadowMark] Phase %d  timer reset.", m_phase);
+
+    Debug::log("[ShadowMark] Temporary state changed to %d. Timer reset.", static_cast<int>(m_state)
+    );
 }
 
 void EnemyShadowMark::exploit()
 {
-    Debug::log("[ShadowMark] Mark exploited at phase %d!", m_phase);
+    Debug::log("[ShadowMark] Mark exploited");
 
     if (m_reaperGauge == nullptr)
         m_reaperGauge = findReaperGauge();
@@ -105,7 +121,7 @@ void EnemyShadowMark::exploit()
     else
         Debug::warn("[ShadowMark] ReaperGauge not found on any GameObject. Make sure GameController has a ReaperGauge script.");
 
-    m_phase = 0;
+    m_state = ShadowMarkState::None;
     m_timer = 0.0f;
 }
 
@@ -121,15 +137,15 @@ void EnemyShadowMark::updateUI()
 {
     if (m_mark1Object) 
     {
-        GameObjectAPI::setActive(m_mark1Object, m_phase == 1);
+        GameObjectAPI::setActive(m_mark1Object, m_state == ShadowMarkState::DeathOnly);
     }
     if (m_mark2Object)
     {
-        GameObjectAPI::setActive(m_mark2Object, m_phase == 2);
+        GameObjectAPI::setActive(m_mark2Object, m_state == ShadowMarkState::LyrielOnly);
     }
     if (m_mark3Object)
     {
-        GameObjectAPI::setActive(m_mark3Object, m_phase == 3);
+        GameObjectAPI::setActive(m_mark3Object, m_state == ShadowMarkState::Ready);
     }
     
 	if (m_timer <= 0.0f)
@@ -151,8 +167,10 @@ void EnemyShadowMark::updateUI()
 
 void EnemyShadowMark::drawGizmo()
 {
-    if (m_phase == 0)
+    if (m_state == ShadowMarkState::None)
+    {
         return;
+    }
 
     const Transform* t = GameObjectAPI::getTransform(getOwner());
     if (t == nullptr)
@@ -163,11 +181,22 @@ void EnemyShadowMark::drawGizmo()
 
     float   radius;
     Vector3 color;
-    switch (m_phase)
+    switch (m_state)
     {
-    case 1:  radius = 0.20f; color = { 0.35f, 0.35f, 0.35f }; break;
-    case 2:  radius = 0.35f; color = { 0.85f, 0.40f, 0.00f }; break;
-    default: radius = 0.50f; color = { 0.00f, 0.55f, 1.00f }; break;
+    case ShadowMarkState::DeathOnly:
+        radius = 0.20f;
+        color = { 0.35f, 0.35f, 0.35f };
+        break;
+
+    case ShadowMarkState::LyrielOnly:
+        radius = 0.35f;
+        color = { 0.85f, 0.40f, 0.00f };
+        break;
+
+    case ShadowMarkState::Ready:
+        radius = 0.50f;
+        color = { 0.00f, 0.55f, 1.00f };
+        break;
     }
 
     DebugDrawAPI::drawSphere(pos, color, radius, 0, true);

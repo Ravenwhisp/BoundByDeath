@@ -5,6 +5,14 @@
 
 class ReaperGauge;
 
+enum class ShadowMarkState
+{
+    None = 0,
+    DeathOnly,
+    LyrielOnly,
+    Ready
+};
+
 class EnemyShadowMark : public Script
 {
     DECLARE_SCRIPT(EnemyShadowMark)
@@ -19,9 +27,9 @@ public:
     ScriptFieldList getExposedFields() const override;
 
     void notifyDeathHit();
-    bool isExploitable() const { return m_phase == 3; }
+    bool isExploitable() const { return m_state == ShadowMarkState::Ready; }
     virtual void exploit();
-    int  getPhase() const { return m_phase; }
+    ShadowMarkState getState() const { return m_state; }
 	void updateUI();
 
 public:
@@ -39,7 +47,7 @@ private:
     ReaperGauge* findReaperGauge();
 
 private:
-    int          m_phase        = 0;
+    ShadowMarkState m_state = ShadowMarkState::None;
     float        m_timer        = 0.0f;
     ReaperGauge* m_reaperGauge  = nullptr;
 
