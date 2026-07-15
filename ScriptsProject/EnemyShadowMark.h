@@ -35,17 +35,6 @@ public:
     ShadowMarkState getState() const { return m_state; }
 	void updateUI();
 
-public:
-    float m_markDuration              = 3.0f;
-    float m_markUITargetScale = 1.0f;
-	float m_markUIHeightOffset = 1.0f;
-    ScriptComponentRef<Transform2D> m_canvas;
-    ScriptComponentRef<Transform> m_mark_1;
-    ScriptComponentRef<Transform> m_mark_2;
-    ScriptComponentRef<Transform> m_mark_3;
-    
-    float m_volleyCooldownReduction   = 0.20f;  // % of base cooldown removed per exploit
-
 private:
     ReaperGauge* findReaperGauge();
 
@@ -57,6 +46,21 @@ private:
 
     void applyDeathContribution();
     void applyLyrielContribution();
+
+    void resetTimer();
+    void resetMark();
+
+public:
+    float m_markDuration = 3.0f;
+    float m_markUITargetScale = 1.0f;
+    float m_markUIHeightOffset = 1.0f;
+    ScriptComponentRef<Transform2D> m_canvas;
+    ScriptComponentRef<Transform> m_mark_1;
+    ScriptComponentRef<Transform> m_mark_2;
+    ScriptComponentRef<Transform> m_mark_3;
+
+    float m_volleyCooldownReduction = 0.20f;  // % of base cooldown removed per exploit
+
 
 private:
     ShadowMarkState m_state = ShadowMarkState::None;

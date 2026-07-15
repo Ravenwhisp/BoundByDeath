@@ -76,9 +76,7 @@ void EnemyShadowMark::Update()
     m_timer -= Time::getDeltaTime();
     if (m_timer <= 0.0f)
     {
-        m_state = ShadowMarkState::None;
-        m_timer = 0.0f;
-        Debug::log("[ShadowMark] Mark expired.");
+        resetMark();
     }
 }
 
@@ -121,8 +119,7 @@ void EnemyShadowMark::exploit()
     else
         Debug::warn("[ShadowMark] ReaperGauge not found on any GameObject. Make sure GameController has a ReaperGauge script.");
 
-    m_state = ShadowMarkState::None;
-    m_timer = 0.0f;
+    resetMark();
 }
 
 ReaperGauge* EnemyShadowMark::findReaperGauge()
@@ -285,10 +282,58 @@ bool EnemyShadowMark::canExploitWith(EnemyAttackType attackType) const
 
 void EnemyShadowMark::applyDeathContribution()
 {
+    switch (m_state)
+    {
+    case ShadowMarkState::None:
+        m_state = ShadowMarkState::DeathOnly;
+        break;
+
+    case ShadowMarkState::DeathOnly:
+        break;
+
+    case ShadowMarkState::LyrielOnly:
+        m_state = ShadowMarkState::Ready;
+        break;
+
+    case ShadowMarkState::Ready:
+        break;
+    }
+
+    resetTimer();
 }
 
 void EnemyShadowMark::applyLyrielContribution()
 {
+    switch (m_state)
+    {
+    case ShadowMarkState::None:
+        m_state = ShadowMarkState::LyrielOnly;
+        break;
+
+    case ShadowMarkState::DeathOnly:
+        m_state = ShadowMarkState::Ready;
+        break;
+
+    case ShadowMarkState::LyrielOnly:
+        break;
+
+    case ShadowMarkState::Ready:
+        break;
+    }
+
+    resetTimer();
+}
+
+void EnemyShadowMark::resetTimer()
+{
+    m_timer = m_markDuration;
+}
+
+void EnemyShadowMark::resetMark()
+{
+    m_state = ShadowMarkState::None;
+    m_timer = 0.0f;
+    updateUI();
 }
 
 IMPLEMENT_SCRIPT(EnemyShadowMark)
