@@ -140,6 +140,11 @@ void EnemyBaseController::facePosition(const Vector3& worldPosition)
 
 bool EnemyBaseController::moveTowardsTarget()
 {
+    if (m_isForcedMovementActive)
+    {
+        return false;
+    }
+
     if (!hasValidTarget())
     {
         clearPath();
@@ -187,6 +192,24 @@ void EnemyBaseController::clearPath()
 void EnemyBaseController::resetRepathTimer()
 {
     m_repathTimer = 0.0f;
+}
+
+void EnemyBaseController::setForcedMovementActive(bool active)
+{
+    if (m_isForcedMovementActive == active)
+    {
+        return;
+    }
+
+    m_isForcedMovementActive = active;
+
+    clearPath();
+    resetRepathTimer();
+}
+
+void EnemyBaseController::setForcedMovementBlocked(bool blocked)
+{
+    m_isForcedMovementBlocked = blocked;
 }
 
 bool EnemyBaseController::isDead() const

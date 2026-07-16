@@ -37,9 +37,12 @@ IMPLEMENT_SCRIPT_FIELDS(DeathConfig,
 	FIELD_GROUP_COLLAPSE("Taunt",
 		SERIALIZED_FLOAT(m_tauntDuration, "Taunt Duration", 1.0f, 10.0f, 0.05f),
 		SERIALIZED_FLOAT(m_tauntRange, "Cone Range", 1.0f, 10.0f, 0.1f),
-		SERIALIZED_FLOAT(m_tauntHalfAngleDegrees, "Cone Angle", 1.0f, 180.0f, 1.0f),
-		SERIALIZED_FLOAT(m_tauntLockDuration, "Taunt Lock Duration", 0.05f, 2.0f, 0.05f),
-		SERIALIZED_FLOAT(m_tauntCooldown, "Taunt Cooldown", 0.0f, 10.0f, 0.01f)
+		SERIALIZED_FLOAT(m_tauntHalfAngleDegrees, "Cone Half Angle", 1.0f, 180.0f, 1.0f),
+		SERIALIZED_FLOAT(m_tauntCooldown, "Taunt Cooldown", 0.0f, 10.0f, 0.01f),
+		SERIALIZED_FLOAT(m_tauntImpactDelay, "Impact Delay", 0.0f, 3.0f, 0.05f),
+		SERIALIZED_FLOAT(m_tauntPullDuration, "Pull Duration", 0.05f, 3.0f, 0.05f),
+		SERIALIZED_FLOAT(m_tauntPullDamage, "Pull Damage", 0.0f, 200.0f, 1.0f),
+		SERIALIZED_FLOAT(m_tauntPullDestinationDistance, "Pull Destination Distance", 0.25f, 5.0f, 0.05f)
 	),
 
 	FIELD_GROUP_COLLAPSE("Dash",

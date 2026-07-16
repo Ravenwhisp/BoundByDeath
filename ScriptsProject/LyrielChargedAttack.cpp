@@ -390,14 +390,14 @@ bool LyrielChargedAttack::applyChargedDamage(const std::vector<GameObject*>& tar
             if (mark != nullptr && mark->isExploitable())
             {
                 mark->exploit();
-                ctx.attackType = EnemyAttackType::ShadowMarkExploit;
+                ctx.attackType = PlayerAttackType::ShadowMarkExploit;
                 anyMarkExploited = true;
                 if (m_lyrielCharacter != nullptr)
                     m_lyrielCharacter->onMarkExploited();
             }
             else
             {
-                ctx.attackType = EnemyAttackType::LyrielCharged;
+                ctx.attackType = PlayerAttackType::LyrielCharged;
             }
 
             damageable->takeDamage(ctx);
