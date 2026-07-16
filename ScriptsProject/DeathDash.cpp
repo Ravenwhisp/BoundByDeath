@@ -192,7 +192,7 @@ void DeathDash::applyDashDamage()
                 EnemyHitContext ctx;
                 ctx.damage = m_deathCharacter->getConfig()->m_dashDamage;
                 ctx.attacker = GameObjectAPI::getTransform(getOwner());
-                ctx.attackType = EnemyAttackType::DeathDash;
+                ctx.attackType = PlayerAttackType::DeathDash;
                 damageable->takeDamage(ctx);
             }
 

@@ -210,7 +210,7 @@ void DeathBasicAttack::dealDamageToTarget(GameObject* target) const
                 EnemyHitContext ctx;
                 ctx.damage = m_deathCharacter->getConfig()->m_basicAttackDamage;
                 ctx.attacker = GameObjectAPI::getTransform(getOwner());
-                ctx.attackType = EnemyAttackType::DeathBasic;
+                ctx.attackType = PlayerAttackType::DeathBasic;
                 damageable->takeDamage(ctx);
             }
 

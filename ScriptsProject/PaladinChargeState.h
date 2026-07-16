@@ -23,6 +23,7 @@ public:
 private:
 	void moveCharge();
 	void finishCharge();
+	void cancelCharge();
 
 	void stopChargeAttackEffect();
 

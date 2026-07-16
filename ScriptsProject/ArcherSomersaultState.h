@@ -22,6 +22,7 @@ public:
 private:
     void moveSomersault();
     void finishSomersault();
+    void cancelSomersault();
 
 private:
     RangedEnemyController* m_archerController = nullptr;
