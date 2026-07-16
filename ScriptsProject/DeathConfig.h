@@ -37,13 +37,21 @@ public:
 	float m_chargedShotArcRange = 3.5f;
 	float m_chargedShotArcAngle = 150.0f;
 	float m_chargedCooldown = 0.0f;
+	float m_chargedMovementSlowdownPercentage = 50.0f;
+	bool m_chargedStunOnMaxCharge = true;
+	float m_chargedStunDuration = 1.0f;
 
-	// Taunt
+	// Taunt / Pull
 	float m_tauntDuration = 3.0f;
-	float m_tauntRange = 2.5f;
-	float m_tauntHalfAngleDegrees = 35.0f;
-	float m_tauntLockDuration = 0.4f;
-	float m_tauntCooldown = 0.0f;
+	float m_tauntRange = 5.0f;
+	float m_tauntHalfAngleDegrees = 70.0f;
+	float m_tauntCooldown = 7.0f;
+
+	float m_tauntImpactDelay = 1.0f;
+	float m_tauntPullDuration = 0.5f;
+	float m_tauntPullDamage = 10.0f;
+
+	float m_tauntPullDestinationDistance = 1.5f;
 
 	// Dash
 	float m_dashDuration = 0.15f;

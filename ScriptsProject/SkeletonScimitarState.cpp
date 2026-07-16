@@ -247,6 +247,11 @@ void SkeletonScimitarState::applyHit(bool shouldStun)
 
 void SkeletonScimitarState::moveInDirection(const Vector3& direction, float speed)
 {
+	if (!m_controller || m_controller->isForcedMovementActive())
+	{
+		return;
+	}
+
 	if (direction.LengthSquared() <= 0.0001f)
 	{
 		return;
@@ -268,7 +273,7 @@ void SkeletonScimitarState::moveInDirection(const Vector3& direction, float spee
 	Vector3 nextPosition;
 	if (NavigationAPI::moveAlongSurface(currentPosition, desiredPosition, nextPosition, m_controller->m_pathSearchExtents))
 	{
-		TransformAPI::setPosition(ownerTransform, nextPosition);
+		TransformAPI::setGlobalPosition(ownerTransform, nextPosition);
 	}
 }
 
