@@ -1,37 +1,54 @@
 #pragma once
 
 #include "Damageable.h"
-#include "EnemyAttackType.h"
+#include "PlayerAttackType.h"
 
 class EnemyDetectionAggro;
 class EnemySound;
 class EnemyShadowMark;
+class Transform2D;
 
 struct EnemyHitContext : public HitContext
 {
 	Transform* attacker = nullptr;
-	EnemyAttackType attackType = EnemyAttackType::None;
+	PlayerAttackType attackType = PlayerAttackType::None;
 };
 
 class EnemyDamageable : public Damageable
 {
 	DECLARE_SCRIPT(EnemyDamageable)
 
-	public:
-		explicit EnemyDamageable(GameObject* owner);
+public:
+	explicit EnemyDamageable(GameObject* owner);
 
-		void Start() override;
-		void takeDamage(const HitContext& ctx) override;
+	void Start() override;
+	void Update() override;
 
-		bool lastHitExploitShadowMark() const { return m_lastHitExploitedShadowMark; }
-	protected:
-		void onDamaged(float amount) override;
+	ScriptFieldList getExposedFields() const override;
+	
+    void takeDamage(const HitContext& ctx) override;
+	bool lastHitExploitShadowMark() const { return m_lastHitExploitedShadowMark; }
+
+protected:
+	void onDamaged(float amount) override;
+
+private: 
+	void resolveHealthBarReferences();
+	void updateHealthBarFade();
+	void setHealthBarAlpha(float alpha);
 
 private:
 	EnemyDetectionAggro* m_enemyDetectionAggro = nullptr;
 	EnemySound* m_enemySound = nullptr;
 	EnemyShadowMark* m_shadowMark = nullptr;
 	Transform* m_damageSource = nullptr;
-
+	
 	bool m_lastHitExploitedShadowMark = false;
+
+	ScriptComponentRef<Transform2D> m_healthBarContainer;
+	Transform2D* m_healthBarContainerTransform = nullptr;
+
+	float m_healthBarFadeTime = 0.25f;
+	float m_healthBarFadeTimer = 0.0f;
+	bool m_healthBarFadeActive = false;
 };

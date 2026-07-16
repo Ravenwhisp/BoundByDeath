@@ -2,7 +2,7 @@
 
 #include "ScriptAPI.h"
 #include "Transform2D.h"
-#include "EnemyAttackType.h"
+#include "PlayerAttackType.h"
 
 class ReaperGauge;
 
@@ -27,9 +27,9 @@ public:
 
     ScriptFieldList getExposedFields() const override;
 
-    bool processAttack(EnemyAttackType attackType);
+    bool processAttack(PlayerAttackType attackType);
     // Temporal to compile
-    void notifyDeathHit() { processAttack(EnemyAttackType::DeathBasic); }
+    void notifyDeathHit() { processAttack(PlayerAttackType::DeathBasic); }
     bool isExploitable() const { return m_state == ShadowMarkState::Ready; }
     virtual void exploit();
     ShadowMarkState getState() const { return m_state; }
@@ -38,11 +38,11 @@ public:
 private:
     ReaperGauge* findReaperGauge();
 
-    bool isDeathAttack(EnemyAttackType attackType) const;
-    bool isLyrielAttack(EnemyAttackType attackType) const;
+    bool isDeathAttack(PlayerAttackType attackType) const;
+    bool isLyrielAttack(PlayerAttackType attackType) const;
 
-    bool canApplyWith(EnemyAttackType attackType) const;
-    bool canExploitWith(EnemyAttackType attackType) const;
+    bool canApplyWith(PlayerAttackType attackType) const;
+    bool canExploitWith(PlayerAttackType attackType) const;
 
     void applyDeathContribution();
     void applyLyrielContribution();

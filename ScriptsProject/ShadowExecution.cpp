@@ -298,7 +298,7 @@ void ShadowExecution::applyAoEDamage()
         }
 
         ctx.attacker = nullptr;
-        ctx.attackType = EnemyAttackType::ShadowExecution;
+        ctx.attackType = PlayerAttackType::ShadowExecution;
         damageable->takeDamage(ctx);
 
         m_hitEnemies.push_back(enemy);

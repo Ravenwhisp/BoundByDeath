@@ -80,7 +80,7 @@ void EnemyShadowMark::Update()
     }
 }
 
-bool EnemyShadowMark::processAttack(EnemyAttackType attackType)
+bool EnemyShadowMark::processAttack(PlayerAttackType attackType)
 {
     if (m_state == ShadowMarkState::Ready && canExploitWith(attackType))
     {
@@ -220,14 +220,14 @@ void EnemyShadowMark::drawGizmo()
     }
 }
 
-bool EnemyShadowMark::isDeathAttack(EnemyAttackType attackType) const
+bool EnemyShadowMark::isDeathAttack(PlayerAttackType attackType) const
 {
     switch (attackType)
     {
-    case EnemyAttackType::DeathBasic:
-    case EnemyAttackType::DeathCharged:
-    case EnemyAttackType::DeathDash:
-    case EnemyAttackType::DeathTaunt:
+    case PlayerAttackType::DeathBasic:
+    case PlayerAttackType::DeathCharged:
+    case PlayerAttackType::DeathDash:
+    case PlayerAttackType::DeathTaunt:
         return true;
 
     default:
@@ -235,13 +235,13 @@ bool EnemyShadowMark::isDeathAttack(EnemyAttackType attackType) const
     }
 }
 
-bool EnemyShadowMark::isLyrielAttack(EnemyAttackType attackType) const
+bool EnemyShadowMark::isLyrielAttack(PlayerAttackType attackType) const
 {
     switch (attackType)
     {
-    case EnemyAttackType::LyrielArrow:
-    case EnemyAttackType::LyrielVolley:
-    case EnemyAttackType::LyrielCharged:
+    case PlayerAttackType::LyrielArrow:
+    case PlayerAttackType::LyrielVolley:
+    case PlayerAttackType::LyrielCharged:
         return true;
 
     default:
@@ -249,17 +249,17 @@ bool EnemyShadowMark::isLyrielAttack(EnemyAttackType attackType) const
     }
 }
 
-bool EnemyShadowMark::canApplyWith(EnemyAttackType attackType) const
+bool EnemyShadowMark::canApplyWith(PlayerAttackType attackType) const
 {
     switch (attackType)
     {
-    case EnemyAttackType::DeathBasic:
-    case EnemyAttackType::DeathCharged:
-    case EnemyAttackType::DeathDash:
-    case EnemyAttackType::DeathTaunt:
-    case EnemyAttackType::LyrielArrow:
-    case EnemyAttackType::LyrielVolley:
-    case EnemyAttackType::LyrielCharged:
+    case PlayerAttackType::DeathBasic:
+    case PlayerAttackType::DeathCharged:
+    case PlayerAttackType::DeathDash:
+    case PlayerAttackType::DeathTaunt:
+    case PlayerAttackType::LyrielArrow:
+    case PlayerAttackType::LyrielVolley:
+    case PlayerAttackType::LyrielCharged:
         return true;
 
     default:
@@ -267,12 +267,12 @@ bool EnemyShadowMark::canApplyWith(EnemyAttackType attackType) const
     }
 }
 
-bool EnemyShadowMark::canExploitWith(EnemyAttackType attackType) const
+bool EnemyShadowMark::canExploitWith(PlayerAttackType attackType) const
 {
     switch (attackType)
     {
-    case EnemyAttackType::DeathCharged:
-    case EnemyAttackType::LyrielCharged:
+    case PlayerAttackType::DeathCharged:
+    case PlayerAttackType::LyrielCharged:
         return true;
 
     default:

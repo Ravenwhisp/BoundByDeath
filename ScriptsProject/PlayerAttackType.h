@@ -1,6 +1,6 @@
 #pragma once
 
-enum class EnemyAttackType
+enum class PlayerAttackType
 {
     None = 0,
     DeathBasic,

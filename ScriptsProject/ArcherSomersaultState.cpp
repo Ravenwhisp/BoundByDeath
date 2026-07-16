@@ -64,6 +64,12 @@ void ArcherSomersaultState::OnStateUpdate()
         return;
     }
 
+    if (m_archerController->isForcedMovementActive())
+    {
+        cancelSomersault();
+        return;
+    }
+
     m_stateTimer += Time::getDeltaTime();
 
     if (m_particles) m_particles->updateChargeParticle();
@@ -84,6 +90,11 @@ void ArcherSomersaultState::OnStateExit()
 
 void ArcherSomersaultState::moveSomersault()
 {
+    if (!m_archerController || m_archerController->isForcedMovementActive())
+    {
+        return;
+    }
+
     if (!m_attackConfig)
     {
         return;
@@ -127,6 +138,20 @@ void ArcherSomersaultState::finishSomersault()
     AnimationAPI::sendTrigger(m_animation, "ToChase");
 
     Debug::log("[ArcherSomersaultState] Finished, Chase trigger sent");
+}
+
+void ArcherSomersaultState::cancelSomersault()
+{
+    if (!m_archerController || !m_animation)
+    {
+        return;
+    }
+
+    m_archerController->consumeSomersaultCooldown();
+
+    AnimationAPI::sendTrigger(m_animation, "ToChase");
+
+    Debug::log("[ArcherSomersaultState] Somersault cancelled by forced movement.");
 }
 
 IMPLEMENT_SCRIPT(ArcherSomersaultState)

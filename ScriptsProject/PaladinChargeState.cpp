@@ -83,13 +83,9 @@ void PaladinChargeState::OnStateUpdate()
 		return;
 	}
 
-	m_stateTimer += Time::getDeltaTime();
-
-	moveCharge();
-
-	if (m_stateTimer >= m_attackConfig->m_chargeDuration || m_paladinController->isTargetInAttackRange())
+	if (m_paladinController->isForcedMovementActive())
 	{
-		finishCharge();
+		cancelCharge();
 		return;
 	}
 
@@ -119,6 +115,11 @@ void PaladinChargeState::OnStateExit()
 
 void PaladinChargeState::moveCharge()
 {
+	if (!m_paladinController || m_paladinController->isForcedMovementActive())
+	{
+		return;
+	}
+
 	if (!m_attackConfig)
 	{
 		return;
@@ -170,6 +171,28 @@ void PaladinChargeState::finishCharge()
 	AnimationAPI::sendTrigger(m_animation, "ToChase");
 
 	Debug::log("[PaladinChargeState] Finished, Chase trigger sent");
+}
+
+void PaladinChargeState::cancelCharge()
+{
+	if (!m_paladinController || !m_animation)
+	{
+		stopChargeAttackEffect();
+		return;
+	}
+
+	stopChargeAttackEffect();
+
+	if (m_paladinSound)
+	{
+		m_paladinSound->stopChargeLoop();
+	}
+
+	m_paladinController->consumeChargeCooldown();
+
+	AnimationAPI::sendTrigger(m_animation, "ToChase");
+
+	Debug::log("[PaladinChargeState] Charge cancelled by forced movement.");
 }
 
 void PaladinChargeState::stopChargeAttackEffect()

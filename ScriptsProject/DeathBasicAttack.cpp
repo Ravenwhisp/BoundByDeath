@@ -8,6 +8,7 @@
 #include "PlayerRotation.h"
 #include "PlayerState.h"
 #include "EnemyDamageable.h"
+#include "EnemyShadowMark.h"
 #include "BreakableDamageable.h"
 #include "DeathUI.h"
 #include "DeathConfig.h"
@@ -209,7 +210,7 @@ void DeathBasicAttack::dealDamageToTarget(GameObject* target) const
                 EnemyHitContext ctx;
                 ctx.damage = m_config->m_basicAttackDamage;
                 ctx.attacker = GameObjectAPI::getTransform(getOwner());
-                ctx.attackType = EnemyAttackType::DeathBasic;
+                ctx.attackType = PlayerAttackType::DeathBasic;
                 damageable->takeDamage(ctx);
             }
 
