@@ -48,6 +48,21 @@ void EnemyDamageable::Update()
 	updateHealthBarFade();
 }
 
+void EnemyDamageable::takeDamage(const HitContext& ctx)
+{
+	const EnemyHitContext& enemyCtx = static_cast<const EnemyHitContext&>(ctx);
+
+	resetLastShadowMarkResult();
+
+	if (m_isDead || m_invulnerable)
+	{
+		return;
+	}
+
+	processShadowMarkHit(enemyCtx.attackType);
+	applyDamageWithoutShadowMark(enemyCtx);
+}
+
 void EnemyDamageable::onDamaged(float amount)
 {
 	Damageable::onDamaged(amount);
@@ -75,28 +90,25 @@ void EnemyDamageable::onDamaged(float amount)
 	m_enemyDetectionAggro->notifyPlayerAttackedEnemy(m_damageSource);
 }
 
-void EnemyDamageable::takeDamage(const HitContext& ctx)
+bool EnemyDamageable::processShadowMarkHit(PlayerAttackType attackType)
 {
-	const EnemyHitContext& enemyCtx = static_cast<const EnemyHitContext&>(ctx);
-
-	m_lastHitExploitedShadowMark = false;
-
-	if (enemyCtx.attacker)
+	if (!m_shadowMark)
 	{
-		m_damageSource = enemyCtx.attacker;
+		return false;
 	}
 
-	// We do it this way to ensure that even with a letal hit, the mark is still processed
-	const float hpBeforeDamage = getCurrentHp();
+	m_lastHitExploitedShadowMark = m_shadowMark->processAttack(attackType);
+	return m_lastHitExploitedShadowMark;
+}
 
-	Damageable::takeDamage(enemyCtx);
-
-	const bool damageWasApplied = getCurrentHp() < hpBeforeDamage;
-
-	if (damageWasApplied && m_shadowMark)
+void EnemyDamageable::applyDamageWithoutShadowMark(const EnemyHitContext& hit)
+{
+	if (hit.attacker)
 	{
-		m_lastHitExploitedShadowMark = m_shadowMark->processAttack(enemyCtx.attackType);
+		m_damageSource = hit.attacker;
 	}
+
+	Damageable::takeDamage(hit);
 
 	m_damageSource = nullptr;
 }

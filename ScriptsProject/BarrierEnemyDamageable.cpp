@@ -3,25 +3,8 @@
 #include "Transform2D.h"
 #include <algorithm>
 
-static const char* barrierAttackTypeNames[] =
-{
-    "None",
-    "DeathBasic",
-    "DeathCharged",
-    "DeathDash",
-    "LyrielArrow",
-    "LyrielVolley",
-    "LyrielCharged",
-    "ShadowExecution",
-    "Environment"
-};
-
-constexpr int barrierAttackTypeCount = 9;
-
 IMPLEMENT_SCRIPT_FIELDS_INHERITED(BarrierEnemyDamageable, EnemyDamageable,
     SERIALIZED_FLOAT_VECTOR(m_barriersThresholds, "Barrier Thresholds (%)"),
-    SERIALIZED_ENUM_INT(m_requiredAttackType, "Barrier Break Attack", barrierAttackTypeNames, barrierAttackTypeCount),
-    SERIALIZED_BOOL(m_shadowMarkExploitBreaksBarriers, "Shadow Mark Exploit Breaks Barriers"),
     SERIALIZED_ASSET_REF(m_barrierPrefab, "Barrier UI Prefab", AssetType::PREFAB),
     SERIALIZED_FLOAT(m_minPos, "Barrier Min Pos (0% HP)", -1000.0f, 1000.0f, 1.0f),
     SERIALIZED_FLOAT(m_maxPos, "Barrier Max Pos (100% HP)", -1000.0f, 1000.0f, 1.0f),
@@ -141,59 +124,8 @@ void BarrierEnemyDamageable::takeDamage(float amount)
     takeDamage(hit);
 }
 
-bool BarrierEnemyDamageable::canBreakBarrier(PlayerAttackType attackType) const
+void BarrierEnemyDamageable::breakNextBarrier()
 {
-    if (attackType == PlayerAttackType::ShadowMarkExploit)
-    {
-        return m_shadowMarkExploitBreaksBarriers;
-    }
-
-    return attackType == static_cast<PlayerAttackType>(m_requiredAttackType);
-}
-
-void BarrierEnemyDamageable::takeDamage(const HitContext& ctx)
-{
-    const EnemyHitContext& hit = static_cast<const EnemyHitContext&>(ctx);
-
-    if (m_isDead || m_invulnerable || hit.damage <= 0.0f)
-    {
-        return;
-    }
-
-    float nextBarrierHp = getNextBarrierAbsoluteHp();
-
-    if (nextBarrierHp <= 0.0f)
-    {
-        EnemyDamageable::takeDamage(hit);
-        return;
-    }
-
-    const float hpBefore = m_currentHp;
-    const float hpAfter = m_currentHp - hit.damage;
-
-    if (hpAfter >= nextBarrierHp)
-    {
-        EnemyDamageable::takeDamage(hit);
-        return;
-    }
-
-    if (!canBreakBarrier(hit.attackType))
-    {
-        const float allowedDamage = m_currentHp - nextBarrierHp;
-        if (allowedDamage > 0.0f)
-        {
-            EnemyHitContext limitedHit = hit;
-            limitedHit.damage = allowedDamage;
-            EnemyDamageable::takeDamage(limitedHit);
-        }
-
-        Debug::log("[Barrier] %s blocked hit at %.0f%% HP. Required attack: %s",
-            GameObjectAPI::getName(m_owner),
-            (nextBarrierHp / m_maxHp) * 100.0f,
-            barrierAttackTypeNames[static_cast<int>(m_requiredAttackType)]);
-        return;
-    }
-
     for (size_t i = 0; i < m_barriers.size(); ++i)
     {
         if (m_barriers[i].broken)
@@ -201,31 +133,70 @@ void BarrierEnemyDamageable::takeDamage(const HitContext& ctx)
             continue;
         }
 
-        const float barrierHp = m_maxHp * m_barriers[i].hpPercent;
-        if (hpAfter <= barrierHp && hpBefore >= barrierHp)
-        {
-            m_barriers[i].broken = true;
-            m_nextBarrierIndex = i + 1;
-            destroyBrokenBarrierUI(i);
+        m_barriers[i].broken = true;
+        m_nextBarrierIndex = i + 1;
+        destroyBrokenBarrierUI(i);
 
-            Debug::log("[Barrier] %s broke barrier at %.0f%% HP (%s, HP: %.1f -> %.1f)",
-                GameObjectAPI::getName(m_owner),
-                m_barriers[i].hpPercent * 100.0f,
-                barrierAttackTypeNames[static_cast<int>(m_requiredAttackType)],
-                hpBefore,
-                hpAfter);
-        }
+        Debug::log("[Barrier] %s broke barrier at %.0f%% HP through Shadow Mark exploit.", GameObjectAPI::getName(m_owner), m_barriers[i].hpPercent * 100.0f);
+
+        return;
+    }
+}
+
+void BarrierEnemyDamageable::takeDamage(const HitContext& ctx)
+{
+    const EnemyHitContext& hit = static_cast<const EnemyHitContext&>(ctx);
+
+    resetLastShadowMarkResult();
+
+    if (m_isDead || m_invulnerable)
+    {
+        return;
     }
 
-    EnemyDamageable::takeDamage(hit);
+    const bool shadowMarkExploited = processShadowMarkHit(hit.attackType);
+    float nextBarrierHp = getNextBarrierAbsoluteHp();
+
+    if (nextBarrierHp <= 0.0f)
+    {
+        applyDamageWithoutShadowMark(hit);
+        return;
+    }
+
+    const float hpAfter = m_currentHp - hit.damage;
+
+    // the hit does not reach the barrier
+    if (hpAfter >= nextBarrierHp)
+    {
+        applyDamageWithoutShadowMark(hit);
+        return;
+    }
+
+    // shadow mark exploit breaks thebarrier but deals no damage
+    if (shadowMarkExploited)
+    {
+        breakNextBarrier();
+        return;
+    }
+
+    // any other hit can only deal damage up to the barrier
+    const float allowedDamage = m_currentHp - nextBarrierHp;
+
+    if (allowedDamage > 0.0f)
+    {
+        EnemyHitContext limitedHit = hit;
+        limitedHit.damage = allowedDamage;
+        applyDamageWithoutShadowMark(limitedHit);
+    }
+
+    Debug::log("[Barrier] %s blocked hit at %.0f%% HP.", GameObjectAPI::getName(m_owner), (nextBarrierHp / m_maxHp) * 100.0f);
 }
 
 void BarrierEnemyDamageable::kill()
 {
     if (hasActiveBarriers())
     {
-        Debug::log("[Barrier] %s kill prevented by active barrier.",
-            GameObjectAPI::getName(m_owner));
+        Debug::log("[Barrier] %s kill prevented by active barrier.", GameObjectAPI::getName(m_owner));
         return;
     }
 

@@ -22,8 +22,6 @@ public:
 
 public:
     std::vector<float> m_barriersThresholds;
-    int m_requiredAttackType = static_cast<int>(PlayerAttackType::ShadowMarkExploit);
-    bool m_shadowMarkExploitBreaksBarriers = true;
     PrefabRef m_barrierPrefab;
 
     float m_minPos = 80.0f;
@@ -47,7 +45,7 @@ private:
     void instantiateBarrierUIs();
     void destroyBrokenBarrierUI(size_t index);
     float getNextBarrierAbsoluteHp() const;
-    bool canBreakBarrier(PlayerAttackType attackType) const;
+    void breakNextBarrier();
 
     std::vector<Barrier> m_barriers;
     std::vector<BarrierUI> m_barrierUIs;
