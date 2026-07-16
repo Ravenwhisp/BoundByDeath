@@ -95,8 +95,11 @@ public:
 			SERIALIZED_FLOAT(m_tauntDuration, "Taunt Duration", 1.0f, 10.0f, 0.05f),
 			SERIALIZED_FLOAT(m_tauntRange, "Cone Range", 1.0f, 10.0f, 0.1f),
 			SERIALIZED_FLOAT(m_tauntHalfAngleDegrees, "Cone Angle", 1.0f, 180.0f, 1.0f),
-			SERIALIZED_FLOAT(m_tauntLockDuration, "Taunt Lock Duration", 0.05f, 2.0f, 0.05f),
-			SERIALIZED_FLOAT(m_tauntCooldown, "Taunt Cooldown", 0.0f, 10.0f, 0.01f)
+			SERIALIZED_FLOAT(m_tauntCooldown, "Taunt Cooldown", 0.0f, 10.0f, 0.01f),
+			SERIALIZED_FLOAT(m_tauntImpactDelay, "Taunt Impact Delay", 0.0f, 5.0f, 0.05f),
+			SERIALIZED_FLOAT(m_tauntPullDuration, "Taunt Pull Duration", 0.0f, 3.0f, 0.05f),
+			SERIALIZED_FLOAT(m_tauntPullDamage, "Taunt Pull Damage", 0.0f, 100.0f, 1.0f),
+			SERIALIZED_FLOAT(m_tauntPullDestinationDistance, "Taunt Pull Destination Distance", 0.5f, 5.0f, 0.1f)
 		),
 
 		FIELD_GROUP_COLLAPSE("Dash",
