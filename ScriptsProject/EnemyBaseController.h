@@ -44,7 +44,7 @@ public:
     // Stunned helpers
     void setStunnedDuration(float stunnedDuration);
     float getStunnedDuration() const { return m_stunnedDuration; }
-    void useStun();
+    void useStun(float duration);
     bool trySendStunTrigger(AnimationComponent* animation);
     bool isStunned() const { return m_isStunned; }
     void clearStun();

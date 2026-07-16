@@ -12,23 +12,36 @@
 #include "BreakableDamageable.h"
 #include "LyrielUI.h"
 #include "LyrielConfig.h"
+#include "PlayerRotation.h"
 
 #include <cmath>
 
 static const float PI = 3.1415926535897931f;
 
 LyrielChargedAttack::LyrielChargedAttack(GameObject* owner)
-    : LyrielAbilityBase(owner)
+    : ChargedAttackBase(owner)
 {
 }
 
 void LyrielChargedAttack::Start()
 {
-    LyrielAbilityBase::Start();
+    ChargedAttackBase::Start();
 
+    m_lyrielCharacter = dynamic_cast<LyrielCharacter*>(m_character);
+    m_config = GameObjectAPI::findScript<LyrielConfig>(getOwner());
     m_lyrielUI = GameObjectAPI::findScript<LyrielUI>(getOwner());
 
-    if (!m_lyrielUI)
+    if (m_lyrielCharacter == nullptr)
+    {
+        Debug::error("[LyrielChargedAttack] Owner does not have a valid LyrielCharacter.");
+    }
+
+    if (m_config == nullptr)
+    {
+        Debug::error("[LyrielChargedAttack] LyrielConfig not found.");
+    }
+
+    if (m_lyrielUI == nullptr)
     {
         Debug::warn("[LyrielChargedAttack] LyrielUI not found.");
     }
@@ -36,7 +49,7 @@ void LyrielChargedAttack::Start()
 
 void LyrielChargedAttack::Update()
 {
-    LyrielAbilityBase::Update();
+    ChargedAttackBase::Update();
 
     if (m_isCharging)
     {
@@ -112,6 +125,8 @@ void LyrielChargedAttack::beginCharge()
     m_isCharging = true;
     setAbilityLocked(true);
 
+    applyChargingMovementSlowdown(m_config->m_chargedMovementSlowdownPercentage);
+
     m_chargeTimer = 0.0f;
     m_currentAimDirection = Vector3::Zero;
 
@@ -169,6 +184,8 @@ void LyrielChargedAttack::releaseChargeAndShoot()
 {
     m_isCharging = false;
 
+    resetChargingMovementSlowdown();
+
     LyrielSound* sound = m_lyrielCharacter != nullptr ? m_lyrielCharacter->getSound() : nullptr;
     if (sound != nullptr)
     {
@@ -217,7 +234,8 @@ void LyrielChargedAttack::releaseChargeAndShoot()
 
     std::vector<GameObject*> targets;
     collectEnemiesInLine(origin, forward, targets);
-    const bool anyMarkExploited = applyChargedDamage(targets, damage);
+    const bool isMaxCharge = m_chargeTimer >= m_config->m_chargedMaxChargeTime;
+    const bool anyMarkExploited = applyChargedDamage(targets, damage, isMaxCharge);
     spawnChargedArrow(origin, forward);
     notifyAbilitySuccessfullyStarted();
 
@@ -349,7 +367,7 @@ void LyrielChargedAttack::collectEnemiesInLine(const Vector3& origin, const Vect
     }
 }
 
-bool LyrielChargedAttack::applyChargedDamage(const std::vector<GameObject*>& targets, float damage)
+bool LyrielChargedAttack::applyChargedDamage(const std::vector<GameObject*>& targets, float damage, bool isMaxCharge)
 {
     bool anyMarkExploited = false;
 
@@ -383,6 +401,7 @@ bool LyrielChargedAttack::applyChargedDamage(const std::vector<GameObject*>& tar
             }
 
             damageable->takeDamage(ctx);
+            tryStunTarget(target, isMaxCharge, m_config->m_chargedStunOnMaxCharge, m_config->m_chargedStunDuration);
             continue;
         }
         BreakableDamageable* breakableDamageable = GameObjectAPI::findScript<BreakableDamageable>(target);
@@ -466,6 +485,54 @@ void LyrielChargedAttack::drawChargePreview(const Vector3& origin, const Vector3
     DebugDrawAPI::drawLine(leftStart, leftEnd, previewColor, 0, true);
     DebugDrawAPI::drawLine(rightStart, rightEnd, previewColor, 0, true);
     DebugDrawAPI::drawLine(leftEnd, rightEnd, previewColor, 0, true);
+}
+
+Transform* LyrielChargedAttack::findArrowSpawnTransform() const
+{
+    Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
+
+    if (ownerTransform == nullptr || m_lyrielCharacter == nullptr)
+    {
+        return nullptr;
+    }
+
+    if (!m_lyrielCharacter->m_arrowSpawnChildName.empty())
+    {
+        Transform* spawnTransform = TransformAPI::findChildByName(ownerTransform, m_lyrielCharacter->m_arrowSpawnChildName.c_str());
+
+        if (spawnTransform != nullptr)
+        {
+            return spawnTransform;
+        }
+    }
+
+    return ownerTransform;
+}
+
+void LyrielChargedAttack::faceDirection(const Vector3& direction)
+{
+    if (m_character == nullptr)
+    {
+        return;
+    }
+
+    PlayerRotation* playerRotation = m_character->getPlayerRotation();
+
+    if (playerRotation == nullptr)
+    {
+        return;
+    }
+
+    Vector3 flatDirection = direction;
+    flatDirection.y = 0.0f;
+
+    if (flatDirection.LengthSquared() <= 0.0001f)
+    {
+        return;
+    }
+
+    flatDirection.Normalize();
+    playerRotation->applyFacingFromDirection(getOwner(), flatDirection, Time::getDeltaTime());
 }
 
 IMPLEMENT_SCRIPT(LyrielChargedAttack)

@@ -244,11 +244,16 @@ void EnemyBaseController::setStunnedDuration(float stunnedDuration)
     m_stunnedDuration = stunnedDuration;
 }
 
-void EnemyBaseController::useStun()
+void EnemyBaseController::useStun(float duration)
 {
+    if (duration <= 0.0f)
+    {
+        return;
+    }
+
     m_isStunned = true;
     m_stunnedTriggerSent = false;
-    m_stunnedTimer = m_stunnedDuration;
+    m_stunnedTimer = duration;
     clearPath();
 }
 
