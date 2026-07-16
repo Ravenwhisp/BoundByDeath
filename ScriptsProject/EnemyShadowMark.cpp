@@ -5,9 +5,9 @@
 #include <cmath>
 
 IMPLEMENT_SCRIPT_FIELDS(EnemyShadowMark, 
+    SERIALIZED_BOOL(m_useMarkDuration, "Use Mark Duration"),
     SERIALIZED_FLOAT(m_markDuration, "Mark Duration", 0.5f, 10.0f, 0.1f),
-	SERIALIZED_FLOAT(m_markUITargetScale, "Mark UI Scale", 0.1f, 5.0f, 0.2f),
-	SERIALIZED_FLOAT(m_markUIHeightOffset, "Mark UI Height", 0.1f, 50.0f, 20.0f),
+    SERIALIZED_FLOAT(m_markFadeDuration, "Mark Fade Duration", 0.0f, 5.0f, 0.1f),
 	SERIALIZED_COMPONENT_REF(m_canvas, "Canvas Transform", ComponentType::TRANSFORM2D),
 	SERIALIZED_COMPONENT_REF(m_mark_death, "Mark Death Sprite", ComponentType::TRANSFORM),
 	SERIALIZED_COMPONENT_REF(m_mark_lyriel, "Mark Lyriel Sprite", ComponentType::TRANSFORM),
@@ -22,10 +22,6 @@ EnemyShadowMark::EnemyShadowMark(GameObject* owner)
 void EnemyShadowMark::Start()
 {
 	m_canvasTransform2D = m_canvas.getReferencedComponent();
-    if (m_canvasTransform2D)
-    {
-		m_startScale = Transform2DAPI::getScale(m_canvasTransform2D).x;
-	}
 	m_mark1Object = m_mark_death.getReferencedComponent() ? ComponentAPI::getOwner(m_mark_death.getReferencedComponent()) : nullptr;
 	m_mark2Object = m_mark_lyriel.getReferencedComponent() ? ComponentAPI::getOwner(m_mark_lyriel.getReferencedComponent()) : nullptr;
 	m_mark3Object = m_mark_both.getReferencedComponent() ? ComponentAPI::getOwner(m_mark_both.getReferencedComponent()) : nullptr;
@@ -40,8 +36,6 @@ void EnemyShadowMark::Start()
 			if (!m_canvasTransform2D)
 			{
 				m_canvasTransform2D = static_cast<Transform2D*>(GameObjectAPI::getComponent(shadowMarkObject, ComponentType::TRANSFORM2D));
-				if (m_canvasTransform2D)
-					m_startScale = Transform2DAPI::getScale(m_canvasTransform2D).x;
 			}
 
 			if (!m_mark1Object)
@@ -67,18 +61,25 @@ void EnemyShadowMark::Start()
 
 void EnemyShadowMark::Update()
 {
-    updateUI();
-
     if (m_state == ShadowMarkState::None)
     {
         return;
     }
 
+    if (!m_useMarkDuration)
+    {
+        return;
+    }
+
     m_timer -= Time::getDeltaTime();
+
     if (m_timer <= 0.0f)
     {
         resetMark();
+        return;
     }
+
+    updateUI();
 }
 
 bool EnemyShadowMark::processAttack(PlayerAttackType attackType)
@@ -133,34 +134,37 @@ ReaperGauge* EnemyShadowMark::findReaperGauge()
 
 void EnemyShadowMark::updateUI()
 {
-    if (m_mark1Object) 
+    if (m_mark1Object)
     {
         GameObjectAPI::setActive(m_mark1Object, m_state == ShadowMarkState::DeathOnly);
     }
+
     if (m_mark2Object)
     {
         GameObjectAPI::setActive(m_mark2Object, m_state == ShadowMarkState::LyrielOnly);
     }
+
     if (m_mark3Object)
     {
         GameObjectAPI::setActive(m_mark3Object, m_state == ShadowMarkState::Ready);
     }
-    
-	if (m_timer <= 0.0f)
+
+    if (!m_canvasTransform2D)
     {
         return;
     }
 
-    if (m_canvasTransform2D)
-    {
-        const float t = (m_markDuration - m_timer) / m_markDuration;
-        const float easedTimerPos = MathAPI::evaluateEasing(MathAPI::EasingType::EaseOutCubic, t);
-        Transform2DAPI::setPosition(m_canvasTransform2D, { 0.0f, easedTimerPos * m_markUIHeightOffset });
+    float alpha = 1.0f;
 
-        const float easedTimerScale = MathAPI::evaluateEasing(MathAPI::EasingType::EaseInSine, t);
-		const float scale = m_startScale + (m_markUITargetScale - m_startScale) * easedTimerScale;
-        Transform2DAPI::setScale(m_canvasTransform2D, { scale, scale });
+    if (m_state != ShadowMarkState::None && m_useMarkDuration && m_markFadeDuration > 0.0f && m_timer <= m_markFadeDuration)
+    {
+        const float fadeProgress = 1.0f - (m_timer / m_markFadeDuration);
+        const float easedProgress = MathAPI::evaluateEasing(MathAPI::EasingType::EaseInSine, fadeProgress);
+
+        alpha = 1.0f - easedProgress;
     }
+
+    Transform2DAPI::setAlpha(m_canvasTransform2D, alpha);
 }
 
 void EnemyShadowMark::drawGizmo()
@@ -200,7 +204,7 @@ void EnemyShadowMark::drawGizmo()
     DebugDrawAPI::drawSphere(pos, color, radius, 0, true);
 
     // Timer ring: white partial arc in XZ plane that shrinks as timer runs out
-    if (m_markDuration > 0.0f)
+    if (m_useMarkDuration &&  m_markDuration > 0.0f)
     {
         const float    ratio    = m_timer / m_markDuration;
         const float    ringR    = radius + 0.15f;
@@ -338,12 +342,25 @@ void EnemyShadowMark::applyLyrielContribution()
 void EnemyShadowMark::resetTimer()
 {
     m_timer = m_markDuration;
+
+    if (m_canvasTransform2D)
+    {
+        Transform2DAPI::setAlpha(m_canvasTransform2D, 1.0f);
+    }
+
+    updateUI();
 }
 
 void EnemyShadowMark::resetMark()
 {
     m_state = ShadowMarkState::None;
     m_timer = 0.0f;
+
+    if (m_canvasTransform2D)
+    {
+        Transform2DAPI::setAlpha(m_canvasTransform2D, 1.0f);
+    }
+
     updateUI();
 }
 

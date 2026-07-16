@@ -49,9 +49,9 @@ private:
     void resetMark();
 
 public:
-    float m_markDuration = 3.0f;
-    float m_markUITargetScale = 1.0f;
-    float m_markUIHeightOffset = 1.0f;
+    bool m_useMarkDuration = true;
+    float m_markDuration = 5.0f;
+    float m_markFadeDuration = 0.5f;
     ScriptComponentRef<Transform2D> m_canvas;
     ScriptComponentRef<Transform> m_mark_death;
     ScriptComponentRef<Transform> m_mark_lyriel;
@@ -69,7 +69,6 @@ private:
 	GameObject* m_mark1Object = nullptr;
     GameObject* m_mark2Object = nullptr;
 	GameObject* m_mark3Object = nullptr;
-	float m_startScale = 1.0f;
 
 };
 
