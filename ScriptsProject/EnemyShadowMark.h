@@ -27,9 +27,7 @@ public:
 
     ScriptFieldList getExposedFields() const override;
 
-    bool processAttack(PlayerAttackType attackType);
-    // Temporal to compile
-    void notifyDeathHit() { processAttack(PlayerAttackType::DeathBasic); }
+    virtual bool processAttack(PlayerAttackType attackType);
     bool isExploitable() const { return m_state == ShadowMarkState::Ready; }
     virtual void exploit();
     ShadowMarkState getState() const { return m_state; }
