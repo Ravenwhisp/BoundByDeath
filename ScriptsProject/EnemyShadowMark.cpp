@@ -9,9 +9,9 @@ IMPLEMENT_SCRIPT_FIELDS(EnemyShadowMark,
 	SERIALIZED_FLOAT(m_markUITargetScale, "Mark UI Scale", 0.1f, 5.0f, 0.2f),
 	SERIALIZED_FLOAT(m_markUIHeightOffset, "Mark UI Height", 0.1f, 50.0f, 20.0f),
 	SERIALIZED_COMPONENT_REF(m_canvas, "Canvas Transform", ComponentType::TRANSFORM2D),
-	SERIALIZED_COMPONENT_REF(m_mark_1, "Mark Phase 1", ComponentType::TRANSFORM),
-	SERIALIZED_COMPONENT_REF(m_mark_2, "Mark Phase 2", ComponentType::TRANSFORM),
-	SERIALIZED_COMPONENT_REF(m_mark_3, "Mark Phase 3", ComponentType::TRANSFORM)
+	SERIALIZED_COMPONENT_REF(m_mark_death, "Mark Death Sprite", ComponentType::TRANSFORM),
+	SERIALIZED_COMPONENT_REF(m_mark_lyriel, "Mark Lyriel Sprite", ComponentType::TRANSFORM),
+	SERIALIZED_COMPONENT_REF(m_mark_both, "Mark Both Sprite", ComponentType::TRANSFORM)
 )
 
 EnemyShadowMark::EnemyShadowMark(GameObject* owner)
@@ -26,9 +26,9 @@ void EnemyShadowMark::Start()
     {
 		m_startScale = Transform2DAPI::getScale(m_canvasTransform2D).x;
 	}
-	m_mark1Object = m_mark_1.getReferencedComponent() ? ComponentAPI::getOwner(m_mark_1.getReferencedComponent()) : nullptr;
-	m_mark2Object = m_mark_2.getReferencedComponent() ? ComponentAPI::getOwner(m_mark_2.getReferencedComponent()) : nullptr;
-	m_mark3Object = m_mark_3.getReferencedComponent() ? ComponentAPI::getOwner(m_mark_3.getReferencedComponent()) : nullptr;
+	m_mark1Object = m_mark_death.getReferencedComponent() ? ComponentAPI::getOwner(m_mark_death.getReferencedComponent()) : nullptr;
+	m_mark2Object = m_mark_lyriel.getReferencedComponent() ? ComponentAPI::getOwner(m_mark_lyriel.getReferencedComponent()) : nullptr;
+	m_mark3Object = m_mark_both.getReferencedComponent() ? ComponentAPI::getOwner(m_mark_both.getReferencedComponent()) : nullptr;
 
 	if (!m_canvasTransform2D || !m_mark1Object || !m_mark2Object || !m_mark3Object)
 	{
@@ -46,17 +46,17 @@ void EnemyShadowMark::Start()
 
 			if (!m_mark1Object)
 			{
-				Transform* mark1 = TransformAPI::findChildByName(shadowMarkTransform, "Shadow Mark 1");
+				Transform* mark1 = TransformAPI::findChildByName(shadowMarkTransform, "Shadow Mark Death");
 				if (mark1) m_mark1Object = ComponentAPI::getOwner(mark1);
 			}
 			if (!m_mark2Object)
 			{
-				Transform* mark2 = TransformAPI::findChildByName(shadowMarkTransform, "Shadow Mark 2");
+				Transform* mark2 = TransformAPI::findChildByName(shadowMarkTransform, "Shadow Mark Lyriel");
 				if (mark2) m_mark2Object = ComponentAPI::getOwner(mark2);
 			}
 			if (!m_mark3Object)
 			{
-				Transform* mark3 = TransformAPI::findChildByName(shadowMarkTransform, "Shadow Mark 3");
+				Transform* mark3 = TransformAPI::findChildByName(shadowMarkTransform, "Shadow Mark Both");
 				if (mark3) m_mark3Object = ComponentAPI::getOwner(mark3);
 			}
 		}

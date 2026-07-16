@@ -55,9 +55,9 @@ public:
     float m_markUITargetScale = 1.0f;
     float m_markUIHeightOffset = 1.0f;
     ScriptComponentRef<Transform2D> m_canvas;
-    ScriptComponentRef<Transform> m_mark_1;
-    ScriptComponentRef<Transform> m_mark_2;
-    ScriptComponentRef<Transform> m_mark_3;
+    ScriptComponentRef<Transform> m_mark_death;
+    ScriptComponentRef<Transform> m_mark_lyriel;
+    ScriptComponentRef<Transform> m_mark_both;
 
     float m_volleyCooldownReduction = 0.20f;  // % of base cooldown removed per exploit
 

@@ -26,7 +26,7 @@
     },
     "Components": [
         {
-            "UID": 6860563545296662153,
+            "UID": 6038084382313671023,
             "ComponentType": "ANIMATION",
             "Active": true,
             "StateMachineUID": {
@@ -44,7 +44,7 @@
             "ForceWorldAfterApply": true
         },
         {
-            "UID": 14291127558035187589,
+            "UID": 2053756690134692458,
             "ComponentType": "SCRIPT",
             "Active": true,
             "ScriptName": "EnemyDetectionAggro",
@@ -57,7 +57,7 @@
             }
         },
         {
-            "UID": 14940978640986292346,
+            "UID": 6375493413794022682,
             "ComponentType": "SCRIPT",
             "Active": true,
             "ScriptName": "RangedEnemyController",
@@ -75,7 +75,7 @@
             }
         },
         {
-            "UID": 10847301636837157427,
+            "UID": 11870870335931238374,
             "ComponentType": "SCRIPT",
             "Active": true,
             "ScriptName": "ArcherAttackConfig",
@@ -99,14 +99,14 @@
             }
         },
         {
-            "UID": 6528403789618805259,
+            "UID": 17709323108217343518,
             "ComponentType": "SCRIPT",
             "Active": true,
             "ScriptName": "EnemyAttackExecutor",
             "ScriptFields": {}
         },
         {
-            "UID": 15063105031606596903,
+            "UID": 2205743251831600833,
             "ComponentType": "SCRIPT",
             "Active": true,
             "ScriptName": "EnemyDamageable",
@@ -121,7 +121,7 @@
             }
         },
         {
-            "UID": 9503104060479588517,
+            "UID": 5829114622937247650,
             "ComponentType": "SCRIPT",
             "Active": true,
             "ScriptName": "EnemyShadowMark",
@@ -130,13 +130,13 @@
                 "Mark UI Scale": 0.30000001192092896,
                 "Mark UI Height": -15.0,
                 "Canvas Transform": 0,
-                "Mark Phase 1": 0,
-                "Mark Phase 2": 0,
-                "Mark Phase 3": 0
+                "Mark Death Sprite": 0,
+                "Mark Lyriel Sprite": 0,
+                "Mark Both Sprite": 0
             }
         },
         {
-            "UID": 9524394326486310052,
+            "UID": 11999971988434332394,
             "ComponentType": "SCRIPT",
             "Active": true,
             "ScriptName": "ArcherUI",
@@ -145,6 +145,13 @@
                 "Arrow Barrage UI Container": 0,
                 "Arrow Barrage UI Glow": 0
             }
+        },
+        {
+            "UID": 12433090144013886738,
+            "ComponentType": "SCRIPT",
+            "Active": true,
+            "ScriptName": "EnemyForcedMovement",
+            "ScriptFields": {}
         }
     ],
     "Children": [
@@ -1304,7 +1311,7 @@
             },
             "Components": [
                 {
-                    "UID": 14044389093407771859,
+                    "UID": 5725223304442272791,
                     "ComponentType": "MODEL",
                     "Active": true,
                     "MeshAssetId": {
@@ -1320,7 +1327,7 @@
                     "Materials": [
                         {
                             "uid": 12795068088801351992,
-                            "libId": "196bf3db5176232ecab7f4035a4b0142",
+                            "libId": "29c05774058dfe27f1527fff83c41656",
                             "type": "MATERIAL"
                         }
                     ],
@@ -1355,7 +1362,7 @@
             },
             "Components": [
                 {
-                    "UID": 8199565828744278093,
+                    "UID": 14583903516854348576,
                     "ComponentType": "MODEL",
                     "Active": true,
                     "MeshAssetId": {
@@ -1371,7 +1378,7 @@
                     "Materials": [
                         {
                             "uid": 12795068088801351992,
-                            "libId": "196bf3db5176232ecab7f4035a4b0142",
+                            "libId": "29c05774058dfe27f1527fff83c41656",
                             "type": "MATERIAL"
                         }
                     ],
@@ -1406,7 +1413,7 @@
             },
             "Components": [
                 {
-                    "UID": 3305814104756073144,
+                    "UID": 17578040432524787274,
                     "ComponentType": "CANVAS",
                     "Active": true,
                     "RenderMode": "WORLD_SPACE_CAMERA",
@@ -1440,7 +1447,7 @@
                     },
                     "Components": [
                         {
-                            "UID": 8986351713855688966,
+                            "UID": 6319576959026556386,
                             "ComponentType": "TRANSFORM2D",
                             "Active": true,
                             "Position": [
@@ -1479,7 +1486,7 @@
                             "Alpha": 1.0
                         },
                         {
-                            "UID": 5304866587163450983,
+                            "UID": 13895194294118816351,
                             "ComponentType": "UIIMAGE",
                             "Active": true,
                             "TextureAssetId": {
@@ -1530,7 +1537,7 @@
                             },
                             "Components": [
                                 {
-                                    "UID": 7411512371074718899,
+                                    "UID": 897780735178676577,
                                     "ComponentType": "TRANSFORM2D",
                                     "Active": true,
                                     "Position": [
@@ -1569,7 +1576,7 @@
                                     "Alpha": 1.0
                                 },
                                 {
-                                    "UID": 4178847390711516376,
+                                    "UID": 6675759142640589043,
                                     "ComponentType": "UISLIDER",
                                     "Active": true,
                                     "FillAmount": [
@@ -1580,7 +1587,7 @@
                                     "FillOrigin": 0
                                 },
                                 {
-                                    "UID": 7555091508809028338,
+                                    "UID": 9625710160045693086,
                                     "ComponentType": "UIIMAGE",
                                     "Active": true,
                                     "TextureAssetId": {
@@ -1632,7 +1639,7 @@
                             },
                             "Components": [
                                 {
-                                    "UID": 17303120315241951969,
+                                    "UID": 390486969853109378,
                                     "ComponentType": "TRANSFORM2D",
                                     "Active": true,
                                     "Position": [
@@ -1671,7 +1678,7 @@
                                     "Alpha": 1.0
                                 },
                                 {
-                                    "UID": 8714578721747186672,
+                                    "UID": 6460141952234871761,
                                     "ComponentType": "UISLIDER",
                                     "Active": true,
                                     "FillAmount": [
@@ -1682,7 +1689,7 @@
                                     "FillOrigin": 0
                                 },
                                 {
-                                    "UID": 11731351490646889586,
+                                    "UID": 2314117291133371204,
                                     "ComponentType": "UIIMAGE",
                                     "Active": true,
                                     "TextureAssetId": {
@@ -1738,14 +1745,14 @@
             },
             "Components": [
                 {
-                    "UID": 14477788432007971370,
+                    "UID": 2978908299450822985,
                     "ComponentType": "CANVAS",
                     "Active": true,
                     "RenderMode": "WORLD_SPACE_CAMERA",
                     "ZTest": true
                 },
                 {
-                    "UID": 14904997382009051441,
+                    "UID": 17704157278619553565,
                     "ComponentType": "TRANSFORM2D",
                     "Active": true,
                     "Position": [
@@ -1786,7 +1793,7 @@
             ],
             "Children": [
                 {
-                    "Name": "Shadow Mark 1",
+                    "Name": "Shadow Mark Death",
                     "Active": true,
                     "Static": false,
                     "Layer": "DEFAULT",
@@ -1811,7 +1818,7 @@
                     },
                     "Components": [
                         {
-                            "UID": 17580698448876845845,
+                            "UID": 1501673717832369769,
                             "ComponentType": "TRANSFORM2D",
                             "Active": true,
                             "Position": [
@@ -1840,8 +1847,8 @@
                                 0.0
                             ],
                             "BaseSize": [
-                                278.0,
-                                281.0,
+                                280.0,
+                                280.0,
                                 0.0
                             ],
                             "StretchMode": "NONE",
@@ -1850,12 +1857,12 @@
                             "Alpha": 1.0
                         },
                         {
-                            "UID": 6169070000690624692,
+                            "UID": 785659057126694319,
                             "ComponentType": "UIIMAGE",
                             "Active": true,
                             "TextureAssetId": {
-                                "uid": 4361778465519367995,
-                                "libId": "7cb74d55a5809345de4ac5420def72d3",
+                                "uid": 670363245371645624,
+                                "libId": "859b54ebe7c82ae8b1630a3f89c003e1",
                                 "type": "TEXTURE"
                             },
                             "FillAmount": [
@@ -1877,7 +1884,7 @@
                     "Children": []
                 },
                 {
-                    "Name": "Shadow Mark 2",
+                    "Name": "Shadow Mark Lyriel",
                     "Active": true,
                     "Static": false,
                     "Layer": "DEFAULT",
@@ -1902,7 +1909,7 @@
                     },
                     "Components": [
                         {
-                            "UID": 393854144229489963,
+                            "UID": 7789349987691498321,
                             "ComponentType": "TRANSFORM2D",
                             "Active": true,
                             "Position": [
@@ -1931,8 +1938,8 @@
                                 0.0
                             ],
                             "BaseSize": [
-                                332.0,
-                                435.0,
+                                280.0,
+                                280.0,
                                 0.0
                             ],
                             "StretchMode": "NONE",
@@ -1941,12 +1948,12 @@
                             "Alpha": 1.0
                         },
                         {
-                            "UID": 2520157038078198967,
+                            "UID": 14191634526736546682,
                             "ComponentType": "UIIMAGE",
                             "Active": true,
                             "TextureAssetId": {
-                                "uid": 8095061603184860963,
-                                "libId": "b3327e9b369fdd50808c433a07c4de1f",
+                                "uid": 15086481139914003395,
+                                "libId": "290271369e90d53277a920abf4705117",
                                 "type": "TEXTURE"
                             },
                             "FillAmount": [
@@ -1968,7 +1975,7 @@
                     "Children": []
                 },
                 {
-                    "Name": "Shadow Mark 3",
+                    "Name": "Shadow Mark Both",
                     "Active": true,
                     "Static": false,
                     "Layer": "DEFAULT",
@@ -1993,7 +2000,7 @@
                     },
                     "Components": [
                         {
-                            "UID": 15179544363292767358,
+                            "UID": 12544934596975789735,
                             "ComponentType": "TRANSFORM2D",
                             "Active": true,
                             "Position": [
@@ -2022,8 +2029,8 @@
                                 0.0
                             ],
                             "BaseSize": [
-                                329.0,
-                                610.0,
+                                280.0,
+                                280.0,
                                 0.0
                             ],
                             "StretchMode": "NONE",
@@ -2032,12 +2039,12 @@
                             "Alpha": 1.0
                         },
                         {
-                            "UID": 11943808501113058021,
+                            "UID": 15688654945701349264,
                             "ComponentType": "UIIMAGE",
                             "Active": true,
                             "TextureAssetId": {
-                                "uid": 3978257701211318606,
-                                "libId": "92fc1133779520dfd85e4f0d3f616c3e",
+                                "uid": 6027977305117566743,
+                                "libId": "db1a1c0c8292deb581b82aa8c0cb9d29",
                                 "type": "TEXTURE"
                             },
                             "FillAmount": [
@@ -2086,14 +2093,14 @@
             },
             "Components": [
                 {
-                    "UID": 15186886198735864619,
+                    "UID": 13890325448966859563,
                     "ComponentType": "CANVAS",
                     "Active": true,
                     "RenderMode": "WORLD_SPACE",
                     "ZTest": true
                 },
                 {
-                    "UID": 9095688288598804669,
+                    "UID": 725342836640285333,
                     "ComponentType": "TRANSFORM2D",
                     "Active": true,
                     "Position": [
@@ -2159,7 +2166,7 @@
                     },
                     "Components": [
                         {
-                            "UID": 2903856917638574069,
+                            "UID": 14354520235130817607,
                             "ComponentType": "TRANSFORM2D",
                             "Active": true,
                             "Position": [
@@ -2198,7 +2205,7 @@
                             "Alpha": 1.0
                         },
                         {
-                            "UID": 7826650200328101976,
+                            "UID": 9602872613857637944,
                             "ComponentType": "UIIMAGE",
                             "Active": true,
                             "TextureAssetId": {
@@ -2250,7 +2257,7 @@
                     },
                     "Components": [
                         {
-                            "UID": 2410066599068959987,
+                            "UID": 4868846209816284820,
                             "ComponentType": "TRANSFORM2D",
                             "Active": true,
                             "Position": [
@@ -2289,7 +2296,7 @@
                             "Alpha": 1.0
                         },
                         {
-                            "UID": 7968758374321284281,
+                            "UID": 4077270982069884053,
                             "ComponentType": "UIIMAGE",
                             "Active": true,
                             "TextureAssetId": {
