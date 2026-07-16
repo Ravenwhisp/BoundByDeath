@@ -23,6 +23,7 @@ class EnemyDamageable : public Damageable
 		void Start() override;
 		void takeDamage(const HitContext& ctx) override;
 
+		bool lastHitExploitShadowMark() const { return m_lastHitExploitedShadowMark; }
 	protected:
 		void onDamaged(float amount) override;
 
@@ -31,4 +32,6 @@ private:
 	EnemySound* m_enemySound = nullptr;
 	EnemyShadowMark* m_shadowMark = nullptr;
 	Transform* m_damageSource = nullptr;
+
+	bool m_lastHitExploitedShadowMark = false;
 };

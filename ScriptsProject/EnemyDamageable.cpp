@@ -84,6 +84,8 @@ void EnemyDamageable::takeDamage(const HitContext& ctx)
 {
 	const EnemyHitContext& enemyCtx = static_cast<const EnemyHitContext&>(ctx);
 
+	m_lastHitExploitedShadowMark = false;
+
 	if (enemyCtx.attacker)
 	{
 		m_damageSource = enemyCtx.attacker;
@@ -98,7 +100,7 @@ void EnemyDamageable::takeDamage(const HitContext& ctx)
 
 	if (damageWasApplied && m_shadowMark)
 	{
-		m_shadowMark->processAttack(enemyCtx.attackType);
+		m_lastHitExploitedShadowMark = m_shadowMark->processAttack(enemyCtx.attackType);
 	}
 
 	m_damageSource = nullptr;
