@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "EnemyShadowMark.h"
 #include "ReaperGauge.h"
+#include "PersistingPowerupState.h"
 #include <cmath>
 
 IMPLEMENT_SCRIPT_FIELDS(EnemyShadowMark, 
@@ -256,11 +257,13 @@ bool EnemyShadowMark::canApplyWith(PlayerAttackType attackType) const
     case PlayerAttackType::DeathBasic:
     case PlayerAttackType::DeathCharged:
     case PlayerAttackType::DeathDash:
-    case PlayerAttackType::DeathTaunt:
     case PlayerAttackType::LyrielArrow:
     case PlayerAttackType::LyrielVolley:
     case PlayerAttackType::LyrielCharged:
         return true;
+
+    case PlayerAttackType::DeathTaunt:
+        return PersistingPowerupState::isUnlocked(PowerupId::DeathPowerup1);
 
     default:
         return false;
