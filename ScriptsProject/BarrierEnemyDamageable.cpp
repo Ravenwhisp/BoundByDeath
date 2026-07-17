@@ -21,6 +21,8 @@ void BarrierEnemyDamageable::Start()
     EnemyDamageable::Start();
     buildBarriers();
     instantiateBarrierUIs();
+
+    setHealthBarAlpha(0.0f);
 }
 
 void BarrierEnemyDamageable::buildBarriers()
@@ -59,7 +61,15 @@ void BarrierEnemyDamageable::instantiateBarrierUIs()
         return;
     }
 
-    GameObject* healthBarObject = ComponentAPI::getOwner(healthBarTransform);
+    Transform* backgroundTransform = TransformAPI::findChildByName(healthBarTransform, "Background");
+
+    if (!backgroundTransform)
+    {
+        Debug::warn("[Barrier] %s - Health Bar Background not found in hierarchy.", GameObjectAPI::getName(m_owner));
+        return;
+    }
+
+    GameObject* backgroundObject = ComponentAPI::getOwner(backgroundTransform);
 
     for (const Barrier& barrier : m_barriers)
     {
@@ -67,7 +77,7 @@ void BarrierEnemyDamageable::instantiateBarrierUIs()
             m_barrierPrefab.m_ref,
             Vector3::Zero,
             Vector3::Zero,
-            healthBarObject);
+            backgroundObject);
 
         if (!uiObject)
         {
@@ -80,12 +90,13 @@ void BarrierEnemyDamageable::instantiateBarrierUIs()
         Transform2D* transform2D = static_cast<Transform2D*>(GameObjectAPI::getComponent(uiObject, ComponentType::TRANSFORM2D));
         if (transform2D)
         {
-            float x = m_maxPos + (1.0f - barrier.hpPercent) * (m_minPos - m_maxPos);
+            const float x = MathAPI::lerp(m_minPos, m_maxPos, barrier.hpPercent);
             Transform2DAPI::setPosition(transform2D, { x, m_barrierUIHeight });
         }
 
         BarrierUI ui;
         ui.gameObject = uiObject;
+        ui.transform2D = transform2D;
         ui.hpPercent = barrier.hpPercent;
         m_barrierUIs.push_back(ui);
     }
@@ -201,6 +212,21 @@ void BarrierEnemyDamageable::kill()
     }
 
     EnemyDamageable::kill();
+}
+
+void BarrierEnemyDamageable::setHealthBarAlpha(float alpha)
+{
+    EnemyDamageable::setHealthBarAlpha(alpha);
+
+    alpha = std::clamp(alpha, 0.0f, 1.0f);
+
+    for (BarrierUI& ui : m_barrierUIs)
+    {
+        if (ui.transform2D)
+        {
+            Transform2DAPI::setAlpha(ui.transform2D, alpha);
+        }
+    }
 }
 
 IMPLEMENT_SCRIPT(BarrierEnemyDamageable)

@@ -37,10 +37,11 @@ protected:
 	bool processShadowMarkHit(PlayerAttackType attackType);
 	void applyDamageWithoutShadowMark(const EnemyHitContext& hit);
 
+	virtual void setHealthBarAlpha(float alpha);
+
 private: 
 	void resolveHealthBarReferences();
 	void updateHealthBarFade();
-	void setHealthBarAlpha(float alpha);
 
 private:
 	EnemyDetectionAggro* m_enemyDetectionAggro = nullptr;
