@@ -48,6 +48,11 @@ private:
     void resetTimer();
     void resetMark();
 
+    // Effects
+    void startExplosion();
+    void updateExplosion();
+    void restoreUIVisuals();
+
 public:
     bool m_useMarkDuration = true;
     float m_markDuration = 5.0f;
@@ -59,6 +64,9 @@ public:
 
     float m_volleyCooldownReduction = 0.20f;  // % of base cooldown removed per exploit
 
+    // Effects
+    float m_explosionDuration = 0.2f;
+    float m_explosionScaleMultiplier = 1.6f;
 
 private:
     ShadowMarkState m_state = ShadowMarkState::None;
@@ -69,6 +77,11 @@ private:
 	GameObject* m_mark1Object = nullptr;
     GameObject* m_mark2Object = nullptr;
 	GameObject* m_mark3Object = nullptr;
+
+    // Effects
+    bool m_isExploding = false;
+    float m_explosionTimer = 0.0f;
+    Vector2 m_originalScale = { 1.0f, 1.0f };
 
 };
 

@@ -11,7 +11,12 @@ IMPLEMENT_SCRIPT_FIELDS(EnemyShadowMark,
 	SERIALIZED_COMPONENT_REF(m_canvas, "Canvas Transform", ComponentType::TRANSFORM2D),
 	SERIALIZED_COMPONENT_REF(m_mark_death, "Mark Death Sprite", ComponentType::TRANSFORM),
 	SERIALIZED_COMPONENT_REF(m_mark_lyriel, "Mark Lyriel Sprite", ComponentType::TRANSFORM),
-	SERIALIZED_COMPONENT_REF(m_mark_both, "Mark Both Sprite", ComponentType::TRANSFORM)
+	SERIALIZED_COMPONENT_REF(m_mark_both, "Mark Both Sprite", ComponentType::TRANSFORM),
+    FIELD_GROUP_COLLAPSE("Effects",
+        FIELD_GROUP_LABEL("Final Mark Explosion Effect"),
+        SERIALIZED_FLOAT(m_explosionDuration, "Explosion Duration", 0.05f, 1.0f, 0.05f),
+        SERIALIZED_FLOAT(m_explosionScaleMultiplier, "Explosion Scale Multiplier", 1.0f, 3.0f, 0.1f)
+    )
 )
 
 EnemyShadowMark::EnemyShadowMark(GameObject* owner)
@@ -56,11 +61,22 @@ void EnemyShadowMark::Start()
 		}
 	}
 
+    if (m_canvasTransform2D)
+    {
+        m_originalScale = Transform2DAPI::getScale(m_canvasTransform2D);
+    }
+
     updateUI();
 }
 
 void EnemyShadowMark::Update()
 {
+    if (m_isExploding)
+    {
+        updateExplosion();
+        return;
+    }
+
     if (m_state == ShadowMarkState::None)
     {
         return;
@@ -84,6 +100,11 @@ void EnemyShadowMark::Update()
 
 bool EnemyShadowMark::processAttack(PlayerAttackType attackType)
 {
+    if (m_isExploding)
+    {
+        return false;
+    }
+
     if (m_state == ShadowMarkState::Ready && canExploitWith(attackType))
     {
         exploit();
@@ -121,7 +142,7 @@ void EnemyShadowMark::exploit()
     else
         Debug::warn("[ShadowMark] ReaperGauge not found on any GameObject. Make sure GameController has a ReaperGauge script.");
 
-    resetMark();
+    startExplosion();
 }
 
 ReaperGauge* EnemyShadowMark::findReaperGauge()
@@ -149,19 +170,26 @@ void EnemyShadowMark::updateUI()
         GameObjectAPI::setActive(m_mark3Object, m_state == ShadowMarkState::Ready);
     }
 
-    if (!m_canvasTransform2D)
+    if (!m_canvasTransform2D || m_isExploding)
     {
         return;
     }
 
     float alpha = 1.0f;
 
-    if (m_state != ShadowMarkState::None && m_useMarkDuration && m_markFadeDuration > 0.0f && m_timer <= m_markFadeDuration)
+    if (m_state != ShadowMarkState::None && m_useMarkDuration && m_markFadeDuration > 0.0f && m_markDuration > 0.0f)
     {
-        const float fadeProgress = 1.0f - (m_timer / m_markFadeDuration);
-        const float easedProgress = MathAPI::evaluateEasing(MathAPI::EasingType::EaseInSine, fadeProgress);
+        const float fadeDuration = (std::min)(m_markFadeDuration, m_markDuration);
 
-        alpha = 1.0f - easedProgress;
+        if (m_timer <= fadeDuration)
+        {
+            float fadeProgress = 1.0f - (m_timer / fadeDuration);
+            fadeProgress = std::clamp(fadeProgress, 0.0f, 1.0f);
+
+            const float easedProgress = MathAPI::evaluateEasing(MathAPI::EasingType::EaseInSine, fadeProgress);
+
+            alpha = 1.0f - easedProgress;
+        }
     }
 
     Transform2DAPI::setAlpha(m_canvasTransform2D, alpha);
@@ -343,11 +371,7 @@ void EnemyShadowMark::resetTimer()
 {
     m_timer = m_markDuration;
 
-    if (m_canvasTransform2D)
-    {
-        Transform2DAPI::setAlpha(m_canvasTransform2D, 1.0f);
-    }
-
+    restoreUIVisuals();
     updateUI();
 }
 
@@ -356,12 +380,78 @@ void EnemyShadowMark::resetMark()
     m_state = ShadowMarkState::None;
     m_timer = 0.0f;
 
-    if (m_canvasTransform2D)
+    m_isExploding = false;
+    m_explosionTimer = 0.0f;
+
+    restoreUIVisuals();
+    updateUI();
+}
+
+void EnemyShadowMark::startExplosion()
+{
+    if (!m_canvasTransform2D)
     {
-        Transform2DAPI::setAlpha(m_canvasTransform2D, 1.0f);
+        resetMark();
+        return;
     }
 
+    if (m_explosionDuration <= 0.0f)
+    {
+        resetMark();
+        return;
+    }
+
+    m_isExploding = true;
+    m_explosionTimer = 0.0f;
+
+    restoreUIVisuals();
     updateUI();
+}
+
+void EnemyShadowMark::updateExplosion()
+{
+    if (!m_canvasTransform2D)
+    {
+        m_isExploding = false;
+        resetMark();
+        return;
+    }
+
+    m_explosionTimer += Time::getDeltaTime();
+
+    float t = m_explosionTimer / m_explosionDuration;
+    t = std::clamp(t, 0.0f, 1.0f);
+
+    const float scaleProgress = MathAPI::evaluateEasing(MathAPI::EasingType::EaseOutCubic, t);
+
+    const float targetScaleX = m_originalScale.x * m_explosionScaleMultiplier;
+    const float targetScaleY = m_originalScale.y * m_explosionScaleMultiplier;
+
+    const Vector2 scale = { m_originalScale.x + (targetScaleX - m_originalScale.x) * scaleProgress, m_originalScale.y + (targetScaleY - m_originalScale.y) * scaleProgress };
+
+    const float fadeProgress = MathAPI::evaluateEasing( MathAPI::EasingType::EaseInSine, t);
+
+    const float alpha = 1.0f - fadeProgress;
+
+    Transform2DAPI::setScale(m_canvasTransform2D, scale);
+    Transform2DAPI::setAlpha(m_canvasTransform2D, alpha);
+
+    if (t >= 1.0f)
+    {
+        m_isExploding = false;
+        resetMark();
+    }
+}
+
+void EnemyShadowMark::restoreUIVisuals()
+{
+    if (!m_canvasTransform2D)
+    {
+        return;
+    }
+
+    Transform2DAPI::setScale(m_canvasTransform2D, m_originalScale);
+    Transform2DAPI::setAlpha(m_canvasTransform2D, 1.0f);
 }
 
 IMPLEMENT_SCRIPT(EnemyShadowMark)
