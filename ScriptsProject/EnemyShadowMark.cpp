@@ -15,7 +15,12 @@ IMPLEMENT_SCRIPT_FIELDS(EnemyShadowMark,
     FIELD_GROUP_COLLAPSE("Effects",
         FIELD_GROUP_LABEL("Final Mark Explosion Effect"),
         SERIALIZED_FLOAT(m_explosionDuration, "Explosion Duration", 0.05f, 1.0f, 0.05f),
-        SERIALIZED_FLOAT(m_explosionScaleMultiplier, "Explosion Scale Multiplier", 1.0f, 3.0f, 0.1f)
+        SERIALIZED_FLOAT(m_explosionScaleMultiplier, "Explosion Scale Multiplier", 1.0f, 3.0f, 0.1f),
+        FIELD_GROUP_LABEL("Mark Entry Pop Effect"),
+        SERIALIZED_FLOAT(m_entryPopDuration, "Entry Pop Duration", 0.05f, 0.5f, 0.01f),
+        SERIALIZED_FLOAT(m_entryPopStartScaleMultiplier, "Entry Pop Start Scale", 0.1f, 1.0f, 0.05f),
+        SERIALIZED_FLOAT(m_entryPopPeakScaleMultiplier, "Entry Pop Peak Scale", 1.0f, 2.0f, 0.05f),
+        SERIALIZED_FLOAT(m_readyPopPeakScaleMultiplier, "Ready Pop Peak Scale", 1.0f, 2.0f, 0.05f)
     )
 )
 
@@ -74,6 +79,12 @@ void EnemyShadowMark::Update()
     if (m_isExploding)
     {
         updateExplosion();
+        return;
+    }
+
+    if (m_isEntryPopping)
+    {
+        updateEntryPop();
         return;
     }
 
@@ -170,7 +181,7 @@ void EnemyShadowMark::updateUI()
         GameObjectAPI::setActive(m_mark3Object, m_state == ShadowMarkState::Ready);
     }
 
-    if (!m_canvasTransform2D || m_isExploding)
+    if (!m_canvasTransform2D || m_isExploding || m_isEntryPopping)
     {
         return;
     }
@@ -325,6 +336,8 @@ bool EnemyShadowMark::canExploitWith(PlayerAttackType attackType) const
 
 void EnemyShadowMark::applyDeathContribution()
 {
+    const ShadowMarkState previousState = m_state;
+
     switch (m_state)
     {
     case ShadowMarkState::None:
@@ -343,10 +356,18 @@ void EnemyShadowMark::applyDeathContribution()
     }
 
     resetTimer();
+
+    if (m_state != previousState)
+    {
+        updateUI();
+        startEntryPop();
+    }
 }
 
 void EnemyShadowMark::applyLyrielContribution()
 {
+    const ShadowMarkState previousState = m_state;
+
     switch (m_state)
     {
     case ShadowMarkState::None:
@@ -365,14 +386,22 @@ void EnemyShadowMark::applyLyrielContribution()
     }
 
     resetTimer();
+
+    if (m_state != previousState)
+    {
+        updateUI();
+        startEntryPop();
+    }
 }
 
 void EnemyShadowMark::resetTimer()
 {
     m_timer = m_markDuration;
 
-    restoreUIVisuals();
-    updateUI();
+    if (!m_isEntryPopping && !m_isExploding)
+    {
+        restoreUIVisuals();
+    }
 }
 
 void EnemyShadowMark::resetMark()
@@ -382,6 +411,9 @@ void EnemyShadowMark::resetMark()
 
     m_isExploding = false;
     m_explosionTimer = 0.0f;
+
+    m_isEntryPopping = false;
+    m_entryPopTimer = 0.0f;
 
     restoreUIVisuals();
     updateUI();
@@ -452,6 +484,83 @@ void EnemyShadowMark::restoreUIVisuals()
 
     Transform2DAPI::setScale(m_canvasTransform2D, m_originalScale);
     Transform2DAPI::setAlpha(m_canvasTransform2D, 1.0f);
+}
+
+void EnemyShadowMark::startEntryPop()
+{
+    if (!m_canvasTransform2D || m_entryPopDuration <= 0.0f)
+    {
+        restoreUIVisuals();
+        updateUI();
+        return;
+    }
+
+    m_isEntryPopping = true;
+    m_entryPopTimer = 0.0f;
+
+    if (m_state == ShadowMarkState::Ready)
+    {
+        m_currentPopPeakMultiplier = m_readyPopPeakScaleMultiplier;
+    }
+    else 
+    {
+        m_currentPopPeakMultiplier = m_entryPopPeakScaleMultiplier;
+    }
+                
+    const Vector2 startScale = { m_originalScale.x * m_entryPopStartScaleMultiplier, m_originalScale.y * m_entryPopStartScaleMultiplier };
+
+    Transform2DAPI::setScale(m_canvasTransform2D, startScale);
+    Transform2DAPI::setAlpha(m_canvasTransform2D, 0.0f);
+}
+
+void EnemyShadowMark::updateEntryPop()
+{
+    if (!m_canvasTransform2D)
+    {
+        m_isEntryPopping = false;
+        return;
+    }
+
+    m_entryPopTimer += Time::getDeltaTime();
+
+    float t = m_entryPopTimer / m_entryPopDuration;
+    t = std::clamp(t, 0.0f, 1.0f);
+
+    Vector2 scale = m_originalScale;
+
+    if (t < 0.5f)
+    {
+        float firstHalfT = t / 0.5f;
+        firstHalfT = MathAPI::evaluateEasing(MathAPI::EasingType::EaseOutCubic, firstHalfT);
+
+        const float multiplier = m_entryPopStartScaleMultiplier + (m_currentPopPeakMultiplier - m_entryPopStartScaleMultiplier) * firstHalfT;
+
+        scale = { m_originalScale.x * multiplier, m_originalScale.y * multiplier };
+
+        Transform2DAPI::setAlpha(m_canvasTransform2D, firstHalfT);
+    }
+    else
+    {
+        float secondHalfT = (t - 0.5f) / 0.5f;
+        secondHalfT = MathAPI::evaluateEasing(MathAPI::EasingType::EaseOutCubic, secondHalfT);
+
+        const float multiplier = m_currentPopPeakMultiplier + (1.0f - m_currentPopPeakMultiplier) * secondHalfT;
+
+        scale = { m_originalScale.x * multiplier, m_originalScale.y * multiplier };
+
+        Transform2DAPI::setAlpha(m_canvasTransform2D, 1.0f);
+    }
+
+    Transform2DAPI::setScale(m_canvasTransform2D, scale);
+
+    if (t >= 1.0f)
+    {
+        m_isEntryPopping = false;
+        m_entryPopTimer = 0.0f;
+
+        restoreUIVisuals();
+        updateUI();
+    }
 }
 
 IMPLEMENT_SCRIPT(EnemyShadowMark)

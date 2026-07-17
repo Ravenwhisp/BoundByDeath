@@ -54,6 +54,9 @@ private:
     void updateExplosion();
     void restoreUIVisuals();
 
+    void startEntryPop();
+    void updateEntryPop();
+
 public:
     bool m_useMarkDuration = true;
     float m_markDuration = 5.0f;
@@ -67,7 +70,12 @@ public:
 
     // Effects
     float m_explosionDuration = 0.2f;
-    float m_explosionScaleMultiplier = 1.6f;
+    float m_explosionScaleMultiplier = 1.3f;
+
+    float m_entryPopDuration = 0.12f;
+    float m_entryPopStartScaleMultiplier = 0.8f;
+    float m_entryPopPeakScaleMultiplier = 1.1f;
+    float m_readyPopPeakScaleMultiplier = 1.2f;
 
 private:
     ShadowMarkState m_state = ShadowMarkState::None;
@@ -83,6 +91,10 @@ private:
     bool m_isExploding = false;
     float m_explosionTimer = 0.0f;
     Vector2 m_originalScale = { 1.0f, 1.0f };
+
+    bool m_isEntryPopping = false;
+    float m_entryPopTimer = 0.0f;
+    float m_currentPopPeakMultiplier = 1.1f;
 
 };
 
