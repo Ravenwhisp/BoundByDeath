@@ -2,6 +2,7 @@
 #include "Component.h"
 #include "SimpleMath.h"
 using DirectX::SimpleMath::Vector2;
+
 #include "UIFill.h"
 
 class UIImage;
