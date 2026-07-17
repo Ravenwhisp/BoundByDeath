@@ -28,7 +28,7 @@ void LyrielChargedAttack::Start()
     ChargedAttackBase::Start();
 
     m_lyrielCharacter = dynamic_cast<LyrielCharacter*>(m_character);
-    m_config = GameObjectAPI::findScript<LyrielConfig>(getOwner());
+    m_config = m_lyrielCharacter->getConfig();
     m_lyrielUI = GameObjectAPI::findScript<LyrielUI>(getOwner());
 
     if (m_lyrielCharacter == nullptr)

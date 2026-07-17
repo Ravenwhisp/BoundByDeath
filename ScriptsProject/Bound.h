@@ -47,7 +47,7 @@ public:
 
     float m_separationHapticHpGate = 0.5f;
 
-    AssetRef<BoundConfig> m_config;
+    AssetReference<BoundConfig> m_config;
 
 private:
     HeartbeatHaptic* m_haptic = nullptr;

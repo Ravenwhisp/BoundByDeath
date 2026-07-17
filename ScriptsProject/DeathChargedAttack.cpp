@@ -23,7 +23,7 @@ void DeathChargedAttack::Start()
     ChargedAttackBase::Start();
 
     m_deathCharacter = dynamic_cast<DeathCharacter*>(m_character);
-    m_config = GameObjectAPI::findScript<DeathConfig>(getOwner());
+    m_config = m_deathCharacter->getConfig();
     m_deathUI = GameObjectAPI::findScript<DeathUI>(getOwner());
     m_particles = GameObjectAPI::findScript<DeathParticles>(getOwner());
 

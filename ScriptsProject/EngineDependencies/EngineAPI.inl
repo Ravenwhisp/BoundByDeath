@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Application.h"
-#include "ModuleAssets.h"
 #include "GameObject.h"
 #include "Component.h"
 #include "Script.h"

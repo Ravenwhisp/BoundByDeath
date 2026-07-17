@@ -283,7 +283,7 @@ void SummonerEnemyController::summonSpidersAroundSelf()
 		}
 
 		GameObjectAPI::instantiatePrefab(
-			m_attackConfig.get()->m_spiderPrefab.m_ref,
+			m_attackConfig.get()->m_spiderPrefab.m_id,
 			spawnPosition,
 			Vector3(0.0f, 0.0f, 0.0f)
 		);

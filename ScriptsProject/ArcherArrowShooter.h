@@ -18,7 +18,7 @@ public:
     PrefabRef m_arrowPrefab;
 
 private:
-    AssetRef<ArcherAttackConfig>    m_config;
+    AssetReference<ArcherAttackConfig>    m_config;
     RangedEnemyController* m_controller = nullptr;
     AnimationComponent*    m_animation  = nullptr;
     ArcherGuardParticles*  m_particles  = nullptr;
