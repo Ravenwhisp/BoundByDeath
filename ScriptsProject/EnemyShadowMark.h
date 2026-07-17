@@ -32,6 +32,7 @@ public:
     virtual void exploit();
     ShadowMarkState getState() const { return m_state; }
 	void updateUI();
+    void clearMark() { resetMark(); }
 
 private:
     ReaperGauge* findReaperGauge();

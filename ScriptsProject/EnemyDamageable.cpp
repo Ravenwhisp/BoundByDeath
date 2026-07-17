@@ -90,6 +90,16 @@ void EnemyDamageable::onDamaged(float amount)
 	m_enemyDetectionAggro->notifyPlayerAttackedEnemy(m_damageSource);
 }
 
+void EnemyDamageable::onDeath()
+{
+	Damageable::onDeath();
+
+	if (m_shadowMark)
+	{
+		m_shadowMark->clearMark();
+	}
+}
+
 bool EnemyDamageable::processShadowMarkHit(PlayerAttackType attackType)
 {
 	if (!m_shadowMark)

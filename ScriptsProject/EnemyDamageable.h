@@ -31,6 +31,7 @@ public:
 
 protected:
 	void onDamaged(float amount) override;
+	void onDeath() override;
 
 	void resetLastShadowMarkResult() { m_lastHitExploitedShadowMark = false; }
 	bool processShadowMarkHit(PlayerAttackType attackType);
