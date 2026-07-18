@@ -69,7 +69,10 @@ public:
 			SERIALIZED_FLOAT(m_chargedLineHalfWidth, "Charged Line Half Width", 0.0f, 10.0f, 0.05f),
 			SERIALIZED_FLOAT(m_chargedAttackLockDuration, "Charged Attack Lock Duration", 0.0f, 2.0f, 0.01f),
 			SERIALIZED_FLOAT(m_chargedArrowSpeed, "Charged Arrow Speed", 0.0f, 100.0f, 0.5f),
-			SERIALIZED_FLOAT(m_chargedCooldown, "Charged Cooldown", 0.0f, 10.0f, 0.01f)
+			SERIALIZED_FLOAT(m_chargedCooldown, "Charged Cooldown", 0.0f, 10.0f, 0.01f),
+			SERIALIZED_FLOAT(m_chargedMovementSlowdownPercentage, "Charged Movement Slowdown (%)", 0.0f, 100.0f, 1.0f),
+			SERIALIZED_BOOL(m_chargedStunOnMaxCharge, "Stun On Max Charge"),
+			SERIALIZED_FLOAT(m_chargedStunDuration, "Max Charge Stun Duration", 0.0f, 10.0f, 0.05f)
 		),
 
 		FIELD_GROUP_COLLAPSE("Arrow Volley",
