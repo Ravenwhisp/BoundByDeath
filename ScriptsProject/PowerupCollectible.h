@@ -2,6 +2,8 @@
 
 #include "ScriptAPI.h"
 
+class CheckpointManager;
+
 class PowerupCollectible : public Script
 {
     DECLARE_SCRIPT(PowerupCollectible)
@@ -34,6 +36,8 @@ private:
         LYRIEL_POWERUP_1 = 0,
         DEATH_POWERUP_1
     };
+
+	CheckpointManager* m_checkpointManager = nullptr;   
 
     int m_targetCharacter = BOTH;
     int m_powerupEffect = LYRIEL_POWERUP_1;

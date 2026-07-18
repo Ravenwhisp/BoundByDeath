@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "Damageable.h"
 
+#include "CheckpointManager.h"
+
 IMPLEMENT_SCRIPT_FIELDS(Damageable,
     SERIALIZED_FLOAT(m_maxHp, "Max HP", 0.0f, 999999.0f, 1.0f),
     SERIALIZED_COMPONENT_REF(m_healthBar, "Health Slider", ComponentType::UISLIDER),
@@ -24,6 +26,18 @@ void Damageable::Start()
     m_currentHp = m_maxHp;
     clampHp();
     m_isDead = (m_currentHp <= 0.0f);
+
+    auto managers = SceneAPI::findAllGameObjectsWithScript<CheckpointManager>();
+    for (GameObject* obj : managers)
+    {
+        m_checkpointManager = GameObjectAPI::findScript<CheckpointManager>(obj);
+        if (m_checkpointManager) break;
+    }
+
+    if (!m_checkpointManager)
+    {
+        Debug::warn("CheckpointEvent: CheckpointManager script not found in scene.");
+    }
 
     setupUI();
 }

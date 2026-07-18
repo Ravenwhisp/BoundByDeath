@@ -4,6 +4,8 @@
 #include "PersistingPowerupState.h"
 #include "EnvironmentSound.h"
 
+#include "CheckpointManager.h"
+
 #include <cmath>
 
 static const char* powerupTargetNames[] =
@@ -34,6 +36,18 @@ PowerupCollectible::PowerupCollectible(GameObject* owner)
 
 void PowerupCollectible::Start()
 {
+    auto managers = SceneAPI::findAllGameObjectsWithScript<CheckpointManager>();
+    for (GameObject* obj : managers)
+    {
+        m_checkpointManager = GameObjectAPI::findScript<CheckpointManager>(obj);
+        if (m_checkpointManager) break;
+    }
+
+    if (!m_checkpointManager)
+    {
+        Debug::warn("CheckpointEvent: CheckpointManager script not found in scene.");
+    }
+
     m_startPosition = TransformAPI::getGlobalPosition(GameObjectAPI::getTransform(getOwner()));
 }
 
@@ -70,6 +84,14 @@ void PowerupCollectible::OnTriggerEnter(GameObject* player)
     }
 
     m_collected = true;
+
+	CollectibleCheckpointState state;
+	state.m_isCollected = true;
+
+    if (m_checkpointManager)
+    {
+        m_checkpointManager->SaveState(m_owner->GetID(), state);
+	}
 
     // Posted from the COLLECTING PLAYER's source: this GO is destroyed immediately below,
     // which would cut a sound played from its own emitter. The player persists and is at

@@ -4,6 +4,8 @@
 #include "UISlider.h"
 #include "UISheet.h"
 
+class CheckpointManager;
+
 struct HitContext
 {
     float damage = 0.0f;
@@ -76,6 +78,7 @@ protected:
 	UISlider* m_healthBar2Slider = nullptr;
     UISlider* m_healthGlowSlider = nullptr;
     UISheet* m_healthGlowSheet = nullptr;
+	CheckpointManager* m_checkpointManager = nullptr;
 	float m_uiTimer = 0.0f;
 	float m_currentDisplayedHp = 100.0f;
 	float m_previousHp = 100.0f;

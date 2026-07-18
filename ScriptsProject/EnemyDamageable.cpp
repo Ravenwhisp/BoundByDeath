@@ -4,6 +4,8 @@
 #include "EnemyDetectionAggro.h"
 #include "EnemySound.h"
 
+#include "CheckpointManager.h"
+
 EnemyDamageable::EnemyDamageable(GameObject* owner)
 	: Damageable(owner)
 {
@@ -75,6 +77,16 @@ void EnemyDamageable::onDamaged(float amount)
 	}
 
 	m_enemyDetectionAggro->notifyPlayerAttackedEnemy(m_damageSource);
+}
+
+void EnemyDamageable::onDeath()
+{
+	Damageable::onDeath();
+
+	EnemyCheckpointState state;
+	state.m_isDead = true;
+
+	m_checkpointManager->SaveState(m_owner->GetID(), state);
 }
 
 void EnemyDamageable::takeDamage(const HitContext& ctx)

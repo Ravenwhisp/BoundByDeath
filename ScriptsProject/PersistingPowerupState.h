@@ -13,6 +13,7 @@ public:
     static void unlock(PowerupId powerup);
     static bool isUnlocked(PowerupId powerup);
     static void reset();
+	static bool* getUnlockedPowerupState() { return s_unlockedPowerups; }
 
 private:
     static bool s_unlockedPowerups[static_cast<int>(PowerupId::Count)];

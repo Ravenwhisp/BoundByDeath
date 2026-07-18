@@ -37,6 +37,7 @@ class EnemyDamageable : public Damageable
 
 	protected:
 		void onDamaged(float amount) override;
+		void onDeath() override;
 
 private:
 	EnemyDetectionAggro* m_enemyDetectionAggro = nullptr;
