@@ -10,16 +10,11 @@ CheckpointSetup::CheckpointSetup(GameObject* owner)
 
 void CheckpointSetup::Start()
 {
-	auto managers = SceneAPI::findAllGameObjectsWithScript<CheckpointManager>();
-	for (GameObject* obj : managers)
-	{
-		m_checkpointManager = GameObjectAPI::findScript<CheckpointManager>(obj);
-		if (m_checkpointManager) break;
-	}
+	m_checkpointManager = &CheckpointManager::Get();
 
-	if (!m_checkpointManager)
+	if(!m_checkpointManager)
 	{
-		Debug::warn("CheckpointSetup: CheckpointManager script not found in scene.");
+		Debug::warn("CheckpointSetup: CheckpointManager singleton not found.");
 		return;
 	}
 

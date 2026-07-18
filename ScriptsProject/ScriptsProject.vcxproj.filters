@@ -151,6 +151,21 @@
     <Filter Include="Enemies\Skeleton\States">
       <UniqueIdentifier>{bee86649-753b-4746-bc39-122ddb51888b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Systems\Checkpoints">
+      <UniqueIdentifier>{0f665952-af70-44af-8a12-0776d009bf1f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems\Checkpoints\Events">
+      <UniqueIdentifier>{b70f8551-d726-4848-a743-f27a359de712}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems\Checkpoints\Setups">
+      <UniqueIdentifier>{b8f8ee12-ac71-481c-8f8f-cd6924432d2a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems\Checkpoints\Events\Level1">
+      <UniqueIdentifier>{3e016832-71fe-45ec-a36a-8528048419f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems\Checkpoints\Setups\Level1">
+      <UniqueIdentifier>{cd53e336-f5b3-421b-bfe7-a65264896570}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -610,6 +625,23 @@
     <ClInclude Include="PaladinVFX.h">
       <Filter>Enemies\Paladin</Filter>
     </ClInclude>
+    <ClInclude Include="LinkedDeathController.h" />
+    <ClInclude Include="ParticleManager.h" />
+    <ClInclude Include="CheckpointManager.h">
+      <Filter>Systems\Checkpoints</Filter>
+    </ClInclude>
+    <ClInclude Include="Checkpoint1_Level1_Event.h">
+      <Filter>Systems\Checkpoints\Events\Level1</Filter>
+    </ClInclude>
+    <ClInclude Include="Checkpoint1_Level1_Setup.h">
+      <Filter>Systems\Checkpoints\Setups\Level1</Filter>
+    </ClInclude>
+    <ClInclude Include="CheckpointEvent.h">
+      <Filter>Systems\Checkpoints\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="CheckpointSetup.h">
+      <Filter>Systems\Checkpoints\Setups</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
@@ -1060,6 +1092,23 @@
     <ClCompile Include="PlayAnimationAction.cpp" />
     <ClCompile Include="PaladinVFX.cpp">
       <Filter>Enemies\Paladin</Filter>
+    </ClCompile>
+    <ClCompile Include="LinkedDeathController.cpp" />
+    <ClCompile Include="ParticleManager.cpp" />
+    <ClCompile Include="CheckpointManager.cpp">
+      <Filter>Systems\Checkpoints</Filter>
+    </ClCompile>
+    <ClCompile Include="Checkpoint1_Level1_Event.cpp">
+      <Filter>Systems\Checkpoints\Events\Level1</Filter>
+    </ClCompile>
+    <ClCompile Include="Checkpoint1_Level1_Setup.cpp">
+      <Filter>Systems\Checkpoints\Setups\Level1</Filter>
+    </ClCompile>
+    <ClCompile Include="CheckpointEvent.cpp">
+      <Filter>Systems\Checkpoints\Events</Filter>
+    </ClCompile>
+    <ClCompile Include="CheckpointSetup.cpp">
+      <Filter>Systems\Checkpoints\Setups</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

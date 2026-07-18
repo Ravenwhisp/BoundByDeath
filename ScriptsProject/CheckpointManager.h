@@ -61,15 +61,10 @@ enum CheckpointId // Represents different checkpoints in the game, useful becaus
 
 class CheckpointSetup;
 
-class CheckpointManager : public Script
+class CheckpointManager
 {
-    DECLARE_SCRIPT(CheckpointManager)
-
 public:
-    explicit CheckpointManager(GameObject* owner);
-
-    void Start() override;
-    void Update() override;
+    static CheckpointManager& Get();
 
     template <typename T>
     void SaveState(UID id, const T& checkpointState)
@@ -103,9 +98,10 @@ public:
         m_checkpointSetupPool[checkpointId] = setup;
     }
 
-    void LoadCheckpointByID();
-
     void ApplyCheckpoint();
+
+private:
+    void LoadCheckpointByID();
 
 private:
 	CheckpointId m_lastCheckpointId = CheckpointId::NONE;

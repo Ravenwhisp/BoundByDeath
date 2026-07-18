@@ -27,17 +27,13 @@ void Damageable::Start()
     clampHp();
     m_isDead = (m_currentHp <= 0.0f);
 
-    auto managers = SceneAPI::findAllGameObjectsWithScript<CheckpointManager>();
-    for (GameObject* obj : managers)
+    m_checkpointManager = &CheckpointManager::Get();
+    
+    if(!m_checkpointManager)
     {
-        m_checkpointManager = GameObjectAPI::findScript<CheckpointManager>(obj);
-        if (m_checkpointManager) break;
-    }
-
-    if (!m_checkpointManager)
-    {
-        Debug::warn("CheckpointEvent: CheckpointManager script not found in scene.");
-    }
+        Debug::warn("[Damageable] CheckpointManager singleton not found.");
+        return;
+	}
 
     setupUI();
 }

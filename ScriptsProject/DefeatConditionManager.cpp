@@ -4,6 +4,8 @@
 #include "PlayerDownState.h"
 #include "CooperativeSound.h"
 
+#include "CheckpointManager.h"
+
 IMPLEMENT_SCRIPT_FIELDS(DefeatConditionManager,
     SERIALIZED_COMPONENT_REF(m_player1Transform, "Player 1 Transform", ComponentType::TRANSFORM),
     SERIALIZED_COMPONENT_REF(m_player2Transform, "Player 2 Transform", ComponentType::TRANSFORM)
@@ -24,6 +26,8 @@ void DefeatConditionManager::Start()
 
     m_player1DownState = findPlayerDownStateFromReference(player1Transform);
     m_player2DownState = findPlayerDownStateFromReference(player2Transform);
+
+    CheckpointManager::Get().ApplyCheckpoint();
 
     const auto coopGOs = SceneAPI::findAllGameObjectsWithScript<CooperativeSound>();
     if (!coopGOs.empty())

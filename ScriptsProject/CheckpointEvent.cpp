@@ -13,12 +13,12 @@ CheckpointEvent::CheckpointEvent(GameObject* owner)
 
 void CheckpointEvent::Start()
 {
-	auto managers = SceneAPI::findAllGameObjectsWithScript<CheckpointManager>();
+	auto managers = SceneAPI::findAllGameObjectsWithScript<ReaperGauge>();
 	GameObject* manager = nullptr;
 	for (GameObject* obj : managers)
 	{
-		m_checkpointManager = GameObjectAPI::findScript<CheckpointManager>(obj);
-		if (m_checkpointManager)
+		m_reaperGauge = GameObjectAPI::findScript<ReaperGauge>(obj);
+		if (m_reaperGauge)
 		{
 			manager = obj;
 			break;
@@ -26,15 +26,16 @@ void CheckpointEvent::Start()
 	}
 	if (manager)
 	{
-		m_reaperGauge = GameObjectAPI::findScript<ReaperGauge>(manager);
 		Bound* boundScript = GameObjectAPI::findScript<Bound>(manager);
 		m_lyrielDamageable = boundScript ? boundScript->m_firstDamageable : nullptr;
 		m_deathDamageable = boundScript ? boundScript->m_secondDamageable : nullptr;
 	}
 
+	m_checkpointManager = &CheckpointManager::Get();
+
 	if (!m_checkpointManager)
 	{
-		Debug::warn("CheckpointSetup: CheckpointManager script not found in scene.");
+		Debug::warn("CheckpointEvent: CheckpointManager singleton not found.");
 		return;
 	}
 

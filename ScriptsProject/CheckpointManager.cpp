@@ -3,17 +3,10 @@
 
 #include "CheckpointSetup.h"
 
-CheckpointManager::CheckpointManager(GameObject* owner)
-    : Script(owner)
+CheckpointManager& CheckpointManager::Get() 
 {
-}
-
-void CheckpointManager::Start()
-{
-}
-
-void CheckpointManager::Update()
-{
+	static CheckpointManager instance;
+	return instance;
 }
 
 void CheckpointManager::ApplyCheckpoint()
@@ -46,5 +39,3 @@ void CheckpointManager::LoadCheckpointByID()
 		}
 	}
 }
-
-IMPLEMENT_SCRIPT(CheckpointManager)

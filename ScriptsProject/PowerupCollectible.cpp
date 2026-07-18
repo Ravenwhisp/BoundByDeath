@@ -36,17 +36,13 @@ PowerupCollectible::PowerupCollectible(GameObject* owner)
 
 void PowerupCollectible::Start()
 {
-    auto managers = SceneAPI::findAllGameObjectsWithScript<CheckpointManager>();
-    for (GameObject* obj : managers)
-    {
-        m_checkpointManager = GameObjectAPI::findScript<CheckpointManager>(obj);
-        if (m_checkpointManager) break;
-    }
+    m_checkpointManager = &CheckpointManager::Get();
 
-    if (!m_checkpointManager)
+    if(!m_checkpointManager)
     {
-        Debug::warn("CheckpointEvent: CheckpointManager script not found in scene.");
-    }
+        Debug::warn("[PowerupCollectible] CheckpointManager singleton not found.");
+        return;
+	}
 
     m_startPosition = TransformAPI::getGlobalPosition(GameObjectAPI::getTransform(getOwner()));
 }
