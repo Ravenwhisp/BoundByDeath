@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "EnemyBaseController.h"
+#include "EnemyBaseAttackConfig.h"
 
 #include "Damageable.h"
 #include "EnemySound.h"
@@ -86,6 +87,22 @@ bool EnemyBaseController::isCurrentTargetInRange(float range) const
     }
 
     return getDistanceToCurrentTarget() <= range;
+}
+
+bool EnemyBaseController::isTargetInAttackRange() const
+{
+    if (!hasValidTarget())
+    {
+        return false;
+    }
+
+    const EnemyBaseAttackConfig* cfg = getAttackConfig();
+    if (!cfg)
+    {
+        return false;
+    }
+
+    return isCurrentTargetInRange(cfg->m_basicAttackRange);
 }
 
 void EnemyBaseController::faceCurrentTarget()

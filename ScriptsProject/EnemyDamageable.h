@@ -5,6 +5,7 @@
 class EnemyDetectionAggro;
 class EnemySound;
 class Transform2D;
+class EnemyBaseController;
 
 enum class PlayerAttackType
 {

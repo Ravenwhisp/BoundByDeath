@@ -5,6 +5,7 @@
 class AnimationComponent;
 class Transform;
 class EnemySound;
+class EnemyBaseAttackConfig;
 
 class EnemyBaseController : public Script
 {
@@ -20,8 +21,12 @@ public:
 
     virtual bool hasValidTarget() const;
 
+    // Attack config access (non-pure virtual: returns nullptr by default for controllers without one)
+    virtual const EnemyBaseAttackConfig* getAttackConfig() const { return nullptr; }
+
     float getDistanceToCurrentTarget() const;
     bool isCurrentTargetInRange(float range) const;
+    bool isTargetInAttackRange() const;
 
     // Facing helpers
     void faceCurrentTarget();

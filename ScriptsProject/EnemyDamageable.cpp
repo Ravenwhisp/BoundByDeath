@@ -3,6 +3,8 @@
 
 #include "EnemyDetectionAggro.h"
 #include "EnemySound.h"
+#include "EnemyBaseController.h"
+#include "EnemyBaseAttackConfig.h"
 #include "Transform2D.h"
 
 IMPLEMENT_SCRIPT_FIELDS_INHERITED(EnemyDamageable, Damageable,
@@ -18,6 +20,17 @@ EnemyDamageable::EnemyDamageable(GameObject* owner)
 void EnemyDamageable::Start()
 {
 	resolveHealthBarReferences();
+
+	// Override HP from controller's attack config (inherits from EnemyBaseDataConfig)
+	EnemyBaseController* controller = GameObjectAPI::findScript<EnemyBaseController>(m_owner);
+	if (controller)
+	{
+		const EnemyBaseAttackConfig* attackConfig = controller->getAttackConfig();
+		if (attackConfig && attackConfig->m_maxHp > 0.0f)
+		{
+			m_maxHp = attackConfig->m_maxHp;
+		}
+	}
 
 	Damageable::Start();
 

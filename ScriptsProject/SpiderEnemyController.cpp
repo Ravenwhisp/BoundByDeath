@@ -57,14 +57,9 @@ bool SpiderEnemyController::isTargetDowned(Transform* target) const
 	return m_enemyDetectionAggro->isDowned(target);
 }
 
-bool SpiderEnemyController::isTargetInAttackRange() const
+const EnemyBaseAttackConfig* SpiderEnemyController::getAttackConfig() const
 {
-	if (!hasValidTarget() || !m_attackConfig.get())
-	{
-		return false;
-	}
-	
-	return isCurrentTargetInRange(m_attackConfig.get()->m_basicAttackRange);
+	return m_attackConfig.get();
 }
 
 IMPLEMENT_SCRIPT_FIELDS_INHERITED(SpiderEnemyController, EnemyBaseController,

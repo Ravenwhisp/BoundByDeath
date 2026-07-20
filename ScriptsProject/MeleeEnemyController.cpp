@@ -60,14 +60,9 @@ bool MeleeEnemyController::isTargetDowned(Transform* target) const
 	return m_enemyDetectionAggro->isDowned(target);
 }
 
-bool MeleeEnemyController::isTargetInAttackRange() const
+const EnemyBaseAttackConfig* MeleeEnemyController::getAttackConfig() const
 {
-	if (!hasValidTarget() || !m_attackConfig.get())
-	{
-		return false;
-	}
-
-	return isCurrentTargetInRange(m_attackConfig.get()->m_basicAttackRange);
+	return m_attackConfig.get();
 }
 
 bool MeleeEnemyController::playerInChargeRange() const

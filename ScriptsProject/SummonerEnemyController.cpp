@@ -62,14 +62,9 @@ bool SummonerEnemyController::isTargetDowned(Transform* target) const
 	return m_enemyDetectionAggro->isDowned(target);
 }
 
-bool SummonerEnemyController::isTargetInAttackRange() const
+const EnemyBaseAttackConfig* SummonerEnemyController::getAttackConfig() const
 {
-	if (!hasValidTarget() || !m_attackConfig)
-	{
-		return false;
-	}
-
-	return isCurrentTargetInRange(m_attackConfig.get()->m_basicAttackRange);
+	return m_attackConfig.get();
 }
 
 bool SummonerEnemyController::isTeleportReady() const

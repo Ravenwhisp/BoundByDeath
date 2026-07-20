@@ -68,6 +68,11 @@ bool SkeletonEnemyController::isTargetDowned(Transform* target) const
 	return m_enemyDetectionAggro->isDowned(target);
 }
 
+const EnemyBaseAttackConfig* SkeletonEnemyController::getAttackConfig() const
+{
+	return m_attackConfig.get();
+}
+
 bool SkeletonEnemyController::isTargetInScimitarRange() const
 {
 	if (!hasValidTarget() || !m_attackConfig.get())
