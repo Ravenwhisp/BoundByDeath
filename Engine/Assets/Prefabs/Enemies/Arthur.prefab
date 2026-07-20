@@ -26,7 +26,7 @@
     },
     "Components": [
         {
-            "UID": 15496312908730013509,
+            "UID": 415332937635498383,
             "ComponentType": "ANIMATION",
             "Active": true,
             "StateMachineUID": {
@@ -44,13 +44,13 @@
             "ForceWorldAfterApply": true
         },
         {
-            "UID": 14888456162316717261,
+            "UID": 1635664814772129187,
             "ComponentType": "SCRIPT",
             "Active": true,
             "ScriptName": "ArthurBossController",
             "ScriptFields": {
-                "Enemy Type": 3,
-                "Move Speed": 3.5,
+                "Enemy Type": 2,
+                "Move Speed": 1.0,
                 "Turn Speed Degrees": 360.0,
                 "Repath Interval": 0.5,
                 "Path Point Reach Distance": 0.25,
@@ -59,16 +59,11 @@
                     5.0,
                     5.0
                 ],
-                "Combat Range": 3.0,
-                "Attack Config": {
-                    "uid": 10517112698425458880,
-                    "libId": "626cd9d3c6e6673fe443216600d4ab99",
-                    "type": "DATA_CONTAINER"
-                }
+                "Combat Range": 3.0
             }
         },
         {
-            "UID": 16123314857432619187,
+            "UID": 267440913860839119,
             "ComponentType": "SCRIPT",
             "Active": true,
             "ScriptName": "ArthurDetectionAggro",
@@ -81,7 +76,61 @@
             }
         },
         {
-            "UID": 8209618037720168003,
+            "UID": 1903043287270806727,
+            "ComponentType": "SCRIPT",
+            "Active": true,
+            "ScriptName": "ArthurAttackConfig",
+            "ScriptFields": {
+                "Heavy Swipe Damage": 10.0,
+                "Heavy Swipe Range": 3.0,
+                "Heavy Swipe Half Angle Degrees": 45.0,
+                "Heavy Swipe Total Duration": 1.5,
+                "Heavy Swipe Hit 1 Time": 0.44999998807907104,
+                "Heavy Swipe Hit 2 Time": 0.949999988079071,
+                "Heavy Swipe Hit 3 Time": 1.350000023841858,
+                "Heavy Swipe Recovery Duration": 0.75,
+                "Heavy Swipe Phase 2 Hit 1 Time": 0.30000001192092896,
+                "Heavy Swipe Phase 2 Hit 2 Time": 0.6000000238418579,
+                "Heavy Swipe Phase 2 Hit 3 Time": 0.8999999761581421,
+                "Heavy Swipe Phase 2 Hit 4 Time": 1.2000000476837158,
+                "Heavy Swipe Phase 2 Recovery Duration": 0.44999998807907104,
+                "Side Sweep Damage": 12.0,
+                "Side Sweep Range": 4.0,
+                "Side Sweep Half Angle Degrees": 55.0,
+                "Side Sweep Hit Time": 0.3499999940395355,
+                "Side Sweep Total Duration": 0.699999988079071,
+                "Side Sweep Recovery Duration": 0.5,
+                "Side Sweep Cooldown": 2.0,
+                "Side Sweep Phase 2 Hit Time": 0.20000000298023224,
+                "Side Sweep Phase 2 Total Duration": 0.550000011920929,
+                "Side Sweep Phase 2 Recovery Duration": 0.3499999940395355,
+                "Charging Slam Dash Damage": 12.0,
+                "Charging Slam Final Area Impact Damage": 25.0,
+                "Charging Slam Hit Time": 1.0,
+                "Charging Slam Dash Speed": 8.0,
+                "Charging Slam Dash Hit Radius": 1.2000000476837158,
+                "Charging Slam Impact Radius": 3.0,
+                "Charging Slam Total Duration": 2.200000047683716,
+                "Charging Slam Recovery Duration": 1.25,
+                "Charging Slam Impact Stun Duration": 1.0,
+                "Charging Slam Cooldown": 14.0,
+                "Charging Slam Phase 2 Hit Time": 0.5,
+                "Charging Slam Phase 2 Dash Speed": 10.0,
+                "Charging Slam Min Range": 5.0,
+                "Charging Slam Max Range": 8.0,
+                "Earth Hammer Damage": 20.0,
+                "Earth Hammer Radius": 6.5,
+                "Earth Hammer Total Duration": 2.200000047683716,
+                "Earth Hammer Hit Time": 2.0,
+                "Earth Hammer Recovery Duration": 1.0,
+                "Earth Hammer Stun Duration": 1.25,
+                "Earth Hammer Cooldown": 18.0,
+                "Earth Hammer Phase 2 Damage": 25.0,
+                "Earth Hammer Phase 2 Stun Duration": 1.5
+            }
+        },
+        {
+            "UID": 3980987986855243097,
             "ComponentType": "SCRIPT",
             "Active": true,
             "ScriptName": "ArthurAttackDebugDraw",
@@ -96,36 +145,42 @@
             }
         },
         {
-            "UID": 11294932327155310705,
+            "UID": 3446119531150705200,
             "ComponentType": "SCRIPT",
             "Active": true,
             "ScriptName": "EnemyAttackExecutor",
             "ScriptFields": {}
         },
         {
-            "UID": 604570090052620433,
+            "UID": 9725317633347742311,
             "ComponentType": "SCRIPT",
             "Active": true,
             "ScriptName": "BarrierEnemyDamageable",
             "ScriptFields": {
-                "Max HP": 100.0,
+                "Max HP": 400.0,
                 "Health Slider": 1029083385113641433,
                 "Health Slider 2": 10486887829417920041,
-                "Health Glow": 0,
                 "UI Update Time (Slider 2)": 1.0,
                 "UI Wait Time (Slider 2)": 0.6000000238418579,
-                "Barrier Thresholds (%)": [],
-                "Barrier Break Attack": 8,
-                "Shadow Mark Exploit Breaks Barriers": true,
-                "Barrier UI Prefab": {
-                    "uid": 0,
-                    "libId": "",
-                    "type": "UNKNOWN"
-                },
-                "Barrier Min Pos (0% HP)": 80.0,
-                "Barrier Max Pos (100% HP)": -90.0,
+                "Health Bar Container": 0,
+                "Health Bar Fade Time": 0.25,
+                "Barrier Thresholds (%)": [
+                    0.5
+                ],
+                "uid": 0,
+                "libId": "",
+                "type": "UNKNOWN",
+                "Barrier Min Pos (0% HP)": 0.0,
+                "Barrier Max Pos (100% HP)": 1300.0,
                 "Barrier UI Height": 0.0
             }
+        },
+        {
+            "UID": 16065024914833603850,
+            "ComponentType": "SCRIPT",
+            "Active": true,
+            "ScriptName": "EnemyForcedMovement",
+            "ScriptFields": {}
         }
     ],
     "Children": [
@@ -1391,7 +1446,7 @@
             },
             "Components": [
                 {
-                    "UID": 6705077516313242600,
+                    "UID": 11567711665325181131,
                     "ComponentType": "MODEL",
                     "Active": true,
                     "MeshAssetId": {
@@ -1407,7 +1462,7 @@
                     "Materials": [
                         {
                             "uid": 6832901981405145406,
-                            "libId": "53c3c6e3db6f113c20c91bc7054bdb44",
+                            "libId": "4673f9321a206624ba7af13045034e69",
                             "type": "MATERIAL"
                         }
                     ],
@@ -1442,14 +1497,14 @@
             },
             "Components": [
                 {
-                    "UID": 547862497447261560,
+                    "UID": 15190326216135476187,
                     "ComponentType": "CANVAS",
                     "Active": true,
                     "RenderMode": "WORLD_SPACE",
                     "ZTest": true
                 },
                 {
-                    "UID": 4209112105871274949,
+                    "UID": 3260132291891160627,
                     "ComponentType": "TRANSFORM2D",
                     "Active": true,
                     "Position": [
@@ -1515,7 +1570,7 @@
                     },
                     "Components": [
                         {
-                            "UID": 14254251090900995005,
+                            "UID": 12447492759851253411,
                             "ComponentType": "TRANSFORM2D",
                             "Active": true,
                             "Position": [
@@ -1554,7 +1609,7 @@
                             "Alpha": 1.0
                         },
                         {
-                            "UID": 12753100551193750826,
+                            "UID": 7439056469552824774,
                             "ComponentType": "UIIMAGE",
                             "Active": true,
                             "TextureAssetId": {
@@ -1606,7 +1661,7 @@
                     },
                     "Components": [
                         {
-                            "UID": 4873495840944702585,
+                            "UID": 7965810743031883128,
                             "ComponentType": "TRANSFORM2D",
                             "Active": true,
                             "Position": [
@@ -1645,7 +1700,7 @@
                             "Alpha": 1.0
                         },
                         {
-                            "UID": 9263930934717959599,
+                            "UID": 16132578865012122775,
                             "ComponentType": "UIIMAGE",
                             "Active": true,
                             "TextureAssetId": {
@@ -1699,14 +1754,14 @@
             },
             "Components": [
                 {
-                    "UID": 5493441710389774686,
+                    "UID": 9410789884624107314,
                     "ComponentType": "CANVAS",
                     "Active": true,
                     "RenderMode": "WORLD_SPACE",
                     "ZTest": true
                 },
                 {
-                    "UID": 8208576471729627764,
+                    "UID": 8716650871502670312,
                     "ComponentType": "TRANSFORM2D",
                     "Active": true,
                     "Position": [
@@ -1772,7 +1827,7 @@
                     },
                     "Components": [
                         {
-                            "UID": 10702893895102172042,
+                            "UID": 6953492073743879996,
                             "ComponentType": "TRANSFORM2D",
                             "Active": true,
                             "Position": [
@@ -1811,7 +1866,7 @@
                             "Alpha": 1.0
                         },
                         {
-                            "UID": 4153259891407386146,
+                            "UID": 8957919210182365342,
                             "ComponentType": "UIIMAGE",
                             "Active": true,
                             "TextureAssetId": {
@@ -1863,7 +1918,7 @@
                     },
                     "Components": [
                         {
-                            "UID": 11473838251685006756,
+                            "UID": 5248878482239367396,
                             "ComponentType": "TRANSFORM2D",
                             "Active": true,
                             "Position": [
@@ -1902,7 +1957,7 @@
                             "Alpha": 1.0
                         },
                         {
-                            "UID": 6204718468956678682,
+                            "UID": 15585930038295026094,
                             "ComponentType": "UIIMAGE",
                             "Active": true,
                             "TextureAssetId": {
@@ -1954,7 +2009,7 @@
                     },
                     "Components": [
                         {
-                            "UID": 13361119508404057095,
+                            "UID": 10717163262639800663,
                             "ComponentType": "TRANSFORM2D",
                             "Active": true,
                             "Position": [
@@ -1993,7 +2048,7 @@
                             "Alpha": 1.0
                         },
                         {
-                            "UID": 7237984885536783551,
+                            "UID": 6388984248243472912,
                             "ComponentType": "UIIMAGE",
                             "Active": true,
                             "TextureAssetId": {
@@ -2045,7 +2100,7 @@
                     },
                     "Components": [
                         {
-                            "UID": 18186369380961329858,
+                            "UID": 12899338200984229455,
                             "ComponentType": "TRANSFORM2D",
                             "Active": true,
                             "Position": [
@@ -2084,7 +2139,7 @@
                             "Alpha": 1.0
                         },
                         {
-                            "UID": 15018184508745552378,
+                            "UID": 8954100472301920091,
                             "ComponentType": "UIIMAGE",
                             "Active": true,
                             "TextureAssetId": {
@@ -2136,7 +2191,7 @@
                     },
                     "Components": [
                         {
-                            "UID": 5048956802121982191,
+                            "UID": 10270096738724644203,
                             "ComponentType": "TRANSFORM2D",
                             "Active": true,
                             "Position": [
@@ -2175,7 +2230,7 @@
                             "Alpha": 1.0
                         },
                         {
-                            "UID": 10981238208420976401,
+                            "UID": 13891472854071988522,
                             "ComponentType": "UIIMAGE",
                             "Active": true,
                             "TextureAssetId": {
@@ -2229,14 +2284,14 @@
             },
             "Components": [
                 {
-                    "UID": 18436801373452439801,
+                    "UID": 1612345489518666240,
                     "ComponentType": "CANVAS",
                     "Active": true,
                     "RenderMode": "WORLD_SPACE",
                     "ZTest": true
                 },
                 {
-                    "UID": 16195092760806126296,
+                    "UID": 17248676834739690305,
                     "ComponentType": "TRANSFORM2D",
                     "Active": true,
                     "Position": [
@@ -2302,7 +2357,7 @@
                     },
                     "Components": [
                         {
-                            "UID": 5924302275865970269,
+                            "UID": 15073587668357270053,
                             "ComponentType": "TRANSFORM2D",
                             "Active": true,
                             "Position": [
@@ -2341,7 +2396,7 @@
                             "Alpha": 1.0
                         },
                         {
-                            "UID": 3881956222094308198,
+                            "UID": 18364977696382731859,
                             "ComponentType": "UIIMAGE",
                             "Active": true,
                             "TextureAssetId": {
@@ -2365,7 +2420,7 @@
                             "StretchDrawMode": "Tile"
                         },
                         {
-                            "UID": 17663395125761220822,
+                            "UID": 3722181122970745098,
                             "ComponentType": "UIIMAGE",
                             "Active": true,
                             "TextureAssetId": {
@@ -2417,7 +2472,7 @@
                     },
                     "Components": [
                         {
-                            "UID": 17495730839505269190,
+                            "UID": 12759391812729696283,
                             "ComponentType": "TRANSFORM2D",
                             "Active": true,
                             "Position": [
@@ -2456,7 +2511,7 @@
                             "Alpha": 1.0
                         },
                         {
-                            "UID": 12352011831590689997,
+                            "UID": 9069282569294386123,
                             "ComponentType": "UIIMAGE",
                             "Active": true,
                             "TextureAssetId": {
@@ -2480,7 +2535,7 @@
                             "StretchDrawMode": "Stretch"
                         },
                         {
-                            "UID": 8157324811399273935,
+                            "UID": 58073860744268870,
                             "ComponentType": "UIIMAGE",
                             "Active": true,
                             "TextureAssetId": {
@@ -2532,7 +2587,7 @@
                     },
                     "Components": [
                         {
-                            "UID": 488098042680906634,
+                            "UID": 4268526419378512442,
                             "ComponentType": "TRANSFORM2D",
                             "Active": true,
                             "Position": [
@@ -2571,7 +2626,7 @@
                             "Alpha": 1.0
                         },
                         {
-                            "UID": 17932864910205850197,
+                            "UID": 9028344524731039343,
                             "ComponentType": "UIIMAGE",
                             "Active": true,
                             "TextureAssetId": {
@@ -2623,7 +2678,7 @@
                     },
                     "Components": [
                         {
-                            "UID": 5952358088754407517,
+                            "UID": 15090166329231489375,
                             "ComponentType": "TRANSFORM2D",
                             "Active": true,
                             "Position": [
@@ -2662,7 +2717,7 @@
                             "Alpha": 1.0
                         },
                         {
-                            "UID": 4752250848664478090,
+                            "UID": 1420735262416766362,
                             "ComponentType": "UIIMAGE",
                             "Active": true,
                             "TextureAssetId": {
@@ -2686,7 +2741,7 @@
                             "StretchDrawMode": "Stretch"
                         },
                         {
-                            "UID": 2940456846603392836,
+                            "UID": 4344643777860187094,
                             "ComponentType": "UIIMAGE",
                             "Active": true,
                             "TextureAssetId": {
@@ -2740,14 +2795,14 @@
             },
             "Components": [
                 {
-                    "UID": 934283529327219198,
+                    "UID": 5353950423738124875,
                     "ComponentType": "CANVAS",
                     "Active": true,
                     "RenderMode": "WORLD_SPACE",
                     "ZTest": true
                 },
                 {
-                    "UID": 9759992701446806125,
+                    "UID": 10543252592255745799,
                     "ComponentType": "TRANSFORM2D",
                     "Active": true,
                     "Position": [
@@ -2813,7 +2868,7 @@
                     },
                     "Components": [
                         {
-                            "UID": 15162366178411661287,
+                            "UID": 15294291152970509370,
                             "ComponentType": "TRANSFORM2D",
                             "Active": true,
                             "Position": [
@@ -2852,7 +2907,7 @@
                             "Alpha": 1.0
                         },
                         {
-                            "UID": 2460888475220718369,
+                            "UID": 6066121608890622050,
                             "ComponentType": "UIIMAGE",
                             "Active": true,
                             "TextureAssetId": {
@@ -2904,7 +2959,7 @@
                     },
                     "Components": [
                         {
-                            "UID": 8312253175460648755,
+                            "UID": 5488446566574749250,
                             "ComponentType": "TRANSFORM2D",
                             "Active": true,
                             "Position": [
@@ -2943,7 +2998,7 @@
                             "Alpha": 1.0
                         },
                         {
-                            "UID": 6523115023685428637,
+                            "UID": 4695695334040574662,
                             "ComponentType": "UIIMAGE",
                             "Active": true,
                             "TextureAssetId": {
@@ -2995,7 +3050,7 @@
                     },
                     "Components": [
                         {
-                            "UID": 8062722594795561160,
+                            "UID": 1559854134201484833,
                             "ComponentType": "TRANSFORM2D",
                             "Active": true,
                             "Position": [
@@ -3034,7 +3089,7 @@
                             "Alpha": 1.0
                         },
                         {
-                            "UID": 1641487030185399563,
+                            "UID": 2960921540432727911,
                             "ComponentType": "UIIMAGE",
                             "Active": true,
                             "TextureAssetId": {
@@ -3086,7 +3141,7 @@
                     },
                     "Components": [
                         {
-                            "UID": 10954321140898649570,
+                            "UID": 3790007769422600533,
                             "ComponentType": "TRANSFORM2D",
                             "Active": true,
                             "Position": [
@@ -3125,7 +3180,7 @@
                             "Alpha": 1.0
                         },
                         {
-                            "UID": 13994127972767225317,
+                            "UID": 14288481355352390185,
                             "ComponentType": "UIIMAGE",
                             "Active": true,
                             "TextureAssetId": {
@@ -3179,7 +3234,7 @@
             },
             "Components": [
                 {
-                    "UID": 7590970653630067039,
+                    "UID": 10356654108455612133,
                     "ComponentType": "CANVAS",
                     "Active": true,
                     "RenderMode": "SCREEN_SPACE",
@@ -3213,7 +3268,7 @@
                     },
                     "Components": [
                         {
-                            "UID": 2385438502245706578,
+                            "UID": 9935036432884482302,
                             "ComponentType": "TRANSFORM2D",
                             "Active": true,
                             "Position": [
@@ -3242,7 +3297,7 @@
                                 0.0
                             ],
                             "BaseSize": [
-                                1301.0,
+                                1300.0,
                                 140.0,
                                 0.0
                             ],
@@ -3279,7 +3334,7 @@
                             },
                             "Components": [
                                 {
-                                    "UID": 7778067468990392942,
+                                    "UID": 9657944500751895097,
                                     "ComponentType": "TRANSFORM2D",
                                     "Active": true,
                                     "Position": [
@@ -3308,7 +3363,7 @@
                                         0.0
                                     ],
                                     "BaseSize": [
-                                        1301.0,
+                                        1300.0,
                                         140.0,
                                         0.0
                                     ],
@@ -3318,7 +3373,7 @@
                                     "Alpha": 1.0
                                 },
                                 {
-                                    "UID": 10040208590884012323,
+                                    "UID": 5158747726942041691,
                                     "ComponentType": "UIIMAGE",
                                     "Active": true,
                                     "TextureAssetId": {
@@ -3370,7 +3425,7 @@
                             },
                             "Components": [
                                 {
-                                    "UID": 15700910135648000799,
+                                    "UID": 8325212809986418015,
                                     "ComponentType": "TRANSFORM2D",
                                     "Active": true,
                                     "Position": [
@@ -3399,7 +3454,7 @@
                                         0.0
                                     ],
                                     "BaseSize": [
-                                        1301.0,
+                                        1300.0,
                                         140.0,
                                         0.0
                                     ],
@@ -3409,7 +3464,7 @@
                                     "Alpha": 1.0
                                 },
                                 {
-                                    "UID": 6045154115466208028,
+                                    "UID": 10783426513281654487,
                                     "ComponentType": "UIIMAGE",
                                     "Active": true,
                                     "TextureAssetId": {
@@ -3461,7 +3516,7 @@
                             },
                             "Components": [
                                 {
-                                    "UID": 10585222586176475877,
+                                    "UID": 13880477634146601839,
                                     "ComponentType": "TRANSFORM2D",
                                     "Active": true,
                                     "Position": [
@@ -3490,7 +3545,7 @@
                                         0.0
                                     ],
                                     "BaseSize": [
-                                        1301.0,
+                                        1300.0,
                                         140.0,
                                         0.0
                                     ],
@@ -3500,7 +3555,7 @@
                                     "Alpha": 1.0
                                 },
                                 {
-                                    "UID": 16336474159419727502,
+                                    "UID": 7030813416320341489,
                                     "ComponentType": "UIIMAGE",
                                     "Active": true,
                                     "TextureAssetId": {
@@ -3552,7 +3607,7 @@
                             },
                             "Components": [
                                 {
-                                    "UID": 12461211867226367462,
+                                    "UID": 18231125178168197034,
                                     "ComponentType": "TRANSFORM2D",
                                     "Active": true,
                                     "Position": [
@@ -3581,7 +3636,7 @@
                                         0.0
                                     ],
                                     "BaseSize": [
-                                        1301.0,
+                                        1300.0,
                                         140.0,
                                         0.0
                                     ],
@@ -3591,7 +3646,7 @@
                                     "Alpha": 1.0
                                 },
                                 {
-                                    "UID": 14871403322101174851,
+                                    "UID": 18268383481783020011,
                                     "ComponentType": "UIIMAGE",
                                     "Active": true,
                                     "TextureAssetId": {
@@ -3615,7 +3670,7 @@
                                     "StretchDrawMode": "Stretch"
                                 },
                                 {
-                                    "UID": 3269379984981749895,
+                                    "UID": 1713462784954213454,
                                     "ComponentType": "UIIMAGE",
                                     "Active": true,
                                     "TextureAssetId": {
@@ -3667,7 +3722,7 @@
                             },
                             "Components": [
                                 {
-                                    "UID": 7223627671930707605,
+                                    "UID": 6134222272253263831,
                                     "ComponentType": "TRANSFORM2D",
                                     "Active": true,
                                     "Position": [
@@ -3696,7 +3751,7 @@
                                         0.0
                                     ],
                                     "BaseSize": [
-                                        1301.0,
+                                        1300.0,
                                         140.0,
                                         0.0
                                     ],
@@ -3706,7 +3761,7 @@
                                     "Alpha": 1.0
                                 },
                                 {
-                                    "UID": 13900418669727480738,
+                                    "UID": 12813500318781040430,
                                     "ComponentType": "UIIMAGE",
                                     "Active": true,
                                     "TextureAssetId": {
@@ -3730,7 +3785,7 @@
                                     "StretchDrawMode": "Stretch"
                                 },
                                 {
-                                    "UID": 17582348500152964658,
+                                    "UID": 6276037048466527182,
                                     "ComponentType": "UIIMAGE",
                                     "Active": true,
                                     "TextureAssetId": {
@@ -3782,7 +3837,7 @@
                             },
                             "Components": [
                                 {
-                                    "UID": 575928612227476789,
+                                    "UID": 3073102347114513947,
                                     "ComponentType": "TRANSFORM2D",
                                     "Active": true,
                                     "Position": [
@@ -3811,7 +3866,7 @@
                                         0.0
                                     ],
                                     "BaseSize": [
-                                        1301.0,
+                                        1300.0,
                                         140.0,
                                         0.0
                                     ],
@@ -3821,7 +3876,7 @@
                                     "Alpha": 1.0
                                 },
                                 {
-                                    "UID": 10030610450445118949,
+                                    "UID": 8528869090388956692,
                                     "ComponentType": "UIIMAGE",
                                     "Active": true,
                                     "TextureAssetId": {
@@ -3848,6 +3903,361 @@
                             "Children": []
                         }
                     ]
+                }
+            ]
+        },
+        {
+            "Name": "Shadow Mark",
+            "Active": true,
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    0.0,
+                    3.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    1.0,
+                    0.0,
+                    1.1920930376163597e-7
+                ],
+                "Scale": [
+                    1.0000265836715698,
+                    1.0,
+                    1.0000265836715698
+                ]
+            },
+            "Components": [
+                {
+                    "UID": 9014698593582806246,
+                    "ComponentType": "CANVAS",
+                    "Active": true,
+                    "RenderMode": "WORLD_SPACE_CAMERA",
+                    "ZTest": true
+                },
+                {
+                    "UID": 13366312903676873482,
+                    "ComponentType": "TRANSFORM2D",
+                    "Active": true,
+                    "Position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Scale": [
+                        1.0,
+                        1.0,
+                        0.0
+                    ],
+                    "Pivot": [
+                        0.5,
+                        0.10000000149011612,
+                        0.0
+                    ],
+                    "AnchorMin": [
+                        0.5,
+                        0.0,
+                        0.0
+                    ],
+                    "AnchorMax": [
+                        0.5,
+                        0.0,
+                        0.0
+                    ],
+                    "BaseSize": [
+                        100.0,
+                        100.0,
+                        0.0
+                    ],
+                    "StretchMode": "NONE",
+                    "SizingMode": "KEEP_ASPECT_RATIO",
+                    "AspectRatio": 1.0,
+                    "Alpha": 1.0
+                },
+                {
+                    "UID": 6569312439817207671,
+                    "ComponentType": "PREFAB_INSTANCE",
+                    "Active": true,
+                    "sourcePath": "Assets\\Prefabs\\UI\\Shadow Mark.prefab",
+                    "assetUID": 9242344307091159343
+                }
+            ],
+            "Children": [
+                {
+                    "Name": "Shadow Mark Death",
+                    "Active": true,
+                    "Static": false,
+                    "Layer": "DEFAULT",
+                    "Tag": "DEFAULT",
+                    "Transform": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "Rotation": [
+                            -0.0,
+                            0.0,
+                            -0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "Components": [
+                        {
+                            "UID": 15457316896303184131,
+                            "ComponentType": "TRANSFORM2D",
+                            "Active": true,
+                            "Position": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "Scale": [
+                                0.30000001192092896,
+                                0.30000001192092896,
+                                0.0
+                            ],
+                            "Pivot": [
+                                0.5,
+                                1.0,
+                                0.0
+                            ],
+                            "AnchorMin": [
+                                0.5,
+                                0.0,
+                                0.0
+                            ],
+                            "AnchorMax": [
+                                0.5,
+                                0.0,
+                                0.0
+                            ],
+                            "BaseSize": [
+                                280.0,
+                                280.0,
+                                0.0
+                            ],
+                            "StretchMode": "NONE",
+                            "SizingMode": "KEEP_ASPECT_RATIO",
+                            "AspectRatio": 1.0,
+                            "Alpha": 1.0
+                        },
+                        {
+                            "UID": 14652420006418876509,
+                            "ComponentType": "UIIMAGE",
+                            "Active": true,
+                            "TextureAssetId": {
+                                "uid": 670363245371645624,
+                                "libId": "859b54ebe7c82ae8b1630a3f89c003e1",
+                                "type": "TEXTURE"
+                            },
+                            "FillAmount": [
+                                0.0,
+                                1.0
+                            ],
+                            "FillMethod": "Horizontal",
+                            "FillOrigin": 0,
+                            "SheetColumns": 1,
+                            "SheetRows": 1,
+                            "SheetOffset": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "StretchDrawMode": "Stretch"
+                        }
+                    ],
+                    "Children": []
+                },
+                {
+                    "Name": "Shadow Mark Lyriel",
+                    "Active": true,
+                    "Static": false,
+                    "Layer": "DEFAULT",
+                    "Tag": "DEFAULT",
+                    "Transform": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "Rotation": [
+                            -0.0,
+                            0.0,
+                            -0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "Components": [
+                        {
+                            "UID": 11664166897673472734,
+                            "ComponentType": "TRANSFORM2D",
+                            "Active": true,
+                            "Position": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "Scale": [
+                                0.30000001192092896,
+                                0.30000001192092896,
+                                0.0
+                            ],
+                            "Pivot": [
+                                0.5,
+                                1.0,
+                                0.0
+                            ],
+                            "AnchorMin": [
+                                0.5,
+                                0.0,
+                                0.0
+                            ],
+                            "AnchorMax": [
+                                0.5,
+                                0.0,
+                                0.0
+                            ],
+                            "BaseSize": [
+                                280.0,
+                                280.0,
+                                0.0
+                            ],
+                            "StretchMode": "NONE",
+                            "SizingMode": "KEEP_ASPECT_RATIO",
+                            "AspectRatio": 1.0,
+                            "Alpha": 1.0
+                        },
+                        {
+                            "UID": 6137901179541743423,
+                            "ComponentType": "UIIMAGE",
+                            "Active": true,
+                            "TextureAssetId": {
+                                "uid": 15086481139914003395,
+                                "libId": "290271369e90d53277a920abf4705117",
+                                "type": "TEXTURE"
+                            },
+                            "FillAmount": [
+                                0.0,
+                                1.0
+                            ],
+                            "FillMethod": "Horizontal",
+                            "FillOrigin": 0,
+                            "SheetColumns": 1,
+                            "SheetRows": 1,
+                            "SheetOffset": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "StretchDrawMode": "Stretch"
+                        }
+                    ],
+                    "Children": []
+                },
+                {
+                    "Name": "Shadow Mark Both",
+                    "Active": true,
+                    "Static": false,
+                    "Layer": "DEFAULT",
+                    "Tag": "DEFAULT",
+                    "Transform": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "Rotation": [
+                            -0.0,
+                            0.0,
+                            -0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "Components": [
+                        {
+                            "UID": 3069985862765963991,
+                            "ComponentType": "TRANSFORM2D",
+                            "Active": true,
+                            "Position": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "Scale": [
+                                0.30000001192092896,
+                                0.30000001192092896,
+                                0.0
+                            ],
+                            "Pivot": [
+                                0.5,
+                                1.0,
+                                0.0
+                            ],
+                            "AnchorMin": [
+                                0.5,
+                                0.0,
+                                0.0
+                            ],
+                            "AnchorMax": [
+                                0.5,
+                                0.0,
+                                0.0
+                            ],
+                            "BaseSize": [
+                                280.0,
+                                280.0,
+                                0.0
+                            ],
+                            "StretchMode": "NONE",
+                            "SizingMode": "KEEP_ASPECT_RATIO",
+                            "AspectRatio": 1.0,
+                            "Alpha": 1.0
+                        },
+                        {
+                            "UID": 15039994077217116697,
+                            "ComponentType": "UIIMAGE",
+                            "Active": true,
+                            "TextureAssetId": {
+                                "uid": 6027977305117566743,
+                                "libId": "db1a1c0c8292deb581b82aa8c0cb9d29",
+                                "type": "TEXTURE"
+                            },
+                            "FillAmount": [
+                                0.0,
+                                1.0
+                            ],
+                            "FillMethod": "Horizontal",
+                            "FillOrigin": 0,
+                            "SheetColumns": 1,
+                            "SheetRows": 1,
+                            "SheetOffset": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "StretchDrawMode": "Stretch"
+                        }
+                    ],
+                    "Children": []
                 }
             ]
         }

@@ -5,6 +5,7 @@
 #include "EnemySound.h"
 #include "EnemyBaseController.h"
 #include "EnemyBaseAttackConfig.h"
+#include "EnemyShadowMark.h"
 #include "Transform2D.h"
 
 IMPLEMENT_SCRIPT_FIELDS_INHERITED(EnemyDamageable, Damageable,
@@ -41,6 +42,8 @@ void EnemyDamageable::Start()
 		Debug::warn("EnemyDetectionAggro Script is missing from %s", GameObjectAPI::getName(m_owner));
 	}
 
+	m_shadowMark = GameObjectAPI::findScript<EnemyShadowMark>(m_owner);
+
 	m_enemySound = GameObjectAPI::findScript<EnemySound>(m_owner);
 
 	if (!m_healthBarContainerTransform)
@@ -56,6 +59,21 @@ void EnemyDamageable::Update()
 {
 	Damageable::Update();
 	updateHealthBarFade();
+}
+
+void EnemyDamageable::takeDamage(const HitContext& ctx)
+{
+	const EnemyHitContext& enemyCtx = static_cast<const EnemyHitContext&>(ctx);
+
+	resetLastShadowMarkResult();
+
+	if (m_isDead || m_invulnerable)
+	{
+		return;
+	}
+
+	processShadowMarkHit(enemyCtx.attackType);
+	applyDamageWithoutShadowMark(enemyCtx);
 }
 
 void EnemyDamageable::onDamaged(float amount)
@@ -85,16 +103,35 @@ void EnemyDamageable::onDamaged(float amount)
 	m_enemyDetectionAggro->notifyPlayerAttackedEnemy(m_damageSource);
 }
 
-void EnemyDamageable::takeDamage(const HitContext& ctx)
+void EnemyDamageable::onDeath()
 {
-	const EnemyHitContext& enemyCtx = static_cast<const EnemyHitContext&>(ctx);
+	Damageable::onDeath();
 
-	if (enemyCtx.attacker)
+	if (m_shadowMark)
 	{
-		m_damageSource = enemyCtx.attacker;
+		m_shadowMark->clearMark();
+	}
+}
+
+bool EnemyDamageable::processShadowMarkHit(PlayerAttackType attackType)
+{
+	if (!m_shadowMark)
+	{
+		return false;
 	}
 
-	Damageable::takeDamage(enemyCtx.damage);
+	m_lastHitExploitedShadowMark = m_shadowMark->processAttack(attackType);
+	return m_lastHitExploitedShadowMark;
+}
+
+void EnemyDamageable::applyDamageWithoutShadowMark(const EnemyHitContext& hit)
+{
+	if (hit.attacker)
+	{
+		m_damageSource = hit.attacker;
+	}
+
+	Damageable::takeDamage(hit);
 
 	m_damageSource = nullptr;
 }
