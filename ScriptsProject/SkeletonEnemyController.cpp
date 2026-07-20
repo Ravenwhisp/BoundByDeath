@@ -14,6 +14,8 @@ SkeletonEnemyController::SkeletonEnemyController(GameObject* owner)
 
 void SkeletonEnemyController::Start()
 {
+	EnemyBaseController::Start();
+
 	m_enemyDetectionAggro = GameObjectAPI::findScript<EnemyDetectionAggro>(getOwner());
 	m_damageable = GameObjectAPI::findScript<SkeletonDamageable>(getOwner());
 

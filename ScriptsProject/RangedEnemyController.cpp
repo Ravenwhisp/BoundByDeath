@@ -12,6 +12,8 @@ RangedEnemyController::RangedEnemyController(GameObject* owner) : EnemyBaseContr
 
 void RangedEnemyController::Start()
 {
+    EnemyBaseController::Start();
+
     m_enemyDetectionAggro = GameObjectAPI::findScript<EnemyDetectionAggro>(getOwner());
     if (!m_enemyDetectionAggro)
     {

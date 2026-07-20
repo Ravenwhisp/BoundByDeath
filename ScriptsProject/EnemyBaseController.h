@@ -13,6 +13,8 @@ public:
     explicit EnemyBaseController(GameObject* owner);
     virtual ~EnemyBaseController() = default;
 
+    void Start() override;
+
     FieldList getExposedFields() const override;
 
     // Target helpers

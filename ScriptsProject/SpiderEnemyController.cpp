@@ -13,6 +13,8 @@ SpiderEnemyController::SpiderEnemyController(GameObject* owner)
 
 void SpiderEnemyController::Start()
 {
+	EnemyBaseController::Start();
+
 	m_enemyDetectionAggro = GameObjectAPI::findScript<EnemyDetectionAggro>(getOwner());
 
 	if (!m_enemyDetectionAggro)

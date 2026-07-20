@@ -3,6 +3,7 @@
 #include "EnemyBaseAttackConfig.h"
 
 #include "Damageable.h"
+#include "EnemyBaseAttackConfig.h"
 #include "EnemySound.h"
 
 static const char* navAgentProfileNames[] =
@@ -26,6 +27,17 @@ IMPLEMENT_SCRIPT_FIELDS(EnemyBaseController,
 EnemyBaseController::EnemyBaseController(GameObject* owner)
     : Script(owner)
 {
+}
+
+void EnemyBaseController::Start()
+{
+    const EnemyBaseAttackConfig* cfg = getAttackConfig();
+    if (cfg)
+    {
+        m_moveSpeed = cfg->m_moveSpeed;
+        m_recoveryDuration = cfg->m_recoveryDuration;
+        m_stunnedDuration = cfg->m_stunnedDuration;
+    }
 }
 
 void EnemyBaseController::updateCurrentTarget()
