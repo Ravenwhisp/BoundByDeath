@@ -15,6 +15,7 @@ public:
 
     void Start() override;
     void Update() override;
+    FieldList getExposedFields() const override;
 
     bool isTargetInAttackRange() const;
 
@@ -40,7 +41,7 @@ protected:
 
 private:
     EnemyDetectionAggro* m_enemyDetectionAggro = nullptr;
-    ArcherAttackConfig* m_attackConfig = nullptr;
+    AssetReference<ArcherAttackConfig> m_attackConfig;
 
     float m_somersaultCooldownTimer = 0.0f;
     float m_arrowBarrageCooldownTimer = 0.0f;

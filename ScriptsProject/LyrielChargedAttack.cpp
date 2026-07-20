@@ -28,7 +28,7 @@ void LyrielChargedAttack::Start()
     ChargedAttackBase::Start();
 
     m_lyrielCharacter = dynamic_cast<LyrielCharacter*>(m_character);
-    m_config = GameObjectAPI::findScript<LyrielConfig>(getOwner());
+    m_config = m_lyrielCharacter->getConfig();
     m_lyrielUI = GameObjectAPI::findScript<LyrielUI>(getOwner());
 
     if (m_lyrielCharacter == nullptr)
@@ -107,7 +107,7 @@ void LyrielChargedAttack::onAttackWindowFinished()
 
 float LyrielChargedAttack::getCooldown() const
 {
-    return m_config->m_chargedCooldown;
+    return m_lyrielCharacter->getConfig()->m_chargedCooldown;
 }
 
 void LyrielChargedAttack::startAbility()
@@ -155,9 +155,9 @@ void LyrielChargedAttack::beginCharge()
 void LyrielChargedAttack::updateCharge()
 {
     m_chargeTimer += Time::getDeltaTime();
-    if (m_chargeTimer > m_config->m_chargedMaxChargeTime)
+    if (m_chargeTimer > m_lyrielCharacter->getConfig()->m_chargedMaxChargeTime)
     {
-        m_chargeTimer = m_config->m_chargedMaxChargeTime;
+        m_chargeTimer = m_lyrielCharacter->getConfig()->m_chargedMaxChargeTime;
     }
 
     Vector3 aimDirection = computeAimDirection();
@@ -250,7 +250,7 @@ void LyrielChargedAttack::releaseChargeAndShoot()
 
     beginAttackPresentation();
 
-    beginAttackWindow(m_config->m_chargedAttackLockDuration);
+    beginAttackWindow(m_lyrielCharacter->getConfig()->m_chargedAttackLockDuration);
     startCooldown();
     m_chargeTimer = 0.0f;
 
@@ -267,28 +267,28 @@ float LyrielChargedAttack::computeChargedDamage() const
 {
     float chargeRatio = 0.0f;
 
-    if (m_config->m_chargedMaxChargeTime > 0.0001f)
+    if (m_lyrielCharacter->getConfig()->m_chargedMaxChargeTime > 0.0001f)
     {
-        chargeRatio = m_chargeTimer / m_config->m_chargedMaxChargeTime;
+        chargeRatio = m_chargeTimer / m_lyrielCharacter->getConfig()->m_chargedMaxChargeTime;
     }
 
     chargeRatio = std::clamp(chargeRatio, 0.0f, 1.0f);
 
-    return m_config->m_chargedMinDamage + (m_config->m_chargedMaxDamage - m_config->m_chargedMinDamage) * chargeRatio;
+    return m_lyrielCharacter->getConfig()->m_chargedMinDamage + (m_lyrielCharacter->getConfig()->m_chargedMaxDamage - m_lyrielCharacter->getConfig()->m_chargedMinDamage) * chargeRatio;
 }
 
 float LyrielChargedAttack::computeChargedRange() const
 {
     float chargeRatio = 0.0f;
 
-    if (m_config->m_chargedMaxChargeTime > 0.0001f)
+    if (m_lyrielCharacter->getConfig()->m_chargedMaxChargeTime > 0.0001f)
     {
-        chargeRatio = m_chargeTimer / m_config->m_chargedMaxChargeTime;
+        chargeRatio = m_chargeTimer / m_lyrielCharacter->getConfig()->m_chargedMaxChargeTime;
     }
 
     chargeRatio = std::clamp(chargeRatio, 0.0f, 1.0f);
 
-    return m_config->m_chargedMinAttackRange + (m_config->m_chargedMaxAttackRange - m_config->m_chargedMinAttackRange) * chargeRatio;
+    return m_lyrielCharacter->getConfig()->m_chargedMinAttackRange + (m_lyrielCharacter->getConfig()->m_chargedMaxAttackRange - m_lyrielCharacter->getConfig()->m_chargedMinAttackRange) * chargeRatio;
 }
 
 bool LyrielChargedAttack::isAimStickValid(const Vector3& direction) const
@@ -320,7 +320,7 @@ void LyrielChargedAttack::collectEnemiesInLine(const Vector3& origin, const Vect
     flatForward.Normalize();
 
     const float currentRange = computeChargedRange();
-    const float lineHalfWidthSq = m_config->m_chargedLineHalfWidth * m_config->m_chargedLineHalfWidth;
+    const float lineHalfWidthSq = m_lyrielCharacter->getConfig()->m_chargedLineHalfWidth * m_lyrielCharacter->getConfig()->m_chargedLineHalfWidth;
 
     for (GameObject* target : potentialTargets)
     {
@@ -435,9 +435,9 @@ void LyrielChargedAttack::spawnChargedArrow(const Vector3& origin, const Vector3
 
     const float range = computeChargedRange();
 
-    const float lifetime = range / m_config->m_chargedArrowSpeed;
+    const float lifetime = range / m_lyrielCharacter->getConfig()->m_chargedArrowSpeed;
 
-    arrow->launch(origin, flatForward, m_config->m_chargedArrowSpeed, lifetime, nullptr, 0.0f);
+    arrow->launch(origin, flatForward, m_lyrielCharacter->getConfig()->m_chargedArrowSpeed, lifetime, nullptr, 0.0f);
 }
 
 void LyrielChargedAttack::drawChargePreview(const Vector3& origin, const Vector3& forward) const
@@ -463,8 +463,8 @@ void LyrielChargedAttack::drawChargePreview(const Vector3& origin, const Vector3
 
     const Vector3 previewColor(0.2f, 1.0f, 1.0f);
 
-    const Vector3 leftStart = origin - right * m_config->m_chargedLineHalfWidth;
-    const Vector3 rightStart = origin + right * m_config->m_chargedLineHalfWidth;
+    const Vector3 leftStart = origin - right * m_lyrielCharacter->getConfig()->m_chargedLineHalfWidth;
+    const Vector3 rightStart = origin + right * m_lyrielCharacter->getConfig()->m_chargedLineHalfWidth;
 
     const Vector3 leftEnd = leftStart + flatForward * previewRange;
     const Vector3 rightEnd = rightStart + flatForward * previewRange;

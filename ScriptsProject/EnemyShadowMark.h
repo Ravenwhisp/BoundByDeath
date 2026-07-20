@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "ScriptAPI.h"
 #include "Transform2D.h"
@@ -25,7 +25,7 @@ public:
     void Update()    override;
     void drawGizmo() override;
 
-    ScriptFieldList getExposedFields() const override;
+    FieldList getExposedFields() const override;
 
     virtual bool processAttack(PlayerAttackType attackType);
     bool isExploitable() const { return m_state == ShadowMarkState::Ready; }
@@ -61,10 +61,10 @@ public:
     bool m_useMarkDuration = true;
     float m_markDuration = 5.0f;
     float m_markFadeDuration = 0.5f;
-    ScriptComponentRef<Transform2D> m_canvas;
-    ScriptComponentRef<Transform> m_mark_death;
-    ScriptComponentRef<Transform> m_mark_lyriel;
-    ScriptComponentRef<Transform> m_mark_both;
+    ComponentRef<Transform2D> m_canvas;
+    ComponentRef<Transform> m_mark_death;
+    ComponentRef<Transform> m_mark_lyriel;
+    ComponentRef<Transform> m_mark_both;
 
     float m_volleyCooldownReduction = 0.20f;  // % of base cooldown removed per exploit
 

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Damageable.h"
 #include "UISheet.h"
@@ -18,7 +18,7 @@ public:
     void Start() override;
     void Update() override;
 
-    ScriptFieldList getExposedFields() const override;
+    FieldList getExposedFields() const override;
 
     float m_heartbeatThreshold = 0.5f;
 
@@ -42,8 +42,8 @@ private:
     LyrielSound* m_lyrielSound = nullptr;
     PlayerRenderBufferComponent* m_playerRenderBuffer = nullptr;
 
-    ScriptComponentRef<Transform> m_renderer;
-    ScriptComponentRef<UISlider> m_healthGlow;
+    ComponentRef<Transform> m_renderer;
+    ComponentRef<UISlider> m_healthGlow;
 
     UISlider* m_healthGlowSlider = nullptr;
     UISheet* m_healthGlowSheet = nullptr;

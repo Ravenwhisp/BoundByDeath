@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "ScriptAPI.h"
 #include "EnemyShadowMark.h"
 #include "PuzzleManagerLVL1.h"
@@ -12,7 +12,7 @@ public:
     void Start()  override;
     void Update() override;
 
-    ScriptFieldList getExposedFields() const override;
+    FieldList getExposedFields() const override;
 
     bool processAttack(PlayerAttackType attackType) override;
     bool isActivated() const { return m_activated; }
@@ -24,7 +24,7 @@ private:
     void activateCrystal();
 
 public:
-    ScriptComponentRef<Transform> m_puzzleManager;
+    ComponentRef<Transform> m_puzzleManager;
     int m_puzzleID = 0;
     float m_activeTime = 5.0f;
     PrefabRef m_crystalSparks;

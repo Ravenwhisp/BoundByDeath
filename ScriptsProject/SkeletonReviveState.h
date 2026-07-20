@@ -39,7 +39,7 @@ private:
 private:
 	SkeletonEnemyController* m_controller = nullptr;
 	SkeletonDamageable* m_damageable = nullptr;
-	SkeletonAttackConfig* m_attackConfig = nullptr;
+	AssetReference<SkeletonAttackConfig> m_attackConfig;
 	AnimationComponent* m_animation = nullptr;
 
 	Phase m_phase = Phase::ReviveStart;

@@ -24,7 +24,7 @@ public:
 	void Start() override;
 	void Update() override;
 
-	ScriptFieldList getExposedFields() const override;
+	FieldList getExposedFields() const override;
 	
     void takeDamage(const HitContext& ctx) override;
 	bool lastHitExploitShadowMark() const { return m_lastHitExploitedShadowMark; }
@@ -51,7 +51,7 @@ private:
 	
 	bool m_lastHitExploitedShadowMark = false;
 
-	ScriptComponentRef<Transform2D> m_healthBarContainer;
+	ComponentRef<Transform2D> m_healthBarContainer;
 	Transform2D* m_healthBarContainerTransform = nullptr;
 
 	float m_healthBarFadeTime = 0.25f;

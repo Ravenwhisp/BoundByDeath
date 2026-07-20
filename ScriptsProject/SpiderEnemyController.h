@@ -14,6 +14,7 @@ public:
 
 	void Start() override;
 	void Update() override;
+	FieldList getExposedFields() const override;
 
 	bool isTargetInAttackRange() const;
 
@@ -23,5 +24,5 @@ protected:
 
 private:
 	EnemyDetectionAggro* m_enemyDetectionAggro = nullptr;
-	EnemyBaseAttackConfig* m_attackConfig = nullptr;
+	AssetReference<EnemyBaseAttackConfig> m_attackConfig;
 };
