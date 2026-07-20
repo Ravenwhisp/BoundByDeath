@@ -15,7 +15,7 @@ public:
 
 	void Start() override;
 	void Update() override;
-
+	FieldList getExposedFields() const override;
 	bool isTargetInScimitarRange() const;
 
 	bool isGuardReady() const;
@@ -36,7 +36,7 @@ protected:
 
 private:
 	EnemyDetectionAggro* m_enemyDetectionAggro = nullptr;
-	SkeletonAttackConfig* m_attackConfig = nullptr;
+	AssetReference<SkeletonAttackConfig> m_attackConfig;
 	SkeletonDamageable* m_damageable = nullptr;
 
 	float m_guardCooldownTimer = 0.0f;

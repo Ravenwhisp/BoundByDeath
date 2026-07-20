@@ -151,6 +151,9 @@
     <Filter Include="Enemies\Skeleton\States">
       <UniqueIdentifier>{bee86649-753b-4746-bc39-122ddb51888b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Enemies\Movement">
+      <UniqueIdentifier>{59fd20a4-f8fa-40db-81e4-287d22402309}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -383,9 +386,6 @@
     <ClInclude Include="HeartbeatHaptic.h">
       <Filter>Systems</Filter>
     </ClInclude>
-    <ClInclude Include="PlayerGamepadBinding.h">
-      <Filter>Systems</Filter>
-    </ClInclude>
     <ClInclude Include="EnemyBaseController.h">
       <Filter>Enemies</Filter>
     </ClInclude>
@@ -615,8 +615,8 @@
     </ClInclude>
     <ClInclude Include="LinkedDeathController.h" />
     <ClInclude Include="ParticleManager.h" />
-    <ClInclude Include="HapticTester.h">
-      <Filter>Tests</Filter>
+    <ClInclude Include="EnemyForcedMovement.h">
+      <Filter>Enemies\Movement</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -857,9 +857,6 @@
     <ClCompile Include="HeartbeatHaptic.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
-    <ClCompile Include="PlayerGamepadBinding.cpp">
-      <Filter>Systems</Filter>
-    </ClCompile>
     <ClCompile Include="EnemyBaseController.cpp">
       <Filter>Enemies</Filter>
     </ClCompile>
@@ -1074,8 +1071,8 @@
     </ClCompile>
     <ClCompile Include="LinkedDeathController.cpp" />
     <ClCompile Include="ParticleManager.cpp" />
-    <ClCompile Include="HapticTester.cpp">
-      <Filter>Tests</Filter>
+    <ClCompile Include="EnemyForcedMovement.cpp">
+      <Filter>Enemies\Movement</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

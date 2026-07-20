@@ -22,10 +22,11 @@ public:
 private:
     void moveSomersault();
     void finishSomersault();
+    void cancelSomersault();
 
 private:
     RangedEnemyController* m_archerController = nullptr;
-    ArcherAttackConfig* m_attackConfig = nullptr;
+    AssetReference<ArcherAttackConfig> m_attackConfig;
     AnimationComponent* m_animation = nullptr;
     ArcherGuardParticles* m_particles = nullptr;
 
