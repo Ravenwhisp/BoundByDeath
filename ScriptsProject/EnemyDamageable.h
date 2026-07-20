@@ -38,7 +38,7 @@ public:
 	void Update() override;
 	void takeDamage(const HitContext& ctx) override;
 
-	ScriptFieldList getExposedFields() const override;
+	FieldList getExposedFields() const override;
 
 protected:
 	void onDamaged(float amount) override;
@@ -53,7 +53,7 @@ private:
 	EnemySound* m_enemySound = nullptr;
 	Transform* m_damageSource = nullptr;
 
-	ScriptComponentRef<Transform2D> m_healthBarContainer;
+	ComponentRef<Transform2D> m_healthBarContainer;
 	Transform2D* m_healthBarContainerTransform = nullptr;
 
 	float m_healthBarFadeTime = 0.25f;

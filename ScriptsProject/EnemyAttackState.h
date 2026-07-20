@@ -26,7 +26,7 @@ private:
 
 private:
     EnemyBaseController* m_controller = nullptr;
-    EnemyBaseAttackConfig* m_attackConfig = nullptr;
+    AssetReference<EnemyBaseAttackConfig> m_attackConfig;
     AnimationComponent* m_animation = nullptr;
     PaladinVFX* m_paladinVFX = nullptr;
     EnemySound* m_enemySound = nullptr;

@@ -15,6 +15,7 @@ public:
 
 	void Start() override;
 	void Update() override;
+	FieldList getExposedFields() const override;
 
 	bool isTargetInAttackRange() const;
 
@@ -42,7 +43,7 @@ private:
 
 private:
 	EnemyDetectionAggro* m_enemyDetectionAggro = nullptr;
-	SummonerAttackConfig* m_attackConfig = nullptr;
+	AssetReference<SummonerAttackConfig> m_attackConfig;
 
 	float m_attackCooldownTimer = 0.0f;
 	float m_teleportCooldownTimer = 0.0f;

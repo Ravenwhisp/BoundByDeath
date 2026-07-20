@@ -112,7 +112,7 @@ void DeathTaunt::onAttackWindowFinished()
 
 float DeathTaunt::getCooldown() const
 {
-    return m_config->m_tauntCooldown;
+    return m_deathCharacter->getConfig()->m_tauntCooldown;
 }
 
 void DeathTaunt::startAbility()
@@ -153,7 +153,7 @@ void DeathTaunt::drawGizmo()
 
     ownerForward.Normalize();
 
-    const float clampedHalfAngle = (m_config->m_tauntHalfAngleDegrees < 0.1f) ? 0.1f : ((m_config->m_tauntHalfAngleDegrees > 89.9f) ? 89.9f : m_config->m_tauntHalfAngleDegrees);
+    const float clampedHalfAngle = (m_deathCharacter->getConfig()->m_tauntHalfAngleDegrees < 0.1f) ? 0.1f : ((m_deathCharacter->getConfig()->m_tauntHalfAngleDegrees > 89.9f) ? 89.9f : m_deathCharacter->getConfig()->m_tauntHalfAngleDegrees);
     const float halfAngleRadians = clampedHalfAngle * (3.14159265f / 180.0f);
 
     const int numSteps = 16;
@@ -170,7 +170,7 @@ void DeathTaunt::drawGizmo()
             direction.x * std::sin(angle) + direction.z * std::cos(angle)
         );
         direction.Normalize();
-        Vector3 arcPoint = ownerPosition + direction * m_config->m_tauntRange;
+        Vector3 arcPoint = ownerPosition + direction * m_deathCharacter->getConfig()->m_tauntRange;
         DebugDrawAPI::drawLine(ownerPosition, arcPoint, color, 0, false);
     }
 }
@@ -242,7 +242,7 @@ void DeathTaunt::releaseAimAndCast()
 
     m_castOrigin = TransformAPI::getGlobalPosition(ownerTransform);
     m_castDirection = finalDirection;
-    m_impactDelayTimer = m_config->m_tauntImpactDelay;
+    m_impactDelayTimer = m_deathCharacter->getConfig()->m_tauntImpactDelay;
     m_tauntState = TauntState::WaitingForImpact;
 
     DeathSound* sound = m_deathCharacter != nullptr ? m_deathCharacter->getSound() : nullptr;
@@ -257,11 +257,11 @@ void DeathTaunt::releaseAimAndCast()
     }
 
     notifyAbilitySuccessfullyStarted();
-    m_debugConeTimer = m_config->m_tauntImpactDelay;
+    m_debugConeTimer = m_deathCharacter->getConfig()->m_tauntImpactDelay;
 
     m_movementLockedForCombo = true;
     beginAttackPresentation();
-    beginAttackWindow(m_config->m_tauntImpactDelay);
+    beginAttackWindow(m_deathCharacter->getConfig()->m_tauntImpactDelay);
 
     m_currentAimDirection = Vector3::Zero;
 
@@ -306,14 +306,14 @@ void DeathTaunt::resolveImpact()
         Vector3 offsetFromOrigin = enemyPosition - m_castOrigin;
         offsetFromOrigin.y = 0.0f;
 
-        if (offsetFromOrigin.Length() <= m_config->m_tauntPullDestinationDistance)
+        if (offsetFromOrigin.Length() <= m_deathCharacter->getConfig()->m_tauntPullDestinationDistance)
         {
             EnemyDamageable* damageable = GameObjectAPI::findScript<EnemyDamageable>(enemy);
 
             if (damageable)
             {
                 EnemyHitContext hitContext;
-                hitContext.damage = m_config->m_tauntPullDamage;
+                hitContext.damage = m_deathCharacter->getConfig()->m_tauntPullDamage;
                 hitContext.attacker = deathTransform;
                 hitContext.attackType = PlayerAttackType::DeathTaunt;
 
@@ -334,7 +334,7 @@ void DeathTaunt::resolveImpact()
 
         const Vector3 destination = calculatePullDestination(enemy);
 
-        const bool pullStarted = forcedMovement->startPull(destination, m_config->m_tauntPullDuration, deathTransform, m_config->m_tauntPullDamage, PlayerAttackType::DeathTaunt);
+        const bool pullStarted = forcedMovement->startPull(destination, m_deathCharacter->getConfig()->m_tauntPullDuration, deathTransform, m_deathCharacter->getConfig()->m_tauntPullDamage, PlayerAttackType::DeathTaunt);
 
         if (pullStarted)
         {
@@ -399,7 +399,7 @@ void DeathTaunt::applyTauntEffects(GameObject* enemy, Transform* deathTransform,
 
     if (enemyAggro)
     {
-        enemyAggro->applyTaunt(deathTransform, m_config->m_tauntDuration);
+        enemyAggro->applyTaunt(deathTransform, m_deathCharacter->getConfig()->m_tauntDuration);
     }
 
     if (!PersistingPowerupState::isUnlocked(PowerupId::DeathPowerup1))
@@ -439,7 +439,7 @@ Vector3 DeathTaunt::calculatePullDestination(GameObject* enemy) const
 
     directionFromOrigin.Normalize();
 
-    Vector3 finalDestination  = m_castOrigin + directionFromOrigin * m_config->m_tauntPullDestinationDistance;
+    Vector3 finalDestination  = m_castOrigin + directionFromOrigin * m_deathCharacter->getConfig()->m_tauntPullDestinationDistance;
 
     return finalDestination;
 }
@@ -492,7 +492,7 @@ bool DeathTaunt::isEnemyInsideTauntCone(GameObject* enemy, const Vector3& ownerP
     directionToEnemy.y = 0.0f;
 
     const float distanceToEnemy = directionToEnemy.Length();
-    if (distanceToEnemy <= 0.0f || distanceToEnemy > m_config->m_tauntRange)
+    if (distanceToEnemy <= 0.0f || distanceToEnemy > m_deathCharacter->getConfig()->m_tauntRange)
     {
         return false;
     }
@@ -506,7 +506,7 @@ bool DeathTaunt::isEnemyInsideTauntCone(GameObject* enemy, const Vector3& ownerP
     flattenedForward.Normalize();
     directionToEnemy.Normalize();
 
-    const float halfAngleRadians = m_config->m_tauntHalfAngleDegrees * (3.14159265f / 180.0f);
+    const float halfAngleRadians = m_deathCharacter->getConfig()->m_tauntHalfAngleDegrees * (3.14159265f / 180.0f);
     const float coneThreshold = std::cos(halfAngleRadians);
 
     // TODO: Add a line-of-sight / wall check before confirming the taunt hit.

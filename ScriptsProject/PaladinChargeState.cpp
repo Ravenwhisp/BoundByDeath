@@ -14,7 +14,6 @@ PaladinChargeState::PaladinChargeState(GameObject* owner)
 void PaladinChargeState::OnStateEnter()
 {
 	m_paladinController = GameObjectAPI::findScript<MeleeEnemyController>(getOwner());
-	m_attackConfig = GameObjectAPI::findScript<PaladinAttackConfig>(getOwner());
 	m_animation = AnimationAPI::getAnimationComponent(getOwner());
 	m_paladinVFX = GameObjectAPI::findScript<PaladinVFX>(getOwner());
 
@@ -23,12 +22,6 @@ void PaladinChargeState::OnStateEnter()
 	if (!m_paladinController)
 	{
 		Debug::error("[PaladinChargeState] MeleeEnemyController not found.");
-		return;
-	}
-
-	if (!m_attackConfig)
-	{
-		Debug::error("[PaladinChargeState] PaladinAttackConfig not found.");
 		return;
 	}
 
@@ -65,7 +58,7 @@ void PaladinChargeState::OnStateEnter()
 
 void PaladinChargeState::OnStateUpdate()
 {
-	if (!m_paladinController || !m_attackConfig || !m_animation)
+	if (!m_paladinController || !m_attackConfig.get() || !m_animation)
 	{
 		stopChargeAttackEffect();
 		return;
@@ -93,7 +86,7 @@ void PaladinChargeState::OnStateUpdate()
 
 	moveCharge();
 
-	if (m_stateTimer >= m_attackConfig->m_chargeDuration || m_paladinController->isTargetInAttackRange())
+	if (m_stateTimer >= m_attackConfig.get()->m_chargeDuration || m_paladinController->isTargetInAttackRange())
 	{
 		finishCharge();
 		return;
@@ -140,7 +133,7 @@ void PaladinChargeState::moveCharge()
 	Vector3 ownerPosition = TransformAPI::getGlobalPosition(ownerTransform);
 	Vector3 desiredPosition = ownerPosition;
 
-	desiredPosition += m_chargeDirection * m_attackConfig->m_chargeSpeed * Time::getDeltaTime();
+	desiredPosition += m_chargeDirection * m_attackConfig.get()->m_chargeSpeed * Time::getDeltaTime();
 
 	Vector3 nextPosition;
 

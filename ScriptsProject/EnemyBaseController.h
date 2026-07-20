@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "ScriptAPI.h"
 
@@ -12,7 +12,7 @@ public:
     explicit EnemyBaseController(GameObject* owner);
     virtual ~EnemyBaseController() = default;
 
-    ScriptFieldList getExposedFields() const override;
+    FieldList getExposedFields() const override;
 
     // Target helpers
     virtual void updateCurrentTarget();

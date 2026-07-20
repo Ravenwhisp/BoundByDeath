@@ -29,7 +29,7 @@ private:
 
 private:
 	MeleeEnemyController* m_paladinController = nullptr;
-	PaladinAttackConfig* m_attackConfig = nullptr;
+	AssetReference<PaladinAttackConfig> m_attackConfig;
 	AnimationComponent* m_animation = nullptr;
 	PaladinSound* m_paladinSound = nullptr;
 	PaladinVFX* m_paladinVFX = nullptr;

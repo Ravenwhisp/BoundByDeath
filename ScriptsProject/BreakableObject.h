@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "ScriptAPI.h"
 
@@ -14,7 +14,7 @@ public:
 
     void Start() override;
 
-    ScriptFieldList getExposedFields() const override;
+    FieldList getExposedFields() const override;
 
     virtual void onBreak();
     bool isBroken() const { return m_isBroken; }
