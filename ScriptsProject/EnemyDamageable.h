@@ -7,6 +7,7 @@ class EnemyDetectionAggro;
 class EnemySound;
 class EnemyShadowMark;
 class Transform2D;
+class EnemyBaseController;
 
 struct EnemyHitContext : public HitContext
 {
