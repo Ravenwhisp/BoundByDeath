@@ -1,0 +1,219 @@
+{
+    "Version": 2,
+    "sourcePath": "Assets\\Prefabs\\HealthPlaceholder.prefab",
+    "Name": "HealthPlaceholder",
+    "Active": true,
+    "Static": false,
+    "Layer": "DEFAULT",
+    "Tag": "DEFAULT",
+    "Transform": {
+        "Position": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "Rotation": [
+            -0.0,
+            0.0,
+            -0.0,
+            1.0
+        ],
+        "Scale": [
+            0.25,
+            0.25,
+            0.25
+        ]
+    },
+    "Components": [
+        {
+            "UID": 10784248248280384553,
+            "ComponentType": "SCRIPT",
+            "Active": true,
+            "ScriptName": "HealthPickup",
+            "ScriptFields": {
+                "Heal Amount": 10.0,
+                "Collect Particle Prefab": {
+                    "uid": 3316399158378073336,
+                    "libId": "324f83d53e6944e5b0b9dab2e9257ecf",
+                    "type": "PREFAB"
+                },
+                "Spawn Height": 2.5,
+                "Fall Gravity": 8.0,
+                "Idle Speed": 0.20000000298023224,
+                "Horizontal Amplitude": 0.10000000149011612,
+                "Vertical Amplitude": 0.20000000298023224
+            }
+        },
+        {
+            "UID": 15527696258687701014,
+            "ComponentType": "TRIGGER",
+            "Active": true,
+            "Shape": "Box",
+            "Center": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Size": [
+                1.2999999523162842,
+                1.2999999523162842,
+                1.2999999523162842
+            ]
+        }
+    ],
+    "Children": [
+        {
+            "Name": "spirit smoke",
+            "Active": true,
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [
+                {
+                    "UID": 15178789281802388170,
+                    "ComponentType": "MODEL",
+                    "Active": true,
+                    "MeshAssetId": {
+                        "uid": 8932442827935410038,
+                        "libId": "1b1b40fe4b325ec990a1e9bb5b7ffcf7",
+                        "type": "MESH"
+                    },
+                    "SkinAssetId": {
+                        "uid": 0,
+                        "libId": "",
+                        "type": "DATA_CONTAINER"
+                    },
+                    "Materials": [
+                        {
+                            "uid": 17481603862598985862,
+                            "libId": "5f5f6100f432b2cf69074d93fe65960f",
+                            "type": "MATERIAL"
+                        }
+                    ],
+                    "Render Mode": 0
+                }
+            ],
+            "Children": []
+        },
+        {
+            "Name": "outer orb",
+            "Active": true,
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0,
+                    1.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [
+                {
+                    "UID": 3567253579148927497,
+                    "ComponentType": "MODEL",
+                    "Active": true,
+                    "MeshAssetId": {
+                        "uid": 9838865459293910330,
+                        "libId": "cfa731d038be880e1b230a1b3489efef",
+                        "type": "MESH"
+                    },
+                    "SkinAssetId": {
+                        "uid": 0,
+                        "libId": "",
+                        "type": "DATA_CONTAINER"
+                    },
+                    "Materials": [
+                        {
+                            "uid": 17333716385840839233,
+                            "libId": "725250f2e4282bb5501d164b6094a7dd",
+                            "type": "MATERIAL"
+                        }
+                    ],
+                    "Render Mode": 0
+                }
+            ],
+            "Children": []
+        },
+        {
+            "Name": "inner orb",
+            "Active": true,
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [
+                {
+                    "UID": 9267583012949649848,
+                    "ComponentType": "MODEL",
+                    "Active": true,
+                    "MeshAssetId": {
+                        "uid": 4674353068748063608,
+                        "libId": "2f689fae761b59f6946e7b293613d703",
+                        "type": "MESH"
+                    },
+                    "SkinAssetId": {
+                        "uid": 0,
+                        "libId": "",
+                        "type": "DATA_CONTAINER"
+                    },
+                    "Materials": [
+                        {
+                            "uid": 4774687755739455797,
+                            "libId": "b89cb392059ea54a0440b99366ccde89",
+                            "type": "MATERIAL"
+                        }
+                    ],
+                    "Render Mode": 0
+                }
+            ],
+            "Children": []
+        }
+    ]
+}
