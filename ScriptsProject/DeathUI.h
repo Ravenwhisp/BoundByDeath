@@ -23,7 +23,7 @@ public:
 
 	// Charged Attack
 	void showChargedAttackUI();
-	void updateChargedAttackUI(const Vector3& origin, const Vector3& aimDirection);
+	void updateChargedAttackUI(const Vector3& origin);
 	void hideChargedAttackUI();
 
 	// Slash Combo

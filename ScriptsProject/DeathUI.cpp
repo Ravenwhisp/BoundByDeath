@@ -118,28 +118,14 @@ void DeathUI::showChargedAttackUI()
 	GameObjectAPI::setActive(owner, true);
 }
 
-void DeathUI::updateChargedAttackUI(const Vector3& origin, const Vector3& aimDirection)
+void DeathUI::updateChargedAttackUI(const Vector3& origin)
 {
 	if (!m_chargedAttackUITransform)
 	{
 		return;
 	}
 
-	Vector3 flatDirection = aimDirection;
-	flatDirection.y = 0.0f;
-
-	if (flatDirection.LengthSquared() <= 0.0001f)
-	{
-		return;
-	}
-
-	flatDirection.Normalize();
-
-	const float yawRad = std::atan2(flatDirection.x, flatDirection.z);
-	const float targetYawDeg = yawRad * (180.0f / 3.14159265f);
-
 	TransformAPI::setGlobalPosition(m_chargedAttackUITransform, origin);
-	TransformAPI::setGlobalRotationEuler(m_chargedAttackUITransform, Vector3(0.0f, targetYawDeg, 0.0f));
 }
 
 void DeathUI::hideChargedAttackUI()
