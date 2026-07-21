@@ -111,9 +111,12 @@ void ArthurBossController::Update()
 		}
 	}
 
-	updateAttackCooldowns(Time::getDeltaTime());
+    const float dt = Time::getDeltaTime();
+    m_chargingSlamCooldownTimer.update(dt);
+    m_sideSweepCooldownTimer.update(dt);
+    m_earthHammerCooldownTimer.update(dt);
 
-	updateBossPhase();
+    updateBossPhase();
 }
 
 Transform* ArthurBossController::acquireCurrentTarget()
@@ -185,26 +188,15 @@ void ArthurBossController::updateBossPhase()
 	}
 }
 
-void ArthurBossController::updateAttackCooldowns(float dt)
-{
-	m_chargingSlamCooldownTimer -= dt;
-	m_sideSweepCooldownTimer -= dt;
-	m_earthHammerCooldownTimer -= dt;
-
-	if (m_chargingSlamCooldownTimer <= 0.0f) m_chargingSlamCooldownTimer = 0.0f;
-	if (m_sideSweepCooldownTimer <= 0.0f) m_sideSweepCooldownTimer = 0.0f;
-	if (m_earthHammerCooldownTimer <= 0.0f) m_earthHammerCooldownTimer = 0.0f;
-}
-
 void ArthurBossController::consumeChargingSlamCooldown()
 {
-	if (!m_attackConfig.get())
-	{
-		Debug::error("[ArthurBossController] AtrhurAttackConfig not found.");
-		return;
-	}
+    if (!m_attackConfig.get())
+    {
+        Debug::error("[ArthurBossController] AtrhurAttackConfig not found.");
+        return;
+    }
 
-	m_chargingSlamCooldownTimer = m_attackConfig.get()->m_chargingSlamCooldown;
+    m_chargingSlamCooldownTimer.start(m_attackConfig.get()->m_chargingSlamCooldown);
 }
 
 void ArthurBossController::consumeSideSweepCooldown()
@@ -215,7 +207,7 @@ void ArthurBossController::consumeSideSweepCooldown()
 		return;
 	}
 
-	m_sideSweepCooldownTimer = m_attackConfig.get()->m_sideSweepCooldown;
+    m_sideSweepCooldownTimer.start(m_attackConfig.get()->m_sideSweepCooldown);
 }
 
 void ArthurBossController::consumeEarthHammerCooldown()
@@ -226,7 +218,7 @@ void ArthurBossController::consumeEarthHammerCooldown()
 		return;
 	}
 
-	m_earthHammerCooldownTimer = m_attackConfig.get()->m_earthHammerCooldown;
+    m_earthHammerCooldownTimer.start(m_attackConfig.get()->m_earthHammerCooldown);
 }
 
 Transform* ArthurBossController::getNonFocusTarget() const

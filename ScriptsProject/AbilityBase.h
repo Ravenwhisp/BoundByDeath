@@ -2,6 +2,7 @@
 
 #include "ScriptAPI.h"
 #include "CharacterUI.h"
+#include "Timer.h"
 
 class CharacterBase;
 
@@ -37,10 +38,9 @@ protected:
     virtual bool canStartSpecificAbility() const { return true; }
 
     virtual float getCooldown() const { return m_cooldown; }
-    void updateCooldown(float dt);
-	void updateAttackWindow(float dt);
-	void startCooldown();
-    bool isCooldownReady() const { return m_cooldownTimer <= 0.0f; }
+    void updateAttackWindow(float dt);
+    void startCooldown();
+    bool isCooldownReady() const { return m_cooldownTimer.isReady(); }
 
     void setAbilityLocked(bool locked); //innecesario
     int getPlayerIndex() const; //innecesario
@@ -64,9 +64,9 @@ protected:
     int m_uiSlot = static_cast<int>(AbilityUISlot::BasicAttack);
 
     float m_cooldown = 0.0;
-    float m_cooldownTimer = 0.0f;
+    Timer m_cooldownTimer;
 
-    float m_attackStateTimer = 0.0f;
+    Timer m_attackStateTimer;
 
     int m_successfulUseCount = 0;
 

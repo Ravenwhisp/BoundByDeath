@@ -40,14 +40,23 @@ void AbilityBase::Start()
     {
         Debug::warn("[AbilityBase] CharacterUI not found on owner '%s'.", GameObjectAPI::getName(getOwner()));
     }
+
+    m_cooldownTimer.onCompleted([this]() {
+        const AbilityUISlot slot = static_cast<AbilityUISlot>(m_uiSlot);
+        if (m_characterUI) m_characterUI->hideAbilityCooldown(slot);
+    });
+
+    m_attackStateTimer.onCompleted([this]() {
+        finishAttackWindow();
+    });
 }
 
 void AbilityBase::Update()
 {
-	float dt = Time::getDeltaTime();
+    float dt = Time::getDeltaTime();
 
-    updateCooldown(dt);
-	updateAttackWindow(dt);
+    m_cooldownTimer.update(dt);
+    updateAttackWindow(dt);
     updateUI();
 }
 
@@ -61,24 +70,6 @@ void AbilityBase::tryAbility()
     startAbility();
 }
 
-void AbilityBase::updateCooldown(float dt)
-{
-    if (m_cooldownTimer <= 0.0f)
-    {
-        return;
-    }
-
-    m_cooldownTimer -= dt;
-
-    if (m_cooldownTimer < 0.0f)
-    {
-        m_cooldownTimer = 0.0f;
-
-        const AbilityUISlot slot = static_cast<AbilityUISlot>(m_uiSlot);
-        m_characterUI->hideAbilityCooldown(slot);
-    }
-}
-
 void AbilityBase::updateUI()
 {
     if (!m_characterUI)
@@ -88,47 +79,35 @@ void AbilityBase::updateUI()
 
     const float cooldown = getCooldown();
 
-    if (m_cooldownTimer <= 0.0f || cooldown <= 0.0001f)
+    if (m_cooldownTimer.isReady() || cooldown <= 0.0001f)
     {
         return;
     }
 
     const AbilityUISlot slot = static_cast<AbilityUISlot>(m_uiSlot);
-    m_characterUI->updateAbilityCooldown(slot, m_cooldownTimer / cooldown);
+    m_characterUI->updateAbilityCooldown(slot, m_cooldownTimer.getRemaining() / cooldown);
 }
 
 void AbilityBase::reduceCooldown(float fraction)
 {
     const float cooldown = getCooldown();
 
-    if (m_cooldownTimer <= 0.0f || fraction <= 0.0f || cooldown <= 0.0f)
+    if (!m_cooldownTimer.isActive() || fraction <= 0.0f || cooldown <= 0.0f)
     {
         return;
     }
 
-    m_cooldownTimer -= fraction * cooldown;
+    m_cooldownTimer.reduce(fraction * cooldown);
 
-    if (m_cooldownTimer <= 0.0f)
+    if (m_cooldownTimer.isActive() && m_characterUI)
     {
-        m_cooldownTimer = 0.0f;
-
-        if (m_characterUI)
-        {
-            m_characterUI->hideAbilityCooldown(static_cast<AbilityUISlot>(m_uiSlot));
-        }
-
-        return;
-    }
-
-    if (m_characterUI)
-    {
-        m_characterUI->updateAbilityCooldown(static_cast<AbilityUISlot>(m_uiSlot), m_cooldownTimer / cooldown);
+        m_characterUI->updateAbilityCooldown(static_cast<AbilityUISlot>(m_uiSlot), m_cooldownTimer.getRemaining() / cooldown);
     }
 }
 
 void AbilityBase::startCooldown()
 {
-    m_cooldownTimer = getCooldown();
+    m_cooldownTimer.start(getCooldown());
 
     if (m_characterUI)
     {
@@ -139,18 +118,14 @@ void AbilityBase::startCooldown()
 
 void AbilityBase::updateAttackWindow(float dt)
 {
-    if (m_attackStateTimer <= 0.0f)
+    if (!m_attackStateTimer.isActive())
     {
         return;
     }
 
     onAttackWindowUpdate();
 
-    m_attackStateTimer -= dt;
-    if (m_attackStateTimer <= 0.0f)
-    {
-        finishAttackWindow();
-    }
+    m_attackStateTimer.update(dt);
 }
 
 void AbilityBase::notifyAbilitySuccessfullyStarted()
@@ -213,12 +188,12 @@ int AbilityBase::getPlayerIndex() const //innecesario
 
 void AbilityBase::beginAttackWindow(float lockDuration)
 {
-    m_attackStateTimer = lockDuration;
+    m_attackStateTimer.start(lockDuration);
 }
 
 void AbilityBase::finishAttackWindow()
 {
-    m_attackStateTimer = 0.0f;
+    m_attackStateTimer.stop();
 
     setAbilityLocked(false);
 

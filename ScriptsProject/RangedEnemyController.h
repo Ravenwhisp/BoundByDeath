@@ -1,6 +1,7 @@
 #pragma once
 
 #include "EnemyBaseController.h"
+#include "Timer.h"
 
 class EnemyDetectionAggro;
 class ArcherAttackConfig;
@@ -24,20 +25,17 @@ public:
 
     bool isSomersaultReady() const;
     void consumeSomersaultCooldown();
-    void updateSomersaultCooldown(float dt);
 
     Vector3 getDirectionAwayFromClosestPlayer() const;
 
     // Arrow Barrage helpers
     bool isArrowBarrageReady() const;
     void consumeArrowBarrageCooldown();
-    void updateArrowBarrageCooldown(float dt);
 
     bool isTargetInArrowBarrageRange() const;
 
     // Post-somersault range buff
     void activateSomersaultRangeBuff();
-    void updateSomersaultRangeBuff(float dt);
     bool isSomersaultRangeBuffActive() const;
     bool isTargetInAttackRange() const;
 
@@ -48,9 +46,9 @@ protected:
 private:
     EnemyDetectionAggro* m_enemyDetectionAggro = nullptr;
 
-    float m_somersaultCooldownTimer = 0.0f;
-    float m_arrowBarrageCooldownTimer = 0.0f;
-    float m_basicAttackRangeBuffTimer = 0.0f;
+    Timer m_somersaultCooldownTimer;
+    Timer m_arrowBarrageCooldownTimer;
+    Timer m_basicAttackRangeBuffTimer;
 
 public:
     AssetReference<ArcherAttackConfig> m_attackConfig;

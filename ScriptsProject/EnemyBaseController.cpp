@@ -305,7 +305,7 @@ void EnemyBaseController::useStun(float duration)
 
     m_isStunned = true;
     m_stunnedTriggerSent = false;
-    m_stunnedTimer = duration;
+    m_stunnedTimer.start(duration);
     clearPath();
 }
 
@@ -351,6 +351,7 @@ void EnemyBaseController::clearStun()
 {
     m_isStunned = false;
     m_stunnedTriggerSent = false;
+    m_stunnedTimer.stop();
 }
 
 void EnemyBaseController::updateStun(float dt)
@@ -360,9 +361,9 @@ void EnemyBaseController::updateStun(float dt)
         return;
     }
 
-    m_stunnedTimer -= dt;
+    m_stunnedTimer.update(dt);
 
-    if (m_stunnedTimer <= 0.0f)
+    if (m_stunnedTimer.isReady())
     {
         clearStun();
     }

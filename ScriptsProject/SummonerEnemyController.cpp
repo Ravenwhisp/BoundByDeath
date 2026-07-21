@@ -30,13 +30,13 @@ void SummonerEnemyController::Update()
 {
 	const float dt = Time::getDeltaTime();
 
-	updateCurrentTarget();
+    updateCurrentTarget();
 
-	updateTeleportCooldown(dt);
-	updateSummonCooldown(dt);
-	updateAttackCooldown(dt);
+    m_teleportCooldownTimer.update(dt);
+    m_summonCooldownTimer.update(dt);
+    m_attackCooldownTimer.update(dt);
 
-	updateStun(dt);
+    updateStun(dt);
 }
 
 Transform* SummonerEnemyController::acquireCurrentTarget()
@@ -71,7 +71,7 @@ const EnemyBaseAttackConfig* SummonerEnemyController::getAttackConfig() const
 
 bool SummonerEnemyController::isTeleportReady() const
 {
-	return m_teleportCooldownTimer <= 0.0f;
+    return m_teleportCooldownTimer.isReady();
 }
 
 void SummonerEnemyController::consumeTeleportCooldown()
@@ -81,7 +81,7 @@ void SummonerEnemyController::consumeTeleportCooldown()
 		return;
 	}
 
-	m_teleportCooldownTimer = m_attackConfig.get()->m_teleportCooldown;
+	    m_teleportCooldownTimer.start(m_attackConfig.get()->m_teleportCooldown);
 }
 
 bool SummonerEnemyController::tryGetTeleportPosition(Vector3& outPosition) const
@@ -216,34 +216,19 @@ bool SummonerEnemyController::tryGetTeleportPosition(Vector3& outPosition) const
 	return false;
 }
 
-void SummonerEnemyController::updateTeleportCooldown(float dt)
-{
-	if (m_teleportCooldownTimer <= 0.0f)
-	{
-		return;
-	}
-	
-	m_teleportCooldownTimer -= dt;
-
-	if (m_teleportCooldownTimer < 0.0f)
-	{
-		m_teleportCooldownTimer = 0.0f;
-	}
-}
-
 bool SummonerEnemyController::isSummonReady() const
 {
-	return m_summonCooldownTimer <= 0.0f;
+    return m_summonCooldownTimer.isReady();
 }
 
 void SummonerEnemyController::consumeSummonCooldown()
 {
-	if (!m_attackConfig)
-	{
-		return;
-	}
+    if (!m_attackConfig)
+    {
+        return;
+    }
 
-	m_summonCooldownTimer = m_attackConfig.get()->m_summonCooldown;
+    m_summonCooldownTimer.start(m_attackConfig.get()->m_summonCooldown);
 }
 
 void SummonerEnemyController::summonSpidersAroundSelf()
@@ -287,59 +272,29 @@ void SummonerEnemyController::summonSpidersAroundSelf()
 	}
 }
 
-void SummonerEnemyController::updateSummonCooldown(float dt)
-{
-	if (m_summonCooldownTimer <= 0.0f)
-	{
-		return;
-	}
-
-	m_summonCooldownTimer -= dt;
-
-	if (m_summonCooldownTimer < 0.0f)
-	{
-		m_summonCooldownTimer = 0.0f;
-	}
-}
-
 float SummonerEnemyController::getRecoveryDuration() const
 {
-	if (!m_attackConfig)
-	{
-		return 0.0f;
-	}
+    if (!m_attackConfig)
+    {
+        return 0.0f;
+    }
 
-	return m_attackConfig.get()->m_summonRecoverDuration;
+    return m_attackConfig.get()->m_summonRecoverDuration;
 }
 
 bool SummonerEnemyController::isAttackReady() const
 {
-	return m_attackCooldownTimer <= 0.0f;
+    return m_attackCooldownTimer.isReady();
 }
 
 void SummonerEnemyController::consumeAttackCooldown()
 {
-	if (!m_attackConfig)
-	{
-		return;
-	}
+    if (!m_attackConfig)
+    {
+        return;
+    }
 
-	m_attackCooldownTimer = m_attackConfig.get()->m_basicAttackCooldown;
-}
-
-void SummonerEnemyController::updateAttackCooldown(float dt)
-{
-	if (m_attackCooldownTimer <= 0.0f)
-	{
-		return;
-	}
-
-	m_attackCooldownTimer -= dt;
-
-	if (m_attackCooldownTimer < 0.0f)
-	{
-		m_attackCooldownTimer = 0.0f;
-	}
+    m_attackCooldownTimer.start(m_attackConfig.get()->m_basicAttackCooldown);
 }
 
 IMPLEMENT_SCRIPT_FIELDS_INHERITED(SummonerEnemyController, EnemyBaseController,

@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "ScriptAPI.h"
+#include "Timer.h"
 
 class AnimationComponent;
 class Transform;
@@ -104,7 +105,7 @@ protected:
 
     float m_recoveryDuration = 0.75f;
     float m_stunnedDuration = 2.0f;
-    float m_stunnedTimer = 0.0f;
+    Timer m_stunnedTimer;
     bool m_stunnedTriggerSent = false;
     bool m_isStunned = false;
 

@@ -435,7 +435,7 @@ void DeathChargedAttack::updateUI()
 {
     if (m_deathUI)
     {
-        m_deathUI->updateChargedSlashUI(m_attackStateTimer, m_deathCharacter->getConfig()->m_chargedAttackLockDuration);
+        m_deathUI->updateChargedSlashUI(m_attackStateTimer.getRemaining(), m_deathCharacter->getConfig()->m_chargedAttackLockDuration);
     }
 }
 

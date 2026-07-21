@@ -46,7 +46,7 @@ void DeathBasicAttack::Update()
     DeathAbilityBase::Update();
 
     // Block new input while the attack window is still running
-    if (m_attackStateTimer > 0.0f)
+    if (m_attackStateTimer.isActive())
     {
         return;
     }
@@ -414,7 +414,7 @@ void DeathBasicAttack::updateUI()
 
     if (m_deathUI)
     {
-        m_deathUI->updateBasicSlashUI(m_attackStateTimer, m_deathCharacter->getConfig()->m_basicAttackLockDuration);
+        m_deathUI->updateBasicSlashUI(m_attackStateTimer.getRemaining(), m_deathCharacter->getConfig()->m_basicAttackLockDuration);
     }
 }
 

@@ -32,9 +32,9 @@ void MeleeEnemyController::Update()
 {
 	const float dt = Time::getDeltaTime();
 
-	updateCurrentTarget();
-	updateChargeCooldown(dt);
-	updateStun(dt);
+    updateCurrentTarget();
+    m_chargeCooldownTimer.update(dt);
+    updateStun(dt);
 }
 
 Transform* MeleeEnemyController::acquireCurrentTarget()
@@ -100,32 +100,17 @@ bool MeleeEnemyController::playerInChargeRange() const
 
 bool MeleeEnemyController::isChargeReady() const
 {
-	return m_chargeCooldownTimer <= 0.0f;
+    return m_chargeCooldownTimer.isReady();
 }
 
 void MeleeEnemyController::consumeChargeCooldown()
 {
-	if (!m_attackConfig.get())
-	{
-		return;
-	}
+    if (!m_attackConfig.get())
+    {
+        return;
+    }
 
-	m_chargeCooldownTimer = m_attackConfig.get()->m_chargeCooldown;
-}
-
-void MeleeEnemyController::updateChargeCooldown(float dt)
-{
-	if (m_chargeCooldownTimer <= 0.0f)
-	{
-		return;
-	}
-
-	m_chargeCooldownTimer -= dt;
-
-	if (m_chargeCooldownTimer < 0.0f)
-	{
-		m_chargeCooldownTimer = 0.0f;
-	}
+    m_chargeCooldownTimer.start(m_attackConfig.get()->m_chargeCooldown);
 }
 
 Vector3 MeleeEnemyController::getChargeDirection() const

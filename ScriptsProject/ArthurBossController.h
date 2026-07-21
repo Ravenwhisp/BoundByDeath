@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "EnemyBaseController.h"
+#include "Timer.h"
 
 class ArthurDetectionAggro;
 class ArthurAttackConfig;
@@ -33,12 +34,10 @@ public:
 	bool isPhase2() const { return m_phase == ArthurBossPhase::Phase2; }
 	void updateBossPhase();
 
-	// Attack Cooldown Helpers
-	void updateAttackCooldowns(float dt);
-
-	bool isChargingSlamReady() const { return m_chargingSlamCooldownTimer <= 0.0f; }
-	bool isSideSweepReady() const { return m_sideSweepCooldownTimer <= 0.0f; }
-	bool isEarthHammerReady() const { return m_earthHammerCooldownTimer <= 0.0f; }
+    // Attack Cooldown Helpers
+    bool isChargingSlamReady() const { return m_chargingSlamCooldownTimer.isReady(); }
+    bool isSideSweepReady() const { return m_sideSweepCooldownTimer.isReady(); }
+    bool isEarthHammerReady() const { return m_earthHammerCooldownTimer.isReady(); }
 
 	void consumeChargingSlamCooldown();
 	void consumeSideSweepCooldown();
@@ -87,8 +86,8 @@ private:
 
 	int m_selectedSideSweepSide = 1;
 
-	// Attack Cooldown
-	float m_chargingSlamCooldownTimer = 0.0f;
-	float m_sideSweepCooldownTimer = 0.0f;
-	float m_earthHammerCooldownTimer = 0.0f;
+    // Attack Cooldown
+    Timer m_chargingSlamCooldownTimer;
+    Timer m_sideSweepCooldownTimer;
+    Timer m_earthHammerCooldownTimer;
 };

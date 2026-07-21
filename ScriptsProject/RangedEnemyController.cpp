@@ -32,9 +32,9 @@ void RangedEnemyController::Update()
     const float dt = Time::getDeltaTime();
 
     updateCurrentTarget();
-    updateSomersaultCooldown(dt);
-    updateArrowBarrageCooldown(dt);
-    updateSomersaultRangeBuff(dt);
+    m_somersaultCooldownTimer.update(dt);
+    m_arrowBarrageCooldownTimer.update(dt);
+    m_basicAttackRangeBuffTimer.update(dt);
     updateStun(dt);
 }
 
@@ -119,7 +119,7 @@ bool RangedEnemyController::playerInSomersaultRange() const
 
 bool RangedEnemyController::isSomersaultReady() const
 {
-    return m_somersaultCooldownTimer <= 0.0f;
+    return m_somersaultCooldownTimer.isReady();
 }
 
 void RangedEnemyController::consumeSomersaultCooldown()
@@ -129,22 +129,7 @@ void RangedEnemyController::consumeSomersaultCooldown()
         return;
     }
 
-    m_somersaultCooldownTimer = m_attackConfig.get()->m_somersaultCooldown;
-}
-
-void RangedEnemyController::updateSomersaultCooldown(float dt)
-{
-    if (m_somersaultCooldownTimer <= 0.0f)
-    {
-        return;
-    }
-
-    m_somersaultCooldownTimer -= dt;
-
-    if (m_somersaultCooldownTimer < 0.0f)
-    {
-        m_somersaultCooldownTimer = 0.0f;
-    }
+    m_somersaultCooldownTimer.start(m_attackConfig.get()->m_somersaultCooldown);
 }
 
 void RangedEnemyController::activateSomersaultRangeBuff()
@@ -154,27 +139,12 @@ void RangedEnemyController::activateSomersaultRangeBuff()
         return;
     }
 
-    m_basicAttackRangeBuffTimer = m_attackConfig.get()->m_postSomersaultBuffDuration;
-}
-
-void RangedEnemyController::updateSomersaultRangeBuff(float dt)
-{
-    if (m_basicAttackRangeBuffTimer <= 0.0f)
-    {
-        return;
-    }
-
-    m_basicAttackRangeBuffTimer -= dt;
-
-    if (m_basicAttackRangeBuffTimer < 0.0f)
-    {
-        m_basicAttackRangeBuffTimer = 0.0f;
-    }
+    m_basicAttackRangeBuffTimer.start(m_attackConfig.get()->m_postSomersaultBuffDuration);
 }
 
 bool RangedEnemyController::isSomersaultRangeBuffActive() const
 {
-    return m_basicAttackRangeBuffTimer > 0.0f;
+    return m_basicAttackRangeBuffTimer.isActive();
 }
 
 bool RangedEnemyController::isTargetInAttackRange() const
@@ -278,7 +248,7 @@ Vector3 RangedEnemyController::getDirectionAwayFromClosestPlayer() const
 
 bool RangedEnemyController::isArrowBarrageReady() const
 {
-    return m_arrowBarrageCooldownTimer <= 0.0f;
+    return m_arrowBarrageCooldownTimer.isReady();
 }
 
 void RangedEnemyController::consumeArrowBarrageCooldown()
@@ -288,22 +258,7 @@ void RangedEnemyController::consumeArrowBarrageCooldown()
         return;
     }
 
-    m_arrowBarrageCooldownTimer = m_attackConfig.get()->m_arrowBarrageCooldown;
-}
-
-void RangedEnemyController::updateArrowBarrageCooldown(float dt)
-{
-    if (m_arrowBarrageCooldownTimer <= 0.0f)
-    {
-        return;
-    }
-
-    m_arrowBarrageCooldownTimer -= dt;
-
-    if (m_arrowBarrageCooldownTimer < 0.0f)
-    {
-        m_arrowBarrageCooldownTimer = 0.0f;
-    }
+    m_arrowBarrageCooldownTimer.start(m_attackConfig.get()->m_arrowBarrageCooldown);
 }
 
 bool RangedEnemyController::isTargetInArrowBarrageRange() const

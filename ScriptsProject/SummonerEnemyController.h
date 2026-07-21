@@ -1,6 +1,7 @@
 #pragma once
 
 #include "EnemyBaseController.h"
+#include "Timer.h"
 
 class EnemyDetectionAggro;
 class SummonerAttackConfig;
@@ -37,16 +38,11 @@ protected:
 	bool isTargetDowned(Transform* target) const override;
 
 private:
-	void updateTeleportCooldown(float dt);
-	void updateSummonCooldown(float dt);
-	void updateAttackCooldown(float dt);
+    EnemyDetectionAggro* m_enemyDetectionAggro = nullptr;
 
-private:
-	EnemyDetectionAggro* m_enemyDetectionAggro = nullptr;
-
-	float m_attackCooldownTimer = 0.0f;
-	float m_teleportCooldownTimer = 0.0f;
-	float m_summonCooldownTimer = 0.0f;
+    Timer m_attackCooldownTimer;
+    Timer m_teleportCooldownTimer;
+    Timer m_summonCooldownTimer;
 
 public:
 	AssetReference<SummonerAttackConfig> m_attackConfig;

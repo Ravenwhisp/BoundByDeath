@@ -1,6 +1,7 @@
 #pragma once
 
 #include "EnemyBaseController.h"
+#include "Timer.h"
 
 class EnemyDetectionAggro;
 class PaladinAttackConfig;
@@ -21,9 +22,8 @@ public:
 	// Charge helpers
 	bool playerInChargeRange() const;
 
-	bool isChargeReady() const;
-	void consumeChargeCooldown();
-	void updateChargeCooldown(float dt);
+    bool isChargeReady() const;
+    void consumeChargeCooldown();
 
 	Vector3 getChargeDirection() const;
 
@@ -34,7 +34,7 @@ protected:
 private:
 	EnemyDetectionAggro* m_enemyDetectionAggro = nullptr;
 
-	float m_chargeCooldownTimer = 0.0f;
+    Timer m_chargeCooldownTimer;
 
 public:
 	AssetReference<PaladinAttackConfig> m_attackConfig;
