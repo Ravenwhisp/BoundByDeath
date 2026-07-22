@@ -27,8 +27,6 @@ void DefeatConditionManager::Start()
     m_player1DownState = findPlayerDownStateFromReference(player1Transform);
     m_player2DownState = findPlayerDownStateFromReference(player2Transform);
 
-    CheckpointManager::Get().ApplyCheckpoint();
-
     const auto coopGOs = SceneAPI::findAllGameObjectsWithScript<CooperativeSound>();
     if (!coopGOs.empty())
     {
@@ -58,6 +56,12 @@ void DefeatConditionManager::Start()
 
 void DefeatConditionManager::Update()
 {
+    if (m_needsInitialization)
+    {
+        CheckpointManager::Get().ApplyCheckpoint();
+        m_needsInitialization = false;
+    }
+
     if (m_hasTriggeredDefeat)
     {
         return;
