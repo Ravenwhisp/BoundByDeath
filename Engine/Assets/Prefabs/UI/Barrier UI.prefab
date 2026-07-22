@@ -1,82 +1,93 @@
 {
-  "sourcePath": "Assets\\Prefabs\\Barrier UI.prefab",
-  "Name": "Barrier UI",
-  "Active": true,
-  "Static": false,
-  "Layer": "DEFAULT",
-  "Tag": "DEFAULT",
-  "Transform": {
-    "Position": [
-      0.0,
-      0.0,
-      0.0
-    ],
-    "Rotation": [
-      1.0,
-      0.0,
-      0.0,
-      -0.0
-    ],
-    "Scale": [
-      0.0,
-      0.0,
-      0.0
-    ]
-  },
-  "Components": [
-    {
-      "UID": 16098060869663201113,
-      "ComponentType": "TRANSFORM2D",
-      "Active": true,
-      "Position": [
-        71.0,
-        1.0,
-        0.0
-      ],
-      "Scale": [
-        1.0,
-        1.0,
-        0.0
-      ],
-      "Pivot": [
-        0.5,
-        0.5,
-        0.0
-      ],
-      "AnchorMin": [
-        0.0,
-        0.0,
-        0.0
-      ],
-      "AnchorMax": [
-        0.0,
-        0.0,
-        0.0
-      ],
-      "BaseSize": [
-        18.0,
-        40.0,
-        0.0
-      ],
-      "StretchMode": 0,
-      "SizingMode": 0,
-      "AspectRatio": 1.0,
-      "Alpha": 1.0
+    "Version": 2,
+    "sourcePath": "Assets\\Prefabs\\UI\\Barrier UI.prefab",
+    "Name": "Barrier UI",
+    "Active": true,
+    "Static": false,
+    "Layer": "DEFAULT",
+    "Tag": "DEFAULT",
+    "Transform": {
+        "Position": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "Rotation": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ],
+        "Scale": [
+            1.0,
+            1.0,
+            1.0
+        ]
     },
-    {
-      "UID": 5743631643130609216,
-      "ComponentType": "UIIMAGE",
-      "Active": true,
-      "TextureAssetId": {
-        "uid": 6703742743120778305,
-        "libId": "03313cbcf104dc97f629ab12b056ebff",
-        "type": "TEXTURE"
-      },
-      "FillAmount": 1.0,
-      "FillMethod": 0,
-      "FillOrigin": 0
-    }
-  ],
-  "Children": [],
-  "Version": 2
+    "Components": [
+        {
+            "UID": 16252769421853394608,
+            "ComponentType": "TRANSFORM2D",
+            "Active": true,
+            "Position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                0.0
+            ],
+            "Pivot": [
+                0.5,
+                0.5,
+                0.0
+            ],
+            "AnchorMin": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "AnchorMax": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "BaseSize": [
+                18.0,
+                40.0,
+                0.0
+            ],
+            "StretchMode": "NONE",
+            "SizingMode": "KEEP_ASPECT_RATIO",
+            "AspectRatio": 1.0,
+            "Alpha": 1.0
+        },
+        {
+            "UID": 10587781703693710190,
+            "ComponentType": "UIIMAGE",
+            "Active": true,
+            "TextureAssetId": {
+                "uid": 6703742743120778305,
+                "libId": "03313cbcf104dc97f629ab12b056ebff",
+                "type": "TEXTURE"
+            },
+            "FillAmount": [
+                0.0,
+                1.0
+            ],
+            "FillMethod": "Horizontal",
+            "FillOrigin": 0,
+            "SheetColumns": 1,
+            "SheetRows": 1,
+            "SheetOffset": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "StretchDrawMode": "Stretch"
+        }
+    ],
+    "Children": []
 }

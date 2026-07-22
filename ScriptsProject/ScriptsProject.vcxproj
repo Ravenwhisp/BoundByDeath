@@ -169,6 +169,7 @@
     <ClInclude Include="ArthurAttackConfig.h" />
     <ClInclude Include="ArthurAttackDebugDraw.h" />
     <ClInclude Include="ArthurUI.h" />
+    <ClInclude Include="BoundConfig.h" />
     <ClInclude Include="CameraFollow.h" />
     <ClInclude Include="AudioListenerFollow.h" />
     <ClInclude Include="CameraSwitcher.h" />
@@ -176,6 +177,7 @@
     <ClInclude Include="CameraTransitionEvent.h" />
     <ClInclude Include="CameraTransitionStep.h" />
     <ClInclude Include="CameraTransitionStepAction.h" />
+    <ClInclude Include="ChargedAttackBase.h" />
     <ClInclude Include="Checkpoint1_Level1_Event.h" />
     <ClInclude Include="Checkpoint1_Level1_Setup.h" />
     <ClInclude Include="CheckpointEvent.h" />
@@ -184,6 +186,7 @@
     <ClInclude Include="CombatAreaEvent.h" />
     <ClInclude Include="DeathParticles.h" />
     <ClInclude Include="EnemyAttackState.h" />
+    <ClInclude Include="PlayerAttackType.h" />
     <ClInclude Include="EnemyBaseAttackConfig.h" />
     <ClInclude Include="CharacterUI.h" />
     <ClInclude Include="DeathConfig.h" />
@@ -198,6 +201,8 @@
     <ClInclude Include="ArthurDetectionAggro.h" />
     <ClInclude Include="ArthurEarthHammer.h" />
     <ClInclude Include="ArthurHeavySwipe.h" />
+    <ClInclude Include="EnemyBaseDataConfig.h" />
+    <ClInclude Include="EnemyForcedMovement.h" />
     <ClInclude Include="EnemyRecoverState.h" />
     <ClInclude Include="ArthurSideSweep.h" />
     <ClInclude Include="Bound.h" />
@@ -342,6 +347,7 @@
     <ClCompile Include="CameraTransitionEvent.cpp" />
     <ClCompile Include="CameraTransitionStep.cpp" />
     <ClCompile Include="CameraTransitionStepAction.cpp" />
+    <ClCompile Include="ChargedAttackBase.cpp" />
     <ClCompile Include="Checkpoint1_Level1_Event.cpp" />
     <ClCompile Include="Checkpoint1_Level1_Setup.cpp" />
     <ClCompile Include="CheckpointEvent.cpp" />
@@ -364,6 +370,8 @@
     <ClCompile Include="ArthurDetectionAggro.cpp" />
     <ClCompile Include="ArthurEarthHammer.cpp" />
     <ClCompile Include="ArthurHeavySwipe.cpp" />
+    <ClCompile Include="EnemyBaseDataConfig.cpp" />
+    <ClCompile Include="EnemyForcedMovement.cpp" />
     <ClCompile Include="EnemyRecoverState.cpp" />
     <ClCompile Include="ArthurSideSweep.cpp" />
     <ClCompile Include="Bound.cpp" />
@@ -480,7 +488,6 @@
     <ClCompile Include="PlayerRotation.cpp" />
     <ClCompile Include="PlayerState.cpp" />
     <ClCompile Include="PlayerTargetController.cpp" />
-    <ClCompile Include="SummonerAttackConfig.cpp" />
     <ClCompile Include="SummonerEnergyBallState.cpp" />
     <ClCompile Include="SummonerEnemyController.cpp" />
     <ClCompile Include="SummonerIdleState.cpp" />
