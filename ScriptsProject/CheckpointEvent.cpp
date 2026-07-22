@@ -54,18 +54,23 @@ void CheckpointEvent::executeEvent(GameplayEventTrigger* trigger)
 {
 	if(m_checkpointManager)
 	{
-		CharacterCheckpointState state;
-		state.m_lyrielHealth = m_lyrielDamageable ? m_lyrielDamageable->getCurrentHp() : 0.0f;
-		state.m_deathHealth = m_deathDamageable ? m_deathDamageable->getCurrentHp() : 0.0f;
-		state.m_reaperGaugeAmount = m_reaperGauge ? m_reaperGauge->getGauge() : 0.0f;
-		
 		bool* currentPowerups = PersistingPowerupState::getUnlockedPowerupState();
 
-		std::copy(currentPowerups, currentPowerups + static_cast<int>(PowerupId::Count), state.m_unlockedPowerups);
+		CharacterCheckpointState lyrielState;
+		lyrielState.m_health = m_lyrielDamageable ? m_lyrielDamageable->getCurrentHp() : 0.0f;
 
-		m_checkpointManager->SaveState(m_owner->GetID(), state);
+		CharacterCheckpointState deathState;
+		deathState.m_health = m_deathDamageable ? m_deathDamageable->getCurrentHp() : 0.0f;
 
-		m_checkpointManager->SetCheckpointId(m_checkpointId);
+		GlobalCheckpointState globalState;
+		globalState.m_reaperGaugeAmount = m_reaperGauge ? m_reaperGauge->getGauge() : 0.0f;
+
+		std::copy(currentPowerups, currentPowerups + static_cast<int>(PowerupId::Count), globalState.m_unlockedPowerups);
+		m_checkpointManager->SaveState(m_owner->GetID(), lyrielState);
+		m_checkpointManager->SaveState(m_owner->GetID(), deathState);
+		m_checkpointManager->SaveState(m_owner->GetID(), globalState);
+
+		m_checkpointManager->SetCheckpoint(m_checkpointId);
 	}
 }
 
