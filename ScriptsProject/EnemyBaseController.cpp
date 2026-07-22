@@ -17,7 +17,6 @@ constexpr int navAgentProfileCount = 3;
 
 IMPLEMENT_SCRIPT_FIELDS(EnemyBaseController,
     SERIALIZED_ENUM_INT(m_enemyType, "Enemy Type", navAgentProfileNames, navAgentProfileCount),
-    SERIALIZED_FLOAT(m_moveSpeed, "Move Speed", 0.0f, 50.0f, 0.1f),
     SERIALIZED_FLOAT(m_turnSpeedDegrees, "Turn Speed Degrees", 0.0f, 1080.0f, 1.0f),
     SERIALIZED_FLOAT(m_repathInterval, "Repath Interval", 0.0f, 50.0f, 0.1f),
     SERIALIZED_FLOAT(m_pathPointReachDistance, "Path Point Reach Distance", 0.01f, 5.0f, 0.01f),
