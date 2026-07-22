@@ -68,10 +68,10 @@ private:
 
 public:
 	float m_combatRange = 3.0f;
+	AssetReference<ArthurAttackConfig> m_attackConfig;
 
 private:
 	ArthurDetectionAggro* m_arthurDetectionAggro = nullptr;
-	AssetReference<ArthurAttackConfig> m_attackConfig;
 	ArthurUI* m_arthurUI = nullptr;
 
 	ArthurBossPhase m_phase = ArthurBossPhase::Phase1;
