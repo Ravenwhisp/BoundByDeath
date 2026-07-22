@@ -8,30 +8,35 @@
 // Dynamic Checkpoint State Structures
 //////////////////////////////////////
 
-struct CharacterCheckpointState
+struct GlobalCheckpointState
 {
-	float m_lyrielHealth;
-    float m_deathHealth;
     float m_reaperGaugeAmount;
     bool m_unlockedPowerups[static_cast<int>(PowerupId::Count)];
+    //more to add?
+};
+
+struct CharacterCheckpointState
+{
+    float m_health;
 };
 
 struct EnemyCheckpointState
 {
     //UID m_enemyId;
-    bool m_isDead;
+	bool m_isDead; //esto realmente es necesario? si creamos el state cuando muere, no hace falta esto ya que ESTARÁ muerto, osea solo por tener su estado significa que esta muerto
+    //posicion donde murieron?
 };
 
 struct BreakableCheckpointState
 {
 	//UID m_breakableId;
-    bool m_isBroken;
+    bool m_isBroken; //lo mismo, si esto no es necesario bastará con una lista de uid
 };
 
 struct CollectibleCheckpointState
 {
 	//UID m_pickupId;
-    bool m_isCollected;
+    bool m_isCollected; //lo mismo, si esto no es necesario bastará con una lista de uid
 };
 
 /////////////////////////////
@@ -41,6 +46,7 @@ struct CollectibleCheckpointState
 enum CheckpointId // Represents different checkpoints in the game, useful because they are partially harcoded
 {
 	NONE = 0,
+
     CHECKPOINT_1_LEVEL_1= 100,
     CHECKPOINT_2_LEVEL_1,
     CHECKPOINT_3_LEVEL_1,
@@ -51,14 +57,6 @@ enum CheckpointId // Represents different checkpoints in the game, useful becaus
 	//... Add more checkpoints as needed
 };
 
-//struct CheckpointDef 
-//{
-//    Vector3 spawnPos;
-//
-//    std::vector<uint64_t> doorsToOpen;
-//    //puzzles superados, ver como guardar (id de puzle? y enviarselo al puzzle manager?)
-//};
-
 class CheckpointSetup;
 
 class CheckpointManager
@@ -66,24 +64,44 @@ class CheckpointManager
 public:
     static CheckpointManager& Get();
 
+    void Register(GameObject* go)
+    {
+        if (go) m_registeredGameObjects[go->GetID()] = go;
+    }
+
+    void Unregister(GameObject* go)
+    {
+        if (go) m_registeredGameObjects.erase(go->GetID());
+    }
+
+    GameObject* FindGameObject(UID uid)
+    {
+        auto it = m_registeredGameObjects.find(uid);
+        return (it != m_registeredGameObjects.end()) ? it->second : nullptr;
+    }
+
     template <typename T>
     void SaveState(UID id, const T& checkpointState)
     {
-        if constexpr (std::is_same_v<T, CharacterCheckpointState>)
+        if constexpr (std::is_same_v<T, GlobalCheckpointState>)
         {
-            m_characterCheckpoints.insert_or_assign(id, checkpointState);
+            m_activeGlobalState = checkpointState;
+        }
+        else if constexpr (std::is_same_v<T, CharacterCheckpointState>)
+        {
+            m_characterStates.insert_or_assign(id, checkpointState);
         }
         else if constexpr (std::is_same_v<T, EnemyCheckpointState>)
         {
-            m_enemyCheckpoints.insert({ id, checkpointState });
+            m_enemyStates.insert({ id, checkpointState });
         }
         else if constexpr (std::is_same_v<T, BreakableCheckpointState>)
         {
-            m_breakableCheckpoints.insert({ id, checkpointState });
+            m_breakableStates.insert({ id, checkpointState });
         }
         else if constexpr (std::is_same_v<T, CollectibleCheckpointState>)
         {
-            m_collectibleCheckpoints.insert({ id, checkpointState });
+            m_collectibleStates.insert({ id, checkpointState });
         }
         else
         {
@@ -91,7 +109,7 @@ public:
         }
     }
 
-	void SetCheckpointId(CheckpointId checkpointId) { m_lastCheckpointId = checkpointId; }
+    void SetCheckpoint(CheckpointId checkpointId);
 
     void RegisterCheckpoint(const CheckpointId& checkpointId, CheckpointSetup* setup)
     {
@@ -106,10 +124,17 @@ private:
 private:
 	CheckpointId m_lastCheckpointId = CheckpointId::NONE;
 
+    std::unordered_map<UID, GameObject*> m_registeredGameObjects;
+
 	std::map<CheckpointId, CheckpointSetup*> m_checkpointSetupPool;
 
-	std::map<UID, CharacterCheckpointState> m_characterCheckpoints;
-    std::map<UID, EnemyCheckpointState> m_enemyCheckpoints;
-    std::map<UID, BreakableCheckpointState> m_breakableCheckpoints;
-    std::map<UID, CollectibleCheckpointState> m_collectibleCheckpoints;
+    GlobalCheckpointState m_activeGlobalState;
+	std::map<UID, CharacterCheckpointState> m_characterStates;
+    std::map<UID, EnemyCheckpointState> m_enemyStates;
+    std::map<UID, BreakableCheckpointState> m_breakableStates;
+    std::map<UID, CollectibleCheckpointState> m_collectibleStates;
+
+    std::map<UID, EnemyCheckpointState> m_enemyActiveStates;
+	std::map<UID, BreakableCheckpointState> m_breakableActiveStates;
+	std::map<UID, CollectibleCheckpointState> m_collectibleActiveStates;
 };
