@@ -15,6 +15,8 @@ void EnemyDamageable::Start()
 {
 	Damageable::Start();
 
+	m_checkpointManager->Register(m_owner);
+
 	m_enemyDetectionAggro = GameObjectAPI::findScript<EnemyDetectionAggro>(m_owner);
 
 	if (!m_enemyDetectionAggro)
@@ -87,6 +89,8 @@ void EnemyDamageable::onDeath()
 	state.m_isDead = true;
 
 	m_checkpointManager->SaveState(m_owner->GetID(), state);
+
+	m_checkpointManager->Unregister(m_owner);
 }
 
 void EnemyDamageable::takeDamage(const HitContext& ctx)

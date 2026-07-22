@@ -13,6 +13,8 @@ void BreakableDamageable::Start()
 {
     Damageable::Start();
 
+    m_checkpointManager->Register(m_owner);
+
 	m_breakableObject = GameObjectAPI::findScript<BreakableObject>(getOwner());
 
     if (m_breakableObject == nullptr)
@@ -34,6 +36,8 @@ void BreakableDamageable::onDeath()
     {
         m_breakableObject->onBreak();
     }
+
+	m_checkpointManager->Unregister(m_owner);
 }
 
 IMPLEMENT_SCRIPT(BreakableDamageable)

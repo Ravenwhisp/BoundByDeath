@@ -36,7 +36,28 @@ PowerupCollectible::PowerupCollectible(GameObject* owner)
 
 void PowerupCollectible::Start()
 {
+    switch (m_powerupEffect)
+    {
+    case LYRIEL_POWERUP_1:
+        if (PersistingPowerupState::isUnlocked(PowerupId::LyrielPowerup1))
+        {
+            Debug::log("[PowerupCollectible] Lyriel Powerup 1 already unlocked. Destroying collectible.");
+            GameObjectAPI::removeGameObject(getOwner());
+			return;
+        }
+
+    case DEATH_POWERUP_1:
+        if (PersistingPowerupState::isUnlocked(PowerupId::DeathPowerup1))
+        {
+            Debug::log("[PowerupCollectible] Death Powerup 1 already unlocked. Destroying collectible.");
+            GameObjectAPI::removeGameObject(getOwner());
+            return;
+        }
+    }
+
     m_checkpointManager = &CheckpointManager::Get();
+
+    m_checkpointManager->Register(m_owner);
 
     if(!m_checkpointManager)
     {
@@ -87,6 +108,7 @@ void PowerupCollectible::OnTriggerEnter(GameObject* player)
     if (m_checkpointManager)
     {
         m_checkpointManager->SaveState(m_owner->GetID(), state);
+        m_checkpointManager->Unregister(m_owner);
 	}
 
     // Posted from the COLLECTING PLAYER's source: this GO is destroyed immediately below,
