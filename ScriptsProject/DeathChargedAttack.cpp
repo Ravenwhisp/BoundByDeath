@@ -59,11 +59,7 @@ void DeathChargedAttack::Update()
             }
         }
 
-        if (m_chargeTime >= m_config->m_chargedMaxChargeTime)
-        {
-            fireAttack();
-        }
-        else if (Input::isRightTriggerReleased(getPlayerIndex()))
+        if (Input::isRightTriggerReleased(getPlayerIndex()))
         {
             fireAttack();
         }
