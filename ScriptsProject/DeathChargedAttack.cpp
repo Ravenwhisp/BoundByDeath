@@ -107,7 +107,7 @@ void DeathChargedAttack::fireAttack()
     {
         const float rawRatio    = m_chargeTime / m_config->m_chargedMaxChargeTime;
         const float chargeRatio = rawRatio > 1.0f ? 1.0f : rawRatio;
-        damage = m_config->m_chargedAttackDamage * (1.0f + chargeRatio);
+        damage = m_config->m_chargedAttackDamage + (m_config->m_chargedMaxChargeDamage - m_config->m_chargedAttackDamage) * chargeRatio;
 
         Debug::log("[ChargedAttack] Charged shot  dmg=%.1f  ratio=%.0f%%%s",
             damage, chargeRatio * 100.0f, isMaxCharge ? " (MAX)" : "");

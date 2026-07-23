@@ -29,6 +29,7 @@ public:
 
 	// Charged Attack
 	float m_chargedAttackDamage = 40.0f;
+	float m_chargedMaxChargeDamage = 80.0f;
 	float m_chargedCircleRadius = 3.0f;
 	float m_chargedMaxChargeTime = 2.0f;
 	float m_chargedMinChargeTime = 0.5f;
@@ -76,6 +77,7 @@ public:
 
 		FIELD_GROUP_COLLAPSE("Charged Attack",
 			SERIALIZED_FLOAT(m_chargedAttackDamage, "Charged Attack Damage", 0.0f, 200.0f, 1.0f),
+			SERIALIZED_FLOAT(m_chargedMaxChargeDamage, "Max Charge Damage", 0.0f, 400.0f, 1.0f),
 			SERIALIZED_FLOAT(m_chargedCircleRadius, "Charged Circle Radius", 0.5f, 10.0f, 0.1f),
 			SERIALIZED_FLOAT(m_chargedMaxChargeTime, "Max Charge Time", 0.5f, 5.0f, 0.1f),
 			SERIALIZED_FLOAT(m_chargedMinChargeTime, "Min Charge Time", 0.0f, 3.0f, 0.05f),
