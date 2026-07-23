@@ -177,8 +177,14 @@ void PuzzleManagerLVL1::onCrystalsActivated(int puzzleID)
 
 bool PuzzleManagerLVL1::isPuzzleSolved(int puzzleID) const
 {
-	const PuzzleData& puzzle = m_puzzles.at(puzzleID);
-	return puzzle.crystalsActivated >= puzzle.totalCrystals;
+	const auto it = m_puzzles.find(puzzleID);
+
+	if (it == m_puzzles.end())
+	{
+		return false;
+	}
+
+	return it->second.puzzleSolved;
 }
 
 void PuzzleManagerLVL1::onPuzzleSolved(int puzzleID)
