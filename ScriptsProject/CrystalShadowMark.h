@@ -34,6 +34,7 @@ public:
     int m_puzzleID = 0;
     float m_activeTime = 5.0f;
     PrefabRef m_crystalSparks;
+    PrefabRef m_crystalStars;
 
 private:
     GameObject* managerObject = nullptr;
@@ -47,5 +48,6 @@ private:
     float m_activationTimer = 0.0f;
 
     GameObject* effectObject = nullptr;
+    GameObject* effectObject2 = nullptr;
 };
 
