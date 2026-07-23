@@ -29,7 +29,7 @@ public:
     float m_somersaultCooldown = 9.0f;
 
     // Post-somersault range buff
-    float m_postSomersaultRangeMultiplier = 2.0f;
+    float m_postSomersaultRangeBonus = 4.0f;
     float m_postSomersaultBuffDuration = 5.0f;
 
     IMPLEMENT_DATACONTAINER_FIELDS_INHERITED(ArcherAttackConfig, EnemyBaseAttackConfig,
@@ -47,7 +47,7 @@ public:
             SERIALIZED_FLOAT(m_somersaultDistance, "Somersault Distance", 0.0f, 20.0f, 0.1f),
             SERIALIZED_FLOAT(m_somersaultDuration, "Somersault Duration", 0.0f, 5.0f, 0.05f),
             SERIALIZED_FLOAT(m_somersaultCooldown, "Somersault Cooldown", 0.0f, 30.0f, 0.1f),
-            SERIALIZED_FLOAT(m_postSomersaultRangeMultiplier, "Post-Somersault Range Multiplier", 1.0f, 10.0f, 0.1f),
+            SERIALIZED_FLOAT(m_postSomersaultRangeBonus, "Post-Somersault Range Bonus", 0.0f, 20.0f, 0.1f),
             SERIALIZED_FLOAT(m_postSomersaultBuffDuration, "Post-Somersault Buff Duration", 0.0f, 30.0f, 0.1f)
         )
     )

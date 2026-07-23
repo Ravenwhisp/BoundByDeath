@@ -192,7 +192,7 @@ bool RangedEnemyController::isTargetInAttackRange() const
 
     if (isSomersaultRangeBuffActive())
     {
-        return isCurrentTargetInRange(cfg->m_basicAttackRange * cfg->m_postSomersaultRangeMultiplier);
+        return isCurrentTargetInRange(cfg->m_basicAttackRange + cfg->m_postSomersaultRangeBonus);
     }
 
     return isCurrentTargetInRange(cfg->m_basicAttackRange);
