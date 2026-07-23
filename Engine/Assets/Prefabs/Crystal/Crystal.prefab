@@ -26,7 +26,7 @@
     },
     "Components": [
         {
-            "UID": 8343500243795533633,
+            "UID": 4806355428814176632,
             "ComponentType": "SCRIPT",
             "Active": true,
             "ScriptName": "EnemyDamageable",
@@ -41,7 +41,7 @@
             }
         },
         {
-            "UID": 12144340296496407823,
+            "UID": 13156923087956420269,
             "ComponentType": "SCRIPT",
             "Active": true,
             "ScriptName": "CrystalShadowMark",
@@ -63,16 +63,28 @@
                 "Puzzle ID": 0,
                 "Active Time": 15.0,
                 "Crystal Sparks Particle": {
-                    "uid": 18213575649999028214,
-                    "libId": "380b10b43143f12a346e5246b771a279",
+                    "uid": 10185809864374214726,
+                    "libId": "aeb38406b357fce567163bc8508de46b",
                     "type": "PREFAB"
                 }
             }
         },
         {
-            "UID": 3896703443952753910,
+            "UID": 1536969664209411660,
             "ComponentType": "SOUND_SOURCE",
             "Active": true
+        },
+        {
+            "UID": 9790928497649947272,
+            "ComponentType": "SCRIPT",
+            "Active": true,
+            "ScriptName": "CrystalVisuals",
+            "ScriptFields": {
+                "Object to Rotate (cristal)": 17596963483364402034,
+                "Inactive Model": 2807423377191567237,
+                "Active Model": 5483019778675235395,
+                "Rotation Speed": 30.0
+            }
         }
     ],
     "Children": [
@@ -102,7 +114,7 @@
             },
             "Components": [
                 {
-                    "UID": 10603017822332162633,
+                    "UID": 11044641620715433414,
                     "ComponentType": "ANIMATION",
                     "Active": true,
                     "StateMachineUID": {
@@ -122,83 +134,162 @@
             ],
             "Children": [
                 {
-                    "Name": "Box001",
+                    "Name": "Crystal Pivot",
                     "Active": true,
                     "Static": false,
                     "Layer": "DEFAULT",
                     "Tag": "DEFAULT",
                     "Transform": {
                         "Position": [
-                            -0.005675041116774082,
-                            1.2206474542617798,
-                            0.0542469322681427
+                            0.0009613037109375,
+                            1.2834995985031128,
+                            0.00048065185546875
                         ],
                         "Rotation": [
-                            0.07219081372022629,
+                            -0.0,
                             0.0,
                             -0.0,
-                            0.997390866279602
-                        ],
-                        "Scale": [
-                            0.0069762058556079865,
-                            0.006976207252591848,
-                            0.006976207252591848
-                        ]
-                    },
-                    "Components": [
-                        {
-                            "UID": 6811945149728373169,
-                            "ComponentType": "MODEL",
-                            "Active": true,
-                            "MeshAssetId": {
-                                "uid": 14651434867468343213,
-                                "libId": "37e47b691edc57ef7ad35f28a299ed77",
-                                "type": "MESH"
-                            },
-                            "SkinAssetId": {
-                                "uid": 0,
-                                "libId": "",
-                                "type": "SKIN"
-                            },
-                            "Materials": [
-                                {
-                                    "uid": 12469207213468328814,
-                                    "libId": "5f5f6100f432b2cf69074d93fe65960f",
-                                    "type": "MATERIAL"
-                                }
-                            ],
-                            "Render Mode": 0
-                        }
-                    ],
-                    "Children": []
-                },
-                {
-                    "Name": "default",
-                    "Active": true,
-                    "Static": false,
-                    "Layer": "DEFAULT",
-                    "Tag": "DEFAULT",
-                    "Transform": {
-                        "Position": [
-                            0.0,
-                            0.0,
-                            0.0
-                        ],
-                        "Rotation": [
-                            0.0,
-                            0.0,
-                            0.0,
                             1.0
                         ],
                         "Scale": [
-                            0.02539999969303608,
-                            0.02539999969303608,
-                            0.02539999969303608
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "Components": [],
+                    "Children": [
+                        {
+                            "Name": "Active",
+                            "Active": true,
+                            "Static": false,
+                            "Layer": "DEFAULT",
+                            "Tag": "DEFAULT",
+                            "Transform": {
+                                "Position": [
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "Rotation": [
+                                    0.07219081372022629,
+                                    0.0,
+                                    -0.0,
+                                    0.997390866279602
+                                ],
+                                "Scale": [
+                                    0.006976205389946699,
+                                    0.006976207252591848,
+                                    0.006976207252591848
+                                ]
+                            },
+                            "Components": [
+                                {
+                                    "UID": 15841814792963770633,
+                                    "ComponentType": "MODEL",
+                                    "Active": true,
+                                    "MeshAssetId": {
+                                        "uid": 14651434867468343213,
+                                        "libId": "37e47b691edc57ef7ad35f28a299ed77",
+                                        "type": "MESH"
+                                    },
+                                    "SkinAssetId": {
+                                        "uid": 0,
+                                        "libId": "",
+                                        "type": "SKIN"
+                                    },
+                                    "Materials": [
+                                        {
+                                            "uid": 12469207213468328814,
+                                            "libId": "5f5f6100f432b2cf69074d93fe65960f",
+                                            "type": "MATERIAL"
+                                        }
+                                    ],
+                                    "Render Mode": 0
+                                }
+                            ],
+                            "Children": []
+                        },
+                        {
+                            "Name": "Inactive",
+                            "Active": false,
+                            "Static": false,
+                            "Layer": "DEFAULT",
+                            "Tag": "DEFAULT",
+                            "Transform": {
+                                "Position": [
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "Rotation": [
+                                    0.07219052314758301,
+                                    0.0,
+                                    -0.0,
+                                    0.997390866279602
+                                ],
+                                "Scale": [
+                                    0.006976503878831863,
+                                    0.006976236589252949,
+                                    0.006976236589252949
+                                ]
+                            },
+                            "Components": [
+                                {
+                                    "UID": 15370152102404785395,
+                                    "ComponentType": "MODEL",
+                                    "Active": true,
+                                    "MeshAssetId": {
+                                        "uid": 14651434867468343213,
+                                        "libId": "37e47b691edc57ef7ad35f28a299ed77",
+                                        "type": "MESH"
+                                    },
+                                    "SkinAssetId": {
+                                        "uid": 0,
+                                        "libId": "",
+                                        "type": "SKIN"
+                                    },
+                                    "Materials": [
+                                        {
+                                            "uid": 12469207213468328814,
+                                            "libId": "5f5f6100f432b2cf69074d93fe65960f",
+                                            "type": "MATERIAL"
+                                        }
+                                    ],
+                                    "Render Mode": 0
+                                }
+                            ],
+                            "Children": []
+                        }
+                    ]
+                },
+                {
+                    "Name": "Base",
+                    "Active": true,
+                    "Static": false,
+                    "Layer": "DEFAULT",
+                    "Tag": "DEFAULT",
+                    "Transform": {
+                        "Position": [
+                            0.0000019073486328125,
+                            1.1920928955078125e-7,
+                            9.5367431640625e-7
+                        ],
+                        "Rotation": [
+                            -0.0,
+                            0.0,
+                            -0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            0.02540000155568123,
+                            0.02540000155568123,
+                            0.02540000155568123
                         ]
                     },
                     "Components": [
                         {
-                            "UID": 15727261602891572179,
+                            "UID": 1255806199306095968,
                             "ComponentType": "MODEL",
                             "Active": true,
                             "MeshAssetId": {
@@ -251,14 +342,14 @@
             },
             "Components": [
                 {
-                    "UID": 11357839768343542393,
+                    "UID": 14138652514781174496,
                     "ComponentType": "CANVAS",
                     "Active": true,
                     "RenderMode": "WORLD_SPACE_CAMERA",
                     "ZTest": true
                 },
                 {
-                    "UID": 14749206926513802726,
+                    "UID": 14902731998110120312,
                     "ComponentType": "TRANSFORM2D",
                     "Active": true,
                     "Position": [
@@ -297,7 +388,7 @@
                     "Alpha": 1.0
                 },
                 {
-                    "UID": 6598245571966344992,
+                    "UID": 13037882770267927560,
                     "ComponentType": "PREFAB_INSTANCE",
                     "Active": true,
                     "sourcePath": "Assets\\Prefabs\\UI\\Shadow Mark.prefab",
@@ -331,7 +422,7 @@
                     },
                     "Components": [
                         {
-                            "UID": 275653688000095978,
+                            "UID": 8938774133001116862,
                             "ComponentType": "TRANSFORM2D",
                             "Active": true,
                             "Position": [
@@ -370,7 +461,7 @@
                             "Alpha": 1.0
                         },
                         {
-                            "UID": 6507335708583499871,
+                            "UID": 11656606945571821942,
                             "ComponentType": "UIIMAGE",
                             "Active": true,
                             "TextureAssetId": {
@@ -422,7 +513,7 @@
                     },
                     "Components": [
                         {
-                            "UID": 15678466397747514538,
+                            "UID": 12928380404206743264,
                             "ComponentType": "TRANSFORM2D",
                             "Active": true,
                             "Position": [
@@ -461,7 +552,7 @@
                             "Alpha": 1.0
                         },
                         {
-                            "UID": 7859178538849129292,
+                            "UID": 388756932839993351,
                             "ComponentType": "UIIMAGE",
                             "Active": true,
                             "TextureAssetId": {
@@ -513,7 +604,7 @@
                     },
                     "Components": [
                         {
-                            "UID": 4600845663579219932,
+                            "UID": 9934687106791584316,
                             "ComponentType": "TRANSFORM2D",
                             "Active": true,
                             "Position": [
@@ -552,7 +643,7 @@
                             "Alpha": 1.0
                         },
                         {
-                            "UID": 16736783719452048423,
+                            "UID": 10578203145715999659,
                             "ComponentType": "UIIMAGE",
                             "Active": true,
                             "TextureAssetId": {

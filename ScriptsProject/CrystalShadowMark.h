@@ -3,6 +3,8 @@
 #include "EnemyShadowMark.h"
 #include "PuzzleManagerLVL1.h"
 
+class CrystalVisuals;
+
 class CrystalShadowMark : public EnemyShadowMark
 {
     DECLARE_SCRIPT(CrystalShadowMark)
@@ -36,6 +38,7 @@ public:
 private:
     GameObject* managerObject = nullptr;
     PuzzleManagerLVL1* managerScript = nullptr;
+    CrystalVisuals* m_visualsController = nullptr;
 
     bool m_activated = false;
     bool m_puzzleCompleted = false;

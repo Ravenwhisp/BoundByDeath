@@ -2,6 +2,7 @@
 #include "CrystalShadowMark.h"
 #include "EnvironmentSound.h"
 #include "EnemyDamageable.h"
+#include "CrystalVisuals.h"
 
 IMPLEMENT_SCRIPT_FIELDS_INHERITED(CrystalShadowMark, EnemyShadowMark,
     SERIALIZED_COMPONENT_REF(m_puzzleManager, "PuzzleManager", ComponentType::TRANSFORM),
@@ -26,6 +27,13 @@ void CrystalShadowMark::Start()
     if (managerScript == nullptr)
     {
         Debug::log("[CrystalMark] ERROR: PuzzleManager script not found on referenced object!");
+    }
+
+    m_visualsController = GameObjectAPI::findScript<CrystalVisuals>(getOwner());
+
+    if (m_visualsController == nullptr)
+    {
+        Debug::warn("[CrystalMark] CrystalVisuals not found on '%s'.", GameObjectAPI::getName(getOwner()));
     }
 }
 
@@ -59,6 +67,11 @@ void CrystalShadowMark::Update()
 
     m_activated = false;
     m_activationTimer = 0.0f;
+
+    if (m_visualsController != nullptr)
+    {
+        m_visualsController->setActivated(false);
+    }
 
     deactivateEffect();
 
@@ -125,7 +138,13 @@ void CrystalShadowMark::activateCrystal()
     m_activationTimer = 0.0f;
     m_activated = true;
 
+    if (m_visualsController != nullptr)
+    {
+        m_visualsController->setActivated(true);
+    }
+
     activeEffect();
+    Debug::log("[CrystalMark] '%s' activating puzzle %d using manager '%s'.", GameObjectAPI::getName(getOwner()), m_puzzleID, GameObjectAPI::getName(managerObject));
     managerScript->onCrystalsActivated(m_puzzleID);
 
     if (managerScript->isPuzzleSolved(m_puzzleID))
@@ -144,6 +163,11 @@ void CrystalShadowMark::completeCrystal()
     m_puzzleCompleted = true;
     m_activated = true;
     m_activationTimer = 0.0f;
+
+    if (m_visualsController != nullptr)
+    {
+        m_visualsController->setActivated(true);
+    }
 
     activeEffect();
 
