@@ -9,6 +9,7 @@ IMPLEMENT_SCRIPT_FIELDS_INHERITED(DeathUI, CharacterUI,
 
 	FIELD_GROUP_LABEL("Charged Attack"),
 	SERIALIZED_COMPONENT_REF(m_chargedAttackUI, "Charged Attack UI", ComponentType::TRANSFORM),
+	SERIALIZED_COMPONENT_REF(m_chargedAttackChargeUI, "Charge Fill UI", ComponentType::TRANSFORM),
 
 	FIELD_GROUP_LABEL("Slash Combo"),
 	SERIALIZED_COMPONENT_REF(m_basicSlashUI, "Basic Slash UI", ComponentType::TRANSFORM),
@@ -29,6 +30,7 @@ void DeathUI::Start()
 
 	m_tauntUITransform = m_tauntUI.getReferencedComponent();
 	m_chargedAttackUITransform = m_chargedAttackUI.getReferencedComponent();
+	m_chargedAttackChargeTransform = m_chargedAttackChargeUI.getReferencedComponent();
 
 	m_basicSlashUITransform = m_basicSlashUI.getReferencedComponent();
 	m_basicSlashUISlider = m_basicSlashSlider.getReferencedComponent();
@@ -116,9 +118,14 @@ void DeathUI::showChargedAttackUI()
 	}
 
 	GameObjectAPI::setActive(owner, true);
+
+	if (m_chargedAttackChargeTransform)
+	{
+		TransformAPI::setScale(m_chargedAttackChargeTransform, Vector3(0.0f, 0.0f, 0.0f));
+	}
 }
 
-void DeathUI::updateChargedAttackUI(const Vector3& origin)
+void DeathUI::updateChargedAttackUI(const Vector3& origin, float chargeRatio)
 {
 	if (!m_chargedAttackUITransform)
 	{
@@ -126,6 +133,12 @@ void DeathUI::updateChargedAttackUI(const Vector3& origin)
 	}
 
 	TransformAPI::setGlobalPosition(m_chargedAttackUITransform, origin);
+
+	if (m_chargedAttackChargeTransform)
+	{
+		const float clampedRatio = (chargeRatio < 0.0f) ? 0.0f : (chargeRatio > 1.0f) ? 1.0f : chargeRatio;
+		TransformAPI::setScale(m_chargedAttackChargeTransform, Vector3(clampedRatio, clampedRatio, clampedRatio));
+	}
 }
 
 void DeathUI::hideChargedAttackUI()

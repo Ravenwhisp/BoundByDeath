@@ -23,7 +23,7 @@ public:
 
 	// Charged Attack
 	void showChargedAttackUI();
-	void updateChargedAttackUI(const Vector3& origin);
+	void updateChargedAttackUI(const Vector3& origin, float chargeRatio);
 	void hideChargedAttackUI();
 
 	// Slash Combo
@@ -43,6 +43,9 @@ private:
 	// Charged Attack
 	ComponentRef<Transform> m_chargedAttackUI;
 	Transform* m_chargedAttackUITransform = nullptr;
+
+	ComponentRef<Transform> m_chargedAttackChargeUI;
+	Transform* m_chargedAttackChargeTransform = nullptr;
 
 	// Slash Combo
 	ComponentRef<Transform> m_basicSlashUI;
