@@ -20,7 +20,6 @@ public:
 public:
     bool  m_autoEnableHeartbeat = true;
     float m_healthThreshold = 0.5f;
-    float m_maxSeparationDistance = 100.0f;
     float m_deathGreyDuration = 1.5f;
     float m_deathBlackDuration = 1.5f;
 

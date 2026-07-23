@@ -6,7 +6,6 @@
 IMPLEMENT_SCRIPT_FIELDS(PlayerVitalsMonitor,
     SERIALIZED_BOOL(m_autoEnableHeartbeat, "Auto Enable Heartbeat"),
     SERIALIZED_FLOAT(m_healthThreshold, "Health Threshold", 0.0f, 1.0f, 0.01f),
-    SERIALIZED_FLOAT(m_maxSeparationDistance, "Max Separation Distance (Fallback)", 1.0f, 999999.0f, 1.0f),
     SERIALIZED_FLOAT(m_deathGreyDuration, "Death Grey Duration", 0.0f, 60.0f, 0.1f),
     SERIALIZED_FLOAT(m_deathBlackDuration, "Death Black Duration", 0.0f, 60.0f, 0.1f)
 )
@@ -76,18 +75,18 @@ void PlayerVitalsMonitor::Update()
 
     if (m_bound != nullptr)
     {
-        // Bound::m_distanceInstaKill is loaded from the BoundConfig asset at
-        // runtime, so this stays in sync with the actual tether range instead
-        // of drifting from a hand-tuned constant. Fall back to the serialized
-        // value only if Bound hasn't supplied a usable range yet.
-        const float maxDistance = (m_bound->m_distanceInstaKill > 0.0f)
-            ? m_bound->m_distanceInstaKill
-            : m_maxSeparationDistance;
+        Transform* firstTransform = m_bound->m_firstTarget.getReferencedComponent();
+        Transform* secondTransform = m_bound->m_secondTarget.getReferencedComponent();
 
-        separation01 = m_bound->m_previousDistance / maxDistance;
+        if (firstTransform != nullptr && secondTransform != nullptr && m_bound->m_minDistance > 0.0f)
+        {
+            const Vector3 firstPosition = TransformAPI::getGlobalPosition(firstTransform);
+            const Vector3 secondPosition = TransformAPI::getGlobalPosition(secondTransform);
+            const float distance = Vector3::Distance(firstPosition, secondPosition);
 
-        if (separation01 < 0.0f) separation01 = 0.0f;
-        if (separation01 > 1.0f) separation01 = 1.0f;
+            const float excess = (distance - m_bound->m_minDistance) / m_bound->m_minDistance;
+            separation01 = (excess > 0.0f) ? min(excess, 1.0f) : 0.0f;
+        }
     }
 
     PostProcessAPI::setSeparation(separation01);
