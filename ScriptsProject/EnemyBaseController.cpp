@@ -215,6 +215,8 @@ void EnemyBaseController::clearPath()
     m_path.clear();
     m_currentPathIndex = 0;
     m_hasPath = false;
+
+    m_noProgressTime = 0.0f;
 }
 
 void EnemyBaseController::resetRepathTimer()
@@ -424,7 +426,6 @@ void EnemyBaseController::rotateTowardsDirection(const Vector3& direction)
 
 bool EnemyBaseController::buildPathToTarget()
 {
-    Debug::log("[EnemyBaseController] Trying to build path.");
     if (!hasValidTarget())
     {
         return false;
@@ -444,8 +445,6 @@ bool EnemyBaseController::buildPathToTarget()
 
     const int pointCount = NavigationAPI::findStraightPath(start, destination, pathPoints, MAX_PATH_POINTS, m_pathSearchExtents, static_cast<NavAgentProfile>(m_enemyType));
 
-    Debug::log("[EnemyBaseController] point count = %i", pointCount);
-
     if (pointCount < 2)
     {
         clearPath();
@@ -455,6 +454,9 @@ bool EnemyBaseController::buildPathToTarget()
     m_path = std::vector<Vector3>(pathPoints, pathPoints + pointCount);
     m_currentPathIndex = 1;
     m_hasPath = true;
+
+    m_lastProgressPosition = start;
+    m_noProgressTime = 0.0f;
 
     return true;
 }
@@ -550,15 +552,32 @@ bool EnemyBaseController::followPath()
     Vector3 actualStep = nextPosition - ownerPosition;
     actualStep.y = 0.0f;
 
-    if (actualStep.LengthSquared() <= 0.00001f)
-    {
-        clearPath();
-        return false;
-    }
-
-    facePosition(nextPosition);
+    facePosition(currentPathPoint);
 
     TransformAPI::setGlobalPosition(ownerTransform, nextPosition);
+
+    // Progress check
+    Vector3 progress = nextPosition - m_lastProgressPosition;
+    progress.y = 0.0f;
+
+    const float requiredProgressSquared = m_progressCheckDistance * m_progressCheckDistance;
+
+    if (progress.LengthSquared() >= requiredProgressSquared)
+    {
+        m_lastProgressPosition = nextPosition;
+        m_noProgressTime = 0.0f;
+    }
+    else
+    {
+        m_noProgressTime += Time::getDeltaTime();
+
+        if (m_noProgressTime >= m_maxNoProgressTime)
+        {
+            Debug::warn("[EnemyBaseController] Enemy made no progress.");
+            clearPath();
+            return false;
+        }
+    }
 
     return true;
 }
