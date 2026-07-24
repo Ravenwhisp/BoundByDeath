@@ -474,31 +474,6 @@ bool EnemyBaseController::followPath()
         return false;
     }
 
-    for (size_t i = 0; i < m_path.size(); ++i)
-    {
-        const Vector3 color =
-            i == m_currentPathIndex
-            ? Vector3(1.0f, 0.0f, 0.0f)
-            : Vector3(0.0f, 1.0f, 0.0f);
-
-        DebugDrawAPI::drawSphere(
-            m_path[i],
-            color,
-            0.15f,
-            1000
-        );
-
-        if (i > 0)
-        {
-            DebugDrawAPI::drawLine(
-                m_path[i - 1],
-                m_path[i],
-                Vector3(1.0f, 1.0f, 0.0f),
-                1000
-            );
-        }
-    }
-
     Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
 
     if (!ownerTransform)
@@ -520,7 +495,6 @@ bool EnemyBaseController::followPath()
 
         if (m_currentPathIndex >= m_path.size())
         {
-            Debug::log("[EnemyBaseController] Clear path: no actual movement.");
             clearPath();
             return false;
         }
@@ -544,7 +518,6 @@ bool EnemyBaseController::followPath()
     Vector3 nextPosition;
     if (!NavigationAPI::moveAlongSurface(ownerPosition, desiredStepTarget, nextPosition, m_pathSearchExtents))
     {
-        Debug::log("[EnemyBaseController] Clear path: moveAlongSurface failed.");
         clearPath();
         return false;
     }
@@ -573,7 +546,6 @@ bool EnemyBaseController::followPath()
 
         if (m_noProgressTime >= m_maxNoProgressTime)
         {
-            Debug::warn("[EnemyBaseController] Enemy made no progress.");
             clearPath();
             return false;
         }
