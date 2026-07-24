@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "ScriptAPI.h"
 #include "GameplayEventAction.h"
@@ -30,7 +30,7 @@ public:
 
     void executeEvent(GameplayEventTrigger* trigger) override;
 
-    ScriptFieldList getExposedFields() const override;
+    FieldList getExposedFields() const override;
 
     Transform2D* getPopUpImageTransform2D(int index) const;
     int getPopUpImageCount() const;
@@ -53,12 +53,12 @@ private:
     PopUpController* findPopUpController() const;
 
 public:
-    std::vector<ScriptComponentRef<Transform2D>> m_popUpImages;
+    std::vector<ComponentRef<Transform2D>> m_popUpImages;
 
-    ScriptComponentRef<Transform2D> m_player1NotConfirmedIndicator;
-    ScriptComponentRef<Transform2D> m_player1ConfirmedIndicator;
-    ScriptComponentRef<Transform2D> m_player2NotConfirmedIndicator;
-    ScriptComponentRef<Transform2D> m_player2ConfirmedIndicator;
+    ComponentRef<Transform2D> m_player1NotConfirmedIndicator;
+    ComponentRef<Transform2D> m_player1ConfirmedIndicator;
+    ComponentRef<Transform2D> m_player2NotConfirmedIndicator;
+    ComponentRef<Transform2D> m_player2ConfirmedIndicator;
 
     int m_transitionType = static_cast<int>(PopUpTransitionType::Fade);
     int m_closeMode = static_cast<int>(PopUpCloseMode::BothPlayersConfirm);
