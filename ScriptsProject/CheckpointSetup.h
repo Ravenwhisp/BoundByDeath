@@ -13,11 +13,20 @@ class CheckpointSetup : public Script
 public:
     explicit CheckpointSetup(GameObject* owner);
 
+    FieldList getExposedFields() const override;
+
     void Start() override;
 
-    virtual void ApplyCheckpointState() {};
+    virtual void ApplyCheckpointState();
+
+public:
+    ComponentRef<Transform> m_lyrielTransform;
+    ComponentRef<Transform> m_deathTransform;
 
 private:
 	CheckpointManager*  m_checkpointManager = nullptr;
 	CheckpointId        m_checkpointId = CheckpointId::NONE;
+
+    Vector3 lyrielSpawnPosition;
+    Vector3 deathSpawnPosition;
 };

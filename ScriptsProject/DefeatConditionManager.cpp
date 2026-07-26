@@ -56,12 +56,6 @@ void DefeatConditionManager::Start()
 
 void DefeatConditionManager::Update()
 {
-    if (m_needsInitialization)
-    {
-        CheckpointManager::Get().ApplyCheckpoint();
-        m_needsInitialization = false;
-    }
-
     if (m_hasTriggeredDefeat)
     {
         return;

@@ -22,6 +22,8 @@ EnemyDamageable::EnemyDamageable(GameObject* owner)
 
 void EnemyDamageable::Start()
 {
+	//si este go esta en la lista del checkpoint, no cargar directamente y fuer
+
 	resolveHealthBarReferences();
 
 	// Override HP from controller's attack config (inherits from EnemyBaseDataConfig)
@@ -36,8 +38,6 @@ void EnemyDamageable::Start()
 	}
 
 	Damageable::Start();
-
-	m_checkpointManager->Register(m_owner);
 
 	m_enemyDetectionAggro = GameObjectAPI::findScript<EnemyDetectionAggro>(m_owner);
 
@@ -116,12 +116,7 @@ void EnemyDamageable::onDeath()
 		m_shadowMark->clearMark();
 	}
 	
-	EnemyCheckpointState state;
-	state.m_isDead = true;
-
-	m_checkpointManager->SaveState(m_owner->GetID(), state);
-
-	m_checkpointManager->Unregister(m_owner);
+	CheckpointManager::Get().m_deadEnemies.push_back(m_owner->GetID());
 }
 
 bool EnemyDamageable::processShadowMarkHit(PlayerAttackType attackType)

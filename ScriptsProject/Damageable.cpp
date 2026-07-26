@@ -25,10 +25,8 @@ void Damageable::Start()
     m_currentHp = m_maxHp;
     clampHp();
     m_isDead = (m_currentHp <= 0.0f);
-
-    m_checkpointManager = &CheckpointManager::Get();
     
-    if(!m_checkpointManager)
+    if(!&CheckpointManager::Get())
     {
         Debug::warn("[Damageable] CheckpointManager singleton not found.");
         return;

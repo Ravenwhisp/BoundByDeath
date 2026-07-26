@@ -45,5 +45,4 @@ private:
     float m_defeatTimer = 0.0f;
     float m_defeatDelay = 3.0f;
 
-    bool m_needsInitialization = true; // Flag para aplicar el checkpoint en el primer frame. Esta aqui porque no hay otra clase encargada de managear las escenas
 };

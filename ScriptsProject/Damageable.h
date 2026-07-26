@@ -77,8 +77,6 @@ protected:
 
 	UISlider* m_healthBarSlider = nullptr;
 	UISlider* m_healthBar2Slider = nullptr;
-	
-	CheckpointManager* m_checkpointManager = nullptr;
 
 private:
     float m_uiTimer = 0.0f;

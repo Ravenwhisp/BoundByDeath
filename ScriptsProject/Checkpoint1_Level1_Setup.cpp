@@ -28,6 +28,9 @@ void Checkpoint1_Level1_Setup::Start()
 
 void Checkpoint1_Level1_Setup::ApplyCheckpointState()
 {
+	//Llamamos a CheckpointSetup::ApplyCheckpointState() para aplicar el lugar de spawn de Lyriel y Death
+	CheckpointSetup::ApplyCheckpointState();
+
 	// Checkpoint 1: Completar puzzle cristales
 	if (m_puzzleManager)
 	{

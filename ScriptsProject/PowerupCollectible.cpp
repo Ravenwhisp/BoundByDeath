@@ -55,16 +55,6 @@ void PowerupCollectible::Start()
         }
     }
 
-    m_checkpointManager = &CheckpointManager::Get();
-
-    m_checkpointManager->Register(m_owner);
-
-    if(!m_checkpointManager)
-    {
-        Debug::warn("[PowerupCollectible] CheckpointManager singleton not found.");
-        return;
-	}
-
     m_startPosition = TransformAPI::getGlobalPosition(GameObjectAPI::getTransform(getOwner()));
 }
 
@@ -102,14 +92,7 @@ void PowerupCollectible::OnTriggerEnter(GameObject* player)
 
     m_collected = true;
 
-	CollectibleCheckpointState state;
-	state.m_isCollected = true;
-
-    if (m_checkpointManager)
-    {
-        m_checkpointManager->SaveState(m_owner->GetID(), state);
-        m_checkpointManager->Unregister(m_owner);
-	}
+    CheckpointManager::Get().m_collectedCollectibles.push_back(m_owner->GetID());
 
     // Posted from the COLLECTING PLAYER's source: this GO is destroyed immediately below,
     // which would cut a sound played from its own emitter. The player persists and is at

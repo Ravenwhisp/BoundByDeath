@@ -2,6 +2,8 @@
 #include "ReaperGauge.h"
 #include "CooperativeSound.h"
 
+#include "CheckpointManager.h"
+
 #include <cmath>
 
 IMPLEMENT_SCRIPT_FIELDS(ReaperGauge,
@@ -33,6 +35,13 @@ void ReaperGauge::Start()
     SliderAPI::setFillAmount(m_reaperGaugeSlider, getGaugePercent());
     Transform2DAPI::setAlpha(m_glowTransform, 0.0f);
     Transform2DAPI::setAlpha(m_blinkAlphaTransform, 0.0f);
+
+    CheckpointManager* checkpointManager = &CheckpointManager::Get();
+    if (checkpointManager)
+    {
+        m_gauge = checkpointManager->m_savedReaperGaugeAmount;
+        m_everExploited = true;
+    }
 }
 
 void ReaperGauge::Update()
