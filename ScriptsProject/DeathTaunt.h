@@ -23,6 +23,7 @@ protected:
 
 	bool canStartSpecificAbility() const override;
     void onAttackWindowFinished() override;
+    void onHitFrame() override;
 
     float getCooldown() const override;
 
@@ -46,4 +47,5 @@ private:
     float m_debugConeTimer = 0.0f;
     bool m_isAiming = false;
     Vector3 m_currentAimDirection = Vector3::Zero;
+    Vector3 m_castDirection = Vector3::Zero;
 };

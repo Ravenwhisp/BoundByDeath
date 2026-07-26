@@ -161,7 +161,11 @@ void DeathChargedAttack::fireAttack()
     const float range = isChargedShot ? m_config->m_chargedShotArcRange : m_config->m_chargedArcRange;
     const float angle = isChargedShot ? m_config->m_chargedShotArcAngle : m_config->m_chargedArcAngle;
 
-    dealDamageInArc(damage, range, angle, isChargedShot, isMaxCharge);
+    m_pendingDamage = damage;
+    m_pendingRange = range;
+    m_pendingAngle = angle;
+    m_pendingChargedShot = isChargedShot;
+    m_pendingMaxCharge = isMaxCharge;
     notifyAbilitySuccessfullyStarted();
 
     // Max charge (auto-fired at full charge, always step 0) gets longer combo window
@@ -183,6 +187,11 @@ void DeathChargedAttack::fireAttack()
     beginAttackPresentation();
     beginAttackWindow(lockDuration);
     startCooldown();
+}
+
+void DeathChargedAttack::onHitFrame()
+{
+    dealDamageInArc(m_pendingDamage, m_pendingRange, m_pendingAngle, m_pendingChargedShot, m_pendingMaxCharge);
 }
 
 void DeathChargedAttack::dealDamageInArc(float damage, float range, float angle, bool isChargedShot, bool isMaxCharge) const

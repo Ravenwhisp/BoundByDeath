@@ -94,6 +94,11 @@ void DeathTaunt::onAttackWindowFinished()
     }
 }
 
+void DeathTaunt::onHitFrame()
+{
+    applyTauntToEnemiesInCone(m_castDirection);
+}
+
 float DeathTaunt::getCooldown() const
 {
     return m_config->m_tauntCooldown;
@@ -226,7 +231,7 @@ void DeathTaunt::releaseAimAndCast()
             m_deathParticles->SetTauntActive(finalDirection);
         }
 
-        applyTauntToEnemiesInCone(finalDirection);
+        m_castDirection = finalDirection;
         notifyAbilitySuccessfullyStarted();
         m_debugConeTimer = 0.25f;
 

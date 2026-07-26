@@ -1,12 +1,23 @@
 #include "pch.h"
 #include "PlayerAnimationController.h"
 
+namespace
+{
+    std::string trimmed(const std::string& value)
+    {
+        const size_t start = value.find_first_not_of(" \t\r\n");
+        if (start == std::string::npos) return "";
+        const size_t end = value.find_last_not_of(" \t\r\n");
+        return value.substr(start, end - start + 1);
+    }
+}
+
 IMPLEMENT_SCRIPT_FIELDS(PlayerAnimationController,
     SERIALIZED_STRING(m_idleStateName, "Idle state name"),
     SERIALIZED_STRING(m_moveStateName, "Move state name"),
     SERIALIZED_STRING(m_dashStateName, "Dash state name"),
     SERIALIZED_STRING(m_attackStateName, "Attack state name"),
-    SERIALIZED_STRING(m_damagedStateName, "Damaged state name"),
+    SERIALIZED_STRING_VECTOR(m_damagedStateNames, "Damaged state names"),
     SERIALIZED_STRING(m_downedStateName, "Downed state name"),
     SERIALIZED_STRING(m_deathStateName, "Death state name"),
     SERIALIZED_FLOAT(m_defaultBlendTime, "Default blend time", 0.0f, 2.0f, 0.01f),
@@ -33,6 +44,16 @@ void PlayerAnimationController::Update()
 		return;
 	}
 
+    const float dt = Time::getDeltaTime();
+    if (m_damagedHoldTimer > 0.0f) m_damagedHoldTimer -= dt;
+    if (m_recoveryHoldTimer > 0.0f) m_recoveryHoldTimer -= dt;
+
+    const bool freshDamage = m_damagedRequested && !m_isDead && !m_isDowned;
+    if (freshDamage)
+    {
+        m_currentDamagedState = pickDamagedState();
+    }
+
     AnimState desiredState = AnimState::Idle;
     float blendTime = m_defaultBlendTime;
 
@@ -46,17 +67,20 @@ void PlayerAnimationController::Update()
         desiredState = AnimState::Downed;
         blendTime = m_downedBlendTime;
     }
-    else if (m_damagedRequested)
+    else if (freshDamage || m_damagedHoldTimer > 0.0f)
     {
         desiredState = AnimState::Damaged;
         blendTime = m_damagedBlendTime;
     }
     else if (m_attackRequested || m_hasAttackOverride)
     {
-        // While an ability holds an attack override the attack state is sustained for the
-        // whole window, so single-shot attacks (e.g. Lyriel's bow) no longer get cut after one frame.
         desiredState = AnimState::Attack;
         blendTime = m_attackBlendTime;
+    }
+    else if (m_recoveryHoldTimer > 0.0f)
+    {
+        desiredState = AnimState::Recovery;
+        blendTime = m_recoveryBlend;
     }
     else if (m_isDashing)
     {
@@ -71,11 +95,23 @@ void PlayerAnimationController::Update()
         desiredState = AnimState::Idle;
     }
 
-    if (desiredState != m_currentState)
+    const bool forceReplay = freshDamage && desiredState == AnimState::Damaged;
+    if (desiredState != m_currentState || forceReplay)
     {
         if (playAnimState(desiredState, blendTime))
         {
             m_currentState = desiredState;
+
+            if (desiredState == AnimState::Damaged)
+            {
+                const float dur = AnimationAPI::getPlaybackDuration(m_animationComponent);
+                m_damagedHoldTimer = dur > 0.0f ? dur : 0.3f;
+            }
+
+            if (desiredState != AnimState::Recovery)
+            {
+                m_recoveryHoldTimer = 0.0f;
+            }
         }
     }
 
@@ -126,6 +162,40 @@ void PlayerAnimationController::clearAttackOverride()
     m_hasAttackOverride = false;
 }
 
+void PlayerAnimationController::playRecovery(const std::string& stateName, float blendTime, float speed)
+{
+    m_hasAttackOverride = false;
+
+    const std::string state = trimmed(stateName);
+    if (state.empty() || !m_animationComponent)
+    {
+        return;
+    }
+
+    m_recoveryState = state;
+    m_recoveryBlend = blendTime;
+    m_recoverySpeed = speed;
+
+    AnimationAPI::setSpeedMultiplier(m_animationComponent, speed);
+    if (AnimationAPI::playState(m_animationComponent, state.c_str(), blendTime))
+    {
+        m_currentState = AnimState::Recovery;
+        const float dur = AnimationAPI::getPlaybackDuration(m_animationComponent);
+        m_recoveryHoldTimer = dur > 0.0f ? dur : 0.3f;
+    }
+}
+
+const std::string& PlayerAnimationController::pickDamagedState()
+{
+    static const std::string empty;
+    if (m_damagedStateNames.empty())
+    {
+        return empty;
+    }
+    m_damagedIndex = (m_damagedIndex + 1) % static_cast<int>(m_damagedStateNames.size());
+    return m_damagedStateNames[m_damagedIndex];
+}
+
 AnimationComponent* PlayerAnimationController::findAnimationComponent()
 {
 	m_animationComponent = AnimationAPI::getAnimationComponent(m_owner);
@@ -139,31 +209,36 @@ AnimationComponent* PlayerAnimationController::findAnimationComponent()
 
 bool PlayerAnimationController::playAnimState(AnimState state, float blendTime)
 {
-    const char* stateName = nullptr;
+    std::string stateName;
 
     switch (state)
     {
-    case AnimState::Idle:    stateName = m_idleStateName.c_str(); break;
-    case AnimState::Move:    stateName = m_moveStateName.c_str(); break;
-    case AnimState::Dash:    stateName = m_dashStateName.c_str(); break;
-    case AnimState::Attack:  stateName = m_attackStateName.c_str(); break;
-    case AnimState::Damaged: stateName = m_damagedStateName.c_str(); break;
-    case AnimState::Downed: stateName = m_downedStateName.c_str(); break;
-    case AnimState::Death:   stateName = m_deathStateName.c_str(); break;
+    case AnimState::Idle:    stateName = m_idleStateName; break;
+    case AnimState::Move:    stateName = m_moveStateName; break;
+    case AnimState::Dash:    stateName = m_dashStateName; break;
+    case AnimState::Attack:  stateName = m_attackStateName; break;
+    case AnimState::Damaged: stateName = m_currentDamagedState; break;
+    case AnimState::Recovery: stateName = m_recoveryState; break;
+    case AnimState::Downed: stateName = m_downedStateName; break;
+    case AnimState::Death:   stateName = m_deathStateName; break;
     default: return false;
     }
 
-    // An active ability can redirect the Attack slot to a specific clip, with its own
-    // blend and playback speed, so every attack can look and time differently.
     float speed = 1.0f;
     if (state == AnimState::Attack && m_hasAttackOverride && !m_attackOverrideName.empty())
     {
-        stateName = m_attackOverrideName.c_str();
+        stateName = m_attackOverrideName;
         blendTime = m_attackOverrideBlend;
         speed = m_attackOverrideSpeed;
     }
+    else if (state == AnimState::Recovery)
+    {
+        speed = m_recoverySpeed;
+    }
 
-    if (!stateName || stateName[0] == '\0')
+    stateName = trimmed(stateName);
+
+    if (stateName.empty())
     {
         Debug::warn("PlayerAnimationController on '%s' has empty animation state name.", GameObjectAPI::getName(m_owner));
         return false;
@@ -171,11 +246,11 @@ bool PlayerAnimationController::playAnimState(AnimState state, float blendTime)
 
     AnimationAPI::setSpeedMultiplier(m_animationComponent, speed);
 
-    const bool played = AnimationAPI::playState(m_animationComponent, stateName, blendTime);
+    const bool played = AnimationAPI::playState(m_animationComponent, stateName.c_str(), blendTime);
 
     if (!played)
     {
-        Debug::warn("PlayerAnimationController on '%s' could not play state '%s'.", GameObjectAPI::getName(m_owner), stateName);
+        Debug::warn("PlayerAnimationController on '%s' could not play state '%s'.", GameObjectAPI::getName(m_owner), stateName.c_str());
     }
 
     return played;

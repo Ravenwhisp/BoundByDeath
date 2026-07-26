@@ -7,6 +7,7 @@
 #include "CooperativeSound.h"
 #include "PlayerState.h"
 #include "PlayerAnimationController.h"
+#include "CharacterAnimations.h"
 #include "EnemyDamageable.h"
 #include "Bound.h"
 
@@ -349,11 +350,24 @@ void ShadowExecution::lockPlayers(bool locked)
             }
         }
 
-        if (locked)
+        PlayerAnimationController* anim = character->getAnimationController();
+        if (anim != nullptr)
         {
-            PlayerAnimationController* anim = character->getAnimationController();
-            if (anim != nullptr)
+            if (locked)
+            {
+                CharacterAnimations* anims = GameObjectAPI::findScript<CharacterAnimations>(character->getOwner());
+                if (anims != nullptr)
+                {
+                    const AttackAnimInfo info = anims->resolve(AttackAnimId::ShadowExecution, 0);
+                    if (!info.stateName.empty())
+                        anim->setAttackOverride(info.stateName, info.blendIn, info.speed);
+                }
                 anim->requestAttack();
+            }
+            else
+            {
+                anim->clearAttackOverride();
+            }
         }
     }
 }

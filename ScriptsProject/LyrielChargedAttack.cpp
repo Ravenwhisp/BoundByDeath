@@ -210,17 +210,29 @@ void LyrielChargedAttack::releaseChargeAndShoot()
         return;
     }
 
-    const float damage = computeChargedDamage();
-
     m_attackFacingDirection = forward;
     faceDirection(forward);
 
-    std::vector<GameObject*> targets;
-    collectEnemiesInLine(origin, forward, targets);
-    const bool anyMarkExploited = applyChargedDamage(targets, damage);
-    spawnChargedArrow(origin, forward);
+    m_shotOrigin = origin;
+    m_shotForward = forward;
+    m_shotDamage = computeChargedDamage();
     notifyAbilitySuccessfullyStarted();
 
+    beginAttackPresentation();
+
+    beginAttackWindow(m_config->m_chargedAttackLockDuration);
+    startCooldown();
+    m_chargeTimer = 0.0f;
+}
+
+void LyrielChargedAttack::onHitFrame()
+{
+    std::vector<GameObject*> targets;
+    collectEnemiesInLine(m_shotOrigin, m_shotForward, targets);
+    const bool anyMarkExploited = applyChargedDamage(targets, m_shotDamage);
+    spawnChargedArrow(m_shotOrigin, m_shotForward);
+
+    LyrielSound* sound = m_lyrielCharacter != nullptr ? m_lyrielCharacter->getSound() : nullptr;
     if (sound != nullptr)
     {
         sound->playChargedRelease();
@@ -233,15 +245,6 @@ void LyrielChargedAttack::releaseChargeAndShoot()
             sound->playMarkExploit();
         }
     }
-
-    beginAttackPresentation();
-
-    beginAttackWindow(m_config->m_chargedAttackLockDuration);
-    startCooldown();
-    m_chargeTimer = 0.0f;
-
-    Debug::log("[LyrielChargedAttack] Fired charged shot. Targets hit: %d Damage: %.2f",
-        static_cast<int>(targets.size()), damage);
 }
 
 Vector3 LyrielChargedAttack::computeAimDirection() const

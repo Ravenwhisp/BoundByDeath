@@ -188,11 +188,22 @@ void LyrielArrowVolley::releaseAimAndCast()
     m_attackFacingDirection = forward;
     faceDirection(forward);
 
-    std::vector<Damageable*> targets;
-    collectEnemiesInCone(origin, forward, targets);
-    const bool anyMarkExploited = applyVolleyDamage(targets);
-    spawnVolleyArrows(origin, forward);
+    m_castOrigin = origin;
+    m_castForward = forward;
     notifyAbilitySuccessfullyStarted();
+
+    beginAttackPresentation();
+
+    beginAttackWindow(m_config->m_volleyAttackLockDuration);
+    startCooldown();
+}
+
+void LyrielArrowVolley::onHitFrame()
+{
+    std::vector<Damageable*> targets;
+    collectEnemiesInCone(m_castOrigin, m_castForward, targets);
+    const bool anyMarkExploited = applyVolleyDamage(targets);
+    spawnVolleyArrows(m_castOrigin, m_castForward);
 
     LyrielSound* sound = m_lyrielCharacter != nullptr ? m_lyrielCharacter->getSound() : nullptr;
     if (sound != nullptr)
@@ -203,13 +214,6 @@ void LyrielArrowVolley::releaseAimAndCast()
             sound->playMarkExploit();
         }
     }
-
-    beginAttackPresentation();
-
-    beginAttackWindow(m_config->m_volleyAttackLockDuration);
-    startCooldown();
-
-    Debug::log("[LyrielArrowVolley] Cast Arrow Volley. Targets hit: %d", static_cast<int>(targets.size()));
 }
 
 Vector3 LyrielArrowVolley::computeAimDirection() const

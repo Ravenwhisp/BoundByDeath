@@ -2,6 +2,9 @@
 
 #include "ScriptAPI.h"
 
+#include <string>
+#include <vector>
+
 class AnimationComponent;
 
 enum class AnimState
@@ -11,6 +14,7 @@ enum class AnimState
     Dash,
     Attack,
     Damaged,
+    Recovery,
     Downed,
     Death
 };
@@ -35,21 +39,22 @@ public:
     void requestAttack();
     void requestDamaged();
 
-    // Lets an ability choose which clip the Attack slot plays, plus its blend and speed,
-    // for the duration of one attack. Cleared when the attack window ends.
     void setAttackOverride(const std::string& stateName, float blendTime, float speed);
     void clearAttackOverride();
+
+    void playRecovery(const std::string& stateName, float blendTime, float speed);
 
 private:
     AnimationComponent* findAnimationComponent();
     bool playAnimState(AnimState state, float blendTime);
+    const std::string& pickDamagedState();
 
 public:
     std::string m_idleStateName = "";
 	std::string m_moveStateName = "";
 	std::string m_dashStateName = "";
 	std::string m_attackStateName = "";
-	std::string m_damagedStateName = "";
+	std::vector<std::string> m_damagedStateNames;
     std::string m_downedStateName = "";
 	std::string m_deathStateName = "";
 
@@ -72,9 +77,17 @@ private:
 
     AnimState m_currentState = AnimState::Idle;
 
-    // Per-attack override of the Attack slot (set by abilities via setAttackOverride).
     std::string m_attackOverrideName = "";
     float m_attackOverrideBlend = 0.15f;
     float m_attackOverrideSpeed = 1.0f;
     bool  m_hasAttackOverride = false;
+
+    int m_damagedIndex = -1;
+    std::string m_currentDamagedState = "";
+    float m_damagedHoldTimer = 0.0f;
+
+    std::string m_recoveryState = "";
+    float m_recoveryBlend = 0.15f;
+    float m_recoverySpeed = 1.0f;
+    float m_recoveryHoldTimer = 0.0f;
 };

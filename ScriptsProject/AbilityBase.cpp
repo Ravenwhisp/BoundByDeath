@@ -4,6 +4,7 @@
 #include "CharacterBase.h"
 #include "PlayerState.h"
 #include "PlayerAnimationController.h"
+#include "CharacterAnimations.h"
 #include "CharacterUI.h"
 
 static const char* abilityUISlotNames[] =
@@ -16,15 +17,18 @@ static const char* abilityUISlotNames[] =
 
 constexpr int abilityUISlotCount = 4;
 
+static AttackAnimId animIdForSlot(int uiSlot)
+{
+    switch (static_cast<AbilityUISlot>(uiSlot))
+    {
+    case AbilityUISlot::ChargedAttack: return AttackAnimId::Charged;
+    case AbilityUISlot::Ability:       return AttackAnimId::Special;
+    default:                           return AttackAnimId::Basic;
+    }
+}
+
 IMPLEMENT_SCRIPT_FIELDS(AbilityBase,
-    SERIALIZED_ENUM_INT(m_uiSlot, "UI Slot", abilityUISlotNames, abilityUISlotCount),
-    FIELD_GROUP_LABEL("Animation Timing"),
-    SERIALIZED_BOOL(m_useAnimTiming, "Use Anim-Driven Timing"),
-    SERIALIZED_STRING(m_animStateName, "Anim State Name"),
-    SERIALIZED_FLOAT(m_animSpeed, "Anim Speed", 0.0f, 5.0f, 0.01f),
-    SERIALIZED_FLOAT(m_animBlendIn, "Anim Blend In", 0.0f, 2.0f, 0.01f),
-    SERIALIZED_FLOAT(m_hitStartPct, "Hit Point %", 0.0f, 1.0f, 0.01f),
-    SERIALIZED_FLOAT(m_recoverEndPct, "Recover End %", 0.0f, 1.0f, 0.01f)
+    SERIALIZED_ENUM_INT(m_uiSlot, "UI Slot", abilityUISlotNames, abilityUISlotCount)
 )
 
 AbilityBase::AbilityBase(GameObject* owner)
@@ -49,6 +53,7 @@ void AbilityBase::Start()
     }
 
     m_animComp = AnimationAPI::getAnimationComponent(getOwner());
+    m_attackAnims = GameObjectAPI::findScript<CharacterAnimations>(getOwner());
 }
 
 void AbilityBase::Update()
@@ -155,7 +160,6 @@ void AbilityBase::updateAttackWindow(float dt)
 
     onAttackWindowUpdate();
 
-    // Keep the legacy timer ticking (still used by the slash UI as a progress hint).
     if (m_attackStateTimer > 0.0f)
     {
         m_attackStateTimer -= dt;
@@ -167,15 +171,10 @@ void AbilityBase::updateAttackWindow(float dt)
 
     if (usesAnimHitTiming())
     {
-        // Animation-driven window: the hit frame and the window end are derived
-        // from the clip's normalized playback, not from a fixed timer.
         m_attackWindowElapsed += dt;
 
-        // Only time against OUR clip. Guards against (a) reading the previous idle/move
-        // clip's playback on the first frames before the attack state becomes active, and
-        // (b) a hurt/downed state interrupting us mid-attack.
         const char* activeState = AnimationAPI::getActiveStateName(m_animComp);
-        const bool onOurClip = (activeState != nullptr && m_animStateName == activeState);
+        const bool onOurClip = (activeState != nullptr && m_curAnimState == activeState);
 
         if (onOurClip)
         {
@@ -184,20 +183,19 @@ void AbilityBase::updateAttackWindow(float dt)
                 ? (AnimationAPI::getPlaybackTime(m_animComp) / duration)
                 : 0.0f;
 
-            if (!m_hitFired && progress >= m_hitStartPct)
+            if (!m_hitFired && progress >= m_curHitPct)
             {
                 m_hitFired = true;
                 onHitFrame();
             }
 
-            if (progress >= m_recoverEndPct)
+            if (progress >= m_curRecoverPct)
             {
                 finishAttackWindow();
                 return;
             }
         }
 
-        // never lock forever if our clip never becomes active (e.g. interrupted or misconfigured)
         constexpr float k_animSafetyCap = 8.0f;
         if (m_attackWindowElapsed >= k_animSafetyCap)
         {
@@ -206,7 +204,12 @@ void AbilityBase::updateAttackWindow(float dt)
     }
     else
     {
-        // Legacy fixed-duration window.
+        if (!m_hitFired)
+        {
+            m_hitFired = true;
+            onHitFrame();
+        }
+
         if (m_attackStateTimer <= 0.0f)
         {
             finishAttackWindow();
@@ -285,6 +288,12 @@ void AbilityBase::finishAttackWindow()
     m_attackStateTimer = 0.0f;
     m_attackWindowActive = false;
 
+    if (!m_hitFired)
+    {
+        m_hitFired = true;
+        onHitFrame();
+    }
+
     setAbilityLocked(false);
 
     if (m_character != nullptr)
@@ -292,7 +301,14 @@ void AbilityBase::finishAttackWindow()
         PlayerAnimationController* animController = m_character->getAnimationController();
         if (animController != nullptr)
         {
-            animController->clearAttackOverride();
+            if (!m_curRecoveryState.empty())
+            {
+                animController->playRecovery(m_curRecoveryState, m_curAnimBlend, m_curAnimSpeed);
+            }
+            else
+            {
+                animController->clearAttackOverride();
+            }
         }
 
         PlayerState* playerState = m_character->getPlayerState();
@@ -307,7 +323,26 @@ void AbilityBase::finishAttackWindow()
 
 bool AbilityBase::usesAnimHitTiming() const
 {
-    return m_useAnimTiming && m_animComp != nullptr && !m_animStateName.empty();
+    return m_animComp != nullptr && !m_curAnimState.empty();
+}
+
+void AbilityBase::resolveCurrentAttackAnim()
+{
+    if (m_attackAnims != nullptr)
+    {
+        const AttackAnimInfo info = m_attackAnims->resolve(animIdForSlot(m_uiSlot), getAttackVariant());
+        m_curAnimState = info.stateName;
+        m_curAnimSpeed = info.speed;
+        m_curAnimBlend = info.blendIn;
+        m_curHitPct = info.actionPct;
+        m_curRecoverPct = info.recoverPct;
+        m_curRecoveryState = info.recoveryState;
+    }
+    else
+    {
+        m_curAnimState.clear();
+        m_curRecoveryState.clear();
+    }
 }
 
 void AbilityBase::beginAttackPresentation()
@@ -328,14 +363,15 @@ void AbilityBase::beginAttackPresentation()
         playerState->setState(PlayerStateType::AttackRecovery);
     }
 
+    resolveCurrentAttackAnim();
+
     PlayerAnimationController* animController = m_character->getAnimationController();
     if (animController != nullptr)
     {
-        if (m_useAnimTiming && !m_animStateName.empty())
+        if (!m_curAnimState.empty())
         {
-            animController->setAttackOverride(m_animStateName, m_animBlendIn, m_animSpeed);
+            animController->setAttackOverride(m_curAnimState, m_curAnimBlend, m_curAnimSpeed);
         }
-
         animController->requestAttack();
     }
 }

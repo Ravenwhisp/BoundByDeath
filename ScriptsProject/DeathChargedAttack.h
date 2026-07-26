@@ -23,6 +23,7 @@ protected:
 
     void onAttackWindowUpdate()     override;
     void onAttackWindowFinished()   override;
+    void onHitFrame()               override;
 
     float getCooldown() const override;
 
@@ -41,6 +42,12 @@ private:
     float   m_chargeTime = 0.0f;
     bool    m_isCharging = false;
     Vector3 m_aimDirection = { 0.0f, 0.0f, 0.0f };
+
+    float m_pendingDamage = 0.0f;
+    float m_pendingRange = 0.0f;
+    float m_pendingAngle = 0.0f;
+    bool  m_pendingChargedShot = false;
+    bool  m_pendingMaxCharge = false;
 
     DeathParticles* m_particles = nullptr;
 };

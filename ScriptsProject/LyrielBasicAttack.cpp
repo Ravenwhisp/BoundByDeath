@@ -41,7 +41,6 @@ void LyrielBasicAttack::onAttackWindowFinished()
 
 void LyrielBasicAttack::onHitFrame()
 {
-    // Animation-driven release: the arrow leaves the bow at m_hitStartPct of the draw clip.
     fireArrow(m_attackFacingTarget);
 }
 
@@ -80,17 +79,6 @@ void LyrielBasicAttack::startAbility()
 
     faceTarget(target);
     m_attackFacingTarget = target;
-
-    // Legacy timing fires the arrow immediately; animation-driven timing fires it on the release frame.
-    if (!usesAnimHitTiming())
-    {
-        if (!fireArrow(target))
-        {
-            setAbilityLocked(false);
-            m_attackFacingTarget = nullptr;
-            return;
-        }
-    }
 
     notifyAbilitySuccessfullyStarted();
 

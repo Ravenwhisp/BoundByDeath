@@ -71,6 +71,7 @@ void DeathBasicAttack::startAbility()
     m_attackFacingTarget = target;
 
     const int comboStep = m_deathCharacter->getComboStep();
+    m_comboVariant = comboStep;
 
     DeathSound* sound = m_deathCharacter->getSound();
     if (sound != nullptr)
@@ -78,11 +79,6 @@ void DeathBasicAttack::startAbility()
         sound->playLightSwing();
     }
 
-    // Legacy timing deals damage immediately; animation-driven timing defers it to the hit frame.
-    if (!usesAnimHitTiming())
-    {
-        dealDamageToTarget(target);
-    }
     notifyAbilitySuccessfullyStarted();
 
     m_deathCharacter->advanceCombo(false);
@@ -137,8 +133,12 @@ void DeathBasicAttack::onAttackWindowFinished()
 
 void DeathBasicAttack::onHitFrame()
 {
-    // Animation-driven hit: damage lands at m_hitStartPct of the swing clip.
     dealDamageToTarget(m_attackFacingTarget);
+}
+
+int DeathBasicAttack::getAttackVariant() const
+{
+    return m_comboVariant;
 }
 
 float DeathBasicAttack::getCooldown() const
