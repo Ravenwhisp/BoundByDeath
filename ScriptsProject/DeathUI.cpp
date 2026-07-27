@@ -3,13 +3,16 @@
 
 #include <cmath>
 
+static constexpr float kChargedAttackUIReferenceRadius = 3.0f;
+static constexpr float kChargedAttackUIReferenceSize = 1000.0f;
+
 IMPLEMENT_SCRIPT_FIELDS_INHERITED(DeathUI, CharacterUI,
 	FIELD_GROUP_LABEL("Taunt"),
 	SERIALIZED_COMPONENT_REF(m_tauntUI, "Taunt UI", ComponentType::TRANSFORM),
 
 	FIELD_GROUP_LABEL("Charged Attack"),
 	SERIALIZED_COMPONENT_REF(m_chargedAttackUI, "Charged Attack UI", ComponentType::TRANSFORM),
-	SERIALIZED_COMPONENT_REF(m_chargedAttackChargeUI, "Charge Fill UI", ComponentType::TRANSFORM),
+	SERIALIZED_COMPONENT_REF(m_chargedAttackChargeSlider, "Charge Ring Slider", ComponentType::UISLIDER),
 
 	FIELD_GROUP_LABEL("Slash Combo"),
 	SERIALIZED_COMPONENT_REF(m_basicSlashUI, "Basic Slash UI", ComponentType::TRANSFORM),
@@ -30,7 +33,7 @@ void DeathUI::Start()
 
 	m_tauntUITransform = m_tauntUI.getReferencedComponent();
 	m_chargedAttackUITransform = m_chargedAttackUI.getReferencedComponent();
-	m_chargedAttackChargeTransform = m_chargedAttackChargeUI.getReferencedComponent();
+	m_chargedAttackChargeUISlider = m_chargedAttackChargeSlider.getReferencedComponent();
 
 	m_basicSlashUITransform = m_basicSlashUI.getReferencedComponent();
 	m_basicSlashUISlider = m_basicSlashSlider.getReferencedComponent();
@@ -118,14 +121,9 @@ void DeathUI::showChargedAttackUI()
 	}
 
 	GameObjectAPI::setActive(owner, true);
-
-	if (m_chargedAttackChargeTransform)
-	{
-		TransformAPI::setScale(m_chargedAttackChargeTransform, Vector3(0.0f, 0.0f, 0.0f));
-	}
 }
 
-void DeathUI::updateChargedAttackUI(const Vector3& origin, float chargeRatio)
+void DeathUI::updateChargedAttackUI(const Vector3& origin, float chargeRatio, float attackRadius)
 {
 	if (!m_chargedAttackUITransform)
 	{
@@ -134,15 +132,43 @@ void DeathUI::updateChargedAttackUI(const Vector3& origin, float chargeRatio)
 
 	TransformAPI::setGlobalPosition(m_chargedAttackUITransform, origin);
 
-	if (m_chargedAttackChargeTransform)
+	constexpr float referenceRadius = 3.0f;
+
+	float uiScale = 1.0f;
+
+	if (referenceRadius > 0.0001f)
 	{
-		const float clampedRatio = (chargeRatio < 0.0f) ? 0.0f : (chargeRatio > 1.0f) ? 1.0f : chargeRatio;
-		TransformAPI::setScale(m_chargedAttackChargeTransform, Vector3(clampedRatio, clampedRatio, clampedRatio));
+		uiScale = attackRadius / referenceRadius;
 	}
+
+	TransformAPI::setScale(m_chargedAttackUITransform, Vector3(uiScale, uiScale, uiScale));
+
+	if (!m_chargedAttackChargeUISlider)
+	{
+		return;
+	}
+
+	float clampedRatio = chargeRatio;
+
+	if (clampedRatio < 0.0f)
+	{
+		clampedRatio = 0.0f;
+	}
+	else if (clampedRatio > 1.0f)
+	{
+		clampedRatio = 1.0f;
+	}
+
+	SliderAPI::setFillAmount(m_chargedAttackChargeUISlider, clampedRatio);
 }
 
 void DeathUI::hideChargedAttackUI()
 {
+	if (m_chargedAttackChargeUISlider)
+	{
+		SliderAPI::setFillAmount(m_chargedAttackChargeUISlider, 0.0f);
+	}
+
 	if (!m_chargedAttackUITransform)
 	{
 		return;
