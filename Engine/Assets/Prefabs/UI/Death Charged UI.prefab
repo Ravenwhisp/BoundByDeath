@@ -1,0 +1,231 @@
+{
+    "Version": 2,
+    "sourcePath": "Assets\\Prefabs\\UI\\Death Charged UI.prefab",
+    "Name": "Death Charged UI",
+    "Active": false,
+    "Static": false,
+    "Layer": "DEFAULT",
+    "Tag": "DEFAULT",
+    "Transform": {
+        "Position": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "Rotation": [
+            -0.0,
+            0.3826833963394165,
+            -0.0,
+            0.9238795638084412
+        ],
+        "Scale": [
+            1.0,
+            1.0,
+            1.100000023841858
+        ]
+    },
+    "Components": [
+        {
+            "UID": 5534482614114147749,
+            "ComponentType": "CANVAS",
+            "Active": true,
+            "RenderMode": "WORLD_SPACE",
+            "ZTest": true
+        }
+    ],
+    "Children": [
+        {
+            "Name": "Range Area",
+            "Active": true,
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.7071068286895752,
+                    0.0,
+                    0.0,
+                    0.7071067094802856
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [
+                {
+                    "UID": 6188067717723808565,
+                    "ComponentType": "TRANSFORM2D",
+                    "Active": true,
+                    "Position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Scale": [
+                        1.0,
+                        1.0,
+                        0.0
+                    ],
+                    "Pivot": [
+                        0.5,
+                        0.5,
+                        0.0
+                    ],
+                    "AnchorMin": [
+                        0.5,
+                        0.5,
+                        0.0
+                    ],
+                    "AnchorMax": [
+                        0.5,
+                        0.5,
+                        0.0
+                    ],
+                    "BaseSize": [
+                        650.0,
+                        650.0,
+                        0.0
+                    ],
+                    "StretchMode": "NONE",
+                    "SizingMode": "KEEP_ASPECT_RATIO",
+                    "AspectRatio": 1.0,
+                    "Alpha": 0.30000001192092896
+                },
+                {
+                    "UID": 5658404751115368233,
+                    "ComponentType": "UIIMAGE",
+                    "Active": true,
+                    "TextureAssetId": {
+                        "uid": 9771884856223029865,
+                        "libId": "a782c97ce029e684d8e2a4863ca5b96a",
+                        "type": "TEXTURE"
+                    },
+                    "FillAmount": [
+                        0.0,
+                        1.0
+                    ],
+                    "FillMethod": "Horizontal",
+                    "FillOrigin": 0,
+                    "SheetColumns": 1,
+                    "SheetRows": 1,
+                    "SheetOffset": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "StretchDrawMode": "Stretch"
+                }
+            ],
+            "Children": []
+        },
+        {
+            "Name": "Charge Fill Ring",
+            "Active": true,
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.7071068286895752,
+                    0.0,
+                    0.0,
+                    0.7071067690849304
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [
+                {
+                    "UID": 11673778668155551515,
+                    "ComponentType": "TRANSFORM2D",
+                    "Active": true,
+                    "Position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Scale": [
+                        1.0,
+                        1.0,
+                        0.0
+                    ],
+                    "Pivot": [
+                        0.5,
+                        0.5,
+                        0.0
+                    ],
+                    "AnchorMin": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "AnchorMax": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "BaseSize": [
+                        650.0,
+                        650.0,
+                        0.0
+                    ],
+                    "StretchMode": "NONE",
+                    "SizingMode": "KEEP_ASPECT_RATIO",
+                    "AspectRatio": 1.0,
+                    "Alpha": 1.0
+                },
+                {
+                    "UID": 6355238078292172623,
+                    "ComponentType": "UISLIDER",
+                    "Active": true,
+                    "FillAmount": [
+                        0.0,
+                        1.0
+                    ],
+                    "FillMethod": "Radial360",
+                    "FillOrigin": 0
+                },
+                {
+                    "UID": 1048868824072513941,
+                    "ComponentType": "UIIMAGE",
+                    "Active": true,
+                    "TextureAssetId": {
+                        "uid": 3471763468123391006,
+                        "libId": "525469310db95b9b14f5a38e2692f084",
+                        "type": "TEXTURE"
+                    },
+                    "FillAmount": [
+                        0.0,
+                        1.0
+                    ],
+                    "FillMethod": "Radial360",
+                    "FillOrigin": 0,
+                    "SheetColumns": 1,
+                    "SheetRows": 1,
+                    "SheetOffset": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "StretchDrawMode": "Stretch"
+                }
+            ],
+            "Children": []
+        }
+    ]
+}
