@@ -123,7 +123,7 @@ void DeathUI::showChargedAttackUI()
 	GameObjectAPI::setActive(owner, true);
 }
 
-void DeathUI::updateChargedAttackUI(const Vector3& origin, float chargeRatio, float attackRadius)
+void DeathUI::updateChargedAttackUI(const Vector3& origin, float chargeRatio, float attackRadius, bool isMaxCharge)
 {
 	if (!m_chargedAttackUITransform)
 	{
@@ -141,25 +141,30 @@ void DeathUI::updateChargedAttackUI(const Vector3& origin, float chargeRatio, fl
 		uiScale = attackRadius / referenceRadius;
 	}
 
-	TransformAPI::setScale(m_chargedAttackUITransform, Vector3(uiScale, uiScale, uiScale));
+	m_chargedAttackBaseScale = uiScale;
 
-	if (!m_chargedAttackChargeUISlider)
+	if (!m_isPlayingMaxChargePop)
 	{
-		return;
+		TransformAPI::setScale(m_chargedAttackUITransform, Vector3(uiScale, uiScale, uiScale));
 	}
 
-	float clampedRatio = chargeRatio;
-
-	if (clampedRatio < 0.0f)
+	if (m_chargedAttackChargeUISlider)
 	{
-		clampedRatio = 0.0f;
-	}
-	else if (clampedRatio > 1.0f)
-	{
-		clampedRatio = 1.0f;
+		float clampedRatio = chargeRatio;
+
+		if (clampedRatio < 0.0f)
+		{
+			clampedRatio = 0.0f;
+		}
+		else if (clampedRatio > 1.0f)
+		{
+			clampedRatio = 1.0f;
+		}
+
+		SliderAPI::setFillAmount(m_chargedAttackChargeUISlider, clampedRatio);
 	}
 
-	SliderAPI::setFillAmount(m_chargedAttackChargeUISlider, clampedRatio);
+	updateMaxChargeAnimation(isMaxCharge);
 }
 
 void DeathUI::hideChargedAttackUI()
@@ -168,6 +173,8 @@ void DeathUI::hideChargedAttackUI()
 	{
 		SliderAPI::setFillAmount(m_chargedAttackChargeUISlider, 0.0f);
 	}
+
+	resetMaxChargeAnimation();
 
 	if (!m_chargedAttackUITransform)
 	{
@@ -182,6 +189,73 @@ void DeathUI::hideChargedAttackUI()
 	}
 
 	GameObjectAPI::setActive(owner, false);
+}
+
+void DeathUI::updateMaxChargeAnimation(bool isMaxCharge)
+{
+	if (!m_chargedAttackUITransform)
+	{
+		return;
+	}
+
+	if (isMaxCharge && !m_wasMaxCharge)
+	{
+		m_isPlayingMaxChargePop = true;
+		m_maxChargePopTimer = 0.0f;
+	}
+
+	m_wasMaxCharge = isMaxCharge;
+
+	if (!m_isPlayingMaxChargePop)
+	{
+		return;
+	}
+
+	constexpr float popDuration = 0.20f;
+	constexpr float maxPopMultiplier = 1.10f;
+
+	m_maxChargePopTimer += Time::getDeltaTime();
+
+	float progress = m_maxChargePopTimer / popDuration;
+
+	if (progress >= 1.0f)
+	{
+		progress = 1.0f;
+		m_isPlayingMaxChargePop = false;
+	}
+
+	float popAmount = 0.0f;
+
+	if (progress < 0.5f)
+	{
+		popAmount = progress * 2.0f;
+	}
+	else
+	{
+		popAmount = (1.0f - progress) * 2.0f;
+	}
+
+	const float popMultiplier = 1.0f + (maxPopMultiplier - 1.0f) * popAmount;
+	const float finalScale = m_chargedAttackBaseScale * popMultiplier;
+
+	TransformAPI::setScale(m_chargedAttackUITransform, Vector3(finalScale, finalScale, finalScale));
+
+	if (!m_isPlayingMaxChargePop)
+	{
+		TransformAPI::setScale(m_chargedAttackUITransform, Vector3(m_chargedAttackBaseScale, m_chargedAttackBaseScale, m_chargedAttackBaseScale));
+	}
+}
+
+void DeathUI::resetMaxChargeAnimation()
+{
+	m_wasMaxCharge = false;
+	m_isPlayingMaxChargePop = false;
+	m_maxChargePopTimer = 0.0f;
+
+	if (m_chargedAttackUITransform)
+	{
+		TransformAPI::setScale(m_chargedAttackUITransform, Vector3(m_chargedAttackBaseScale, m_chargedAttackBaseScale, m_chargedAttackBaseScale));
+	}
 }
 
 void DeathUI::setupSlashUI()

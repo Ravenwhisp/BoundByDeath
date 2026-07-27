@@ -54,8 +54,9 @@ void DeathChargedAttack::Update()
             {
                 const Vector3 origin = TransformAPI::getGlobalPosition(ownerTransform);
                 const float chargeRatio = m_chargeTime / m_config->m_chargedMaxChargeTime;
+                const bool isMaxCharge = m_chargeTime >= m_config->m_chargedMaxChargeTime;
                 m_deathUI->showChargedAttackUI();
-                m_deathUI->updateChargedAttackUI(origin, chargeRatio, m_config->m_chargedCircleRadius);
+                m_deathUI->updateChargedAttackUI(origin, chargeRatio, m_config->m_chargedCircleRadius, isMaxCharge);
             }
         }
 
