@@ -43,9 +43,10 @@ public:
 	void onCrystalsActivated(int puzzleID);
 	void onCrystalsDeactivated(int puzzleID);
 
+	bool isPuzzleSolved(int puzzleId) const;
+
 private:
 
-	bool isPuzzleSolved(int puzzleId) const;
 	void onPuzzleSolved(int puzzleId);
 
 	std::unordered_map<int, PuzzleData> m_puzzles;
