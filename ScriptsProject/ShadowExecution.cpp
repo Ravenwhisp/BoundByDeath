@@ -53,7 +53,7 @@ void ShadowExecution::Start()
     }
     else
     {
-        m_maxRadius = bound->m_config.get()->m_distanceDamage * 0.5f;
+        m_maxRadius = bound->m_config.get()->m_minDistance * 0.5f;
 	}
 
     cachePlayers();
