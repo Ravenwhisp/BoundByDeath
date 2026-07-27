@@ -6,6 +6,7 @@
 IMPLEMENT_SCRIPT_FIELDS(PlayerVitalsMonitor,
     SERIALIZED_BOOL(m_autoEnableHeartbeat, "Auto Enable Heartbeat"),
     SERIALIZED_FLOAT(m_healthThreshold, "Health Threshold", 0.0f, 1.0f, 0.01f),
+    SERIALIZED_FLOAT(m_heartbeatIntensityScale, "Heartbeat Intensity Scale", 0.1f, 1.0f, 0.01f),
     SERIALIZED_FLOAT(m_deathGreyDuration, "Death Grey Duration", 0.0f, 60.0f, 0.1f),
     SERIALIZED_FLOAT(m_deathBlackDuration, "Death Black Duration", 0.0f, 60.0f, 0.1f)
 )
@@ -33,7 +34,7 @@ void PlayerVitalsMonitor::Start()
     // Reset post-process state so a fresh run/scene restart never inherits a
     // stale death fade or heartbeat from a previous session.
     PostProcessAPI::setHeartbeatEnabled(m_autoEnableHeartbeat);
-    PostProcessAPI::setHealthThreshold(m_healthThreshold);
+    PostProcessAPI::setHealthThreshold(kEngineThresholdPassthrough);
     PostProcessAPI::setDeathGreyDuration(m_deathGreyDuration);
     PostProcessAPI::setDeathBlackDuration(m_deathBlackDuration);
 
@@ -69,7 +70,16 @@ void PlayerVitalsMonitor::Update()
         anyPlayerFound = true;
     }
 
-    PostProcessAPI::setHealth(anyPlayerFound ? lowestHpPercent : 1.0f);
+    float visualHealth = 1.0f;
+
+    if (anyPlayerFound && lowestHpPercent < m_healthThreshold)
+    {
+        const float danger = 1.0f - lowestHpPercent;
+        const float softenedDanger = danger * m_heartbeatIntensityScale;
+        visualHealth = 1.0f - softenedDanger;
+    }
+
+    PostProcessAPI::setHealth(visualHealth);
 
     float separation01 = 0.0f;
 

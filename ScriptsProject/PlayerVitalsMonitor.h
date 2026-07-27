@@ -19,7 +19,8 @@ public:
 
 public:
     bool  m_autoEnableHeartbeat = true;
-    float m_healthThreshold = 0.5f;
+    float m_healthThreshold = 0.1f;
+    float m_heartbeatIntensityScale = 0.65f;
     float m_deathGreyDuration = 1.5f;
     float m_deathBlackDuration = 1.5f;
 
@@ -28,6 +29,8 @@ private:
     void findBound();
 
     bool allPlayersFound() const;
+
+    static constexpr float kEngineThresholdPassthrough = 0.999f;
 
 private:
     PlayerDamageable* m_player1 = nullptr;
