@@ -17,7 +17,6 @@ constexpr int navAgentProfileCount = 3;
 
 IMPLEMENT_SCRIPT_FIELDS(EnemyBaseController,
     SERIALIZED_ENUM_INT(m_enemyType, "Enemy Type", navAgentProfileNames, navAgentProfileCount),
-    SERIALIZED_FLOAT(m_moveSpeed, "Move Speed", 0.0f, 50.0f, 0.1f),
     SERIALIZED_FLOAT(m_turnSpeedDegrees, "Turn Speed Degrees", 0.0f, 1080.0f, 1.0f),
     SERIALIZED_FLOAT(m_repathInterval, "Repath Interval", 0.0f, 50.0f, 0.1f),
     SERIALIZED_FLOAT(m_pathPointReachDistance, "Path Point Reach Distance", 0.01f, 5.0f, 0.01f),
@@ -216,6 +215,8 @@ void EnemyBaseController::clearPath()
     m_path.clear();
     m_currentPathIndex = 0;
     m_hasPath = false;
+
+    m_noProgressTime = 0.0f;
 }
 
 void EnemyBaseController::resetRepathTimer()
@@ -454,6 +455,9 @@ bool EnemyBaseController::buildPathToTarget()
     m_currentPathIndex = 1;
     m_hasPath = true;
 
+    m_lastProgressPosition = start;
+    m_noProgressTime = 0.0f;
+
     return true;
 }
 
@@ -521,15 +525,31 @@ bool EnemyBaseController::followPath()
     Vector3 actualStep = nextPosition - ownerPosition;
     actualStep.y = 0.0f;
 
-    if (actualStep.LengthSquared() <= 0.00001f)
-    {
-        clearPath();
-        return false;
-    }
-
-    facePosition(nextPosition);
+    facePosition(currentPathPoint);
 
     TransformAPI::setGlobalPosition(ownerTransform, nextPosition);
+
+    // Progress check
+    Vector3 progress = nextPosition - m_lastProgressPosition;
+    progress.y = 0.0f;
+
+    const float requiredProgressSquared = m_progressCheckDistance * m_progressCheckDistance;
+
+    if (progress.LengthSquared() >= requiredProgressSquared)
+    {
+        m_lastProgressPosition = nextPosition;
+        m_noProgressTime = 0.0f;
+    }
+    else
+    {
+        m_noProgressTime += Time::getDeltaTime();
+
+        if (m_noProgressTime >= m_maxNoProgressTime)
+        {
+            clearPath();
+            return false;
+        }
+    }
 
     return true;
 }

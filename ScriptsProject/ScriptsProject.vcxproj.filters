@@ -633,7 +633,14 @@
     <ClInclude Include="EnemyForcedMovement.h">
       <Filter>Enemies\Movement</Filter>
     </ClInclude>
-    <ClInclude Include="CheckpointManager.h">
+    <ClInclude Include="BoundConfig.h" />
+    <ClInclude Include="ChargedAttackBase.h" />
+    <ClInclude Include="PlayerAttackType.h" />
+    <ClInclude Include="EnemyBaseDataConfig.h" />
+    <ClInclude Include="CrystalVisuals.h">
+      <Filter>Interaction/Gameplay\Puzzles</Filter>
+    </ClInclude>
+        <ClInclude Include="CheckpointManager.h">
       <Filter>Systems\Checkpoints</Filter>
     </ClInclude>
     <ClInclude Include="Checkpoint1_Level1_Event.h">
@@ -1023,9 +1030,6 @@
     <ClCompile Include="SpiderEnemyController.cpp">
       <Filter>Enemies\Spider</Filter>
     </ClCompile>
-    <ClCompile Include="SummonerAttackConfig.cpp">
-      <Filter>Enemies\Summoner</Filter>
-    </ClCompile>
     <ClCompile Include="SummonerEnemyController.cpp">
       <Filter>Enemies\Summoner</Filter>
     </ClCompile>
@@ -1103,6 +1107,11 @@
     <ClCompile Include="ParticleManager.cpp" />
     <ClCompile Include="EnemyForcedMovement.cpp">
       <Filter>Enemies\Movement</Filter>
+    </ClCompile>
+    <ClCompile Include="ChargedAttackBase.cpp" />
+    <ClCompile Include="EnemyBaseDataConfig.cpp" />
+    <ClCompile Include="CrystalVisuals.cpp">
+      <Filter>Interaction/Gameplay\Puzzles</Filter>
     </ClCompile>
     <ClCompile Include="CheckpointManager.cpp">
       <Filter>Systems\Checkpoints</Filter>
