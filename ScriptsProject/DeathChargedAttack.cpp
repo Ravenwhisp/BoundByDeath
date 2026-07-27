@@ -273,6 +273,8 @@ void DeathChargedAttack::drawGizmo()
 
 void DeathChargedAttack::updateUI()
 {
+    AbilityBase::updateUI();
+
     if (m_deathUI)
         m_deathUI->updateChargedSlashUI(m_attackStateTimer, m_deathCharacter->getConfig()->m_chargedAttackLockDuration);
 }
