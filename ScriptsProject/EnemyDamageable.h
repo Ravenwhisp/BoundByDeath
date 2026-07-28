@@ -9,6 +9,8 @@ class EnemyShadowMark;
 class Transform2D;
 class EnemyBaseController;
 class EnemyBaseDataConfig;
+class ReaperGauge;
+class ShadowExecution;
 
 struct EnemyHitContext : public HitContext
 {
@@ -46,17 +48,30 @@ private:
 	void resolveHealthBarReferences();
 	void updateHealthBarFade();
 
+	void resolveReaperGauge();
+	void updateShadowExecutionPreviewAvailability();
+	void setShadowExecutionPreviewActive(bool active);
+
+	void resolveShadowExecution();
+	void updateShadowExecutionPreview();
+
 private:
 	const EnemyBaseDataConfig* m_baseDataConfig = nullptr;
 	EnemyDetectionAggro* m_enemyDetectionAggro = nullptr;
 	EnemySound* m_enemySound = nullptr;
 	EnemyShadowMark* m_shadowMark = nullptr;
 	Transform* m_damageSource = nullptr;
+	ReaperGauge* m_reaperGauge = nullptr;
+	ShadowExecution* m_shadowExecution = nullptr;
 	
 	bool m_lastHitExploitedShadowMark = false;
 
+	bool m_shadowExecutionPreviewActive = false;
+
 	ComponentRef<Transform2D> m_healthBarContainer;
 	Transform2D* m_healthBarContainerTransform = nullptr;
+	ComponentRef<Transform2D> m_shadowExecutionPreview;
+	Transform2D* m_shadowExecutionPreviewTransform = nullptr;
 
 	float m_healthBarFadeTime = 0.25f;
 	float m_healthBarFadeTimer = 0.0f;

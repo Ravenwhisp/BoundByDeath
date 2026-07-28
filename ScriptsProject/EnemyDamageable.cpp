@@ -7,9 +7,12 @@
 #include "EnemyBaseDataConfig.h"
 #include "EnemyShadowMark.h"
 #include "Transform2D.h"
+#include "ReaperGauge.h"
+#include "ShadowExecution.h"
 
 IMPLEMENT_SCRIPT_FIELDS_INHERITED(EnemyDamageable, Damageable,
 	SERIALIZED_COMPONENT_REF(m_healthBarContainer, "Health Bar Container", ComponentType::TRANSFORM2D),
+	SERIALIZED_COMPONENT_REF(m_shadowExecutionPreview, "Shadow Execution Preview", ComponentType::TRANSFORM2D),
 	SERIALIZED_FLOAT(m_healthBarFadeTime, "Health Bar Fade Time", 0.0f, 5.0f, 0.05f)
 )
 
@@ -21,6 +24,13 @@ EnemyDamageable::EnemyDamageable(GameObject* owner)
 void EnemyDamageable::Start()
 {
 	resolveHealthBarReferences();
+	resolveReaperGauge();
+	resolveShadowExecution();
+
+	if (m_shadowExecutionPreviewTransform)
+	{
+		Transform2DAPI::setAlpha(m_shadowExecutionPreviewTransform, 0.0f);
+	}
 
 	// Override HP from controller's attack config (inherits from EnemyBaseDataConfig)
 	EnemyBaseController* controller = GameObjectAPI::findScript<EnemyBaseController>(m_owner);
@@ -60,6 +70,7 @@ void EnemyDamageable::Update()
 {
 	Damageable::Update();
 	updateHealthBarFade();
+	updateShadowExecutionPreviewAvailability();
 }
 
 void EnemyDamageable::takeDamage(const HitContext& ctx)
@@ -96,6 +107,11 @@ void EnemyDamageable::onDamaged(float amount)
 		m_enemySound->playHurt();
 	}
 
+	if (m_shadowExecutionPreviewActive)
+	{
+		updateShadowExecutionPreview();
+	}
+
 	if (!m_enemyDetectionAggro)
 	{
 		return;
@@ -107,6 +123,7 @@ void EnemyDamageable::onDamaged(float amount)
 	}
 
 	m_enemyDetectionAggro->notifyPlayerAttackedEnemy(m_damageSource);
+
 }
 
 void EnemyDamageable::onDeath()
@@ -178,12 +195,27 @@ void EnemyDamageable::resolveHealthBarReferences()
 					m_healthBar2Slider = static_cast<UISlider*>(GameObjectAPI::getComponent(slider2Object, ComponentType::UISLIDER));
 				}
 			}
+
+			if (!m_shadowExecutionPreviewTransform)
+			{
+				Transform* previewTransform = TransformAPI::findChildByName(backgroundTransform, "Shadow Execution Preview");
+				if (previewTransform)
+				{
+					GameObject* previewObject = ComponentAPI::getOwner(previewTransform);
+					m_shadowExecutionPreviewTransform = static_cast<Transform2D*>(GameObjectAPI::getComponent(previewObject, ComponentType::TRANSFORM2D));
+				}
+			}
 		}
 	}
 
 	if (!m_healthBarContainerTransform)
 	{
 		m_healthBarContainerTransform = m_healthBarContainer.getReferencedComponent();
+	}
+
+	if (!m_shadowExecutionPreviewTransform)
+	{
+		m_shadowExecutionPreviewTransform = m_shadowExecutionPreview.getReferencedComponent();
 	}
 }
 
@@ -233,6 +265,82 @@ void EnemyDamageable::setHealthBarAlpha(float alpha)
 	alpha = std::clamp(alpha, 0.0f, 1.0f);
 
 	Transform2DAPI::setAlpha(m_healthBarContainerTransform, alpha);
+}
+
+void EnemyDamageable::resolveReaperGauge()
+{
+	const std::vector<GameObject*> holders = SceneAPI::findAllGameObjectsWithScript<ReaperGauge>();
+
+	if (!holders.empty())
+	{
+		m_reaperGauge = GameObjectAPI::findScript<ReaperGauge>(holders[0]);
+	}
+
+	if (!m_reaperGauge)
+	{
+		Debug::warn("[EnemyDamageable] ReaperGauge not found for '%s'.", GameObjectAPI::getName(m_owner));
+	}
+}
+
+void EnemyDamageable::updateShadowExecutionPreviewAvailability()
+{
+	if (!m_reaperGauge)
+	{
+		return;
+	}
+
+	const bool shouldBeActive = m_reaperGauge->isFull() && !m_isDead;
+
+	if (shouldBeActive != m_shadowExecutionPreviewActive)
+	{
+		setShadowExecutionPreviewActive(shouldBeActive);
+	}
+}
+
+void EnemyDamageable::setShadowExecutionPreviewActive(bool active)
+{
+	m_shadowExecutionPreviewActive = active;
+
+	if (!m_shadowExecutionPreviewTransform)
+	{
+		return;
+	}
+
+	Transform2DAPI::setAlpha(m_shadowExecutionPreviewTransform, active ? 1.0f : 0.0f);
+
+	if (active)
+	{
+		updateShadowExecutionPreview();
+	}
+}
+
+void EnemyDamageable::resolveShadowExecution()
+{
+	const std::vector<GameObject*> holders = SceneAPI::findAllGameObjectsWithScript<ShadowExecution>();
+
+	if (!holders.empty())
+	{
+		m_shadowExecution = GameObjectAPI::findScript<ShadowExecution>(holders[0]);
+	}
+
+	if (!m_shadowExecution)
+	{
+		Debug::warn("[EnemyDamageable] ShadowExecution not found for '%s'.", GameObjectAPI::getName(m_owner));
+	}
+}
+
+void EnemyDamageable::updateShadowExecutionPreview()
+{
+	if (!m_shadowExecutionPreviewActive || !m_shadowExecution || m_isDead)
+	{
+		return;
+	}
+
+	const ShadowExecutionPreview preview = m_shadowExecution->calculatePreview(this);
+	const float maxHp = getMaxHp();
+	const float currentHpPercent = maxHp > 0.0f ? getCurrentHp() / maxHp : 0.0f;
+
+	Debug::log("[ShadowExecutionPreview] Enemy '%s': current %.1f%%, resulting %.1f%%, damage %.1f, lethal %s.", GameObjectAPI::getName(m_owner), currentHpPercent * 100.0f, preview.resultingHpPercent * 100.0f, preview.damage, preview.willDie ? "true" : "false");
 }
 
 IMPLEMENT_SCRIPT(EnemyDamageable)

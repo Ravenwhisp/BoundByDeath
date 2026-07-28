@@ -303,20 +303,15 @@ void ShadowExecution::applyAoEDamage()
 
         const bool belowThreshold = currentHp <= thresholdHp;
 
-        EnemyHitContext ctx;
-        if (belowThreshold)
-        {
-            ctx.damage = currentHp;
-            Debug::log("[ShadowExecution] Enemy '%s' executed below threshold. Current HP: %.1f, threshold HP: %.1f.", GameObjectAPI::getName(enemy), currentHp, thresholdHp);
-        }
-        else
-        {
-            ctx.damage = selectedDamage;
-            Debug::log("[ShadowExecution] Enemy '%s' took %.1f damage. Fixed: %.1f, percentage: %.1f.", GameObjectAPI::getName(enemy), ctx.damage, m_shadowExecutionConfig->m_fixedDamage, percentageDamage);
-        }
+        const ShadowExecutionPreview preview = calculatePreview(damageable);
 
+        EnemyHitContext ctx;
+        ctx.damage = preview.damage;
         ctx.attacker = nullptr;
         ctx.attackType = PlayerAttackType::ShadowExecution;
+
+        Debug::log("[ShadowExecution] Enemy '%s' will take %.1f damage. Resulting HP: %.1f%%. Lethal: %s.", GameObjectAPI::getName(enemy), preview.damage, preview.resultingHpPercent * 100.0f, preview.willDie ? "true" : "false");
+
         damageable->takeDamage(ctx);
 
         m_hitEnemies.push_back(enemy);
@@ -402,6 +397,45 @@ void ShadowExecution::updateUI()
 	SliderAPI::setFillAmount(m_reaperGaugeSlider, 1.0f - t);
 	Transform2DAPI::setAlpha(m_executionTransform2D, t);
 	Transform2DAPI::setScale(m_executionTransform2D, Vector2(m_currentRadius, m_currentRadius));
+}
+
+ShadowExecutionPreview ShadowExecution::calculatePreview(const EnemyDamageable* damageable) const
+{
+    ShadowExecutionPreview preview;
+
+    if (!damageable || !m_shadowExecutionConfig)
+    {
+        return preview;
+    }
+
+    const float maxHp = damageable->getMaxHp();
+    const float currentHp = damageable->getCurrentHp();
+
+    if (maxHp <= 0.0f || currentHp <= 0.0f)
+    {
+        return preview;
+    }
+
+    const float thresholdMultiplier = damageable->getShadowExecutionThresholdMultiplier();
+    const float effectiveThreshold = m_shadowExecutionConfig->m_instaKillThreshold * thresholdMultiplier;
+    const float thresholdHp = maxHp * effectiveThreshold;
+    const float percentageDamage = maxHp * m_shadowExecutionConfig->m_percentageDamage;
+    const float selectedDamage = percentageDamage > m_shadowExecutionConfig->m_fixedDamage ? percentageDamage : m_shadowExecutionConfig->m_fixedDamage;
+
+    const bool insideExecutionThreshold = currentHp <= thresholdHp;
+
+    preview.damage = insideExecutionThreshold ? currentHp : selectedDamage;
+
+    if (preview.damage > currentHp)
+    {
+        preview.damage = currentHp;
+    }
+
+    preview.willDie = preview.damage >= currentHp;
+    const float resultingHp = currentHp - preview.damage;
+    preview.resultingHpPercent = resultingHp / maxHp;
+
+    return preview;
 }
 
 IMPLEMENT_SCRIPT(ShadowExecution)

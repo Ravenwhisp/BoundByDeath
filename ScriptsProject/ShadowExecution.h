@@ -8,11 +8,19 @@ class DeathCharacter;
 class LyrielCharacter;
 class CooperativeSound;
 class ShadowExecutionConfig;
+class EnemyDamageable;
 
 // Estructura para controlar el tiempo de vida de las partículas instanciadas
 struct SpawnedPrefab {
     GameObject* gameObject;
     float lifetimeRemaining;
+};
+
+struct ShadowExecutionPreview
+{
+    float damage = 0.0f;
+    float resultingHpPercent = 0.0f;
+    bool willDie = false;
 };
 
 class ShadowExecution : public Script
@@ -29,6 +37,8 @@ public:
     FieldList getExposedFields() const override;
 
     bool isActive() const { return m_isActive; }
+
+    ShadowExecutionPreview calculatePreview(const EnemyDamageable* damageable) const;
 
 public:
     AssetReference<ShadowExecutionConfig> m_config;
