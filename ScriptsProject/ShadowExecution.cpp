@@ -10,13 +10,10 @@
 #include "EnemyDamageable.h"
 #include "Bound.h"
 #include "BoundConfig.h"
+#include "ShadowExecutionConfig.h"
 
 IMPLEMENT_SCRIPT_FIELDS(ShadowExecution,
-    SERIALIZED_FLOAT(m_timeWindow,         "Co-op Window (s)",      0.1f, 10.0f, 0.1f),
-    SERIALIZED_FLOAT(m_executionDuration,  "Execution Duration (s)", 0.1f, 10.0f, 0.1f),
-    SERIALIZED_FLOAT(m_instaKillThreshold, "Insta Kill HP %",        0.0f,  1.0f, 0.01f),
-    SERIALIZED_FLOAT(m_fixedDamage, "Fixed Damage", 0.0f, 1000.0f, 1.0f),
-    SERIALIZED_FLOAT(m_percentageDamage, "Percentage Damage (max HP %)", 0.0f, 1.0f, 0.01f),
+    SERIALIZED_ASSET_REF(m_config, "Shadow Execution Config", AssetType::DATA_CONTAINER),
     SERIALIZED_ASSET_REF(m_particlePrefab, "Particle Prefab", AssetType::PREFAB),
     SERIALIZED_COMPONENT_REF(m_reaperGaugeBar, "Reaper Gauge UI", ComponentType::UISLIDER),
     SERIALIZED_COMPONENT_REF(m_executionCanvas, "Execution Canvas", ComponentType::TRANSFORM),
@@ -56,6 +53,14 @@ void ShadowExecution::Start()
     {
         m_maxRadius = bound->m_config.get()->m_minDistance * 0.5f;
 	}
+
+    m_shadowExecutionConfig = m_config.get();
+
+    if (!m_shadowExecutionConfig)
+    {
+        Debug::error("[ShadowExecution] ShadowExecutionConfig is missing.");
+        return;
+    }
 
     cachePlayers();
 }
@@ -124,8 +129,8 @@ void ShadowExecution::Update()
     {
         if (m_reaperGauge->isFull())
         {
-            m_p0WindowTimer = m_timeWindow;
-            Debug::log("[ShadowExecution] Player 0 pressed Triangle. Window open for %.1fs.", m_timeWindow);
+            m_p0WindowTimer = m_shadowExecutionConfig->m_timeWindow;
+            Debug::log("[ShadowExecution] Player 0 pressed Triangle. Window open for %.1fs.", m_shadowExecutionConfig->m_timeWindow);
         }
         else
         {
@@ -137,8 +142,8 @@ void ShadowExecution::Update()
     {
         if (m_reaperGauge->isFull())
         {
-            m_p1WindowTimer = m_timeWindow;
-            Debug::log("[ShadowExecution] Player 1 pressed Triangle. Window open for %.1fs.", m_timeWindow);
+            m_p1WindowTimer = m_shadowExecutionConfig->m_timeWindow;
+            Debug::log("[ShadowExecution] Player 1 pressed Triangle. Window open for %.1fs.", m_shadowExecutionConfig->m_timeWindow);
         }
         else
         {
@@ -220,21 +225,21 @@ void ShadowExecution::beginExecution()
     }
 
     Debug::log("[ShadowExecution] *** TRIGGERED *** Center (%.2f, %.2f, %.2f), max radius %.2f, duration %.1fs.",
-        m_center.x, m_center.y, m_center.z, m_maxRadius, m_executionDuration);
+        m_center.x, m_center.y, m_center.z, m_maxRadius, m_shadowExecutionConfig->m_executionDuration);
 }
 
 void ShadowExecution::updateExecution(float dt)
 {
     m_executionTimer += dt;
 
-    float progress = m_executionDuration > 0.0f ? (m_executionTimer / m_executionDuration) : 1.0f;
+    float progress = m_shadowExecutionConfig->m_executionDuration > 0.0f ? (m_executionTimer / m_shadowExecutionConfig->m_executionDuration) : 1.0f;
     if (progress > 1.0f) progress = 1.0f;
 
     m_currentRadius = progress * m_maxRadius;
 
     applyAoEDamage();
 
-    if (m_executionTimer >= m_executionDuration)
+    if (m_executionTimer >= m_shadowExecutionConfig->m_executionDuration)
     {
         endExecution();
     }
@@ -284,14 +289,14 @@ void ShadowExecution::applyAoEDamage()
         const float currentHp = damageable->getCurrentHp();
         
         const float thresholdMultiplier = damageable->getShadowExecutionThresholdMultiplier();
-        const float effectiveThreshold = m_instaKillThreshold * thresholdMultiplier;
+        const float effectiveThreshold = m_shadowExecutionConfig->m_instaKillThreshold * thresholdMultiplier;
         const float thresholdHp = maxHp * effectiveThreshold;
 
-        const float percentageDamage = maxHp * m_percentageDamage;
+        const float percentageDamage = maxHp * m_shadowExecutionConfig->m_percentageDamage;
 
-        float selectedDamage = m_fixedDamage;
+        float selectedDamage = m_shadowExecutionConfig->m_fixedDamage;
 
-        if (percentageDamage > m_fixedDamage) 
+        if (percentageDamage > m_shadowExecutionConfig->m_fixedDamage)
         {
             selectedDamage = percentageDamage;
         }
@@ -307,7 +312,7 @@ void ShadowExecution::applyAoEDamage()
         else
         {
             ctx.damage = selectedDamage;
-            Debug::log("[ShadowExecution] Enemy '%s' took %.1f damage. Fixed: %.1f, percentage: %.1f.", GameObjectAPI::getName(enemy), ctx.damage, m_fixedDamage, percentageDamage);
+            Debug::log("[ShadowExecution] Enemy '%s' took %.1f damage. Fixed: %.1f, percentage: %.1f.", GameObjectAPI::getName(enemy), ctx.damage, m_shadowExecutionConfig->m_fixedDamage, percentageDamage);
         }
 
         ctx.attacker = nullptr;
@@ -393,7 +398,7 @@ void ShadowExecution::updateUI()
         return;
     }
 
-    const float t = m_executionTimer / m_executionDuration;
+    const float t = m_executionTimer / m_shadowExecutionConfig->m_executionDuration;
 	SliderAPI::setFillAmount(m_reaperGaugeSlider, 1.0f - t);
 	Transform2DAPI::setAlpha(m_executionTransform2D, t);
 	Transform2DAPI::setScale(m_executionTransform2D, Vector2(m_currentRadius, m_currentRadius));

@@ -7,6 +7,7 @@ class ReaperGauge;
 class DeathCharacter;
 class LyrielCharacter;
 class CooperativeSound;
+class ShadowExecutionConfig;
 
 // Estructura para controlar el tiempo de vida de las partículas instanciadas
 struct SpawnedPrefab {
@@ -30,12 +31,7 @@ public:
     bool isActive() const { return m_isActive; }
 
 public:
-    float m_timeWindow         = 2.0f;
-    float m_executionDuration  = 3.0f;
-
-    float m_instaKillThreshold = 0.20f;
-    float m_fixedDamage     = 30.0f;
-    float m_percentageDamage = 0.10f;
+    AssetReference<ShadowExecutionConfig> m_config;
 
     PrefabRef m_particlePrefab;
 
@@ -48,6 +44,7 @@ private:
     void applyAoEDamage();
     void lockPlayers(bool locked);
 
+    ShadowExecutionConfig* m_shadowExecutionConfig = nullptr;
     ReaperGauge* m_reaperGauge     = nullptr;
     DeathCharacter* m_deathCharacter  = nullptr;
     LyrielCharacter* m_lyrielCharacter = nullptr;
