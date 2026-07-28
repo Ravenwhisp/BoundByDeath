@@ -70,10 +70,14 @@ private:
 
 	ComponentRef<Transform2D> m_healthBarContainer;
 	Transform2D* m_healthBarContainerTransform = nullptr;
-	ComponentRef<Transform2D> m_shadowExecutionPreview;
-	Transform2D* m_shadowExecutionPreviewTransform = nullptr;
 
 	float m_healthBarFadeTime = 0.25f;
 	float m_healthBarFadeTimer = 0.0f;
 	bool m_healthBarFadeActive = false;
+
+	ComponentRef<Transform2D> m_shadowExecutionPreview;
+	Transform2D* m_shadowExecutionPreviewTransform = nullptr;
+
+	Vector2 m_shadowExecutionPreviewBaseSize = Vector2::Zero;
+	Vector2 m_shadowExecutionPreviewBasePosition = Vector2::Zero;
 };

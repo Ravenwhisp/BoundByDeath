@@ -29,7 +29,16 @@ void EnemyDamageable::Start()
 
 	if (m_shadowExecutionPreviewTransform)
 	{
-		Transform2DAPI::setAlpha(m_shadowExecutionPreviewTransform, 0.0f);
+		if (m_shadowExecutionPreviewTransform)
+		{
+			m_shadowExecutionPreviewBaseSize = Transform2DAPI::getBaseSize(m_shadowExecutionPreviewTransform);
+			m_shadowExecutionPreviewBasePosition = Transform2DAPI::getPosition(m_shadowExecutionPreviewTransform);
+
+			Transform2DAPI::setPivot(m_shadowExecutionPreviewTransform, Vector2(0.0f, 0.5f));
+			Transform2DAPI::setAnchorMin(m_shadowExecutionPreviewTransform, Vector2(0.0f, 0.5f));
+			Transform2DAPI::setAnchorMax(m_shadowExecutionPreviewTransform, Vector2(0.0f, 0.5f));
+			Transform2DAPI::setAlpha(m_shadowExecutionPreviewTransform, 0.0f);
+		}
 	}
 
 	// Override HP from controller's attack config (inherits from EnemyBaseDataConfig)
@@ -306,11 +315,15 @@ void EnemyDamageable::setShadowExecutionPreviewActive(bool active)
 		return;
 	}
 
-	Transform2DAPI::setAlpha(m_shadowExecutionPreviewTransform, active ? 1.0f : 0.0f);
-
 	if (active)
 	{
 		updateShadowExecutionPreview();
+	}
+	else
+	{
+		Transform2DAPI::setAlpha(m_shadowExecutionPreviewTransform, 0.0f);
+		Transform2DAPI::setBaseSize(m_shadowExecutionPreviewTransform, m_shadowExecutionPreviewBaseSize);
+		Transform2DAPI::setPosition(m_shadowExecutionPreviewTransform, m_shadowExecutionPreviewBasePosition);
 	}
 }
 
@@ -331,16 +344,47 @@ void EnemyDamageable::resolveShadowExecution()
 
 void EnemyDamageable::updateShadowExecutionPreview()
 {
-	if (!m_shadowExecutionPreviewActive || !m_shadowExecution || m_isDead)
+	if (!m_shadowExecutionPreviewActive || !m_shadowExecution || !m_shadowExecutionPreviewTransform || m_isDead)
 	{
 		return;
 	}
 
-	const ShadowExecutionPreview preview = m_shadowExecution->calculatePreview(this);
 	const float maxHp = getMaxHp();
-	const float currentHpPercent = maxHp > 0.0f ? getCurrentHp() / maxHp : 0.0f;
+	const float currentHp = getCurrentHp();
 
-	Debug::log("[ShadowExecutionPreview] Enemy '%s': current %.1f%%, resulting %.1f%%, damage %.1f, lethal %s.", GameObjectAPI::getName(m_owner), currentHpPercent * 100.0f, preview.resultingHpPercent * 100.0f, preview.damage, preview.willDie ? "true" : "false");
+	if (maxHp <= 0.0f || currentHp <= 0.0f)
+	{
+		Transform2DAPI::setAlpha(m_shadowExecutionPreviewTransform, 0.0f);
+		return;
+	}
+
+	const ShadowExecutionPreview preview = m_shadowExecution->calculatePreview(this);
+
+	float currentHpPercent = currentHp / maxHp;
+	float resultingHpPercent = preview.resultingHpPercent;
+
+	currentHpPercent = std::clamp(currentHpPercent, 0.0f, 1.0f);
+	resultingHpPercent = std::clamp(resultingHpPercent, 0.0f, currentHpPercent);
+
+	const float damageSegmentPercent = currentHpPercent - resultingHpPercent;
+
+	if (damageSegmentPercent <= 0.0f)
+	{
+		Transform2DAPI::setAlpha(m_shadowExecutionPreviewTransform, 0.0f);
+		return;
+	}
+
+	Vector2 previewSize = m_shadowExecutionPreviewBaseSize;
+	previewSize.x = m_shadowExecutionPreviewBaseSize.x * damageSegmentPercent;
+
+	Vector2 previewPosition = m_shadowExecutionPreviewBasePosition;
+	previewPosition.x = m_shadowExecutionPreviewBasePosition.x + m_shadowExecutionPreviewBaseSize.x * resultingHpPercent;
+
+	Transform2DAPI::setBaseSize(m_shadowExecutionPreviewTransform, previewSize);
+	Transform2DAPI::setPosition(m_shadowExecutionPreviewTransform, previewPosition);
+	Transform2DAPI::setAlpha(m_shadowExecutionPreviewTransform, 1.0f);
+
+	Debug::log("[ShadowExecutionPreview] Enemy '%s': current %.1f%%, resulting %.1f%%, segment %.1f%%, damage %.1f, lethal %s.", GameObjectAPI::getName(m_owner), currentHpPercent * 100.0f, resultingHpPercent * 100.0f, damageSegmentPercent * 100.0f, preview.damage, preview.willDie ? "true" : "false");
 }
 
 IMPLEMENT_SCRIPT(EnemyDamageable)
