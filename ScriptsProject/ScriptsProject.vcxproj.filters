@@ -154,6 +154,9 @@
     <Filter Include="Enemies\Movement">
       <UniqueIdentifier>{59fd20a4-f8fa-40db-81e4-287d22402309}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Enemies\Aelorin">
+      <UniqueIdentifier>{d4bbb81c-70b6-4bbe-b359-68f53637b67a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -625,6 +628,11 @@
     <ClInclude Include="CrystalVisuals.h">
       <Filter>Interaction/Gameplay\Puzzles</Filter>
     </ClInclude>
+    <ClInclude Include="HapticTester.h" />
+    <ClInclude Include="PlayerGamepadBinding.h" />
+    <ClInclude Include="AelorinDetectionAggro.h">
+      <Filter>Enemies\Aelorin</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
@@ -1082,6 +1090,11 @@
     <ClCompile Include="EnemyBaseDataConfig.cpp" />
     <ClCompile Include="CrystalVisuals.cpp">
       <Filter>Interaction/Gameplay\Puzzles</Filter>
+    </ClCompile>
+    <ClCompile Include="HapticTester.cpp" />
+    <ClCompile Include="PlayerGamepadBinding.cpp" />
+    <ClCompile Include="AelorinDetectionAggro.cpp">
+      <Filter>Enemies\Aelorin</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
