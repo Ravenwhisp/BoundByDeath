@@ -18,20 +18,29 @@ public:
 public:
 	float m_detectionRadius = 20.0f;
 	bool m_debugEnabled = true;
-
-private:
-	Transform* m_lyrielTransform = nullptr;
-	Transform* m_deathTransform = nullptr;
-	// add boss controller to check phases
-
-private:
-	void findPlayerTransforms();
-	Transform* getOwnerTransform() const;
+	ComponentRef<Transform> m_lyrielTransform;
+	ComponentRef<Transform> m_deathTransform;
 
 public:
+	Transform* getLyrielTransform() const;
+	Transform* getDeathTransform() const;
+
 	Vector3 getLyrielPosition() const;
 	Vector3 getDeathPosition() const;
 
 	float getDistanceToLyriel() const;
 	float getDistanceToDeath() const;
+
+	bool isLyrielInDetectionRange() const;
+	bool isDeathInDetectionRange() const;
+
+private:
+	Transform* m_lyrielCachedTransform = nullptr;
+	Transform* m_deathCachedTransform = nullptr;
+	// add boss controller to check phases
+
+private:
+	void findPlayerTransforms();
+	Transform* getOwnerTransform() const;
+	Vector3 getOwnerPosition() const;
 };
