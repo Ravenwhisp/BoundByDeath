@@ -15,7 +15,8 @@ IMPLEMENT_SCRIPT_FIELDS(ShadowExecution,
     SERIALIZED_FLOAT(m_timeWindow,         "Co-op Window (s)",      0.1f, 10.0f, 0.1f),
     SERIALIZED_FLOAT(m_executionDuration,  "Execution Duration (s)", 0.1f, 10.0f, 0.1f),
     SERIALIZED_FLOAT(m_instaKillThreshold, "Insta Kill HP %",        0.0f,  1.0f, 0.01f),
-    SERIALIZED_FLOAT(m_standardDamage,     "Standard Damage (max HP %)", 0.0f, 1.0f, 0.01f),
+    SERIALIZED_FLOAT(m_fixedDamage, "Fixed Damage", 0.0f, 1000.0f, 1.0f),
+    SERIALIZED_FLOAT(m_percentageDamage, "Percentage Damage (max HP %)", 0.0f, 1.0f, 0.01f),
     SERIALIZED_ASSET_REF(m_particlePrefab, "Particle Prefab", AssetType::PREFAB),
     SERIALIZED_COMPONENT_REF(m_reaperGaugeBar, "Reaper Gauge UI", ComponentType::UISLIDER),
     SERIALIZED_COMPONENT_REF(m_executionCanvas, "Execution Canvas", ComponentType::TRANSFORM),
@@ -279,23 +280,34 @@ void ShadowExecution::applyAoEDamage()
             continue;
         }
 
-        const float maxHp     = damageable->getMaxHp();
-        const float hpPercent = damageable->getHpPercent();
+        const float maxHp = damageable->getMaxHp();
+        const float currentHp = damageable->getCurrentHp();
+        
+        const float thresholdMultiplier = damageable->getShadowExecutionThresholdMultiplier();
+        const float effectiveThreshold = m_instaKillThreshold * thresholdMultiplier;
+        const float thresholdHp = maxHp * effectiveThreshold;
+
+        const float percentageDamage = maxHp * m_percentageDamage;
+
+        float selectedDamage = m_fixedDamage;
+
+        if (percentageDamage > m_fixedDamage) 
+        {
+            selectedDamage = percentageDamage;
+        }
+
+        const bool belowThreshold = currentHp <= thresholdHp;
 
         EnemyHitContext ctx;
-        if (hpPercent <= m_instaKillThreshold)
+        if (belowThreshold)
         {
-            ctx.damage = damageable->getCurrentHp();
-
-            Debug::log("[ShadowExecution] Enemy '%s' below %.0f%% HP -> instant kill.",
-            GameObjectAPI::getName(enemy), m_instaKillThreshold * 100.0f);
+            ctx.damage = currentHp;
+            Debug::log("[ShadowExecution] Enemy '%s' executed below threshold. Current HP: %.1f, threshold HP: %.1f.", GameObjectAPI::getName(enemy), currentHp, thresholdHp);
         }
         else
         {
-            ctx.damage = maxHp * m_standardDamage;
-
-            Debug::log("[ShadowExecution] Enemy '%s' took %.1f damage (%.0f%% of max HP).",
-            GameObjectAPI::getName(enemy), ctx.damage, m_standardDamage * 100.0f);
+            ctx.damage = selectedDamage;
+            Debug::log("[ShadowExecution] Enemy '%s' took %.1f damage. Fixed: %.1f, percentage: %.1f.", GameObjectAPI::getName(enemy), ctx.damage, m_fixedDamage, percentageDamage);
         }
 
         ctx.attacker = nullptr;

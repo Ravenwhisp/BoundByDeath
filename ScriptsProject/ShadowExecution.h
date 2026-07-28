@@ -32,8 +32,10 @@ public:
 public:
     float m_timeWindow         = 2.0f;
     float m_executionDuration  = 3.0f;
+
     float m_instaKillThreshold = 0.20f;
-    float m_standardDamage     = 0.10f;
+    float m_fixedDamage     = 30.0f;
+    float m_percentageDamage = 0.10f;
 
     PrefabRef m_particlePrefab;
 

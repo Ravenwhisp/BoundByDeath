@@ -8,6 +8,7 @@ class EnemySound;
 class EnemyShadowMark;
 class Transform2D;
 class EnemyBaseController;
+class EnemyBaseDataConfig;
 
 struct EnemyHitContext : public HitContext
 {
@@ -29,6 +30,7 @@ public:
 	
     void takeDamage(const HitContext& ctx) override;
 	bool lastHitExploitShadowMark() const { return m_lastHitExploitedShadowMark; }
+	float getShadowExecutionThresholdMultiplier() const;
 
 protected:
 	void onDamaged(float amount) override;
@@ -45,6 +47,7 @@ private:
 	void updateHealthBarFade();
 
 private:
+	const EnemyBaseDataConfig* m_baseDataConfig = nullptr;
 	EnemyDetectionAggro* m_enemyDetectionAggro = nullptr;
 	EnemySound* m_enemySound = nullptr;
 	EnemyShadowMark* m_shadowMark = nullptr;

@@ -4,7 +4,7 @@
 #include "EnemyDetectionAggro.h"
 #include "EnemySound.h"
 #include "EnemyBaseController.h"
-#include "EnemyBaseAttackConfig.h"
+#include "EnemyBaseDataConfig.h"
 #include "EnemyShadowMark.h"
 #include "Transform2D.h"
 
@@ -26,10 +26,11 @@ void EnemyDamageable::Start()
 	EnemyBaseController* controller = GameObjectAPI::findScript<EnemyBaseController>(m_owner);
 	if (controller)
 	{
-		const EnemyBaseAttackConfig* attackConfig = controller->getAttackConfig();
-		if (attackConfig && attackConfig->m_maxHp > 0.0f)
+		m_baseDataConfig = controller->getBaseDataConfig();
+
+		if (m_baseDataConfig && m_baseDataConfig->m_maxHp > 0.0f)
 		{
-			m_maxHp = attackConfig->m_maxHp;
+			m_maxHp = m_baseDataConfig->m_maxHp;
 		}
 	}
 
@@ -74,6 +75,11 @@ void EnemyDamageable::takeDamage(const HitContext& ctx)
 
 	processShadowMarkHit(enemyCtx.attackType);
 	applyDamageWithoutShadowMark(enemyCtx);
+}
+
+float EnemyDamageable::getShadowExecutionThresholdMultiplier() const
+{
+	return m_baseDataConfig ? m_baseDataConfig->m_shadowExecutionThresholdMultiplier : 1.0f;
 }
 
 void EnemyDamageable::onDamaged(float amount)
