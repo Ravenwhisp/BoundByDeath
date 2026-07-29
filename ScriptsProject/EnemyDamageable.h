@@ -35,6 +35,8 @@ public:
 	bool lastHitExploitShadowMark() const { return m_lastHitExploitedShadowMark; }
 	float getShadowExecutionThresholdMultiplier() const;
 
+	void playShadowExecutionHitPreview();
+
 protected:
 	void onDamaged(float amount) override;
 	void onDeath() override;
@@ -56,6 +58,9 @@ private:
 	void resolveShadowExecution();
 	void updateShadowExecutionPreview();
 
+	void updateShadowExecutionPreviewAnimation(float dt);
+	void resetShadowExecutionPreviewVisual();
+
 private:
 	const EnemyBaseDataConfig* m_baseDataConfig = nullptr;
 	EnemyDetectionAggro* m_enemyDetectionAggro = nullptr;
@@ -67,8 +72,6 @@ private:
 	
 	bool m_lastHitExploitedShadowMark = false;
 
-	bool m_shadowExecutionPreviewActive = false;
-
 	ComponentRef<Transform2D> m_healthBarContainer;
 	Transform2D* m_healthBarContainerTransform = nullptr;
 
@@ -76,7 +79,25 @@ private:
 	float m_healthBarFadeTimer = 0.0f;
 	bool m_healthBarFadeActive = false;
 
+	// Shadow Execution Health Bar effects
+	bool m_shadowExecutionPreviewActive = false;
+
 	ComponentRef<UISlider> m_shadowExecutionPreview;
 	UISlider* m_shadowExecutionPreviewSlider = nullptr;
 	Transform2D* m_shadowExecutionPreviewTransform = nullptr;
+
+	Vector2 m_shadowExecutionPreviewBaseScale = Vector2(1.0f, 1.0f);
+
+	float m_shadowExecutionPreviewFadeTimer = 0.0f;
+	float m_shadowExecutionPreviewHitTimer = 0.0f;
+	float m_shadowExecutionPreviewHitStart = 0.0f;
+	float m_shadowExecutionPreviewHitEnd = 0.0f;
+
+	bool m_shadowExecutionPreviewLethal = false;
+	bool m_shadowExecutionPreviewHitAnimating = false;
+
+	float m_shadowExecutionPreviewFadeTime = 0.2f;
+	float m_shadowExecutionPreviewHitTime = 0.2f;
+	float m_shadowExecutionPreviewNonLethalAlpha = 0.7f;
+	float m_shadowExecutionPreviewLethalAlpha = 1.0f;
 };

@@ -11,9 +11,15 @@
 #include "ShadowExecution.h"
 
 IMPLEMENT_SCRIPT_FIELDS_INHERITED(EnemyDamageable, Damageable,
+	FIELD_GROUP_LABEL("Health Bar"),
 	SERIALIZED_COMPONENT_REF(m_healthBarContainer, "Health Bar Container", ComponentType::TRANSFORM2D),
-	SERIALIZED_COMPONENT_REF(m_shadowExecutionPreview, "Shadow Execution Preview", ComponentType::UISLIDER), 
-	SERIALIZED_FLOAT(m_healthBarFadeTime, "Health Bar Fade Time", 0.0f, 5.0f, 0.05f)
+	SERIALIZED_FLOAT(m_healthBarFadeTime, "Health Bar Fade Time", 0.0f, 5.0f, 0.05f),
+	FIELD_GROUP_LABEL("Shadow Execution Preview"),
+	SERIALIZED_COMPONENT_REF(m_shadowExecutionPreview, "Shadow Execution Preview", ComponentType::UISLIDER),
+	SERIALIZED_FLOAT(m_shadowExecutionPreviewFadeTime, "Shadow Preview Fade Time", 0.0f, 2.0f, 0.05f),
+	SERIALIZED_FLOAT(m_shadowExecutionPreviewHitTime, "Shadow Preview Hit Time", 0.05f, 1.0f, 0.05f),
+	SERIALIZED_FLOAT(m_shadowExecutionPreviewNonLethalAlpha, "Shadow Preview Non-Lethal Alpha", 0.0f, 1.0f, 0.05f),
+	SERIALIZED_FLOAT(m_shadowExecutionPreviewLethalAlpha, "Shadow Preview Lethal Alpha", 0.0f, 1.0f, 0.05f)
 )
 
 EnemyDamageable::EnemyDamageable(GameObject* owner)
@@ -36,6 +42,7 @@ void EnemyDamageable::Start()
 
 	if (m_shadowExecutionPreviewTransform)
 	{
+		m_shadowExecutionPreviewBaseScale = Transform2DAPI::getScale(m_shadowExecutionPreviewTransform);
 		Transform2DAPI::setAlpha(m_shadowExecutionPreviewTransform, 0.0f);
 	}
 
@@ -78,6 +85,7 @@ void EnemyDamageable::Update()
 	Damageable::Update();
 	updateHealthBarFade();
 	updateShadowExecutionPreviewAvailability();
+	updateShadowExecutionPreviewAnimation(Time::getDeltaTime());
 }
 
 void EnemyDamageable::takeDamage(const HitContext& ctx)
@@ -100,6 +108,23 @@ float EnemyDamageable::getShadowExecutionThresholdMultiplier() const
 	return m_baseDataConfig ? m_baseDataConfig->m_shadowExecutionThresholdMultiplier : 1.0f;
 }
 
+void EnemyDamageable::playShadowExecutionHitPreview()
+{
+	if (!m_shadowExecutionPreviewActive || !m_shadowExecutionPreviewSlider || !m_shadowExecutionPreviewTransform)
+	{
+		return;
+	}
+
+	const Vector2 previewRange = SliderAPI::getFillAmountVec(m_shadowExecutionPreviewSlider);
+
+	m_shadowExecutionPreviewHitStart = previewRange.y;
+	m_shadowExecutionPreviewHitEnd = previewRange.x;
+	m_shadowExecutionPreviewHitTimer = 0.0f;
+	m_shadowExecutionPreviewHitAnimating = true;
+
+	Transform2DAPI::setAlpha(m_shadowExecutionPreviewTransform, m_shadowExecutionPreviewLethal ? m_shadowExecutionPreviewLethalAlpha : m_shadowExecutionPreviewNonLethalAlpha);
+}
+
 void EnemyDamageable::onDamaged(float amount)
 {
 	Damageable::onDamaged(amount);
@@ -114,7 +139,7 @@ void EnemyDamageable::onDamaged(float amount)
 		m_enemySound->playHurt();
 	}
 
-	if (m_shadowExecutionPreviewActive)
+	if (m_shadowExecutionPreviewActive && !m_shadowExecutionPreviewHitAnimating)
 	{
 		updateShadowExecutionPreview();
 	}
@@ -332,16 +357,21 @@ void EnemyDamageable::setShadowExecutionPreviewActive(bool active)
 
 	if (active)
 	{
-		updateShadowExecutionPreview();
-	}
-	else
-	{
-		SliderAPI::setFillAmountVec(m_shadowExecutionPreviewSlider, Vector2(0.0f, 0.0f));
+		m_shadowExecutionPreviewFadeTimer = 0.0f;
+		m_shadowExecutionPreviewHitTimer = 0.0f;
+		m_shadowExecutionPreviewHitAnimating = false;
 
 		if (m_shadowExecutionPreviewTransform)
 		{
 			Transform2DAPI::setAlpha(m_shadowExecutionPreviewTransform, 0.0f);
+			Transform2DAPI::setScale(m_shadowExecutionPreviewTransform, m_shadowExecutionPreviewBaseScale);
 		}
+
+		updateShadowExecutionPreview();
+	}
+	else
+	{
+		resetShadowExecutionPreviewVisual();
 	}
 }
 
@@ -362,7 +392,7 @@ void EnemyDamageable::resolveShadowExecution()
 
 void EnemyDamageable::updateShadowExecutionPreview()
 {
-	if (!m_shadowExecutionPreviewActive || !m_shadowExecution || !m_shadowExecutionPreviewSlider || m_isDead)
+	if (!m_shadowExecutionPreviewActive || !m_shadowExecution || !m_shadowExecutionPreviewSlider || m_isDead || m_shadowExecutionPreviewHitAnimating)
 	{
 		return;
 	}
@@ -372,13 +402,7 @@ void EnemyDamageable::updateShadowExecutionPreview()
 
 	if (maxHp <= 0.0f || currentHp <= 0.0f)
 	{
-		SliderAPI::setFillAmountVec(m_shadowExecutionPreviewSlider, Vector2(0.0f, 0.0f));
-
-		if (m_shadowExecutionPreviewTransform)
-		{
-			Transform2DAPI::setAlpha(m_shadowExecutionPreviewTransform, 0.0f);
-		}
-
+		resetShadowExecutionPreviewVisual();
 		return;
 	}
 
@@ -392,21 +416,77 @@ void EnemyDamageable::updateShadowExecutionPreview()
 
 	if (currentHpPercent <= resultingHpPercent)
 	{
-		SliderAPI::setFillAmountVec(m_shadowExecutionPreviewSlider, Vector2(0.0f, 0.0f));
+		resetShadowExecutionPreviewVisual();
+		return;
+	}
 
-		if (m_shadowExecutionPreviewTransform)
+	m_shadowExecutionPreviewLethal = preview.willDie;
+
+	SliderAPI::setFillAmountVec(m_shadowExecutionPreviewSlider, Vector2(resultingHpPercent, currentHpPercent));
+}
+
+void EnemyDamageable::updateShadowExecutionPreviewAnimation(float dt)
+{
+	if (!m_shadowExecutionPreviewActive || !m_shadowExecutionPreviewSlider || !m_shadowExecutionPreviewTransform)
+	{
+		return;
+	}
+
+	if (m_shadowExecutionPreviewHitAnimating)
+	{
+		m_shadowExecutionPreviewHitTimer += dt;
+
+		float t = m_shadowExecutionPreviewHitTime > 0.0f ? m_shadowExecutionPreviewHitTimer / m_shadowExecutionPreviewHitTime : 1.0f;
+		t = std::clamp(t, 0.0f, 1.0f);
+
+		const float easedT = MathAPI::evaluateEasing(MathAPI::EasingType::EaseOutCubic, t);
+		const float currentEnd = m_shadowExecutionPreviewHitStart + (m_shadowExecutionPreviewHitEnd - m_shadowExecutionPreviewHitStart) * easedT;
+
+		SliderAPI::setFillAmountVec(m_shadowExecutionPreviewSlider, Vector2(m_shadowExecutionPreviewHitEnd, currentEnd));
+
+		const float popStrength = m_shadowExecutionPreviewLethal ? 0.15f : 0.08f;
+		const float pop = 1.0f + sinf(t * 3.14159265f) * popStrength;
+
+		Transform2DAPI::setScale(m_shadowExecutionPreviewTransform, Vector2(m_shadowExecutionPreviewBaseScale.x * pop, m_shadowExecutionPreviewBaseScale.y * pop));
+		Transform2DAPI::setAlpha(m_shadowExecutionPreviewTransform, m_shadowExecutionPreviewLethal ? m_shadowExecutionPreviewLethalAlpha : m_shadowExecutionPreviewNonLethalAlpha);
+
+		if (t >= 1.0f)
 		{
+			m_shadowExecutionPreviewHitAnimating = false;
+			SliderAPI::setFillAmountVec(m_shadowExecutionPreviewSlider, Vector2(0.0f, 0.0f));
+			Transform2DAPI::setScale(m_shadowExecutionPreviewTransform, m_shadowExecutionPreviewBaseScale);
 			Transform2DAPI::setAlpha(m_shadowExecutionPreviewTransform, 0.0f);
 		}
 
 		return;
 	}
 
-	SliderAPI::setFillAmountVec(m_shadowExecutionPreviewSlider, Vector2(resultingHpPercent, currentHpPercent));
+	m_shadowExecutionPreviewFadeTimer += dt;
+
+	float fadeT = m_shadowExecutionPreviewFadeTime > 0.0f ? m_shadowExecutionPreviewFadeTimer / m_shadowExecutionPreviewFadeTime : 1.0f;
+	fadeT = std::clamp(fadeT, 0.0f, 1.0f);
+
+	const float easedFade = MathAPI::evaluateEasing(MathAPI::EasingType::EaseOutCubic, fadeT);
+	const float targetAlpha = m_shadowExecutionPreviewLethal ? m_shadowExecutionPreviewLethalAlpha : m_shadowExecutionPreviewNonLethalAlpha;
+
+	Transform2DAPI::setAlpha(m_shadowExecutionPreviewTransform, targetAlpha * easedFade);
+}
+
+void EnemyDamageable::resetShadowExecutionPreviewVisual()
+{
+	m_shadowExecutionPreviewFadeTimer = 0.0f;
+	m_shadowExecutionPreviewHitTimer = 0.0f;
+	m_shadowExecutionPreviewHitAnimating = false;
+
+	if (m_shadowExecutionPreviewSlider)
+	{
+		SliderAPI::setFillAmountVec(m_shadowExecutionPreviewSlider, Vector2(0.0f, 0.0f));
+	}
 
 	if (m_shadowExecutionPreviewTransform)
 	{
-		Transform2DAPI::setAlpha(m_shadowExecutionPreviewTransform, 1.0f);
+		Transform2DAPI::setAlpha(m_shadowExecutionPreviewTransform, 0.0f);
+		Transform2DAPI::setScale(m_shadowExecutionPreviewTransform, m_shadowExecutionPreviewBaseScale);
 	}
 }
 

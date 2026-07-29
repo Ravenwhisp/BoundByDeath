@@ -309,8 +309,7 @@ void ShadowExecution::applyAoEDamage()
         ctx.attacker = nullptr;
         ctx.attackType = PlayerAttackType::ShadowExecution;
 
-        Debug::log("[ShadowExecution] Enemy '%s' will take %.1f damage. Resulting HP: %.1f%%. Lethal: %s.", GameObjectAPI::getName(enemy), preview.damage, preview.resultingHpPercent * 100.0f, preview.willDie ? "true" : "false");
-
+        damageable->playShadowExecutionHitPreview();
         damageable->takeDamage(ctx);
 
         m_hitEnemies.push_back(enemy);
