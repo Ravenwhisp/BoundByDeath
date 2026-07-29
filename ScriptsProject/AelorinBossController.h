@@ -42,6 +42,11 @@ private:
 
 	bool m_hasStartedEncounter = false;
 
+	// Model switching
 	GameObject* m_phase1GameObject = nullptr;
 	GameObject* m_phase2GameObject = nullptr;
+
+	// Teleport TODO
+	std::vector<Vector3> m_teleportPositions;
+	size_t m_currentPositionIndex = 0;
 };
