@@ -41,4 +41,7 @@ private:
 	Phase m_phase = Phase::Phase1;
 
 	bool m_hasStartedEncounter = false;
+
+	GameObject* m_phase1GameObject = nullptr;
+	GameObject* m_phase2GameObject = nullptr;
 };

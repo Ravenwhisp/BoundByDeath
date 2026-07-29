@@ -15,6 +15,11 @@ void AelorinBossController::Start()
 	m_aelorinDetectionAggro = GameObjectAPI::findScript<AelorinDetectionAggro>(getOwner());
 	m_damageable = GameObjectAPI::findScript<EnemyDamageable>(getOwner());
 
+	Transform* phase1Model = TransformAPI::findChildByName(getOwner()->GetTransform(), "Phase1");
+	m_phase1GameObject = ComponentAPI::getOwner(phase1Model);
+	Transform* phase2Model = TransformAPI::findChildByName(getOwner()->GetTransform(), "Phase2");
+	m_phase2GameObject = ComponentAPI::getOwner(phase2Model);
+
 	if (!m_aelorinDetectionAggro)
 	{
 		Debug::error("[AelorinBossController] AelorinDetectionAggro script not found!");
@@ -23,6 +28,16 @@ void AelorinBossController::Start()
 	if (!m_damageable)
 	{
 		Debug::error("[AelorinBossController] EnemyDamageable script not found!");
+	}
+
+	if (!m_phase1GameObject)
+	{
+		Debug::error("[AelorinBossController] Phase 1 Game Object not found!");
+	}
+
+	if (!m_phase2GameObject)
+	{
+		Debug::error("[AelorinBossController] Phase 2 Game Object not found!");
 	}
 }
 
@@ -75,6 +90,8 @@ void AelorinBossController::updateBossPhase()
 	{
 		setPhase(Phase::Phase2);
 		Debug::log("Phase 2 has started!");
+		GameObjectAPI::setActive(m_phase1GameObject, false);
+		GameObjectAPI::setActive(m_phase2GameObject, true);
 	}
 }
 
