@@ -31,11 +31,11 @@ void CheckpointEvent::Start()
 		m_deathDamageable = boundScript ? boundScript->m_secondDamageable : nullptr;
 	}
 
-	m_checkpointManager = &CheckpointManager::Get();
+	m_PersistingCheckpointState = &PersistingCheckpointState::Get();
 
-	if (!m_checkpointManager)
+	if (!m_PersistingCheckpointState)
 	{
-		Debug::warn("CheckpointEvent: CheckpointManager singleton not found.");
+		Debug::warn("CheckpointEvent: PersistingCheckpointState singleton not found.");
 		return;
 	}
 
@@ -52,26 +52,26 @@ void CheckpointEvent::Update()
 
 void CheckpointEvent::executeEvent(GameplayEventTrigger* trigger)
 {
-	if(m_checkpointManager)
+	if(m_PersistingCheckpointState)
 	{
-		if(m_checkpointManager->GetLastCheckpoint() >= m_checkpointId)
+		if(m_PersistingCheckpointState->GetLastCheckpoint() >= m_checkpointId)
 		{
 			Debug::log("CheckpointEvent: Checkpoint %d already saved, skipping.", static_cast<int>(m_checkpointId));
 			return;
 		}
 		bool* currentPowerups = PersistingPowerupState::getUnlockedPowerupState();
 
-		CheckpointManager* checkpointManager = &CheckpointManager::Get();
+		PersistingCheckpointState* PersistingCheckpointState = &PersistingCheckpointState::Get();
 
-		checkpointManager->m_savedLyrielHealth = m_lyrielDamageable ? m_lyrielDamageable->getCurrentHp() : 0.0f;
-		checkpointManager->m_savedDeathHealth = m_deathDamageable ? m_deathDamageable->getCurrentHp() : 0.0f;
-		checkpointManager->m_savedReaperGaugeAmount = m_reaperGauge ? m_reaperGauge->getGauge() : 0.0f;
+		PersistingCheckpointState->m_savedLyrielHealth = m_lyrielDamageable ? m_lyrielDamageable->getCurrentHp() : 0.0f;
+		PersistingCheckpointState->m_savedDeathHealth = m_deathDamageable ? m_deathDamageable->getCurrentHp() : 0.0f;
+		PersistingCheckpointState->m_savedReaperGaugeAmount = m_reaperGauge ? m_reaperGauge->getGauge() : 0.0f;
 
 		std::copy(currentPowerups,
 			currentPowerups + static_cast<int>(PowerupId::Count),
-			checkpointManager->m_savedUnlockedPowerups);
+			PersistingCheckpointState->m_savedUnlockedPowerups);
 
-		m_checkpointManager->SetCheckpoint(m_checkpointId);
+		m_PersistingCheckpointState->SetCheckpoint(m_checkpointId);
 		Debug::log("CheckpointEvent: Checkpoint %d saved.", static_cast<int>(m_checkpointId));
 	}
 }

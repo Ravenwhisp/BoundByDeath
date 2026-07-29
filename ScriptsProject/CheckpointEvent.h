@@ -4,7 +4,7 @@
 
 #include "GameplayEventAction.h"
 
-#include "CheckpointManager.h"
+#include "PersistingCheckpointState.h"
 
 class GameplayEventTrigger;
 class ReaperGauge;
@@ -23,7 +23,7 @@ public:
     void Update() override;
 
 protected:
-	CheckpointManager* m_checkpointManager = nullptr;
+	PersistingCheckpointState* m_PersistingCheckpointState = nullptr;
     ReaperGauge* m_reaperGauge = nullptr;
     Damageable* m_lyrielDamageable = nullptr;
 	Damageable* m_deathDamageable = nullptr;

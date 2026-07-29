@@ -2,7 +2,7 @@
 
 #include "ScriptAPI.h"
 
-class CheckpointManager;
+class PersistingCheckpointState;
 
 class PowerupCollectible : public Script
 {

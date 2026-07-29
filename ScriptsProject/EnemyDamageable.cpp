@@ -13,7 +13,7 @@ IMPLEMENT_SCRIPT_FIELDS_INHERITED(EnemyDamageable, Damageable,
 	SERIALIZED_FLOAT(m_healthBarFadeTime, "Health Bar Fade Time", 0.0f, 5.0f, 0.05f)
 )
 
-#include "CheckpointManager.h"
+#include "PersistingCheckpointState.h"
 
 EnemyDamageable::EnemyDamageable(GameObject* owner)
 	: Damageable(owner)
@@ -116,7 +116,7 @@ void EnemyDamageable::onDeath()
 		m_shadowMark->clearMark();
 	}
 	
-	CheckpointManager::Get().m_deadEnemies.push_back(m_owner->GetID());
+	PersistingCheckpointState::Get().m_deadEnemies.push_back(m_owner->GetID());
 }
 
 bool EnemyDamageable::processShadowMarkHit(PlayerAttackType attackType)

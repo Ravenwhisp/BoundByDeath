@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "CheckpointSetup.h"
 
-#include "CheckpointManager.h"
+#include "PersistingCheckpointState.h"
 
 IMPLEMENT_SCRIPT_FIELDS(CheckpointSetup,
 	SERIALIZED_COMPONENT_REF(m_lyrielTransform, "Lyriel Transform", ComponentType::TRANSFORM),
@@ -15,11 +15,11 @@ CheckpointSetup::CheckpointSetup(GameObject* owner)
 
 void CheckpointSetup::Start()
 {
-	m_checkpointManager = &CheckpointManager::Get();
+	m_PersistingCheckpointState = &PersistingCheckpointState::Get();
 
-	if(!m_checkpointManager)
+	if(!m_PersistingCheckpointState)
 	{
-		Debug::warn("CheckpointSetup: CheckpointManager singleton not found.");
+		Debug::warn("CheckpointSetup: PersistingCheckpointState singleton not found.");
 		return;
 	}
 

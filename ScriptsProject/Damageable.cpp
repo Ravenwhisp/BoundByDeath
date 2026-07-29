@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "Damageable.h"
 
-#include "CheckpointManager.h"
+#include "PersistingCheckpointState.h"
 
 IMPLEMENT_SCRIPT_FIELDS(Damageable,
     SERIALIZED_FLOAT(m_maxHp, "Max HP", 0.0f, 999999.0f, 1.0f),
@@ -26,9 +26,9 @@ void Damageable::Start()
     clampHp();
     m_isDead = (m_currentHp <= 0.0f);
     
-    if(!&CheckpointManager::Get())
+    if(!&PersistingCheckpointState::Get())
     {
-        Debug::warn("[Damageable] CheckpointManager singleton not found.");
+        Debug::warn("[Damageable] PersistingCheckpointState singleton not found.");
         return;
 	}
 

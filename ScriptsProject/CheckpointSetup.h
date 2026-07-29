@@ -2,7 +2,7 @@
 
 #include "ScriptAPI.h"
 
-#include "CheckpointManager.h"
+#include "PersistingCheckpointState.h"
 
 class ReaperGauge;
 
@@ -24,7 +24,7 @@ public:
     ComponentRef<Transform> m_deathTransform;
 
 private:
-	CheckpointManager*  m_checkpointManager = nullptr;
+	PersistingCheckpointState*  m_PersistingCheckpointState = nullptr;
 	CheckpointId        m_checkpointId = CheckpointId::NONE;
 
     Vector3 lyrielSpawnPosition;

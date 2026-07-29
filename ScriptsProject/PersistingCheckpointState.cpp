@@ -1,18 +1,18 @@
 #include "pch.h"
-#include "CheckpointManager.h"
+#include "PersistingCheckpointState.h"
 
 #include "CheckpointSetup.h"
 #include "EnemyDamageable.h"
 #include "BreakableObject.h"
 #include "PowerupCollectible.h"
 
-CheckpointManager& CheckpointManager::Get() 
+PersistingCheckpointState& PersistingCheckpointState::Get() 
 {
-	static CheckpointManager instance;
+	static PersistingCheckpointState instance;
 	return instance;
 }
 
-void CheckpointManager::SetCheckpoint(CheckpointId checkpointId)
+void PersistingCheckpointState::SetCheckpoint(CheckpointId checkpointId)
 {
 	m_lastCheckpointId = checkpointId;
 
@@ -28,4 +28,6 @@ void CheckpointManager::SetCheckpoint(CheckpointId checkpointId)
 		m_collectedCollectiblesPersistent.end(),
 		m_collectedCollectibles.begin(),
 		m_collectedCollectibles.end());
+
+	m_solvedPuzzlesPersistent = m_solvedPuzzles;
 }

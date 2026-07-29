@@ -3,8 +3,9 @@
 #include "ScriptAPI.h"
 #include "PersistingPowerupState.h"
 #include <map>
+#include <array>
 
-enum CheckpointId // Represents different checkpoints in the game, useful because they are partially harcoded
+enum CheckpointId
 {
 	NONE = 0,
 
@@ -18,10 +19,19 @@ enum CheckpointId // Represents different checkpoints in the game, useful becaus
 	//... Add more checkpoints as needed
 };
 
-class CheckpointManager
+enum PuzzleId
+{
+    PUZZLE1_LEVEL1 = 0,
+    PUZZLE2_LEVEL1,
+    PUZZLE3_LEVEL1,
+    COUNT
+    //... Add more puzzle ids as needed
+};
+
+class PersistingCheckpointState
 {
 public:
-    static CheckpointManager& Get();
+    static PersistingCheckpointState& Get();
 
     void SetCheckpoint(CheckpointId checkpointId);
 
@@ -40,13 +50,12 @@ public:
     std::vector<UID> m_deadEnemies;
     std::vector<UID> m_brokenBreakables;
     std::vector<UID> m_collectedCollectibles; //necesario? la persistencia ya esta en el powerupcollectible
+    std::array<bool, static_cast<size_t>(PuzzleId::COUNT)> m_solvedPuzzles{};
 
     //cuando cojamos un checkpoint, pondremos aqui los elementos de los otros vectores. son los elementos que no volveran a aparecer
     std::vector<UID> m_deadEnemiesPersistent;
     std::vector<UID> m_brokenBreakablesPersistent;
     std::vector<UID> m_collectedCollectiblesPersistent;
-
-private:
-    void LoadCheckpointByID();
+    std::array<bool, static_cast<size_t>(PuzzleId::COUNT)> m_solvedPuzzlesPersistent{};
 
 };

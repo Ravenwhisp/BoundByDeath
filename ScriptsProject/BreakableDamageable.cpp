@@ -2,7 +2,7 @@
 #include "BreakableDamageable.h"
 #include "BreakableObject.h"
 
-#include "CheckpointManager.h"
+#include "PersistingCheckpointState.h"
 
 BreakableDamageable::BreakableDamageable(GameObject* owner)
     : Damageable(owner)
@@ -25,7 +25,7 @@ void BreakableDamageable::onDeath()
 {
     Damageable::onDeath();
 
-    CheckpointManager::Get().m_brokenBreakables.push_back(m_owner->GetID());
+    PersistingCheckpointState::Get().m_brokenBreakables.push_back(m_owner->GetID());
 
     if (m_breakableObject != nullptr)
     {

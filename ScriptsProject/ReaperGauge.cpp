@@ -2,7 +2,7 @@
 #include "ReaperGauge.h"
 #include "CooperativeSound.h"
 
-#include "CheckpointManager.h"
+#include "PersistingCheckpointState.h"
 
 #include <cmath>
 
@@ -36,10 +36,10 @@ void ReaperGauge::Start()
     Transform2DAPI::setAlpha(m_glowTransform, 0.0f);
     Transform2DAPI::setAlpha(m_blinkAlphaTransform, 0.0f);
 
-    CheckpointManager* checkpointManager = &CheckpointManager::Get();
-    if (checkpointManager)
+    PersistingCheckpointState* PersistingCheckpointState = &PersistingCheckpointState::Get();
+    if (PersistingCheckpointState)
     {
-        m_gauge = checkpointManager->m_savedReaperGaugeAmount;
+        m_gauge = PersistingCheckpointState->m_savedReaperGaugeAmount;
         m_everExploited = true;
     }
 }
