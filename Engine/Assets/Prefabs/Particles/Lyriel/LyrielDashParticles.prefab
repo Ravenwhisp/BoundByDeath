@@ -1,7 +1,7 @@
 {
     "Version": 2,
-    "sourcePath": "Assets\\Prefabs\\Particles\\Death\\DeathDashParticles.prefab",
-    "Name": "DeathDashParticles",
+    "sourcePath": "Assets\\Prefabs\\Particles\\Lyriel\\LyrielDashParticles.prefab",
+    "Name": "LyrielDashParticles",
     "Active": true,
     "Static": false,
     "Layer": "DEFAULT",
@@ -26,7 +26,7 @@
     },
     "Components": [
         {
-            "UID": 15100000000000001001,
+            "UID": 15100000000000006001,
             "ComponentType": "PARTICLE_SYSTEM",
             "Active": true,
             "TextureAssetId": {
@@ -41,13 +41,13 @@
                             "ModuleType": 2,
                             "Looping": true,
                             "Duration": 1.0,
-                            "RateOverTime": 30.0,
+                            "RateOverTime": 25.0,
                             "RateOverDistance": 0.0
                         },
                         {
                             "ModuleType": 4,
                             "LifeTimeType": "CONSTANT",
-                            "StartLifeTime": 0.5
+                            "StartLifeTime": 0.45
                         },
                         {
                             "ModuleType": 1,
@@ -63,8 +63,8 @@
                                     "IsAlphaMark": false,
                                     "Position": 0.0,
                                     "Color": [
-                                        0.85,
-                                        0.75,
+                                        0.7,
+                                        0.88,
                                         1.0
                                     ]
                                 },
@@ -72,9 +72,9 @@
                                     "IsAlphaMark": false,
                                     "Position": 1.0,
                                     "Color": [
-                                        0.15,
                                         0.0,
-                                        0.35
+                                        0.1,
+                                        0.85
                                     ]
                                 }
                             ],
@@ -88,14 +88,14 @@
                         {
                             "ModuleType": 5,
                             "VelocityType": "CONSTANT",
-                            "InitialVelocity": 0.8
+                            "InitialVelocity": 1.0
                         },
                         {
                             "ModuleType": 6,
                             "StartScaleType": "CONSTANT",
                             "StartScale": [
-                                0.12,
-                                0.12,
+                                0.1,
+                                0.1,
                                 0.0
                             ],
                             "ChangeSizeOverTime": true,
@@ -159,7 +159,7 @@
             },
             "Components": [
                 {
-                    "UID": 15100000000000001002,
+                    "UID": 15100000000000006002,
                     "ComponentType": "PARTICLE_SYSTEM",
                     "Active": true,
                     "TextureAssetId": {
@@ -196,8 +196,8 @@
                                             "IsAlphaMark": false,
                                             "Position": 0.0,
                                             "Color": [
-                                                0.95,
                                                 0.9,
+                                                0.96,
                                                 1.0
                                             ]
                                         },
@@ -205,9 +205,9 @@
                                             "IsAlphaMark": false,
                                             "Position": 1.0,
                                             "Color": [
-                                                0.4,
                                                 0.1,
-                                                0.9
+                                                0.3,
+                                                1.0
                                             ]
                                         }
                                     ],

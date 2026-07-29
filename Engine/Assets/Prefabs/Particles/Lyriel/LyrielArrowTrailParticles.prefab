@@ -1,7 +1,7 @@
 {
     "Version": 2,
-    "sourcePath": "Assets\\Prefabs\\Particles\\Death\\DeathHitFlash.prefab",
-    "Name": "DeathHitFlash",
+    "sourcePath": "Assets\\Prefabs\\Particles\\Lyriel\\LyrielArrowTrailParticles.prefab",
+    "Name": "LyrielArrowTrailParticles",
     "Active": true,
     "Static": false,
     "Layer": "DEFAULT",
@@ -24,526 +24,8 @@
             1.0
         ]
     },
-    "Components": [
-        {
-            "UID": 15100000000000002001,
-            "ComponentType": "PARTICLE_SYSTEM",
-            "Active": true,
-            "TextureAssetId": {
-                "uid": 16276558567823421533,
-                "libId": "e1e1f3c7d0f4b05d9c7c6b485fa6a81e",
-                "type": "TEXTURE"
-            },
-            "ParticleEmitters": [
-                {
-                    "Modules": [
-                        {
-                            "ModuleType": 2,
-                            "Looping": false,
-                            "Duration": 0.08,
-                            "RateOverTime": 25.0,
-                            "RateOverDistance": 0.0
-                        },
-                        {
-                            "ModuleType": 4,
-                            "LifeTimeType": "CONSTANT",
-                            "StartLifeTime": 0.18
-                        },
-                        {
-                            "ModuleType": 1,
-                            "ShapeType": "SPHERE",
-                            "Radius": 0.0001,
-                            "RadiusThickness": 1.0,
-                            "RadiusScale": 1.0
-                        },
-                        {
-                            "ModuleType": 3,
-                            "ColorOverTime": [
-                                {
-                                    "IsAlphaMark": false,
-                                    "Position": 0.0,
-                                    "Color": [
-                                        0.85,
-                                        0.7,
-                                        1.0
-                                    ]
-                                },
-                                {
-                                    "IsAlphaMark": false,
-                                    "Position": 1.0,
-                                    "Color": [
-                                        0.35,
-                                        0.1,
-                                        0.7
-                                    ]
-                                }
-                            ],
-                            "ColorCurve": [
-                                0.0,
-                                1.0,
-                                1.0,
-                                0.0
-                            ]
-                        },
-                        {
-                            "ModuleType": 5,
-                            "VelocityType": "CONSTANT",
-                            "InitialVelocity": 0.001
-                        },
-                        {
-                            "ModuleType": 6,
-                            "StartScaleType": "CONSTANT",
-                            "StartScale": [
-                                0.2,
-                                0.2,
-                                0.0
-                            ],
-                            "ChangeSizeOverTime": true,
-                            "EndScaleType": "CONSTANT",
-                            "EndScale": [
-                                0.55,
-                                0.55,
-                                0.0
-                            ]
-                        },
-                        {
-                            "ModuleType": 7,
-                            "RotationType": "CONSTANT",
-                            "StartRotation": 0.0,
-                            "VelocityType": "CONSTANT",
-                            "AngularVelocity": 0.0,
-                            "FlipRotation": 0.0
-                        },
-                        {
-                            "ModuleType": 8,
-                            "TileRows": 1,
-                            "TileColumns": 1,
-                            "FPS": 0.0,
-                            "StartFrameType": "CONSTANT",
-                            "StartFrame": 0.0
-                        },
-                        {
-                            "ModuleType": 9,
-                            "RenderMode": "BILLBOARD",
-                            "RenderLayer": 0
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "UID": 15100000000000002002,
-            "ComponentType": "SCRIPT",
-            "Active": true,
-            "ScriptName": "DestroyParticles",
-            "ScriptFields": {
-                "Lifetime": 0.5
-            }
-        }
-    ],
+    "Components": [],
     "Children": [
-        {
-            "Name": "Bloom",
-            "Active": true,
-            "Static": false,
-            "Layer": "DEFAULT",
-            "Tag": "DEFAULT",
-            "Transform": {
-                "Position": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0,
-                    1.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Components": [
-                {
-                    "UID": 15100000000000002004,
-                    "ComponentType": "PARTICLE_SYSTEM",
-                    "Active": true,
-                    "TextureAssetId": {
-                        "uid": 13764988489437730080,
-                        "libId": "bf071019e246d5202f1d6d838f3eff77",
-                        "type": "TEXTURE"
-                    },
-                    "ParticleEmitters": [
-                        {
-                            "Modules": [
-                                {
-                                    "ModuleType": 2,
-                                    "Looping": false,
-                                    "Duration": 0.08,
-                                    "RateOverTime": 20.0,
-                                    "RateOverDistance": 0.0
-                                },
-                                {
-                                    "ModuleType": 4,
-                                    "LifeTimeType": "CONSTANT",
-                                    "StartLifeTime": 0.22
-                                },
-                                {
-                                    "ModuleType": 1,
-                                    "ShapeType": "SPHERE",
-                                    "Radius": 0.0001,
-                                    "RadiusThickness": 1.0,
-                                    "RadiusScale": 1.0
-                                },
-                                {
-                                    "ModuleType": 3,
-                                    "ColorOverTime": [
-                                        {
-                                            "IsAlphaMark": false,
-                                            "Position": 0.0,
-                                            "Color": [
-                                                0.7,
-                                                0.4,
-                                                1.0
-                                            ]
-                                        },
-                                        {
-                                            "IsAlphaMark": false,
-                                            "Position": 1.0,
-                                            "Color": [
-                                                0.2,
-                                                0.0,
-                                                0.5
-                                            ]
-                                        }
-                                    ],
-                                    "ColorCurve": [
-                                        0.0,
-                                        0.8,
-                                        1.0,
-                                        0.0
-                                    ]
-                                },
-                                {
-                                    "ModuleType": 5,
-                                    "VelocityType": "CONSTANT",
-                                    "InitialVelocity": 0.001
-                                },
-                                {
-                                    "ModuleType": 6,
-                                    "StartScaleType": "CONSTANT",
-                                    "StartScale": [
-                                        0.5,
-                                        0.5,
-                                        0.0
-                                    ],
-                                    "ChangeSizeOverTime": true,
-                                    "EndScaleType": "CONSTANT",
-                                    "EndScale": [
-                                        0.9,
-                                        0.9,
-                                        0.0
-                                    ]
-                                },
-                                {
-                                    "ModuleType": 7,
-                                    "RotationType": "CONSTANT",
-                                    "StartRotation": 0.0,
-                                    "VelocityType": "CONSTANT",
-                                    "AngularVelocity": 0.0,
-                                    "FlipRotation": 0.0
-                                },
-                                {
-                                    "ModuleType": 8,
-                                    "TileRows": 1,
-                                    "TileColumns": 1,
-                                    "FPS": 0.0,
-                                    "StartFrameType": "CONSTANT",
-                                    "StartFrame": 0.0
-                                },
-                                {
-                                    "ModuleType": 9,
-                                    "RenderMode": "BILLBOARD",
-                                    "RenderLayer": 0
-                                }
-                            ]
-                        }
-                    ]
-                }
-            ],
-            "Children": []
-        },
-        {
-            "Name": "Core Flash",
-            "Active": true,
-            "Static": false,
-            "Layer": "DEFAULT",
-            "Tag": "DEFAULT",
-            "Transform": {
-                "Position": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0,
-                    1.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Components": [
-                {
-                    "UID": 15100000000000002005,
-                    "ComponentType": "PARTICLE_SYSTEM",
-                    "Active": true,
-                    "TextureAssetId": {
-                        "uid": 15233043859842995764,
-                        "libId": "d366a4aeb1e31634779c02d33b3631dc",
-                        "type": "TEXTURE"
-                    },
-                    "ParticleEmitters": [
-                        {
-                            "Modules": [
-                                {
-                                    "ModuleType": 2,
-                                    "Looping": false,
-                                    "Duration": 0.06,
-                                    "RateOverTime": 25.0,
-                                    "RateOverDistance": 0.0
-                                },
-                                {
-                                    "ModuleType": 4,
-                                    "LifeTimeType": "CONSTANT",
-                                    "StartLifeTime": 0.15
-                                },
-                                {
-                                    "ModuleType": 1,
-                                    "ShapeType": "SPHERE",
-                                    "Radius": 0.0001,
-                                    "RadiusThickness": 1.0,
-                                    "RadiusScale": 1.0
-                                },
-                                {
-                                    "ModuleType": 3,
-                                    "ColorOverTime": [
-                                        {
-                                            "IsAlphaMark": false,
-                                            "Position": 0.0,
-                                            "Color": [
-                                                1.0,
-                                                0.95,
-                                                1.0
-                                            ]
-                                        },
-                                        {
-                                            "IsAlphaMark": false,
-                                            "Position": 1.0,
-                                            "Color": [
-                                                0.6,
-                                                0.3,
-                                                1.0
-                                            ]
-                                        }
-                                    ],
-                                    "ColorCurve": [
-                                        0.0,
-                                        1.0,
-                                        1.0,
-                                        0.0
-                                    ]
-                                },
-                                {
-                                    "ModuleType": 5,
-                                    "VelocityType": "CONSTANT",
-                                    "InitialVelocity": 0.001
-                                },
-                                {
-                                    "ModuleType": 6,
-                                    "StartScaleType": "CONSTANT",
-                                    "StartScale": [
-                                        0.28,
-                                        0.28,
-                                        0.0
-                                    ],
-                                    "ChangeSizeOverTime": true,
-                                    "EndScaleType": "CONSTANT",
-                                    "EndScale": [
-                                        0.42,
-                                        0.42,
-                                        0.0
-                                    ]
-                                },
-                                {
-                                    "ModuleType": 7,
-                                    "RotationType": "CONSTANT",
-                                    "StartRotation": 0.0,
-                                    "VelocityType": "CONSTANT",
-                                    "AngularVelocity": 2.0,
-                                    "FlipRotation": 0.0
-                                },
-                                {
-                                    "ModuleType": 8,
-                                    "TileRows": 1,
-                                    "TileColumns": 1,
-                                    "FPS": 0.0,
-                                    "StartFrameType": "CONSTANT",
-                                    "StartFrame": 0.0
-                                },
-                                {
-                                    "ModuleType": 9,
-                                    "RenderMode": "BILLBOARD",
-                                    "RenderLayer": 0
-                                }
-                            ]
-                        }
-                    ]
-                }
-            ],
-            "Children": []
-        },
-        {
-            "Name": "Shockwave",
-            "Active": true,
-            "Static": false,
-            "Layer": "DEFAULT",
-            "Tag": "DEFAULT",
-            "Transform": {
-                "Position": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0,
-                    1.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Components": [
-                {
-                    "UID": 15100000000000002006,
-                    "ComponentType": "PARTICLE_SYSTEM",
-                    "Active": true,
-                    "TextureAssetId": {
-                        "uid": 10920831856812825284,
-                        "libId": "978e96b675191ac4651f1db5a6ff22ec",
-                        "type": "TEXTURE"
-                    },
-                    "ParticleEmitters": [
-                        {
-                            "Modules": [
-                                {
-                                    "ModuleType": 2,
-                                    "Looping": false,
-                                    "Duration": 0.08,
-                                    "RateOverTime": 20.0,
-                                    "RateOverDistance": 0.0
-                                },
-                                {
-                                    "ModuleType": 4,
-                                    "LifeTimeType": "CONSTANT",
-                                    "StartLifeTime": 0.3
-                                },
-                                {
-                                    "ModuleType": 1,
-                                    "ShapeType": "SPHERE",
-                                    "Radius": 0.0001,
-                                    "RadiusThickness": 1.0,
-                                    "RadiusScale": 1.0
-                                },
-                                {
-                                    "ModuleType": 3,
-                                    "ColorOverTime": [
-                                        {
-                                            "IsAlphaMark": false,
-                                            "Position": 0.0,
-                                            "Color": [
-                                                0.55,
-                                                0.25,
-                                                0.85
-                                            ]
-                                        },
-                                        {
-                                            "IsAlphaMark": false,
-                                            "Position": 1.0,
-                                            "Color": [
-                                                0.15,
-                                                0.0,
-                                                0.35
-                                            ]
-                                        }
-                                    ],
-                                    "ColorCurve": [
-                                        0.0,
-                                        0.7,
-                                        1.0,
-                                        0.0
-                                    ]
-                                },
-                                {
-                                    "ModuleType": 5,
-                                    "VelocityType": "CONSTANT",
-                                    "InitialVelocity": 0.001
-                                },
-                                {
-                                    "ModuleType": 6,
-                                    "StartScaleType": "CONSTANT",
-                                    "StartScale": [
-                                        0.3,
-                                        0.3,
-                                        0.0
-                                    ],
-                                    "ChangeSizeOverTime": true,
-                                    "EndScaleType": "CONSTANT",
-                                    "EndScale": [
-                                        1.1,
-                                        1.1,
-                                        0.0
-                                    ]
-                                },
-                                {
-                                    "ModuleType": 7,
-                                    "RotationType": "CONSTANT",
-                                    "StartRotation": 0.0,
-                                    "VelocityType": "CONSTANT",
-                                    "AngularVelocity": 0.0,
-                                    "FlipRotation": 0.0
-                                },
-                                {
-                                    "ModuleType": 8,
-                                    "TileRows": 1,
-                                    "TileColumns": 1,
-                                    "FPS": 0.0,
-                                    "StartFrameType": "CONSTANT",
-                                    "StartFrame": 0.0
-                                },
-                                {
-                                    "ModuleType": 9,
-                                    "RenderMode": "BILLBOARD",
-                                    "RenderLayer": 0
-                                }
-                            ]
-                        }
-                    ]
-                }
-            ],
-            "Children": []
-        },
         {
             "Name": "Embers",
             "Active": true,
@@ -570,7 +52,7 @@
             },
             "Components": [
                 {
-                    "UID": 15100000000000002003,
+                    "UID": 15100000000000004001,
                     "ComponentType": "PARTICLE_SYSTEM",
                     "Active": true,
                     "TextureAssetId": {
@@ -583,15 +65,15 @@
                             "Modules": [
                                 {
                                     "ModuleType": 2,
-                                    "Looping": false,
-                                    "Duration": 0.15,
-                                    "RateOverTime": 45.0,
+                                    "Looping": true,
+                                    "Duration": 1.0,
+                                    "RateOverTime": 25.0,
                                     "RateOverDistance": 0.0
                                 },
                                 {
                                     "ModuleType": 4,
                                     "LifeTimeType": "CONSTANT",
-                                    "StartLifeTime": 0.25
+                                    "StartLifeTime": 0.35
                                 },
                                 {
                                     "ModuleType": 1,
@@ -607,8 +89,8 @@
                                             "IsAlphaMark": false,
                                             "Position": 0.0,
                                             "Color": [
-                                                0.75,
-                                                0.55,
+                                                0.6,
+                                                0.85,
                                                 1.0
                                             ]
                                         },
@@ -616,9 +98,9 @@
                                             "IsAlphaMark": false,
                                             "Position": 1.0,
                                             "Color": [
-                                                0.25,
                                                 0.0,
-                                                0.4
+                                                0.1,
+                                                0.9
                                             ]
                                         }
                                     ],
@@ -632,14 +114,14 @@
                                 {
                                     "ModuleType": 5,
                                     "VelocityType": "CONSTANT",
-                                    "InitialVelocity": 1.5
+                                    "InitialVelocity": 0.4
                                 },
                                 {
                                     "ModuleType": 6,
                                     "StartScaleType": "CONSTANT",
                                     "StartScale": [
-                                        0.06,
-                                        0.06,
+                                        0.05,
+                                        0.05,
                                         0.0
                                     ],
                                     "ChangeSizeOverTime": true,
@@ -656,6 +138,274 @@
                                     "StartRotation": 0.0,
                                     "VelocityType": "CONSTANT",
                                     "AngularVelocity": 0.0,
+                                    "FlipRotation": 0.0
+                                },
+                                {
+                                    "ModuleType": 8,
+                                    "TileRows": 1,
+                                    "TileColumns": 1,
+                                    "FPS": 0.0,
+                                    "StartFrameType": "CONSTANT",
+                                    "StartFrame": 0.0
+                                },
+                                {
+                                    "ModuleType": 9,
+                                    "RenderMode": "BILLBOARD",
+                                    "RenderLayer": 0
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "Children": []
+        },
+        {
+            "Name": "Emphasis",
+            "Active": true,
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [
+                {
+                    "UID": 15100000000000004002,
+                    "ComponentType": "PARTICLE_SYSTEM",
+                    "Active": true,
+                    "TextureAssetId": {
+                        "uid": 1159539902958090999,
+                        "libId": "10178365f2b53af740151b5abde7fd18",
+                        "type": "TEXTURE"
+                    },
+                    "ParticleEmitters": [
+                        {
+                            "Modules": [
+                                {
+                                    "ModuleType": 2,
+                                    "Looping": true,
+                                    "Duration": 1.0,
+                                    "RateOverTime": 8.0,
+                                    "RateOverDistance": 0.0
+                                },
+                                {
+                                    "ModuleType": 4,
+                                    "LifeTimeType": "CONSTANT",
+                                    "StartLifeTime": 0.6
+                                },
+                                {
+                                    "ModuleType": 1,
+                                    "ShapeType": "SPHERE",
+                                    "Radius": 0.08,
+                                    "RadiusThickness": 1.0,
+                                    "RadiusScale": 1.0
+                                },
+                                {
+                                    "ModuleType": 3,
+                                    "ColorOverTime": [
+                                        {
+                                            "IsAlphaMark": false,
+                                            "Position": 0.0,
+                                            "Color": [
+                                                0.85,
+                                                0.93,
+                                                1.0
+                                            ]
+                                        },
+                                        {
+                                            "IsAlphaMark": false,
+                                            "Position": 1.0,
+                                            "Color": [
+                                                0.1,
+                                                0.3,
+                                                1.0
+                                            ]
+                                        }
+                                    ],
+                                    "ColorCurve": [
+                                        0.0,
+                                        1.0,
+                                        1.0,
+                                        0.0
+                                    ]
+                                },
+                                {
+                                    "ModuleType": 5,
+                                    "VelocityType": "CONSTANT",
+                                    "InitialVelocity": 0.2
+                                },
+                                {
+                                    "ModuleType": 6,
+                                    "StartScaleType": "CONSTANT",
+                                    "StartScale": [
+                                        0.22,
+                                        0.1,
+                                        0.0
+                                    ],
+                                    "ChangeSizeOverTime": true,
+                                    "EndScaleType": "CONSTANT",
+                                    "EndScale": [
+                                        0.05,
+                                        0.02,
+                                        0.0
+                                    ]
+                                },
+                                {
+                                    "ModuleType": 7,
+                                    "RotationType": "CONSTANT",
+                                    "StartRotation": 0.0,
+                                    "VelocityType": "CONSTANT",
+                                    "AngularVelocity": 0.0,
+                                    "FlipRotation": 0.0
+                                },
+                                {
+                                    "ModuleType": 8,
+                                    "TileRows": 1,
+                                    "TileColumns": 1,
+                                    "FPS": 0.0,
+                                    "StartFrameType": "CONSTANT",
+                                    "StartFrame": 0.0
+                                },
+                                {
+                                    "ModuleType": 9,
+                                    "RenderMode": "BILLBOARD",
+                                    "RenderLayer": 0
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "Children": []
+        },
+        {
+            "Name": "Sparkle",
+            "Active": true,
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [
+                {
+                    "UID": 15100000000000004003,
+                    "ComponentType": "PARTICLE_SYSTEM",
+                    "Active": true,
+                    "TextureAssetId": {
+                        "uid": 15233043859842995764,
+                        "libId": "d366a4aeb1e31634779c02d33b3631dc",
+                        "type": "TEXTURE"
+                    },
+                    "ParticleEmitters": [
+                        {
+                            "Modules": [
+                                {
+                                    "ModuleType": 2,
+                                    "Looping": true,
+                                    "Duration": 1.0,
+                                    "RateOverTime": 3.0,
+                                    "RateOverDistance": 0.0
+                                },
+                                {
+                                    "ModuleType": 4,
+                                    "LifeTimeType": "CONSTANT",
+                                    "StartLifeTime": 0.3
+                                },
+                                {
+                                    "ModuleType": 1,
+                                    "ShapeType": "SPHERE",
+                                    "Radius": 0.03,
+                                    "RadiusThickness": 1.0,
+                                    "RadiusScale": 1.0
+                                },
+                                {
+                                    "ModuleType": 3,
+                                    "ColorOverTime": [
+                                        {
+                                            "IsAlphaMark": false,
+                                            "Position": 0.0,
+                                            "Color": [
+                                                0.9,
+                                                0.96,
+                                                1.0
+                                            ]
+                                        },
+                                        {
+                                            "IsAlphaMark": false,
+                                            "Position": 1.0,
+                                            "Color": [
+                                                0.2,
+                                                0.5,
+                                                1.0
+                                            ]
+                                        }
+                                    ],
+                                    "ColorCurve": [
+                                        0.0,
+                                        1.0,
+                                        1.0,
+                                        0.0
+                                    ]
+                                },
+                                {
+                                    "ModuleType": 5,
+                                    "VelocityType": "CONSTANT",
+                                    "InitialVelocity": 0.001
+                                },
+                                {
+                                    "ModuleType": 6,
+                                    "StartScaleType": "CONSTANT",
+                                    "StartScale": [
+                                        0.12,
+                                        0.12,
+                                        0.0
+                                    ],
+                                    "ChangeSizeOverTime": true,
+                                    "EndScaleType": "CONSTANT",
+                                    "EndScale": [
+                                        0.02,
+                                        0.02,
+                                        0.0
+                                    ]
+                                },
+                                {
+                                    "ModuleType": 7,
+                                    "RotationType": "CONSTANT",
+                                    "StartRotation": 0.0,
+                                    "VelocityType": "CONSTANT",
+                                    "AngularVelocity": 1.0,
                                     "FlipRotation": 0.0
                                 },
                                 {
