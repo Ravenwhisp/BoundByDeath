@@ -31,3 +31,20 @@ void PersistingCheckpointState::SetCheckpoint(CheckpointId checkpointId)
 
 	m_solvedPuzzlesPersistent = m_solvedPuzzles;
 }
+
+void PersistingCheckpointState::Reset()
+{
+	m_lastCheckpointId = CheckpointId::NONE;
+	m_savedReaperGaugeAmount = 0.f;
+	std::fill_n(m_savedUnlockedPowerups, static_cast<size_t>(PowerupId::Count), false);
+
+	m_deadEnemies.clear();
+	m_brokenBreakables.clear();
+	m_collectedCollectibles.clear();
+	m_solvedPuzzles.fill(false);
+
+	m_deadEnemiesPersistent.clear();
+	m_brokenBreakables.clear();
+	m_collectedCollectiblesPersistent.clear();
+	m_solvedPuzzlesPersistent.fill(false);
+}

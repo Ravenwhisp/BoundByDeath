@@ -37,6 +37,8 @@ public:
 
     const CheckpointId GetLastCheckpoint() const { return m_lastCheckpointId; };
 
+    void Reset();
+
 public:
     CheckpointId m_lastCheckpointId = CheckpointId::NONE;
 
