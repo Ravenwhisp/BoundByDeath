@@ -6,6 +6,11 @@
 #include "Damageable.h"
 #include "PersistingPowerupState.h"
 
+IMPLEMENT_SCRIPT_FIELDS(CheckpointEvent,
+	SERIALIZED_COMPONENT_REF(m_lyrielRespawn, "Lyriel respawn transform", ComponentType::TRANSFORM),
+	SERIALIZED_COMPONENT_REF(m_deathRespawn, "Death respawn transform", ComponentType::TRANSFORM)
+)
+
 CheckpointEvent::CheckpointEvent(GameObject* owner)
     : GameplayEventAction(owner)
 {
@@ -36,13 +41,29 @@ void CheckpointEvent::Start()
 	if (!m_PersistingCheckpointState)
 	{
 		Debug::warn("CheckpointEvent: PersistingCheckpointState singleton not found.");
-		return;
 	}
 
 	if (!m_reaperGauge)
 	{
 		Debug::warn("CheckpointSetup: ReaperGauge script not found in scene.");
-		return;
+	}
+
+	if (!m_lyrielRespawnTransform)
+	{
+		Debug::warn("CheckpointSetup: No LyrielRespawn transform referenced.");
+	}
+	else
+	{
+		m_lyrielRespawnTransform = m_lyrielRespawn.getReferencedComponent();
+	}
+
+	if (!m_deathRespawnTransform)
+	{
+		Debug::warn("CheckpointSetup: No DeathRespawn transform referenced.");
+	}
+	else
+	{
+		m_deathRespawnTransform = m_deathRespawn.getReferencedComponent();
 	}
 }
 
@@ -61,15 +82,22 @@ void CheckpointEvent::executeEvent(GameplayEventTrigger* trigger)
 		}
 		bool* currentPowerups = PersistingPowerupState::getUnlockedPowerupState();
 
-		PersistingCheckpointState* PersistingCheckpointState = &PersistingCheckpointState::Get();
+		m_PersistingCheckpointState->m_savedLyrielHealth = m_lyrielDamageable ? m_lyrielDamageable->getCurrentHp() : 0.0f;
+		m_PersistingCheckpointState->m_savedDeathHealth = m_deathDamageable ? m_deathDamageable->getCurrentHp() : 0.0f;
+		m_PersistingCheckpointState->m_savedReaperGaugeAmount = m_reaperGauge ? m_reaperGauge->getGauge() : 0.0f;
 
-		PersistingCheckpointState->m_savedLyrielHealth = m_lyrielDamageable ? m_lyrielDamageable->getCurrentHp() : 0.0f;
-		PersistingCheckpointState->m_savedDeathHealth = m_deathDamageable ? m_deathDamageable->getCurrentHp() : 0.0f;
-		PersistingCheckpointState->m_savedReaperGaugeAmount = m_reaperGauge ? m_reaperGauge->getGauge() : 0.0f;
+		if(m_lyrielRespawnTransform)
+		{
+			m_PersistingCheckpointState->m_savedLyrielRespawn = TransformAPI::getGlobalPosition(m_lyrielRespawnTransform);
+		}
+		if (m_deathRespawnTransform)
+		{
+			m_PersistingCheckpointState->m_savedDeathRespawn = TransformAPI::getGlobalPosition(m_deathRespawnTransform);
+		}
 
 		std::copy(currentPowerups,
 			currentPowerups + static_cast<int>(PowerupId::Count),
-			PersistingCheckpointState->m_savedUnlockedPowerups);
+			m_PersistingCheckpointState->m_savedUnlockedPowerups);
 
 		m_PersistingCheckpointState->SetCheckpoint(m_checkpointId);
 		Debug::log("CheckpointEvent: Checkpoint %d saved.", static_cast<int>(m_checkpointId));

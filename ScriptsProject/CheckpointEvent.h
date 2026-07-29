@@ -17,6 +17,8 @@ class CheckpointEvent : public GameplayEventAction
 public:
     explicit CheckpointEvent(GameObject* owner);
 
+    FieldList getExposedFields() const override;
+
 	void executeEvent(GameplayEventTrigger* trigger) override;
 
     void Start() override;
@@ -29,5 +31,12 @@ protected:
 	Damageable* m_deathDamageable = nullptr;
 
 	CheckpointId m_checkpointId = CheckpointId::NONE;
+
+private:
+    ComponentRef<Transform> m_lyrielRespawn;
+    ComponentRef<Transform> m_deathRespawn;
+
+    Transform* m_lyrielRespawnTransform = nullptr;
+    Transform* m_deathRespawnTransform = nullptr;
 
 };

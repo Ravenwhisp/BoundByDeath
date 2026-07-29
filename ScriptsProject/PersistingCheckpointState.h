@@ -48,13 +48,14 @@ public:
     float m_savedLyrielHealth = 0.f;
     float m_savedDeathHealth = 0.f;
 
-    // al cargar la escena, resetearemos esto
+    Vector3 m_savedLyrielRespawn;
+    Vector3 m_savedDeathRespawn;
+
     std::vector<UID> m_deadEnemies;
     std::vector<UID> m_brokenBreakables;
     std::vector<UID> m_collectedCollectibles; //necesario? la persistencia ya esta en el powerupcollectible
     std::array<bool, static_cast<size_t>(PuzzleId::COUNT)> m_solvedPuzzles{};
 
-    //cuando cojamos un checkpoint, pondremos aqui los elementos de los otros vectores. son los elementos que no volveran a aparecer
     std::vector<UID> m_deadEnemiesPersistent;
     std::vector<UID> m_brokenBreakablesPersistent;
     std::vector<UID> m_collectedCollectiblesPersistent;
