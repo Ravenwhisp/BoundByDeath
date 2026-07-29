@@ -15,8 +15,35 @@ void AelorinDetectionAggro::Start()
 	findPlayerTransforms();
 }
 
-// update
-// drawgizmo
+void AelorinDetectionAggro::Update()
+{
+
+}
+
+void AelorinDetectionAggro::drawGizmo()
+{
+	if (!m_debugEnabled)
+	{
+		return;
+	}
+
+	const Vector3 white = { 1.0f, 1.0f, 1.0f };
+	const Vector3 red = { 1.0f, 0.0f, 0.0f };
+
+	Vector3 debugPosition = getOwnerPosition() + Vector3(0.0f, 0.2f, 0.0f);
+
+	DebugDrawAPI::drawCircle(debugPosition, Vector3(0.0f, 1.0f, 0.0f), white, m_detectionRadius, 24.0f, 0, true);
+
+	if (isLyrielInDetectionRange())
+	{
+		DebugDrawAPI::drawLine(debugPosition, getLyrielPosition(), red, 0, true);
+	}
+
+	if (isDeathInDetectionRange())
+	{
+		DebugDrawAPI::drawLine(debugPosition, getDeathPosition(), red, 0, true);
+	}
+}
 
 void AelorinDetectionAggro::findPlayerTransforms()
 {
