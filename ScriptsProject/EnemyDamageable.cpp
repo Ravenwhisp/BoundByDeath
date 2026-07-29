@@ -12,7 +12,7 @@
 
 IMPLEMENT_SCRIPT_FIELDS_INHERITED(EnemyDamageable, Damageable,
 	SERIALIZED_COMPONENT_REF(m_healthBarContainer, "Health Bar Container", ComponentType::TRANSFORM2D),
-	SERIALIZED_COMPONENT_REF(m_shadowExecutionPreview, "Shadow Execution Preview", ComponentType::TRANSFORM2D),
+	SERIALIZED_COMPONENT_REF(m_shadowExecutionPreview, "Shadow Execution Preview", ComponentType::UISLIDER), 
 	SERIALIZED_FLOAT(m_healthBarFadeTime, "Health Bar Fade Time", 0.0f, 5.0f, 0.05f)
 )
 
@@ -27,18 +27,16 @@ void EnemyDamageable::Start()
 	resolveReaperGauge();
 	resolveShadowExecution();
 
+	if (m_shadowExecutionPreviewSlider)
+	{
+		SliderAPI::setFillMethod(m_shadowExecutionPreviewSlider, FillMethod::Horizontal);
+		SliderAPI::setFillOrigin(m_shadowExecutionPreviewSlider, FillOrigin::HorizontalLeft);
+		SliderAPI::setFillAmountVec(m_shadowExecutionPreviewSlider, Vector2(0.0f, 0.0f));
+	}
+
 	if (m_shadowExecutionPreviewTransform)
 	{
-		if (m_shadowExecutionPreviewTransform)
-		{
-			m_shadowExecutionPreviewBaseSize = Transform2DAPI::getBaseSize(m_shadowExecutionPreviewTransform);
-			m_shadowExecutionPreviewBasePosition = Transform2DAPI::getPosition(m_shadowExecutionPreviewTransform);
-
-			Transform2DAPI::setPivot(m_shadowExecutionPreviewTransform, Vector2(0.0f, 0.5f));
-			Transform2DAPI::setAnchorMin(m_shadowExecutionPreviewTransform, Vector2(0.0f, 0.5f));
-			Transform2DAPI::setAnchorMax(m_shadowExecutionPreviewTransform, Vector2(0.0f, 0.5f));
-			Transform2DAPI::setAlpha(m_shadowExecutionPreviewTransform, 0.0f);
-		}
+		Transform2DAPI::setAlpha(m_shadowExecutionPreviewTransform, 0.0f);
 	}
 
 	// Override HP from controller's attack config (inherits from EnemyBaseDataConfig)
@@ -205,13 +203,22 @@ void EnemyDamageable::resolveHealthBarReferences()
 				}
 			}
 
-			if (!m_shadowExecutionPreviewTransform)
+			if (!m_shadowExecutionPreviewSlider || !m_shadowExecutionPreviewTransform)
 			{
 				Transform* previewTransform = TransformAPI::findChildByName(backgroundTransform, "Shadow Execution Preview");
 				if (previewTransform)
 				{
 					GameObject* previewObject = ComponentAPI::getOwner(previewTransform);
-					m_shadowExecutionPreviewTransform = static_cast<Transform2D*>(GameObjectAPI::getComponent(previewObject, ComponentType::TRANSFORM2D));
+
+					if (!m_shadowExecutionPreviewSlider)
+					{
+						m_shadowExecutionPreviewSlider = static_cast<UISlider*>(GameObjectAPI::getComponent(previewObject, ComponentType::UISLIDER));
+					}
+
+					if (!m_shadowExecutionPreviewTransform)
+					{
+						m_shadowExecutionPreviewTransform = static_cast<Transform2D*>(GameObjectAPI::getComponent(previewObject, ComponentType::TRANSFORM2D));
+					}
 				}
 			}
 		}
@@ -222,9 +229,15 @@ void EnemyDamageable::resolveHealthBarReferences()
 		m_healthBarContainerTransform = m_healthBarContainer.getReferencedComponent();
 	}
 
-	if (!m_shadowExecutionPreviewTransform)
+	if (!m_shadowExecutionPreviewSlider)
 	{
-		m_shadowExecutionPreviewTransform = m_shadowExecutionPreview.getReferencedComponent();
+		m_shadowExecutionPreviewSlider = m_shadowExecutionPreview.getReferencedComponent();
+	}
+
+	if (!m_shadowExecutionPreviewTransform && m_shadowExecutionPreviewSlider)
+	{
+		GameObject* previewObject = ComponentAPI::getOwner(m_shadowExecutionPreviewSlider);
+		m_shadowExecutionPreviewTransform = static_cast<Transform2D*>(GameObjectAPI::getComponent(previewObject, ComponentType::TRANSFORM2D));
 	}
 }
 
@@ -293,12 +306,14 @@ void EnemyDamageable::resolveReaperGauge()
 
 void EnemyDamageable::updateShadowExecutionPreviewAvailability()
 {
-	if (!m_reaperGauge)
+	if (!m_reaperGauge || !m_shadowExecution)
 	{
 		return;
 	}
 
-	const bool shouldBeActive = m_reaperGauge->isFull() && !m_isDead;
+	const bool shadowExecutionAvailable = m_reaperGauge->isFull();
+	const bool shadowExecutionPlaying = m_shadowExecution->isActive();
+	const bool shouldBeActive = (shadowExecutionAvailable || shadowExecutionPlaying) && !m_isDead;
 
 	if (shouldBeActive != m_shadowExecutionPreviewActive)
 	{
@@ -310,7 +325,7 @@ void EnemyDamageable::setShadowExecutionPreviewActive(bool active)
 {
 	m_shadowExecutionPreviewActive = active;
 
-	if (!m_shadowExecutionPreviewTransform)
+	if (!m_shadowExecutionPreviewSlider)
 	{
 		return;
 	}
@@ -321,9 +336,12 @@ void EnemyDamageable::setShadowExecutionPreviewActive(bool active)
 	}
 	else
 	{
-		Transform2DAPI::setAlpha(m_shadowExecutionPreviewTransform, 0.0f);
-		Transform2DAPI::setBaseSize(m_shadowExecutionPreviewTransform, m_shadowExecutionPreviewBaseSize);
-		Transform2DAPI::setPosition(m_shadowExecutionPreviewTransform, m_shadowExecutionPreviewBasePosition);
+		SliderAPI::setFillAmountVec(m_shadowExecutionPreviewSlider, Vector2(0.0f, 0.0f));
+
+		if (m_shadowExecutionPreviewTransform)
+		{
+			Transform2DAPI::setAlpha(m_shadowExecutionPreviewTransform, 0.0f);
+		}
 	}
 }
 
@@ -344,7 +362,7 @@ void EnemyDamageable::resolveShadowExecution()
 
 void EnemyDamageable::updateShadowExecutionPreview()
 {
-	if (!m_shadowExecutionPreviewActive || !m_shadowExecution || !m_shadowExecutionPreviewTransform || m_isDead)
+	if (!m_shadowExecutionPreviewActive || !m_shadowExecution || !m_shadowExecutionPreviewSlider || m_isDead)
 	{
 		return;
 	}
@@ -354,7 +372,13 @@ void EnemyDamageable::updateShadowExecutionPreview()
 
 	if (maxHp <= 0.0f || currentHp <= 0.0f)
 	{
-		Transform2DAPI::setAlpha(m_shadowExecutionPreviewTransform, 0.0f);
+		SliderAPI::setFillAmountVec(m_shadowExecutionPreviewSlider, Vector2(0.0f, 0.0f));
+
+		if (m_shadowExecutionPreviewTransform)
+		{
+			Transform2DAPI::setAlpha(m_shadowExecutionPreviewTransform, 0.0f);
+		}
+
 		return;
 	}
 
@@ -366,25 +390,24 @@ void EnemyDamageable::updateShadowExecutionPreview()
 	currentHpPercent = std::clamp(currentHpPercent, 0.0f, 1.0f);
 	resultingHpPercent = std::clamp(resultingHpPercent, 0.0f, currentHpPercent);
 
-	const float damageSegmentPercent = currentHpPercent - resultingHpPercent;
-
-	if (damageSegmentPercent <= 0.0f)
+	if (currentHpPercent <= resultingHpPercent)
 	{
-		Transform2DAPI::setAlpha(m_shadowExecutionPreviewTransform, 0.0f);
+		SliderAPI::setFillAmountVec(m_shadowExecutionPreviewSlider, Vector2(0.0f, 0.0f));
+
+		if (m_shadowExecutionPreviewTransform)
+		{
+			Transform2DAPI::setAlpha(m_shadowExecutionPreviewTransform, 0.0f);
+		}
+
 		return;
 	}
 
-	Vector2 previewSize = m_shadowExecutionPreviewBaseSize;
-	previewSize.x = m_shadowExecutionPreviewBaseSize.x * damageSegmentPercent;
+	SliderAPI::setFillAmountVec(m_shadowExecutionPreviewSlider, Vector2(resultingHpPercent, currentHpPercent));
 
-	Vector2 previewPosition = m_shadowExecutionPreviewBasePosition;
-	previewPosition.x = m_shadowExecutionPreviewBasePosition.x + m_shadowExecutionPreviewBaseSize.x * resultingHpPercent;
-
-	Transform2DAPI::setBaseSize(m_shadowExecutionPreviewTransform, previewSize);
-	Transform2DAPI::setPosition(m_shadowExecutionPreviewTransform, previewPosition);
-	Transform2DAPI::setAlpha(m_shadowExecutionPreviewTransform, 1.0f);
-
-	Debug::log("[ShadowExecutionPreview] Enemy '%s': current %.1f%%, resulting %.1f%%, segment %.1f%%, damage %.1f, lethal %s.", GameObjectAPI::getName(m_owner), currentHpPercent * 100.0f, resultingHpPercent * 100.0f, damageSegmentPercent * 100.0f, preview.damage, preview.willDie ? "true" : "false");
+	if (m_shadowExecutionPreviewTransform)
+	{
+		Transform2DAPI::setAlpha(m_shadowExecutionPreviewTransform, 1.0f);
+	}
 }
 
 IMPLEMENT_SCRIPT(EnemyDamageable)

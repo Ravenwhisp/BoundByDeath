@@ -202,6 +202,7 @@ void ShadowExecution::beginExecution()
     m_p1WindowTimer  = 0.0f;
     m_hitEnemies.clear();
 
+    m_isActive = true;
     m_reaperGauge->consume();
 
     if (m_sound != nullptr)
@@ -216,8 +217,6 @@ void ShadowExecution::beginExecution()
     }
 
     lockPlayers(true);
-
-    m_isActive = true;
 
     if (m_executionTransform)
     {

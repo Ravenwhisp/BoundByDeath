@@ -11,6 +11,7 @@ class EnemyBaseController;
 class EnemyBaseDataConfig;
 class ReaperGauge;
 class ShadowExecution;
+class UISlider;
 
 struct EnemyHitContext : public HitContext
 {
@@ -75,9 +76,7 @@ private:
 	float m_healthBarFadeTimer = 0.0f;
 	bool m_healthBarFadeActive = false;
 
-	ComponentRef<Transform2D> m_shadowExecutionPreview;
+	ComponentRef<UISlider> m_shadowExecutionPreview;
+	UISlider* m_shadowExecutionPreviewSlider = nullptr;
 	Transform2D* m_shadowExecutionPreviewTransform = nullptr;
-
-	Vector2 m_shadowExecutionPreviewBaseSize = Vector2::Zero;
-	Vector2 m_shadowExecutionPreviewBasePosition = Vector2::Zero;
 };
