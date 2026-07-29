@@ -34,6 +34,8 @@ public:
 	bool isLyrielInDetectionRange() const;
 	bool isDeathInDetectionRange() const;
 
+	bool startEncounter() const;
+
 private:
 	Transform* m_lyrielCachedTransform = nullptr;
 	Transform* m_deathCachedTransform = nullptr;

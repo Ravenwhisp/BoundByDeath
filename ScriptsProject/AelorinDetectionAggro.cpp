@@ -17,7 +17,6 @@ void AelorinDetectionAggro::Start()
 
 void AelorinDetectionAggro::Update()
 {
-
 }
 
 void AelorinDetectionAggro::drawGizmo()
@@ -151,6 +150,14 @@ bool AelorinDetectionAggro::isDeathInDetectionRange() const
 	}
 
 	return getDistanceToDeath() <= m_detectionRadius;
+}
+
+bool AelorinDetectionAggro::startEncounter() const
+{
+	if (isLyrielInDetectionRange() || isDeathInDetectionRange())
+		return true;
+	
+	return false;
 }
 
 IMPLEMENT_SCRIPT(AelorinDetectionAggro)
