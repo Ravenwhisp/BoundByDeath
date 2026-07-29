@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "PersistingCheckpointState.h"
 
-#include "CheckpointSetup.h"
 #include "EnemyDamageable.h"
 #include "BreakableObject.h"
 #include "PowerupCollectible.h"

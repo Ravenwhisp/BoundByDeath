@@ -45,12 +45,12 @@ void CheckpointEvent::Start()
 
 	if (!m_reaperGauge)
 	{
-		Debug::warn("CheckpointSetup: ReaperGauge script not found in scene.");
+		Debug::warn("CheckpointEvent: ReaperGauge script not found in scene.");
 	}
 
 	if (!m_lyrielRespawnTransform)
 	{
-		Debug::warn("CheckpointSetup: No LyrielRespawn transform referenced.");
+		Debug::warn("CheckpointEvent: No LyrielRespawn transform referenced.");
 	}
 	else
 	{
@@ -59,7 +59,7 @@ void CheckpointEvent::Start()
 
 	if (!m_deathRespawnTransform)
 	{
-		Debug::warn("CheckpointSetup: No DeathRespawn transform referenced.");
+		Debug::warn("CheckpointEvent: No DeathRespawn transform referenced.");
 	}
 	else
 	{
