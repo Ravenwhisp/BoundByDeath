@@ -39,15 +39,15 @@
                     0.0
                 ],
                 "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0,
-                    1.0
+                    0.7071068286895752,
+                    7.105429898699844e-15,
+                    -7.105429898699844e-15,
+                    -0.7071068286895752
                 ],
                 "Scale": [
                     1.0,
-                    1.0,
-                    1.0
+                    -1.0000001192092896,
+                    0.0
                 ]
             },
             "Components": [
@@ -67,20 +67,21 @@
                                     "ModuleType": 2,
                                     "Looping": true,
                                     "Duration": 1.0,
-                                    "RateOverTime": 25.0,
+                                    "RateOverTime": 28.0,
                                     "RateOverDistance": 0.0
                                 },
                                 {
                                     "ModuleType": 4,
                                     "LifeTimeType": "CONSTANT",
-                                    "StartLifeTime": 0.35
+                                    "StartLifeTime": 0.4
                                 },
                                 {
                                     "ModuleType": 1,
-                                    "ShapeType": "SPHERE",
-                                    "Radius": 0.05,
+                                    "ShapeType": "CONE",
+                                    "Radius": 0.08,
                                     "RadiusThickness": 1.0,
-                                    "RadiusScale": 1.0
+                                    "RadiusScale": 2.0,
+                                    "ConeAngle": 0.2
                                 },
                                 {
                                     "ModuleType": 3,
@@ -114,7 +115,7 @@
                                 {
                                     "ModuleType": 5,
                                     "VelocityType": "CONSTANT",
-                                    "InitialVelocity": 0.4
+                                    "InitialVelocity": 3.0
                                 },
                                 {
                                     "ModuleType": 6,
@@ -173,15 +174,15 @@
                     0.0
                 ],
                 "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0,
-                    1.0
+                    0.7071068286895752,
+                    7.105429898699844e-15,
+                    -7.105429898699844e-15,
+                    -0.7071068286895752
                 ],
                 "Scale": [
                     1.0,
-                    1.0,
-                    1.0
+                    -1.0000001192092896,
+                    0.0
                 ]
             },
             "Components": [
@@ -201,20 +202,21 @@
                                     "ModuleType": 2,
                                     "Looping": true,
                                     "Duration": 1.0,
-                                    "RateOverTime": 8.0,
+                                    "RateOverTime": 10.0,
                                     "RateOverDistance": 0.0
                                 },
                                 {
                                     "ModuleType": 4,
                                     "LifeTimeType": "CONSTANT",
-                                    "StartLifeTime": 0.6
+                                    "StartLifeTime": 0.5
                                 },
                                 {
                                     "ModuleType": 1,
-                                    "ShapeType": "SPHERE",
+                                    "ShapeType": "CONE",
                                     "Radius": 0.08,
                                     "RadiusThickness": 1.0,
-                                    "RadiusScale": 1.0
+                                    "RadiusScale": 2.0,
+                                    "ConeAngle": 0.12
                                 },
                                 {
                                     "ModuleType": 3,
@@ -248,7 +250,7 @@
                                 {
                                     "ModuleType": 5,
                                     "VelocityType": "CONSTANT",
-                                    "InitialVelocity": 0.2
+                                    "InitialVelocity": 3.5
                                 },
                                 {
                                     "ModuleType": 6,
@@ -295,7 +297,7 @@
             "Children": []
         },
         {
-            "Name": "Sparkle",
+            "Name": "Side Sparks",
             "Active": true,
             "Static": false,
             "Layer": "DEFAULT",
@@ -324,8 +326,8 @@
                     "ComponentType": "PARTICLE_SYSTEM",
                     "Active": true,
                     "TextureAssetId": {
-                        "uid": 15233043859842995764,
-                        "libId": "d366a4aeb1e31634779c02d33b3631dc",
+                        "uid": 4517537234170266115,
+                        "libId": "3eb1842df651c20387b7a8f3f29d63d2",
                         "type": "TEXTURE"
                     },
                     "ParticleEmitters": [
@@ -335,19 +337,19 @@
                                     "ModuleType": 2,
                                     "Looping": true,
                                     "Duration": 1.0,
-                                    "RateOverTime": 3.0,
+                                    "RateOverTime": 10.0,
                                     "RateOverDistance": 0.0
                                 },
                                 {
                                     "ModuleType": 4,
                                     "LifeTimeType": "CONSTANT",
-                                    "StartLifeTime": 0.3
+                                    "StartLifeTime": 0.22
                                 },
                                 {
                                     "ModuleType": 1,
-                                    "ShapeType": "SPHERE",
-                                    "Radius": 0.03,
-                                    "RadiusThickness": 1.0,
+                                    "ShapeType": "CIRCLE",
+                                    "Radius": 0.06,
+                                    "RadiusThickness": 0.6,
                                     "RadiusScale": 1.0
                                 },
                                 {
@@ -382,20 +384,20 @@
                                 {
                                     "ModuleType": 5,
                                     "VelocityType": "CONSTANT",
-                                    "InitialVelocity": 0.001
+                                    "InitialVelocity": 1.8
                                 },
                                 {
                                     "ModuleType": 6,
                                     "StartScaleType": "CONSTANT",
                                     "StartScale": [
-                                        0.12,
-                                        0.12,
+                                        0.05,
+                                        0.09,
                                         0.0
                                     ],
                                     "ChangeSizeOverTime": true,
                                     "EndScaleType": "CONSTANT",
                                     "EndScale": [
-                                        0.02,
+                                        0.01,
                                         0.02,
                                         0.0
                                     ]
@@ -405,7 +407,7 @@
                                     "RotationType": "CONSTANT",
                                     "StartRotation": 0.0,
                                     "VelocityType": "CONSTANT",
-                                    "AngularVelocity": 1.0,
+                                    "AngularVelocity": 2.0,
                                     "FlipRotation": 0.0
                                 },
                                 {
