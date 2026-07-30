@@ -1,0 +1,500 @@
+{
+    "Version": 2,
+    "sourcePath": "Assets\\Prefabs\\Particles\\VFXRemake\\Enemies\\BossFight\\Teleport\\PS_BossSpell.prefab",
+    "Name": "PS_BossSpell",
+    "Active": true,
+    "Static": false,
+    "Layer": "DEFAULT",
+    "Tag": "DEFAULT",
+    "Transform": {
+        "Position": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "Rotation": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ],
+        "Scale": [
+            1.0,
+            1.0,
+            1.0
+        ]
+    },
+    "Components": [],
+    "Children": [
+        {
+            "Name": "PS_BossSpellCastShine",
+            "Active": true,
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0,
+                    1.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [
+                {
+                    "UID": 9796869436430771221,
+                    "ComponentType": "PARTICLE_SYSTEM",
+                    "Active": true,
+                    "TextureAssetId": {
+                        "uid": 13764988489437730080,
+                        "libId": "bf071019e246d5202f1d6d838f3eff77",
+                        "type": "TEXTURE"
+                    },
+                    "ParticleEmitters": [
+                        {
+                            "Modules": [
+                                {
+                                    "ModuleType": 2,
+                                    "Looping": true,
+                                    "Duration": 2.0,
+                                    "RateOverTime": 1.0,
+                                    "RateOverDistance": 0.0
+                                },
+                                {
+                                    "ModuleType": 4,
+                                    "LifeTimeType": "CONSTANT",
+                                    "StartLifeTime": 1.0
+                                },
+                                {
+                                    "ModuleType": 1,
+                                    "ShapeType": "CIRCLE",
+                                    "Radius": 0.0,
+                                    "RadiusThickness": 1.0,
+                                    "RadiusScale": 3.0
+                                },
+                                {
+                                    "ModuleType": 3,
+                                    "ColorOverTime": [
+                                        {
+                                            "IsAlphaMark": true,
+                                            "Position": 0.006557377055287361,
+                                            "Alpha": 0.25
+                                        },
+                                        {
+                                            "IsAlphaMark": true,
+                                            "Position": 0.4191419184207916,
+                                            "Alpha": 0.75
+                                        },
+                                        {
+                                            "IsAlphaMark": false,
+                                            "Position": 0.488448828458786,
+                                            "Color": [
+                                                0.4000000059604645,
+                                                0.20000000298023224,
+                                                0.6000000238418579
+                                            ]
+                                        },
+                                        {
+                                            "IsAlphaMark": true,
+                                            "Position": 0.5409836173057556,
+                                            "Alpha": 0.75
+                                        },
+                                        {
+                                            "IsAlphaMark": true,
+                                            "Position": 0.9868852496147156,
+                                            "Alpha": 0.25
+                                        }
+                                    ],
+                                    "ColorCurve": [
+                                        0.0,
+                                        0.0,
+                                        1.0,
+                                        1.0
+                                    ]
+                                },
+                                {
+                                    "ModuleType": 5,
+                                    "VelocityType": "CONSTANT",
+                                    "InitialVelocity": 0.0
+                                },
+                                {
+                                    "ModuleType": 6,
+                                    "StartScaleType": "CONSTANT",
+                                    "StartScale": [
+                                        0.15000000596046448,
+                                        0.15000000596046448,
+                                        0.0
+                                    ],
+                                    "ChangeSizeOverTime": true,
+                                    "EndScaleType": "CONSTANT",
+                                    "EndScale": [
+                                        0.25,
+                                        0.25,
+                                        0.0
+                                    ]
+                                },
+                                {
+                                    "ModuleType": 7,
+                                    "RotationType": "CONSTANT",
+                                    "StartRotation": 0.0,
+                                    "VelocityType": "CONSTANT",
+                                    "AngularVelocity": 0.0,
+                                    "FlipRotation": 0.0
+                                },
+                                {
+                                    "ModuleType": 8,
+                                    "TileRows": 1,
+                                    "TileColumns": 1,
+                                    "FPS": 0.0,
+                                    "StartFrameType": "CONSTANT",
+                                    "StartFrame": 0.0
+                                },
+                                {
+                                    "ModuleType": 9,
+                                    "RenderMode": "BILLBOARD",
+                                    "RenderLayer": 0
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "UID": 1539503278675400251,
+                    "ComponentType": "PREFAB_INSTANCE",
+                    "Active": true,
+                    "sourcePath": "Assets\\Prefabs\\Particles\\VFXRemake\\Enemies\\BossFight\\Teleport\\PS_BossSpellCastShine.prefab",
+                    "assetUID": 12761583735242231193
+                }
+            ],
+            "Children": []
+        },
+        {
+            "Name": "PS_BossSpellCastFlame",
+            "Active": true,
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0,
+                    1.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [
+                {
+                    "UID": 6374174159991220359,
+                    "ComponentType": "PARTICLE_SYSTEM",
+                    "Active": true,
+                    "TextureAssetId": {
+                        "uid": 12915887318928091474,
+                        "libId": "6d29c4e08361a3ac765c274b1aaa8e3d",
+                        "type": "TEXTURE"
+                    },
+                    "ParticleEmitters": [
+                        {
+                            "Modules": [
+                                {
+                                    "ModuleType": 2,
+                                    "Looping": true,
+                                    "Duration": 5.0,
+                                    "RateOverTime": 20.0,
+                                    "RateOverDistance": 0.0
+                                },
+                                {
+                                    "ModuleType": 4,
+                                    "LifeTimeType": "RANDOM_BETWEEN_TWO",
+                                    "StartLifeTime": 0.20000000298023224,
+                                    "StartLifeTime2": 0.800000011920929
+                                },
+                                {
+                                    "ModuleType": 1,
+                                    "ShapeType": "CONE",
+                                    "Radius": 0.05000000074505806,
+                                    "RadiusThickness": 1.0,
+                                    "RadiusScale": 1.0
+                                },
+                                {
+                                    "ModuleType": 3,
+                                    "ColorOverTime": [
+                                        {
+                                            "IsAlphaMark": true,
+                                            "Position": 0.0032786885276436806,
+                                            "Alpha": 0.2540000081062317
+                                        },
+                                        {
+                                            "IsAlphaMark": true,
+                                            "Position": 0.34206604957580566,
+                                            "Alpha": 1.0
+                                        },
+                                        {
+                                            "IsAlphaMark": false,
+                                            "Position": 0.5280531048774719,
+                                            "Color": [
+                                                0.4000000059604645,
+                                                0.20000000298023224,
+                                                0.6000000238418579
+                                            ]
+                                        },
+                                        {
+                                            "IsAlphaMark": true,
+                                            "Position": 0.8065573573112488,
+                                            "Alpha": 1.0
+                                        },
+                                        {
+                                            "IsAlphaMark": true,
+                                            "Position": 0.9868852496147156,
+                                            "Alpha": 0.0
+                                        },
+                                        {
+                                            "IsAlphaMark": false,
+                                            "Position": 1.0,
+                                            "Color": [
+                                                1.0,
+                                                0.8666666746139526,
+                                                0.3333333432674408
+                                            ]
+                                        }
+                                    ],
+                                    "ColorCurve": [
+                                        0.1875,
+                                        0.65625,
+                                        1.0,
+                                        1.0
+                                    ]
+                                },
+                                {
+                                    "ModuleType": 5,
+                                    "VelocityType": "RANDOM_BETWEEN_TWO",
+                                    "InitialVelocity": 0.20000000298023224,
+                                    "InitialVelocity2": 0.5
+                                },
+                                {
+                                    "ModuleType": 6,
+                                    "StartScaleType": "RANDOM_BETWEEN_TWO",
+                                    "StartScale": [
+                                        0.10000000149011612,
+                                        0.10000000149011612,
+                                        0.0
+                                    ],
+                                    "StartScale2": [
+                                        0.20000000298023224,
+                                        0.20000000298023224,
+                                        0.0
+                                    ],
+                                    "ChangeSizeOverTime": true,
+                                    "EndScaleType": "CONSTANT",
+                                    "EndScale": [
+                                        0.0,
+                                        0.0,
+                                        0.0
+                                    ]
+                                },
+                                {
+                                    "ModuleType": 7,
+                                    "RotationType": "RANDOM_BETWEEN_TWO",
+                                    "StartRotation": 0.0,
+                                    "StartRotation2": 4.71238899230957,
+                                    "VelocityType": "RANDOM_BETWEEN_TWO",
+                                    "AngularVelocity": 0.1745329201221466,
+                                    "AngularVelocity2": -0.1745329201221466,
+                                    "FlipRotation": 0.0
+                                },
+                                {
+                                    "ModuleType": 8,
+                                    "TileRows": 3,
+                                    "TileColumns": 3,
+                                    "FPS": 9.0,
+                                    "StartFrameType": "CONSTANT",
+                                    "StartFrame": 0.0
+                                },
+                                {
+                                    "ModuleType": 9,
+                                    "RenderMode": "BILLBOARD",
+                                    "RenderLayer": 1
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "UID": 16606581299621967146,
+                    "ComponentType": "PREFAB_INSTANCE",
+                    "Active": true,
+                    "sourcePath": "Assets\\Prefabs\\Particles\\VFXRemake\\Enemies\\BossFight\\Teleport\\PS_BossSpellCastFlame.prefab",
+                    "assetUID": 12756889338679326651
+                }
+            ],
+            "Children": []
+        },
+        {
+            "Name": "PS_BossSpellParticles",
+            "Active": true,
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0,
+                    1.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [
+                {
+                    "UID": 4106193421663306397,
+                    "ComponentType": "PARTICLE_SYSTEM",
+                    "Active": true,
+                    "TextureAssetId": {
+                        "uid": 14944502442081492448,
+                        "libId": "b5ba4a8b80e041a6d6c3fa6d490c4859",
+                        "type": "TEXTURE"
+                    },
+                    "ParticleEmitters": [
+                        {
+                            "Modules": [
+                                {
+                                    "ModuleType": 2,
+                                    "Looping": true,
+                                    "Duration": 2.0,
+                                    "RateOverTime": 10.0,
+                                    "RateOverDistance": 0.0
+                                },
+                                {
+                                    "ModuleType": 4,
+                                    "LifeTimeType": "RANDOM_BETWEEN_TWO",
+                                    "StartLifeTime": 1.0,
+                                    "StartLifeTime2": 0.5
+                                },
+                                {
+                                    "ModuleType": 1,
+                                    "ShapeType": "CONE",
+                                    "Radius": 0.05000000074505806,
+                                    "RadiusThickness": 1.0,
+                                    "RadiusScale": 1.0
+                                },
+                                {
+                                    "ModuleType": 3,
+                                    "ColorOverTime": [
+                                        {
+                                            "IsAlphaMark": false,
+                                            "Position": 0.3531355559825897,
+                                            "Color": [
+                                                0.4000000059604645,
+                                                0.20000000298023224,
+                                                0.6000000238418579
+                                            ]
+                                        },
+                                        {
+                                            "IsAlphaMark": false,
+                                            "Position": 1.0,
+                                            "Color": [
+                                                1.0,
+                                                0.8666666746139526,
+                                                0.3333333432674408
+                                            ]
+                                        }
+                                    ],
+                                    "ColorCurve": [
+                                        0.0,
+                                        0.0,
+                                        1.0,
+                                        1.0
+                                    ]
+                                },
+                                {
+                                    "ModuleType": 5,
+                                    "VelocityType": "RANDOM_BETWEEN_TWO",
+                                    "InitialVelocity": 0.20000000298023224,
+                                    "InitialVelocity2": 0.4000000059604645
+                                },
+                                {
+                                    "ModuleType": 6,
+                                    "StartScaleType": "RANDOM_BETWEEN_TWO",
+                                    "StartScale": [
+                                        0.05000000074505806,
+                                        0.10000000149011612,
+                                        0.0
+                                    ],
+                                    "StartScale2": [
+                                        0.05000000074505806,
+                                        0.05000000074505806,
+                                        0.0
+                                    ],
+                                    "ChangeSizeOverTime": true,
+                                    "EndScaleType": "CONSTANT",
+                                    "EndScale": [
+                                        0.0,
+                                        0.0,
+                                        0.0
+                                    ]
+                                },
+                                {
+                                    "ModuleType": 7,
+                                    "RotationType": "CONSTANT",
+                                    "StartRotation": 0.0,
+                                    "VelocityType": "CONSTANT",
+                                    "AngularVelocity": 0.0,
+                                    "FlipRotation": 0.0
+                                },
+                                {
+                                    "ModuleType": 8,
+                                    "TileRows": 1,
+                                    "TileColumns": 1,
+                                    "FPS": 0.0,
+                                    "StartFrameType": "CONSTANT",
+                                    "StartFrame": 0.0
+                                },
+                                {
+                                    "ModuleType": 9,
+                                    "RenderMode": "VERTICAL",
+                                    "RenderLayer": 0
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "UID": 17100808149663735744,
+                    "ComponentType": "PREFAB_INSTANCE",
+                    "Active": true,
+                    "sourcePath": "Assets\\Prefabs\\Particles\\VFXRemake\\Enemies\\BossFight\\Teleport\\PS_BossSpellParticles.prefab",
+                    "assetUID": 15072285761615363040
+                }
+            ],
+            "Children": []
+        }
+    ]
+}
