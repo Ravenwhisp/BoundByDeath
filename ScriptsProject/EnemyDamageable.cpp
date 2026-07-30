@@ -6,6 +6,7 @@
 #include "EnemyBaseController.h"
 #include "EnemyBaseAttackConfig.h"
 #include "EnemyShadowMark.h"
+#include "BarrierComponent.h"
 #include "Transform2D.h"
 
 IMPLEMENT_SCRIPT_FIELDS_INHERITED(EnemyDamageable, Damageable,
@@ -73,7 +74,40 @@ void EnemyDamageable::takeDamage(const HitContext& ctx)
 	}
 
 	processShadowMarkHit(enemyCtx.attackType);
+
+	auto* barrier = GameObjectAPI::findScript<BarrierComponent>(m_owner);
+	if (barrier && barrier->hasActiveBarriers())
+	{
+		BarrierResult result = barrier->processBarrierDamage(enemyCtx.damage, m_currentHp, m_maxHp, m_lastHitExploitedShadowMark);
+
+		if (result.blocked)
+		{
+			return;
+		}
+
+		if (result.damageToApply > 0.0f)
+		{
+			EnemyHitContext cappedHit = enemyCtx;
+			cappedHit.damage = result.damageToApply;
+			applyDamageWithoutShadowMark(cappedHit);
+		}
+
+		return;
+	}
+
 	applyDamageWithoutShadowMark(enemyCtx);
+}
+
+void EnemyDamageable::kill()
+{
+	auto* barrier = GameObjectAPI::findScript<BarrierComponent>(m_owner);
+	if (barrier && barrier->hasActiveBarriers())
+	{
+		Debug::log("[Barrier] %s kill prevented by active barrier.", GameObjectAPI::getName(m_owner));
+		return;
+	}
+
+	Damageable::kill();
 }
 
 void EnemyDamageable::onDamaged(float amount)
@@ -227,6 +261,12 @@ void EnemyDamageable::setHealthBarAlpha(float alpha)
 	alpha = std::clamp(alpha, 0.0f, 1.0f);
 
 	Transform2DAPI::setAlpha(m_healthBarContainerTransform, alpha);
+
+	auto* barrier = GameObjectAPI::findScript<BarrierComponent>(m_owner);
+	if (barrier)
+	{
+		barrier->setBarrierUIAlpha(alpha);
+	}
 }
 
 IMPLEMENT_SCRIPT(EnemyDamageable)

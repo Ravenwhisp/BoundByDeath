@@ -28,6 +28,7 @@ public:
 	FieldList getExposedFields() const override;
 	
     void takeDamage(const HitContext& ctx) override;
+	void kill() override;
 	bool lastHitExploitShadowMark() const { return m_lastHitExploitedShadowMark; }
 
 protected:
