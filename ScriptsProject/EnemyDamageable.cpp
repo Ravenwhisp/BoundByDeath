@@ -16,6 +16,7 @@ IMPLEMENT_SCRIPT_FIELDS_INHERITED(EnemyDamageable, Damageable,
 	SERIALIZED_FLOAT(m_healthBarFadeTime, "Health Bar Fade Time", 0.0f, 5.0f, 0.05f),
 	FIELD_GROUP_LABEL("Shadow Execution Preview"),
 	SERIALIZED_COMPONENT_REF(m_shadowExecutionPreview, "Shadow Execution Preview", ComponentType::UISLIDER),
+	SERIALIZED_COMPONENT_REF(m_shadowExecutionThresholdMarker, "Shadow Execution Threshold Marker", ComponentType::TRANSFORM2D),
 	SERIALIZED_FLOAT(m_shadowExecutionPreviewFadeTime, "Shadow Preview Fade Time", 0.0f, 2.0f, 0.05f),
 	SERIALIZED_FLOAT(m_shadowExecutionPreviewHitTime, "Shadow Preview Hit Time", 0.05f, 1.0f, 0.05f),
 	SERIALIZED_FLOAT(m_shadowExecutionPreviewNonLethalAlpha, "Shadow Preview Non-Lethal Alpha", 0.0f, 1.0f, 0.05f),
@@ -44,6 +45,11 @@ void EnemyDamageable::Start()
 	{
 		m_shadowExecutionPreviewBaseScale = Transform2DAPI::getScale(m_shadowExecutionPreviewTransform);
 		Transform2DAPI::setAlpha(m_shadowExecutionPreviewTransform, 0.0f);
+	}
+
+	if (m_shadowExecutionThresholdMarkerTransform)
+	{
+		Transform2DAPI::setAlpha(m_shadowExecutionThresholdMarkerTransform, 0.0f);
 	}
 
 	// Override HP from controller's attack config (inherits from EnemyBaseDataConfig)
@@ -162,6 +168,8 @@ void EnemyDamageable::onDeath()
 {
 	Damageable::onDeath();
 
+	setShadowExecutionThresholdMarkerVisible(false);
+
 	if (m_shadowMark)
 	{
 		m_shadowMark->clearMark();
@@ -246,6 +254,16 @@ void EnemyDamageable::resolveHealthBarReferences()
 					}
 				}
 			}
+
+			if (!m_shadowExecutionThresholdMarkerTransform)
+			{
+				Transform* markerTransform = TransformAPI::findChildByName(backgroundTransform, "Shadow Execution Threshold Marker");
+				if (markerTransform)
+				{
+					GameObject* markerObject = ComponentAPI::getOwner(markerTransform);
+					m_shadowExecutionThresholdMarkerTransform = static_cast<Transform2D*>(GameObjectAPI::getComponent(markerObject, ComponentType::TRANSFORM2D));
+				}
+			}
 		}
 	}
 
@@ -263,6 +281,11 @@ void EnemyDamageable::resolveHealthBarReferences()
 	{
 		GameObject* previewObject = ComponentAPI::getOwner(m_shadowExecutionPreviewSlider);
 		m_shadowExecutionPreviewTransform = static_cast<Transform2D*>(GameObjectAPI::getComponent(previewObject, ComponentType::TRANSFORM2D));
+	}
+
+	if (!m_shadowExecutionThresholdMarkerTransform)
+	{
+		m_shadowExecutionThresholdMarkerTransform = m_shadowExecutionThresholdMarker.getReferencedComponent();
 	}
 }
 
@@ -350,11 +373,6 @@ void EnemyDamageable::setShadowExecutionPreviewActive(bool active)
 {
 	m_shadowExecutionPreviewActive = active;
 
-	if (!m_shadowExecutionPreviewSlider)
-	{
-		return;
-	}
-
 	if (active)
 	{
 		m_shadowExecutionPreviewFadeTimer = 0.0f;
@@ -368,10 +386,13 @@ void EnemyDamageable::setShadowExecutionPreviewActive(bool active)
 		}
 
 		updateShadowExecutionPreview();
+		updateShadowExecutionThresholdMarker();
+		setShadowExecutionThresholdMarkerVisible(true);
 	}
 	else
 	{
 		resetShadowExecutionPreviewVisual();
+		setShadowExecutionThresholdMarkerVisible(false);
 	}
 }
 
@@ -488,6 +509,35 @@ void EnemyDamageable::resetShadowExecutionPreviewVisual()
 		Transform2DAPI::setAlpha(m_shadowExecutionPreviewTransform, 0.0f);
 		Transform2DAPI::setScale(m_shadowExecutionPreviewTransform, m_shadowExecutionPreviewBaseScale);
 	}
+}
+
+void EnemyDamageable::setShadowExecutionThresholdMarkerVisible(bool visible)
+{
+	if (!m_shadowExecutionThresholdMarkerTransform)
+	{
+		return;
+	}
+
+	Transform2DAPI::setAlpha(m_shadowExecutionThresholdMarkerTransform, visible ? 1.0f : 0.0f);
+}
+
+void EnemyDamageable::updateShadowExecutionThresholdMarker()
+{
+	if (!m_shadowExecutionThresholdMarkerTransform || !m_healthBarContainerTransform || !m_shadowExecution)
+	{
+		return;
+	}
+
+	const float thresholdPercent = m_shadowExecution->getExecutionThresholdPercent(this);
+
+	const Vector2 containerSize = Transform2DAPI::getBaseSize(m_healthBarContainerTransform);
+	const Vector2 containerPivot = Transform2DAPI::getPivot(m_healthBarContainerTransform);
+	const Vector2 markerPosition = Transform2DAPI::getPosition(m_shadowExecutionThresholdMarkerTransform);
+
+	const float leftEdge = -containerSize.x * containerPivot.x;
+	const float markerX = leftEdge + containerSize.x * thresholdPercent;
+
+	Transform2DAPI::setPosition(m_shadowExecutionThresholdMarkerTransform, Vector2(markerX, markerPosition.y));
 }
 
 IMPLEMENT_SCRIPT(EnemyDamageable)

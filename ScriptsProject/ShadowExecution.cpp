@@ -284,24 +284,6 @@ void ShadowExecution::applyAoEDamage()
             continue;
         }
 
-        const float maxHp = damageable->getMaxHp();
-        const float currentHp = damageable->getCurrentHp();
-        
-        const float thresholdMultiplier = damageable->getShadowExecutionThresholdMultiplier();
-        const float effectiveThreshold = m_shadowExecutionConfig->m_instaKillThreshold * thresholdMultiplier;
-        const float thresholdHp = maxHp * effectiveThreshold;
-
-        const float percentageDamage = maxHp * m_shadowExecutionConfig->m_percentageDamage;
-
-        float selectedDamage = m_shadowExecutionConfig->m_fixedDamage;
-
-        if (percentageDamage > m_shadowExecutionConfig->m_fixedDamage)
-        {
-            selectedDamage = percentageDamage;
-        }
-
-        const bool belowThreshold = currentHp <= thresholdHp;
-
         const ShadowExecutionPreview preview = calculatePreview(damageable);
 
         EnemyHitContext ctx;
@@ -434,6 +416,19 @@ ShadowExecutionPreview ShadowExecution::calculatePreview(const EnemyDamageable* 
     preview.resultingHpPercent = resultingHp / maxHp;
 
     return preview;
+}
+
+float ShadowExecution::getExecutionThresholdPercent(const EnemyDamageable* damageable) const
+{
+    if (!damageable || !m_shadowExecutionConfig)
+    {
+        return 0.0f;
+    }
+
+    const float thresholdMultiplier = damageable->getShadowExecutionThresholdMultiplier();
+    const float effectiveThreshold = m_shadowExecutionConfig->m_instaKillThreshold * thresholdMultiplier;
+
+    return std::clamp(effectiveThreshold, 0.0f, 1.0f);
 }
 
 IMPLEMENT_SCRIPT(ShadowExecution)

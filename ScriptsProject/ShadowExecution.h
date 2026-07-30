@@ -39,6 +39,7 @@ public:
     bool isActive() const { return m_isActive; }
 
     ShadowExecutionPreview calculatePreview(const EnemyDamageable* damageable) const;
+    float getExecutionThresholdPercent(const EnemyDamageable* damageable) const;
 
 public:
     AssetReference<ShadowExecutionConfig> m_config;

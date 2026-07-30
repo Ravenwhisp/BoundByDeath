@@ -61,6 +61,9 @@ private:
 	void updateShadowExecutionPreviewAnimation(float dt);
 	void resetShadowExecutionPreviewVisual();
 
+	void updateShadowExecutionThresholdMarker();
+	void setShadowExecutionThresholdMarkerVisible(bool visible);
+
 private:
 	const EnemyBaseDataConfig* m_baseDataConfig = nullptr;
 	EnemyDetectionAggro* m_enemyDetectionAggro = nullptr;
@@ -100,4 +103,7 @@ private:
 	float m_shadowExecutionPreviewHitTime = 0.2f;
 	float m_shadowExecutionPreviewNonLethalAlpha = 0.7f;
 	float m_shadowExecutionPreviewLethalAlpha = 1.0f;
+
+	ComponentRef<Transform2D> m_shadowExecutionThresholdMarker;
+	Transform2D* m_shadowExecutionThresholdMarkerTransform = nullptr;
 };
