@@ -90,6 +90,12 @@ public:
 
     Vector3 m_pathSearchExtents = Vector3(5.0f, 5.0f, 5.0f);
 
+    // Movement Progress Check
+    Vector3 m_lastProgressPosition = Vector3::Zero;
+    float m_noProgressTime = 0.0f;
+    float m_progressCheckDistance = 0.05f;
+    float m_maxNoProgressTime = 0.5f;
+
 protected:
     Transform* m_currentTarget = nullptr;
     bool m_deathTriggerSent = false;
