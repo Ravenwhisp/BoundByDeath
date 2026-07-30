@@ -2,7 +2,7 @@
 #include "AelorinBossController.h"
 
 #include "AelorinDetectionAggro.h"
-#include "EnemyDamageable.h"
+#include "AelorinDamageable.h"
 
 AelorinBossController::AelorinBossController(GameObject* owner) : EnemyBaseController(owner)
 {
@@ -13,11 +13,23 @@ void AelorinBossController::Start()
 	EnemyBaseController::Start();
 
 	m_aelorinDetectionAggro = GameObjectAPI::findScript<AelorinDetectionAggro>(getOwner());
-	m_damageable = GameObjectAPI::findScript<EnemyDamageable>(getOwner());
+	m_damageable = GameObjectAPI::findScript<AelorinDamageable>(getOwner());
 
 	Transform* phase1Model = TransformAPI::findChildByName(getOwner()->GetTransform(), "Phase1");
-	m_phase1GameObject = ComponentAPI::getOwner(phase1Model);
+	if (!phase1Model)
+	{
+		Debug::error("[AelorinBossController] Phase 1 Model not found!");
+		return;
+	}	
+
 	Transform* phase2Model = TransformAPI::findChildByName(getOwner()->GetTransform(), "Phase2");
+	if (!phase2Model)
+	{
+		Debug::error("[AelorinBossController] Phase 2 Model not found!");
+		return;
+	}
+
+	m_phase1GameObject = ComponentAPI::getOwner(phase1Model);
 	m_phase2GameObject = ComponentAPI::getOwner(phase2Model);
 
 	if (!m_aelorinDetectionAggro)
@@ -27,7 +39,7 @@ void AelorinBossController::Start()
 
 	if (!m_damageable)
 	{
-		Debug::error("[AelorinBossController] EnemyDamageable script not found!");
+		Debug::error("[AelorinBossController] AelorinDamageable script not found!");
 	}
 
 	if (!m_phase1GameObject)
@@ -55,8 +67,6 @@ void AelorinBossController::Update()
 			m_hasStartedEncounter = true;
 		}
 	}
-
-	updateBossPhase();
 }
 
 void AelorinBossController::setPhase(Phase phase)
@@ -86,12 +96,12 @@ void AelorinBossController::updateBossPhase()
 		return;
 	}
 
-	if (m_damageable->getCurrentHp() <= 0.0f)
+	if (m_damageable->canChangePhases())
 	{
-		setPhase(Phase::Phase2);
 		Debug::log("Phase 2 has started!");
 		GameObjectAPI::setActive(m_phase1GameObject, false);
 		GameObjectAPI::setActive(m_phase2GameObject, true);
+		setPhase(Phase::Phase2);
 	}
 }
 

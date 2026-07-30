@@ -26,7 +26,7 @@ void AelorinIdleState::OnStateEnter()
 		Debug::error("[AelorinIdleState] AnimationComponent not found.");
 	}
 
-	Debug::log("[AelorinIdleState] ENTER - Phase %i", static_cast<int>(m_controller->getPhase()) + 1);
+	Debug::log("[AelorinIdleState] ENTER");
 }
 
 void AelorinIdleState::OnStateUpdate()

@@ -3,7 +3,7 @@
 #include "EnemyBaseController.h"
 
 class AelorinDetectionAggro;
-class EnemyDamageable;
+class AelorinDamageable;
 
 enum class Phase
 {
@@ -36,7 +36,7 @@ protected:
 
 private:
 	AelorinDetectionAggro* m_aelorinDetectionAggro = nullptr;
-	EnemyDamageable* m_damageable = nullptr;
+	AelorinDamageable* m_damageable = nullptr;
 
 	Phase m_phase = Phase::Phase1;
 
