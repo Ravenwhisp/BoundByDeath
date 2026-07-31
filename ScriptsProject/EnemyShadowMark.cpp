@@ -36,6 +36,14 @@ void EnemyShadowMark::Start()
 	m_mark2Object = m_mark_lyriel.getReferencedComponent() ? ComponentAPI::getOwner(m_mark_lyriel.getReferencedComponent()) : nullptr;
 	m_mark3Object = m_mark_both.getReferencedComponent() ? ComponentAPI::getOwner(m_mark_both.getReferencedComponent()) : nullptr;
 
+    m_deathSheet = m_mark1Object ? static_cast<UISheet*>(GameObjectAPI::getComponent(m_mark1Object, ComponentType::UISHEET)) : nullptr;
+    m_lyrielSheet = m_mark2Object ? static_cast<UISheet*>(GameObjectAPI::getComponent(m_mark2Object, ComponentType::UISHEET)) : nullptr;
+    m_bothSheet = m_mark3Object ? static_cast<UISheet*>(GameObjectAPI::getComponent(m_mark3Object, ComponentType::UISHEET)) : nullptr;
+
+    UISheetAPI::setLoop(m_deathSheet, true);
+    UISheetAPI::setLoop(m_lyrielSheet, true);
+    UISheetAPI::setLoop(m_bothSheet, true);
+
 	if (!m_canvasTransform2D || !m_mark1Object || !m_mark2Object || !m_mark3Object)
 	{
 		Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
@@ -180,6 +188,8 @@ void EnemyShadowMark::updateUI()
     {
         GameObjectAPI::setActive(m_mark3Object, m_state == ShadowMarkState::Ready);
     }
+
+    updateSheetAnimation();
 
     if (!m_canvasTransform2D || m_isExploding || m_isEntryPopping)
     {
@@ -561,6 +571,46 @@ void EnemyShadowMark::updateEntryPop()
         restoreUIVisuals();
         updateUI();
     }
+}
+
+void EnemyShadowMark::stopAllSheets()
+{
+    UISheetAPI::stop(m_deathSheet);
+    UISheetAPI::stop(m_lyrielSheet);
+    UISheetAPI::stop(m_bothSheet);
+}
+
+void EnemyShadowMark::updateSheetAnimation()
+{
+    if (m_displayedState == m_state)
+    {
+        return;
+    }
+
+    stopAllSheets();
+
+    switch (m_state)
+    {
+    case ShadowMarkState::DeathOnly:
+        UISheetAPI::reset(m_deathSheet);
+        UISheetAPI::play(m_deathSheet);
+        break;
+
+    case ShadowMarkState::LyrielOnly:
+        UISheetAPI::reset(m_lyrielSheet);
+        UISheetAPI::play(m_lyrielSheet);
+        break;
+
+    case ShadowMarkState::Ready:
+        UISheetAPI::reset(m_bothSheet);
+        UISheetAPI::play(m_bothSheet);
+        break;
+
+    case ShadowMarkState::None:
+        break;
+    }
+
+    m_displayedState = m_state;
 }
 
 IMPLEMENT_SCRIPT(EnemyShadowMark)

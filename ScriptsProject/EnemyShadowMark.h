@@ -3,6 +3,7 @@
 #include "ScriptAPI.h"
 #include "Transform2D.h"
 #include "PlayerAttackType.h"
+#include "UISheet.h"
 
 class ReaperGauge;
 
@@ -57,6 +58,9 @@ private:
     void startEntryPop();
     void updateEntryPop();
 
+    void updateSheetAnimation();
+    void stopAllSheets();
+
 public:
     bool m_useMarkDuration = true;
     float m_markDuration = 5.0f;
@@ -76,6 +80,12 @@ public:
     float m_entryPopStartScaleMultiplier = 0.8f;
     float m_entryPopPeakScaleMultiplier = 1.1f;
     float m_readyPopPeakScaleMultiplier = 1.2f;
+
+    UISheet* m_deathSheet = nullptr;
+    UISheet* m_lyrielSheet = nullptr;
+    UISheet* m_bothSheet = nullptr;
+
+    ShadowMarkState m_displayedState = ShadowMarkState::None;
 
 private:
     ShadowMarkState m_state = ShadowMarkState::None;
