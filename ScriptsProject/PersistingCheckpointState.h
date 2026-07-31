@@ -35,8 +35,6 @@ public:
 
     void SetCheckpoint(CheckpointId checkpointId);
 
-    const CheckpointId GetLastCheckpoint() const { return m_lastCheckpointId; };
-
     void Reset();
 
 public:
@@ -53,12 +51,10 @@ public:
 
     std::vector<UID> m_deadEnemies;
     std::vector<UID> m_brokenBreakables;
-    std::vector<UID> m_collectedCollectibles; //necesario? la persistencia ya esta en el powerupcollectible
     std::array<bool, static_cast<size_t>(PuzzleId::COUNT)> m_solvedPuzzles{};
 
     std::vector<UID> m_deadEnemiesPersistent;
     std::vector<UID> m_brokenBreakablesPersistent;
-    std::vector<UID> m_collectedCollectiblesPersistent;
     std::array<bool, static_cast<size_t>(PuzzleId::COUNT)> m_solvedPuzzlesPersistent{};
 
 };

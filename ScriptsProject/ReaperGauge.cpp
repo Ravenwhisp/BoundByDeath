@@ -37,10 +37,12 @@ void ReaperGauge::Start()
     Transform2DAPI::setAlpha(m_blinkAlphaTransform, 0.0f);
 
     PersistingCheckpointState* PersistingCheckpointState = &PersistingCheckpointState::Get();
-    if (PersistingCheckpointState)
+    if (PersistingCheckpointState && PersistingCheckpointState->m_lastCheckpointId > CheckpointId::NONE)
     {
         m_gauge = PersistingCheckpointState->m_savedReaperGaugeAmount;
         m_everExploited = true;
+        m_decayTimer = 0.0f;
+        m_decaying = false;
     }
 }
 

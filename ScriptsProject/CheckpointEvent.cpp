@@ -75,7 +75,7 @@ void CheckpointEvent::executeEvent(GameplayEventTrigger* trigger)
 {
 	if(m_PersistingCheckpointState)
 	{
-		if(m_PersistingCheckpointState->GetLastCheckpoint() >= m_checkpointId)
+		if(m_PersistingCheckpointState->m_lastCheckpointId >= m_checkpointId)
 		{
 			Debug::log("CheckpointEvent: Checkpoint %d already saved, skipping.", static_cast<int>(m_checkpointId));
 			return;

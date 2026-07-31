@@ -92,8 +92,6 @@ void PowerupCollectible::OnTriggerEnter(GameObject* player)
 
     m_collected = true;
 
-    PersistingCheckpointState::Get().m_collectedCollectibles.push_back(m_owner->GetID());
-
     // Posted from the COLLECTING PLAYER's source: this GO is destroyed immediately below,
     // which would cut a sound played from its own emitter. The player persists and is at
     // the pickup's position anyway.
