@@ -39,4 +39,5 @@ private:
     Transform* m_lyrielRespawnTransform = nullptr;
     Transform* m_deathRespawnTransform = nullptr;
 
+    bool m_isPersistent = false;
 };

@@ -29,4 +29,8 @@ public:
     int  m_stateOnEnter = 0;
     bool m_changeOnExit = false;
     int  m_stateOnExit  = 0;
+
+private:
+    bool m_isPersistent = false;
+
 };

@@ -43,4 +43,6 @@ private:
 
     bool m_isActive = false;
     bool m_hasCompleted = false;
+
+    bool m_isPersistent = true;
 };

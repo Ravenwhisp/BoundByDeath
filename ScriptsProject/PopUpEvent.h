@@ -68,4 +68,8 @@ public:
 
     bool m_lockGameplay = true;
     bool m_fadeHud = true;
+
+private:
+    bool m_isPersistent = true;
+
 };

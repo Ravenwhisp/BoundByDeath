@@ -51,10 +51,12 @@ public:
 
     std::vector<UID> m_deadEnemies;
     std::vector<UID> m_brokenBreakables;
+    std::vector<UID> m_triggeredEvents;
     std::array<bool, static_cast<size_t>(PuzzleId::COUNT)> m_solvedPuzzles{};
 
     std::vector<UID> m_deadEnemiesPersistent;
     std::vector<UID> m_brokenBreakablesPersistent;
+    std::vector<UID> m_triggeredEventsPersistent;
     std::array<bool, static_cast<size_t>(PuzzleId::COUNT)> m_solvedPuzzlesPersistent{};
 
 };
