@@ -63,6 +63,4 @@ private:
     int m_initialDashUseCount = 0;
 
     int m_initialBrokenCount = 0;
-
-    bool m_isPersistent = true;
 };
