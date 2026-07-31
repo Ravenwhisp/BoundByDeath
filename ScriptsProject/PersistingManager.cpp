@@ -4,6 +4,10 @@
 #include "PersistingCheckpointState.h"
 #include "PersistingPowerupState.h"
 
+IMPLEMENT_SCRIPT_FIELDS(PersistingManager,
+    SERIALIZED_INT(m_levelNumber, "Level number")
+)
+
 PersistingManager::PersistingManager(GameObject* owner)
     : Script(owner)
 {

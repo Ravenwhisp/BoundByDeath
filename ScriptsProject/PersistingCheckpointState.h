@@ -5,6 +5,14 @@
 #include <map>
 #include <array>
 
+enum SceneId
+{
+    NONE_SCENE = 0,
+    LEVEL1,
+    LEVEL2,
+    LEVEL3
+};
+
 enum CheckpointId
 {
 	NONE = 0, // Start of the game
@@ -45,13 +53,14 @@ public:
 
 public:
     CheckpointId m_lastCheckpointId = CheckpointId::NONE;
+    SceneId m_lastSceneId = SceneId::NONE_SCENE;
 
     // elementos globales
     float m_savedReaperGaugeAmount = 0.f;
     bool m_savedUnlockedPowerups[static_cast<int>(PowerupId::Count)];
 
-    float m_savedLyrielHealth = 0.f; //poner vida maxima y que se setee siempre en el start
-    float m_savedDeathHealth = 0.f; //poner vida maxima y que se setee siempre en el start
+    float m_savedLyrielHealth = 0.f;
+    float m_savedDeathHealth = 0.f;
 
     std::array<bool, static_cast<size_t>(PuzzleId::COUNT)> m_solvedPuzzles{};
     std::array<bool, static_cast<size_t>(PuzzleId::COUNT)> m_solvedPuzzlesPersistent{};

@@ -11,4 +11,9 @@ public:
 
     void Start() override;
     void OnGameStop() override;
+
+    FieldList getExposedFields() const override;
+
+public:
+    int m_levelNumber = 0;
 };
