@@ -36,14 +36,6 @@ void EnemyShadowMark::Start()
 	m_mark2Object = m_mark_lyriel.getReferencedComponent() ? ComponentAPI::getOwner(m_mark_lyriel.getReferencedComponent()) : nullptr;
 	m_mark3Object = m_mark_both.getReferencedComponent() ? ComponentAPI::getOwner(m_mark_both.getReferencedComponent()) : nullptr;
 
-    m_deathSheet = m_mark1Object ? static_cast<UISheet*>(GameObjectAPI::getComponent(m_mark1Object, ComponentType::UISHEET)) : nullptr;
-    m_lyrielSheet = m_mark2Object ? static_cast<UISheet*>(GameObjectAPI::getComponent(m_mark2Object, ComponentType::UISHEET)) : nullptr;
-    m_bothSheet = m_mark3Object ? static_cast<UISheet*>(GameObjectAPI::getComponent(m_mark3Object, ComponentType::UISHEET)) : nullptr;
-
-    UISheetAPI::setLoop(m_deathSheet, true);
-    UISheetAPI::setLoop(m_lyrielSheet, true);
-    UISheetAPI::setLoop(m_bothSheet, true);
-
 	if (!m_canvasTransform2D || !m_mark1Object || !m_mark2Object || !m_mark3Object)
 	{
 		Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
@@ -73,6 +65,14 @@ void EnemyShadowMark::Start()
 			}
 		}
 	}
+
+    m_deathSheet = m_mark1Object ? static_cast<UISheet*>(GameObjectAPI::getComponent(m_mark1Object, ComponentType::UISHEET)) : nullptr;
+    m_lyrielSheet = m_mark2Object ? static_cast<UISheet*>(GameObjectAPI::getComponent(m_mark2Object, ComponentType::UISHEET)) : nullptr;
+    m_bothSheet = m_mark3Object ? static_cast<UISheet*>(GameObjectAPI::getComponent(m_mark3Object, ComponentType::UISHEET)) : nullptr;
+
+    UISheetAPI::setLoop(m_deathSheet, true);
+    UISheetAPI::setLoop(m_lyrielSheet, true);
+    UISheetAPI::setLoop(m_bothSheet, true);
 
     if (m_canvasTransform2D)
     {
