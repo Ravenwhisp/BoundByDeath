@@ -11,6 +11,17 @@ BreakableDamageable::BreakableDamageable(GameObject* owner)
 
 void BreakableDamageable::Start()
 {
+    if(PersistingCheckpointState::Get().m_lastCheckpointId > CheckpointId::NONE)
+    {
+        std::vector<UID>* brokenBreakables = &PersistingCheckpointState::Get().m_brokenBreakablesPersistent;
+
+        if (std::find(brokenBreakables->begin(), brokenBreakables->end(), m_owner->GetID()) != brokenBreakables->end())
+        {
+            GameObjectAPI::removeGameObject(m_owner);
+            return;
+        }
+    }
+
     Damageable::Start();
 
 	m_breakableObject = GameObjectAPI::findScript<BreakableObject>(getOwner());

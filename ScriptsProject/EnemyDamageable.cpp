@@ -7,13 +7,14 @@
 #include "EnemyBaseAttackConfig.h"
 #include "EnemyShadowMark.h"
 #include "Transform2D.h"
+#include "PersistingCheckpointState.h"
+
+#include <algorithm>
 
 IMPLEMENT_SCRIPT_FIELDS_INHERITED(EnemyDamageable, Damageable,
 	SERIALIZED_COMPONENT_REF(m_healthBarContainer, "Health Bar Container", ComponentType::TRANSFORM2D),
 	SERIALIZED_FLOAT(m_healthBarFadeTime, "Health Bar Fade Time", 0.0f, 5.0f, 0.05f)
 )
-
-#include "PersistingCheckpointState.h"
 
 EnemyDamageable::EnemyDamageable(GameObject* owner)
 	: Damageable(owner)
@@ -22,7 +23,16 @@ EnemyDamageable::EnemyDamageable(GameObject* owner)
 
 void EnemyDamageable::Start()
 {
-	//si este go esta en la lista del checkpoint, no cargar directamente y fuer
+	if (PersistingCheckpointState::Get().m_lastCheckpointId > CheckpointId::NONE)
+	{
+		std::vector<UID>* deadEnemies = &PersistingCheckpointState::Get().m_deadEnemiesPersistent;
+
+		if (std::find(deadEnemies->begin(), deadEnemies->end(), m_owner->GetID()) != deadEnemies->end())
+		{
+			GameObjectAPI::removeGameObject(m_owner);
+			return;
+		}
+	}
 
 	resolveHealthBarReferences();
 
