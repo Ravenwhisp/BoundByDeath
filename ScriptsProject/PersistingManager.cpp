@@ -15,6 +15,10 @@ void PersistingManager::Start()
     {
         PersistingPowerupState::setUnlockedPowerupState(PersistingCheckpointState::Get().m_savedUnlockedPowerups);
     }
+
+    PersistingCheckpointState::Get().m_deadEnemies.clear();
+    PersistingCheckpointState::Get().m_brokenBreakables.clear();
+    PersistingCheckpointState::Get().m_solvedPuzzles.fill(false);
 }
 
 void PersistingManager::OnGameStop()
