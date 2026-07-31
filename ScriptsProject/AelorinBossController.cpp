@@ -74,35 +74,48 @@ void AelorinBossController::setPhase(Phase phase)
 	m_phase = phase;
 }
 
-void AelorinBossController::updateBossPhase()
+void AelorinBossController::requestPhaseTransition()
+{
+	if (isPhase2() || m_phaseTransitionRequested)
+	{
+		return;
+	}
+
+	m_phaseTransitionRequested = true;
+
+	Debug::log("[AelorinBossController] Phase transition requested.");
+}
+
+void AelorinBossController::markPhaseTransitionTriggered()
+{
+	m_phaseTransitionTriggered = true;
+}
+
+void AelorinBossController::beginPhase2()
 {
 	if (isPhase2())
 	{
 		return;
 	}
 
-	if (!m_aelorinDetectionAggro || !m_hasStartedEncounter)
+	if (!m_phase1GameObject || !m_phase2GameObject)
 	{
 		return;
 	}
 
-	if (!m_damageable)
+	GameObjectAPI::setActive(m_phase1GameObject, false);
+	GameObjectAPI::setActive(m_phase2GameObject, true);
+
+	setPhase(Phase::Phase2);
+
+	m_phaseTransitionRequested = false;
+
+	if (m_damageable)
 	{
-		return;
+		m_damageable->beginPhase2();
 	}
 
-	if (m_damageable->getMaxHp() <= 0.0f)
-	{
-		return;
-	}
-
-	if (m_damageable->canChangePhases())
-	{
-		Debug::log("Phase 2 has started!");
-		GameObjectAPI::setActive(m_phase1GameObject, false);
-		GameObjectAPI::setActive(m_phase2GameObject, true);
-		setPhase(Phase::Phase2);
-	}
+	Debug::log("[AelorinBossController] Phase 2 started.");
 }
 
 // These two will not be needed

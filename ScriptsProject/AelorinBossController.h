@@ -25,10 +25,15 @@ public:
 	//FieldList getExposedFields() const override;
 
 	// Phase helpers
-	void setPhase(Phase phase);
 	Phase getPhase() const { return m_phase; }
+	void setPhase(Phase phase);
 	bool isPhase2() const { return m_phase == Phase::Phase2; }
-	void updateBossPhase();
+	
+	void requestPhaseTransition();
+	void markPhaseTransitionTriggered();
+	void beginPhase2();
+	bool isPhaseTransitionRequested() const { return m_phaseTransitionRequested; }
+	bool canTriggerPhaseTransition() const { return m_phaseTransitionRequested && !m_phaseTransitionTriggered; }
 
 protected:
 	Transform* acquireCurrentTarget() override;
@@ -39,6 +44,8 @@ private:
 	AelorinDamageable* m_damageable = nullptr;
 
 	Phase m_phase = Phase::Phase1;
+	bool m_phaseTransitionRequested = false;
+	bool m_phaseTransitionTriggered = false;
 
 	bool m_hasStartedEncounter = false;
 
