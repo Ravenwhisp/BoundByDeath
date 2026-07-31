@@ -6,6 +6,7 @@ IMPLEMENT_SCRIPT_FIELDS(ArthurUI,
 		SERIALIZED_COMPONENT_REF(m_healthBarCanvas, "Health Bar Canvas", ComponentType::TRANSFORM),
 		SERIALIZED_COMPONENT_REF(m_healthBarContainer, "Health Bar Container", ComponentType::TRANSFORM2D),
 		SERIALIZED_COMPONENT_REF(m_healthBarPhase2, "Health Bar Phase 2", ComponentType::TRANSFORM2D),
+		SERIALIZED_COMPONENT_REF(m_healthBarPhaseMarker, "Health Bar Phase Marker", ComponentType::TRANSFORM2D),
 		SERIALIZED_FLOAT(m_healthBarDuration, "Health Bar Duration", 0.0f, 10.0f, 0.1f)
 	),
 
@@ -113,6 +114,7 @@ void ArthurUI::setupHealthUI()
 	m_healthBarCanvasTransform = m_healthBarCanvas.getReferencedComponent();
 	m_healthBarContainerTransform2D = m_healthBarContainer.getReferencedComponent();
 	m_healthBarPhase2Transform2D = m_healthBarPhase2.getReferencedComponent();
+	m_healthBarPhaseMarkerTransform2D = m_healthBarPhaseMarker.getReferencedComponent();
 
 	if (!m_healthBarCanvasTransform)
 	{
@@ -137,6 +139,12 @@ void ArthurUI::setupHealthUI()
 	if (m_healthBarPhase2Transform2D)
 	{
 		Transform2DAPI::setAlpha(m_healthBarPhase2Transform2D, 0.0f);
+	}
+
+	if (m_healthBarPhaseMarkerTransform2D)
+	{
+		updateHealthPhaseMarkerPosition();
+		setHealthPhaseMarkerVisible(false);
 	}
 }
 
@@ -201,6 +209,16 @@ void ArthurUI::showHealthUI(bool show)
 	m_healthBarVisible = show;
 	m_healthBarTimer = m_healthBarDuration;
 
+	if (show && !m_healthBarPhase2Visible)
+	{
+		updateHealthPhaseMarkerPosition();
+		setHealthPhaseMarkerVisible(true);
+	}
+	else if (!show)
+	{
+		setHealthPhaseMarkerVisible(false);
+	}
+
 	GameObjectAPI::setActive(canvasOwner, true);
 }
 
@@ -213,6 +231,35 @@ void ArthurUI::updateHealthUIPhase()
 
 	m_healthBarPhase2Visible = true;
 	m_healthBarPhase2Timer = m_healthBarDuration;
+
+	setHealthPhaseMarkerVisible(false);
+}
+
+void ArthurUI::updateHealthPhaseMarkerPosition()
+{
+	if (!m_healthBarContainerTransform2D || !m_healthBarPhaseMarkerTransform2D)
+	{
+		return;
+	}
+
+	const Vector2 containerSize = Transform2DAPI::getBaseSize(m_healthBarContainerTransform2D);
+	const Vector2 containerPivot = Transform2DAPI::getPivot(m_healthBarContainerTransform2D);
+	const Vector2 markerPosition = Transform2DAPI::getPosition(m_healthBarPhaseMarkerTransform2D);
+
+	const float leftEdge = -containerSize.x * containerPivot.x;
+	const float markerX = leftEdge + containerSize.x * 0.5f;
+
+	Transform2DAPI::setPosition(m_healthBarPhaseMarkerTransform2D, Vector2(markerX, markerPosition.y));
+}
+
+void ArthurUI::setHealthPhaseMarkerVisible(bool visible)
+{
+	if (!m_healthBarPhaseMarkerTransform2D)
+	{
+		return;
+	}
+
+	Transform2DAPI::setAlpha(m_healthBarPhaseMarkerTransform2D, visible ? 1.0f : 0.0f);
 }
 
 void ArthurUI::setupHeavySwipeUI()

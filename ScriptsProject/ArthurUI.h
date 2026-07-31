@@ -22,6 +22,8 @@ public:
 	void updateHealthUI();
 	void showHealthUI(bool show);
 	void updateHealthUIPhase();
+	void updateHealthPhaseMarkerPosition();
+	void setHealthPhaseMarkerVisible(bool visible);
 
 	// Heavy Swipe
 	void setupHeavySwipeUI();
@@ -55,10 +57,12 @@ private:
 	ComponentRef<Transform> m_healthBarCanvas;
 	ComponentRef<Transform2D> m_healthBarContainer;
 	ComponentRef<Transform2D> m_healthBarPhase2;
+	ComponentRef<Transform2D> m_healthBarPhaseMarker;
 
 	Transform* m_healthBarCanvasTransform = nullptr;
 	Transform2D* m_healthBarContainerTransform2D = nullptr;
 	Transform2D* m_healthBarPhase2Transform2D = nullptr;
+	Transform2D* m_healthBarPhaseMarkerTransform2D = nullptr;
 
 	float m_healthBarTimer = 0.0f;
 	bool m_healthBarVisible = false;
