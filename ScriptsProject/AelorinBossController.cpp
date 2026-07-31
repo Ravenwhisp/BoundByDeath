@@ -60,6 +60,11 @@ void AelorinBossController::Start()
 
 void AelorinBossController::Update()
 {
+	updateEncounter();
+}
+
+void AelorinBossController::updateEncounter()
+{
 	if (!m_hasStartedEncounter && m_aelorinDetectionAggro)
 	{
 		if (m_aelorinDetectionAggro->startEncounter())
@@ -109,6 +114,7 @@ void AelorinBossController::beginPhase2()
 	setPhase(Phase::Phase2);
 
 	m_phaseTransitionRequested = false;
+	m_phaseTransitionTriggered = false;
 
 	if (m_damageable)
 	{

@@ -24,6 +24,9 @@ public:
 
 	//FieldList getExposedFields() const override;
 
+	// Encounter
+	void updateEncounter();
+
 	// Phase helpers
 	Phase getPhase() const { return m_phase; }
 	void setPhase(Phase phase);

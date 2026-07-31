@@ -187,9 +187,7 @@ void AelorinDamageable::processShadowExecution(const EnemyHitContext& ctx)
         return;
     }
 
-    const bool isPhase2 = m_controller && m_controller->isPhase2();
-
-    if (isPhase2)
+    if (m_controller && m_controller->isPhase2())
     {
         handleFinalDeath(ctx);
         return;
@@ -241,12 +239,10 @@ void AelorinDamageable::requestPhaseTransition()
 
     Debug::log("[AelorinDamageable] Final Phase 1 threshold broken. Phase transition requested.");
 
-    if (!m_controller)
+    if (m_controller)
     {
-        return;
+        m_controller->requestPhaseTransition();
     }
-
-    m_controller->requestPhaseTransition();
 }
 
 void AelorinDamageable::beginPhase2()
