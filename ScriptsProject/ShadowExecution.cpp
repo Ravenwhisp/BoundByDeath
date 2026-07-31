@@ -118,8 +118,9 @@ void ShadowExecution::Update()
     if (p1IsOpen && m_p1WindowTimer <= 0.0f)
         Debug::log("[ShadowExecution] Player 1 window expired.");
 
-
     if (Input::isFaceButtonTopJustPressed(0))
+        tryTrigger();
+    /*if (Input::isFaceButtonTopJustPressed(0))
     {
         if (m_reaperGauge->isFull())
         {
@@ -146,7 +147,7 @@ void ShadowExecution::Update()
         }
     }
     if (m_p0WindowTimer > 0.0f && m_p1WindowTimer > 0.0f && m_reaperGauge->isFull())
-        tryTrigger();
+        tryTrigger();*/
 }
 
 void ShadowExecution::cachePlayers()
@@ -195,6 +196,9 @@ void ShadowExecution::beginExecution()
     m_p0WindowTimer  = 0.0f;
     m_p1WindowTimer  = 0.0f;
     m_hitEnemies.clear();
+
+    // temp
+    m_maxRadius = 100.0f;
 
     m_reaperGauge->consume();
 

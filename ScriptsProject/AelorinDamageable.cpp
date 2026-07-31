@@ -150,7 +150,7 @@ void AelorinDamageable::processNormalDamage(const EnemyHitContext& ctx)
     }
 
     EnemyHitContext adjustedContext = ctx;
-    adjustedContext.damage = std::min(ctx.damage, damageUntilThreshold);
+    (adjustedContext.damage) = (std::min)(ctx.damage, damageUntilThreshold);
 
     if (adjustedContext.damage <= 0.0f)
     {

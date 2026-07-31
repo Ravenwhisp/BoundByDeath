@@ -118,6 +118,37 @@ void AelorinBossController::beginPhase2()
 	Debug::log("[AelorinBossController] Phase 2 started.");
 }
 
+bool AelorinBossController::trySendPhaseTransitionTrigger(AnimationComponent* animation)
+{
+	if (!m_phaseTransitionRequested)
+	{
+		return false;
+	}
+
+	if (m_phaseTransitionTriggered)
+	{
+		return false;
+	}
+
+	if (!animation)
+	{
+		return false;
+	}
+
+	const bool sent = AnimationAPI::sendTrigger(animation, "ToPhaseTransition");
+
+	if (!sent)
+	{
+		return false;
+	}
+
+	markPhaseTransitionTriggered();
+
+	Debug::log("[AelorinBossController] ToPhaseTransition trigger sent.");
+
+	return true;
+}
+
 // These two will not be needed
 Transform* AelorinBossController::acquireCurrentTarget()
 {

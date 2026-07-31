@@ -35,6 +35,11 @@ void AelorinIdleState::OnStateUpdate()
 	{
 		return;
 	}
+
+	if (m_controller->trySendPhaseTransitionTrigger(m_animation))
+	{
+		return;
+	}
 }
 
 void AelorinIdleState::OnStateExit()

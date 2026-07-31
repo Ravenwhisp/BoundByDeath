@@ -35,6 +35,8 @@ public:
 	bool isPhaseTransitionRequested() const { return m_phaseTransitionRequested; }
 	bool canTriggerPhaseTransition() const { return m_phaseTransitionRequested && !m_phaseTransitionTriggered; }
 
+	bool trySendPhaseTransitionTrigger(AnimationComponent* animation);
+
 protected:
 	Transform* acquireCurrentTarget() override;
 	bool isTargetDowned(Transform* target) const override;
