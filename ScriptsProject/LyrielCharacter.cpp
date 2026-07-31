@@ -68,7 +68,7 @@ void LyrielCharacter::Start()
         Debug::log("[LyrielCharacter] PlayerMovement not found on owner '%s'.", GameObjectAPI::getName(getOwner()));
     }
 
-    if (PersistingCheckpointState::Get().m_lastCheckpointId > CheckpointId::NONE)
+    if (!PersistingCheckpointState::Get().IsStartOfLevel())
     {
         TransformAPI::setGlobalPosition(GameObjectAPI::getTransform(m_owner),
             PersistingCheckpointState::Get().m_savedLyrielRespawn);

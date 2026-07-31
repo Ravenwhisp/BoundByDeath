@@ -11,7 +11,7 @@ BreakableDamageable::BreakableDamageable(GameObject* owner)
 
 void BreakableDamageable::Start()
 {
-    if(PersistingCheckpointState::Get().m_lastCheckpointId > CheckpointId::NONE)
+    if(!PersistingCheckpointState::Get().IsStartOfLevel())
     {
         std::vector<UID>* brokenBreakables = &PersistingCheckpointState::Get().m_brokenBreakablesPersistent;
 

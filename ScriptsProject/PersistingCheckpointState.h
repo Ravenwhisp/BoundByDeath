@@ -7,15 +7,19 @@
 
 enum CheckpointId
 {
-	NONE = 0,
+	NONE = 0, // Start of the game
 
-    CHECKPOINT_1_LEVEL_1= 100,
+    CHECKPOINT_1_LEVEL_1 = 101,
     CHECKPOINT_2_LEVEL_1,
     CHECKPOINT_3_LEVEL_1,
 
-	CHECKPOINT_1_LEVEL_2 = 200,
+    LEVEL_2 = 200, // Start of Level 2
 
-	CHECKPOINT_1_LEVEL_3 = 300,
+	CHECKPOINT_1_LEVEL_2 = 201,
+
+    LEVEL_3 = 300, // Start of Level 3
+
+	CHECKPOINT_1_LEVEL_3 = 301,
 	//... Add more checkpoints as needed
 };
 
@@ -37,26 +41,31 @@ public:
 
     void Reset();
 
+    bool IsStartOfLevel() const { return m_lastCheckpointId % 100 == 0; };
+
 public:
     CheckpointId m_lastCheckpointId = CheckpointId::NONE;
 
+    // elementos globales
     float m_savedReaperGaugeAmount = 0.f;
     bool m_savedUnlockedPowerups[static_cast<int>(PowerupId::Count)];
 
-    float m_savedLyrielHealth = 0.f;
-    float m_savedDeathHealth = 0.f;
+    float m_savedLyrielHealth = 0.f; //poner vida maxima y que se setee siempre en el start
+    float m_savedDeathHealth = 0.f; //poner vida maxima y que se setee siempre en el start
 
+    std::array<bool, static_cast<size_t>(PuzzleId::COUNT)> m_solvedPuzzles{};
+    std::array<bool, static_cast<size_t>(PuzzleId::COUNT)> m_solvedPuzzlesPersistent{};
+
+    // elementos correspondientes a cada nivel
     Vector3 m_savedLyrielRespawn;
     Vector3 m_savedDeathRespawn;
 
     std::vector<UID> m_deadEnemies;
     std::vector<UID> m_brokenBreakables;
     std::vector<UID> m_triggeredEvents;
-    std::array<bool, static_cast<size_t>(PuzzleId::COUNT)> m_solvedPuzzles{};
 
     std::vector<UID> m_deadEnemiesPersistent;
     std::vector<UID> m_brokenBreakablesPersistent;
     std::vector<UID> m_triggeredEventsPersistent;
-    std::array<bool, static_cast<size_t>(PuzzleId::COUNT)> m_solvedPuzzlesPersistent{};
 
 };

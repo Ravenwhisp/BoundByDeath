@@ -15,7 +15,7 @@ GameplayEventTrigger::GameplayEventTrigger(GameObject* owner)
 
 void GameplayEventTrigger::Start()
 {
-    if (PersistingCheckpointState::Get().m_lastCheckpointId > CheckpointId::NONE)
+    if (!PersistingCheckpointState::Get().IsStartOfLevel())
     {
         std::vector<UID>* triggeredEvents = &PersistingCheckpointState::Get().m_triggeredEventsPersistent;
 

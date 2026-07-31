@@ -23,7 +23,7 @@ EnemyDamageable::EnemyDamageable(GameObject* owner)
 
 void EnemyDamageable::Start()
 {
-	if (PersistingCheckpointState::Get().m_lastCheckpointId > CheckpointId::NONE)
+	if (!PersistingCheckpointState::Get().IsStartOfLevel())
 	{
 		std::vector<UID>* deadEnemies = &PersistingCheckpointState::Get().m_deadEnemiesPersistent;
 
