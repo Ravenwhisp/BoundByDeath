@@ -3,7 +3,7 @@
 #include "EnemyBaseAttackConfig.h"
 
 #include "Damageable.h"
-#include "EnemyBaseAttackConfig.h"
+#include "EnemyBaseDataConfig.h"
 #include "EnemySound.h"
 
 static const char* navAgentProfileNames[] =
@@ -30,13 +30,15 @@ EnemyBaseController::EnemyBaseController(GameObject* owner)
 
 void EnemyBaseController::Start()
 {
-    const EnemyBaseAttackConfig* cfg = getAttackConfig();
-    if (cfg)
+    const EnemyBaseDataConfig* cfg = getBaseDataConfig();
+    if (!cfg)
     {
-        m_moveSpeed = cfg->m_moveSpeed;
-        m_recoveryDuration = cfg->m_recoveryDuration;
-        m_stunnedDuration = cfg->m_stunnedDuration;
+        return;
     }
+
+    m_moveSpeed = cfg->m_moveSpeed;
+    m_recoveryDuration = cfg->m_recoveryDuration;
+    m_stunnedDuration = cfg->m_stunnedDuration;
 }
 
 void EnemyBaseController::updateCurrentTarget()
@@ -65,6 +67,11 @@ bool EnemyBaseController::hasValidTarget() const
     }
 
     return true;
+}
+
+const EnemyBaseDataConfig* EnemyBaseController::getBaseDataConfig() const
+{
+    return getAttackConfig();
 }
 
 float EnemyBaseController::getDistanceToCurrentTarget() const
