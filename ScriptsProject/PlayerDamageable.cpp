@@ -8,7 +8,8 @@
 #include "PlayerAnimationController.h"
 
 IMPLEMENT_SCRIPT_FIELDS_INHERITED(PlayerDamageable, Damageable,
-    SERIALIZED_FLOAT(m_heartbeatThreshold, "Heartbeat Threshold", 0.5f, 0.25f, 0.0f),
+    SERIALIZED_COMPONENT_REF(m_healthGlow, "Health Glow", ComponentType::UISLIDER),
+    SERIALIZED_FLOAT(m_heartbeatThreshold, "Heartbeat Threshold", 0.0f, 1.00f, 0.0f),
     SERIALIZED_COMPONENT_REF(m_renderer, "Mesh Renderer", ComponentType::TRANSFORM),
     SERIALIZED_FLOAT(m_damageHighlightSpeed, "Damage Highlight Speed", 0.1f, 5.0f, 0.0f)
 )
@@ -21,6 +22,8 @@ PlayerDamageable::PlayerDamageable(GameObject* owner)
 void PlayerDamageable::Start()
 {
     Damageable::Start();
+
+    setupPlayerHealthUI();
 
     m_playerAnimationController = GameObjectAPI::findScript<PlayerAnimationController>(m_owner);
 
@@ -46,11 +49,11 @@ void PlayerDamageable::Start()
     }
     else
     {
-        m_playerRenderBuffer = Shaders::getPlayerRenderBufferComponent(ComponentAPI::getOwner(rendererTransform));
+        m_damageHighlight = ShadersAPI::getDamageHighlightComponent(ComponentAPI::getOwner(rendererTransform));
 
-        if (m_playerRenderBuffer == nullptr)
+        if (m_damageHighlight == nullptr)
         {
-            Debug::warn("Renderer referenced in PlayerDamageable on '%s' does not have a PlayerRenderbuffer component.", GameObjectAPI::getName(getOwner()));
+            Debug::warn("Renderer referenced in PlayerDamageable on '%s' does not have a DamageHighlight component.", GameObjectAPI::getName(getOwner()));
         }
     }
 }
@@ -68,7 +71,7 @@ void PlayerDamageable::Update()
             m_damageHighlightActive = false;
         }
 
-        Shaders::setDamageHighlightIntensity(m_playerRenderBuffer, m_damageHighlightTimer);
+        ShadersAPI::setDamageHighlightIntensity(m_damageHighlight, m_damageHighlightTimer);
     }
 
     if (!m_haptic) return;
@@ -111,6 +114,41 @@ void PlayerDamageable::onDamaged(float amount)
     
 }
 
+void PlayerDamageable::onHealthUIChanged(float previousHpPercent, float currentHpPercent)
+{
+    if (!m_healthGlowSlider || !m_healthGlowSheet)
+    {
+        return;
+    }
+
+    float delayedBarPercent = previousHpPercent;
+
+    if (m_healthBar2Slider)
+    {
+        delayedBarPercent = SliderAPI::getFillAmount(m_healthBar2Slider);
+    }
+
+    SliderAPI::setFillAmountVec(m_healthGlowSlider, Vector2(currentHpPercent, delayedBarPercent));
+
+    UISheetAPI::play(m_healthGlowSheet);
+}
+
+void PlayerDamageable::setupPlayerHealthUI()
+{
+    m_healthGlowSlider = m_healthGlow.getReferencedComponent();
+
+    if (!m_healthGlowSlider)
+    {
+        return;
+    }
+
+    GameObject* glowObject = ComponentAPI::getOwner(m_healthGlowSlider);
+
+    m_healthGlowSheet = static_cast<UISheet*>(GameObjectAPI::getComponent( glowObject, ComponentType::UISHEET));
+
+    SliderAPI::setFillAmount(m_healthGlowSlider, getHpPercent());
+}
+
 void PlayerDamageable::playHurtSfx()
 {
     if (m_deathSound != nullptr)
@@ -125,7 +163,7 @@ void PlayerDamageable::playHurtSfx()
 
 void PlayerDamageable::playHurtVfx()
 {
-    if (m_playerRenderBuffer == nullptr)
+    if (m_damageHighlight == nullptr)
     {
         return;
     }

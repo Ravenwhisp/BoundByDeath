@@ -22,7 +22,6 @@ protected:
 
     void onAttackWindowUpdate() override;
     void onAttackWindowFinished() override;
-    void onHitFrame() override;
 
     float getCooldown() const override;
 
@@ -37,7 +36,7 @@ private:
     bool isAimStickValid(const Vector3& direction) const;
 
     void collectEnemiesInCone(const Vector3& origin, const Vector3& forward, std::vector<Damageable*>& outTargets);
-    bool applyVolleyDamage(const std::vector<Damageable*>& targets);
+    void applyVolleyDamage(const std::vector<Damageable*>& targets);
     void spawnVolleyArrows(const Vector3& origin, const Vector3& forward);
 
     void drawAimPreview(const Vector3& origin, const Vector3& forward) const;
@@ -48,7 +47,4 @@ private:
     bool m_isAiming = false;
     Vector3 m_currentAimDirection = Vector3::Zero;
     Vector3 m_attackFacingDirection = Vector3::Zero;
-
-    Vector3 m_castOrigin = Vector3::Zero;
-    Vector3 m_castForward = Vector3::Zero;
 };

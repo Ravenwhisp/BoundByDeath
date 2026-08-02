@@ -169,6 +169,7 @@
     <ClInclude Include="ArthurAttackConfig.h" />
     <ClInclude Include="ArthurAttackDebugDraw.h" />
     <ClInclude Include="ArthurUI.h" />
+    <ClInclude Include="BoundConfig.h" />
     <ClInclude Include="CameraFollow.h" />
     <ClInclude Include="AudioListenerFollow.h" />
     <ClInclude Include="CameraSwitcher.h" />
@@ -176,9 +177,12 @@
     <ClInclude Include="CameraTransitionEvent.h" />
     <ClInclude Include="CameraTransitionStep.h" />
     <ClInclude Include="CameraTransitionStepAction.h" />
+    <ClInclude Include="ChargedAttackBase.h" />
     <ClInclude Include="CombatAreaEvent.h" />
+    <ClInclude Include="CrystalVisuals.h" />
     <ClInclude Include="DeathParticles.h" />
     <ClInclude Include="EnemyAttackState.h" />
+    <ClInclude Include="PlayerAttackType.h" />
     <ClInclude Include="EnemyBaseAttackConfig.h" />
     <ClInclude Include="CharacterUI.h" />
     <ClInclude Include="DeathConfig.h" />
@@ -193,6 +197,8 @@
     <ClInclude Include="ArthurDetectionAggro.h" />
     <ClInclude Include="ArthurEarthHammer.h" />
     <ClInclude Include="ArthurHeavySwipe.h" />
+    <ClInclude Include="EnemyBaseDataConfig.h" />
+    <ClInclude Include="EnemyForcedMovement.h" />
     <ClInclude Include="EnemyRecoverState.h" />
     <ClInclude Include="ArthurSideSweep.h" />
     <ClInclude Include="Bound.h" />
@@ -218,6 +224,7 @@
     <ClInclude Include="EnergyBallProjectile.h" />
     <ClInclude Include="GameplayEventAction.h" />
     <ClInclude Include="GameplayEventTrigger.h" />
+    <ClInclude Include="HapticTester.h" />
     <ClInclude Include="HUDFader.h" />
     <ClInclude Include="LinkedDeathController.h" />
     <ClInclude Include="LocalMultiplayerSetup.h" />
@@ -239,6 +246,7 @@
     <ClInclude Include="EnemyShadowMark.h" />
     <ClInclude Include="HealthDropSpawner.h" />
     <ClInclude Include="HeartbeatHaptic.h" />
+    <ClInclude Include="PlayerGamepadBinding.h" />
     <ClInclude Include="LightZoneManager.h" />
     <ClInclude Include="LightZoneTrigger.h" />
     <ClInclude Include="LyrielTargetIndicatorUI.h" />
@@ -285,6 +293,7 @@
     <ClInclude Include="AbilityDash.h" />
     <ClInclude Include="LyrielDash.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="ShadowExecutionConfig.h" />
     <ClInclude Include="SkeletonAttackConfig.h" />
     <ClInclude Include="SkeletonAttackDebugDraw.h" />
     <ClInclude Include="SkeletonChaseState.h" />
@@ -338,7 +347,9 @@
     <ClCompile Include="CameraTransitionEvent.cpp" />
     <ClCompile Include="CameraTransitionStep.cpp" />
     <ClCompile Include="CameraTransitionStepAction.cpp" />
+    <ClCompile Include="ChargedAttackBase.cpp" />
     <ClCompile Include="CombatAreaEvent.cpp" />
+    <ClCompile Include="CrystalVisuals.cpp" />
     <ClCompile Include="DeathParticles.cpp" />
     <ClCompile Include="EnemyAttackState.cpp" />
     <ClCompile Include="EnemyBaseAttackConfig.cpp" />
@@ -355,6 +366,8 @@
     <ClCompile Include="ArthurDetectionAggro.cpp" />
     <ClCompile Include="ArthurEarthHammer.cpp" />
     <ClCompile Include="ArthurHeavySwipe.cpp" />
+    <ClCompile Include="EnemyBaseDataConfig.cpp" />
+    <ClCompile Include="EnemyForcedMovement.cpp" />
     <ClCompile Include="EnemyRecoverState.cpp" />
     <ClCompile Include="ArthurSideSweep.cpp" />
     <ClCompile Include="Bound.cpp" />
@@ -379,6 +392,7 @@
     <ClCompile Include="EnemyStunParticles.cpp" />
     <ClCompile Include="EnergyBallProjectile.cpp" />
     <ClCompile Include="GameplayEventTrigger.cpp" />
+    <ClCompile Include="HapticTester.cpp" />
     <ClCompile Include="HUDFader.cpp" />
     <ClCompile Include="LinkedDeathController.cpp" />
     <ClCompile Include="LocalMultiplayerSetup.cpp" />
@@ -401,6 +415,7 @@
     <ClCompile Include="EnemyShadowMark.cpp" />
     <ClCompile Include="HealthDropSpawner.cpp" />
     <ClCompile Include="HeartbeatHaptic.cpp" />
+    <ClCompile Include="PlayerGamepadBinding.cpp" />
     <ClCompile Include="LightZoneManager.cpp" />
     <ClCompile Include="LightZoneTrigger.cpp" />
     <ClCompile Include="LyrielTargetIndicatorUI.cpp" />
@@ -453,6 +468,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="ShadowExecutionConfig.cpp" />
     <ClCompile Include="SkeletonAttackConfig.cpp" />
     <ClCompile Include="SkeletonAttackDebugDraw.cpp" />
     <ClCompile Include="SkeletonChaseState.cpp" />
@@ -472,7 +488,6 @@
     <ClCompile Include="PlayerRotation.cpp" />
     <ClCompile Include="PlayerState.cpp" />
     <ClCompile Include="PlayerTargetController.cpp" />
-    <ClCompile Include="SummonerAttackConfig.cpp" />
     <ClCompile Include="SummonerEnergyBallState.cpp" />
     <ClCompile Include="SummonerEnemyController.cpp" />
     <ClCompile Include="SummonerIdleState.cpp" />

@@ -17,13 +17,11 @@ public:
 private:
     void startAbility() override;
     bool spawnArrowToTarget(GameObject* target);
-    bool fireArrow(GameObject* target);
     void faceTarget(GameObject* target);
 
 protected:
     void onAttackWindowUpdate() override;
     void onAttackWindowFinished() override;
-    void onHitFrame() override;
 
     float getCooldown() const override;
 

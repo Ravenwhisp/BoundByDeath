@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "EnemyDamageable.h"
 #include <vector>
@@ -11,7 +11,7 @@ public:
     explicit BarrierEnemyDamageable(GameObject* owner);
 
     void Start() override;
-    ScriptFieldList getExposedFields() const override;
+    FieldList getExposedFields() const override;
 
     void takeDamage(float amount) override;
     void takeDamage(const HitContext& ctx) override;
@@ -19,15 +19,14 @@ public:
 
     bool hasActiveBarriers() const { return m_nextBarrierIndex < m_barriers.size(); }
     size_t getRemainingBarrierCount() const { return m_barriers.size() - m_nextBarrierIndex; }
+    bool hasActiveBarrierAt(float hpPercent) const;
 
 public:
     std::vector<float> m_barriersThresholds;
-    int m_requiredAttackType = static_cast<int>(EnemyAttackType::ShadowMarkExploit);
-    bool m_shadowMarkExploitBreaksBarriers = true;
     PrefabRef m_barrierPrefab;
 
-    float m_minPos = 80.0f;
-    float m_maxPos = -90.0f;
+    float m_minPos = -80.0f;
+    float m_maxPos = 80.0f;
     float m_barrierUIHeight = 0.0f;
 
 private:
@@ -40,6 +39,7 @@ private:
     struct BarrierUI
     {
         GameObject* gameObject = nullptr;
+        Transform2D* transform2D = nullptr;
         float hpPercent;
     };
 
@@ -47,9 +47,12 @@ private:
     void instantiateBarrierUIs();
     void destroyBrokenBarrierUI(size_t index);
     float getNextBarrierAbsoluteHp() const;
-    bool canBreakBarrier(EnemyAttackType attackType) const;
+    void breakNextBarrier();
 
     std::vector<Barrier> m_barriers;
     std::vector<BarrierUI> m_barrierUIs;
     size_t m_nextBarrierIndex = 0;
+
+protected:
+    void setHealthBarAlpha(float alpha) override;
 };

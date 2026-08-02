@@ -1,0 +1,1794 @@
+{
+    "Version": 2,
+    "sourcePath": "Assets\\Prefabs\\Enemies\\Enemy Dwarf.prefab",
+    "Name": "Enemy Dwarf",
+    "Active": true,
+    "Static": false,
+    "Layer": "DEFAULT",
+    "Tag": "ENEMY",
+    "Transform": {
+        "Position": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "Rotation": [
+            -0.0,
+            0.0,
+            -0.0,
+            1.0
+        ],
+        "Scale": [
+            1.0,
+            1.0,
+            1.0
+        ]
+    },
+    "Components": [
+        {
+            "UID": 2444710092696028202,
+            "ComponentType": "ANIMATION",
+            "Active": true,
+            "StateMachineUID": {
+                "uid": 6913162384799397660,
+                "libId": "1fb92df2a01eaee3cfa47ab3359bb56c",
+                "type": "ANIMATION_STATE_MACHINE"
+            },
+            "AnimationSourceUID": {
+                "uid": 0,
+                "libId": "",
+                "type": "UNKNOWN"
+            },
+            "PlayOnStart": true,
+            "ApplyScale": false,
+            "ForceWorldAfterApply": true
+        },
+        {
+            "UID": 6839872566295328364,
+            "ComponentType": "SCRIPT",
+            "Active": true,
+            "ScriptName": "EnemyDetectionAggro",
+            "ScriptFields": {
+                "Detection Radius": 10.0,
+                "Target Lock Duration": 5.0,
+                "Debug Enabled": true,
+                "Lyriel Transform": 743245849143440901,
+                "Death Transform": 16858939129400802547
+            }
+        },
+        {
+            "UID": 8778654910285729356,
+            "ComponentType": "SCRIPT",
+            "Active": true,
+            "ScriptName": "SpiderEnemyController",
+            "ScriptFields": {
+                "Enemy Type": 2,
+                "Turn Speed Degrees": 360.0,
+                "Repath Interval": 0.5,
+                "Path Point Reach Distance": 0.25,
+                "Path Search Extents": [
+                    5.0,
+                    5.0,
+                    5.0
+                ],
+                "Attack Config": {
+                    "uid": 1997948656421177250,
+                    "libId": "8c4fc3beb7aec43c5b6403fd958d8aef",
+                    "type": "DATA_CONTAINER"
+                }
+            }
+        },
+        {
+            "UID": 12957541681659263038,
+            "ComponentType": "SCRIPT",
+            "Active": true,
+            "ScriptName": "EnemyBaseAttackConfig"
+        },
+        {
+            "UID": 8843632120597790817,
+            "ComponentType": "SCRIPT",
+            "Active": true,
+            "ScriptName": "EnemyAttackExecutor",
+            "ScriptFields": {}
+        },
+        {
+            "UID": 7255340833447147560,
+            "ComponentType": "SCRIPT",
+            "Active": true,
+            "ScriptName": "EnemyDamageable",
+            "ScriptFields": {
+                "Max HP": 20.0,
+                "Health Slider": 0,
+                "Health Slider 2": 0,
+                "UI Update Time (Slider 2)": 1.0,
+                "UI Wait Time (Slider 2)": 0.6000000238418579,
+                "Health Bar Container": 0,
+                "Health Bar Fade Time": 0.25,
+                "Shadow Execution Preview": 0,
+                "Shadow Execution Threshold Marker": 0,
+                "Shadow Preview Fade Time": 0.20000000298023224,
+                "Shadow Preview Hit Time": 0.20000000298023224,
+                "Shadow Preview Non-Lethal Alpha": 0.699999988079071,
+                "Shadow Preview Lethal Alpha": 1.0
+            }
+        },
+        {
+            "UID": 905770452977588344,
+            "ComponentType": "SCRIPT",
+            "Active": true,
+            "ScriptName": "EnemyShadowMark",
+            "ScriptFields": {
+                "Use Mark Duration": false,
+                "Mark Duration": 3.0,
+                "Mark Fade Duration": 0.5,
+                "Canvas Transform": 0,
+                "Mark Death Sprite": 0,
+                "Mark Lyriel Sprite": 0,
+                "Mark Both Sprite": 0,
+                "Explosion Duration": 0.20000000298023224,
+                "Explosion Scale Multiplier": 1.2999999523162842,
+                "Entry Pop Duration": 0.11999999731779099,
+                "Entry Pop Start Scale": 0.800000011920929,
+                "Entry Pop Peak Scale": 1.100000023841858,
+                "Ready Pop Peak Scale": 1.2000000476837158
+            }
+        },
+        {
+            "UID": 7721238338326201442,
+            "ComponentType": "SCRIPT",
+            "Active": true,
+            "ScriptName": "EnemyForcedMovement",
+            "ScriptFields": {}
+        }
+    ],
+    "Children": [
+        {
+            "Name": "Hobbit",
+            "Active": true,
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.7071068286895752,
+                    0.0,
+                    0.0,
+                    0.7071068286895752
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [
+                {
+                    "UID": 13118510842040165043,
+                    "ComponentType": "MODEL",
+                    "Active": true,
+                    "MeshAssetId": {
+                        "uid": 13371476406969661153,
+                        "libId": "e62498bb254c34cad0c507abea386452",
+                        "type": "MESH"
+                    },
+                    "SkinAssetId": {
+                        "uid": 11466635705232141369,
+                        "libId": "4e885d5de2accc5d793bfbf2984580b5",
+                        "type": "SKIN"
+                    },
+                    "Materials": [
+                        {
+                            "uid": 16745961617354812937,
+                            "libId": "48cd428e2e2f0c979dd417b6866af2f8",
+                            "type": "MATERIAL"
+                        }
+                    ],
+                    "Render Mode": 0
+                }
+            ],
+            "Children": []
+        },
+        {
+            "Name": "bones",
+            "Active": true,
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    -0.6697115898132324,
+                    -0.24787776172161102,
+                    0.09124153852462769,
+                    0.6940590739250183
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [],
+            "Children": [
+                {
+                    "Name": "branch",
+                    "Active": true,
+                    "Static": false,
+                    "Layer": "DEFAULT",
+                    "Tag": "DEFAULT",
+                    "Transform": {
+                        "Position": [
+                            0.9253131747245789,
+                            -7.105427198782324e-17,
+                            2.997602219427482e-16
+                        ],
+                        "Rotation": [
+                            -0.022329255938529968,
+                            0.23937158286571503,
+                            0.09015554189682007,
+                            0.9664753675460815
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "Components": [],
+                    "Children": []
+                },
+                {
+                    "Name": "sword",
+                    "Active": true,
+                    "Static": false,
+                    "Layer": "DEFAULT",
+                    "Tag": "DEFAULT",
+                    "Transform": {
+                        "Position": [
+                            -0.4206520617008209,
+                            -0.11958298087120056,
+                            0.7066925764083862
+                        ],
+                        "Rotation": [
+                            0.9664753675460815,
+                            0.09015554189682007,
+                            -0.23937158286571503,
+                            0.022329255938529968
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "Components": [],
+                    "Children": []
+                },
+                {
+                    "Name": "pelvis",
+                    "Active": true,
+                    "Static": false,
+                    "Layer": "DEFAULT",
+                    "Tag": "DEFAULT",
+                    "Transform": {
+                        "Position": [
+                            0.14809295535087585,
+                            0.010371011681854725,
+                            0.27942022681236267
+                        ],
+                        "Rotation": [
+                            0.05855031684041023,
+                            -0.5130419731140137,
+                            0.06194242835044861,
+                            0.854121208190918
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "Components": [],
+                    "Children": [
+                        {
+                            "Name": "back",
+                            "Active": true,
+                            "Static": false,
+                            "Layer": "DEFAULT",
+                            "Tag": "DEFAULT",
+                            "Transform": {
+                                "Position": [
+                                    0.13122397661209106,
+                                    0.005536171607673168,
+                                    -1.679212212248986e-17
+                                ],
+                                "Rotation": [
+                                    0.0,
+                                    0.0,
+                                    0.16280318796634674,
+                                    0.9866585731506348
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ]
+                            },
+                            "Components": [],
+                            "Children": [
+                                {
+                                    "Name": "shoulder_R",
+                                    "Active": true,
+                                    "Static": false,
+                                    "Layer": "DEFAULT",
+                                    "Tag": "DEFAULT",
+                                    "Transform": {
+                                        "Position": [
+                                            0.1357336938381195,
+                                            -0.001489801099523902,
+                                            0.034112799912691116
+                                        ],
+                                        "Rotation": [
+                                            0.6998981237411499,
+                                            -0.10071077942848206,
+                                            -0.6998981237411499,
+                                            -0.10071077942848206
+                                        ],
+                                        "Scale": [
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ]
+                                    },
+                                    "Components": [],
+                                    "Children": [
+                                        {
+                                            "Name": "arm_1_R",
+                                            "Active": true,
+                                            "Static": false,
+                                            "Layer": "DEFAULT",
+                                            "Tag": "DEFAULT",
+                                            "Transform": {
+                                                "Position": [
+                                                    -0.10673919320106506,
+                                                    0.009752299636602402,
+                                                    -0.006231999956071377
+                                                ],
+                                                "Rotation": [
+                                                    0.011174704879522324,
+                                                    0.005712658632546663,
+                                                    0.009776167571544647,
+                                                    0.9998734593391418
+                                                ],
+                                                "Scale": [
+                                                    1.0,
+                                                    1.0,
+                                                    1.0
+                                                ]
+                                            },
+                                            "Components": [],
+                                            "Children": [
+                                                {
+                                                    "Name": "arm_2_R",
+                                                    "Active": true,
+                                                    "Static": false,
+                                                    "Layer": "DEFAULT",
+                                                    "Tag": "DEFAULT",
+                                                    "Transform": {
+                                                        "Position": [
+                                                            -0.12805382907390594,
+                                                            -1.3746315197238346e-8,
+                                                            1.0847126219459824e-7
+                                                        ],
+                                                        "Rotation": [
+                                                            -2.268573364523509e-20,
+                                                            -2.1565048348715507e-19,
+                                                            -0.10461948066949844,
+                                                            0.9945123195648193
+                                                        ],
+                                                        "Scale": [
+                                                            1.0,
+                                                            1.0,
+                                                            1.0
+                                                        ]
+                                                    },
+                                                    "Components": [],
+                                                    "Children": [
+                                                        {
+                                                            "Name": "hand_R",
+                                                            "Active": true,
+                                                            "Static": false,
+                                                            "Layer": "DEFAULT",
+                                                            "Tag": "DEFAULT",
+                                                            "Transform": {
+                                                                "Position": [
+                                                                    -0.12804967164993286,
+                                                                    4.6844277790114575e-8,
+                                                                    1.4123254743481084e-7
+                                                                ],
+                                                                "Rotation": [
+                                                                    0.020725887268781662,
+                                                                    0.03425917774438858,
+                                                                    -0.01748846098780632,
+                                                                    0.9990450143814087
+                                                                ],
+                                                                "Scale": [
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0
+                                                                ]
+                                                            },
+                                                            "Components": [],
+                                                            "Children": [
+                                                                {
+                                                                    "Name": "fingers_1_R",
+                                                                    "Active": true,
+                                                                    "Static": false,
+                                                                    "Layer": "DEFAULT",
+                                                                    "Tag": "DEFAULT",
+                                                                    "Transform": {
+                                                                        "Position": [
+                                                                            -0.13554655015468597,
+                                                                            0.0024314483162015676,
+                                                                            0.018775777891278267
+                                                                        ],
+                                                                        "Rotation": [
+                                                                            -0.18254056572914124,
+                                                                            0.2305273413658142,
+                                                                            -0.0071198358200490475,
+                                                                            0.9557642936706543
+                                                                        ],
+                                                                        "Scale": [
+                                                                            1.0,
+                                                                            1.0,
+                                                                            1.0
+                                                                        ]
+                                                                    },
+                                                                    "Components": [],
+                                                                    "Children": []
+                                                                },
+                                                                {
+                                                                    "Name": "b_finger_R",
+                                                                    "Active": true,
+                                                                    "Static": false,
+                                                                    "Layer": "DEFAULT",
+                                                                    "Tag": "DEFAULT",
+                                                                    "Transform": {
+                                                                        "Position": [
+                                                                            -0.06180305778980255,
+                                                                            0.07255478203296661,
+                                                                            0.03848932683467865
+                                                                        ],
+                                                                        "Rotation": [
+                                                                            0.25069504976272583,
+                                                                            -0.027674159035086632,
+                                                                            -0.6005125641822815,
+                                                                            0.7587956190109253
+                                                                        ],
+                                                                        "Scale": [
+                                                                            1.0,
+                                                                            1.0,
+                                                                            1.0
+                                                                        ]
+                                                                    },
+                                                                    "Components": [],
+                                                                    "Children": []
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "Name": "arm_1_R1",
+                                                    "Active": true,
+                                                    "Static": false,
+                                                    "Layer": "DEFAULT",
+                                                    "Tag": "DEFAULT",
+                                                    "Transform": {
+                                                        "Position": [
+                                                            -0.03923506289720535,
+                                                            -4.270181719334687e-8,
+                                                            3.572619391434273e-7
+                                                        ],
+                                                        "Rotation": [
+                                                            1.2939302407311004e-14,
+                                                            -2.97537602195197e-15,
+                                                            -8.847089727481716e-16,
+                                                            1.0
+                                                        ],
+                                                        "Scale": [
+                                                            1.0,
+                                                            1.0,
+                                                            1.0
+                                                        ]
+                                                    },
+                                                    "Components": [],
+                                                    "Children": []
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "Name": "shoulder_L",
+                                    "Active": true,
+                                    "Static": false,
+                                    "Layer": "DEFAULT",
+                                    "Tag": "DEFAULT",
+                                    "Transform": {
+                                        "Position": [
+                                            0.13573400676250458,
+                                            -0.0014899421948939562,
+                                            -0.034112799912691116
+                                        ],
+                                        "Rotation": [
+                                            0.10071077942848206,
+                                            0.6998981237411499,
+                                            -0.10071077942848206,
+                                            0.6998981237411499
+                                        ],
+                                        "Scale": [
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ]
+                                    },
+                                    "Components": [],
+                                    "Children": [
+                                        {
+                                            "Name": "arm_1_L",
+                                            "Active": true,
+                                            "Static": false,
+                                            "Layer": "DEFAULT",
+                                            "Tag": "DEFAULT",
+                                            "Transform": {
+                                                "Position": [
+                                                    0.10673932731151581,
+                                                    -0.009752247482538223,
+                                                    0.00623131450265646
+                                                ],
+                                                "Rotation": [
+                                                    0.011174704879522324,
+                                                    0.005712658632546663,
+                                                    0.009776167571544647,
+                                                    0.9998734593391418
+                                                ],
+                                                "Scale": [
+                                                    1.0,
+                                                    1.0,
+                                                    1.0
+                                                ]
+                                            },
+                                            "Components": [],
+                                            "Children": [
+                                                {
+                                                    "Name": "arm_2_L",
+                                                    "Active": true,
+                                                    "Static": false,
+                                                    "Layer": "DEFAULT",
+                                                    "Tag": "DEFAULT",
+                                                    "Transform": {
+                                                        "Position": [
+                                                            0.1280534565448761,
+                                                            0.0,
+                                                            -7.105426934084528e-16
+                                                        ],
+                                                        "Rotation": [
+                                                            -2.0428042067851915e-18,
+                                                            -2.8376209642817756e-18,
+                                                            -0.10461948066949844,
+                                                            0.9945123195648193
+                                                        ],
+                                                        "Scale": [
+                                                            1.0,
+                                                            1.0,
+                                                            1.0
+                                                        ]
+                                                    },
+                                                    "Components": [],
+                                                    "Children": [
+                                                        {
+                                                            "Name": "hand_L",
+                                                            "Active": true,
+                                                            "Static": false,
+                                                            "Layer": "DEFAULT",
+                                                            "Tag": "DEFAULT",
+                                                            "Transform": {
+                                                                "Position": [
+                                                                    0.12804999947547913,
+                                                                    0.0,
+                                                                    4.9737990656174066e-15
+                                                                ],
+                                                                "Rotation": [
+                                                                    0.020725887268781662,
+                                                                    0.03425917774438858,
+                                                                    -0.01748846098780632,
+                                                                    0.9990450143814087
+                                                                ],
+                                                                "Scale": [
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0
+                                                                ]
+                                                            },
+                                                            "Components": [],
+                                                            "Children": [
+                                                                {
+                                                                    "Name": "fingers_1_L",
+                                                                    "Active": true,
+                                                                    "Static": false,
+                                                                    "Layer": "DEFAULT",
+                                                                    "Tag": "DEFAULT",
+                                                                    "Transform": {
+                                                                        "Position": [
+                                                                            0.13554641604423523,
+                                                                            -0.002431444823741913,
+                                                                            -0.018775375559926033
+                                                                        ],
+                                                                        "Rotation": [
+                                                                            -0.18254056572914124,
+                                                                            0.2305273413658142,
+                                                                            -0.0071198358200490475,
+                                                                            0.9557642936706543
+                                                                        ],
+                                                                        "Scale": [
+                                                                            1.0,
+                                                                            1.0,
+                                                                            1.0
+                                                                        ]
+                                                                    },
+                                                                    "Components": [],
+                                                                    "Children": []
+                                                                },
+                                                                {
+                                                                    "Name": "b_finger_L",
+                                                                    "Active": true,
+                                                                    "Static": false,
+                                                                    "Layer": "DEFAULT",
+                                                                    "Tag": "DEFAULT",
+                                                                    "Transform": {
+                                                                        "Position": [
+                                                                            0.0618026927113533,
+                                                                            -0.07255484163761139,
+                                                                            -0.03848913684487343
+                                                                        ],
+                                                                        "Rotation": [
+                                                                            0.25069504976272583,
+                                                                            -0.027674159035086632,
+                                                                            -0.6005125641822815,
+                                                                            0.7587956190109253
+                                                                        ],
+                                                                        "Scale": [
+                                                                            1.0,
+                                                                            1.0,
+                                                                            1.0
+                                                                        ]
+                                                                    },
+                                                                    "Components": [],
+                                                                    "Children": []
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "Name": "arm_1_L1",
+                                                    "Active": true,
+                                                    "Static": false,
+                                                    "Layer": "DEFAULT",
+                                                    "Tag": "DEFAULT",
+                                                    "Transform": {
+                                                        "Position": [
+                                                            0.03923505172133446,
+                                                            -4.440891999238953e-18,
+                                                            0.0
+                                                        ],
+                                                        "Rotation": [
+                                                            1.214306433183765e-17,
+                                                            1.1167282376600696e-17,
+                                                            1.3877787807814457e-17,
+                                                            1.0
+                                                        ],
+                                                        "Scale": [
+                                                            1.0,
+                                                            1.0,
+                                                            1.0
+                                                        ]
+                                                    },
+                                                    "Components": [],
+                                                    "Children": []
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "Name": "neck",
+                                    "Active": true,
+                                    "Static": false,
+                                    "Layer": "DEFAULT",
+                                    "Tag": "DEFAULT",
+                                    "Transform": {
+                                        "Position": [
+                                            0.20811845362186432,
+                                            -0.0394146591424942,
+                                            6.439293357537451e-17
+                                        ],
+                                        "Rotation": [
+                                            0.10071077942848206,
+                                            0.6998981237411499,
+                                            -0.10071077942848206,
+                                            0.6998981237411499
+                                        ],
+                                        "Scale": [
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ]
+                                    },
+                                    "Components": [],
+                                    "Children": [
+                                        {
+                                            "Name": "head",
+                                            "Active": true,
+                                            "Static": false,
+                                            "Layer": "DEFAULT",
+                                            "Tag": "DEFAULT",
+                                            "Transform": {
+                                                "Position": [
+                                                    -1.431493754142546e-16,
+                                                    0.017121179029345512,
+                                                    0.06898343563079834
+                                                ],
+                                                "Rotation": [
+                                                    -0.23910707235336304,
+                                                    8.295693033669277e-19,
+                                                    -3.368809470293422e-18,
+                                                    0.9709932208061218
+                                                ],
+                                                "Scale": [
+                                                    1.0,
+                                                    1.0,
+                                                    1.0
+                                                ]
+                                            },
+                                            "Components": [],
+                                            "Children": []
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "Name": "leg_1_L",
+                            "Active": true,
+                            "Static": false,
+                            "Layer": "DEFAULT",
+                            "Tag": "DEFAULT",
+                            "Transform": {
+                                "Position": [
+                                    -0.00415783142670989,
+                                    0.0023086965084075928,
+                                    -0.08875949680805206
+                                ],
+                                "Rotation": [
+                                    -0.042988792061805725,
+                                    0.9806932806968689,
+                                    0.17868997156620026,
+                                    0.06680209189653397
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ]
+                            },
+                            "Components": [],
+                            "Children": [
+                                {
+                                    "Name": "leg_2_L",
+                                    "Active": true,
+                                    "Static": false,
+                                    "Layer": "DEFAULT",
+                                    "Tag": "DEFAULT",
+                                    "Transform": {
+                                        "Position": [
+                                            0.1249462366104126,
+                                            8.881783998477905e-18,
+                                            -7.105427198782324e-17
+                                        ],
+                                        "Rotation": [
+                                            -2.9568422991738904e-18,
+                                            2.7597628786384363e-17,
+                                            0.10653147101402283,
+                                            0.9943093657493591
+                                        ],
+                                        "Scale": [
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ]
+                                    },
+                                    "Components": [],
+                                    "Children": [
+                                        {
+                                            "Name": "foot_L",
+                                            "Active": true,
+                                            "Static": false,
+                                            "Layer": "DEFAULT",
+                                            "Tag": "DEFAULT",
+                                            "Transform": {
+                                                "Position": [
+                                                    0.12494999915361404,
+                                                    8.881783998477905e-18,
+                                                    -5.329070399086743e-17
+                                                ],
+                                                "Rotation": [
+                                                    -0.01023772545158863,
+                                                    -0.0038653393276035786,
+                                                    -0.0821598619222641,
+                                                    0.9965590834617615
+                                                ],
+                                                "Scale": [
+                                                    1.0,
+                                                    1.0,
+                                                    1.0
+                                                ]
+                                            },
+                                            "Components": [],
+                                            "Children": [
+                                                {
+                                                    "Name": "toe_L",
+                                                    "Active": true,
+                                                    "Static": false,
+                                                    "Layer": "DEFAULT",
+                                                    "Tag": "DEFAULT",
+                                                    "Transform": {
+                                                        "Position": [
+                                                            0.025048675015568733,
+                                                            -0.10567581653594971,
+                                                            -0.0148129528388381
+                                                        ],
+                                                        "Rotation": [
+                                                            0.1052456870675087,
+                                                            -0.6665936708450317,
+                                                            0.03459753096103668,
+                                                            0.7371426224708557
+                                                        ],
+                                                        "Scale": [
+                                                            1.0,
+                                                            1.0,
+                                                            1.0
+                                                        ]
+                                                    },
+                                                    "Components": [],
+                                                    "Children": []
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "Name": "leg_1_R",
+                            "Active": true,
+                            "Static": false,
+                            "Layer": "DEFAULT",
+                            "Tag": "DEFAULT",
+                            "Transform": {
+                                "Position": [
+                                    -0.004158101975917816,
+                                    0.0023086790461093187,
+                                    0.08875949680805206
+                                ],
+                                "Rotation": [
+                                    0.9806932806968689,
+                                    0.042988792061805725,
+                                    -0.06680209189653397,
+                                    0.17868997156620026
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ]
+                            },
+                            "Components": [],
+                            "Children": [
+                                {
+                                    "Name": "leg_2_R",
+                                    "Active": true,
+                                    "Static": false,
+                                    "Layer": "DEFAULT",
+                                    "Tag": "DEFAULT",
+                                    "Transform": {
+                                        "Position": [
+                                            -0.12494548410177231,
+                                            1.776356799695581e-17,
+                                            -7.105427198782324e-17
+                                        ],
+                                        "Rotation": [
+                                            -2.7597628786384363e-17,
+                                            -2.9568422991738904e-18,
+                                            0.10653147101402283,
+                                            0.9943093657493591
+                                        ],
+                                        "Scale": [
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ]
+                                    },
+                                    "Components": [],
+                                    "Children": [
+                                        {
+                                            "Name": "foot_R",
+                                            "Active": true,
+                                            "Static": false,
+                                            "Layer": "DEFAULT",
+                                            "Tag": "DEFAULT",
+                                            "Transform": {
+                                                "Position": [
+                                                    -0.12495052069425583,
+                                                    1.776356799695581e-17,
+                                                    -7.105427198782324e-17
+                                                ],
+                                                "Rotation": [
+                                                    -0.01023772545158863,
+                                                    -0.0038653393276035786,
+                                                    -0.0821598619222641,
+                                                    0.9965590834617615
+                                                ],
+                                                "Scale": [
+                                                    1.0,
+                                                    1.0,
+                                                    1.0
+                                                ]
+                                            },
+                                            "Components": [],
+                                            "Children": [
+                                                {
+                                                    "Name": "toe_R",
+                                                    "Active": true,
+                                                    "Static": false,
+                                                    "Layer": "DEFAULT",
+                                                    "Tag": "DEFAULT",
+                                                    "Transform": {
+                                                        "Position": [
+                                                            -0.0250486321747303,
+                                                            0.10567580908536911,
+                                                            0.014813237823545933
+                                                        ],
+                                                        "Rotation": [
+                                                            0.1052456870675087,
+                                                            -0.6665936708450317,
+                                                            0.03459753096103668,
+                                                            0.7371426224708557
+                                                        ],
+                                                        "Scale": [
+                                                            1.0,
+                                                            1.0,
+                                                            1.0
+                                                        ]
+                                                    },
+                                                    "Components": [],
+                                                    "Children": []
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "Name": "Health Bar",
+            "Active": true,
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    0.0,
+                    1.0,
+                    0.0
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0,
+                    1.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [
+                {
+                    "UID": 5467010081251183869,
+                    "ComponentType": "CANVAS",
+                    "Active": true,
+                    "RenderMode": "WORLD_SPACE_CAMERA",
+                    "ZTest": true
+                },
+                {
+                    "UID": 5637640447211419735,
+                    "ComponentType": "PREFAB_INSTANCE",
+                    "Active": true,
+                    "sourcePath": "Assets\\Prefabs\\UI\\Health Bar.prefab",
+                    "assetUID": 10790661539130925352
+                }
+            ],
+            "Children": [
+                {
+                    "Name": "Background",
+                    "Active": true,
+                    "Static": false,
+                    "Layer": "DEFAULT",
+                    "Tag": "DEFAULT",
+                    "Transform": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "Rotation": [
+                            -0.0,
+                            0.0,
+                            -0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "Components": [
+                        {
+                            "UID": 501494515847356069,
+                            "ComponentType": "TRANSFORM2D",
+                            "Active": true,
+                            "Position": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "Scale": [
+                                0.5,
+                                0.5,
+                                0.0
+                            ],
+                            "Pivot": [
+                                0.5,
+                                0.5,
+                                0.0
+                            ],
+                            "AnchorMin": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "AnchorMax": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "BaseSize": [
+                                189.0,
+                                25.0,
+                                0.0
+                            ],
+                            "StretchMode": "NONE",
+                            "SizingMode": "KEEP_ASPECT_RATIO",
+                            "AspectRatio": 1.0,
+                            "Alpha": 1.0
+                        },
+                        {
+                            "UID": 3312395696859584678,
+                            "ComponentType": "UIIMAGE",
+                            "Active": true,
+                            "TextureAssetId": {
+                                "uid": 14538694312607389381,
+                                "libId": "2d5f24fa27461cdba4e38a08f027dbfa",
+                                "type": "TEXTURE"
+                            },
+                            "FillAmount": [
+                                0.0,
+                                1.0
+                            ],
+                            "FillMethod": "Horizontal",
+                            "FillOrigin": 0,
+                            "SheetColumns": 1,
+                            "SheetRows": 1,
+                            "SheetOffset": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "StretchDrawMode": "Stretch"
+                        }
+                    ],
+                    "Children": [
+                        {
+                            "Name": "Slider 2",
+                            "Active": true,
+                            "Static": false,
+                            "Layer": "DEFAULT",
+                            "Tag": "DEFAULT",
+                            "Transform": {
+                                "Position": [
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "Rotation": [
+                                    -0.0,
+                                    0.0,
+                                    -0.0,
+                                    1.0
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ]
+                            },
+                            "Components": [
+                                {
+                                    "UID": 17564499582709938560,
+                                    "ComponentType": "TRANSFORM2D",
+                                    "Active": true,
+                                    "Position": [
+                                        0.0,
+                                        0.0,
+                                        0.0
+                                    ],
+                                    "Scale": [
+                                        1.0,
+                                        1.0,
+                                        0.0
+                                    ],
+                                    "Pivot": [
+                                        0.5,
+                                        0.5,
+                                        0.0
+                                    ],
+                                    "AnchorMin": [
+                                        0.5,
+                                        0.5,
+                                        0.0
+                                    ],
+                                    "AnchorMax": [
+                                        0.5,
+                                        0.5,
+                                        0.0
+                                    ],
+                                    "BaseSize": [
+                                        189.0,
+                                        25.0,
+                                        0.0
+                                    ],
+                                    "StretchMode": "NONE",
+                                    "SizingMode": "KEEP_ASPECT_RATIO",
+                                    "AspectRatio": 1.0,
+                                    "Alpha": 1.0
+                                },
+                                {
+                                    "UID": 2245136720305084137,
+                                    "ComponentType": "UIIMAGE",
+                                    "Active": true,
+                                    "TextureAssetId": {
+                                        "uid": 13066959920105547232,
+                                        "libId": "35770f3d2c3257ecc825ff18d3a2eb32",
+                                        "type": "TEXTURE"
+                                    },
+                                    "FillAmount": [
+                                        0.0,
+                                        1.0
+                                    ],
+                                    "FillMethod": "Horizontal",
+                                    "FillOrigin": 0,
+                                    "SheetColumns": 1,
+                                    "SheetRows": 1,
+                                    "SheetOffset": [
+                                        0.0,
+                                        0.0,
+                                        0.0
+                                    ],
+                                    "StretchDrawMode": "Stretch"
+                                },
+                                {
+                                    "UID": 7259800974239896441,
+                                    "ComponentType": "UISLIDER",
+                                    "Active": true,
+                                    "FillAmount": [
+                                        0.0,
+                                        1.0
+                                    ],
+                                    "FillMethod": "Horizontal",
+                                    "FillOrigin": 0
+                                }
+                            ],
+                            "Children": []
+                        },
+                        {
+                            "Name": "Slider 1",
+                            "Active": true,
+                            "Static": false,
+                            "Layer": "DEFAULT",
+                            "Tag": "DEFAULT",
+                            "Transform": {
+                                "Position": [
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "Rotation": [
+                                    -0.0,
+                                    0.0,
+                                    -0.0,
+                                    1.0
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ]
+                            },
+                            "Components": [
+                                {
+                                    "UID": 16867599228391632953,
+                                    "ComponentType": "TRANSFORM2D",
+                                    "Active": true,
+                                    "Position": [
+                                        0.0,
+                                        0.0,
+                                        0.0
+                                    ],
+                                    "Scale": [
+                                        1.0,
+                                        1.0,
+                                        0.0
+                                    ],
+                                    "Pivot": [
+                                        0.5,
+                                        0.5,
+                                        0.0
+                                    ],
+                                    "AnchorMin": [
+                                        0.5,
+                                        0.5,
+                                        0.0
+                                    ],
+                                    "AnchorMax": [
+                                        0.5,
+                                        0.5,
+                                        0.0
+                                    ],
+                                    "BaseSize": [
+                                        189.0,
+                                        25.0,
+                                        0.0
+                                    ],
+                                    "StretchMode": "NONE",
+                                    "SizingMode": "KEEP_ASPECT_RATIO",
+                                    "AspectRatio": 1.0,
+                                    "Alpha": 1.0
+                                },
+                                {
+                                    "UID": 13054602084851162173,
+                                    "ComponentType": "UIIMAGE",
+                                    "Active": true,
+                                    "TextureAssetId": {
+                                        "uid": 13445409784538940101,
+                                        "libId": "70ac6644b69e35b4c1e2a2e364921877",
+                                        "type": "TEXTURE"
+                                    },
+                                    "FillAmount": [
+                                        0.0,
+                                        1.0
+                                    ],
+                                    "FillMethod": "Horizontal",
+                                    "FillOrigin": 0,
+                                    "SheetColumns": 1,
+                                    "SheetRows": 1,
+                                    "SheetOffset": [
+                                        0.0,
+                                        0.0,
+                                        0.0
+                                    ],
+                                    "StretchDrawMode": "Stretch"
+                                },
+                                {
+                                    "UID": 17940135393311014944,
+                                    "ComponentType": "UISLIDER",
+                                    "Active": true,
+                                    "FillAmount": [
+                                        0.0,
+                                        1.0
+                                    ],
+                                    "FillMethod": "Horizontal",
+                                    "FillOrigin": 0
+                                }
+                            ],
+                            "Children": []
+                        },
+                        {
+                            "Name": "Shadow Execution Preview",
+                            "Active": true,
+                            "Static": false,
+                            "Layer": "DEFAULT",
+                            "Tag": "DEFAULT",
+                            "Transform": {
+                                "Position": [
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "Rotation": [
+                                    -0.0,
+                                    0.0,
+                                    -0.0,
+                                    1.0
+                                ],
+                                "Scale": [
+                                    0.9999999403953552,
+                                    1.0,
+                                    0.9999999403953552
+                                ]
+                            },
+                            "Components": [
+                                {
+                                    "UID": 1436827264586054175,
+                                    "ComponentType": "TRANSFORM2D",
+                                    "Active": true,
+                                    "Position": [
+                                        0.0,
+                                        0.0,
+                                        0.0
+                                    ],
+                                    "Scale": [
+                                        1.0,
+                                        1.0,
+                                        0.0
+                                    ],
+                                    "Pivot": [
+                                        0.5,
+                                        0.5,
+                                        0.0
+                                    ],
+                                    "AnchorMin": [
+                                        0.5,
+                                        0.5,
+                                        0.0
+                                    ],
+                                    "AnchorMax": [
+                                        0.5,
+                                        0.5,
+                                        0.0
+                                    ],
+                                    "BaseSize": [
+                                        189.0,
+                                        25.0,
+                                        0.0
+                                    ],
+                                    "StretchMode": "NONE",
+                                    "SizingMode": "KEEP_ASPECT_RATIO",
+                                    "AspectRatio": 1.0,
+                                    "Alpha": 1.0
+                                },
+                                {
+                                    "UID": 15014727344382549946,
+                                    "ComponentType": "UIIMAGE",
+                                    "Active": true,
+                                    "TextureAssetId": {
+                                        "uid": 9705071187105261286,
+                                        "libId": "41138c8e51466fca4e434b2b3cd761d2",
+                                        "type": "TEXTURE"
+                                    },
+                                    "FillAmount": [
+                                        0.0,
+                                        1.0
+                                    ],
+                                    "FillMethod": "Horizontal",
+                                    "FillOrigin": 0,
+                                    "SheetColumns": 1,
+                                    "SheetRows": 1,
+                                    "SheetOffset": [
+                                        0.0,
+                                        0.0,
+                                        0.0
+                                    ],
+                                    "StretchDrawMode": "Stretch"
+                                },
+                                {
+                                    "UID": 11486610052986342432,
+                                    "ComponentType": "UISLIDER",
+                                    "Active": true,
+                                    "FillAmount": [
+                                        0.0,
+                                        1.0
+                                    ],
+                                    "FillMethod": "Horizontal",
+                                    "FillOrigin": 0
+                                }
+                            ],
+                            "Children": []
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "Name": "Shadow Mark",
+            "Active": true,
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    0.0,
+                    1.2000000476837158,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.7071068286895752,
+                    0.0,
+                    -0.7071067094802856
+                ],
+                "Scale": [
+                    1.0000263452529907,
+                    1.0,
+                    1.0000263452529907
+                ]
+            },
+            "Components": [
+                {
+                    "UID": 18192445692863174185,
+                    "ComponentType": "CANVAS",
+                    "Active": true,
+                    "RenderMode": "WORLD_SPACE_CAMERA",
+                    "ZTest": true
+                },
+                {
+                    "UID": 3606817379273677975,
+                    "ComponentType": "TRANSFORM2D",
+                    "Active": true,
+                    "Position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Scale": [
+                        0.3499999940395355,
+                        0.3499999940395355,
+                        0.0
+                    ],
+                    "Pivot": [
+                        0.5,
+                        0.0,
+                        0.0
+                    ],
+                    "AnchorMin": [
+                        0.5,
+                        0.0,
+                        0.0
+                    ],
+                    "AnchorMax": [
+                        0.5,
+                        0.0,
+                        0.0
+                    ],
+                    "BaseSize": [
+                        100.0,
+                        100.0,
+                        0.0
+                    ],
+                    "StretchMode": "NONE",
+                    "SizingMode": "KEEP_ASPECT_RATIO",
+                    "AspectRatio": 1.0,
+                    "Alpha": 1.0
+                },
+                {
+                    "UID": 18194057281125882724,
+                    "ComponentType": "PREFAB_INSTANCE",
+                    "Active": true,
+                    "sourcePath": "Assets\\Prefabs\\UI\\Shadow Mark.prefab",
+                    "assetUID": 9242344307091159343
+                }
+            ],
+            "Children": [
+                {
+                    "Name": "Shadow Mark Death",
+                    "Active": true,
+                    "Static": false,
+                    "Layer": "DEFAULT",
+                    "Tag": "DEFAULT",
+                    "Transform": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "Rotation": [
+                            -0.0,
+                            0.0,
+                            -0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "Components": [
+                        {
+                            "UID": 9039294889792973149,
+                            "ComponentType": "TRANSFORM2D",
+                            "Active": true,
+                            "Position": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "Scale": [
+                                0.30000001192092896,
+                                0.30000001192092896,
+                                0.0
+                            ],
+                            "Pivot": [
+                                0.5,
+                                1.0,
+                                0.0
+                            ],
+                            "AnchorMin": [
+                                0.5,
+                                0.0,
+                                0.0
+                            ],
+                            "AnchorMax": [
+                                0.5,
+                                0.0,
+                                0.0
+                            ],
+                            "BaseSize": [
+                                280.0,
+                                280.0,
+                                0.0
+                            ],
+                            "StretchMode": "NONE",
+                            "SizingMode": "KEEP_ASPECT_RATIO",
+                            "AspectRatio": 1.0,
+                            "Alpha": 1.0
+                        },
+                        {
+                            "UID": 10847983630802664533,
+                            "ComponentType": "UIIMAGE",
+                            "Active": true,
+                            "TextureAssetId": {
+                                "uid": 670363245371645624,
+                                "libId": "859b54ebe7c82ae8b1630a3f89c003e1",
+                                "type": "TEXTURE"
+                            },
+                            "FillAmount": [
+                                0.0,
+                                1.0
+                            ],
+                            "FillMethod": "Horizontal",
+                            "FillOrigin": 0,
+                            "SheetColumns": 1,
+                            "SheetRows": 1,
+                            "SheetOffset": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "StretchDrawMode": "Stretch"
+                        }
+                    ],
+                    "Children": []
+                },
+                {
+                    "Name": "Shadow Mark Lyriel",
+                    "Active": true,
+                    "Static": false,
+                    "Layer": "DEFAULT",
+                    "Tag": "DEFAULT",
+                    "Transform": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "Rotation": [
+                            -0.0,
+                            0.0,
+                            -0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "Components": [
+                        {
+                            "UID": 11559000823494578915,
+                            "ComponentType": "TRANSFORM2D",
+                            "Active": true,
+                            "Position": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "Scale": [
+                                0.30000001192092896,
+                                0.30000001192092896,
+                                0.0
+                            ],
+                            "Pivot": [
+                                0.5,
+                                1.0,
+                                0.0
+                            ],
+                            "AnchorMin": [
+                                0.5,
+                                0.0,
+                                0.0
+                            ],
+                            "AnchorMax": [
+                                0.5,
+                                0.0,
+                                0.0
+                            ],
+                            "BaseSize": [
+                                280.0,
+                                280.0,
+                                0.0
+                            ],
+                            "StretchMode": "NONE",
+                            "SizingMode": "KEEP_ASPECT_RATIO",
+                            "AspectRatio": 1.0,
+                            "Alpha": 1.0
+                        },
+                        {
+                            "UID": 18339032631394755658,
+                            "ComponentType": "UIIMAGE",
+                            "Active": true,
+                            "TextureAssetId": {
+                                "uid": 15086481139914003395,
+                                "libId": "290271369e90d53277a920abf4705117",
+                                "type": "TEXTURE"
+                            },
+                            "FillAmount": [
+                                0.0,
+                                1.0
+                            ],
+                            "FillMethod": "Horizontal",
+                            "FillOrigin": 0,
+                            "SheetColumns": 1,
+                            "SheetRows": 1,
+                            "SheetOffset": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "StretchDrawMode": "Stretch"
+                        }
+                    ],
+                    "Children": []
+                },
+                {
+                    "Name": "Shadow Mark Both",
+                    "Active": true,
+                    "Static": false,
+                    "Layer": "DEFAULT",
+                    "Tag": "DEFAULT",
+                    "Transform": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "Rotation": [
+                            -0.0,
+                            0.0,
+                            -0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "Components": [
+                        {
+                            "UID": 10925826362540832359,
+                            "ComponentType": "TRANSFORM2D",
+                            "Active": true,
+                            "Position": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "Scale": [
+                                0.30000001192092896,
+                                0.30000001192092896,
+                                0.0
+                            ],
+                            "Pivot": [
+                                0.5,
+                                1.0,
+                                0.0
+                            ],
+                            "AnchorMin": [
+                                0.5,
+                                0.0,
+                                0.0
+                            ],
+                            "AnchorMax": [
+                                0.5,
+                                0.0,
+                                0.0
+                            ],
+                            "BaseSize": [
+                                280.0,
+                                280.0,
+                                0.0
+                            ],
+                            "StretchMode": "NONE",
+                            "SizingMode": "KEEP_ASPECT_RATIO",
+                            "AspectRatio": 1.0,
+                            "Alpha": 1.0
+                        },
+                        {
+                            "UID": 14317668833586157111,
+                            "ComponentType": "UIIMAGE",
+                            "Active": true,
+                            "TextureAssetId": {
+                                "uid": 6027977305117566743,
+                                "libId": "db1a1c0c8292deb581b82aa8c0cb9d29",
+                                "type": "TEXTURE"
+                            },
+                            "FillAmount": [
+                                0.0,
+                                1.0
+                            ],
+                            "FillMethod": "Horizontal",
+                            "FillOrigin": 0,
+                            "SheetColumns": 1,
+                            "SheetRows": 1,
+                            "SheetOffset": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "StretchDrawMode": "Stretch"
+                        }
+                    ],
+                    "Children": []
+                }
+            ]
+        }
+    ]
+}

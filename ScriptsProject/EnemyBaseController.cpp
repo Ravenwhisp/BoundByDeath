@@ -1,7 +1,9 @@
 #include "pch.h"
 #include "EnemyBaseController.h"
+#include "EnemyBaseAttackConfig.h"
 
 #include "Damageable.h"
+#include "EnemyBaseDataConfig.h"
 #include "EnemySound.h"
 
 static const char* navAgentProfileNames[] =
@@ -15,7 +17,6 @@ constexpr int navAgentProfileCount = 3;
 
 IMPLEMENT_SCRIPT_FIELDS(EnemyBaseController,
     SERIALIZED_ENUM_INT(m_enemyType, "Enemy Type", navAgentProfileNames, navAgentProfileCount),
-    SERIALIZED_FLOAT(m_moveSpeed, "Move Speed", 0.0f, 50.0f, 0.1f),
     SERIALIZED_FLOAT(m_turnSpeedDegrees, "Turn Speed Degrees", 0.0f, 1080.0f, 1.0f),
     SERIALIZED_FLOAT(m_repathInterval, "Repath Interval", 0.0f, 50.0f, 0.1f),
     SERIALIZED_FLOAT(m_pathPointReachDistance, "Path Point Reach Distance", 0.01f, 5.0f, 0.01f),
@@ -25,6 +26,19 @@ IMPLEMENT_SCRIPT_FIELDS(EnemyBaseController,
 EnemyBaseController::EnemyBaseController(GameObject* owner)
     : Script(owner)
 {
+}
+
+void EnemyBaseController::Start()
+{
+    const EnemyBaseDataConfig* cfg = getBaseDataConfig();
+    if (!cfg)
+    {
+        return;
+    }
+
+    m_moveSpeed = cfg->m_moveSpeed;
+    m_recoveryDuration = cfg->m_recoveryDuration;
+    m_stunnedDuration = cfg->m_stunnedDuration;
 }
 
 void EnemyBaseController::updateCurrentTarget()
@@ -53,6 +67,11 @@ bool EnemyBaseController::hasValidTarget() const
     }
 
     return true;
+}
+
+const EnemyBaseDataConfig* EnemyBaseController::getBaseDataConfig() const
+{
+    return getAttackConfig();
 }
 
 float EnemyBaseController::getDistanceToCurrentTarget() const
@@ -86,6 +105,22 @@ bool EnemyBaseController::isCurrentTargetInRange(float range) const
     }
 
     return getDistanceToCurrentTarget() <= range;
+}
+
+bool EnemyBaseController::isTargetInAttackRange() const
+{
+    if (!hasValidTarget())
+    {
+        return false;
+    }
+
+    const EnemyBaseAttackConfig* cfg = getAttackConfig();
+    if (!cfg)
+    {
+        return false;
+    }
+
+    return isCurrentTargetInRange(cfg->m_basicAttackRange);
 }
 
 void EnemyBaseController::faceCurrentTarget()
@@ -140,6 +175,11 @@ void EnemyBaseController::facePosition(const Vector3& worldPosition)
 
 bool EnemyBaseController::moveTowardsTarget()
 {
+    if (m_isForcedMovementActive)
+    {
+        return false;
+    }
+
     if (!hasValidTarget())
     {
         clearPath();
@@ -182,11 +222,31 @@ void EnemyBaseController::clearPath()
     m_path.clear();
     m_currentPathIndex = 0;
     m_hasPath = false;
+
+    m_noProgressTime = 0.0f;
 }
 
 void EnemyBaseController::resetRepathTimer()
 {
     m_repathTimer = 0.0f;
+}
+
+void EnemyBaseController::setForcedMovementActive(bool active)
+{
+    if (m_isForcedMovementActive == active)
+    {
+        return;
+    }
+
+    m_isForcedMovementActive = active;
+
+    clearPath();
+    resetRepathTimer();
+}
+
+void EnemyBaseController::setForcedMovementBlocked(bool blocked)
+{
+    m_isForcedMovementBlocked = blocked;
 }
 
 bool EnemyBaseController::isDead() const
@@ -244,11 +304,16 @@ void EnemyBaseController::setStunnedDuration(float stunnedDuration)
     m_stunnedDuration = stunnedDuration;
 }
 
-void EnemyBaseController::useStun()
+void EnemyBaseController::useStun(float duration)
 {
+    if (duration <= 0.0f)
+    {
+        return;
+    }
+
     m_isStunned = true;
     m_stunnedTriggerSent = false;
-    m_stunnedTimer = m_stunnedDuration;
+    m_stunnedTimer = duration;
     clearPath();
 }
 
@@ -397,6 +462,9 @@ bool EnemyBaseController::buildPathToTarget()
     m_currentPathIndex = 1;
     m_hasPath = true;
 
+    m_lastProgressPosition = start;
+    m_noProgressTime = 0.0f;
+
     return true;
 }
 
@@ -464,15 +532,31 @@ bool EnemyBaseController::followPath()
     Vector3 actualStep = nextPosition - ownerPosition;
     actualStep.y = 0.0f;
 
-    if (actualStep.LengthSquared() <= 0.00001f)
-    {
-        clearPath();
-        return false;
-    }
-
-    facePosition(nextPosition);
+    facePosition(currentPathPoint);
 
     TransformAPI::setGlobalPosition(ownerTransform, nextPosition);
+
+    // Progress check
+    Vector3 progress = nextPosition - m_lastProgressPosition;
+    progress.y = 0.0f;
+
+    const float requiredProgressSquared = m_progressCheckDistance * m_progressCheckDistance;
+
+    if (progress.LengthSquared() >= requiredProgressSquared)
+    {
+        m_lastProgressPosition = nextPosition;
+        m_noProgressTime = 0.0f;
+    }
+    else
+    {
+        m_noProgressTime += Time::getDeltaTime();
+
+        if (m_noProgressTime >= m_maxNoProgressTime)
+        {
+            clearPath();
+            return false;
+        }
+    }
 
     return true;
 }

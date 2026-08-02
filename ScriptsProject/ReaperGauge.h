@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "ScriptAPI.h"
 #include "UISlider.h"
@@ -18,7 +18,7 @@ public:
     void drawGizmo() override;
     void updateUI();
 
-    ScriptFieldList getExposedFields() const override;
+    FieldList getExposedFields() const override;
 
     void  onMarkExploited();
     void  consume();
@@ -29,14 +29,13 @@ public:
 
 public:
     float m_maxGauge         = 100.0f;
-    int   m_numSegments      = 5;
-    float m_gainPerExploit   = 12.5f;
+    int   m_numSegments      = 3;
     float m_gracePeriod      = 10.0f;
     float m_decayPerSecond   = 2.0f;
 
-    ScriptComponentRef<UISlider> m_reaperGaugeUI;
-	ScriptComponentRef<Transform2D> m_glowUI;
-    ScriptComponentRef<Transform2D> m_blinkAlphaUI;
+    ComponentRef<UISlider> m_reaperGaugeUI;
+	ComponentRef<Transform2D> m_glowUI;
+    ComponentRef<Transform2D> m_blinkAlphaUI;
 
 	float m_blinkSpeed = 5.0f;
     float m_blinkAlpha = 0.25f;

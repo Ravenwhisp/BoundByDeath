@@ -1,8 +1,8 @@
-#pragma once
+﻿#pragma once
 
 #include "ScriptAPI.h"
 
-class ArthurAttackConfig;
+class ArthurBossController;
 
 class ArthurAttackDebugDraw : public Script
 {
@@ -14,7 +14,7 @@ public:
     void Start() override;
     void drawGizmo() override;
 
-    ScriptFieldList getExposedFields() const override;
+    FieldList getExposedFields() const override;
 
 public:
     bool m_debugEnabled = true;
@@ -27,7 +27,7 @@ public:
     float m_heightOffset = 0.15f;
 
 private:
-    ArthurAttackConfig* m_attackConfig = nullptr;
+    ArthurBossController* m_arthurController = nullptr;
 
 private:
     void drawHeavySwipeCone() const;

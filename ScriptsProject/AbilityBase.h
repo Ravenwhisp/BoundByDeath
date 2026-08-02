@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "ScriptAPI.h"
 #include "CharacterUI.h"
@@ -17,7 +17,7 @@ public:
 
     void Start() override;
     void Update() override;
-    ScriptFieldList getExposedFields() const override;
+    FieldList getExposedFields() const override;
 
     bool isEnabled() const { return m_isEnabled; }
     void setEnabled(bool enabled) { m_isEnabled = enabled; }

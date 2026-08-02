@@ -1,7 +1,9 @@
-#pragma once
+﻿#pragma once
 #include "ScriptAPI.h"
 #include "EnemyShadowMark.h"
 #include "PuzzleManagerLVL1.h"
+
+class CrystalVisuals;
 
 class CrystalShadowMark : public EnemyShadowMark
 {
@@ -12,37 +14,40 @@ public:
     void Start()  override;
     void Update() override;
 
-    void exploit();
+    FieldList getExposedFields() const override;
 
+    bool processAttack(PlayerAttackType attackType) override;
     bool isActivated() const { return m_activated; }
 
-    void notifyDeathHit();
+    bool isPuzzleCompleted() const { return m_puzzleCompleted; }
 
-    void updateUI();
-
-    ScriptComponentRef<Transform> m_puzzleManager;
-
-	int m_puzzleID = 0;
-
-	float m_activeTime = 5.0f;
-
-    PrefabRef m_crystalSparks;
 
 private:
-
-    bool m_activated = false;
-    bool m_activatedLoopStarted = false;   // crystal hum loop: start once, 3D attenuation handles audibility
-
-	float m_activationTimer = 0.0f;
-
-	GameObject* effectObject = nullptr;
-
 	void activeEffect();
 	void deactivateEffect();
 
-	GameObject* managerObject = nullptr;
-	PuzzleManagerLVL1* managerScript = nullptr;
+    void activateCrystal();
+    void completeCrystal();
 
-ScriptFieldList getExposedFields() const override;
+public:
+    ComponentRef<Transform> m_puzzleManager;
+    int m_puzzleID = 0;
+    float m_activeTime = 5.0f;
+    PrefabRef m_crystalSparks;
+    PrefabRef m_crystalStars;
+
+private:
+    GameObject* managerObject = nullptr;
+    PuzzleManagerLVL1* managerScript = nullptr;
+    CrystalVisuals* m_visualsController = nullptr;
+
+    bool m_activated = false;
+    bool m_puzzleCompleted = false;
+    bool m_activatedLoopStarted = false;   // crystal hum loop: start once, 3D attenuation handles audibility
+
+    float m_activationTimer = 0.0f;
+
+    GameObject* effectObject = nullptr;
+    GameObject* effectObject2 = nullptr;
 };
 

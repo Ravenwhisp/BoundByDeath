@@ -30,7 +30,7 @@ class CharacterAnimations : public Script
 public:
     explicit CharacterAnimations(GameObject* owner) : Script(owner) {}
 
-    ScriptFieldList getExposedFields() const override;
+    FieldList getExposedFields() const override;
 
     AttackAnimInfo resolve(AttackAnimId id, int variant) const;
 

@@ -1,10 +1,9 @@
-#pragma once
+﻿#pragma once
 
 #include "ScriptAPI.h"
 #include "StateMachineScript.h"
 
 class ArthurBossController;
-class ArthurAttackConfig;
 class EnemyAttackExecutor;
 class AnimationComponent;
 class ArthurUI;
@@ -21,7 +20,7 @@ public:
     void OnStateUpdate() override;
     void OnStateExit() override;
 
-    ScriptFieldList getExposedFields() const override;
+    FieldList getExposedFields() const override;
 
 private:
     void lockTargetPosition();
@@ -46,7 +45,6 @@ private:
 
 private:
     ArthurBossController* m_arthurController = nullptr;
-    ArthurAttackConfig* m_attackConfig = nullptr;
     EnemyAttackExecutor* m_attackExecutor = nullptr;
     AnimationComponent* m_animation = nullptr;
     ArthurUI* m_arthurUI = nullptr;

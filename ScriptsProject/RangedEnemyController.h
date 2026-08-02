@@ -15,8 +15,9 @@ public:
 
     void Start() override;
     void Update() override;
+    FieldList getExposedFields() const override;
 
-    bool isTargetInAttackRange() const;
+    const EnemyBaseAttackConfig* getAttackConfig() const override;
 
     // Somersault helpers
     bool playerInSomersaultRange() const;
@@ -34,14 +35,23 @@ public:
 
     bool isTargetInArrowBarrageRange() const;
 
+    // Post-somersault range buff
+    void activateSomersaultRangeBuff();
+    void updateSomersaultRangeBuff(float dt);
+    bool isSomersaultRangeBuffActive() const;
+    bool isTargetInAttackRange() const;
+
 protected:
     Transform* acquireCurrentTarget() override;
     bool isTargetDowned(Transform* target) const override;
 
 private:
     EnemyDetectionAggro* m_enemyDetectionAggro = nullptr;
-    ArcherAttackConfig* m_attackConfig = nullptr;
 
     float m_somersaultCooldownTimer = 0.0f;
     float m_arrowBarrageCooldownTimer = 0.0f;
+    float m_basicAttackRangeBuffTimer = 0.0f;
+
+public:
+    AssetReference<ArcherAttackConfig> m_attackConfig;
 };

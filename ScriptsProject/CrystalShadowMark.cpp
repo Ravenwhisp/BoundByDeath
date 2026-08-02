@@ -1,12 +1,15 @@
 #include "pch.h"
 #include "CrystalShadowMark.h"
 #include "EnvironmentSound.h"
+#include "EnemyDamageable.h"
+#include "CrystalVisuals.h"
 
 IMPLEMENT_SCRIPT_FIELDS_INHERITED(CrystalShadowMark, EnemyShadowMark,
     SERIALIZED_COMPONENT_REF(m_puzzleManager, "PuzzleManager", ComponentType::TRANSFORM),
 	SERIALIZED_INT(m_puzzleID, "Puzzle ID"),
 	SERIALIZED_FLOAT(m_activeTime, "Active Time", 0.0f, 10.0f, 0.1f),
-    SERIALIZED_ASSET_REF(m_crystalSparks, "Crystal Sparks Particle", AssetType::PREFAB)
+    SERIALIZED_ASSET_REF(m_crystalSparks, "Crystal Sparks Particle", AssetType::PREFAB),
+    SERIALIZED_ASSET_REF(m_crystalStars, "Crystal Stars Particle", AssetType::PREFAB)
 )
 
 CrystalShadowMark::CrystalShadowMark(GameObject* owner) : EnemyShadowMark(owner) {}
@@ -26,79 +29,92 @@ void CrystalShadowMark::Start()
     {
         Debug::log("[CrystalMark] ERROR: PuzzleManager script not found on referenced object!");
     }
+
+    m_visualsController = GameObjectAPI::findScript<CrystalVisuals>(getOwner());
+
+    if (m_visualsController == nullptr)
+    {
+        Debug::warn("[CrystalMark] CrystalVisuals not found on '%s'.", GameObjectAPI::getName(getOwner()));
+    }
 }
 
 void CrystalShadowMark::Update() 
 {
     EnemyShadowMark::Update();
 
-    if (!m_activated) return;
+    if (!m_puzzleCompleted && managerScript != nullptr && managerScript->isPuzzleSolved(m_puzzleID))
+    {
+        completeCrystal();
+    }
+
+    if (m_puzzleCompleted)
+    {
+        return;
+    }
+
+    if (!m_activated) 
+    {
+        return;
+    }
 
 	m_activationTimer += Time::getDeltaTime();
-    if (m_activationTimer >= m_activeTime)
-    {
-        Debug::log("[CrystalMark] Crystal deactivated after %.1f seconds.", m_activeTime);
-        m_activated = false;
-        m_activationTimer = 0.0f;
-
-        if (managerScript != nullptr)
-        {
-            managerScript->onCrystalsDeactivated(m_puzzleID);
-			deactivateEffect();
-        }
-        else
-        {
-            Debug::log("[CrystalMark] WARNING: PuzzleManagerLVL1 not found!");
-        }
-    }
-}
-
-void CrystalShadowMark::exploit()
-{
-    if (m_activated)
-    {
-        Debug::log("[CrystalMark] Crystal already activated, ignoring exploit.");
-        return;
-	}
-
-    EnemyShadowMark::exploit(); 
     
-    EnvironmentSound::play(getOwner(), "Play_Environment_Crystal_Activate");   // ding on each activation
-
-    if (!m_activatedLoopStarted)
+    if (m_activationTimer < m_activeTime)
     {
-        // Continuous hum while active. No explicit stop: the 3D attenuation silences it
-        // when you walk away, and the engine's StopAll cuts it on scene change.
-        EnvironmentSound::play(getOwner(), "Play_Environment_Crystal_Activated");
-        m_activatedLoopStarted = true;
+        return;
     }
+   
+    Debug::log("[CrystalMark] Crystal deactivated after %.1f seconds.", m_activeTime);
+
+    m_activated = false;
+    m_activationTimer = 0.0f;
+
+    if (m_visualsController != nullptr)
+    {
+        m_visualsController->setActivated(false);
+    }
+
+    deactivateEffect();
 
     if (managerScript != nullptr)
     {
-        managerScript->onCrystalsActivated(m_puzzleID);
-		activeEffect();
-		m_activated = true;
+        managerScript->onCrystalsDeactivated(m_puzzleID);
     }
     else
     {
-		Debug::log("[CrystalMark] WARNING: PuzzleManagerLVL1 not found!");
-    }
+        Debug::log("[CrystalMark] WARNING: PuzzleManagerLVL1 not found!");
+    } 
 }
 
-void CrystalShadowMark::notifyDeathHit()
+bool CrystalShadowMark::processAttack(PlayerAttackType attackType)
 {
-    if (m_activated)
+    if (m_activated || m_puzzleCompleted)
     {
-        return;
+        return false;
     }
-    EnemyShadowMark::notifyDeathHit();
+
+    const bool markExploited = EnemyShadowMark::processAttack(attackType);
+
+    if (markExploited)
+    {
+        activateCrystal();
+    }
+
+    return markExploited;
 }
 
 void CrystalShadowMark::activeEffect()
 {
+    const Vector3 effectPosition = TransformAPI::getGlobalPosition(GameObjectAPI::getTransform(getOwner())) + Vector3(0.0f, 1.0f, 0.0f);
+
     if (effectObject == nullptr)
     {
-        effectObject = GameObjectAPI::instantiatePrefab(m_crystalSparks.m_ref, TransformAPI::getGlobalPosition(GameObjectAPI::getTransform(getOwner())) + Vector3(0.0f, 1.0f, 0.0f), Vector3(0.0f, 0.0f, 0.0f));
+        effectObject = GameObjectAPI::instantiatePrefab(m_crystalSparks.m_id, effectPosition, Vector3(0.0f, 0.0f, 0.0f));
+    }
+
+    if (effectObject2 == nullptr)
+    {
+        effectObject2 = GameObjectAPI::instantiatePrefab(m_crystalStars.m_id, effectPosition, Vector3(0.0f, 0.0f, 0.0f));
     }
 }
 
@@ -109,6 +125,74 @@ void CrystalShadowMark::deactivateEffect()
         GameObjectAPI::removeGameObject(effectObject);
         effectObject = nullptr;
     }
+
+    if (effectObject2 != nullptr)
+    {
+        GameObjectAPI::removeGameObject(effectObject2);
+        effectObject2 = nullptr;
+    }
+}
+
+void CrystalShadowMark::activateCrystal()
+{
+    EnvironmentSound::play(getOwner(), "Play_Environment_Crystal_Activate");
+
+    if (!m_activatedLoopStarted)
+    {
+        EnvironmentSound::play(getOwner(), "Play_Environment_Crystal_Activated");
+        m_activatedLoopStarted = true;
+    }
+
+    if (managerScript == nullptr)
+    {
+        Debug::log("[CrystalMark] WARNING: PuzzleManagerLVL1 not found!");
+        return;
+    }
+
+    m_activationTimer = 0.0f;
+    m_activated = true;
+
+    if (m_visualsController != nullptr)
+    {
+        m_visualsController->setActivated(true);
+    }
+
+    activeEffect();
+    Debug::log("[CrystalMark] '%s' activating puzzle %d using manager '%s'.", GameObjectAPI::getName(getOwner()), m_puzzleID, GameObjectAPI::getName(managerObject));
+    managerScript->onCrystalsActivated(m_puzzleID);
+
+    if (managerScript->isPuzzleSolved(m_puzzleID))
+    {
+        completeCrystal();
+    }
+}
+
+void CrystalShadowMark::completeCrystal()
+{
+    if (m_puzzleCompleted)
+    {
+        return;
+    }
+
+    m_puzzleCompleted = true;
+    m_activated = true;
+    m_activationTimer = 0.0f;
+
+    if (m_visualsController != nullptr)
+    {
+        m_visualsController->setActivated(true);
+    }
+
+    activeEffect();
+
+    EnemyDamageable* damageable = GameObjectAPI::findScript<EnemyDamageable>(getOwner());
+
+    if (damageable)
+    {
+        damageable->setInvulnerable(true);
+    }
+
+    Debug::log("[CrystalMark] Crystal permanently activated for solved puzzle %d.", m_puzzleID);
 }
 
 IMPLEMENT_SCRIPT(CrystalShadowMark)

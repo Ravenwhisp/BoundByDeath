@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "PuzzleManagerLVL1.h"
 #include "EnvironmentSound.h"
 
@@ -7,7 +7,7 @@ namespace
     constexpr const char* k_openDoor = "Play_Environment_Open_Door";
 
     // Plays the door-open SFX from the door's own GameObject (positional 3D).
-    void playDoorOpen(const ScriptComponentRef<Transform>& doorRef)
+    void playDoorOpen(const ComponentRef<Transform>& doorRef)
     {
         Transform* doorTransform = doorRef.getReferencedComponent();
         if (doorTransform != nullptr)
@@ -169,7 +169,7 @@ void PuzzleManagerLVL1::onCrystalsActivated(int puzzleID)
 	puzzle.crystalsActivated++;
 
 	Debug::log("Crystal activated! Total activated: %d/%d", puzzle.crystalsActivated, puzzle.totalCrystals);
-	if (isPuzzleSolved(puzzleID))
+	if (puzzle.crystalsActivated >= puzzle.totalCrystals)
 	{
 		onPuzzleSolved(puzzleID);
 	}
@@ -177,8 +177,14 @@ void PuzzleManagerLVL1::onCrystalsActivated(int puzzleID)
 
 bool PuzzleManagerLVL1::isPuzzleSolved(int puzzleID) const
 {
-	const PuzzleData& puzzle = m_puzzles.at(puzzleID);
-	return puzzle.crystalsActivated >= puzzle.totalCrystals;
+	const auto it = m_puzzles.find(puzzleID);
+
+	if (it == m_puzzles.end())
+	{
+		return false;
+	}
+
+	return it->second.puzzleSolved;
 }
 
 void PuzzleManagerLVL1::onPuzzleSolved(int puzzleID)

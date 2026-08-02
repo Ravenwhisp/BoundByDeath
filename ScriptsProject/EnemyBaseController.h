@@ -1,10 +1,13 @@
-#pragma once
+﻿#pragma once
 
 #include "ScriptAPI.h"
 
 class AnimationComponent;
 class Transform;
 class EnemySound;
+class EnemyBaseAttackConfig;
+
+class EnemyBaseDataConfig;
 
 class EnemyBaseController : public Script
 {
@@ -12,7 +15,9 @@ public:
     explicit EnemyBaseController(GameObject* owner);
     virtual ~EnemyBaseController() = default;
 
-    ScriptFieldList getExposedFields() const override;
+    void Start() override;
+
+    FieldList getExposedFields() const override;
 
     // Target helpers
     virtual void updateCurrentTarget();
@@ -20,8 +25,14 @@ public:
 
     virtual bool hasValidTarget() const;
 
+    // Attack config access (non-pure virtual: returns nullptr by default for controllers without one)
+    virtual const EnemyBaseDataConfig* getBaseDataConfig() const;
+    virtual const EnemyBaseAttackConfig* getAttackConfig() const { return nullptr; }
+
+
     float getDistanceToCurrentTarget() const;
     bool isCurrentTargetInRange(float range) const;
+    bool isTargetInAttackRange() const;
 
     // Facing helpers
     void faceCurrentTarget();
@@ -32,6 +43,12 @@ public:
 
     virtual void clearPath();
     virtual void resetRepathTimer();
+
+    // Forced movement helpers
+    void setForcedMovementActive(bool active);
+    bool isForcedMovementActive() const { return m_isForcedMovementActive; }
+    void setForcedMovementBlocked(bool blocked);
+    bool isForcedMovementBlocked() const { return m_isForcedMovementBlocked; }
 
     // Death helpers
     bool isDead() const;
@@ -44,7 +61,7 @@ public:
     // Stunned helpers
     void setStunnedDuration(float stunnedDuration);
     float getStunnedDuration() const { return m_stunnedDuration; }
-    void useStun();
+    void useStun(float duration);
     bool trySendStunTrigger(AnimationComponent* animation);
     bool isStunned() const { return m_isStunned; }
     void clearStun();
@@ -77,6 +94,12 @@ public:
 
     Vector3 m_pathSearchExtents = Vector3(5.0f, 5.0f, 5.0f);
 
+    // Movement Progress Check
+    Vector3 m_lastProgressPosition = Vector3::Zero;
+    float m_noProgressTime = 0.0f;
+    float m_progressCheckDistance = 0.05f;
+    float m_maxNoProgressTime = 0.5f;
+
 protected:
     Transform* m_currentTarget = nullptr;
     bool m_deathTriggerSent = false;
@@ -85,6 +108,9 @@ protected:
     size_t m_currentPathIndex = 0;
     bool m_hasPath = false;
     float m_repathTimer = 0.0f;
+
+    bool m_isForcedMovementActive = false;
+    bool m_isForcedMovementBlocked = false;
 
     float m_recoveryDuration = 0.75f;
     float m_stunnedDuration = 2.0f;
