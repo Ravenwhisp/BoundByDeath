@@ -214,6 +214,21 @@ void BarrierEnemyDamageable::kill()
     EnemyDamageable::kill();
 }
 
+bool BarrierEnemyDamageable::hasActiveBarrierAt(float hpPercent) const
+{
+    constexpr float tolerance = 0.001f;
+
+    for (const Barrier& barrier : m_barriers)
+    {
+        if (std::abs(barrier.hpPercent - hpPercent) <= tolerance)
+        {
+            return !barrier.broken;
+        }
+    }
+
+    return false;
+}
+
 void BarrierEnemyDamageable::setHealthBarAlpha(float alpha)
 {
     EnemyDamageable::setHealthBarAlpha(alpha);

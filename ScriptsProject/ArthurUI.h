@@ -4,7 +4,7 @@
 #include "Transform2D.h"
 #include "UISlider.h"
 
-class Damageable;
+class BarrierEnemyDamageable;
 
 class ArthurUI : public Script
 {
@@ -57,7 +57,7 @@ public:
 
 private:
 	// Health
-	Damageable* m_damageable = nullptr;
+	BarrierEnemyDamageable* m_barrierDamageable = nullptr;
 	ComponentRef<Transform> m_healthBarCanvas;
 	ComponentRef<Transform2D> m_healthBarContainer;
 	ComponentRef<Transform2D> m_healthBarPhase2;

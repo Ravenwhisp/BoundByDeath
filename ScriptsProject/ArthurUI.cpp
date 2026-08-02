@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "ArthurUI.h"
-#include "Damageable.h"
+#include "BarrierEnemyDamageable.h"
 
 IMPLEMENT_SCRIPT_FIELDS(ArthurUI,
 	FIELD_GROUP_COLLAPSE("Health Bar",
@@ -62,14 +62,14 @@ ArthurUI::ArthurUI(GameObject* owner)
 
 void ArthurUI::Start()
 {
-	m_damageable = GameObjectAPI::findScript<Damageable>(getOwner());
-
-	if (!m_damageable)
-	{
-		Debug::warn("[ArthurUI] Damageable script is missing.");
-	}
-
 	setupHealthUI();
+
+	m_barrierDamageable = GameObjectAPI::findScript<BarrierEnemyDamageable>(getOwner());
+
+	if (!m_barrierDamageable)
+	{
+		Debug::warn("[ArthurUI] BarrierEnemyDamageable script is missing.");
+	}
 
 	m_heavySwipeUICanvasTransform = m_heavySwipeUICanvas.getReferencedComponent();
 	m_heavySwipeUIContainerTransform2D = m_heavySwipeUIContainer.getReferencedComponent();
@@ -258,23 +258,22 @@ void ArthurUI::setHealthMarkerVisible(Transform2D* marker, bool visible)
 
 void ArthurUI::updateHealthMarkers()
 {
-	if (!m_damageable || !m_healthBarVisible)
+	if (!m_healthBarVisible)
 	{
 		return;
 	}
 
-	const float maxHp = m_damageable->getMaxHp();
-
-	if (maxHp <= 0.0f)
+	if (!m_barrierDamageable)
 	{
+		setHealthMarkerVisible(m_healthBarMarker25Transform2D, false);
+		setHealthMarkerVisible(m_healthBarPhaseMarkerTransform2D, false);
+		setHealthMarkerVisible(m_healthBarMarker75Transform2D, false);
 		return;
 	}
 
-	const float hpPercent = std::clamp(m_damageable->getCurrentHp() / maxHp, 0.0f, 1.0f);
-
-	setHealthMarkerVisible(m_healthBarMarker75Transform2D, hpPercent > 0.75f);
-	setHealthMarkerVisible(m_healthBarPhaseMarkerTransform2D, hpPercent > 0.50f);
-	setHealthMarkerVisible(m_healthBarMarker25Transform2D, hpPercent > 0.25f);
+	setHealthMarkerVisible(m_healthBarMarker25Transform2D, m_barrierDamageable->hasActiveBarrierAt(0.25f));
+	setHealthMarkerVisible(m_healthBarPhaseMarkerTransform2D, m_barrierDamageable->hasActiveBarrierAt(0.50f));
+	setHealthMarkerVisible(m_healthBarMarker75Transform2D, m_barrierDamageable->hasActiveBarrierAt(0.75f));
 }
 
 void ArthurUI::setupHeavySwipeUI()

@@ -19,6 +19,7 @@ public:
 
     bool hasActiveBarriers() const { return m_nextBarrierIndex < m_barriers.size(); }
     size_t getRemainingBarrierCount() const { return m_barriers.size() - m_nextBarrierIndex; }
+    bool hasActiveBarrierAt(float hpPercent) const;
 
 public:
     std::vector<float> m_barriersThresholds;
