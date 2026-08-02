@@ -6,7 +6,8 @@ IMPLEMENT_SCRIPT_FIELDS(ElevatorManager,
     SERIALIZED_COMPONENT_REF_VECTOR(m_combatAreaRoots, "Combat Area Roots", ComponentType::TRANSFORM),
     SERIALIZED_COMPONENT_REF(m_elevator, "Elevator", ComponentType::TRANSFORM),
     SERIALIZED_COMPONENT_REF_VECTOR(m_elevatorTargets, "Elevator Targets", ComponentType::TRANSFORM),
-    SERIALIZED_FLOAT(m_moveDuration, "Move Duration", 0.0f, 30.0f, 0.05f)
+    SERIALIZED_FLOAT(m_moveDuration, "Move Duration", 0.0f, 30.0f, 0.05f),
+    SERIALIZED_FLOAT(m_lerpPower, "Lerp Power", 0.1f, 10.0f, 0.1f)
 )
 
 ElevatorManager::ElevatorManager(GameObject* owner)
@@ -143,8 +144,8 @@ void ElevatorManager::startElevatorMove(int targetIndex)
     if (targetTransform == nullptr)
         return;
 
-    m_elevatorStartPos = TransformAPI::getGlobalPosition(elevatorTransform);
-    m_elevatorTargetPos = TransformAPI::getGlobalPosition(targetTransform);
+    m_elevatorStartY = TransformAPI::getPosition(elevatorTransform).y;
+    m_elevatorTargetY = TransformAPI::getPosition(targetTransform).y;
     m_elevatorTimer = 0.0f;
     m_elevatorMoving = true;
 }
@@ -164,10 +165,11 @@ void ElevatorManager::updateElevatorMove()
     if (alpha > 1.0f)
         alpha = 1.0f;
 
-    alpha = MathAPI::smoothStep(0.0f, 1.0f, alpha);
+    alpha = pow(alpha, m_lerpPower);
 
-    Vector3 newPos = MathAPI::lerp(m_elevatorStartPos, m_elevatorTargetPos, alpha);
-    TransformAPI::setGlobalPosition(elevatorTransform, newPos);
+    Vector3 currentPos = TransformAPI::getPosition(elevatorTransform);
+    currentPos.y = m_elevatorStartY + (m_elevatorTargetY - m_elevatorStartY) * alpha;
+    TransformAPI::setPosition(elevatorTransform, currentPos);
 
     if (m_elevatorTimer >= m_moveDuration)
         m_elevatorMoving = false;

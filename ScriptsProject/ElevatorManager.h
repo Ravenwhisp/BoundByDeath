@@ -28,6 +28,7 @@ public:
     ComponentRef<Transform> m_elevator;
     std::vector<ComponentRef<Transform>> m_elevatorTargets;
     float m_moveDuration = 2.0f;
+    float m_lerpPower = 1.0f;
 
 private:
     std::vector<CombatAreaEvent*> m_combatAreas;
@@ -35,7 +36,7 @@ private:
     int m_wavesCompleted = 0;
     bool m_elevatorMoving = false;
     float m_elevatorTimer = 0.0f;
-    Vector3 m_elevatorStartPos;
-    Vector3 m_elevatorTargetPos;
+    float m_elevatorStartY = 0.0f;
+    float m_elevatorTargetY = 0.0f;
     int m_elevatorTargetIndex = 0;
 };
