@@ -24,13 +24,19 @@ void ElevatorManager::Start()
 
 void ElevatorManager::Update()
 {
+    const int areaCount = static_cast<int>(m_combatAreas.size());
+
     if (m_elevatorMoving)
     {
         updateElevatorMove();
+
+        if (!m_elevatorMoving)
+        {
+            if (m_wavesCompleted < areaCount)
+                enableArea(m_wavesCompleted);
+        }
         return;
     }
-
-    const int areaCount = static_cast<int>(m_combatAreas.size());
 
     for (int i = m_wavesStarted; i < areaCount; i++)
     {
@@ -41,9 +47,6 @@ void ElevatorManager::Update()
         if (area->isActive())
         {
             m_wavesStarted = i + 1;
-
-            if (m_wavesStarted < areaCount)
-                enableArea(m_wavesStarted);
             break;
         }
     }
