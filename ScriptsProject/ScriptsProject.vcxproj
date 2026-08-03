@@ -179,6 +179,7 @@
     <ClInclude Include="CameraTransitionStepAction.h" />
     <ClInclude Include="ChargedAttackBase.h" />
     <ClInclude Include="CombatAreaEvent.h" />
+    <ClInclude Include="CrystalVisuals.h" />
     <ClInclude Include="DeathParticles.h" />
     <ClInclude Include="EnemyAttackState.h" />
     <ClInclude Include="PlayerAttackType.h" />
@@ -223,6 +224,7 @@
     <ClInclude Include="EnergyBallProjectile.h" />
     <ClInclude Include="GameplayEventAction.h" />
     <ClInclude Include="GameplayEventTrigger.h" />
+    <ClInclude Include="HapticTester.h" />
     <ClInclude Include="HUDFader.h" />
     <ClInclude Include="LinkedDeathController.h" />
     <ClInclude Include="LocalMultiplayerSetup.h" />
@@ -231,7 +233,7 @@
     <ClInclude Include="LyrielSound.h" />
     <ClInclude Include="DebugDamageTrigger.h" />
     <ClInclude Include="DebugDrawTest.h" />
-    <ClInclude Include="BarrierEnemyDamageable.h" />
+    <ClInclude Include="BarrierComponent.h" />
     <ClInclude Include="ArcherChaseState.h" />
     <ClInclude Include="EnemyDamageable.h" />
     <ClInclude Include="EnemySound.h" />
@@ -244,6 +246,7 @@
     <ClInclude Include="EnemyShadowMark.h" />
     <ClInclude Include="HealthDropSpawner.h" />
     <ClInclude Include="HeartbeatHaptic.h" />
+    <ClInclude Include="PlayerGamepadBinding.h" />
     <ClInclude Include="LightZoneManager.h" />
     <ClInclude Include="LightZoneTrigger.h" />
     <ClInclude Include="LyrielTargetIndicatorUI.h" />
@@ -290,6 +293,7 @@
     <ClInclude Include="AbilityDash.h" />
     <ClInclude Include="LyrielDash.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="ShadowExecutionConfig.h" />
     <ClInclude Include="SkeletonAttackConfig.h" />
     <ClInclude Include="SkeletonAttackDebugDraw.h" />
     <ClInclude Include="SkeletonChaseState.h" />
@@ -344,6 +348,7 @@
     <ClCompile Include="CameraTransitionStepAction.cpp" />
     <ClCompile Include="ChargedAttackBase.cpp" />
     <ClCompile Include="CombatAreaEvent.cpp" />
+    <ClCompile Include="CrystalVisuals.cpp" />
     <ClCompile Include="DeathParticles.cpp" />
     <ClCompile Include="EnemyAttackState.cpp" />
     <ClCompile Include="EnemyBaseAttackConfig.cpp" />
@@ -386,6 +391,7 @@
     <ClCompile Include="EnemyStunParticles.cpp" />
     <ClCompile Include="EnergyBallProjectile.cpp" />
     <ClCompile Include="GameplayEventTrigger.cpp" />
+    <ClCompile Include="HapticTester.cpp" />
     <ClCompile Include="HUDFader.cpp" />
     <ClCompile Include="LinkedDeathController.cpp" />
     <ClCompile Include="LocalMultiplayerSetup.cpp" />
@@ -395,7 +401,7 @@
     <ClCompile Include="DebugDamageTrigger.cpp" />
     <ClCompile Include="DebugDrawTest.cpp" />
     <ClCompile Include="dllmain.cpp" />
-    <ClCompile Include="BarrierEnemyDamageable.cpp" />
+    <ClCompile Include="BarrierComponent.cpp" />
     <ClCompile Include="ArcherChaseState.cpp" />
     <ClCompile Include="EnemyDamageable.cpp" />
     <ClCompile Include="EnemySound.cpp" />
@@ -408,6 +414,7 @@
     <ClCompile Include="EnemyShadowMark.cpp" />
     <ClCompile Include="HealthDropSpawner.cpp" />
     <ClCompile Include="HeartbeatHaptic.cpp" />
+    <ClCompile Include="PlayerGamepadBinding.cpp" />
     <ClCompile Include="LightZoneManager.cpp" />
     <ClCompile Include="LightZoneTrigger.cpp" />
     <ClCompile Include="LyrielTargetIndicatorUI.cpp" />
@@ -460,6 +467,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="ShadowExecutionConfig.cpp" />
     <ClCompile Include="SkeletonAttackConfig.cpp" />
     <ClCompile Include="SkeletonAttackDebugDraw.cpp" />
     <ClCompile Include="SkeletonChaseState.cpp" />

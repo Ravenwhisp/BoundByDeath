@@ -347,7 +347,7 @@
     <ClInclude Include="ArthurSound.h">
       <Filter>Enemies\Arthur</Filter>
     </ClInclude>
-    <ClInclude Include="BarrierEnemyDamageable.h">
+    <ClInclude Include="BarrierComponent.h">
       <Filter>Enemies\Variants</Filter>
     </ClInclude>
     <ClInclude Include="LinkedDeathEnemyState.h">
@@ -618,6 +618,13 @@
     <ClInclude Include="EnemyForcedMovement.h">
       <Filter>Enemies\Movement</Filter>
     </ClInclude>
+    <ClInclude Include="BoundConfig.h" />
+    <ClInclude Include="ChargedAttackBase.h" />
+    <ClInclude Include="PlayerAttackType.h" />
+    <ClInclude Include="EnemyBaseDataConfig.h" />
+    <ClInclude Include="CrystalVisuals.h">
+      <Filter>Interaction/Gameplay\Puzzles</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
@@ -818,7 +825,7 @@
     <ClCompile Include="ArthurSound.cpp">
       <Filter>Enemies\Arthur</Filter>
     </ClCompile>
-    <ClCompile Include="BarrierEnemyDamageable.cpp">
+    <ClCompile Include="BarrierComponent.cpp">
       <Filter>Enemies\Variants</Filter>
     </ClCompile>
     <ClCompile Include="LinkedDeathEnemyState.cpp">
@@ -993,9 +1000,6 @@
     <ClCompile Include="SpiderEnemyController.cpp">
       <Filter>Enemies\Spider</Filter>
     </ClCompile>
-    <ClCompile Include="SummonerAttackConfig.cpp">
-      <Filter>Enemies\Summoner</Filter>
-    </ClCompile>
     <ClCompile Include="SummonerEnemyController.cpp">
       <Filter>Enemies\Summoner</Filter>
     </ClCompile>
@@ -1073,6 +1077,11 @@
     <ClCompile Include="ParticleManager.cpp" />
     <ClCompile Include="EnemyForcedMovement.cpp">
       <Filter>Enemies\Movement</Filter>
+    </ClCompile>
+    <ClCompile Include="ChargedAttackBase.cpp" />
+    <ClCompile Include="EnemyBaseDataConfig.cpp" />
+    <ClCompile Include="CrystalVisuals.cpp">
+      <Filter>Interaction/Gameplay\Puzzles</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
