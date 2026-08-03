@@ -42,12 +42,13 @@
                             "Looping": true,
                             "Duration": 0.30000001192092896,
                             "RateOverTime": 0.0,
-                            "RateOverDistance": 3.0
+                            "RateOverDistance": 2.0
                         },
                         {
                             "ModuleType": 4,
-                            "LifeTimeType": "CONSTANT",
-                            "StartLifeTime": 1.0
+                            "LifeTimeType": "RANDOM_BETWEEN_TWO",
+                            "StartLifeTime": 0.800000011920929,
+                            "StartLifeTime2": 1.0
                         },
                         {
                             "ModuleType": 1,
@@ -63,19 +64,29 @@
                                     "IsAlphaMark": false,
                                     "Position": 0.0,
                                     "Color": [
-                                        1.0,
-                                        1.0,
-                                        1.0
+                                        0.929411768913269,
+                                        0.8784313797950745,
+                                        0.8313725590705872
                                     ]
                                 },
                                 {
                                     "IsAlphaMark": false,
-                                    "Position": 1.0,
+                                    "Position": 0.4059414863586426,
                                     "Color": [
-                                        1.0,
-                                        1.0,
-                                        1.0
+                                        0.6901960968971252,
+                                        0.5372549295425415,
+                                        0.40784314274787903
                                     ]
+                                },
+                                {
+                                    "IsAlphaMark": true,
+                                    "Position": 0.7114754319190979,
+                                    "Alpha": 1.0
+                                },
+                                {
+                                    "IsAlphaMark": true,
+                                    "Position": 0.9801980257034302,
+                                    "Alpha": 0.25
                                 }
                             ],
                             "ColorCurve": [
@@ -94,24 +105,36 @@
                             "ModuleType": 6,
                             "StartScaleType": "RANDOM_BETWEEN_TWO",
                             "StartScale": [
-                                0.5,
-                                0.5,
+                                0.3499999940395355,
+                                0.3499999940395355,
                                 0.0
                             ],
                             "StartScale2": [
-                                0.25,
-                                0.25,
+                                0.20000000298023224,
+                                0.20000000298023224,
                                 0.0
                             ],
-                            "ChangeSizeOverTime": false
+                            "ChangeSizeOverTime": true,
+                            "EndScaleType": "RANDOM_BETWEEN_TWO",
+                            "EndScale": [
+                                0.6000000238418579,
+                                0.6000000238418579,
+                                0.0
+                            ],
+                            "EndScale2": [
+                                0.30000001192092896,
+                                0.30000001192092896,
+                                0.0
+                            ]
                         },
                         {
                             "ModuleType": 7,
-                            "RotationType": "CONSTANT",
+                            "RotationType": "RANDOM_BETWEEN_TWO",
                             "StartRotation": 0.0,
+                            "StartRotation2": 4.71238899230957,
                             "VelocityType": "CONSTANT",
-                            "AngularVelocity": 0.0,
-                            "FlipRotation": 0.0
+                            "AngularVelocity": 0.2617993950843811,
+                            "FlipRotation": -15.0
                         },
                         {
                             "ModuleType": 8,
