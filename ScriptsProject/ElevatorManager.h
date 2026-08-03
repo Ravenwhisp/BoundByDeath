@@ -20,6 +20,7 @@ private:
     void resolveCombatAreas();
     void enableArea(int waveIndex);
     void disableArea(int waveIndex);
+    void setActiveRecursive(GameObject* obj, bool active);
     void startElevatorMove(int targetIndex);
     void updateElevatorMove();
 

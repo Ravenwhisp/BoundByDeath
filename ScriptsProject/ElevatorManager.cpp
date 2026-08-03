@@ -108,7 +108,7 @@ void ElevatorManager::enableArea(int waveIndex)
         if (t == nullptr) continue;
         GameObject* obj = ComponentAPI::getOwner(t);
         if (obj == nullptr) continue;
-        GameObjectAPI::setActive(obj, true);
+        setActiveRecursive(obj, true);
     }
 }
 
@@ -127,7 +127,29 @@ void ElevatorManager::disableArea(int waveIndex)
         if (t == nullptr) continue;
         GameObject* obj = ComponentAPI::getOwner(t);
         if (obj == nullptr) continue;
-        GameObjectAPI::setActive(obj, false);
+        setActiveRecursive(obj, false);
+    }
+}
+
+void ElevatorManager::setActiveRecursive(GameObject* obj, bool active)
+{
+    if (obj == nullptr)
+        return;
+
+    GameObjectAPI::setActive(obj, active);
+
+    Transform* t = GameObjectAPI::getTransform(obj);
+    if (t == nullptr)
+        return;
+
+    const int childCount = TransformAPI::getChildCount(t);
+    for (int i = 0; i < childCount; i++)
+    {
+        Transform* child = TransformAPI::getChild(t, i);
+        if (child == nullptr)
+            continue;
+        GameObject* childObj = ComponentAPI::getOwner(child);
+        setActiveRecursive(childObj, active);
     }
 }
 
