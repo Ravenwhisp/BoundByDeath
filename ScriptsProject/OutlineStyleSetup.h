@@ -17,8 +17,9 @@ public:
     bool  m_enableOutline = true;
 
     float m_intensity = 1.0f;
-    float m_thickness = 0.5f;
-    float m_threshold = 0.001f;
+    float m_thickness = 0.7f;
+    float m_threshold = 0.035f;
+    float m_normalThreshold = 0.45f;
     float m_wobble = 0.0f;
     float m_breakup = 0.0f;
 
