@@ -40,6 +40,11 @@ void AelorinIdleState::OnStateUpdate()
 	{
 		return;
 	}
+
+	if (m_controller->trySendThresholdStaggerTrigger(m_animation))
+	{
+		return;
+	}
 }
 
 void AelorinIdleState::OnStateExit()

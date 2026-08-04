@@ -4,6 +4,7 @@
 
 class AelorinDetectionAggro;
 class AelorinDamageable;
+class AelorinAttackConfig;
 
 enum class Phase
 {
@@ -22,7 +23,10 @@ public:
 	//void drawGizmo() override;
 	void Update() override;
 
-	//FieldList getExposedFields() const override;
+	FieldList getExposedFields() const override;
+
+	// AttackConfig
+	const AelorinAttackConfig* getAelorinAttackConfig() const { return m_attackConfig.get(); }
 
 	// Encounter
 	void updateEncounter();
@@ -40,9 +44,18 @@ public:
 
 	bool trySendPhaseTransitionTrigger(AnimationComponent* animation);
 
+	// Threshold Stagger helpers
+	void requestThresholdStagger();
+	bool trySendThresholdStaggerTrigger(AnimationComponent* animation);
+	void completeThresholdStagger();
+	float getThresholdStaggerDuration() const;
+
 protected:
 	Transform* acquireCurrentTarget() override;
 	bool isTargetDowned(Transform* target) const override;
+
+public:
+	AssetReference<AelorinAttackConfig> m_attackConfig;
 
 private:
 	AelorinDetectionAggro* m_aelorinDetectionAggro = nullptr;
@@ -53,6 +66,9 @@ private:
 	bool m_phaseTransitionTriggered = false;
 
 	bool m_hasStartedEncounter = false;
+
+	bool m_thresholdStaggerRequested = false;
+	bool m_thresholdStaggerTriggered = false;
 
 	// Model switching
 	GameObject* m_phase1GameObject = nullptr;

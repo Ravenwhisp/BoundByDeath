@@ -6,6 +6,20 @@
 
 class AelorinBossController;
 
+enum class AelorinThresholdType
+{
+	Standard,
+	Fury,
+	PhaseTransition,
+	FinalDeath
+};
+
+struct AelorinThreshold
+{
+	float percent = 0.0f;
+	AelorinThresholdType type = AelorinThresholdType::Standard;
+};
+
 class AelorinDamageable : public EnemyDamageable
 {
 	DECLARE_SCRIPT(AelorinDamageable)
@@ -27,10 +41,10 @@ protected:
 	void onHpDepleted() override;
 
 private:
-	const std::vector<float>& getActiveThresholds() const;
+	const std::vector<AelorinThreshold>& getActiveThresholds() const;
 
+	const AelorinThreshold* getCurrentThreshold() const;
 	bool hasCurrentThreshold() const;
-	bool isCurrentThresholdFinal() const;
 	bool isShadowExecution(const EnemyHitContext& ctx) const;
 
 	float getCurrentThresholdPercent() const;
@@ -47,19 +61,19 @@ private:
 private:
 	AelorinBossController* m_controller = nullptr;
 
-	std::vector<float> m_phase1Thresholds
+	std::vector<AelorinThreshold> m_phase1Thresholds
 	{
-		0.50f,
-		0.00f
+		{ 0.50f, AelorinThresholdType::Standard },
+		{ 0.00f, AelorinThresholdType::PhaseTransition }
 	};
 
-	std::vector<float> m_phase2Thresholds
+	std::vector<AelorinThreshold> m_phase2Thresholds
 	{
-		0.70f,
-		0.45f,
-		0.25f,
-		0.10f,
-		0.00f
+		{ 0.70f, AelorinThresholdType::Standard },
+		{ 0.45f, AelorinThresholdType::Fury },
+		{ 0.25f, AelorinThresholdType::Standard },
+		{ 0.10f, AelorinThresholdType::Fury },
+		{ 0.00f, AelorinThresholdType::FinalDeath }
 	};
 
 	std::size_t m_currentThresholdIndex = 0;

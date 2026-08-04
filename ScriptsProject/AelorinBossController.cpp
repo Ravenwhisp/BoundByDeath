@@ -3,6 +3,11 @@
 
 #include "AelorinDetectionAggro.h"
 #include "AelorinDamageable.h"
+#include "AelorinAttackConfig.h"
+
+IMPLEMENT_SCRIPT_FIELDS_INHERITED(AelorinBossController, EnemyBaseController,
+	SERIALIZED_ASSET_REF(m_attackConfig, "Attack Config", AssetType::DATA_CONTAINER)
+)
 
 AelorinBossController::AelorinBossController(GameObject* owner) : EnemyBaseController(owner)
 {
@@ -153,6 +158,70 @@ bool AelorinBossController::trySendPhaseTransitionTrigger(AnimationComponent* an
 	Debug::log("[AelorinBossController] ToPhaseTransition trigger sent.");
 
 	return true;
+}
+
+void AelorinBossController::requestThresholdStagger()
+{
+	if (m_thresholdStaggerRequested)
+	{
+		return;
+	}
+
+	m_thresholdStaggerRequested = true;
+	m_thresholdStaggerTriggered = false;
+
+	Debug::log("[AelorinBossController] Threshold stagger requested.");
+}
+
+bool AelorinBossController::trySendThresholdStaggerTrigger(AnimationComponent* animation)
+{
+	if (!m_thresholdStaggerRequested)
+	{
+		return false;
+	}
+
+	if (m_thresholdStaggerTriggered)
+	{
+		return false;
+	}
+
+	if (!animation)
+	{
+		return false;
+	}
+
+	const bool sent = AnimationAPI::sendTrigger(animation, "ToThresholdStagger");
+
+	if (!sent)
+	{
+		return false;
+	}
+
+	m_thresholdStaggerTriggered = true;
+
+	Debug::log("[AelorinBossController] ToThresholdStagger trigger sent.");
+
+	return true;
+}
+
+void AelorinBossController::completeThresholdStagger()
+{
+	m_thresholdStaggerRequested = false;
+	m_thresholdStaggerTriggered = false;
+
+	Debug::log("[AelorinBossController] Threshold stagger completed.");
+}
+
+float AelorinBossController::getThresholdStaggerDuration() const
+{
+	const AelorinAttackConfig* config = m_attackConfig.get();
+
+	if (!config)
+	{
+		return 2.0f;
+	}
+
+	return config->m_thresholdStaggerDuration;
 }
 
 // These two will not be needed

@@ -66,7 +66,7 @@ void AelorinDamageable::takeDamage(const HitContext& ctx)
     processNormalDamage(enemyCtx);
 }
 
-const std::vector<float>& AelorinDamageable::getActiveThresholds() const
+const std::vector<AelorinThreshold>& AelorinDamageable::getActiveThresholds() const
 {
     if (m_controller && m_controller->isPhase2())
     {
@@ -76,23 +76,19 @@ const std::vector<float>& AelorinDamageable::getActiveThresholds() const
     return m_phase1Thresholds;
 }
 
-bool AelorinDamageable::hasCurrentThreshold() const
-{
-    const std::vector<float>& thresholds = getActiveThresholds();
-
-    return m_currentThresholdIndex < thresholds.size();
-}
-
-bool AelorinDamageable::isCurrentThresholdFinal() const
+const AelorinThreshold* AelorinDamageable::getCurrentThreshold() const
 {
     if (!hasCurrentThreshold())
     {
-        return false;
+        return nullptr;
     }
 
-    const std::vector<float>& thresholds = getActiveThresholds();
+    return &getActiveThresholds()[m_currentThresholdIndex];
+}
 
-    return m_currentThresholdIndex == thresholds.size() - 1;
+bool AelorinDamageable::hasCurrentThreshold() const
+{
+    return m_currentThresholdIndex < getActiveThresholds().size();
 }
 
 bool AelorinDamageable::isShadowExecution(const EnemyHitContext& ctx) const
@@ -102,12 +98,14 @@ bool AelorinDamageable::isShadowExecution(const EnemyHitContext& ctx) const
 
 float AelorinDamageable::getCurrentThresholdPercent() const
 {
-    if (!hasCurrentThreshold())
+    const AelorinThreshold* threshold = getCurrentThreshold();
+
+    if (!threshold)
     {
         return 0.0f;
     }
 
-    return getActiveThresholds()[m_currentThresholdIndex];
+    return threshold->percent;
 }
 
 float AelorinDamageable::getCurrentThresholdHp() const
@@ -168,7 +166,9 @@ void AelorinDamageable::processNormalDamage(const EnemyHitContext& ctx)
 
 void AelorinDamageable::processShadowExecution(const EnemyHitContext& ctx)
 {
-    if (!hasCurrentThreshold())
+    const AelorinThreshold* threshold = getCurrentThreshold();
+
+    if (!threshold)
     {
         return;
     }
@@ -179,21 +179,48 @@ void AelorinDamageable::processShadowExecution(const EnemyHitContext& ctx)
         return;
     }
 
-    Debug::log("[AelorinDamageable] Shadow Execution broke the %.0f%% threshold.", getCurrentThresholdPercent() * 100.0f);
+    Debug::log("[AelorinDamageable] Shadow Execution broke the %.0f%% threshold.", threshold->percent * 100.0f);
 
-    if (!isCurrentThresholdFinal())
+    switch (threshold->type)
     {
+    case AelorinThresholdType::Standard:
+    {
+        // to add health drop
         advanceThreshold();
-        return;
-    }
+        
+        if (m_controller)
+        {
+            m_controller->requestThresholdStagger();
+        }
 
-    if (m_controller && m_controller->isPhase2())
+        Debug::log("[AelorinDamageable] Standard threshold broken.");
+        break;
+    }
+    case AelorinThresholdType::Fury:
+    {
+        // request fury
+        // advance threshold after fury/exhaustion
+        advanceThreshold();
+
+        Debug::log("[AelorinDamageable] Fury threshold broken.");
+        break;
+    }
+    case AelorinThresholdType::PhaseTransition:
+    {
+        requestPhaseTransition();
+        break;
+    }
+    case AelorinThresholdType::FinalDeath:
     {
         handleFinalDeath(ctx);
-        return;
+        break;
     }
-
-    requestPhaseTransition();
+    default:
+    {
+        Debug::error("[AelorinDamageable] Unknown threshold type.");
+        break;
+    }
+    }
 }
 
 void AelorinDamageable::lockCurrentThreshold()
