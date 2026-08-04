@@ -1,14 +1,14 @@
 #include "pch.h"
-#include "AelorinThresholdStagger.h"
+#include "AelorinThresholdStaggerState.h"
 
 #include "AelorinBossController.h"
 
-AelorinThresholdStagger::AelorinThresholdStagger(GameObject* owner)
+AelorinThresholdStaggerState::AelorinThresholdStaggerState(GameObject* owner)
 	: StateMachineScript(owner)
 {
 }
 
-void AelorinThresholdStagger::OnStateEnter()
+void AelorinThresholdStaggerState::OnStateEnter()
 {
 	Transform* parentTransform = TransformAPI::getParent(getOwner()->GetTransform());
 	GameObject* parentGameObject = ComponentAPI::getOwner(parentTransform);
@@ -20,18 +20,18 @@ void AelorinThresholdStagger::OnStateEnter()
 
 	if (!m_controller)
 	{
-		Debug::error("[AelorinThresholdStagger] AelorinBossController not found.");
+		Debug::error("[AelorinThresholdStaggerState] AelorinBossController not found.");
 	}
 
 	if (!m_animation)
 	{
-		Debug::error("[AelorinThresholdStagger] AnimationComponent not found.");
+		Debug::error("[AelorinThresholdStaggerState] AnimationComponent not found.");
 	}
 
-	Debug::log("[AelorinThresholdStagger] ENTER");
+	Debug::log("[AelorinThresholdStaggerState] ENTER");
 }
 
-void AelorinThresholdStagger::OnStateUpdate()
+void AelorinThresholdStaggerState::OnStateUpdate()
 {
 	if (!m_controller || !m_animation || m_staggerCompleted)
 	{
@@ -53,13 +53,13 @@ void AelorinThresholdStagger::OnStateUpdate()
 
 	if (!sent)
 	{
-		Debug::warn("[AelorinThresholdStagger] Failed to send ToIdle trigger.");
+		Debug::warn("[AelorinThresholdStaggerState] Failed to send ToIdle trigger.");
 	}
 }
 
-void AelorinThresholdStagger::OnStateExit()
+void AelorinThresholdStaggerState::OnStateExit()
 {
-	Debug::log("[AelorinThresholdStagger] EXIT");
+	Debug::log("[AelorinThresholdStaggerState] EXIT");
 }
 
-IMPLEMENT_SCRIPT(AelorinThresholdStagger)
+IMPLEMENT_SCRIPT(AelorinThresholdStaggerState)

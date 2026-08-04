@@ -16,6 +16,9 @@ void AelorinIdleState::OnStateEnter()
 	m_controller = GameObjectAPI::findScript<AelorinBossController>(parentGameObject);
 	m_animation = AnimationAPI::getAnimationComponent(getOwner());
 
+	m_decisionTimer = 0.0f;
+	m_decisionMade = false;
+
 	if (!m_controller)
 	{
 		Debug::error("[AelorinIdleState] AelorinBossController not found.");
@@ -45,6 +48,22 @@ void AelorinIdleState::OnStateUpdate()
 	{
 		return;
 	}
+
+	if (m_decisionMade)
+	{
+		return;
+	}
+
+	m_decisionTimer += Time::getDeltaTime();
+
+	if (m_decisionTimer < m_controller->getDecisionTime())
+	{
+		return;
+	}
+
+	m_decisionMade = true;
+
+	Debug::log("[AelorinIdleState] Decision time elapsed.");
 }
 
 void AelorinIdleState::OnStateExit()

@@ -81,6 +81,18 @@ void AelorinBossController::updateEncounter()
 	}
 }
 
+float AelorinBossController::getDecisionTime() const
+{
+	const AelorinAttackConfig* config = m_attackConfig.get();
+
+	if (!config)
+	{
+		return isPhase2() ? 1.0f : 2.0f;
+	}
+
+	return isPhase2() ? config->m_phase2DecisionTime : config->m_phase1DecisionTime;
+}
+
 void AelorinBossController::setPhase(Phase phase)
 {
 	m_phase = phase;

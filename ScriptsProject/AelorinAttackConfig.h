@@ -14,6 +14,10 @@ public:
 	{
 	}
 
+	// Decision Timing
+	float m_phase1DecisionTime = 2.0f;
+	float m_phase2DecisionTime = 1.0f;
+
 	// Thresholds
 	float m_thresholdStaggerDuration = 2.0f;
 
@@ -38,6 +42,11 @@ public:
 
 	IMPLEMENT_DATACONTAINER_FIELDS(
 		AelorinAttackConfig,
+
+		FIELD_GROUP_COLLAPSE("Decision Timing",
+			SERIALIZED_FLOAT(m_phase1DecisionTime, "Phase 1 Decision Time", 0.0f, 10.0f, 0.05f),
+			SERIALIZED_FLOAT(m_phase2DecisionTime, "Phase 2 Decision Time", 0.0f, 10.0f, 0.05f)
+		),
 
 		FIELD_GROUP_COLLAPSE("Thresholds",
 			SERIALIZED_FLOAT(m_thresholdStaggerDuration, "Threshold Stagger Duration", 0.0f, 10.0f, 0.05f)

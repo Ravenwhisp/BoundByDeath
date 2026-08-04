@@ -31,6 +31,9 @@ public:
 	// Encounter
 	void updateEncounter();
 
+	// Decision Timing helpers
+	float getDecisionTime() const;
+
 	// Phase helpers
 	Phase getPhase() const { return m_phase; }
 	void setPhase(Phase phase);

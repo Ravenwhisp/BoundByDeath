@@ -6,12 +6,12 @@
 class AelorinBossController;
 class AnimationComponent;
 
-class AelorinPhaseTransition : public StateMachineScript
+class AelorinThresholdStaggerState : public StateMachineScript
 {
-	DECLARE_SCRIPT(AelorinPhaseTransition)
+	DECLARE_SCRIPT(AelorinThAelorinThresholdStaggerStateresholdStagger)
 
 public:
-	explicit AelorinPhaseTransition(GameObject* owner);
+	explicit AelorinThresholdStaggerState(GameObject* owner);
 
 	void OnStateEnter() override;
 	void OnStateUpdate() override;
@@ -21,5 +21,6 @@ private:
 	AelorinBossController* m_controller = nullptr;
 	AnimationComponent* m_animation = nullptr;
 
-	bool m_phase2Started = false;
+	float m_staggerTimer = 0.0f;
+	bool m_staggerCompleted = false;
 };

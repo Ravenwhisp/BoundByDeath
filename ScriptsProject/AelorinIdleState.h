@@ -20,4 +20,7 @@ public:
 private:
 	AelorinBossController* m_controller = nullptr;
 	AnimationComponent* m_animation = nullptr;
+
+	float m_decisionTimer = 0.0f;
+	bool m_decisionMade = false;
 };

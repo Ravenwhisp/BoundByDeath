@@ -1,14 +1,14 @@
 #include "pch.h"
-#include "AelorinPhaseTransition.h"
+#include "AelorinPhaseTransitionState.h"
 
 #include "AelorinBossController.h"
 
-AelorinPhaseTransition::AelorinPhaseTransition(GameObject* owner)
+AelorinPhaseTransitionState::AelorinPhaseTransitionState(GameObject* owner)
 	: StateMachineScript(owner)
 {
 }
 
-void AelorinPhaseTransition::OnStateEnter()
+void AelorinPhaseTransitionState::OnStateEnter()
 {
 	Transform* parentTransform = TransformAPI::getParent(getOwner()->GetTransform());
 	GameObject* parentGameObject = ComponentAPI::getOwner(parentTransform);
@@ -20,18 +20,18 @@ void AelorinPhaseTransition::OnStateEnter()
 
 	if (!m_controller)
 	{
-		Debug::error("[AelorinPhaseTransition] AelorinBossController not found.");
+		Debug::error("[AelorinPhaseTransitionState] AelorinBossController not found.");
 	}
 
 	if (!m_animation)
 	{
-		Debug::error("[AelorinPhaseTransition] AnimationComponent not found.");
+		Debug::error("[AelorinPhaseTransitionState] AnimationComponent not found.");
 	}
 
-	Debug::log("[AelorinPhaseTransition] ENTER");
+	Debug::log("[AelorinPhaseTransitionState] ENTER");
 }
 
-void AelorinPhaseTransition::OnStateUpdate()
+void AelorinPhaseTransitionState::OnStateUpdate()
 {
 	if (!m_controller || !m_animation)
 	{
@@ -45,15 +45,15 @@ void AelorinPhaseTransition::OnStateUpdate()
 
 	if (!AnimationAPI::isPlaying(m_animation))
 	{
-		Debug::log("[AelorinPhaseTransition] stopped playing animation");
+		Debug::log("[AelorinPhaseTransitionState] stopped playing animation");
 		m_phase2Started = true;
 		m_controller->beginPhase2();
 	}
 }
 
-void AelorinPhaseTransition::OnStateExit()
+void AelorinPhaseTransitionState::OnStateExit()
 {
-	Debug::log("[AelorinPhaseTransition] EXIT");
+	Debug::log("[AelorinPhaseTransitionState] EXIT");
 }
 
-IMPLEMENT_SCRIPT(AelorinPhaseTransition)
+IMPLEMENT_SCRIPT(AelorinPhaseTransitionState)
