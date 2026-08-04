@@ -185,11 +185,11 @@ void AelorinDamageable::processShadowExecution(const EnemyHitContext& ctx)
     {
     case AelorinThresholdType::Standard:
     {
-        // to add health drop
         advanceThreshold();
         
         if (m_controller)
         {
+            m_controller->spawnHealthDrops();
             m_controller->requestThresholdStagger();
         }
 
@@ -207,6 +207,11 @@ void AelorinDamageable::processShadowExecution(const EnemyHitContext& ctx)
     }
     case AelorinThresholdType::PhaseTransition:
     {
+        if (m_controller)
+        {
+            m_controller->spawnHealthDrops();
+        }
+
         requestPhaseTransition();
         break;
     }

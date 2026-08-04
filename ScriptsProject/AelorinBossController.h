@@ -50,6 +50,9 @@ public:
 	void completeThresholdStagger();
 	float getThresholdStaggerDuration() const;
 
+	// Health drop
+	void spawnHealthDrops();
+
 protected:
 	Transform* acquireCurrentTarget() override;
 	bool isTargetDowned(Transform* target) const override;

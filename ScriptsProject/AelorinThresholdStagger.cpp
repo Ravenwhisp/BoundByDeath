@@ -15,6 +15,8 @@ void AelorinThresholdStagger::OnStateEnter()
 
 	m_controller = GameObjectAPI::findScript<AelorinBossController>(parentGameObject);
 	m_animation = AnimationAPI::getAnimationComponent(getOwner());
+	m_staggerCompleted = false;
+	m_staggerTimer = 0.0f;
 
 	if (!m_controller)
 	{

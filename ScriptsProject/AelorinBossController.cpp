@@ -5,6 +5,8 @@
 #include "AelorinDamageable.h"
 #include "AelorinAttackConfig.h"
 
+#include "HealthDropSpawner.h"
+
 IMPLEMENT_SCRIPT_FIELDS_INHERITED(AelorinBossController, EnemyBaseController,
 	SERIALIZED_ASSET_REF(m_attackConfig, "Attack Config", AssetType::DATA_CONTAINER)
 )
@@ -222,6 +224,43 @@ float AelorinBossController::getThresholdStaggerDuration() const
 	}
 
 	return config->m_thresholdStaggerDuration;
+}
+
+void AelorinBossController::spawnHealthDrops()
+{
+	const AelorinAttackConfig* config = m_attackConfig.get();
+
+	if (!config)
+	{
+		Debug::warn("[AelorinBossController] Cannot spawn health drops: AelorinAttackConfig is missing.");
+		return;
+	}
+
+	if (!config->m_healthPickupPrefab.m_id.isValid())
+	{
+		Debug::warn("[AelorinBossController] Cannot spawn health drops: health pickup prefab is invalid.");
+		return;
+	}
+
+	Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
+	if (!ownerTransform)
+	{
+		Debug::warn("[AelorinBossController] Cannot spawn health drops: owner transform is missing.");
+		return;
+	}
+
+	const Vector3 position = TransformAPI::getGlobalPosition(ownerTransform);
+
+	for (int i = 0; i < config->m_healthDropQuantity; ++i)
+	{
+		HealthDropSpawner::drop(
+			config->m_healthPickupPrefab.m_id,
+			position,
+			config->m_healingAmount,
+			config->m_dropRadius,
+			config->m_dropHeight
+		);
+	}
 }
 
 // These two will not be needed
