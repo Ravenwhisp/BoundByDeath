@@ -59,6 +59,7 @@ public:
 	int getSelectedSideSweepSide() const { return m_selectedSideSweepSide; }
 	
 protected:
+	const EnemyBaseDataConfig* getBaseDataConfig() const override;
 	Transform* acquireCurrentTarget() override;
 	bool isTargetDowned(Transform* target) const override;
 
