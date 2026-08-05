@@ -8,12 +8,14 @@ class ArcherGuardParticles : public Script
 public:
     explicit ArcherGuardParticles(GameObject* owner);
     void Start() override;
+    void Update() override;
+
     FieldList getExposedFields() const override;
 
     PrefabRef m_trailPrefab;
-    PrefabRef m_volleyPrefab;
-    PrefabRef m_chargePrefab;
-    PrefabRef m_arrowPrefab;
+    PrefabRef m_barrageImpactPrefab;
+    PrefabRef m_somersaultPrefab;
+    PrefabRef m_arrowBarragePrefab;
 
     // Basic attack trail — called by ArcherArrowShooter
     void spawnBasicAttackTrail(const Vector3& pos);
@@ -34,4 +36,9 @@ private:
     GameObject*              m_trailGO          = nullptr;
     std::vector<GameObject*> m_barrageArrows;
     GameObject*              m_chargeParticleGO = nullptr;
+
+    Transform* m_chargeParticleTransform = nullptr;
+    GameObject* m_impactParticleGO = nullptr;
+    float m_impactParticleLifetime = 1.0f;
+    float m_impactParticleTimer = 0.0f;
 };
