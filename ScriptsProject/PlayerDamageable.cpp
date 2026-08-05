@@ -3,6 +3,7 @@
 #include "HeartbeatHaptic.h"
 #include "DeathSound.h"
 #include "LyrielSound.h"
+#include "SharedPlayerParticles.h"
 
 #include "PlayerDownState.h"
 #include "PlayerAnimationController.h"
@@ -40,6 +41,12 @@ void PlayerDamageable::Start()
 
     m_deathSound  = GameObjectAPI::findScript<DeathSound>(m_owner);
     m_lyrielSound = GameObjectAPI::findScript<LyrielSound>(m_owner);
+    m_playerParticles = GameObjectAPI::findScript<SharedPlayerParticles>(m_owner);
+
+    if (m_playerParticles == nullptr)
+    {
+        Debug::warn("%s has PlayerDamageable but no PlayerParticles.", GameObjectAPI::getName(m_owner));
+    }
 
     Transform* rendererTransform = m_renderer.getReferencedComponent();
 
@@ -97,6 +104,11 @@ void PlayerDamageable::onDamaged(float amount)
     if (m_playerAnimationController != nullptr)
     {
         m_playerAnimationController->requestDamaged();
+    }
+
+    if (m_playerParticles != nullptr)
+    {
+        m_playerParticles->playDamageParticle();
     }
 
     if (isLastDamageContinuous())
