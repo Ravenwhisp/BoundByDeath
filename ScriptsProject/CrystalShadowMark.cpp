@@ -5,8 +5,6 @@
 #include "CrystalVisuals.h"
 
 IMPLEMENT_SCRIPT_FIELDS_INHERITED(CrystalShadowMark, EnemyShadowMark,
-    SERIALIZED_COMPONENT_REF(m_puzzleManager, "PuzzleManager", ComponentType::TRANSFORM),
-	SERIALIZED_INT(m_puzzleID, "Puzzle ID"),
 	SERIALIZED_FLOAT(m_activeTime, "Active Time", 0.0f, 10.0f, 0.1f),
     SERIALIZED_ASSET_REF(m_crystalSparks, "Crystal Sparks Particle", AssetType::PREFAB),
     SERIALIZED_ASSET_REF(m_crystalStars, "Crystal Stars Particle", AssetType::PREFAB)
@@ -17,18 +15,6 @@ CrystalShadowMark::CrystalShadowMark(GameObject* owner) : EnemyShadowMark(owner)
 void CrystalShadowMark::Start()
 {
     EnemyShadowMark::Start();
-
-    managerObject = ComponentAPI::getOwner(m_puzzleManager.getReferencedComponent());
-    if(managerObject == nullptr)
-    {
-        Debug::log("[CrystalMark] ERROR: PuzzleManager reference is invalid!");
-        return;
-	}
-	managerScript = GameObjectAPI::findScript<PuzzleManagerLVL1>(managerObject);
-    if (managerScript == nullptr)
-    {
-        Debug::log("[CrystalMark] ERROR: PuzzleManager script not found on referenced object!");
-    }
 
     m_visualsController = GameObjectAPI::findScript<CrystalVisuals>(getOwner());
 
@@ -41,11 +27,6 @@ void CrystalShadowMark::Start()
 void CrystalShadowMark::Update() 
 {
     EnemyShadowMark::Update();
-
-    if (!m_puzzleCompleted && managerScript != nullptr && managerScript->isPuzzleSolved(m_puzzleID))
-    {
-        completeCrystal();
-    }
 
     if (m_puzzleCompleted)
     {
@@ -75,15 +56,6 @@ void CrystalShadowMark::Update()
     }
 
     deactivateEffect();
-
-    if (managerScript != nullptr)
-    {
-        managerScript->onCrystalsDeactivated(m_puzzleID);
-    }
-    else
-    {
-        Debug::log("[CrystalMark] WARNING: PuzzleManagerLVL1 not found!");
-    } 
 }
 
 bool CrystalShadowMark::processAttack(PlayerAttackType attackType)
@@ -143,12 +115,6 @@ void CrystalShadowMark::activateCrystal()
         m_activatedLoopStarted = true;
     }
 
-    if (managerScript == nullptr)
-    {
-        Debug::log("[CrystalMark] WARNING: PuzzleManagerLVL1 not found!");
-        return;
-    }
-
     m_activationTimer = 0.0f;
     m_activated = true;
 
@@ -158,13 +124,6 @@ void CrystalShadowMark::activateCrystal()
     }
 
     activeEffect();
-    Debug::log("[CrystalMark] '%s' activating puzzle %d using manager '%s'.", GameObjectAPI::getName(getOwner()), m_puzzleID, GameObjectAPI::getName(managerObject));
-    managerScript->onCrystalsActivated(m_puzzleID);
-
-    if (managerScript->isPuzzleSolved(m_puzzleID))
-    {
-        completeCrystal();
-    }
 }
 
 void CrystalShadowMark::completeCrystal()
@@ -192,7 +151,7 @@ void CrystalShadowMark::completeCrystal()
         damageable->setInvulnerable(true);
     }
 
-    Debug::log("[CrystalMark] Crystal permanently activated for solved puzzle %d.", m_puzzleID);
+    Debug::log("[CrystalMark] Crystal permanently activated for solved puzzle.");
 }
 
 IMPLEMENT_SCRIPT(CrystalShadowMark)

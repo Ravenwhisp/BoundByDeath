@@ -1,13 +1,25 @@
 #include "pch.h"
 #include "ElevatorManager.h"
 #include "CombatAreaEvent.h"
+#include "CrystalShadowMark.h"
 
 IMPLEMENT_SCRIPT_FIELDS(ElevatorManager,
+    SERIALIZED_COMPONENT_REF_VECTOR(m_crystals, "Crystals", ComponentType::TRANSFORM),
     SERIALIZED_COMPONENT_REF_VECTOR(m_combatAreaRoots, "Combat Area Roots", ComponentType::TRANSFORM),
-    SERIALIZED_COMPONENT_REF(m_elevator, "Elevator", ComponentType::TRANSFORM),
-    SERIALIZED_COMPONENT_REF_VECTOR(m_elevatorTargets, "Elevator Targets", ComponentType::TRANSFORM),
-    SERIALIZED_FLOAT(m_moveDuration, "Move Duration", 0.0f, 30.0f, 0.05f),
-    SERIALIZED_FLOAT(m_lerpPower, "Lerp Power", 0.1f, 10.0f, 0.1f)
+    FIELD_GROUP_COLLAPSE("Walls",
+        SERIALIZED_COMPONENT_REF(m_wallTop, "Wall Top", ComponentType::TRANSFORM),
+        SERIALIZED_COMPONENT_REF(m_wallBottom, "Wall Bottom", ComponentType::TRANSFORM),
+        SERIALIZED_FLOAT(m_wallPieceHeight, "Wall Piece Height", 0.1f, 1000.0f, 0.1f),
+        SERIALIZED_FLOAT(m_wallThreshold, "Wall Threshold", 0.0f, 10000.0f, 0.1f),
+        SERIALIZED_FLOAT(m_wallScrollSpeed, "Wall Scroll Speed", 0.0f, 100.0f, 0.1f)
+    ),
+    FIELD_GROUP_COLLAPSE("Platform",
+        SERIALIZED_COMPONENT_REF(m_platform, "Platform", ComponentType::TRANSFORM),
+        SERIALIZED_COMPONENT_REF_VECTOR(m_platformTargets, "Platform Targets", ComponentType::TRANSFORM),
+        SERIALIZED_FLOAT(m_platformMoveDuration, "Move Duration", 0.0f, 30.0f, 0.05f),
+        SERIALIZED_FLOAT(m_platformLerpPower, "Lerp Power", 0.1f, 10.0f, 0.1f)
+    ),
+    SERIALIZED_INT(m_wavesPerCycle, "Waves Per Cycle")
 )
 
 ElevatorManager::ElevatorManager(GameObject* owner)
@@ -18,53 +30,114 @@ ElevatorManager::ElevatorManager(GameObject* owner)
 void ElevatorManager::Start()
 {
     resolveCombatAreas();
+    resolveCrystals();
 
-    for (int i = 1; i < static_cast<int>(m_combatAreas.size()); i++)
+    const int areaCount = static_cast<int>(m_combatAreas.size());
+    for (int i = 0; i < areaCount; i++)
         disableArea(i);
 }
 
 void ElevatorManager::Update()
 {
     const int areaCount = static_cast<int>(m_combatAreas.size());
+    const int targetCount = static_cast<int>(m_platformTargets.size());
 
-    if (m_elevatorMoving)
+    switch (m_state)
     {
-        updateElevatorMove();
-
-        if (!m_elevatorMoving)
-        {
-            if (m_wavesCompleted < areaCount)
-                enableArea(m_wavesCompleted);
-        }
-        return;
-    }
-
-    for (int i = m_wavesStarted; i < areaCount; i++)
+    case State::Idle:
     {
-        CombatAreaEvent* area = m_combatAreas[i];
-        if (area == nullptr)
-            continue;
+        const int crystalA = m_currentCycle * 2;
+        const int crystalB = crystalA + 1;
+        const int crystalCount = static_cast<int>(m_crystalScripts.size());
 
-        if (area->isActive())
+        if (crystalA >= crystalCount || crystalB >= crystalCount)
+            break;
+
+        CrystalShadowMark* a = m_crystalScripts[crystalA];
+        CrystalShadowMark* b = m_crystalScripts[crystalB];
+
+        if (m_waitingForReset)
         {
-            m_wavesStarted = i + 1;
+            if (a != nullptr && b != nullptr && !a->isActivated() && !b->isActivated())
+                m_waitingForReset = false;
             break;
         }
+
+        if (a != nullptr && b != nullptr && a->isActivated() && b->isActivated())
+        {
+            if (m_currentCycle * 2 < targetCount)
+                startPlatformMove(m_currentCycle * 2);
+
+            m_movingToCombat = true;
+            m_wallsActive = true;
+            m_state = State::PlatformMoving;
+        }
+        break;
     }
 
-    if (m_wavesCompleted < m_wavesStarted && m_wavesCompleted < areaCount)
+    case State::PlatformMoving:
     {
-        CombatAreaEvent* area = m_combatAreas[m_wavesCompleted];
-        if (area != nullptr && area->hasCompleted())
-        {
-            m_wavesCompleted++;
+        updateWallScroll();
+        updatePlatformMove();
 
-            if (m_elevatorTargetIndex < static_cast<int>(m_elevatorTargets.size()))
+        if (!m_platformMoving)
+        {
+            if (m_movingToCombat)
             {
-                startElevatorMove(m_elevatorTargetIndex);
-                m_elevatorTargetIndex++;
+                beginWave(m_wavesCompleted);
+                m_wavesDoneInCycle = 1;
+                m_state = State::CycleActive;
+            }
+            else
+            {
+                m_currentCycle++;
+
+                if (m_currentCycle * 2 >= targetCount || m_wavesCompleted >= areaCount)
+                    m_state = State::Done;
+                else
+                {
+                    m_waitingForReset = true;
+                    m_state = State::Idle;
+                }
             }
         }
+        break;
+    }
+
+    case State::CycleActive:
+    {
+        updateWallScroll();
+
+        if (m_wavesCompleted < areaCount)
+        {
+            CombatAreaEvent* area = m_combatAreas[m_wavesCompleted];
+            if (area != nullptr && area->hasCompleted())
+            {
+                m_wavesCompleted++;
+                m_wavesDoneInCycle++;
+
+                if (m_wavesDoneInCycle <= m_wavesPerCycle && m_wavesCompleted < areaCount)
+                {
+                    beginWave(m_wavesCompleted);
+                }
+
+                if (m_wavesDoneInCycle > m_wavesPerCycle)
+                {
+                    m_wallsActive = false;
+
+                    if (m_currentCycle * 2 + 1 < targetCount)
+                        startPlatformMove(m_currentCycle * 2 + 1);
+
+                    m_movingToCombat = false;
+                    m_state = State::PlatformMoving;
+                }
+            }
+        }
+        break;
+    }
+
+    case State::Done:
+        break;
     }
 }
 
@@ -90,6 +163,31 @@ void ElevatorManager::resolveCombatAreas()
 
         CombatAreaEvent* area = GameObjectAPI::findScript<CombatAreaEvent>(rootObject);
         m_combatAreas.push_back(area);
+    }
+}
+
+void ElevatorManager::resolveCrystals()
+{
+    m_crystalScripts.clear();
+
+    for (auto& ref : m_crystals)
+    {
+        Transform* t = ref.getReferencedComponent();
+        if (t == nullptr)
+        {
+            m_crystalScripts.push_back(nullptr);
+            continue;
+        }
+
+        GameObject* obj = ComponentAPI::getOwner(t);
+        if (obj == nullptr)
+        {
+            m_crystalScripts.push_back(nullptr);
+            continue;
+        }
+
+        CrystalShadowMark* crystal = GameObjectAPI::findScript<CrystalShadowMark>(obj);
+        m_crystalScripts.push_back(crystal);
     }
 }
 
@@ -153,48 +251,105 @@ void ElevatorManager::setActiveRecursive(GameObject* obj, bool active)
     }
 }
 
-void ElevatorManager::startElevatorMove(int targetIndex)
+void ElevatorManager::beginWave(int waveIndex)
 {
-    if (targetIndex < 0 || targetIndex >= static_cast<int>(m_elevatorTargets.size()))
+    if (waveIndex < 0 || waveIndex >= static_cast<int>(m_combatAreas.size()))
         return;
 
-    Transform* elevatorTransform = m_elevator.getReferencedComponent();
-    if (elevatorTransform == nullptr)
+    CombatAreaEvent* area = m_combatAreas[waveIndex];
+    if (area == nullptr)
         return;
 
-    Transform* targetTransform = m_elevatorTargets[targetIndex].getReferencedComponent();
+    enableArea(waveIndex);
+    area->executeEvent(nullptr);
+}
+
+void ElevatorManager::startWallScroll()
+{
+    m_wallsActive = true;
+}
+
+void ElevatorManager::updateWallScroll()
+{
+    if (!m_wallsActive)
+        return;
+
+    Transform* top = m_wallTop.getReferencedComponent();
+    Transform* bottom = m_wallBottom.getReferencedComponent();
+
+    if (top == nullptr || bottom == nullptr)
+        return;
+
+    const float dt = Time::getDeltaTime();
+    const float scrollAmount = m_wallScrollSpeed * dt;
+
+    Vector3 topPos = TransformAPI::getPosition(top);
+    Vector3 bottomPos = TransformAPI::getPosition(bottom);
+
+    topPos.y += scrollAmount;
+    bottomPos.y += scrollAmount;
+
+    if (topPos.y >= m_wallThreshold)
+        topPos.y -= m_wallPieceHeight * 2.0f;
+
+    if (bottomPos.y >= m_wallThreshold)
+        bottomPos.y -= m_wallPieceHeight * 2.0f;
+
+    TransformAPI::setPosition(top, topPos);
+    TransformAPI::setPosition(bottom, bottomPos);
+}
+
+void ElevatorManager::startPlatformMove(int targetIndex)
+{
+    if (targetIndex < 0 || targetIndex >= static_cast<int>(m_platformTargets.size()))
+        return;
+
+    Transform* platformTransform = m_platform.getReferencedComponent();
+    if (platformTransform == nullptr)
+        return;
+
+    Transform* targetTransform = m_platformTargets[targetIndex].getReferencedComponent();
     if (targetTransform == nullptr)
         return;
 
-    m_elevatorStartY = TransformAPI::getPosition(elevatorTransform).y;
-    m_elevatorTargetY = TransformAPI::getPosition(targetTransform).y;
-    m_elevatorTimer = 0.0f;
-    m_elevatorMoving = true;
+    m_platformStartY = TransformAPI::getPosition(platformTransform).y;
+    m_platformTargetY = TransformAPI::getPosition(targetTransform).y;
+
+    m_platformTimer = 0.0f;
+    m_platformMoving = true;
 }
 
-void ElevatorManager::updateElevatorMove()
+void ElevatorManager::updatePlatformMove()
 {
-    Transform* elevatorTransform = m_elevator.getReferencedComponent();
-    if (elevatorTransform == nullptr)
+    if (!m_platformMoving)
+        return;
+
+    Transform* platformTransform = m_platform.getReferencedComponent();
+    if (platformTransform == nullptr)
     {
-        m_elevatorMoving = false;
+        m_platformMoving = false;
         return;
     }
 
     float dt = Time::getDeltaTime();
-    m_elevatorTimer += dt;
-    float alpha = m_elevatorTimer / m_moveDuration;
+    m_platformTimer += dt;
+    float alpha = m_platformTimer / m_platformMoveDuration;
     if (alpha > 1.0f)
         alpha = 1.0f;
 
-    alpha = pow(alpha, m_lerpPower);
+    alpha = pow(alpha, m_platformLerpPower);
 
-    Vector3 currentPos = TransformAPI::getPosition(elevatorTransform);
-    currentPos.y = m_elevatorStartY + (m_elevatorTargetY - m_elevatorStartY) * alpha;
-    TransformAPI::setPosition(elevatorTransform, currentPos);
+    Vector3 currentPos = TransformAPI::getPosition(platformTransform);
+    currentPos.y = m_platformStartY + (m_platformTargetY - m_platformStartY) * alpha;
+    TransformAPI::setPosition(platformTransform, currentPos);
 
-    if (m_elevatorTimer >= m_moveDuration)
-        m_elevatorMoving = false;
+    if (m_platformTimer >= m_platformMoveDuration)
+        m_platformMoving = false;
+}
+
+int ElevatorManager::getTotalWaves() const
+{
+    return static_cast<int>(m_platformTargets.size()) * m_wavesPerCycle;
 }
 
 IMPLEMENT_SCRIPT(ElevatorManager)
