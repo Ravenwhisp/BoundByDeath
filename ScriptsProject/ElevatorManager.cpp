@@ -2,6 +2,7 @@
 #include "ElevatorManager.h"
 #include "CombatAreaEvent.h"
 #include "CrystalShadowMark.h"
+#include "Damageable.h"
 
 IMPLEMENT_SCRIPT_FIELDS(ElevatorManager,
     SERIALIZED_COMPONENT_REF_VECTOR(m_crystals, "Crystals", ComponentType::TRANSFORM),
@@ -39,6 +40,13 @@ void ElevatorManager::Start()
 
 void ElevatorManager::Update()
 {
+    const bool cheatHeld = Input::isKeyDown(KeyCode::RightShift) && Input::isKeyDown(KeyCode::L);
+
+    if (cheatHeld && !m_cheatWasPressed)
+        killWaveEnemies(m_cheatWaveIndex++);
+
+    m_cheatWasPressed = cheatHeld;
+
     const int areaCount = static_cast<int>(m_combatAreas.size());
     const int targetCount = static_cast<int>(m_platformTargets.size());
 
@@ -350,6 +358,30 @@ void ElevatorManager::updatePlatformMove()
 int ElevatorManager::getTotalWaves() const
 {
     return static_cast<int>(m_platformTargets.size()) * m_wavesPerCycle;
+}
+
+void ElevatorManager::killWaveEnemies(int waveIndex)
+{
+    if (waveIndex < 0 || waveIndex >= static_cast<int>(m_combatAreas.size()))
+        return;
+
+    CombatAreaEvent* area = m_combatAreas[waveIndex];
+    if (area == nullptr)
+        return;
+
+    for (auto& enemyRef : area->m_enemies)
+    {
+        Transform* t = enemyRef.getReferencedComponent();
+        if (t == nullptr) continue;
+        GameObject* obj = ComponentAPI::getOwner(t);
+        if (obj == nullptr) continue;
+        Damageable* damageable = GameObjectAPI::findScript<Damageable>(obj);
+        if (damageable == nullptr) continue;
+        if (damageable->isDead()) continue;
+        damageable->takeDamage(damageable->getCurrentHp());
+    }
+
+    Debug::log("[ElevatorManager] Cheat: killed wave %d enemies", waveIndex);
 }
 
 IMPLEMENT_SCRIPT(ElevatorManager)

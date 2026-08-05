@@ -35,6 +35,8 @@ private:
 
     int getTotalWaves() const;
 
+    void killWaveEnemies(int waveIndex);
+
     enum class State { Idle, CycleActive, PlatformMoving, Done };
 
 public:
@@ -71,4 +73,7 @@ private:
     float m_platformTimer = 0.0f;
     float m_platformStartY = 0.0f;
     float m_platformTargetY = 0.0f;
+
+    int m_cheatWaveIndex = 0;
+    bool m_cheatWasPressed = false;
 };
