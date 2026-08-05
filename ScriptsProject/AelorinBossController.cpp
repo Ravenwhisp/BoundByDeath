@@ -73,6 +73,26 @@ void AelorinBossController::Update()
 	updateEncounter();
 }
 
+Vector3 AelorinBossController::getLyrielPosition() const
+{
+	if (!m_aelorinDetectionAggro)
+	{
+		return Vector3::Zero;
+	}
+
+	return m_aelorinDetectionAggro->getLyrielPosition();
+}
+
+Vector3 AelorinBossController::getDeathPosition() const
+{
+	if (!m_aelorinDetectionAggro)
+	{
+		return Vector3::Zero;
+	}
+
+	return m_aelorinDetectionAggro->getDeathPosition();
+}
+
 AelorinAbility AelorinBossController::chooseNextAbility()
 {
 	if (canTeleport())

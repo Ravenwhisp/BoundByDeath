@@ -6,6 +6,7 @@
 #include "AelorinBossController.h"
 
 class AnimationComponent;
+class ProjectilePool;
 
 class AelorinSeekerSigilsState : public StateMachineScript
 {
@@ -21,9 +22,20 @@ public:
 private:
 	AelorinBossController* m_controller = nullptr;
 	AnimationComponent* m_animation = nullptr;
+	ProjectilePool* m_projectilePool = nullptr;
 
 	AelorinAbility m_activeAbility = AelorinAbility::None;
 
-	float m_testTimer = 0.0f;
+	float m_waveTimer = 0.0f;
+	int m_currentWave = 0;
+
+	bool m_finalProjectileLaunched = false;
 	bool m_completed = false;
+
+private:
+	void launchCurrentWave();
+	void launchProjectileAt(const Vector3& targetPosition, float impactRadius, float damage);
+
+	void launchPhase2FinalProjectile();
+	void finishAbility();
 };

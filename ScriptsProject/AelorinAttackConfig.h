@@ -38,7 +38,7 @@ public:
 	
 	float m_seekerSigilsInitialDelay = 0.6f;
 	float m_seekerSigilsWaveInterval = 0.45f;
-	float m_seekerSigilsTotalDuration = 2.2f;
+	float m_seekerSigilsRecoveryDuration = 2.2f;
 	
 	float m_seekerSigilsRadius = 1.25f;
 	float m_seekerSigilsDamage = 10.0f;
@@ -46,6 +46,10 @@ public:
 	float m_seekerSigilsPhase2FinalDelay = 0.5f;
 	float m_seekerSigilsPhase2FinalRadius = 2.5f;
 	float m_seekerSigilsPhase2FinalDamage = 20.0f;
+
+	float m_seekerSigilsSpawnHeight = 8.0f;
+	float m_seekerSigilsFallSpeed = 10.0f;
+	float m_seekerSigilsProjectileLifetime = 3.0f;
 
 	// Health Drops
 	PrefabRef m_healthPickupPrefab;
@@ -85,12 +89,15 @@ public:
 			SERIALIZED_INT(m_seekerSigilsWaveCount, "Wave Count", 0, 10, 1),
 			SERIALIZED_FLOAT(m_seekerSigilsInitialDelay, "Initial Delay", 0.0f, 5.0f, 0.01f),
 			SERIALIZED_FLOAT(m_seekerSigilsWaveInterval, "Wave Interval", 0.0f, 5.0f, 0.01f),
-			SERIALIZED_FLOAT(m_seekerSigilsTotalDuration, "Total Duration", 0.0f, 10.0f, 0.1f),
+			SERIALIZED_FLOAT(m_seekerSigilsRecoveryDuration, "Recovery Duration", 0.0f, 10.0f, 0.1f),
 			SERIALIZED_FLOAT(m_seekerSigilsRadius, "Radius", 0.0f, 10.0f, 0.1f),
 			SERIALIZED_FLOAT(m_seekerSigilsDamage, "Damage", 0.0f, 50.0f, 1.0f),
 			SERIALIZED_FLOAT(m_seekerSigilsPhase2FinalDelay, "Phase 2 Delay", 0.0f, 5.0f, 0.01f),
 			SERIALIZED_FLOAT(m_seekerSigilsPhase2FinalRadius, "Phase 2 Radius", 0.0f, 20.0f, 0.1f),
-			SERIALIZED_FLOAT(m_seekerSigilsPhase2FinalDamage, "Phase 2 Damage", 0.0f, 50.0f, 1.0f)
+			SERIALIZED_FLOAT(m_seekerSigilsPhase2FinalDamage, "Phase 2 Damage", 0.0f, 50.0f, 1.0f),
+			SERIALIZED_FLOAT(m_seekerSigilsSpawnHeight, "Spawn Height", 0.0f, 50.0f, 0.1f),
+			SERIALIZED_FLOAT(m_seekerSigilsFallSpeed, "Fall Speed", 0.0f, 50.0f, 0.1f),
+			SERIALIZED_FLOAT(m_seekerSigilsProjectileLifetime, "Lifetime", 0.0f, 20.0f, 0.1f)
 		),
 
 		FIELD_GROUP_COLLAPSE("Health Drops",

@@ -39,6 +39,9 @@ public:
 
 	FieldList getExposedFields() const override;
 
+	Vector3 getLyrielPosition() const;
+	Vector3 getDeathPosition() const;
+
 	// AttackConfig
 	const AelorinAttackConfig* getAelorinAttackConfig() const { return m_attackConfig.get(); }
 
