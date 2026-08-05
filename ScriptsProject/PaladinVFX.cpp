@@ -2,11 +2,8 @@
 #include "PaladinVFX.h"
 
 IMPLEMENT_SCRIPT_FIELDS(PaladinVFX,
-    SERIALIZED_ASSET_REF(m_walkingDustPrefab, "Walking Dust Prefab", AssetType::PREFAB),
     SERIALIZED_ASSET_REF(m_chargeAttackEffectPrefab, "Charge Attack Effect Prefab", AssetType::PREFAB),
     SERIALIZED_ASSET_REF(m_basicAttackEffectPrefab, "Basic Attack Effect Prefab", AssetType::PREFAB),
-    SERIALIZED_FLOAT(walkingDustYOffset, "Walking Dust Y Offset", -5.0f, 5.0f, 0.05f),
-    SERIALIZED_FLOAT(walkingDustForwardOffset, "Walking Dust Forward Offset", -5.0f, 5.0f, 0.05f)
 )
 
 PaladinVFX::PaladinVFX(GameObject* owner)
@@ -16,9 +13,6 @@ PaladinVFX::PaladinVFX(GameObject* owner)
 
 void PaladinVFX::Start()
 {
-    walkingDustEffect = nullptr;
-    walkingDustActive = false;
-
     chargeAttackEffect = nullptr;
     chargeAttackEffectActive = false;
 
@@ -28,11 +22,6 @@ void PaladinVFX::Start()
 
 void PaladinVFX::Update()
 {
-    if (walkingDustActive && walkingDustEffect)
-    {
-        updateWalkingDustPosition();
-    }
-
     if (chargeAttackEffectActive && chargeAttackEffect)
     {
         updateChargeAttackEffectPosition();
@@ -40,26 +29,6 @@ void PaladinVFX::Update()
 
     updateBasicAttackEffectLifetime(Time::getDeltaTime());
 }
-
-void PaladinVFX::setWalkingDustActive(bool active)
-{
-    if (walkingDustActive == active)
-    {
-        return;
-    }
-
-    walkingDustActive = active;
-
-    if (walkingDustActive)
-    {
-        addWalkingDust();
-    }
-    else
-    {
-        removeWalkingDust();
-    }
-}
-
 
 void PaladinVFX::startChargeAttackEffect()
 {
@@ -92,32 +61,6 @@ void PaladinVFX::playBasicAttackEffect()
     {
         basicAttackEffectTimer = 0.0f;
     }
-}
-
-void PaladinVFX::stopWalkingDust()
-{
-    walkingDustActive = false;
-    removeWalkingDust();
-}
-
-Vector3 PaladinVFX::getWalkingDustPosition() const
-{
-    GameObject* owner = getOwner();
-    Transform* ownerTransform = GameObjectAPI::getTransform(owner);
-
-    if (!ownerTransform)
-    {
-        return Vector3(0.0f, 0.0f, 0.0f);
-    }
-
-    const Vector3 ownerPosition = TransformAPI::getGlobalPosition(ownerTransform);
-    const Vector3 ownerForward = TransformAPI::getForward(ownerTransform);
-
-    return Vector3(
-        ownerPosition.x + ownerForward.x * walkingDustForwardOffset,
-        ownerPosition.y + walkingDustYOffset,
-        ownerPosition.z + ownerForward.z * walkingDustForwardOffset
-    );
 }
 
 Vector3 PaladinVFX::getChargeAttackEffectPosition() const
@@ -171,54 +114,6 @@ Vector3 PaladinVFX::getOwnerRotation() const
     }
 
     return TransformAPI::getGlobalEulerDegrees(ownerTransform);
-}
-
-void PaladinVFX::addWalkingDust()
-{
-    removeWalkingDust();
-
-    walkingDustEffect = GameObjectAPI::instantiatePrefab(
-        m_walkingDustPrefab.m_id,
-        getWalkingDustPosition(),
-        getOwnerRotation()
-    );
-
-    if (!walkingDustEffect)
-    {
-        Debug::warn("[PaladinVFX] Could not instantiate WalkingDust prefab.");
-        walkingDustActive = false;
-    }
-}
-
-void PaladinVFX::removeWalkingDust()
-{
-    if (!walkingDustEffect)
-    {
-        return;
-    }
-
-    GameObjectAPI::removeGameObject(walkingDustEffect);
-    walkingDustEffect = nullptr;
-}
-
-void PaladinVFX::updateWalkingDustPosition()
-{
-    Transform* walkingDustTransform = GameObjectAPI::getTransform(walkingDustEffect);
-
-    if (!walkingDustTransform)
-    {
-        return;
-    }
-
-    TransformAPI::setGlobalPosition(
-        walkingDustTransform,
-        getWalkingDustPosition()
-    );
-
-    TransformAPI::setGlobalRotationEuler(
-        walkingDustTransform,
-        getOwnerRotation()
-    );
 }
 
 void PaladinVFX::addChargeAttackEffect()

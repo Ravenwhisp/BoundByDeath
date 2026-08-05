@@ -5,8 +5,9 @@
 class AnimationComponent;
 class Transform;
 class EnemySound;
-class EnemyBaseAttackConfig;
+class SharedEnemyParticles;
 
+class EnemyBaseAttackConfig;
 class EnemyBaseDataConfig;
 
 class EnemyBaseController : public Script
@@ -73,10 +74,6 @@ private:
     bool buildPathToTarget();
     bool followPath();
 
-    // Footstep audio is driven from locomotion: ping the EnemySound each frame we step.
-    EnemySound* m_enemySound = nullptr;
-    bool m_enemySoundResolved = false;
-
 protected:
     //These we will not need if we Refactor DetectionAggro to have a base class
     virtual Transform* acquireCurrentTarget() = 0;
@@ -120,4 +117,11 @@ protected:
 
 private:
     static constexpr size_t MAX_PATH_POINTS = 128;
+
+    // Footstep audio is driven from locomotion: ping the EnemySound each frame we step.
+    EnemySound* m_enemySound = nullptr;
+    bool m_enemySoundResolved = false;
+
+    SharedEnemyParticles* m_sharedEnemyParticles = nullptr;
+    bool m_sharedEnemyParticlesResolved = false;
 };

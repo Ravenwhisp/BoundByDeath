@@ -1,0 +1,40 @@
+#pragma once
+
+#include "ScriptAPI.h"
+
+class SharedEnemyParticles final : public Script
+{
+    DECLARE_SCRIPT(SharedEnemyParticles)
+
+public:
+    explicit SharedEnemyParticles(GameObject* owner);
+
+    void Start() override;
+    void Update() override;
+
+    FieldList getExposedFields() const override;
+
+    void notifyMoving();
+    void stopMovementParticle();
+
+private:
+    void startMovementParticle();
+    void updateMovementParticle();
+
+    Vector3 getMovementParticlePosition() const;
+    Vector3 getOwnerRotation() const;
+
+private:
+    PrefabRef m_movementParticlePrefab;
+
+    float m_movementParticleYOffset = 0.05f;
+    float m_movementParticleForwardOffset = -0.35f;
+    float m_movementNotificationTimeout = 0.1f;
+
+    Transform* m_ownerTransform = nullptr;
+
+    GameObject* m_movementParticle = nullptr;
+    Transform* m_movementParticleTransform = nullptr;
+
+    float m_movementNotificationTimer = 0.0f;
+};

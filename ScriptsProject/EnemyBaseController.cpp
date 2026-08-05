@@ -5,6 +5,7 @@
 #include "Damageable.h"
 #include "EnemyBaseDataConfig.h"
 #include "EnemySound.h"
+#include "SharedEnemyParticles.h"
 
 static const char* navAgentProfileNames[] =
 {
@@ -211,6 +212,17 @@ bool EnemyBaseController::moveTowardsTarget()
         if (m_enemySound)
         {
             m_enemySound->notifyMoving();
+        }
+
+        if (!m_sharedEnemyParticlesResolved)
+        {
+            m_sharedEnemyParticles = GameObjectAPI::findScript<SharedEnemyParticles>(getOwner());
+            m_sharedEnemyParticlesResolved = true;
+        }
+
+        if (m_sharedEnemyParticles)
+        {
+            m_sharedEnemyParticles->notifyMoving();
         }
     }
 
