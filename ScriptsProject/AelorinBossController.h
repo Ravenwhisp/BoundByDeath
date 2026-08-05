@@ -49,6 +49,8 @@ public:
 
 	bool hasRequestedAbility() const { return m_requestedAbility != AelorinAbility::None; }
 	AelorinAbility getRequestedAbility() const { return m_requestedAbility; }
+	bool trySendRequestedAbilityTrigger(AnimationComponent* animation);
+	void clearRequestedAbility();
 
 	// Encounter
 	void updateEncounter();
@@ -109,6 +111,7 @@ private:
 	// Ability
 	AelorinAbility m_requestedAbility = AelorinAbility::None;
 	AelorinAbility m_lastUsedAbility = AelorinAbility::None;
+	bool m_abilityTriggerSent = false;
 
 	// Teleport TODO
 	std::vector<Vector3> m_teleportPositions;

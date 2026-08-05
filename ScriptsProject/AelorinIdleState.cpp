@@ -72,6 +72,7 @@ void AelorinIdleState::OnStateUpdate()
 	if (selectedAbility == AelorinAbility::None)
 	{
 		Debug::warn("[AelorinIdleState] No valid ability available.");
+
 		m_decisionMade = false;
 		m_decisionTimer = 0.0f;
 		return;
@@ -80,6 +81,19 @@ void AelorinIdleState::OnStateUpdate()
 	if (!m_controller->requestAbility(selectedAbility))
 	{
 		Debug::warn("[AelorinIdleState] Failed to request selected ability.");
+
+		m_decisionMade = false;
+		m_decisionTimer = 0.0f;
+		return;
+	}
+
+	if (!m_controller->trySendRequestedAbilityTrigger(m_animation))
+	{
+		Debug::warn("[AelorinIdleState] Failed to send ability trigger.");
+
+		m_controller->clearRequestedAbility();
+		m_decisionMade = false;
+		m_decisionTimer = 0.0f;
 		return;
 	}
 

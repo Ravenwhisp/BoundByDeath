@@ -89,12 +89,13 @@ AelorinAbility AelorinBossController::chooseNextAbility()
 AelorinAbility AelorinBossController::consumeRequestedAbility()
 {
 	const AelorinAbility ability = m_requestedAbility;
-	m_requestedAbility = AelorinAbility::None;
 
 	if (ability != AelorinAbility::None)
 	{
 		m_lastUsedAbility = ability;
 	}
+
+	clearRequestedAbility();
 
 	return ability;
 }
@@ -107,7 +108,72 @@ bool AelorinBossController::requestAbility(AelorinAbility ability)
 	}
 
 	m_requestedAbility = ability;
+	m_abilityTriggerSent = false;
+
 	return true;
+}
+
+bool AelorinBossController::trySendRequestedAbilityTrigger(AnimationComponent* animation)
+{
+	if (!hasRequestedAbility() || m_abilityTriggerSent || !animation)
+	{
+		return false;
+	}
+
+	const char* triggerName = nullptr;
+
+	switch (m_requestedAbility)
+	{
+	case AelorinAbility::SeekerSigils:
+		triggerName = "ToSeekerSigils";
+		break;
+
+	case AelorinAbility::Nova:
+		triggerName = "ToNova";
+		break;
+
+	case AelorinAbility::RisenSpires:
+		triggerName = "ToRisenSpires";
+		break;
+
+	case AelorinAbility::SpiritCannon:
+		triggerName = "ToSpiritCannon";
+		break;
+
+	case AelorinAbility::GraspOfTheDead:
+		triggerName = "ToGraspOfTheDead";
+		break;
+
+	case AelorinAbility::Summon:
+		triggerName = "ToSummon";
+		break;
+
+	case AelorinAbility::Teleport:
+		triggerName = "ToTeleport";
+		break;
+
+	case AelorinAbility::None:
+	default:
+		return false;
+	}
+
+	const bool sent = AnimationAPI::sendTrigger(animation, triggerName);
+
+	if (!sent)
+	{
+		return false;
+	}
+
+	m_abilityTriggerSent = true;
+	Debug::log("[AelorinBossController] Ability trigger sent: %s", triggerName);
+
+	return true;
+}
+
+void AelorinBossController::clearRequestedAbility()
+{
+	m_requestedAbility = AelorinAbility::None;
+	m_abilityTriggerSent = false;
 }
 
 void AelorinBossController::updateEncounter()
@@ -331,25 +397,25 @@ std::vector<AelorinAbility> AelorinBossController::buildAbilityPool() const
 {
 	std::vector<AelorinAbility> pool
 	{
-		AelorinAbility::SeekerSigils,
-		AelorinAbility::RisenSpires,
-		AelorinAbility::SpiritCannon
+		AelorinAbility::SeekerSigils
+		//AelorinAbility::RisenSpires,
+		//AelorinAbility::SpiritCannon
 	};
 
-	if (canUseNova())
-	{
-		pool.push_back(AelorinAbility::Nova);
-	}
+	//if (canUseNova())
+	//{
+	//	pool.push_back(AelorinAbility::Nova);
+	//}
 
-	if (canSummon())
-	{
-		pool.push_back(AelorinAbility::Summon);
-	}
+	//if (canSummon())
+	//{
+	//	pool.push_back(AelorinAbility::Summon);
+	//}
 
-	if (isPhase2())
-	{
-		pool.push_back(AelorinAbility::GraspOfTheDead);
-	}
+	//if (isPhase2())
+	//{
+	//	pool.push_back(AelorinAbility::GraspOfTheDead);
+	//}
 
 	return pool;
 }

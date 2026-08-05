@@ -3,15 +3,16 @@
 #include "ScriptAPI.h"
 #include "StateMachineScript.h"
 
-class AelorinBossController;
+#include "AelorinBossController.h"
+
 class AnimationComponent;
 
-class AelorinThresholdStaggerState : public StateMachineScript
+class AelorinSeekerSigilsState : public StateMachineScript
 {
-	DECLARE_SCRIPT(AelorinThresholdStaggerState)
+	DECLARE_SCRIPT(AelorinSeekerSigilsState)
 
 public:
-	explicit AelorinThresholdStaggerState(GameObject* owner);
+	explicit AelorinSeekerSigilsState(GameObject* owner);
 
 	void OnStateEnter() override;
 	void OnStateUpdate() override;
@@ -21,6 +22,8 @@ private:
 	AelorinBossController* m_controller = nullptr;
 	AnimationComponent* m_animation = nullptr;
 
-	float m_staggerTimer = 0.0f;
-	bool m_staggerCompleted = false;
+	AelorinAbility m_activeAbility = AelorinAbility::None;
+
+	float m_testTimer = 0.0f;
+	bool m_completed = false;
 };

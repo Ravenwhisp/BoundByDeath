@@ -160,6 +160,9 @@
     <Filter Include="Enemies\Aelorin\States">
       <UniqueIdentifier>{b635d58b-4fde-4afd-8126-529d756c71b9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Enemies\Aelorin\States\Combat">
+      <UniqueIdentifier>{536e39f6-7418-49b8-bc01-9da23b66f0fc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -657,6 +660,9 @@
     <ClInclude Include="AelorinAttackConfig.h">
       <Filter>Enemies\Aelorin</Filter>
     </ClInclude>
+    <ClInclude Include="AelorinSeekerSigilsState.h">
+      <Filter>Enemies\Aelorin\States\Combat</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
@@ -1137,6 +1143,9 @@
     </ClCompile>
     <ClCompile Include="AelorinThresholdStaggerState.cpp">
       <Filter>Enemies\Aelorin\States</Filter>
+    </ClCompile>
+    <ClCompile Include="AelorinSeekerSigilsState.cpp">
+      <Filter>Enemies\Aelorin\States\Combat</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

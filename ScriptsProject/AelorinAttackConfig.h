@@ -33,6 +33,20 @@ public:
 	int m_phase1SummonCap = 4;
 	int m_phase2SummonCap = 5;
 
+	// Seeker Sigils
+	int m_seekerSigilsWaveCount = 3;
+	
+	float m_seekerSigilsInitialDelay = 0.6f;
+	float m_seekerSigilsWaveInterval = 0.45f;
+	float m_seekerSigilsTotalDuration = 2.2f;
+	
+	float m_seekerSigilsRadius = 1.25f;
+	float m_seekerSigilsDamage = 10.0f;
+
+	float m_seekerSigilsPhase2FinalDelay = 0.5f;
+	float m_seekerSigilsPhase2FinalRadius = 2.5f;
+	float m_seekerSigilsPhase2FinalDamage = 20.0f;
+
 	// Health Drops
 	PrefabRef m_healthPickupPrefab;
 	int m_healthDropQuantity = 3;
@@ -65,6 +79,18 @@ public:
 		FIELD_GROUP_COLLAPSE("Summons",
 			SERIALIZED_INT(m_phase1SummonCap, "Phase 1 Summon Cap", 0, 10, 1),
 			SERIALIZED_INT(m_phase2SummonCap, "Phase 2 Summon Cap", 0, 10, 1)
+		),
+
+		FIELD_GROUP_COLLAPSE("Seeker Sigils",
+			SERIALIZED_INT(m_seekerSigilsWaveCount, "Wave Count", 0, 10, 1),
+			SERIALIZED_FLOAT(m_seekerSigilsInitialDelay, "Initial Delay", 0.0f, 5.0f, 0.01f),
+			SERIALIZED_FLOAT(m_seekerSigilsWaveInterval, "Wave Interval", 0.0f, 5.0f, 0.01f),
+			SERIALIZED_FLOAT(m_seekerSigilsTotalDuration, "Total Duration", 0.0f, 10.0f, 0.1f),
+			SERIALIZED_FLOAT(m_seekerSigilsRadius, "Radius", 0.0f, 10.0f, 0.1f),
+			SERIALIZED_FLOAT(m_seekerSigilsDamage, "Damage", 0.0f, 50.0f, 1.0f),
+			SERIALIZED_FLOAT(m_seekerSigilsPhase2FinalDelay, "Phase 2 Delay", 0.0f, 5.0f, 0.01f),
+			SERIALIZED_FLOAT(m_seekerSigilsPhase2FinalRadius, "Phase 2 Radius", 0.0f, 20.0f, 0.1f),
+			SERIALIZED_FLOAT(m_seekerSigilsPhase2FinalDamage, "Phase 2 Damage", 0.0f, 50.0f, 1.0f)
 		),
 
 		FIELD_GROUP_COLLAPSE("Health Drops",
