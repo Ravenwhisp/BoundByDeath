@@ -22,7 +22,8 @@ public:
 private:
 	AelorinBossController* m_controller = nullptr;
 	AnimationComponent* m_animation = nullptr;
-	ProjectilePool* m_projectilePool = nullptr;
+	ProjectilePool* m_normalProjectilePool = nullptr;
+	ProjectilePool* m_largeProjectilePool = nullptr;
 
 	AelorinAbility m_activeAbility = AelorinAbility::None;
 
@@ -34,7 +35,7 @@ private:
 
 private:
 	void launchCurrentWave();
-	void launchProjectileAt(const Vector3& targetPosition, float impactRadius, float damage);
+	void launchProjectileAt(ProjectilePool* projectilePool, const Vector3& targetPosition, float impactRadius, float damage);
 
 	void launchPhase2FinalProjectile();
 	void finishAbility();

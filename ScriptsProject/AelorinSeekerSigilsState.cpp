@@ -17,7 +17,8 @@ void AelorinSeekerSigilsState::OnStateEnter()
 	// get scripts
 	m_controller = GameObjectAPI::findScript<AelorinBossController>(parentGameObject);
 	m_animation = AnimationAPI::getAnimationComponent(getOwner());
-	m_projectilePool = GameObjectAPI::findScript<ProjectilePool>(parentGameObject);
+	m_normalProjectilePool = m_controller->getSeekerSigilsProjectilePool();
+	m_largeProjectilePool = m_controller->getSeekerSigilsLargeProjectilePool();
 
 	// reset members
 	m_activeAbility = AelorinAbility::None;
@@ -36,9 +37,14 @@ void AelorinSeekerSigilsState::OnStateEnter()
 		Debug::error("[AelorinSeekerSigilsState] AnimationComponent not found.");
 	}
 
-	if (!m_projectilePool)
+	if (!m_normalProjectilePool)
 	{
-		Debug::error("[AelorinSeekerSigilsState] ProjectilePool not found.");
+		Debug::error("[AelorinSeekerSigilsState] Normal ProjectilePool not found.");
+	}
+
+	if (!m_largeProjectilePool)
+	{
+		Debug::error("[AelorinSeekerSigilsState] Large ProjectilePool not found.");
 	}
 
 	// consume ability
@@ -53,7 +59,7 @@ void AelorinSeekerSigilsState::OnStateEnter()
 
 void AelorinSeekerSigilsState::OnStateUpdate()
 {
-	if (!m_controller || !m_animation || !m_projectilePool || m_completed)
+	if (!m_controller || !m_animation || !m_normalProjectilePool || !m_largeProjectilePool || m_completed)
 	{
 		return;
 	}
@@ -134,15 +140,15 @@ void AelorinSeekerSigilsState::launchCurrentWave()
 	const Vector3 lyrielPosition = m_controller->getLyrielPosition();
 	const Vector3 deathPosition = m_controller->getDeathPosition();
 
-	launchProjectileAt(lyrielPosition, config->m_seekerSigilsRadius, config->m_seekerSigilsDamage);
-	launchProjectileAt(deathPosition, config->m_seekerSigilsRadius, config->m_seekerSigilsDamage);
+	launchProjectileAt(m_normalProjectilePool, lyrielPosition, config->m_seekerSigilsRadius, config->m_seekerSigilsDamage);
+	launchProjectileAt(m_normalProjectilePool, deathPosition, config->m_seekerSigilsRadius, config->m_seekerSigilsDamage);
 
 	Debug::log("[AelorinSeekerSigilsState] Launched wave %d.", m_currentWave + 1);
 }
 
-void AelorinSeekerSigilsState::launchProjectileAt(const Vector3& targetPosition, float impactRadius, float damage)
+void AelorinSeekerSigilsState::launchProjectileAt(ProjectilePool* projectilePool, const Vector3& targetPosition, float impactRadius, float damage)
 {
-	if (!m_projectilePool || !m_controller)
+	if (!projectilePool || !m_controller)
 	{
 		return;
 	}
@@ -154,7 +160,7 @@ void AelorinSeekerSigilsState::launchProjectileAt(const Vector3& targetPosition,
 		return;
 	}
 
-	ProjectileBase* pooledProjectile = m_projectilePool->acquireProjectile();
+	ProjectileBase* pooledProjectile = projectilePool->acquireProjectile();
 
 	if (!pooledProjectile)
 	{
@@ -190,7 +196,7 @@ void AelorinSeekerSigilsState::launchPhase2FinalProjectile()
 	const Vector3 deathPosition = m_controller->getDeathPosition();
 	const Vector3 midpoint = (lyrielPosition + deathPosition) * 0.5f;
 
-	launchProjectileAt(midpoint, config->m_seekerSigilsPhase2FinalRadius, config->m_seekerSigilsPhase2FinalDamage);
+	launchProjectileAt(m_largeProjectilePool, midpoint, config->m_seekerSigilsPhase2FinalRadius, config->m_seekerSigilsPhase2FinalDamage);
 
 	Debug::log("[AelorinSeekerSigilsState] Launched Phase 2 final projectile.");
 }

@@ -6,12 +6,16 @@
 #include "AelorinAttackConfig.h"
 
 #include "HealthDropSpawner.h"
+#include "ProjectilePool.h"
+#include "SeekerSigilProjectile.h"
 
 #include <algorithm>
 #include <cstdlib>
 
 IMPLEMENT_SCRIPT_FIELDS_INHERITED(AelorinBossController, EnemyBaseController,
-	SERIALIZED_ASSET_REF(m_attackConfig, "Attack Config", AssetType::DATA_CONTAINER)
+	SERIALIZED_ASSET_REF(m_attackConfig, "Attack Config", AssetType::DATA_CONTAINER),
+	SERIALIZED_COMPONENT_REF(m_seekerSigilsProjectilePool, "Seeker Sigils Projectile Pool", ComponentType::TRANSFORM),
+	SERIALIZED_COMPONENT_REF(m_seekerSigilsLargeProjectilePool, "Seeker Sigils Large Projectile Pool", ComponentType::TRANSFORM)
 )
 
 AelorinBossController::AelorinBossController(GameObject* owner) : EnemyBaseController(owner)
@@ -60,6 +64,28 @@ void AelorinBossController::Start()
 	if (!m_phase2GameObject)
 	{
 		Debug::error("[AelorinBossController] Phase 2 Game Object not found!");
+	}
+
+	Transform* normalPoolTransform = m_seekerSigilsProjectilePool.getReferencedComponent();
+	if (normalPoolTransform)
+	{
+		m_seekerSigilsProjectilePoolScript = GameObjectAPI::findScript<ProjectilePool>(normalPoolTransform->getOwner());
+	}
+
+	Transform* largePoolTransform = m_seekerSigilsLargeProjectilePool.getReferencedComponent();
+	if (largePoolTransform)
+	{
+		m_seekerSigilsLargeProjectilePoolScript = GameObjectAPI::findScript<ProjectilePool>(largePoolTransform->getOwner());
+	}
+
+	if (!m_seekerSigilsProjectilePoolScript)
+	{
+		Debug::error("[AelorinBossController] Normal Seeker Sigils ProjectilePool not found.");
+	}
+
+	if (!m_seekerSigilsLargeProjectilePoolScript)
+	{
+		Debug::error("[AelorinBossController] Large Seeker Sigils ProjectilePool not found.");
 	}
 }
 

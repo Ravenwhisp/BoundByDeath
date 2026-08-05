@@ -5,6 +5,7 @@
 class AelorinDetectionAggro;
 class AelorinDamageable;
 class AelorinAttackConfig;
+class ProjectilePool;
 
 enum class Phase
 {
@@ -41,6 +42,13 @@ public:
 
 	Vector3 getLyrielPosition() const;
 	Vector3 getDeathPosition() const;
+
+	// Projectile Pool References
+	ComponentRef<Transform> m_seekerSigilsProjectilePool;
+	ComponentRef<Transform> m_seekerSigilsLargeProjectilePool;
+
+	ProjectilePool* getSeekerSigilsProjectilePool() const { return m_seekerSigilsProjectilePoolScript; }
+	ProjectilePool* getSeekerSigilsLargeProjectilePool() const { return m_seekerSigilsLargeProjectilePoolScript; }
 
 	// AttackConfig
 	const AelorinAttackConfig* getAelorinAttackConfig() const { return m_attackConfig.get(); }
@@ -94,6 +102,9 @@ public:
 private:
 	AelorinDetectionAggro* m_aelorinDetectionAggro = nullptr;
 	AelorinDamageable* m_damageable = nullptr;
+
+	ProjectilePool* m_seekerSigilsProjectilePoolScript = nullptr;
+	ProjectilePool* m_seekerSigilsLargeProjectilePoolScript = nullptr;
 
 	// Phase
 	Phase m_phase = Phase::Phase1;
