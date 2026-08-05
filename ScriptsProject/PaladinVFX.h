@@ -7,7 +7,6 @@ class PaladinVFX : public Script
     DECLARE_SCRIPT(PaladinVFX)
 
 public:
-
     explicit PaladinVFX(GameObject* owner);
 
     void Start() override;
@@ -21,10 +20,16 @@ public:
     void startChargeAttackEffect();
     void stopChargeAttackEffect();
 
+    void startBasicAttackTelegraph(
+        const Vector3& position,
+        const Vector3& rotation
+    );
+
+    void stopBasicAttackTelegraph();
+
     void playBasicAttackEffect();
 
 private:
-
     Vector3 getWalkingDustPosition() const;
     Vector3 getOwnerRotation() const;
     Vector3 getChargeAttackEffectPosition() const;
@@ -38,21 +43,28 @@ private:
     void removeChargeAttackEffect();
     void updateChargeAttackEffectPosition();
 
+    void addBasicAttackTelegraph(
+        const Vector3& position,
+        const Vector3& rotation
+    );
+
+    void removeBasicAttackTelegraph();
+
     void addBasicAttackEffect();
     void removeBasicAttackEffect();
     void updateBasicAttackEffectLifetime(float deltaTime);
 
 public:
-
     PrefabRef m_walkingDustPrefab;
     PrefabRef m_chargeAttackEffectPrefab;
+    PrefabRef m_basicAttackTelegraphPrefab;
     PrefabRef m_basicAttackEffectPrefab;
 
     float walkingDustYOffset = 0.05f;
     float walkingDustForwardOffset = -0.35f;
+    float basicAttackTelegraphYOffset = 0.05f;
 
 private:
-
     GameObject* walkingDustEffect = nullptr;
     bool walkingDustActive = false;
 
@@ -62,10 +74,11 @@ private:
     float chargeAttackYOffset = 0.5f;
     float chargeAttackForwardOffset = 0.0f;
 
+    GameObject* basicAttackTelegraph = nullptr;
+
     GameObject* basicAttackEffect = nullptr;
     float basicAttackYOffset = 0.05f;
     float basicAttackForwardOffset = 0.75f;
     float basicAttackEffectLifetime = 1.0f;
     float basicAttackEffectTimer = 0.0f;
-
 };
