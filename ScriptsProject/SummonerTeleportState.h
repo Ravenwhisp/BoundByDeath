@@ -5,6 +5,7 @@
 
 class SummonerEnemyController;
 class AnimationComponent;
+class SummonerParticles;
 
 class SummonerTeleportState : public StateMachineScript
 {
@@ -20,4 +21,5 @@ public:
 private:
 	SummonerEnemyController* m_controller = nullptr;
 	AnimationComponent* m_animation = nullptr;
+	SummonerParticles* m_particles = nullptr;
 };

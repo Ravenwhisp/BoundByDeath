@@ -3,6 +3,7 @@
 
 #include "EnemyDetectionAggro.h"
 #include "SummonerAttackConfig.h"
+#include "SummonerParticles.h"
 
 SummonerEnemyController::SummonerEnemyController(GameObject* owner)
 	: EnemyBaseController(owner)
@@ -17,6 +18,13 @@ void SummonerEnemyController::Start()
 	if (!m_enemyDetectionAggro)
 	{
 		Debug::warn("[SummonerEnemyController] EnemyDetectionAggro not found on '%s'.", GameObjectAPI::getName(getOwner()));
+	}
+
+	m_particles = GameObjectAPI::findScript<SummonerParticles>(getOwner());
+
+	if (!m_particles)
+	{
+		Debug::warn("[SummonerEnemyController] SummonerParticles not found on '%s'.", GameObjectAPI::getName(getOwner()));
 	}
 
 	m_currentTarget = nullptr;
@@ -35,6 +43,7 @@ void SummonerEnemyController::Update()
 	updateTeleportCooldown(dt);
 	updateSummonCooldown(dt);
 	updateAttackCooldown(dt);
+	updatePendingSpiderSummons(dt);
 
 	updateStun(dt);
 }
@@ -246,7 +255,7 @@ void SummonerEnemyController::consumeSummonCooldown()
 	m_summonCooldownTimer = m_attackConfig.get()->m_summonCooldown;
 }
 
-void SummonerEnemyController::summonSpidersAroundSelf()
+void SummonerEnemyController::beginSummoningSpiders()
 {
 	if (!m_attackConfig)
 	{
@@ -254,36 +263,69 @@ void SummonerEnemyController::summonSpidersAroundSelf()
 	}
 
 	Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
+
 	if (!ownerTransform)
 	{
 		return;
 	}
 
-	const Vector3 ownerPosition = TransformAPI::getPosition(ownerTransform);
-	const Vector3 searchExtents = Vector3(5.0f, 5.0f, 5.0f);
+	const Vector3 ownerPosition = TransformAPI::getGlobalPosition(ownerTransform);
+	const Vector3 searchExtents(5.0f, 5.0f, 5.0f);
 
 	for (int i = 0; i < m_attackConfig.get()->m_summonCount; ++i)
 	{
 		Vector3 spawnPosition;
 
-		const bool found = NavigationAPI::findRandomReachablePointAround(
-			ownerPosition,
-			m_attackConfig.get()->m_summonRadius,
-			spawnPosition,
-			searchExtents,
-			10
-		);
+		const bool found = NavigationAPI::findRandomReachablePointAround(ownerPosition, m_attackConfig.get()->m_summonRadius, spawnPosition, searchExtents, 10);
 
 		if (!found)
 		{
 			continue;
 		}
 
-		GameObjectAPI::instantiatePrefab(
-			m_attackConfig.get()->m_spiderPrefab.m_id,
-			spawnPosition,
-			Vector3(0.0f, 0.0f, 0.0f)
-		);
+		if (m_particles)
+		{
+			m_particles->playSummonParticle(spawnPosition);
+		}
+
+		PendingSpiderSummon pendingSummon;
+		pendingSummon.position = spawnPosition;
+		pendingSummon.timer = m_attackConfig.get()->m_spiderSpawnDelay;
+
+		m_pendingSpiderSummons.push_back(pendingSummon);
+	}
+}
+
+void SummonerEnemyController::updatePendingSpiderSummons(float dt)
+{
+	for (size_t i = 0; i < m_pendingSpiderSummons.size();)
+	{
+		PendingSpiderSummon& pendingSummon = m_pendingSpiderSummons[i];
+		pendingSummon.timer -= dt;
+
+		if (pendingSummon.timer > 0.0f)
+		{
+			++i;
+			continue;
+		}
+
+		spawnPendingSpider(pendingSummon.position);
+		m_pendingSpiderSummons.erase(m_pendingSpiderSummons.begin() + i);
+	}
+}
+
+void SummonerEnemyController::spawnPendingSpider(const Vector3& position)
+{
+	if (!m_attackConfig || !m_attackConfig.get()->m_spiderPrefab.m_id.isValid())
+	{
+		return;
+	}
+
+	GameObject* spider = GameObjectAPI::instantiatePrefab(m_attackConfig.get()->m_spiderPrefab.m_id, position, Vector3::Zero);
+
+	if (!spider)
+	{
+		Debug::warn("[SummonerEnemyController] Could not instantiate spider.");
 	}
 }
 
