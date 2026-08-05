@@ -39,6 +39,11 @@ void AelorinIdleState::OnStateUpdate()
 		return;
 	}
 
+	if (!m_controller->hasEncounterStarted())
+	{
+		return;
+	}
+
 	if (m_controller->trySendPhaseTransitionTrigger(m_animation))
 	{
 		return;
@@ -63,7 +68,22 @@ void AelorinIdleState::OnStateUpdate()
 
 	m_decisionMade = true;
 
-	Debug::log("[AelorinIdleState] Decision time elapsed.");
+	const AelorinAbility selectedAbility = m_controller->chooseNextAbility();
+	if (selectedAbility == AelorinAbility::None)
+	{
+		Debug::warn("[AelorinIdleState] No valid ability available.");
+		m_decisionMade = false;
+		m_decisionTimer = 0.0f;
+		return;
+	}
+
+	if (!m_controller->requestAbility(selectedAbility))
+	{
+		Debug::warn("[AelorinIdleState] Failed to request selected ability.");
+		return;
+	}
+
+	Debug::log("[AelorinIdleState] Selected ability: %d", static_cast<int>(selectedAbility));
 }
 
 void AelorinIdleState::OnStateExit()

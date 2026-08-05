@@ -7,6 +7,9 @@
 
 #include "HealthDropSpawner.h"
 
+#include <algorithm>
+#include <cstdlib>
+
 IMPLEMENT_SCRIPT_FIELDS_INHERITED(AelorinBossController, EnemyBaseController,
 	SERIALIZED_ASSET_REF(m_attackConfig, "Attack Config", AssetType::DATA_CONTAINER)
 )
@@ -68,6 +71,43 @@ void AelorinBossController::Start()
 void AelorinBossController::Update()
 {
 	updateEncounter();
+}
+
+AelorinAbility AelorinBossController::chooseNextAbility()
+{
+	if (canTeleport())
+	{
+		return AelorinAbility::Teleport;
+	}
+
+	std::vector<AelorinAbility> pool = buildAbilityPool();
+	removeLastUsedAbility(pool);
+	
+	return chooseRandomAbility(pool);
+}
+
+AelorinAbility AelorinBossController::consumeRequestedAbility()
+{
+	const AelorinAbility ability = m_requestedAbility;
+	m_requestedAbility = AelorinAbility::None;
+
+	if (ability != AelorinAbility::None)
+	{
+		m_lastUsedAbility = ability;
+	}
+
+	return ability;
+}
+
+bool AelorinBossController::requestAbility(AelorinAbility ability)
+{
+	if (ability == AelorinAbility::None || hasRequestedAbility())
+	{
+		return false;
+	}
+
+	m_requestedAbility = ability;
+	return true;
 }
 
 void AelorinBossController::updateEncounter()
@@ -286,5 +326,69 @@ bool AelorinBossController::isTargetDowned(Transform* target) const
 	return false;
 }
 // -----------------------------
+
+std::vector<AelorinAbility> AelorinBossController::buildAbilityPool() const
+{
+	std::vector<AelorinAbility> pool
+	{
+		AelorinAbility::SeekerSigils,
+		AelorinAbility::RisenSpires,
+		AelorinAbility::SpiritCannon
+	};
+
+	if (canUseNova())
+	{
+		pool.push_back(AelorinAbility::Nova);
+	}
+
+	if (canSummon())
+	{
+		pool.push_back(AelorinAbility::Summon);
+	}
+
+	if (isPhase2())
+	{
+		pool.push_back(AelorinAbility::GraspOfTheDead);
+	}
+
+	return pool;
+}
+
+void AelorinBossController::removeLastUsedAbility(std::vector<AelorinAbility>& pool) const
+{
+	if (m_lastUsedAbility == AelorinAbility::None || pool.size() <= 1)
+	{
+		return;
+	}
+
+	pool.erase(std::remove(pool.begin(), pool.end(), m_lastUsedAbility), pool.end());
+}
+
+bool AelorinBossController::canUseNova() const
+{
+	return false;
+}
+
+bool AelorinBossController::canSummon() const
+{
+	return false;
+}
+
+bool AelorinBossController::canTeleport() const
+{
+	return false;
+}
+
+AelorinAbility AelorinBossController::chooseRandomAbility(const std::vector<AelorinAbility>& pool) const
+{
+	if (pool.empty())
+	{
+		return AelorinAbility::None;
+	}
+
+	const std::size_t index = static_cast<std::size_t>(std::rand()) % pool.size();
+
+	return pool[index];
+}
 
 IMPLEMENT_SCRIPT(AelorinBossController)

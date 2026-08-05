@@ -12,6 +12,20 @@ enum class Phase
 	Phase2
 };
 
+enum class AelorinAbility
+{
+	None,
+
+	SeekerSigils,
+	Nova,
+	RisenSpires,
+	SpiritCannon,
+	GraspOfTheDead,
+
+	Summon,
+	Teleport
+};
+
 class AelorinBossController : public EnemyBaseController
 {
 	DECLARE_SCRIPT(AelorinBossController)
@@ -28,8 +42,17 @@ public:
 	// AttackConfig
 	const AelorinAttackConfig* getAelorinAttackConfig() const { return m_attackConfig.get(); }
 
+	// Ability Choosing
+	AelorinAbility chooseNextAbility();
+	AelorinAbility consumeRequestedAbility();
+	bool requestAbility(AelorinAbility ability);
+
+	bool hasRequestedAbility() const { return m_requestedAbility != AelorinAbility::None; }
+	AelorinAbility getRequestedAbility() const { return m_requestedAbility; }
+
 	// Encounter
 	void updateEncounter();
+	bool hasEncounterStarted() const { return m_hasStartedEncounter; }
 
 	// Decision Timing helpers
 	float getDecisionTime() const;
@@ -67,12 +90,15 @@ private:
 	AelorinDetectionAggro* m_aelorinDetectionAggro = nullptr;
 	AelorinDamageable* m_damageable = nullptr;
 
+	// Phase
 	Phase m_phase = Phase::Phase1;
 	bool m_phaseTransitionRequested = false;
 	bool m_phaseTransitionTriggered = false;
 
+	// Encounter
 	bool m_hasStartedEncounter = false;
 
+	// Threshold Stagger
 	bool m_thresholdStaggerRequested = false;
 	bool m_thresholdStaggerTriggered = false;
 
@@ -80,7 +106,22 @@ private:
 	GameObject* m_phase1GameObject = nullptr;
 	GameObject* m_phase2GameObject = nullptr;
 
+	// Ability
+	AelorinAbility m_requestedAbility = AelorinAbility::None;
+	AelorinAbility m_lastUsedAbility = AelorinAbility::None;
+
 	// Teleport TODO
 	std::vector<Vector3> m_teleportPositions;
 	size_t m_currentPositionIndex = 0;
+
+private:
+	// Abilities
+	std::vector<AelorinAbility> buildAbilityPool() const;
+	void removeLastUsedAbility(std::vector<AelorinAbility>& pool) const;
+
+	bool canUseNova() const;
+	bool canSummon() const;
+	bool canTeleport() const;
+
+	AelorinAbility chooseRandomAbility(const std::vector<AelorinAbility>& pool) const;
 };
