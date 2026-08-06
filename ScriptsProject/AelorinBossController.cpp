@@ -448,10 +448,10 @@ std::vector<AelorinAbility> AelorinBossController::buildAbilityPool() const
 		//AelorinAbility::SpiritCannon
 	};
 
-	//if (canUseNova())
-	//{
-	//	pool.push_back(AelorinAbility::Nova);
-	//}
+	if (canUseNova())
+	{
+		pool.push_back(AelorinAbility::Nova);
+	}
 
 	//if (canSummon())
 	//{
@@ -478,7 +478,7 @@ void AelorinBossController::removeLastUsedAbility(std::vector<AelorinAbility>& p
 
 bool AelorinBossController::canUseNova() const
 {
-	return false;
+	return true;
 }
 
 bool AelorinBossController::canSummon() const

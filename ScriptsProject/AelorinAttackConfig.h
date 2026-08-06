@@ -51,6 +51,19 @@ public:
 	float m_seekerSigilsFallSpeed = 10.0f;
 	float m_seekerSigilsProjectileLifetime = 3.0f;
 
+	// Nova
+	float m_novaTriggerDistance = 4.0f;
+
+	float m_novaChargeTime = 3.0f;
+	float m_novaRadius = 5.5f;
+	float m_novaDamage = 30.0f;
+
+	float m_novaPhase2SecondWaveDelay = 0.45f;
+	float m_novaPhase2SecondRadius = 8.0f;
+	float m_novaPhase2SecondDamage = 40.0f;
+
+	float m_novaRecoveryDuration = 1.25f;
+
 	// Health Drops
 	PrefabRef m_healthPickupPrefab;
 	int m_healthDropQuantity = 3;
@@ -98,6 +111,17 @@ public:
 			SERIALIZED_FLOAT(m_seekerSigilsSpawnHeight, "Spawn Height", 0.0f, 50.0f, 0.1f),
 			SERIALIZED_FLOAT(m_seekerSigilsFallSpeed, "Fall Speed", 0.0f, 50.0f, 0.1f),
 			SERIALIZED_FLOAT(m_seekerSigilsProjectileLifetime, "Lifetime", 0.0f, 20.0f, 0.1f)
+		),
+
+		FIELD_GROUP_COLLAPSE("Nova",
+			SERIALIZED_FLOAT(m_novaTriggerDistance, "Nova Trigger Distance", 0.0f, 30.0f, 0.1f),
+			SERIALIZED_FLOAT(m_novaChargeTime, "Nova Charge Time", 0.0f, 10.0f, 0.05f),
+			SERIALIZED_FLOAT(m_novaRadius, "Nova Radius", 0.0f, 50.0f, 0.1f),
+			SERIALIZED_FLOAT(m_novaDamage, "Nova Damage", 0.0f, 200.0f, 1.0f),
+			SERIALIZED_FLOAT(m_novaPhase2SecondWaveDelay, "Nova Phase 2 Wave Delay", 0.0f, 5.0f, 0.05f),
+			SERIALIZED_FLOAT(m_novaPhase2SecondRadius, "Nova Phase 2 Second Radius", 0.0f, 100.0f, 1.0f),
+			SERIALIZED_FLOAT(m_novaPhase2SecondDamage, "Nova Phase 2 Second Damage", 0.0f, 300.0f, 1.0f),
+			SERIALIZED_FLOAT(m_novaRecoveryDuration, "Nova Recovery Duration", 0.0f, 10.0f, 0.05f)
 		),
 
 		FIELD_GROUP_COLLAPSE("Health Drops",
