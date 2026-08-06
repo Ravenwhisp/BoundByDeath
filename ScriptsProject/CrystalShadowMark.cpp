@@ -8,8 +8,7 @@ IMPLEMENT_SCRIPT_FIELDS_INHERITED(CrystalShadowMark, EnemyShadowMark,
     SERIALIZED_COMPONENT_REF(m_puzzleManager, "PuzzleManager", ComponentType::TRANSFORM),
 	SERIALIZED_INT(m_puzzleID, "Puzzle ID"),
 	SERIALIZED_FLOAT(m_activeTime, "Active Time", 0.0f, 10.0f, 0.1f),
-    SERIALIZED_ASSET_REF(m_crystalSparks, "Crystal Sparks Particle", AssetType::PREFAB),
-    SERIALIZED_ASSET_REF(m_crystalStars, "Crystal Stars Particle", AssetType::PREFAB)
+    SERIALIZED_ASSET_REF(m_crystalEffectPrefab, "Crystal Activated Particle", AssetType::PREFAB)
 )
 
 CrystalShadowMark::CrystalShadowMark(GameObject* owner) : EnemyShadowMark(owner) {}
@@ -107,29 +106,20 @@ void CrystalShadowMark::activeEffect()
 {
     const Vector3 effectPosition = TransformAPI::getGlobalPosition(GameObjectAPI::getTransform(getOwner())) + Vector3(0.0f, 1.0f, 0.0f);
 
-    if (effectObject == nullptr)
-    {
-        effectObject = GameObjectAPI::instantiatePrefab(m_crystalSparks.m_id, effectPosition, Vector3(0.0f, 0.0f, 0.0f));
-    }
+    m_effectObject = GameObjectAPI::instantiatePrefab(m_crystalEffectPrefab.m_id, effectPosition, Vector3(0.0f, 0.0f, 0.0f));
 
-    if (effectObject2 == nullptr)
+    if (m_effectObject == nullptr)
     {
-        effectObject2 = GameObjectAPI::instantiatePrefab(m_crystalStars.m_id, effectPosition, Vector3(0.0f, 0.0f, 0.0f));
+        Debug::warn("[CrystalMark] Could not instantiate crystal effect on '%s'.", GameObjectAPI::getName(getOwner()));
     }
 }
 
 void CrystalShadowMark::deactivateEffect()
 {
-    if (effectObject != nullptr)
+    if (m_effectObject != nullptr)
     {
-        GameObjectAPI::removeGameObject(effectObject);
-        effectObject = nullptr;
-    }
-
-    if (effectObject2 != nullptr)
-    {
-        GameObjectAPI::removeGameObject(effectObject2);
-        effectObject2 = nullptr;
+        GameObjectAPI::removeGameObject(m_effectObject);
+        m_effectObject = nullptr;
     }
 }
 
