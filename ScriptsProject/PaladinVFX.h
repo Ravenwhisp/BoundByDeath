@@ -57,12 +57,10 @@ private:
 public:
     PrefabRef m_walkingDustPrefab;
     PrefabRef m_chargeAttackEffectPrefab;
-    PrefabRef m_basicAttackTelegraphPrefab;
     PrefabRef m_basicAttackEffectPrefab;
 
     float walkingDustYOffset = 0.05f;
     float walkingDustForwardOffset = -0.35f;
-    float basicAttackTelegraphYOffset = 0.05f;
 
 private:
     GameObject* walkingDustEffect = nullptr;
@@ -75,6 +73,7 @@ private:
     float chargeAttackForwardOffset = 0.0f;
 
     GameObject* basicAttackTelegraph = nullptr;
+    float basicAttackTelegraphYOffset = 0.05f;
 
     GameObject* basicAttackEffect = nullptr;
     float basicAttackYOffset = 0.05f;

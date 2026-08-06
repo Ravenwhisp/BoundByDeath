@@ -4,11 +4,9 @@
 IMPLEMENT_SCRIPT_FIELDS(PaladinVFX,
     SERIALIZED_ASSET_REF(m_walkingDustPrefab, "Walking Dust Prefab", AssetType::PREFAB),
     SERIALIZED_ASSET_REF(m_chargeAttackEffectPrefab, "Charge Attack Effect Prefab", AssetType::PREFAB),
-    SERIALIZED_ASSET_REF(m_basicAttackTelegraphPrefab, "Basic Attack Telegraph Prefab", AssetType::PREFAB),
     SERIALIZED_ASSET_REF(m_basicAttackEffectPrefab, "Basic Attack Effect Prefab", AssetType::PREFAB),
     SERIALIZED_FLOAT(walkingDustYOffset, "Walking Dust Y Offset", -5.0f, 5.0f, 0.05f),
-    SERIALIZED_FLOAT(walkingDustForwardOffset, "Walking Dust Forward Offset", -5.0f, 5.0f, 0.05f),
-    SERIALIZED_FLOAT(basicAttackTelegraphYOffset, "Basic Attack Telegraph Y Offset", -5.0f, 5.0f, 0.05f)
+    SERIALIZED_FLOAT(walkingDustForwardOffset, "Walking Dust Forward Offset", -5.0f, 5.0f, 0.05f)
 )
 
 PaladinVFX::PaladinVFX(GameObject* owner)
@@ -318,7 +316,7 @@ void PaladinVFX::addBasicAttackTelegraph(
 
     basicAttackTelegraph =
         GameObjectAPI::instantiatePrefab(
-            m_basicAttackTelegraphPrefab.m_id,
+            m_basicAttackEffectPrefab.m_id,
             spawnPosition,
             rotation
         );
@@ -326,7 +324,7 @@ void PaladinVFX::addBasicAttackTelegraph(
     if (!basicAttackTelegraph)
     {
         Debug::warn(
-            "[PaladinVFX] Could not instantiate BasicAttackTelegraph prefab."
+            "[PaladinVFX] Could not instantiate BasicAttackTelegraph."
         );
     }
 }

@@ -5,11 +5,16 @@
 #include "EnemyBaseAttackConfig.h"
 #include "EnemyAttackExecutor.h"
 #include "EnemySound.h"
-#include "PaladinAttackConfig.h"
 
 #include "Damageable.h"
 #include "PlayerState.h"
 #include "PaladinVFX.h"
+
+namespace
+{
+    constexpr float PaladinBasicAttackWidth = 3.0f;
+    constexpr float PaladinBasicAttackForwardOffset = 0.5f;
+}
 
 EnemyAttackState::EnemyAttackState(GameObject* owner)
     : StateMachineScript(owner)
@@ -48,6 +53,7 @@ void EnemyAttackState::OnStateEnter()
         Debug::error(
             "[EnemyAttackState] EnemyController not found."
         );
+
         return;
     }
 
@@ -56,6 +62,7 @@ void EnemyAttackState::OnStateEnter()
         Debug::error(
             "[EnemyAttackState] AnimationComponent not found."
         );
+
         return;
     }
 
@@ -109,11 +116,11 @@ void EnemyAttackState::OnStateUpdate()
 
     m_stateTimer += Time::getDeltaTime();
 
+    const EnemyBaseAttackConfig* attackConfig =
+        m_controller->getAttackConfig();
+
     if (!m_hasAppliedDamage &&
-        m_stateTimer >=
-        m_controller
-        ->getAttackConfig()
-        ->m_basicAttackWindupTime)
+        m_stateTimer >= attackConfig->m_basicAttackWindupTime)
     {
         if (m_usePaladinAreaAttack && m_paladinVFX)
         {
@@ -139,10 +146,7 @@ void EnemyAttackState::OnStateUpdate()
         m_hasAppliedDamage = true;
     }
 
-    if (m_stateTimer >=
-        m_controller
-        ->getAttackConfig()
-        ->m_basicAttackTotalDuration)
+    if (m_stateTimer >= attackConfig->m_basicAttackTotalDuration)
     {
         m_controller->updateCurrentTarget();
 
@@ -203,10 +207,14 @@ void EnemyAttackState::lockPaladinAttackArea()
         return;
     }
 
-    m_controller->faceCurrentTarget();
+    const Vector3 ownerPosition =
+        TransformAPI::getGlobalPosition(ownerTransform);
+
+    const Vector3 targetPosition =
+        TransformAPI::getGlobalPosition(m_committedTarget);
 
     Vector3 direction =
-        TransformAPI::getForward(ownerTransform);
+        targetPosition - ownerPosition;
 
     direction.y = 0.0f;
 
@@ -217,28 +225,23 @@ void EnemyAttackState::lockPaladinAttackArea()
 
     direction.Normalize();
 
-    const PaladinAttackConfig* paladinConfig =
-        static_cast<const PaladinAttackConfig*>(
-            m_controller->getAttackConfig()
-            );
+    m_controller->faceCurrentTarget();
 
-    const Vector3 ownerPosition =
-        TransformAPI::getGlobalPosition(ownerTransform);
+    const EnemyBaseAttackConfig* attackConfig =
+        m_controller->getAttackConfig();
 
     m_lockedAttackDirection = direction;
 
     m_lockedAttackOrigin =
         ownerPosition +
-        direction *
-        paladinConfig->m_basicAttackForwardOffset;
+        direction * PaladinBasicAttackForwardOffset;
 
     m_lockedAttackRotation =
         TransformAPI::getGlobalEulerDegrees(ownerTransform);
 
     const Vector3 telegraphPosition =
         m_lockedAttackOrigin +
-        direction *
-        (paladinConfig->m_basicAttackRange * 0.5f);
+        direction * (attackConfig->m_basicAttackRange * 0.5f);
 
     m_paladinVFX->startBasicAttackTelegraph(
         telegraphPosition,
@@ -257,17 +260,15 @@ void EnemyAttackState::applyPaladinAreaDamage()
         return;
     }
 
-    const PaladinAttackConfig* paladinConfig =
-        static_cast<const PaladinAttackConfig*>(
-            m_controller->getAttackConfig()
-            );
+    const EnemyBaseAttackConfig* attackConfig =
+        m_controller->getAttackConfig();
 
     m_attackExecutor->applyDamageInRectangle(
         m_lockedAttackOrigin,
         m_lockedAttackDirection,
-        paladinConfig->m_basicAttackRange,
-        paladinConfig->m_basicAttackWidth,
-        paladinConfig->m_basicAttackDamage,
+        attackConfig->m_basicAttackRange,
+        PaladinBasicAttackWidth,
+        attackConfig->m_basicAttackDamage,
         "PaladinBasicAttack"
     );
 }
@@ -276,12 +277,9 @@ void EnemyAttackState::tryDamageTarget(
     Transform* targetTransform
 )
 {
-    if (!m_controller->getAttackConfig())
-    {
-        return;
-    }
-
-    if (!targetTransform)
+    if (!m_controller ||
+        !m_controller->getAttackConfig() ||
+        !targetTransform)
     {
         return;
     }
@@ -310,18 +308,17 @@ void EnemyAttackState::tryDamageTarget(
         return;
     }
 
+    const EnemyBaseAttackConfig* attackConfig =
+        m_controller->getAttackConfig();
+
     damageable->takeDamage(
-        m_controller
-        ->getAttackConfig()
-        ->m_basicAttackDamage
+        attackConfig->m_basicAttackDamage
     );
 
     Debug::log(
         "[EnemyAttackState] Damaged '%s' for %.2f.",
         GameObjectAPI::getName(targetObject),
-        m_controller
-        ->getAttackConfig()
-        ->m_basicAttackDamage
+        attackConfig->m_basicAttackDamage
     );
 }
 

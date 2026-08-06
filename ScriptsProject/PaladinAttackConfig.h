@@ -14,9 +14,6 @@ public:
     {
     }
 
-    float m_basicAttackWidth = 3.0f;
-    float m_basicAttackForwardOffset = 0.5f;
-
     float m_chargeRange = 5.0f;
     float m_chargeDuration = 0.5f;
     float m_chargeSpeed = 10.0f;
@@ -25,26 +22,6 @@ public:
     IMPLEMENT_DATACONTAINER_FIELDS_INHERITED(
         PaladinAttackConfig,
         EnemyBaseAttackConfig,
-
-        FIELD_GROUP_COLLAPSE(
-            "Basic Attack Area",
-
-            SERIALIZED_FLOAT(
-                m_basicAttackWidth,
-                "Basic Attack Width",
-                0.1f,
-                20.0f,
-                0.1f
-            ),
-
-            SERIALIZED_FLOAT(
-                m_basicAttackForwardOffset,
-                "Basic Attack Forward Offset",
-                0.0f,
-                10.0f,
-                0.05f
-            )
-        ),
 
         FIELD_GROUP_COLLAPSE(
             "Charge",
