@@ -72,9 +72,9 @@
                                     "IsAlphaMark": false,
                                     "Position": 1.0,
                                     "Color": [
-                                        0.231,
-                                        0.0,
-                                        0.525
+                                        0.161,
+                                        0.024,
+                                        0.157
                                     ]
                                 }
                             ],
@@ -205,18 +205,18 @@
                                             "IsAlphaMark": false,
                                             "Position": 0.0,
                                             "Color": [
-                                                0.706,
-                                                0.243,
-                                                0.561
+                                                1.0,
+                                                0.9,
+                                                0.98
                                             ]
                                         },
                                         {
                                             "IsAlphaMark": false,
                                             "Position": 1.0,
                                             "Color": [
-                                                0.231,
-                                                0.0,
-                                                0.525
+                                                0.161,
+                                                0.024,
+                                                0.157
                                             ]
                                         }
                                     ],
@@ -348,9 +348,9 @@
                                             "IsAlphaMark": false,
                                             "Position": 1.0,
                                             "Color": [
-                                                0.706,
-                                                0.243,
-                                                0.561
+                                                0.384,
+                                                0.0,
+                                                0.702
                                             ]
                                         }
                                     ],
@@ -473,9 +473,9 @@
                                             "IsAlphaMark": false,
                                             "Position": 0.0,
                                             "Color": [
-                                                0.384,
-                                                0.0,
-                                                0.702
+                                                0.918,
+                                                0.478,
+                                                0.957
                                             ]
                                         },
                                         {
@@ -616,9 +616,9 @@
                                             "IsAlphaMark": false,
                                             "Position": 1.0,
                                             "Color": [
-                                                0.231,
-                                                0.0,
-                                                0.525
+                                                0.161,
+                                                0.024,
+                                                0.157
                                             ]
                                         }
                                     ],
@@ -647,6 +647,140 @@
                                     "EndScale": [
                                         0.01,
                                         0.01,
+                                        0.0
+                                    ]
+                                },
+                                {
+                                    "ModuleType": 7,
+                                    "RotationType": "CONSTANT",
+                                    "StartRotation": 0.0,
+                                    "VelocityType": "CONSTANT",
+                                    "AngularVelocity": 0.0,
+                                    "FlipRotation": 0.0
+                                },
+                                {
+                                    "ModuleType": 8,
+                                    "TileRows": 1,
+                                    "TileColumns": 1,
+                                    "FPS": 0.0,
+                                    "StartFrameType": "CONSTANT",
+                                    "StartFrame": 0.0
+                                },
+                                {
+                                    "ModuleType": 9,
+                                    "RenderMode": "BILLBOARD",
+                                    "RenderLayer": 0
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "Children": []
+        },
+        {
+            "Name": "Highlight",
+            "Active": true,
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [
+                {
+                    "UID": 15100000000000002007,
+                    "ComponentType": "PARTICLE_SYSTEM",
+                    "Active": true,
+                    "TextureAssetId": {
+                        "uid": 13764988489437730080,
+                        "libId": "bf071019e246d5202f1d6d838f3eff77",
+                        "type": "TEXTURE"
+                    },
+                    "ParticleEmitters": [
+                        {
+                            "Modules": [
+                                {
+                                    "ModuleType": 2,
+                                    "Looping": false,
+                                    "Duration": 0.04,
+                                    "RateOverTime": 20.0,
+                                    "RateOverDistance": 0.0
+                                },
+                                {
+                                    "ModuleType": 4,
+                                    "LifeTimeType": "CONSTANT",
+                                    "StartLifeTime": 0.08
+                                },
+                                {
+                                    "ModuleType": 1,
+                                    "ShapeType": "SPHERE",
+                                    "Radius": 0.0001,
+                                    "RadiusThickness": 1.0,
+                                    "RadiusScale": 1.0
+                                },
+                                {
+                                    "ModuleType": 3,
+                                    "ColorOverTime": [
+                                        {
+                                            "IsAlphaMark": false,
+                                            "Position": 0.0,
+                                            "Color": [
+                                                1.0,
+                                                1.0,
+                                                1.0
+                                            ]
+                                        },
+                                        {
+                                            "IsAlphaMark": false,
+                                            "Position": 1.0,
+                                            "Color": [
+                                                0.918,
+                                                0.478,
+                                                0.957
+                                            ]
+                                        }
+                                    ],
+                                    "ColorCurve": [
+                                        0.0,
+                                        1.0,
+                                        1.0,
+                                        0.0
+                                    ]
+                                },
+                                {
+                                    "ModuleType": 5,
+                                    "VelocityType": "CONSTANT",
+                                    "InitialVelocity": 0.001
+                                },
+                                {
+                                    "ModuleType": 6,
+                                    "StartScaleType": "CONSTANT",
+                                    "StartScale": [
+                                        0.15,
+                                        0.15,
+                                        0.0
+                                    ],
+                                    "ChangeSizeOverTime": true,
+                                    "EndScaleType": "CONSTANT",
+                                    "EndScale": [
+                                        0.3,
+                                        0.3,
                                         0.0
                                     ]
                                 },
