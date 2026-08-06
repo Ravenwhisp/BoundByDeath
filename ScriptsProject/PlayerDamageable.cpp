@@ -49,11 +49,11 @@ void PlayerDamageable::Start()
     }
     else
     {
-        m_playerRenderBuffer = Shaders::getPlayerRenderBufferComponent(ComponentAPI::getOwner(rendererTransform));
+        m_damageHighlight = ShadersAPI::getDamageHighlightComponent(ComponentAPI::getOwner(rendererTransform));
 
-        if (m_playerRenderBuffer == nullptr)
+        if (m_damageHighlight == nullptr)
         {
-            Debug::warn("Renderer referenced in PlayerDamageable on '%s' does not have a PlayerRenderbuffer component.", GameObjectAPI::getName(getOwner()));
+            Debug::warn("Renderer referenced in PlayerDamageable on '%s' does not have a DamageHighlight component.", GameObjectAPI::getName(getOwner()));
         }
     }
 }
@@ -71,7 +71,7 @@ void PlayerDamageable::Update()
             m_damageHighlightActive = false;
         }
 
-        Shaders::setDamageHighlightIntensity(m_playerRenderBuffer, m_damageHighlightTimer);
+        ShadersAPI::setDamageHighlightIntensity(m_damageHighlight, m_damageHighlightTimer);
     }
 
     if (!m_haptic) return;
@@ -163,7 +163,7 @@ void PlayerDamageable::playHurtSfx()
 
 void PlayerDamageable::playHurtVfx()
 {
-    if (m_playerRenderBuffer == nullptr)
+    if (m_damageHighlight == nullptr)
     {
         return;
     }

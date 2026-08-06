@@ -1,0 +1,158 @@
+{
+    "Version": 2,
+    "sourcePath": "Assets\\Prefabs\\Particles\\VFXRemake\\Enemies\\PS_RunEnemy.prefab",
+    "Name": "PS_RunEnemy",
+    "Active": true,
+    "Static": false,
+    "Layer": "DEFAULT",
+    "Tag": "DEFAULT",
+    "Transform": {
+        "Position": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "Rotation": [
+            -0.0,
+            0.0,
+            -0.0,
+            1.0
+        ],
+        "Scale": [
+            1.0,
+            1.0,
+            1.0
+        ]
+    },
+    "Components": [
+        {
+            "UID": 10915739566061567244,
+            "ComponentType": "PARTICLE_SYSTEM",
+            "Active": true,
+            "TextureAssetId": {
+                "uid": 2593912505183305953,
+                "libId": "e89bc2804e6b05beaba38f9ac081ccf5",
+                "type": "TEXTURE"
+            },
+            "ParticleEmitters": [
+                {
+                    "Modules": [
+                        {
+                            "ModuleType": 2,
+                            "Looping": true,
+                            "Duration": 0.30000001192092896,
+                            "RateOverTime": 0.0,
+                            "RateOverDistance": 2.0
+                        },
+                        {
+                            "ModuleType": 4,
+                            "LifeTimeType": "RANDOM_BETWEEN_TWO",
+                            "StartLifeTime": 0.800000011920929,
+                            "StartLifeTime2": 1.0
+                        },
+                        {
+                            "ModuleType": 1,
+                            "ShapeType": "CIRCLE",
+                            "Radius": 0.0,
+                            "RadiusThickness": 1.0,
+                            "RadiusScale": 3.0
+                        },
+                        {
+                            "ModuleType": 3,
+                            "ColorOverTime": [
+                                {
+                                    "IsAlphaMark": false,
+                                    "Position": 0.0,
+                                    "Color": [
+                                        0.929411768913269,
+                                        0.8784313797950745,
+                                        0.8313725590705872
+                                    ]
+                                },
+                                {
+                                    "IsAlphaMark": false,
+                                    "Position": 0.4059414863586426,
+                                    "Color": [
+                                        0.6901960968971252,
+                                        0.5372549295425415,
+                                        0.40784314274787903
+                                    ]
+                                },
+                                {
+                                    "IsAlphaMark": true,
+                                    "Position": 0.7114754319190979,
+                                    "Alpha": 1.0
+                                },
+                                {
+                                    "IsAlphaMark": true,
+                                    "Position": 0.9801980257034302,
+                                    "Alpha": 0.25
+                                }
+                            ],
+                            "ColorCurve": [
+                                0.0,
+                                0.0,
+                                1.0,
+                                1.0
+                            ]
+                        },
+                        {
+                            "ModuleType": 5,
+                            "VelocityType": "CONSTANT",
+                            "InitialVelocity": 0.0
+                        },
+                        {
+                            "ModuleType": 6,
+                            "StartScaleType": "RANDOM_BETWEEN_TWO",
+                            "StartScale": [
+                                0.3499999940395355,
+                                0.3499999940395355,
+                                0.0
+                            ],
+                            "StartScale2": [
+                                0.20000000298023224,
+                                0.20000000298023224,
+                                0.0
+                            ],
+                            "ChangeSizeOverTime": true,
+                            "EndScaleType": "RANDOM_BETWEEN_TWO",
+                            "EndScale": [
+                                0.6000000238418579,
+                                0.6000000238418579,
+                                0.0
+                            ],
+                            "EndScale2": [
+                                0.30000001192092896,
+                                0.30000001192092896,
+                                0.0
+                            ]
+                        },
+                        {
+                            "ModuleType": 7,
+                            "RotationType": "RANDOM_BETWEEN_TWO",
+                            "StartRotation": 0.0,
+                            "StartRotation2": 4.71238899230957,
+                            "VelocityType": "CONSTANT",
+                            "AngularVelocity": 0.2617993950843811,
+                            "FlipRotation": -15.0
+                        },
+                        {
+                            "ModuleType": 8,
+                            "TileRows": 3,
+                            "TileColumns": 4,
+                            "FPS": 12.0,
+                            "StartFrameType": "CONSTANT",
+                            "StartFrame": 0.0
+                        },
+                        {
+                            "ModuleType": 9,
+                            "RenderMode": "BILLBOARD",
+                            "RenderLayer": 0
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "Children": []
+}

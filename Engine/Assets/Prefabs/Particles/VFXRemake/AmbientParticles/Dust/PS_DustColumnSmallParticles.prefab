@@ -1,0 +1,160 @@
+{
+    "Version": 2,
+    "sourcePath": "Assets\\Prefabs\\Particles\\VFXRemake\\AmbientParticles\\Dust\\PS_DustColumnSmallParticles.prefab",
+    "Name": "PS_DustColumnSmallParticles",
+    "Active": true,
+    "Static": false,
+    "Layer": "DEFAULT",
+    "Tag": "DEFAULT",
+    "Transform": {
+        "Position": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "Rotation": [
+            1.0,
+            -0.0,
+            -0.0,
+            -1.1920930376163597e-7
+        ],
+        "Scale": [
+            1.0,
+            1.0,
+            1.0
+        ]
+    },
+    "Components": [
+        {
+            "UID": 137238114282019930,
+            "ComponentType": "PARTICLE_SYSTEM",
+            "Active": true,
+            "TextureAssetId": {
+                "uid": 10764966982965910805,
+                "libId": "79aa7d0194ab9b0020aa064e26131741",
+                "type": "TEXTURE"
+            },
+            "ParticleEmitters": [
+                {
+                    "Modules": [
+                        {
+                            "ModuleType": 2,
+                            "Looping": false,
+                            "Duration": 1.0,
+                            "RateOverTime": 5.0,
+                            "RateOverDistance": 0.0
+                        },
+                        {
+                            "ModuleType": 4,
+                            "LifeTimeType": "RANDOM_BETWEEN_TWO",
+                            "StartLifeTime": 3.700000047683716,
+                            "StartLifeTime2": 5.0
+                        },
+                        {
+                            "ModuleType": 1,
+                            "ShapeType": "CONE",
+                            "Radius": 0.5,
+                            "RadiusThickness": 1.0,
+                            "RadiusScale": 1.0
+                        },
+                        {
+                            "ModuleType": 3,
+                            "ColorOverTime": [
+                                {
+                                    "IsAlphaMark": false,
+                                    "Position": 0.0,
+                                    "Color": [
+                                        0.6901960968971252,
+                                        0.5372549295425415,
+                                        0.40784314274787903
+                                    ]
+                                },
+                                {
+                                    "IsAlphaMark": false,
+                                    "Position": 0.5940597653388977,
+                                    "Color": [
+                                        0.43529412150382996,
+                                        0.3686274588108063,
+                                        0.32549020648002625
+                                    ]
+                                },
+                                {
+                                    "IsAlphaMark": true,
+                                    "Position": 0.7311472296714783,
+                                    "Alpha": 1.0
+                                },
+                                {
+                                    "IsAlphaMark": true,
+                                    "Position": 0.9801980257034302,
+                                    "Alpha": 0.43799999356269836
+                                }
+                            ],
+                            "ColorCurve": [
+                                0.0,
+                                0.0,
+                                1.0,
+                                1.0
+                            ]
+                        },
+                        {
+                            "ModuleType": 5,
+                            "VelocityType": "CURVE",
+                            "InitialVelocity": 1.399999976158142,
+                            "InitialVelocity2": 0.0,
+                            "VelocityCurve": [
+                                0.0,
+                                0.0,
+                                0.1171875,
+                                0.7643125057220459
+                            ]
+                        },
+                        {
+                            "ModuleType": 6,
+                            "StartScaleType": "RANDOM_BETWEEN_TWO",
+                            "StartScale": [
+                                0.10000000149011612,
+                                0.10000000149011612,
+                                0.0
+                            ],
+                            "StartScale2": [
+                                0.5,
+                                0.5,
+                                0.0
+                            ],
+                            "ChangeSizeOverTime": true,
+                            "EndScaleType": "CONSTANT",
+                            "EndScale": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "ModuleType": 7,
+                            "RotationType": "RANDOM_BETWEEN_TWO",
+                            "StartRotation": 0.0,
+                            "StartRotation2": 0.0,
+                            "VelocityType": "CONSTANT",
+                            "AngularVelocity": 0.0,
+                            "FlipRotation": 0.0
+                        },
+                        {
+                            "ModuleType": 8,
+                            "TileRows": 1,
+                            "TileColumns": 1,
+                            "FPS": 0.0,
+                            "StartFrameType": "CONSTANT",
+                            "StartFrame": 0.0
+                        },
+                        {
+                            "ModuleType": 9,
+                            "RenderMode": "VERTICAL",
+                            "RenderLayer": 1
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "Children": []
+}
