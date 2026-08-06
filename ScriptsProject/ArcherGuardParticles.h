@@ -12,33 +12,39 @@ public:
 
     FieldList getExposedFields() const override;
 
-    PrefabRef m_trailPrefab;
-    PrefabRef m_barrageImpactPrefab;
-    PrefabRef m_somersaultPrefab;
-    PrefabRef m_arrowBarragePrefab;
-
     // Basic attack trail — called by ArcherArrowShooter
     void spawnBasicAttackTrail(const Vector3& pos);
     void syncBasicAttackTrail(const Vector3& pos, const Vector3& eulerDeg);
     void stopBasicAttackTrail();
 
     // Barrage — called by ArcherArrowBarrageState
-    void spawnBarrageArrows(const Vector3& impactPos, float landDelay);
-    void spawnImpactParticle(const Vector3& impactPos);
-    void stopBarrageArrows();
+    void startBarrageFloorParticle(const Vector3& position);
+    void stopBarrageFloorParticle();
+
+    void playBarrageImpactParticle(const Vector3& position);
 
     // Charge/somersault — called by ArcherSomersaultState
     void startChargeParticle();
     void updateChargeParticle();
     void stopChargeParticle();
 
-private:
-    GameObject*              m_trailGO          = nullptr;
-    std::vector<GameObject*> m_barrageArrows;
-    GameObject*              m_chargeParticleGO = nullptr;
+public:    
+    PrefabRef m_trailPrefab;
+    PrefabRef m_barrageFloorPrefab;
+    PrefabRef m_barrageImpactPrefab;
+    PrefabRef m_somersaultPrefab;
 
-    Transform* m_chargeParticleTransform = nullptr;
-    GameObject* m_impactParticleGO = nullptr;
-    float m_impactParticleLifetime = 1.0f;
-    float m_impactParticleTimer = 0.0f;
+    float m_barrageFloorYOffset = 0.05f;
+    float m_barrageImpactYOffset = 0.05f;
+    float m_barrageImpactLifetime = 1.0f;
+
+private:
+    GameObject* m_trailGO  = nullptr;
+    GameObject* m_barrageFloorParticle = nullptr;
+    GameObject* m_barrageImpactParticle = nullptr;
+
+    float m_barrageImpactTimer = 0.0f;
+
+    GameObject* m_somersaultParticle = nullptr;
+    Transform* m_somersaultParticleTransform = nullptr;
 };
