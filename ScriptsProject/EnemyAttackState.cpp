@@ -9,10 +9,11 @@
 #include "Damageable.h"
 #include "PlayerState.h"
 #include "PaladinVFX.h"
+#include "PaladinUI.h"
 
 namespace
 {
-    constexpr float PaladinBasicAttackWidth = 3.0f;
+    constexpr float PaladinBasicAttackWidth = 2.5f;
     constexpr float PaladinBasicAttackForwardOffset = 0.5f;
 }
 
@@ -35,17 +36,20 @@ void EnemyAttackState::OnStateEnter()
     m_paladinVFX =
         GameObjectAPI::findScript<PaladinVFX>(getOwner());
 
+    m_paladinUI =
+        GameObjectAPI::findScript<PaladinUI>(getOwner());
+
     m_stateTimer = 0.0f;
     m_hasAppliedDamage = false;
     m_committedTarget = nullptr;
     m_usePaladinAreaAttack = false;
     m_lockedAttackOrigin = Vector3::Zero;
     m_lockedAttackDirection = Vector3::Zero;
-    m_lockedAttackRotation = Vector3::Zero;
+    m_lockedTargetPosition = Vector3::Zero;
 
-    if (m_paladinVFX)
+    if (m_paladinUI)
     {
-        m_paladinVFX->stopBasicAttackTelegraph();
+        m_paladinUI->hideBasicAttackUI();
     }
 
     if (!m_controller)
@@ -109,22 +113,41 @@ void EnemyAttackState::OnStateUpdate()
         return;
     }
 
-    if (!m_usePaladinAreaAttack)
+    const EnemyBaseAttackConfig* attackConfig =
+        m_controller->getAttackConfig();
+
+    if (m_usePaladinAreaAttack && !m_hasAppliedDamage)
+    {
+        m_controller->facePosition(m_lockedTargetPosition);
+
+        drawPaladinAttackTelegraph();
+
+        if (m_paladinUI)
+        {
+            const Vector3 telegraphCenter =
+                m_lockedAttackOrigin +
+                m_lockedAttackDirection *
+                (attackConfig->m_basicAttackRange * 0.5f);
+
+            m_paladinUI->updateBasicAttackUIPose(
+                telegraphCenter,
+                m_lockedAttackDirection
+            );
+        }
+    }
+    else if (!m_usePaladinAreaAttack)
     {
         m_controller->faceCurrentTarget();
     }
 
     m_stateTimer += Time::getDeltaTime();
 
-    const EnemyBaseAttackConfig* attackConfig =
-        m_controller->getAttackConfig();
-
     if (!m_hasAppliedDamage &&
         m_stateTimer >= attackConfig->m_basicAttackWindupTime)
     {
-        if (m_usePaladinAreaAttack && m_paladinVFX)
+        if (m_usePaladinAreaAttack && m_paladinUI)
         {
-            m_paladinVFX->stopBasicAttackTelegraph();
+            m_paladinUI->showBasicAttackImpact();
         }
 
         playBasicAttackEffect();
@@ -179,9 +202,9 @@ void EnemyAttackState::OnStateUpdate()
 
 void EnemyAttackState::OnStateExit()
 {
-    if (m_paladinVFX)
+    if (m_paladinUI)
     {
-        m_paladinVFX->stopBasicAttackTelegraph();
+        m_paladinUI->hideBasicAttackUI();
     }
 
     m_usePaladinAreaAttack = false;
@@ -193,8 +216,7 @@ void EnemyAttackState::lockPaladinAttackArea()
 {
     if (!m_controller ||
         !m_controller->getAttackConfig() ||
-        !m_committedTarget ||
-        !m_paladinVFX)
+        !m_committedTarget)
     {
         return;
     }
@@ -213,6 +235,8 @@ void EnemyAttackState::lockPaladinAttackArea()
     const Vector3 targetPosition =
         TransformAPI::getGlobalPosition(m_committedTarget);
 
+    m_lockedTargetPosition = targetPosition;
+
     Vector3 direction =
         targetPosition - ownerPosition;
 
@@ -225,10 +249,7 @@ void EnemyAttackState::lockPaladinAttackArea()
 
     direction.Normalize();
 
-    m_controller->faceCurrentTarget();
-
-    const EnemyBaseAttackConfig* attackConfig =
-        m_controller->getAttackConfig();
+    m_controller->facePosition(m_lockedTargetPosition);
 
     m_lockedAttackDirection = direction;
 
@@ -236,19 +257,127 @@ void EnemyAttackState::lockPaladinAttackArea()
         ownerPosition +
         direction * PaladinBasicAttackForwardOffset;
 
-    m_lockedAttackRotation =
-        TransformAPI::getGlobalEulerDegrees(ownerTransform);
+    const EnemyBaseAttackConfig* attackConfig =
+        m_controller->getAttackConfig();
 
-    const Vector3 telegraphPosition =
+    const Vector3 telegraphCenter =
         m_lockedAttackOrigin +
-        direction * (attackConfig->m_basicAttackRange * 0.5f);
+        direction *
+        (attackConfig->m_basicAttackRange * 0.5f);
 
-    m_paladinVFX->startBasicAttackTelegraph(
-        telegraphPosition,
-        m_lockedAttackRotation
-    );
+    if (m_paladinUI)
+    {
+        m_paladinUI->setupBasicAttackUI(
+            PaladinBasicAttackWidth,
+            attackConfig->m_basicAttackRange
+        );
+
+        m_paladinUI->showBasicAttackUI(
+            telegraphCenter,
+            m_lockedAttackDirection
+        );
+    }
 
     m_usePaladinAreaAttack = true;
+}
+
+void EnemyAttackState::drawPaladinAttackTelegraph() const
+{
+    if (!m_controller ||
+        !m_controller->getAttackConfig())
+    {
+        return;
+    }
+
+    Vector3 forward = m_lockedAttackDirection;
+    forward.y = 0.0f;
+
+    if (forward.LengthSquared() < 0.0001f)
+    {
+        return;
+    }
+
+    forward.Normalize();
+
+    Vector3 right(
+        -forward.z,
+        0.0f,
+        forward.x
+    );
+
+    if (right.LengthSquared() < 0.0001f)
+    {
+        return;
+    }
+
+    right.Normalize();
+
+    const EnemyBaseAttackConfig* attackConfig =
+        m_controller->getAttackConfig();
+
+    const float halfWidth =
+        PaladinBasicAttackWidth * 0.5f;
+
+    Vector3 startCenter = m_lockedAttackOrigin;
+    startCenter.y += 0.05f;
+
+    const Vector3 endCenter =
+        startCenter +
+        forward * attackConfig->m_basicAttackRange;
+
+    const Vector3 leftStart =
+        startCenter -
+        right * halfWidth;
+
+    const Vector3 rightStart =
+        startCenter +
+        right * halfWidth;
+
+    const Vector3 leftEnd =
+        endCenter -
+        right * halfWidth;
+
+    const Vector3 rightEnd =
+        endCenter +
+        right * halfWidth;
+
+    const Vector3 telegraphColor(
+        1.0f,
+        0.25f,
+        0.1f
+    );
+
+    DebugDrawAPI::drawLine(
+        leftStart,
+        leftEnd,
+        telegraphColor,
+        0,
+        true
+    );
+
+    DebugDrawAPI::drawLine(
+        rightStart,
+        rightEnd,
+        telegraphColor,
+        0,
+        true
+    );
+
+    DebugDrawAPI::drawLine(
+        leftStart,
+        rightStart,
+        telegraphColor,
+        0,
+        true
+    );
+
+    DebugDrawAPI::drawLine(
+        leftEnd,
+        rightEnd,
+        telegraphColor,
+        0,
+        true
+    );
 }
 
 void EnemyAttackState::applyPaladinAreaDamage()

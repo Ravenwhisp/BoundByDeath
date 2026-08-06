@@ -8,6 +8,7 @@ class EnemyAttackExecutor;
 class AnimationComponent;
 class EnemySound;
 class PaladinVFX;
+class PaladinUI;
 
 class EnemyAttackState : public StateMachineScript
 {
@@ -24,6 +25,7 @@ private:
     void tryDamageTarget(Transform* targetTransform);
     void applyPaladinAreaDamage();
     void lockPaladinAttackArea();
+    void drawPaladinAttackTelegraph() const;
     void playBasicAttackEffect();
 
 private:
@@ -32,12 +34,13 @@ private:
     AnimationComponent* m_animation = nullptr;
     PaladinVFX* m_paladinVFX = nullptr;
     EnemySound* m_enemySound = nullptr;
+    PaladinUI* m_paladinUI = nullptr;
 
     Transform* m_committedTarget = nullptr;
 
     Vector3 m_lockedAttackOrigin = Vector3::Zero;
     Vector3 m_lockedAttackDirection = Vector3::Zero;
-    Vector3 m_lockedAttackRotation = Vector3::Zero;
+    Vector3 m_lockedTargetPosition = Vector3::Zero;
 
     float m_stateTimer = 0.0f;
     bool m_hasAppliedDamage = false;
