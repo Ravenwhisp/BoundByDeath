@@ -20,6 +20,7 @@ public:
 
 public:
     PrefabRef m_healthPickupPrefab;
+    PrefabRef m_healthBreakEffectParticle;
 
     float m_healthDropAmount = 10.0f;
     float m_dropRadius = 1.0f;
