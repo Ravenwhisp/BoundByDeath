@@ -1,7 +1,7 @@
 {
     "Version": 2,
-    "sourcePath": "Assets\\Prefabs\\Particles\\VFXRemake\\Enemies\\Enemies_Level2\\Skeletons\\PS_ShockwaveSmallParticles.prefab",
-    "Name": "PS_ShockwaveSmallParticles",
+    "sourcePath": "Assets\\Prefabs\\Particles\\VFXRemake\\Enemies\\Enemies_Level2\\Skeletons\\PS_Shine.prefab",
+    "Name": "PS_Shine",
     "Active": true,
     "Static": false,
     "Layer": "DEFAULT",
@@ -26,12 +26,12 @@
     },
     "Components": [
         {
-            "UID": 10514616027112454552,
+            "UID": 255513135818873946,
             "ComponentType": "PARTICLE_SYSTEM",
             "Active": true,
             "TextureAssetId": {
-                "uid": 14975996452711739301,
-                "libId": "44168a6acebcaf9bd84233e2665444ae",
+                "uid": 14705584805046184271,
+                "libId": "cc14bb777728e94fe84c4da86f0907cf",
                 "type": "TEXTURE"
             },
             "ParticleEmitters": [
@@ -41,19 +41,18 @@
                             "ModuleType": 2,
                             "Looping": false,
                             "Duration": 1.0,
-                            "RateOverTime": 75.0,
+                            "RateOverTime": 1.0,
                             "RateOverDistance": 0.0
                         },
                         {
                             "ModuleType": 4,
-                            "LifeTimeType": "RANDOM_BETWEEN_TWO",
-                            "StartLifeTime": 0.10000000149011612,
-                            "StartLifeTime2": 0.30000001192092896
+                            "LifeTimeType": "CONSTANT",
+                            "StartLifeTime": 0.30000001192092896
                         },
                         {
                             "ModuleType": 1,
                             "ShapeType": "CIRCLE",
-                            "Radius": 0.5,
+                            "Radius": 0.0,
                             "RadiusThickness": 1.0,
                             "RadiusScale": 3.0
                         },
@@ -64,14 +63,24 @@
                                     "IsAlphaMark": false,
                                     "Position": 0.0,
                                     "Color": [
-                                        0.992277979850769,
-                                        0.9770942330360413,
-                                        0.8620175719261169
+                                        0.9921568632125854,
+                                        0.9764705896377563,
+                                        0.8627451062202454
                                     ]
                                 },
                                 {
+                                    "IsAlphaMark": true,
+                                    "Position": 0.023632578551769257,
+                                    "Alpha": 0.5
+                                },
+                                {
+                                    "IsAlphaMark": true,
+                                    "Position": 0.1770491749048233,
+                                    "Alpha": 1.0
+                                },
+                                {
                                     "IsAlphaMark": false,
-                                    "Position": 0.34983497858047485,
+                                    "Position": 0.6064451932907104,
                                     "Color": [
                                         1.0,
                                         0.9254902005195618,
@@ -79,64 +88,32 @@
                                     ]
                                 },
                                 {
-                                    "IsAlphaMark": false,
-                                    "Position": 0.74587482213974,
-                                    "Color": [
-                                        1.0,
-                                        0.6352941393852234,
-                                        0.0
-                                    ]
-                                },
-                                {
                                     "IsAlphaMark": true,
-                                    "Position": 0.8514851331710815,
-                                    "Alpha": 1.0
-                                },
-                                {
-                                    "IsAlphaMark": true,
-                                    "Position": 0.9934425950050354,
-                                    "Alpha": 0.25
+                                    "Position": 0.9836065769195557,
+                                    "Alpha": 0.24300000071525574
                                 }
                             ],
                             "ColorCurve": [
-                                0.4453125,
-                                0.703125,
-                                1.0,
-                                1.0
+                                0.5703125,
+                                0.1875,
+                                0.5703125,
+                                0.921875
                             ]
                         },
                         {
                             "ModuleType": 5,
-                            "VelocityType": "CURVE",
-                            "InitialVelocity": 6.0,
-                            "InitialVelocity2": 3.0,
-                            "VelocityCurve": [
-                                0.723312497138977,
-                                0.078125,
-                                0.421875,
-                                0.7718124985694885
-                            ]
+                            "VelocityType": "CONSTANT",
+                            "InitialVelocity": 0.0
                         },
                         {
                             "ModuleType": 6,
-                            "StartScaleType": "RANDOM_BETWEEN_TWO",
+                            "StartScaleType": "CONSTANT",
                             "StartScale": [
-                                0.20000000298023224,
-                                0.20000000298023224,
+                                1.0,
+                                1.0,
                                 0.0
                             ],
-                            "StartScale2": [
-                                0.10000000149011612,
-                                0.10000000149011612,
-                                0.0
-                            ],
-                            "ChangeSizeOverTime": true,
-                            "EndScaleType": "CONSTANT",
-                            "EndScale": [
-                                0.10000000149011612,
-                                0.10000000149011612,
-                                0.0
-                            ]
+                            "ChangeSizeOverTime": false
                         },
                         {
                             "ModuleType": 7,
