@@ -16,7 +16,7 @@ public:
 public:
     bool  m_enableOutline = true;
 
-    float m_intensity = 1.0f;
+    float m_intensity = 0.5f;
     float m_thickness = 0.7f;
     float m_threshold = 0.035f;
     float m_normalThreshold = 0.45f;
