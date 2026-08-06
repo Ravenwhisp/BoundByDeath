@@ -10,6 +10,8 @@ IMPLEMENT_SCRIPT_FIELDS(AelorinDebugDraw,
 		SERIALIZED_BOOL(m_drawSeekerSigilsLarge, "Draw Large Impact Areas")
 	),
 
+	SERIALIZED_BOOL(m_drawNova, "Draw Nova"),
+
 	SERIALIZED_BOOL(m_debugEnabled, "Debug Enabled"),
 	SERIALIZED_FLOAT(m_heightOffset, "Height Offset", 0.0f, 5.0f, 0.05f)
 )
@@ -50,13 +52,14 @@ void AelorinDebugDraw::drawGizmo()
 	}
 
 	const Vector3 normalColor =	Vector3(0.0f, 1.0f, 1.0f);
-
 	const Vector3 phase2FinalColor = Vector3(1.0f, 0.0f, 0.0f);
+	const Vector3 cyan = Vector3(0.0f, 1.0f, 1.0f);
+	const Vector3 orange = Vector3(1.0f, 0.5f, 0.0f);
+	const Vector3 yellow = Vector3(1.0f, 1.0f, 0.0f);
 
 	if (m_drawSeekerSigilsNormal)
 	{
 		drawImpactCircle(m_controller->getLyrielPosition(), config->m_seekerSigilsRadius, normalColor);
-
 		drawImpactCircle(m_controller->getDeathPosition(), config->m_seekerSigilsRadius, normalColor);
 	}
 
@@ -67,6 +70,20 @@ void AelorinDebugDraw::drawGizmo()
 		const Vector3 midpoint = (lyrielPosition + deathPosition) * 0.5f;
 
 		drawImpactCircle(midpoint, config->m_seekerSigilsPhase2FinalRadius,	phase2FinalColor);
+	}
+
+	if (m_drawNova)
+	{
+		Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
+		if (!ownerTransform)
+		{
+			return;
+		}
+
+		const Vector3 bossPosition = TransformAPI::getGlobalPosition(ownerTransform);
+		drawImpactCircle(bossPosition, config->m_novaTriggerDistance, phase2FinalColor); // trigger distance
+		drawImpactCircle(bossPosition, config->m_novaRadius, cyan); // first wave radius
+		drawImpactCircle(bossPosition, config->m_novaPhase2SecondRadius, orange); // second wave radius
 	}
 }
 

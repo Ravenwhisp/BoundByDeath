@@ -1,15 +1,14 @@
 #include "pch.h"
 #include "SeekerSigilProjectile.h"
 
-#include "Damageable.h"
-#include "PlayerState.h"
+#include "AelorinAttackExecutor.h"
 
 SeekerSigilProjectile::SeekerSigilProjectile(GameObject* owner)
 	: ProjectileBase(owner)
 {
 }
 
-void SeekerSigilProjectile::launch(const Vector3& startPosition, const Vector3& targetPosition,	float fallSpeed, float lifetime, float impactRadius, float damage)
+void SeekerSigilProjectile::launch(const Vector3& startPosition, const Vector3& targetPosition,	float fallSpeed, float lifetime, float impactRadius, float damage, AelorinAttackExecutor* attackExecutor)
 {
 	m_targetPosition = targetPosition;
 
@@ -20,21 +19,24 @@ void SeekerSigilProjectile::launch(const Vector3& startPosition, const Vector3& 
 	m_impactRadius = impactRadius;
 	m_damage = damage;
 
+	m_attackExecutor = attackExecutor;
+
 	m_isLaunched = true;
 	m_inUse = true;
 
 	GameObjectAPI::setActive(getOwner(), true);
 
-	Transform* transform = GameObjectAPI::getTransform(getOwner());
+	Transform* projectileTransform = GameObjectAPI::getTransform(getOwner());
 
-	if (!transform)
+	if (!projectileTransform)
 	{
+		returnToPool();
 		return;
 	}
 
-	TransformAPI::setGlobalPosition(transform, startPosition);
+	TransformAPI::setGlobalPosition(projectileTransform, startPosition);
 
-	TransformAPI::lookAt(transform,	m_targetPosition);
+	TransformAPI::lookAt(projectileTransform,	m_targetPosition);
 }
 
 void SeekerSigilProjectile::Update()
@@ -93,49 +95,13 @@ void SeekerSigilProjectile::Update()
 
 void SeekerSigilProjectile::applyImpactDamage()
 {
-	const std::vector<GameObject*> players = SceneAPI::findAllGameObjectsByTag(Tag::PLAYER);
-
-	for (GameObject* player : players)
+	if (!m_attackExecutor)
 	{
-		if (!player)
-		{
-			continue;
-		}
-
-		PlayerState* playerState = GameObjectAPI::findScript<PlayerState>(player);
-
-		if (playerState && playerState->isDowned())
-		{
-			continue;
-		}
-
-		Transform* playerTransform = GameObjectAPI::getTransform(player);
-
-		if (!playerTransform)
-		{
-			continue;
-		}
-
-		Vector3 playerPosition = TransformAPI::getGlobalPosition(playerTransform);
-
-		Vector3 difference = playerPosition - m_targetPosition;
-
-		difference.y = 0.0f;
-
-		if (difference.LengthSquared() > m_impactRadius * m_impactRadius)
-		{
-			continue;
-		}
-
-		Damageable* damageable = GameObjectAPI::findScript<Damageable>(player);
-
-		if (!damageable)
-		{
-			continue;
-		}
-
-		damageable->takeDamage(m_damage);
+		Debug::warn("[SeekerSigilProjectile] AelorinAttackExecutor not found.");
+		return;
 	}
+
+	m_attackExecutor->applyDamageInRadius(m_targetPosition, m_impactRadius, m_damage, "Aelorin Seeker Sigils");
 
 	Debug::log(
 		"[SeekerSigilProjectile] Impact at position "
@@ -156,6 +122,8 @@ void SeekerSigilProjectile::resetProjectile()
 
 	m_impactRadius = 0.0f;
 	m_damage = 0.0f;
+
+	m_attackExecutor = nullptr;
 
 	m_isLaunched = false;
 

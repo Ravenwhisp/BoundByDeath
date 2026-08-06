@@ -24,6 +24,9 @@ public:
 	bool m_drawSeekerSigilsNormal = true;
 	bool m_drawSeekerSigilsLarge = true;
 
+	// Nova
+	bool m_drawNova = true;
+
 	float m_heightOffset = 0.15f;
 
 private:

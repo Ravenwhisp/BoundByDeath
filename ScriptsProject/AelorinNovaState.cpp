@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "AelorinNovaState.h"
+#include "AelorinAttackExecutor.h"
 
 #include "AelorinAttackConfig.h"
 
@@ -46,7 +47,7 @@ void AelorinNovaState::OnStateEnter()
 
 void AelorinNovaState::OnStateUpdate()
 {
-	if (!m_controller || !m_animation || m_completed)
+	if (!m_controller || !m_animation ||  m_completed)
 	{
 		return;
 	}
@@ -61,7 +62,7 @@ void AelorinNovaState::OnStateUpdate()
 
 	if (!m_firstWaveApplied && m_stateTimer >= config->m_novaChargeTime)
 	{
-		applyFirstWave();
+		executeFirstNovaWave();
 		m_firstWaveApplied = true;
 	}
 
@@ -70,7 +71,7 @@ void AelorinNovaState::OnStateUpdate()
 		!m_secondWaveApplied &&
 		m_stateTimer >= config->m_novaChargeTime + config->m_novaPhase2SecondWaveDelay)
 	{
-		applySecondWave();
+		executeSecondNovaWave();
 		m_secondWaveApplied = true;
 	}
 
@@ -94,14 +95,60 @@ void AelorinNovaState::OnStateExit()
 	Debug::log("[AelorinNovaState] EXIT");
 }
 
-void AelorinNovaState::applyFirstWave()
+void AelorinNovaState::executeFirstNovaWave()
 {
+	if (!m_controller)
+	{
+		return;
+	}
+
+	const AelorinAttackConfig* config = m_controller->getAelorinAttackConfig();
+	if (!config)
+	{
+		return;
+	}
+
+	executeNovaWave(config->m_novaRadius, config->m_novaDamage);
+
 	Debug::log("[AelorinNovaState] First Nova wave.");
 }
 
-void AelorinNovaState::applySecondWave()
+void AelorinNovaState::executeSecondNovaWave()
 {
+	if (!m_controller)
+	{
+		return;
+	}
+
+	const AelorinAttackConfig* config = m_controller->getAelorinAttackConfig();
+	if (!config)
+	{
+		return;
+	}
+
+	executeNovaWave(config->m_novaPhase2SecondRadius, config->m_novaPhase2SecondDamage);
+
 	Debug::log("[AelorinNovaState] Second Nova wave.");
+}
+
+void AelorinNovaState::executeNovaWave(float radius, float damage)
+{
+	AelorinAttackExecutor* executor = m_controller->getAttackExecutor();
+
+	if (!executor)
+	{
+		return;
+	}
+
+	Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
+	if (!ownerTransform)
+	{
+		return;
+	}
+
+	const Vector3 center = TransformAPI::getGlobalPosition(ownerTransform);
+
+	executor->applyDamageInRadius(center, radius, damage, "Aelorin Nova");
 }
 
 void AelorinNovaState::finishAbility()

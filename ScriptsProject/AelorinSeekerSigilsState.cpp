@@ -160,6 +160,13 @@ void AelorinSeekerSigilsState::launchProjectileAt(ProjectilePool* projectilePool
 		return;
 	}
 
+	AelorinAttackExecutor* executor = m_controller->getAttackExecutor();
+
+	if (!executor)
+	{
+		return;
+	}
+
 	ProjectileBase* pooledProjectile = projectilePool->acquireProjectile();
 
 	if (!pooledProjectile)
@@ -175,7 +182,7 @@ void AelorinSeekerSigilsState::launchProjectileAt(ProjectilePool* projectilePool
 	Vector3 spawnPosition = impactPosition;
 	spawnPosition.y += config->m_seekerSigilsSpawnHeight;
 
-	projectile->launch(spawnPosition, impactPosition, config->m_seekerSigilsFallSpeed, config->m_seekerSigilsProjectileLifetime, impactRadius, damage);
+	projectile->launch(spawnPosition, impactPosition, config->m_seekerSigilsFallSpeed, config->m_seekerSigilsProjectileLifetime, impactRadius, damage, executor);
 }
 
 void AelorinSeekerSigilsState::launchPhase2FinalProjectile()

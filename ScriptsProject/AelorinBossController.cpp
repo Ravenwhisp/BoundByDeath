@@ -4,6 +4,7 @@
 #include "AelorinDetectionAggro.h"
 #include "AelorinDamageable.h"
 #include "AelorinAttackConfig.h"
+#include "AelorinAttackExecutor.h"
 
 #include "HealthDropSpawner.h"
 #include "ProjectilePool.h"
@@ -28,6 +29,7 @@ void AelorinBossController::Start()
 
 	m_aelorinDetectionAggro = GameObjectAPI::findScript<AelorinDetectionAggro>(getOwner());
 	m_damageable = GameObjectAPI::findScript<AelorinDamageable>(getOwner());
+	m_attackExecutor = GameObjectAPI::findScript<AelorinAttackExecutor>(getOwner());
 
 	Transform* phase1Model = TransformAPI::findChildByName(getOwner()->GetTransform(), "Phase1");
 	if (!phase1Model)
@@ -54,6 +56,11 @@ void AelorinBossController::Start()
 	if (!m_damageable)
 	{
 		Debug::error("[AelorinBossController] AelorinDamageable script not found!");
+	}
+
+	if (!m_attackExecutor)
+	{
+		Debug::error("[AelorinBossController] AelorinAttackExecutor script not found!");
 	}
 
 	if (!m_phase1GameObject)
@@ -117,6 +124,18 @@ Vector3 AelorinBossController::getDeathPosition() const
 	}
 
 	return m_aelorinDetectionAggro->getDeathPosition();
+}
+
+float AelorinBossController::getClosestPlayerDistance() const
+{
+	if (!m_aelorinDetectionAggro)
+	{
+		return FLT_MAX;
+	}
+
+	const float minDistance = (std::min)(m_aelorinDetectionAggro->getDistanceToLyriel(), m_aelorinDetectionAggro->getDistanceToDeath());
+	
+	return minDistance;
 }
 
 AelorinAbility AelorinBossController::chooseNextAbility()
@@ -478,7 +497,14 @@ void AelorinBossController::removeLastUsedAbility(std::vector<AelorinAbility>& p
 
 bool AelorinBossController::canUseNova() const
 {
-	return true;
+	const AelorinAttackConfig* config = getAelorinAttackConfig();
+
+	if (!config)
+	{
+		return false;
+	}
+
+	return isPlayerWithinDistance(config->m_novaTriggerDistance);
 }
 
 bool AelorinBossController::canSummon() const
@@ -501,6 +527,11 @@ AelorinAbility AelorinBossController::chooseRandomAbility(const std::vector<Aelo
 	const std::size_t index = static_cast<std::size_t>(std::rand()) % pool.size();
 
 	return pool[index];
+}
+
+bool AelorinBossController::isPlayerWithinDistance(float distance) const
+{
+	return getClosestPlayerDistance() <= distance;
 }
 
 IMPLEMENT_SCRIPT(AelorinBossController)

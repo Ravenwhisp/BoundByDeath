@@ -19,8 +19,9 @@ public:
 	void OnStateExit() override;
 
 private:
-	void applyFirstWave();
-	void applySecondWave();
+	void executeFirstNovaWave();
+	void executeSecondNovaWave();
+	void executeNovaWave(float radius, float damage);
 	void finishAbility();
 
 private:

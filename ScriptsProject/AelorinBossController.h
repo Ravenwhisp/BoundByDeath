@@ -6,6 +6,7 @@ class AelorinDetectionAggro;
 class AelorinDamageable;
 class AelorinAttackConfig;
 class ProjectilePool;
+class AelorinAttackExecutor;
 
 enum class Phase
 {
@@ -42,6 +43,7 @@ public:
 
 	Vector3 getLyrielPosition() const;
 	Vector3 getDeathPosition() const;
+	float getClosestPlayerDistance() const;
 
 	// Projectile Pool References
 	ComponentRef<Transform> m_seekerSigilsProjectilePool;
@@ -52,6 +54,9 @@ public:
 
 	// AttackConfig
 	const AelorinAttackConfig* getAelorinAttackConfig() const { return m_attackConfig.get(); }
+
+	// Attack Executor
+	AelorinAttackExecutor* getAttackExecutor() const { return m_attackExecutor; }
 
 	// Ability Choosing
 	AelorinAbility chooseNextAbility();
@@ -102,6 +107,7 @@ public:
 private:
 	AelorinDetectionAggro* m_aelorinDetectionAggro = nullptr;
 	AelorinDamageable* m_damageable = nullptr;
+	AelorinAttackExecutor* m_attackExecutor = nullptr;
 
 	ProjectilePool* m_seekerSigilsProjectilePoolScript = nullptr;
 	ProjectilePool* m_seekerSigilsLargeProjectilePoolScript = nullptr;
@@ -141,4 +147,6 @@ private:
 	bool canTeleport() const;
 
 	AelorinAbility chooseRandomAbility(const std::vector<AelorinAbility>& pool) const;
+
+	bool isPlayerWithinDistance(float distance) const;
 };

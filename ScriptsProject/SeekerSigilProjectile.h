@@ -2,6 +2,8 @@
 
 #include "ProjectileBase.h"
 
+class AelorinAttackExecutor;
+
 class SeekerSigilProjectile : public ProjectileBase
 {
 	DECLARE_SCRIPT(SeekerSigilProjectile)
@@ -11,13 +13,14 @@ public:
 
 	void Update() override;
 
-	void launch(const Vector3& startPosition, const Vector3& targetPosition, float fallSpeed, float lifetime, float impactRadius, float damage);
+	void launch(const Vector3& startPosition, const Vector3& targetPosition, float fallSpeed, float lifetime, float impactRadius, float damage, AelorinAttackExecutor* attackExecutor);
 	void resetProjectile() override;
 
 private:
 	void applyImpactDamage();
 
 private:
+	AelorinAttackExecutor* m_attackExecutor = nullptr;
 	Vector3 m_targetPosition = Vector3::Zero;
 
 	float m_fallSpeed = 0.0f;
