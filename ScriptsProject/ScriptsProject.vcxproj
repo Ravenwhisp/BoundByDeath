@@ -236,7 +236,7 @@
     <ClInclude Include="LyrielSound.h" />
     <ClInclude Include="DebugDamageTrigger.h" />
     <ClInclude Include="DebugDrawTest.h" />
-    <ClInclude Include="BarrierEnemyDamageable.h" />
+    <ClInclude Include="BarrierComponent.h" />
     <ClInclude Include="ArcherChaseState.h" />
     <ClInclude Include="EnemyDamageable.h" />
     <ClInclude Include="EnemySound.h" />
@@ -296,6 +296,7 @@
     <ClInclude Include="AbilityDash.h" />
     <ClInclude Include="LyrielDash.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="ShadowExecutionConfig.h" />
     <ClInclude Include="SkeletonAttackConfig.h" />
     <ClInclude Include="SkeletonAttackDebugDraw.h" />
     <ClInclude Include="SkeletonChaseState.h" />
@@ -314,6 +315,8 @@
     <ClInclude Include="PlayerRotation.h" />
     <ClInclude Include="PlayerState.h" />
     <ClInclude Include="PlayerTargetController.h" />
+    <ClInclude Include="PlayerVitalsMonitor.h" />
+    <ClInclude Include="OutlineStyleSetup.h" />
     <ClInclude Include="SummonerAttackConfig.h" />
     <ClInclude Include="SummonerEnergyBallState.h" />
     <ClInclude Include="SummonerEnemyController.h" />
@@ -407,7 +410,7 @@
     <ClCompile Include="DebugDamageTrigger.cpp" />
     <ClCompile Include="DebugDrawTest.cpp" />
     <ClCompile Include="dllmain.cpp" />
-    <ClCompile Include="BarrierEnemyDamageable.cpp" />
+    <ClCompile Include="BarrierComponent.cpp" />
     <ClCompile Include="ArcherChaseState.cpp" />
     <ClCompile Include="EnemyDamageable.cpp" />
     <ClCompile Include="EnemySound.cpp" />
@@ -473,6 +476,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="ShadowExecutionConfig.cpp" />
     <ClCompile Include="SkeletonAttackConfig.cpp" />
     <ClCompile Include="SkeletonAttackDebugDraw.cpp" />
     <ClCompile Include="SkeletonChaseState.cpp" />
@@ -491,6 +495,8 @@
     <ClCompile Include="PlayerRotation.cpp" />
     <ClCompile Include="PlayerState.cpp" />
     <ClCompile Include="PlayerTargetController.cpp" />
+    <ClCompile Include="PlayerVitalsMonitor.cpp" />
+    <ClCompile Include="OutlineStyleSetup.cpp" />
     <ClCompile Include="SummonerEnergyBallState.cpp" />
     <ClCompile Include="SummonerEnemyController.cpp" />
     <ClCompile Include="SummonerIdleState.cpp" />

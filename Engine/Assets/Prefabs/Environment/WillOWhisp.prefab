@@ -1,0 +1,217 @@
+{
+    "Version": 2,
+    "sourcePath": "Assets\\Prefabs\\Environment\\WillOWhisp.prefab",
+    "Name": "WillOWhisp",
+    "Active": true,
+    "Static": false,
+    "Layer": "NAVMESH",
+    "Tag": "DEFAULT",
+    "Transform": {
+        "Position": [
+            2.819999933242798,
+            2.8399999141693115,
+            0.03999999910593033
+        ],
+        "Rotation": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ],
+        "Scale": [
+            0.37244001030921936,
+            0.37244001030921936,
+            0.37244001030921936
+        ]
+    },
+    "Components": [],
+    "Children": [
+        {
+            "Name": "Point Light",
+            "Active": true,
+            "Static": false,
+            "Layer": "NAVMESH",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    0.2937812805175781,
+                    0.7418785095214844,
+                    -0.30426025390625
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0,
+                    1.0
+                ],
+                "Scale": [
+                    1.0000001192092896,
+                    1.0000001192092896,
+                    1.0000001192092896
+                ]
+            },
+            "Components": [
+                {
+                    "UID": 10877422459175322780,
+                    "ComponentType": "LIGHT",
+                    "Active": true,
+                    "LightType": 1,
+                    "Color": [
+                        0.39322611689567566,
+                        0.9343629479408264,
+                        0.6648390293121338
+                    ],
+                    "Intensity": 16.299999237060547,
+                    "CastShadows": false,
+                    "ShadowMapSize": 4096,
+                    "ShadowPcfEnabled": true,
+                    "ShadowPcfRadius": 1,
+                    "ShadowBias": 0.0005000000237487257,
+                    "ShadowStrength": 1.0,
+                    "Radius": 3.9000000953674316,
+                    "InnerAngleDegrees": 0.0,
+                    "OuterAngleDegrees": 0.0
+                }
+            ],
+            "Children": []
+        },
+        {
+            "Name": "Particle System",
+            "Active": true,
+            "Static": false,
+            "Layer": "NAVMESH",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    0.14441299438476563,
+                    0.39079952239990234,
+                    -0.3383636474609375
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0,
+                    1.0
+                ],
+                "Scale": [
+                    0.6100013852119446,
+                    0.6100013852119446,
+                    0.6100013852119446
+                ]
+            },
+            "Components": [
+                {
+                    "UID": 7923875454590380522,
+                    "ComponentType": "PARTICLE_SYSTEM",
+                    "Active": true,
+                    "TextureAssetId": {
+                        "uid": 14705584805046184271,
+                        "libId": "cc14bb777728e94fe84c4da86f0907cf",
+                        "type": "TEXTURE"
+                    },
+                    "ParticleEmitters": [
+                        {
+                            "Modules": [
+                                {
+                                    "ModuleType": 2,
+                                    "Looping": true,
+                                    "Duration": 20.0,
+                                    "RateOverTime": 4.0,
+                                    "RateOverDistance": 0.0
+                                },
+                                {
+                                    "ModuleType": 4,
+                                    "LifeTimeType": "CONSTANT",
+                                    "StartLifeTime": 1.0
+                                },
+                                {
+                                    "ModuleType": 1,
+                                    "ShapeType": "CONE",
+                                    "Radius": 0.10000000149011612,
+                                    "RadiusThickness": 1.0,
+                                    "RadiusScale": 4.199999809265137
+                                },
+                                {
+                                    "ModuleType": 3,
+                                    "ColorOverTime": [
+                                        {
+                                            "IsAlphaMark": false,
+                                            "Position": 0.0,
+                                            "Color": [
+                                                0.2135627120733261,
+                                                0.953667938709259,
+                                                0.8079328536987305
+                                            ]
+                                        },
+                                        {
+                                            "IsAlphaMark": true,
+                                            "Position": 0.0,
+                                            "Alpha": 1.0
+                                        },
+                                        {
+                                            "IsAlphaMark": true,
+                                            "Position": 0.9834983348846436,
+                                            "Alpha": 0.0
+                                        },
+                                        {
+                                            "IsAlphaMark": false,
+                                            "Position": 1.0,
+                                            "Color": [
+                                                1.0,
+                                                1.0,
+                                                1.0
+                                            ]
+                                        }
+                                    ],
+                                    "ColorCurve": [
+                                        0.0,
+                                        0.0,
+                                        1.0,
+                                        1.0
+                                    ]
+                                },
+                                {
+                                    "ModuleType": 5,
+                                    "VelocityType": "CONSTANT",
+                                    "InitialVelocity": 0.10000000149011612
+                                },
+                                {
+                                    "ModuleType": 6,
+                                    "StartScaleType": "CONSTANT",
+                                    "StartScale": [
+                                        1.0,
+                                        1.0,
+                                        0.0
+                                    ],
+                                    "ChangeSizeOverTime": false
+                                },
+                                {
+                                    "ModuleType": 7,
+                                    "RotationType": "CONSTANT",
+                                    "StartRotation": 1.5707963705062866,
+                                    "VelocityType": "CONSTANT",
+                                    "AngularVelocity": 0.0,
+                                    "FlipRotation": 0.0
+                                },
+                                {
+                                    "ModuleType": 8,
+                                    "TileRows": 1,
+                                    "TileColumns": 1,
+                                    "FPS": 0.0,
+                                    "StartFrameType": "CONSTANT",
+                                    "StartFrame": 0.0
+                                },
+                                {
+                                    "ModuleType": 9,
+                                    "RenderMode": "BILLBOARD",
+                                    "RenderLayer": 0
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "Children": []
+        }
+    ]
+}
