@@ -2,6 +2,8 @@
 #include "ReaperGauge.h"
 #include "CooperativeSound.h"
 
+#include "PersistingCheckpointState.h"
+
 #include <cmath>
 
 IMPLEMENT_SCRIPT_FIELDS(ReaperGauge,
@@ -32,6 +34,15 @@ void ReaperGauge::Start()
     SliderAPI::setFillAmount(m_reaperGaugeSlider, getGaugePercent());
     Transform2DAPI::setAlpha(m_glowTransform, 0.0f);
     Transform2DAPI::setAlpha(m_blinkAlphaTransform, 0.0f);
+
+    PersistingCheckpointState* PersistingCheckpointState = &PersistingCheckpointState::Get();
+    if (PersistingCheckpointState && PersistingCheckpointState->m_lastCheckpointId > CheckpointId::NONE)
+    {
+        m_gauge = PersistingCheckpointState->m_savedReaperGaugeAmount;
+        m_everExploited = true;
+        m_decayTimer = 0.0f;
+        m_decaying = false;
+    }
 }
 
 void ReaperGauge::Update()

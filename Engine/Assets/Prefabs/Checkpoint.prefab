@@ -1,0 +1,120 @@
+{
+    "Version": 2,
+    "sourcePath": "Assets/Prefabs/Checkpoint.prefab",
+    "Name": "Checkpoint_X",
+    "Active": true,
+    "Static": false,
+    "Layer": "DEFAULT",
+    "Tag": "DEFAULT",
+    "Transform": {
+        "Position": [
+            -10.065030097961426,
+            1.706963300704956,
+            -14.8371000289917
+        ],
+        "Rotation": [
+            -0.0,
+            0.0,
+            -0.0,
+            1.0
+        ],
+        "Scale": [
+            1.0,
+            1.0,
+            1.0
+        ]
+    },
+    "Components": [
+        {
+            "UID": 4599219702566617756,
+            "ComponentType": "SCRIPT",
+            "Active": true,
+            "ScriptName": "Checkpoint1_Level1_Event",
+            "ScriptFields": {
+                "Lyriel respawn transform": 862703008905880733,
+                "Death respawn transform": 7097385975666038413
+            }
+        },
+        {
+            "UID": 223386175495182499,
+            "ComponentType": "SCRIPT",
+            "Active": true,
+            "ScriptName": "GameplayEventTrigger",
+            "ScriptFields": {
+                "Trigger Only Once": true
+            }
+        },
+        {
+            "UID": 711012492470185218,
+            "ComponentType": "TRIGGER",
+            "Active": true,
+            "Shape": "Box",
+            "Center": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Size": [
+                5.550000190734863,
+                1.0,
+                7.449999809265137
+            ]
+        }
+    ],
+    "Children": [
+        {
+            "Name": "LyrielRespawn",
+            "Active": true,
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    1.7459535598754883,
+                    0.0,
+                    1.7482576370239258
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0,
+                    1.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [],
+            "Children": []
+        },
+        {
+            "Name": "DeathRespawn",
+            "Active": true,
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    1.746000051498413,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0,
+                    1.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [],
+            "Children": []
+        }
+    ]
+}
