@@ -640,7 +640,7 @@
     <ClInclude Include="CrystalVisuals.h">
       <Filter>Interaction/Gameplay\Puzzles</Filter>
     </ClInclude>
-        <ClInclude Include="CheckpointManager.h">
+    <ClInclude Include="CheckpointManager.h">
       <Filter>Systems\Checkpoints</Filter>
     </ClInclude>
     <ClInclude Include="Checkpoint1_Level1_Event.h">
@@ -648,6 +648,12 @@
     </ClInclude>
     <ClInclude Include="CheckpointEvent.h">
       <Filter>Systems\Checkpoints\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="HapticTester.h" />
+    <ClInclude Include="PlayerGamepadBinding.h" />
+    <ClInclude Include="ShadowExecutionConfig.h" />
+    <ClInclude Include="PaladinUI.h">
+      <Filter>Enemies\Paladin</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1121,6 +1127,12 @@
     </ClCompile>
     <ClCompile Include="CheckpointEvent.cpp">
       <Filter>Systems\Checkpoints\Events</Filter>
+    </ClCompile>
+    <ClCompile Include="HapticTester.cpp" />
+    <ClCompile Include="PlayerGamepadBinding.cpp" />
+    <ClCompile Include="ShadowExecutionConfig.cpp" />
+    <ClCompile Include="PaladinUI.cpp">
+      <Filter>Enemies\Paladin</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
