@@ -94,6 +94,10 @@ public:
 	void completeThresholdStagger();
 	float getThresholdStaggerDuration() const;
 
+	// Risen Spires helpers
+	Transform* getRisenSpiresPatternARoot() const { return m_risenSpiresPatternARoot.getReferencedComponent(); }
+	Transform* getRisenSpiresPatternBRoot() const { return m_risenSpiresPatternBRoot.getReferencedComponent(); }
+
 	// Health drop
 	void spawnHealthDrops();
 
@@ -132,6 +136,10 @@ private:
 	AelorinAbility m_requestedAbility = AelorinAbility::None;
 	AelorinAbility m_lastUsedAbility = AelorinAbility::None;
 	bool m_abilityTriggerSent = false;
+
+	// Risen Spires Ability
+	ComponentRef<Transform> m_risenSpiresPatternARoot;
+	ComponentRef<Transform> m_risenSpiresPatternBRoot;
 
 	// Teleport TODO
 	std::vector<Vector3> m_teleportPositions;

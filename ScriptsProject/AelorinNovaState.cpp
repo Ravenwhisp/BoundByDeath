@@ -28,11 +28,13 @@ void AelorinNovaState::OnStateEnter()
 	if (!m_controller)
 	{
 		Debug::error("[AelorinNovaState] AelorinBossController not found.");
+		return;
 	}
 
 	if (!m_animation)
 	{
 		Debug::error("[AelorinNovaState] AnimationComponent not found.");
+		return;
 	}
 
 	// consume ability
@@ -40,6 +42,7 @@ void AelorinNovaState::OnStateEnter()
 	if (m_activeAbility != AelorinAbility::Nova)
 	{
 		Debug::warn("[AelorinNovaState] Unexpected requested ability!");
+		return;
 	}
 
 	Debug::log("[AelorinNovaState] ENTER");

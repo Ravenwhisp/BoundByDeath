@@ -30,21 +30,25 @@ void AelorinSeekerSigilsState::OnStateEnter()
 	if (!m_controller)
 	{
 		Debug::error("[AelorinSeekerSigilsState] AelorinBossController not found.");
+		return;
 	}
 
 	if (!m_animation)
 	{
 		Debug::error("[AelorinSeekerSigilsState] AnimationComponent not found.");
+		return;
 	}
 
 	if (!m_normalProjectilePool)
 	{
 		Debug::error("[AelorinSeekerSigilsState] Normal ProjectilePool not found.");
+		return;
 	}
 
 	if (!m_largeProjectilePool)
 	{
 		Debug::error("[AelorinSeekerSigilsState] Large ProjectilePool not found.");
+		return;
 	}
 
 	// consume ability
@@ -52,6 +56,7 @@ void AelorinSeekerSigilsState::OnStateEnter()
 	if (m_activeAbility != AelorinAbility::SeekerSigils)
 	{
 		Debug::warn("[AelorinSeekerSigilsState] Unexpected requested ability!");
+		return;
 	}
 
 	Debug::log("[AelorinSeekerSigilsState] ENTER");

@@ -10,7 +10,14 @@ IMPLEMENT_SCRIPT_FIELDS(AelorinDebugDraw,
 		SERIALIZED_BOOL(m_drawSeekerSigilsLarge, "Draw Large Impact Areas")
 	),
 
-	SERIALIZED_BOOL(m_drawNova, "Draw Nova"),
+	FIELD_GROUP_COLLAPSE("Nova",
+		SERIALIZED_BOOL(m_drawNova, "Draw Nova")
+	),	
+
+	FIELD_GROUP_COLLAPSE("Risen Spires",
+		SERIALIZED_BOOL(m_drawRisenSpiresPatternA, "Draw Pattern A"),
+		SERIALIZED_BOOL(m_drawRisenSpiresPatternB, "Draw Pattern B")
+	),
 
 	SERIALIZED_BOOL(m_debugEnabled, "Debug Enabled"),
 	SERIALIZED_FLOAT(m_heightOffset, "Height Offset", 0.0f, 5.0f, 0.05f)
@@ -84,6 +91,48 @@ void AelorinDebugDraw::drawGizmo()
 		drawImpactCircle(bossPosition, config->m_novaTriggerDistance, phase2FinalColor); // trigger distance
 		drawImpactCircle(bossPosition, config->m_novaRadius, cyan); // first wave radius
 		drawImpactCircle(bossPosition, config->m_novaPhase2SecondRadius, orange); // second wave radius
+	}
+
+	if (m_drawRisenSpiresPatternA)
+	{
+		Transform* patternARoot = m_controller->getRisenSpiresPatternARoot();
+		if (patternARoot)
+		{
+			const int childCount = TransformAPI::getChildCount(patternARoot);
+
+			for (int i = 0; i < childCount; ++i)
+			{
+				Transform* point = TransformAPI::getChild(patternARoot, i);
+				if (!point)
+				{
+					continue;
+				}
+
+				const Vector3 position = TransformAPI::getGlobalPosition(point);
+				drawImpactCircle(position, config->m_risenSpiresRadius, normalColor);
+			}
+		}
+	}
+
+	if (m_drawRisenSpiresPatternB)
+	{
+		Transform* patternBRoot = m_controller->getRisenSpiresPatternBRoot();
+		if (patternBRoot)
+		{
+			const int childCount = TransformAPI::getChildCount(patternBRoot);
+
+			for (int i = 0; i < childCount; ++i)
+			{
+				Transform* point = TransformAPI::getChild(patternBRoot, i);
+				if (!point)
+				{
+					continue;
+				}
+
+				const Vector3 position = TransformAPI::getGlobalPosition(point);
+				drawImpactCircle(position, config->m_risenSpiresRadius, orange);
+			}
+		}
 	}
 }
 

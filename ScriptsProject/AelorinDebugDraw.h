@@ -27,6 +27,10 @@ public:
 	// Nova
 	bool m_drawNova = true;
 
+	// Risen Spires
+	bool m_drawRisenSpiresPatternA = true;
+	bool m_drawRisenSpiresPatternB = true;
+
 	float m_heightOffset = 0.15f;
 
 private:

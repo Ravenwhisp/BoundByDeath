@@ -64,6 +64,14 @@ public:
 
 	float m_novaRecoveryDuration = 1.25f;
 
+	// Risen Spires
+	float m_risenSpiresWindupDuration = 3.0f;
+	float m_risenSpiresRadius = 1.5f;
+	float m_risenSpiresDamage = 30.0f;
+	
+	float m_risenSpiresPhase2SecondPassDelay = 2.0f;
+	float m_risenSpiresRecoveryDuration = 1.0f;
+
 	// Health Drops
 	PrefabRef m_healthPickupPrefab;
 	int m_healthDropQuantity = 3;
@@ -122,6 +130,14 @@ public:
 			SERIALIZED_FLOAT(m_novaPhase2SecondRadius, "Nova Phase 2 Second Radius", 0.0f, 100.0f, 1.0f),
 			SERIALIZED_FLOAT(m_novaPhase2SecondDamage, "Nova Phase 2 Second Damage", 0.0f, 300.0f, 1.0f),
 			SERIALIZED_FLOAT(m_novaRecoveryDuration, "Nova Recovery Duration", 0.0f, 10.0f, 0.05f)
+		),
+
+		FIELD_GROUP_COLLAPSE("Risen Spires",
+			SERIALIZED_FLOAT(m_risenSpiresWindupDuration, "Windup Duration", 0.0f, 10.0f, 0.1f),
+			SERIALIZED_FLOAT(m_risenSpiresRadius, "Spire Radius", 0.0f, 10.0f, 0.1f),
+			SERIALIZED_FLOAT(m_risenSpiresDamage, "Spire Damage", 0.0f,	9999.0f, 1.0f),
+			SERIALIZED_FLOAT(m_risenSpiresPhase2SecondPassDelay, "Phase 2 Second Pass Delay", 0.0f, 10.0f, 0.1f),
+			SERIALIZED_FLOAT(m_risenSpiresRecoveryDuration, "Recovery Duration", 0.0f, 10.0f, 0.1f)
 		),
 
 		FIELD_GROUP_COLLAPSE("Health Drops",
