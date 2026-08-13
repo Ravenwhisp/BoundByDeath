@@ -72,6 +72,22 @@ public:
 	float m_risenSpiresPhase2SecondPassDelay = 2.0f;
 	float m_risenSpiresRecoveryDuration = 1.0f;
 
+	// Spirit Cannon
+	float m_spiritCannonWindupDuration = 3.0f;
+
+	float m_spiritCannonBeamLength = 20.0f;
+	float m_spiritCannonBeamWidth = 1.5f;
+	float m_spiritCannonDamage = 30.0f;
+
+	float m_spiritCannonPhase1ShotInterval = 0.8f;
+	float m_spiritCannonPhase2ShotInterval = 0.45f;
+
+	float m_spiritCannonPhase2FinalShotDelay = 0.8f;
+	float m_spiritCannonPhase2FinalBeamWidth = 4.0f;
+	float m_spiritCannonPhase2FinalDamage = 40.0f;
+
+	float m_spiritCannonRecoveryDuration = 1.0f;
+
 	// Health Drops
 	PrefabRef m_healthPickupPrefab;
 	int m_healthDropQuantity = 3;
@@ -138,6 +154,19 @@ public:
 			SERIALIZED_FLOAT(m_risenSpiresDamage, "Spire Damage", 0.0f,	9999.0f, 1.0f),
 			SERIALIZED_FLOAT(m_risenSpiresPhase2SecondPassDelay, "Phase 2 Second Pass Delay", 0.0f, 10.0f, 0.1f),
 			SERIALIZED_FLOAT(m_risenSpiresRecoveryDuration, "Recovery Duration", 0.0f, 10.0f, 0.1f)
+		),
+
+		FIELD_GROUP_COLLAPSE("Spirit Cannon",
+			SERIALIZED_FLOAT(m_spiritCannonWindupDuration, "Windup Duration", 0.0f, 10.0f, 0.1f),
+			SERIALIZED_FLOAT(m_spiritCannonBeamLength, "Beam Length", 0.0f, 200.0f, 1.0f),
+			SERIALIZED_FLOAT(m_spiritCannonBeamWidth, "Beam Width", 0.0f, 20.0f, 0.1f),
+			SERIALIZED_FLOAT(m_spiritCannonDamage, "Beam Damage", 0.0f, 100.0f, 1.0f),
+			SERIALIZED_FLOAT(m_spiritCannonPhase1ShotInterval, "Phase 1 Shot Interval", 0.0f, 10.0f, 0.05f),
+			SERIALIZED_FLOAT(m_spiritCannonPhase2ShotInterval, "Phase 2 Shot Interval", 0.0f, 10.0f, 0.05f),
+			SERIALIZED_FLOAT(m_spiritCannonPhase2FinalShotDelay, "Phase 2 Final Shot Delay", 0.0f, 10.0f, 0.05f),
+			SERIALIZED_FLOAT(m_spiritCannonPhase2FinalBeamWidth, "Phase 2 Final Beam Width", 0.0f, 20.0f, 0.1f),
+			SERIALIZED_FLOAT(m_spiritCannonPhase2FinalDamage, "Phase 2 Final Beam Damage", 0.0f, 200.0f, 1.0f),
+			SERIALIZED_FLOAT(m_spiritCannonRecoveryDuration, "Recovery Duration", 0.0f, 10.0f, 0.1f)
 		),
 
 		FIELD_GROUP_COLLAPSE("Health Drops",
