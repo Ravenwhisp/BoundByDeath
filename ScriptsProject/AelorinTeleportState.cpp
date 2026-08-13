@@ -11,6 +11,12 @@ AelorinTeleportState::AelorinTeleportState(GameObject* owner)
 void AelorinTeleportState::OnStateEnter()
 {
 	Transform* parentTransform = TransformAPI::getParent(getOwner()->GetTransform());
+	if (!parentTransform)
+	{
+		Debug::error("[AelorinTeleportState] Aelorin transform not found.");
+		return;
+	}
+
 	GameObject* parentGameObject = ComponentAPI::getOwner(parentTransform);
 
 	m_controller = GameObjectAPI::findScript<AelorinBossController>(parentGameObject);

@@ -22,6 +22,34 @@ void AelorinAttackExecutor::Start()
     }
 }
 
+bool AelorinAttackExecutor::isValidDamageTarget(Transform* targetTransform) const
+{
+    if (!targetTransform)
+    {
+        return false;
+    }
+
+    GameObject* targetObject = ComponentAPI::getOwner(targetTransform);
+    if (!targetObject)
+    {
+        return false;
+    }
+
+    Damageable* damageable = GameObjectAPI::findScript<Damageable>(targetObject);
+    if (!damageable)
+    {
+        return false;
+    }
+
+    PlayerState* playerState = GameObjectAPI::findScript<PlayerState>(targetObject);
+    if (playerState && playerState->isDowned())
+    {
+        return false;
+    }
+
+    return true;
+}
+
 void AelorinAttackExecutor::applyDamageInRadius(const Vector3& center, float radius, float damage, const char* sourceName)
 {
     if (!m_detectionAggro)
@@ -125,28 +153,13 @@ bool AelorinAttackExecutor::tryDamageTargetInBeam(Transform* targetTransform, co
 
 bool AelorinAttackExecutor::applyDamageToTarget(Transform* targetTransform, float damage, const char* sourceName)
 {
-    if (!targetTransform)
+    if (!isValidDamageTarget(targetTransform))
     {
         return false;
     }
 
     GameObject* targetObject = ComponentAPI::getOwner(targetTransform);
-    if (!targetObject)
-    {
-        return false;
-    }
-
     Damageable* damageable = GameObjectAPI::findScript<Damageable>(targetObject);
-    if (!damageable)
-    {
-        return false;
-    }
-
-    PlayerState* playerState = GameObjectAPI::findScript<PlayerState>(targetObject);
-    if (playerState && playerState->isDowned())
-    {
-        return false;
-    }
 
     damageable->takeDamage(damage);
 

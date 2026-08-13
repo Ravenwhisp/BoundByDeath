@@ -13,6 +13,8 @@ public:
 
     void Start() override;
 
+    bool isValidDamageTarget(Transform* targetTransform) const;
+
     // Radius Damage
     void applyDamageInRadius(const Vector3& center, float radius, float damage, const char* sourceName);
     bool tryDamageTargetInRadius(Transform* targetTransform, const Vector3& center, float radius, float damage, const char* sourceName);

@@ -11,6 +11,12 @@ AelorinIdleState::AelorinIdleState(GameObject* owner)
 void AelorinIdleState::OnStateEnter()
 {
 	Transform* parentTransform = TransformAPI::getParent(getOwner()->GetTransform());
+	if (!parentTransform)
+	{
+		Debug::error("[AelorinIdleState] Aelorin transform not found.");
+		return;
+	}
+
 	GameObject* parentGameObject = ComponentAPI::getOwner(parentTransform);
 
 	m_controller = GameObjectAPI::findScript<AelorinBossController>(parentGameObject);

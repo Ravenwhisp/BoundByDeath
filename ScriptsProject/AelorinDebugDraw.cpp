@@ -19,6 +19,10 @@ IMPLEMENT_SCRIPT_FIELDS(AelorinDebugDraw,
 		SERIALIZED_BOOL(m_drawRisenSpiresPatternB, "Draw Pattern B")
 	),
 
+	FIELD_GROUP_COLLAPSE("Spirit Cannon",
+		SERIALIZED_BOOL(m_drawSpiritCannon, "Draw Spirit Cannon")
+	),
+
 	SERIALIZED_BOOL(m_debugEnabled, "Debug Enabled"),
 	SERIALIZED_FLOAT(m_heightOffset, "Height Offset", 0.0f, 5.0f, 0.05f)
 )
@@ -134,6 +138,17 @@ void AelorinDebugDraw::drawGizmo()
 			}
 		}
 	}
+
+	if (m_drawSpiritCannon && m_controller->hasSpiritCannonDebugLine())
+	{
+		drawBeam(
+			m_controller->getSpiritCannonDebugOrigin(),
+			m_controller->getSpiritCannonDebugDirection(),
+			config->m_spiritCannonBeamLength,
+			m_controller->getSpiritCannonDebugWidth(),
+			yellow
+		);
+	}
 }
 
 void AelorinDebugDraw::drawImpactCircle(const Vector3& position, float radius, const Vector3& color) const
@@ -152,6 +167,39 @@ void AelorinDebugDraw::drawImpactCircle(const Vector3& position, float radius, c
 	);
 
 	DebugDrawAPI::drawPoint(debugPosition, color, 8.0f, 0,true);
+}
+
+void AelorinDebugDraw::drawBeam(const Vector3& origin, const Vector3& direction, float length, float width, const Vector3& color)
+{
+	Vector3 forward = direction;
+	forward.y = 0.0f;
+
+	if (forward.LengthSquared() <= 0.00001f)
+	{
+		return;
+	}
+
+	forward.Normalize();
+
+	// Perpendicular horizontal direction
+	Vector3 right(forward.z, 0.0f, -forward.x);
+	right.Normalize();
+
+	const float halfWidth = width * 0.5f;
+	const Vector3 startLeft = origin - right * halfWidth;
+	const Vector3 startRight = origin + right * halfWidth;
+	const Vector3 endCenter = origin + forward * length;
+	const Vector3 endLeft = endCenter - right * halfWidth;
+	const Vector3 endRight = endCenter + right * halfWidth;
+
+	// Rectangle borders
+	DebugDrawAPI::drawLine(startLeft, endLeft, color, 0, true);
+	DebugDrawAPI::drawLine(startRight, endRight, color, 0, true);
+	DebugDrawAPI::drawLine(startLeft, startRight, color, 0, true);
+	DebugDrawAPI::drawLine(endLeft, endRight, color, 0, true);
+
+	// Center firing line
+	DebugDrawAPI::drawArrow(origin, endCenter, color, 0.25f, 0, true);
 }
 
 IMPLEMENT_SCRIPT(AelorinDebugDraw)

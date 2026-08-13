@@ -12,6 +12,12 @@ AelorinSeekerSigilsState::AelorinSeekerSigilsState(GameObject* owner)
 void AelorinSeekerSigilsState::OnStateEnter()
 {
 	Transform* parentTransform = TransformAPI::getParent(getOwner()->GetTransform());
+	if (!parentTransform)
+	{
+		Debug::error("[AelorinSeekerSigilsState] Aelorin transform not found.");
+		return;
+	}
+
 	GameObject* parentGameObject = ComponentAPI::getOwner(parentTransform);
 
 	// get scripts

@@ -11,6 +11,12 @@ AelorinThresholdStaggerState::AelorinThresholdStaggerState(GameObject* owner)
 void AelorinThresholdStaggerState::OnStateEnter()
 {
 	Transform* parentTransform = TransformAPI::getParent(getOwner()->GetTransform());
+	if (!parentTransform)
+	{
+		Debug::error("[AelorinThresholdStaggerState] Aelorin transform not found.");
+		return;
+	}
+
 	GameObject* parentGameObject = ComponentAPI::getOwner(parentTransform);
 
 	m_controller = GameObjectAPI::findScript<AelorinBossController>(parentGameObject);

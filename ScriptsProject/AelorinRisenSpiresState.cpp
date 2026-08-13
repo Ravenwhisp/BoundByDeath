@@ -12,6 +12,12 @@ AelorinRisenSpiresState::AelorinRisenSpiresState(GameObject* owner)
 void AelorinRisenSpiresState::OnStateEnter()
 {
 	Transform* parentTransform = TransformAPI::getParent(getOwner()->GetTransform());
+	if (!parentTransform)
+	{
+		Debug::error("[AelorinRisenSpiresState] Aelorin transform not found.");
+		return;
+	}
+
 	GameObject* parentGameObject = ComponentAPI::getOwner(parentTransform);
 
 	// get scripts

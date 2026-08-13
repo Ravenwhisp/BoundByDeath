@@ -11,6 +11,12 @@ AelorinPhaseTransitionState::AelorinPhaseTransitionState(GameObject* owner)
 void AelorinPhaseTransitionState::OnStateEnter()
 {
 	Transform* parentTransform = TransformAPI::getParent(getOwner()->GetTransform());
+	if (!parentTransform)
+	{
+		Debug::error("[AelorinPhaseTransitionState] Aelorin transform not found.");
+		return;
+	}
+
 	GameObject* parentGameObject = ComponentAPI::getOwner(parentTransform);
 
 	m_controller = GameObjectAPI::findScript<AelorinBossController>(parentGameObject);

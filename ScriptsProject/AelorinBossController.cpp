@@ -108,6 +108,26 @@ void AelorinBossController::Update()
 	updateEncounter();
 }
 
+Transform* AelorinBossController::getLyrielTransform() const
+{
+	if (!m_aelorinDetectionAggro)
+	{
+		return nullptr;
+	}
+
+	return m_aelorinDetectionAggro->getLyrielTransform();
+}
+
+Transform* AelorinBossController::getDeathTransform() const
+{
+	if (!m_aelorinDetectionAggro)
+	{
+		return nullptr;
+	}
+
+	return m_aelorinDetectionAggro->getDeathTransform();
+}
+
 Vector3 AelorinBossController::getLyrielPosition() const
 {
 	if (!m_aelorinDetectionAggro)
@@ -411,6 +431,22 @@ float AelorinBossController::getThresholdStaggerDuration() const
 	return config->m_thresholdStaggerDuration;
 }
 
+void AelorinBossController::setSpiritCannonDebugLine(const Vector3& origin, const Vector3& direction, float width)
+{
+	m_spiritCannonDebugOrigin = origin;
+	m_spiritCannonDebugDirection = direction;
+	m_spiritCannonDebugWidth = width;
+	m_hasSpiritCannonDebugLine = true;
+}
+
+void AelorinBossController::clearSpiritCannonDebugLine()
+{
+	m_spiritCannonDebugOrigin = Vector3::Zero;
+	m_spiritCannonDebugDirection = Vector3::Zero;
+	m_spiritCannonDebugWidth = 0.0f;
+	m_hasSpiritCannonDebugLine = false;
+}
+
 void AelorinBossController::spawnHealthDrops()
 {
 	const AelorinAttackConfig* config = m_attackConfig.get();
@@ -464,9 +500,9 @@ std::vector<AelorinAbility> AelorinBossController::buildAbilityPool() const
 {
 	std::vector<AelorinAbility> pool
 	{
-		AelorinAbility::SeekerSigils,
-		AelorinAbility::RisenSpires
-		//AelorinAbility::SpiritCannon
+		//AelorinAbility::SeekerSigils,
+		//AelorinAbility::RisenSpires,
+		AelorinAbility::SpiritCannon
 	};
 
 	if (canUseNova())

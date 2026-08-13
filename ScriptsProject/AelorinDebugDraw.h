@@ -31,6 +31,9 @@ public:
 	bool m_drawRisenSpiresPatternA = true;
 	bool m_drawRisenSpiresPatternB = true;
 
+	// Spirit Cannon
+	bool m_drawSpiritCannon = true;
+
 	float m_heightOffset = 0.15f;
 
 private:
@@ -39,4 +42,5 @@ private:
 
 private:
 	void drawImpactCircle(const Vector3& position, float radius, const Vector3& color) const;
+	void drawBeam(const Vector3& origin, const Vector3& direction, float length, float width, const Vector3& color);
 };

@@ -41,6 +41,9 @@ public:
 
 	FieldList getExposedFields() const override;
 
+	Transform* getLyrielTransform() const;
+	Transform* getDeathTransform() const;
+
 	Vector3 getLyrielPosition() const;
 	Vector3 getDeathPosition() const;
 	float getClosestPlayerDistance() const;
@@ -98,6 +101,15 @@ public:
 	Transform* getRisenSpiresPatternARoot() const { return m_risenSpiresPatternARoot.getReferencedComponent(); }
 	Transform* getRisenSpiresPatternBRoot() const { return m_risenSpiresPatternBRoot.getReferencedComponent(); }
 
+	// Spirit Cannon Debug Draw helpers
+	void setSpiritCannonDebugLine(const Vector3& origin, const Vector3& direction, float width);
+	void clearSpiritCannonDebugLine();
+
+	bool hasSpiritCannonDebugLine() const { return m_hasSpiritCannonDebugLine; }
+	const Vector3& getSpiritCannonDebugOrigin() const { return m_spiritCannonDebugOrigin; }
+	const Vector3& getSpiritCannonDebugDirection() const { return m_spiritCannonDebugDirection; }
+	float getSpiritCannonDebugWidth() const { return m_spiritCannonDebugWidth; }
+
 	// Health drop
 	void spawnHealthDrops();
 
@@ -144,6 +156,12 @@ private:
 	// Teleport TODO
 	std::vector<Vector3> m_teleportPositions;
 	size_t m_currentPositionIndex = 0;
+
+	// Debug Draw
+	bool m_hasSpiritCannonDebugLine = false;
+	Vector3 m_spiritCannonDebugOrigin = Vector3::Zero;
+	Vector3 m_spiritCannonDebugDirection = Vector3::Zero;
+	float m_spiritCannonDebugWidth = 0.0f;
 
 private:
 	// Abilities

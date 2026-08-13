@@ -12,6 +12,12 @@ AelorinNovaState::AelorinNovaState(GameObject* owner)
 void AelorinNovaState::OnStateEnter()
 {
 	Transform* parentTransform = TransformAPI::getParent(getOwner()->GetTransform());
+	if (!parentTransform)
+	{
+		Debug::error("[AelorinNovaState] Aelorin transform not found.");
+		return;
+	}
+
 	GameObject* parentGameObject = ComponentAPI::getOwner(parentTransform);
 
 	// get scripts
