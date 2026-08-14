@@ -110,6 +110,9 @@ public:
 	const Vector3& getSpiritCannonDebugDirection() const { return m_spiritCannonDebugDirection; }
 	float getSpiritCannonDebugWidth() const { return m_spiritCannonDebugWidth; }
 
+	// Grasp of the Dead
+	Transform* getGraspCenter() const { return m_graspCenter.getReferencedComponent(); }
+
 	// Health drop
 	void spawnHealthDrops();
 
@@ -152,6 +155,9 @@ private:
 	// Risen Spires Ability
 	ComponentRef<Transform> m_risenSpiresPatternARoot;
 	ComponentRef<Transform> m_risenSpiresPatternBRoot;
+
+	// Grasp of the Dead Ability
+	ComponentRef<Transform> m_graspCenter;
 
 	// Teleport TODO
 	std::vector<Vector3> m_teleportPositions;

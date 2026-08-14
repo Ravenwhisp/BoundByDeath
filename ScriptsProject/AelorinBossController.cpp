@@ -18,7 +18,8 @@ IMPLEMENT_SCRIPT_FIELDS_INHERITED(AelorinBossController, EnemyBaseController,
 	SERIALIZED_COMPONENT_REF(m_seekerSigilsProjectilePool, "Seeker Sigils Projectile Pool", ComponentType::TRANSFORM),
 	SERIALIZED_COMPONENT_REF(m_seekerSigilsLargeProjectilePool, "Seeker Sigils Large Projectile Pool", ComponentType::TRANSFORM),
 	SERIALIZED_COMPONENT_REF(m_risenSpiresPatternARoot, "Risen Spires Pattern A Root", ComponentType::TRANSFORM),
-	SERIALIZED_COMPONENT_REF(m_risenSpiresPatternBRoot, "Risen Spires Pattern B Root", ComponentType::TRANSFORM)
+	SERIALIZED_COMPONENT_REF(m_risenSpiresPatternBRoot, "Risen Spires Pattern B Root", ComponentType::TRANSFORM),
+	SERIALIZED_COMPONENT_REF(m_graspCenter, "Grasp Center", ComponentType::TRANSFORM)
 )
 
 AelorinBossController::AelorinBossController(GameObject* owner) : EnemyBaseController(owner)
@@ -500,8 +501,8 @@ std::vector<AelorinAbility> AelorinBossController::buildAbilityPool() const
 {
 	std::vector<AelorinAbility> pool
 	{
-		//AelorinAbility::SeekerSigils,
-		//AelorinAbility::RisenSpires,
+		AelorinAbility::SeekerSigils,
+		AelorinAbility::RisenSpires,
 		AelorinAbility::SpiritCannon
 	};
 

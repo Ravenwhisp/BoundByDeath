@@ -88,6 +88,10 @@ public:
 
 	float m_spiritCannonRecoveryDuration = 1.0f;
 
+	// Grasp of the Dead
+	float m_graspPullDuration = 2.0f;
+	float m_graspPullStrength = 6.0f;
+
 	// Health Drops
 	PrefabRef m_healthPickupPrefab;
 	int m_healthDropQuantity = 3;
@@ -167,6 +171,11 @@ public:
 			SERIALIZED_FLOAT(m_spiritCannonPhase2FinalBeamWidth, "Phase 2 Final Beam Width", 0.0f, 20.0f, 0.1f),
 			SERIALIZED_FLOAT(m_spiritCannonPhase2FinalDamage, "Phase 2 Final Beam Damage", 0.0f, 200.0f, 1.0f),
 			SERIALIZED_FLOAT(m_spiritCannonRecoveryDuration, "Recovery Duration", 0.0f, 10.0f, 0.1f)
+		),
+
+		FIELD_GROUP_COLLAPSE("Grasp of the Dead",
+			SERIALIZED_FLOAT(m_graspPullDuration, "Pull Duration", 0.0f, 10.0f, 0.1f),
+			SERIALIZED_FLOAT(m_graspPullStrength, "Pull Strength", 0.0f, 30.0f, 0.1f)
 		),
 
 		FIELD_GROUP_COLLAPSE("Health Drops",
