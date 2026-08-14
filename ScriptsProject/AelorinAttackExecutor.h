@@ -13,6 +13,7 @@ public:
 
     void Start() override;
 
+    bool isValidPlayerTarget(Transform* targetTransform) const;
     bool isValidDamageTarget(Transform* targetTransform) const;
 
     // Radius Damage

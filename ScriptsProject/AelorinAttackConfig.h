@@ -90,7 +90,7 @@ public:
 
 	// Grasp of the Dead
 	float m_graspPullDuration = 2.0f;
-	float m_graspPullStrength = 6.0f;
+	float m_graspPullStrength = 3.0f;
 
 	// Health Drops
 	PrefabRef m_healthPickupPrefab;

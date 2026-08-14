@@ -22,7 +22,7 @@ void AelorinAttackExecutor::Start()
     }
 }
 
-bool AelorinAttackExecutor::isValidDamageTarget(Transform* targetTransform) const
+bool AelorinAttackExecutor::isValidPlayerTarget(Transform* targetTransform) const
 {
     if (!targetTransform)
     {
@@ -35,14 +35,30 @@ bool AelorinAttackExecutor::isValidDamageTarget(Transform* targetTransform) cons
         return false;
     }
 
-    Damageable* damageable = GameObjectAPI::findScript<Damageable>(targetObject);
-    if (!damageable)
+    PlayerState* playerState = GameObjectAPI::findScript<PlayerState>(targetObject);
+    if (playerState && playerState->isDowned())
     {
         return false;
     }
 
-    PlayerState* playerState = GameObjectAPI::findScript<PlayerState>(targetObject);
-    if (playerState && playerState->isDowned())
+    return true;
+}
+
+bool AelorinAttackExecutor::isValidDamageTarget(Transform* targetTransform) const
+{
+    if (!isValidPlayerTarget(targetTransform))
+    {
+        return false;
+    }
+
+    GameObject* targetObject = ComponentAPI::getOwner(targetTransform);
+    if (!targetObject)
+    {
+        return false;
+    }
+
+    Damageable* damageable = GameObjectAPI::findScript<Damageable>(targetObject);
+    if (!damageable)
     {
         return false;
     }

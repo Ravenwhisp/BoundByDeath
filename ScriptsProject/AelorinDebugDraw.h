@@ -34,6 +34,10 @@ public:
 	// Spirit Cannon
 	bool m_drawSpiritCannon = true;
 
+	// Grasp of the Dead
+	bool m_drawGraspCenter = true;
+	bool m_drawGraspNova = true;
+
 	float m_heightOffset = 0.15f;
 
 private:

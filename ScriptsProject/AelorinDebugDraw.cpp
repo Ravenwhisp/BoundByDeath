@@ -23,6 +23,11 @@ IMPLEMENT_SCRIPT_FIELDS(AelorinDebugDraw,
 		SERIALIZED_BOOL(m_drawSpiritCannon, "Draw Spirit Cannon")
 	),
 
+	FIELD_GROUP_COLLAPSE("Grasp of the Dead",
+		SERIALIZED_BOOL(m_drawGraspCenter, "Draw Grasp Center"),
+		SERIALIZED_BOOL(m_drawGraspNova, "Draw Grasp Nova")
+	),
+
 	SERIALIZED_BOOL(m_debugEnabled, "Debug Enabled"),
 	SERIALIZED_FLOAT(m_heightOffset, "Height Offset", 0.0f, 5.0f, 0.05f)
 )
@@ -148,6 +153,45 @@ void AelorinDebugDraw::drawGizmo()
 			m_controller->getSpiritCannonDebugWidth(),
 			yellow
 		);
+	}
+
+	if (m_drawGraspCenter)
+	{
+		Transform* graspCenter = m_controller->getGraspCenter();
+		if (graspCenter)
+		{
+			Vector3 centerPosition = TransformAPI::getGlobalPosition(graspCenter);
+			centerPosition.y += m_heightOffset;
+
+			DebugDrawAPI::drawCross(
+				centerPosition,
+				0.5f,
+				0,
+				true
+			);
+		}
+	}
+
+	if (m_drawGraspNova)
+	{
+		Transform* graspCenter = m_controller->getGraspCenter();
+		if (graspCenter)
+		{
+			Vector3 centerPosition = TransformAPI::getGlobalPosition(graspCenter);
+			centerPosition.y += m_heightOffset;
+
+			drawImpactCircle(
+				centerPosition,
+				config->m_novaRadius,
+				cyan
+			);
+
+			drawImpactCircle(
+				centerPosition,
+				config->m_novaPhase2SecondRadius,
+				orange
+			);
+		}
 	}
 }
 

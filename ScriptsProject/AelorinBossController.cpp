@@ -448,6 +448,21 @@ void AelorinBossController::clearSpiritCannonDebugLine()
 	m_hasSpiritCannonDebugLine = false;
 }
 
+void AelorinBossController::prepareForcedNovaAt(const Vector3& center)
+{
+	m_novaCenterOverride = center;
+	m_hasNovaCenterOverride = true;
+	m_requestedAbility = AelorinAbility::Nova;
+}
+
+Vector3 AelorinBossController::consumeNovaCenterOverride()
+{
+	const Vector3 center = m_novaCenterOverride;
+	m_novaCenterOverride = Vector3::Zero;
+	m_hasNovaCenterOverride = false;
+	return center;
+}
+
 void AelorinBossController::spawnHealthDrops()
 {
 	const AelorinAttackConfig* config = m_attackConfig.get();
@@ -501,9 +516,10 @@ std::vector<AelorinAbility> AelorinBossController::buildAbilityPool() const
 {
 	std::vector<AelorinAbility> pool
 	{
-		AelorinAbility::SeekerSigils,
-		AelorinAbility::RisenSpires,
-		AelorinAbility::SpiritCannon
+		//AelorinAbility::SeekerSigils,
+		//AelorinAbility::RisenSpires,
+		//AelorinAbility::SpiritCannon
+		AelorinAbility::GraspOfTheDead
 	};
 
 	if (canUseNova())

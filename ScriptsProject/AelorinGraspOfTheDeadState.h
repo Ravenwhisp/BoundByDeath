@@ -6,34 +6,35 @@
 #include "AelorinBossController.h"
 
 class AnimationComponent;
+class AelorinAttackExecutor;
+class PlayerMovement;
 
-class AelorinNovaState : public StateMachineScript
+class AelorinGraspOfTheDeadState : public StateMachineScript
 {
-	DECLARE_SCRIPT(AelorinNovaState)
+	DECLARE_SCRIPT(AelorinGraspOfTheDeadState)
 
 public:
-	explicit AelorinNovaState(GameObject* owner);
+	explicit AelorinGraspOfTheDeadState(GameObject* owner);
 
 	void OnStateEnter() override;
 	void OnStateUpdate() override;
 	void OnStateExit() override;
 
 private:
-	void executeFirstNovaWave();
-	void executeSecondNovaWave();
-	void executeNovaWave(float radius, float damage);
-	void finishAbility();
+	void pullPlayer(Transform* playerTransform, PlayerMovement* playerMovement);
+
+	void chainIntoNova();
 
 private:
 	AelorinBossController* m_controller = nullptr;
+	AelorinAttackExecutor* m_attackExecutor = nullptr;
 	AnimationComponent* m_animation = nullptr;
+
+	PlayerMovement* m_lyrielMovement = nullptr;
+	PlayerMovement* m_deathMovement = nullptr;
 
 	AelorinAbility m_activeAbility = AelorinAbility::None;
 
 	float m_stateTimer = 0.0f;
-
-	Vector3 m_novaCenter = Vector3::Zero;
-	bool m_firstWaveApplied = false;
-	bool m_secondWaveApplied = false;
 	bool m_completed = false;
 };

@@ -51,6 +51,15 @@ void AelorinNovaState::OnStateEnter()
 		return;
 	}
 
+	if (m_controller->hasNovaCenterOverride())
+	{
+		m_novaCenter = m_controller->consumeNovaCenterOverride();
+	}
+	else
+	{
+		m_novaCenter = TransformAPI::getGlobalPosition(parentTransform);
+	}
+
 	Debug::log("[AelorinNovaState] ENTER");
 }
 
@@ -97,6 +106,7 @@ void AelorinNovaState::OnStateUpdate()
 void AelorinNovaState::OnStateExit()
 {
 	m_stateTimer = 0.0f;
+	m_novaCenter = Vector3::Zero;
 	m_firstWaveApplied = false;
 	m_secondWaveApplied = false;
 	m_completed = false;
@@ -149,15 +159,7 @@ void AelorinNovaState::executeNovaWave(float radius, float damage)
 		return;
 	}
 
-	Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
-	if (!ownerTransform)
-	{
-		return;
-	}
-
-	const Vector3 center = TransformAPI::getGlobalPosition(ownerTransform);
-
-	executor->applyDamageInRadius(center, radius, damage, "Aelorin Nova");
+	executor->applyDamageInRadius(m_novaCenter, radius, damage, "Aelorin Nova");
 }
 
 void AelorinNovaState::finishAbility()

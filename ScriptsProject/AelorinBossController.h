@@ -113,6 +113,11 @@ public:
 	// Grasp of the Dead
 	Transform* getGraspCenter() const { return m_graspCenter.getReferencedComponent(); }
 
+	// Nova helpers
+	void prepareForcedNovaAt(const Vector3& center);
+	bool hasNovaCenterOverride() const { return m_hasNovaCenterOverride; }
+	Vector3 consumeNovaCenterOverride();
+
 	// Health drop
 	void spawnHealthDrops();
 
@@ -158,6 +163,10 @@ private:
 
 	// Grasp of the Dead Ability
 	ComponentRef<Transform> m_graspCenter;
+
+	// Nova ability
+	bool m_hasNovaCenterOverride = false;
+	Vector3 m_novaCenterOverride = Vector3::Zero;
 
 	// Teleport TODO
 	std::vector<Vector3> m_teleportPositions;
