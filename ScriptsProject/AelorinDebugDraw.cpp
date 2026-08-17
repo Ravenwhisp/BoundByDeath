@@ -28,6 +28,10 @@ IMPLEMENT_SCRIPT_FIELDS(AelorinDebugDraw,
 		SERIALIZED_BOOL(m_drawGraspNova, "Draw Grasp Nova")
 	),
 
+	FIELD_GROUP_COLLAPSE("Teleport",
+		SERIALIZED_BOOL(m_drawTeleport, "Draw Teleport")
+	),
+
 	SERIALIZED_BOOL(m_debugEnabled, "Debug Enabled"),
 	SERIALIZED_FLOAT(m_heightOffset, "Height Offset", 0.0f, 5.0f, 0.05f)
 )
@@ -191,6 +195,28 @@ void AelorinDebugDraw::drawGizmo()
 				config->m_novaPhase2SecondRadius,
 				orange
 			);
+		}
+	}
+
+	if (m_drawTeleport)
+	{
+		Transform* anchorsRoot = m_controller->getTeleportAnchorsRoot();
+		if (anchorsRoot)
+		{
+			const int childCount = TransformAPI::getChildCount(anchorsRoot);
+
+			for (int i = 0; i < childCount; ++i)
+			{
+				Transform* anchor = TransformAPI::getChild(anchorsRoot, i);
+				if (!anchor)
+				{
+					continue;
+				}
+
+				const Vector3 anchorPosition = TransformAPI::getGlobalPosition(anchor);
+
+				drawImpactCircle(anchorPosition, config->m_teleportTriggerDistance, yellow);
+			}
 		}
 	}
 }

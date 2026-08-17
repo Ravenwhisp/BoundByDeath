@@ -92,6 +92,17 @@ public:
 	float m_graspPullDuration = 2.0f;
 	float m_graspPullStrength = 3.0f;
 
+	// Teleport
+	float m_teleportCastDuration = 3.0f;
+	float m_teleportCooldownDuration = 20.0f;
+
+	float m_teleportTriggerDistance = 4.0f;
+
+	float m_teleportPhase2BurstRadius = 3.0f;
+	float m_teleportPhase2BurstDamage = 20.0f;
+
+	float m_teleportRecoveryDuration = 0.75f;
+
 	// Health Drops
 	PrefabRef m_healthPickupPrefab;
 	int m_healthDropQuantity = 3;
@@ -176,6 +187,15 @@ public:
 		FIELD_GROUP_COLLAPSE("Grasp of the Dead",
 			SERIALIZED_FLOAT(m_graspPullDuration, "Pull Duration", 0.0f, 10.0f, 0.1f),
 			SERIALIZED_FLOAT(m_graspPullStrength, "Pull Strength", 0.0f, 30.0f, 0.1f)
+		),
+
+		FIELD_GROUP_COLLAPSE("Teleport",
+			SERIALIZED_FLOAT(m_teleportCastDuration, "Cast Duration", 0.0f, 10.0f, 0.1f),
+			SERIALIZED_FLOAT(m_teleportCooldownDuration, "Cooldown Duration", 0.0f, 60.0f, 0.5f),
+			SERIALIZED_FLOAT(m_teleportTriggerDistance, "Trigger Distance", 0.0f, 20.0f, 0.1f),
+			SERIALIZED_FLOAT(m_teleportPhase2BurstRadius, "Phase 2 Burst Radius", 0.0f, 20.0f, 0.1f),
+			SERIALIZED_FLOAT(m_teleportPhase2BurstDamage, "Phase 2 Burst Damage", 0.0f, 9999.0f, 1.0f),
+			SERIALIZED_FLOAT(m_teleportRecoveryDuration, "Recovery Duration", 0.0f, 5.0f, 0.05f)
 		),
 
 		FIELD_GROUP_COLLAPSE("Health Drops",

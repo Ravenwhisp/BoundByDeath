@@ -10,6 +10,7 @@
 #include "ProjectilePool.h"
 #include "SeekerSigilProjectile.h"
 
+#include <vector>
 #include <algorithm>
 #include <cstdlib>
 
@@ -19,7 +20,8 @@ IMPLEMENT_SCRIPT_FIELDS_INHERITED(AelorinBossController, EnemyBaseController,
 	SERIALIZED_COMPONENT_REF(m_seekerSigilsLargeProjectilePool, "Seeker Sigils Large Projectile Pool", ComponentType::TRANSFORM),
 	SERIALIZED_COMPONENT_REF(m_risenSpiresPatternARoot, "Risen Spires Pattern A Root", ComponentType::TRANSFORM),
 	SERIALIZED_COMPONENT_REF(m_risenSpiresPatternBRoot, "Risen Spires Pattern B Root", ComponentType::TRANSFORM),
-	SERIALIZED_COMPONENT_REF(m_graspCenter, "Grasp Center", ComponentType::TRANSFORM)
+	SERIALIZED_COMPONENT_REF(m_graspCenter, "Grasp Center", ComponentType::TRANSFORM),
+	SERIALIZED_COMPONENT_REF(m_teleportAnchorsRoot, "Teleport Anchors Root", ComponentType::TRANSFORM)
 )
 
 AelorinBossController::AelorinBossController(GameObject* owner) : EnemyBaseController(owner)
@@ -107,6 +109,7 @@ void AelorinBossController::Start()
 void AelorinBossController::Update()
 {
 	updateEncounter();
+	updateTeleportCooldown();
 }
 
 Transform* AelorinBossController::getLyrielTransform() const
@@ -463,6 +466,130 @@ Vector3 AelorinBossController::consumeNovaCenterOverride()
 	return center;
 }
 
+void AelorinBossController::startTeleportCooldown()
+{
+	const AelorinAttackConfig* config = getAelorinAttackConfig();
+	if (!config)
+	{
+		return;
+	}
+
+	m_teleportCooldownRemaining = config->m_teleportCooldownDuration;
+}
+
+void AelorinBossController::updateTeleportCooldown()
+{
+	if (m_teleportCooldownRemaining <= 0.0f)
+	{
+		return;
+	}
+
+	m_teleportCooldownRemaining -= Time::getDeltaTime();
+	if (m_teleportCooldownRemaining < 0.0f)
+	{
+		m_teleportCooldownRemaining = 0.0f;
+	}
+}
+
+Transform* AelorinBossController::getTeleportCrowdingPlayer() const
+{
+	if (!m_aelorinDetectionAggro)
+	{
+		return nullptr;
+	}
+
+	const AelorinAttackConfig* config = getAelorinAttackConfig();
+	if (!config)
+	{
+		return nullptr;
+	}
+
+	Transform* lyriel = m_aelorinDetectionAggro->getLyrielTransform();
+	Transform* death = m_aelorinDetectionAggro->getDeathTransform();
+
+	const float triggerDistance = config->m_teleportTriggerDistance;
+	const float lyrielDistance = m_aelorinDetectionAggro->getDistanceToLyriel();
+	const float deathDistance = m_aelorinDetectionAggro->getDistanceToDeath();
+
+	const bool lyrielCrowding = lyriel && lyrielDistance <= triggerDistance;
+	const bool deathCrowding = death && deathDistance <= triggerDistance;
+
+	if (lyrielCrowding && !deathCrowding)
+	{
+		return lyriel;
+	}
+
+	if (!lyrielCrowding && deathCrowding)
+	{
+		return death;
+	}
+
+	if (lyrielCrowding && deathCrowding)
+	{
+		return lyrielDistance <= deathDistance ? lyriel : death;
+	}
+
+	return nullptr;
+}
+
+Transform* AelorinBossController::chooseTeleportAnchor(Transform* crowdingPlayer) const
+{
+	if (!crowdingPlayer)
+	{
+		return nullptr;
+	}
+
+	Transform* anchorsRoot = getTeleportAnchorsRoot();
+	if (!anchorsRoot)
+	{
+		return nullptr;
+	}
+
+	const AelorinAttackConfig* config = getAelorinAttackConfig();
+	if (!config)
+	{
+		return nullptr;
+	}
+
+	const Vector3 playerPosition = TransformAPI::getGlobalPosition(crowdingPlayer);
+	const float clearDistance = config->m_teleportTriggerDistance;
+	const float clearDistanceSquared = clearDistance * clearDistance;
+
+	std::vector<Transform*> suitableAnchors;
+
+	const int childCount = TransformAPI::getChildCount(anchorsRoot);
+
+	for (int i = 0; i < childCount; ++i)
+	{
+		Transform* anchor = TransformAPI::getChild(anchorsRoot, i);
+		if (!anchor)
+		{
+			continue;
+		}
+
+		const Vector3 anchorPosition = TransformAPI::getGlobalPosition(anchor);
+		Vector3 difference = anchorPosition - playerPosition;
+		difference.y = 0.0f;
+
+		if (difference.LengthSquared() < clearDistanceSquared)
+		{
+			continue;
+		}
+
+		suitableAnchors.push_back(anchor);
+	}
+
+	if (suitableAnchors.empty())
+	{
+		Debug::warn("[AelorinBossController] No teleport anchor clears the crowding player");
+		return nullptr;
+	}
+
+	const int randomIndex = std::rand() % static_cast<int>(suitableAnchors.size());
+
+	return suitableAnchors[randomIndex];
+}
+
 void AelorinBossController::spawnHealthDrops()
 {
 	const AelorinAttackConfig* config = m_attackConfig.get();
@@ -519,13 +646,13 @@ std::vector<AelorinAbility> AelorinBossController::buildAbilityPool() const
 		//AelorinAbility::SeekerSigils,
 		//AelorinAbility::RisenSpires,
 		//AelorinAbility::SpiritCannon
-		AelorinAbility::GraspOfTheDead
+		//AelorinAbility::GraspOfTheDead
 	};
 
-	if (canUseNova())
-	{
-		pool.push_back(AelorinAbility::Nova);
-	}
+	//if (canUseNova())
+	//{
+	//	pool.push_back(AelorinAbility::Nova);
+	//}
 
 	//if (canSummon())
 	//{
@@ -569,7 +696,12 @@ bool AelorinBossController::canSummon() const
 
 bool AelorinBossController::canTeleport() const
 {
-	return false;
+	if (!isTeleportReady())
+	{
+		return false;
+	}
+
+	return getTeleportCrowdingPlayer() != nullptr;
 }
 
 AelorinAbility AelorinBossController::chooseRandomAbility(const std::vector<AelorinAbility>& pool) const

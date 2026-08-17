@@ -118,6 +118,15 @@ public:
 	bool hasNovaCenterOverride() const { return m_hasNovaCenterOverride; }
 	Vector3 consumeNovaCenterOverride();
 
+	// Teleport helpers
+	Transform* getTeleportAnchorsRoot() const { return m_teleportAnchorsRoot.getReferencedComponent(); }
+	Transform* getTeleportCrowdingPlayer() const;
+	Transform* chooseTeleportAnchor(Transform* crowdingPlayer) const;
+	bool isTeleportReady() const { return m_teleportCooldownRemaining <= 0.0f; }
+	void startTeleportCooldown();
+	void updateTeleportCooldown();
+	float getTeleportCooldownRemaining() const { return m_teleportCooldownRemaining; }
+
 	// Health drop
 	void spawnHealthDrops();
 
@@ -168,9 +177,9 @@ private:
 	bool m_hasNovaCenterOverride = false;
 	Vector3 m_novaCenterOverride = Vector3::Zero;
 
-	// Teleport TODO
-	std::vector<Vector3> m_teleportPositions;
-	size_t m_currentPositionIndex = 0;
+	// Teleport
+	ComponentRef<Transform> m_teleportAnchorsRoot;
+	float m_teleportCooldownRemaining = 0.0f;
 
 	// Debug Draw
 	bool m_hasSpiritCannonDebugLine = false;

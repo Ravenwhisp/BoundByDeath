@@ -38,6 +38,9 @@ public:
 	bool m_drawGraspCenter = true;
 	bool m_drawGraspNova = true;
 
+	// Teleport
+	bool m_drawTeleport = true;
+
 	float m_heightOffset = 0.15f;
 
 private:
