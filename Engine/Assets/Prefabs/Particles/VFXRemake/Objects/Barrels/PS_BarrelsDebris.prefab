@@ -1,0 +1,152 @@
+{
+    "Version": 2,
+    "sourcePath": "Assets\\Prefabs\\Particles\\VFXRemake\\Objects\\Barrels\\PS_BarrelsDebris.prefab",
+    "Name": "PS_BarrelsDebris",
+    "Active": true,
+    "Static": false,
+    "Layer": "DEFAULT",
+    "Tag": "DEFAULT",
+    "Transform": {
+        "Position": [
+            0.0,
+            0.05517445504665375,
+            1.315461606310464e-8
+        ],
+        "Rotation": [
+            1.0,
+            0.0,
+            0.0,
+            -1.1920930376163597e-7
+        ],
+        "Scale": [
+            1.0,
+            1.0,
+            1.0
+        ]
+    },
+    "Components": [
+        {
+            "UID": 1631647075926859090,
+            "ComponentType": "PARTICLE_SYSTEM",
+            "Active": true,
+            "TextureAssetId": {
+                "uid": 9969452270045752990,
+                "libId": "8a5a9c04e949ee9e26f2b3ae83cf3980",
+                "type": "TEXTURE"
+            },
+            "ParticleEmitters": [
+                {
+                    "Modules": [
+                        {
+                            "ModuleType": 2,
+                            "Looping": false,
+                            "Duration": 2.0,
+                            "RateOverTime": 5.0,
+                            "RateOverDistance": 0.0
+                        },
+                        {
+                            "ModuleType": 4,
+                            "LifeTimeType": "CONSTANT",
+                            "StartLifeTime": 1.0
+                        },
+                        {
+                            "ModuleType": 1,
+                            "ShapeType": "CONE",
+                            "Radius": 0.10000000149011612,
+                            "RadiusThickness": 1.0,
+                            "RadiusScale": 40.0
+                        },
+                        {
+                            "ModuleType": 3,
+                            "ColorOverTime": [
+                                {
+                                    "IsAlphaMark": false,
+                                    "Position": 0.7689774036407471,
+                                    "Color": [
+                                        0.43529412150382996,
+                                        0.3686274588108063,
+                                        0.32549020648002625
+                                    ]
+                                },
+                                {
+                                    "IsAlphaMark": true,
+                                    "Position": 0.8958285450935364,
+                                    "Alpha": 1.0
+                                },
+                                {
+                                    "IsAlphaMark": false,
+                                    "Position": 0.9900990724563599,
+                                    "Color": [
+                                        0.49803921580314636,
+                                        0.3333333432674408,
+                                        0.2235294133424759
+                                    ]
+                                },
+                                {
+                                    "IsAlphaMark": true,
+                                    "Position": 0.9901639223098755,
+                                    "Alpha": 0.0
+                                }
+                            ],
+                            "ColorCurve": [
+                                0.0,
+                                0.0,
+                                1.0,
+                                1.0
+                            ]
+                        },
+                        {
+                            "ModuleType": 5,
+                            "VelocityType": "CURVE",
+                            "InitialVelocity": 0.10000000149011612,
+                            "InitialVelocity2": 0.0,
+                            "VelocityCurve": [
+                                0.0,
+                                0.0,
+                                0.1640625,
+                                1.0390625
+                            ]
+                        },
+                        {
+                            "ModuleType": 6,
+                            "StartScaleType": "RANDOM_BETWEEN_TWO",
+                            "StartScale": [
+                                0.05000000074505806,
+                                0.05000000074505806,
+                                0.0
+                            ],
+                            "StartScale2": [
+                                0.10000000149011612,
+                                0.10000000149011612,
+                                0.0
+                            ],
+                            "ChangeSizeOverTime": false
+                        },
+                        {
+                            "ModuleType": 7,
+                            "RotationType": "CONSTANT",
+                            "StartRotation": 0.0,
+                            "VelocityType": "CONSTANT",
+                            "AngularVelocity": 0.0,
+                            "FlipRotation": 0.0
+                        },
+                        {
+                            "ModuleType": 8,
+                            "TileRows": 1,
+                            "TileColumns": 1,
+                            "FPS": 0.0,
+                            "StartFrameType": "CONSTANT",
+                            "StartFrame": 0.0
+                        },
+                        {
+                            "ModuleType": 9,
+                            "RenderMode": "BILLBOARD",
+                            "RenderLayer": 0
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "Children": []
+}

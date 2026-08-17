@@ -154,14 +154,14 @@
     <Filter Include="Enemies\Movement">
       <UniqueIdentifier>{59fd20a4-f8fa-40db-81e4-287d22402309}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Enemies\Aelorin">
-      <UniqueIdentifier>{d4bbb81c-70b6-4bbe-b359-68f53637b67a}</UniqueIdentifier>
+    <Filter Include="Systems\Checkpoints">
+      <UniqueIdentifier>{0f665952-af70-44af-8a12-0776d009bf1f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Enemies\Aelorin\States">
-      <UniqueIdentifier>{b635d58b-4fde-4afd-8126-529d756c71b9}</UniqueIdentifier>
+    <Filter Include="Systems\Checkpoints\Events">
+      <UniqueIdentifier>{b70f8551-d726-4848-a743-f27a359de712}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Enemies\Aelorin\States\Combat">
-      <UniqueIdentifier>{536e39f6-7418-49b8-bc01-9da23b66f0fc}</UniqueIdentifier>
+    <Filter Include="Systems\Checkpoints\Events\Level1">
+      <UniqueIdentifier>{3e016832-71fe-45ec-a36a-8528048419f6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -172,6 +172,12 @@
     </ClInclude>
     <ClInclude Include="PlayerDamageable.h">
       <Filter>Player</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerVitalsMonitor.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="OutlineStyleSetup.h">
+      <Filter>Systems</Filter>
     </ClInclude>
     <ClInclude Include="PlayerAnimationController.h">
       <Filter>Player\Animation</Filter>
@@ -356,7 +362,7 @@
     <ClInclude Include="ArthurSound.h">
       <Filter>Enemies\Arthur</Filter>
     </ClInclude>
-    <ClInclude Include="BarrierEnemyDamageable.h">
+    <ClInclude Include="BarrierComponent.h">
       <Filter>Enemies\Variants</Filter>
     </ClInclude>
     <ClInclude Include="LinkedDeathEnemyState.h">
@@ -634,55 +640,20 @@
     <ClInclude Include="CrystalVisuals.h">
       <Filter>Interaction/Gameplay\Puzzles</Filter>
     </ClInclude>
+    <ClInclude Include="CheckpointManager.h">
+      <Filter>Systems\Checkpoints</Filter>
+    </ClInclude>
+    <ClInclude Include="Checkpoint1_Level1_Event.h">
+      <Filter>Systems\Checkpoints\Events\Level1</Filter>
+    </ClInclude>
+    <ClInclude Include="CheckpointEvent.h">
+      <Filter>Systems\Checkpoints\Events</Filter>
+    </ClInclude>
     <ClInclude Include="HapticTester.h" />
     <ClInclude Include="PlayerGamepadBinding.h" />
-    <ClInclude Include="AelorinDetectionAggro.h">
-      <Filter>Enemies\Aelorin</Filter>
-    </ClInclude>
-    <ClInclude Include="AelorinBossController.h">
-      <Filter>Enemies\Aelorin</Filter>
-    </ClInclude>
-    <ClInclude Include="AelorinIdleState.h">
-      <Filter>Enemies\Aelorin\States</Filter>
-    </ClInclude>
-    <ClInclude Include="AelorinTeleportState.h">
-      <Filter>Enemies\Aelorin\States</Filter>
-    </ClInclude>
-    <ClInclude Include="AelorinDamageable.h">
-      <Filter>Enemies\Aelorin</Filter>
-    </ClInclude>
-    <ClInclude Include="AelorinPhaseTransitionState.h">
-      <Filter>Enemies\Aelorin\States</Filter>
-    </ClInclude>
-    <ClInclude Include="AelorinThresholdStaggerState.h">
-      <Filter>Enemies\Aelorin\States</Filter>
-    </ClInclude>
-    <ClInclude Include="AelorinAttackConfig.h">
-      <Filter>Enemies\Aelorin</Filter>
-    </ClInclude>
-    <ClInclude Include="AelorinSeekerSigilsState.h">
-      <Filter>Enemies\Aelorin\States\Combat</Filter>
-    </ClInclude>
-    <ClInclude Include="AelorinNovaState.h">
-      <Filter>Enemies\Aelorin\States\Combat</Filter>
-    </ClInclude>
-    <ClInclude Include="AelorinAttackExecutor.h">
-      <Filter>Enemies\Aelorin</Filter>
-    </ClInclude>
-    <ClInclude Include="SeekerSigilProjectile.h">
-      <Filter>Enemies\Aelorin</Filter>
-    </ClInclude>
-    <ClInclude Include="AelorinRisenSpiresState.h">
-      <Filter>Enemies\Aelorin\States\Combat</Filter>
-    </ClInclude>
-    <ClInclude Include="AelorinSpiritCannonState.h">
-      <Filter>Enemies\Aelorin\States\Combat</Filter>
-    </ClInclude>
-    <ClInclude Include="AelorinGraspOfTheDeadState.h">
-      <Filter>Enemies\Aelorin\States\Combat</Filter>
-    </ClInclude>
-    <ClInclude Include="AelorinDebugDraw.h">
-      <Filter>Enemies\Aelorin</Filter>
+    <ClInclude Include="ShadowExecutionConfig.h" />
+    <ClInclude Include="PaladinUI.h">
+      <Filter>Enemies\Paladin</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -694,6 +665,12 @@
     </ClCompile>
     <ClCompile Include="PlayerDamageable.cpp">
       <Filter>Player</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerVitalsMonitor.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="OutlineStyleSetup.cpp">
+      <Filter>Systems</Filter>
     </ClCompile>
     <ClCompile Include="PlayerAnimationController.cpp">
       <Filter>Player\Animation</Filter>
@@ -884,7 +861,7 @@
     <ClCompile Include="ArthurSound.cpp">
       <Filter>Enemies\Arthur</Filter>
     </ClCompile>
-    <ClCompile Include="BarrierEnemyDamageable.cpp">
+    <ClCompile Include="BarrierComponent.cpp">
       <Filter>Enemies\Variants</Filter>
     </ClCompile>
     <ClCompile Include="LinkedDeathEnemyState.cpp">
@@ -1142,52 +1119,20 @@
     <ClCompile Include="CrystalVisuals.cpp">
       <Filter>Interaction/Gameplay\Puzzles</Filter>
     </ClCompile>
+    <ClCompile Include="CheckpointManager.cpp">
+      <Filter>Systems\Checkpoints</Filter>
+    </ClCompile>
+    <ClCompile Include="Checkpoint1_Level1_Event.cpp">
+      <Filter>Systems\Checkpoints\Events\Level1</Filter>
+    </ClCompile>
+    <ClCompile Include="CheckpointEvent.cpp">
+      <Filter>Systems\Checkpoints\Events</Filter>
+    </ClCompile>
     <ClCompile Include="HapticTester.cpp" />
     <ClCompile Include="PlayerGamepadBinding.cpp" />
-    <ClCompile Include="AelorinDetectionAggro.cpp">
-      <Filter>Enemies\Aelorin</Filter>
-    </ClCompile>
-    <ClCompile Include="AelorinBossController.cpp">
-      <Filter>Enemies\Aelorin</Filter>
-    </ClCompile>
-    <ClCompile Include="AelorinIdleState.cpp">
-      <Filter>Enemies\Aelorin\States</Filter>
-    </ClCompile>
-    <ClCompile Include="AelorinTeleportState.cpp">
-      <Filter>Enemies\Aelorin\States</Filter>
-    </ClCompile>
-    <ClCompile Include="AelorinDamageable.cpp">
-      <Filter>Enemies\Aelorin</Filter>
-    </ClCompile>
-    <ClCompile Include="AelorinPhaseTransitionState.cpp">
-      <Filter>Enemies\Aelorin\States</Filter>
-    </ClCompile>
-    <ClCompile Include="AelorinThresholdStaggerState.cpp">
-      <Filter>Enemies\Aelorin\States</Filter>
-    </ClCompile>
-    <ClCompile Include="AelorinSeekerSigilsState.cpp">
-      <Filter>Enemies\Aelorin\States\Combat</Filter>
-    </ClCompile>
-    <ClCompile Include="AelorinNovaState.cpp">
-      <Filter>Enemies\Aelorin\States\Combat</Filter>
-    </ClCompile>
-    <ClCompile Include="AelorinAttackExecutor.cpp">
-      <Filter>Enemies\Aelorin</Filter>
-    </ClCompile>
-    <ClCompile Include="SeekerSigilProjectile.cpp">
-      <Filter>Enemies\Aelorin</Filter>
-    </ClCompile>
-    <ClCompile Include="AelorinRisenSpiresState.cpp">
-      <Filter>Enemies\Aelorin\States\Combat</Filter>
-    </ClCompile>
-    <ClCompile Include="AelorinSpiritCannonState.cpp">
-      <Filter>Enemies\Aelorin\States\Combat</Filter>
-    </ClCompile>
-    <ClCompile Include="AelorinGraspOfTheDeadState.cpp">
-      <Filter>Enemies\Aelorin\States\Combat</Filter>
-    </ClCompile>
-    <ClCompile Include="AelorinDebugDraw.cpp">
-      <Filter>Enemies\Aelorin</Filter>
+    <ClCompile Include="ShadowExecutionConfig.cpp" />
+    <ClCompile Include="PaladinUI.cpp">
+      <Filter>Enemies\Paladin</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
