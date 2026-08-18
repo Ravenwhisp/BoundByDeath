@@ -127,6 +127,17 @@ public:
 	void updateTeleportCooldown();
 	float getTeleportCooldownRemaining() const { return m_teleportCooldownRemaining; }
 
+	// Summon helpers
+	Transform* getPhase1SummonFormation() const	{ return m_phase1SummonFormation.getReferencedComponent(); }
+	Transform* getPhase2SummonFormation() const	{ return m_phase2SummonFormation.getReferencedComponent(); }
+
+	int getLivingSummonCount() const;
+	int getCurrentSummonCap() const;
+
+	bool isSummonReady() const { return m_summonTimerRemaining <= 0.0f; }
+	void startSummonTimer();
+	float getSummonTimerRemaining() const { return m_summonTimerRemaining; }
+
 	// Health drop
 	void spawnHealthDrops();
 
@@ -180,6 +191,13 @@ private:
 	// Teleport
 	ComponentRef<Transform> m_teleportAnchorsRoot;
 	float m_teleportCooldownRemaining = 0.0f;
+
+	// Summon
+	ComponentRef<Transform> m_phase1SummonFormation;
+	ComponentRef<Transform> m_phase2SummonFormation;
+	float m_summonTimerRemaining = 0.0f;
+	int countLivingSummonsInFormation(Transform* formationRoot) const;
+	void updateSummonTimer();
 
 	// Debug Draw
 	bool m_hasSpiritCannonDebugLine = false;

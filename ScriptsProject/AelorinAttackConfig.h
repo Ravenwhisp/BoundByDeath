@@ -21,18 +21,6 @@ public:
 	// Thresholds
 	float m_thresholdStaggerDuration = 2.0f;
 
-	// Fury
-	int m_firstFuryCastCount = 6;
-	int m_secondFuryCastCount = 10;
-
-	// Teleport
-	float m_teleportCastTime = 3.0f;
-	float m_teleportCooldown = 20.0f;
-
-	// Summons
-	int m_phase1SummonCap = 4;
-	int m_phase2SummonCap = 5;
-
 	// Seeker Sigils
 	int m_seekerSigilsWaveCount = 3;
 	
@@ -103,6 +91,12 @@ public:
 
 	float m_teleportRecoveryDuration = 0.75f;
 
+	// Summon
+	float m_phase1SummonInterval = 12.0f;
+	float m_phase2SummonInterval = 9.0f;
+	float m_summonCastDuration = 2.0f;
+	float m_summonRecoveryDuration = 0.75f;
+
 	// Health Drops
 	PrefabRef m_healthPickupPrefab;
 	int m_healthDropQuantity = 3;
@@ -120,21 +114,6 @@ public:
 
 		FIELD_GROUP_COLLAPSE("Thresholds",
 			SERIALIZED_FLOAT(m_thresholdStaggerDuration, "Threshold Stagger Duration", 0.0f, 10.0f, 0.05f)
-		),
-
-		FIELD_GROUP_COLLAPSE("Fury",
-			SERIALIZED_INT(m_firstFuryCastCount, "First Fury Cast Count", 0, 50, 1),
-			SERIALIZED_INT(m_secondFuryCastCount, "Second Fury Cast Count", 0, 50, 1)
-		),
-
-		FIELD_GROUP_COLLAPSE("Teleport",
-			SERIALIZED_FLOAT(m_teleportCastTime, "Teleport Cast Time", 0.0f, 10.0f, 0.05f),
-			SERIALIZED_FLOAT(m_teleportCooldown, "Teleport Cooldown", 0.0f, 60.0f, 0.1f)
-		),
-
-		FIELD_GROUP_COLLAPSE("Summons",
-			SERIALIZED_INT(m_phase1SummonCap, "Phase 1 Summon Cap", 0, 10, 1),
-			SERIALIZED_INT(m_phase2SummonCap, "Phase 2 Summon Cap", 0, 10, 1)
 		),
 
 		FIELD_GROUP_COLLAPSE("Seeker Sigils",
@@ -196,6 +175,13 @@ public:
 			SERIALIZED_FLOAT(m_teleportPhase2BurstRadius, "Phase 2 Burst Radius", 0.0f, 20.0f, 0.1f),
 			SERIALIZED_FLOAT(m_teleportPhase2BurstDamage, "Phase 2 Burst Damage", 0.0f, 9999.0f, 1.0f),
 			SERIALIZED_FLOAT(m_teleportRecoveryDuration, "Recovery Duration", 0.0f, 5.0f, 0.05f)
+		),
+
+		FIELD_GROUP_COLLAPSE("Summons",
+			SERIALIZED_FLOAT(m_phase1SummonInterval, "Phase 1 Summon Interval", 0.0f, 60.0f, 0.5f),
+			SERIALIZED_FLOAT(m_phase2SummonInterval, "Phase 2 Summon Interval", 0.0f, 60.0f, 0.5f),
+			SERIALIZED_FLOAT(m_summonCastDuration, "Summon Cast Duration", 0.0f, 10.0f,	0.05f),
+			SERIALIZED_FLOAT(m_summonRecoveryDuration, "Summon Recovery Duration", 0.0f, 5.0f, 0.05f)
 		),
 
 		FIELD_GROUP_COLLAPSE("Health Drops",

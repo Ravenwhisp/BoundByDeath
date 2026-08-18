@@ -10,6 +10,8 @@
 #include "ProjectilePool.h"
 #include "SeekerSigilProjectile.h"
 
+#include "AelorinSummonSlot.h"
+
 #include <vector>
 #include <algorithm>
 #include <cstdlib>
@@ -21,7 +23,9 @@ IMPLEMENT_SCRIPT_FIELDS_INHERITED(AelorinBossController, EnemyBaseController,
 	SERIALIZED_COMPONENT_REF(m_risenSpiresPatternARoot, "Risen Spires Pattern A Root", ComponentType::TRANSFORM),
 	SERIALIZED_COMPONENT_REF(m_risenSpiresPatternBRoot, "Risen Spires Pattern B Root", ComponentType::TRANSFORM),
 	SERIALIZED_COMPONENT_REF(m_graspCenter, "Grasp Center", ComponentType::TRANSFORM),
-	SERIALIZED_COMPONENT_REF(m_teleportAnchorsRoot, "Teleport Anchors Root", ComponentType::TRANSFORM)
+	SERIALIZED_COMPONENT_REF(m_teleportAnchorsRoot, "Teleport Anchors Root", ComponentType::TRANSFORM),
+	SERIALIZED_COMPONENT_REF(m_phase1SummonFormation, "Phase 1 Summon Formation", ComponentType::TRANSFORM),
+	SERIALIZED_COMPONENT_REF(m_phase2SummonFormation, "Phase 2 Summon Formation", ComponentType::TRANSFORM)
 )
 
 AelorinBossController::AelorinBossController(GameObject* owner) : EnemyBaseController(owner)
@@ -110,6 +114,7 @@ void AelorinBossController::Update()
 {
 	updateEncounter();
 	updateTeleportCooldown();
+	updateSummonTimer();
 }
 
 Transform* AelorinBossController::getLyrielTransform() const
@@ -491,6 +496,36 @@ void AelorinBossController::updateTeleportCooldown()
 	}
 }
 
+int AelorinBossController::getLivingSummonCount() const
+{
+	const int phase1Living = countLivingSummonsInFormation(getPhase1SummonFormation());
+	const int phase2Living = countLivingSummonsInFormation(getPhase2SummonFormation());
+
+	return phase1Living + phase2Living;
+}
+
+int AelorinBossController::getCurrentSummonCap() const
+{
+	Transform* formationRoot = isPhase2() ? getPhase2SummonFormation() : getPhase1SummonFormation();
+	if (!formationRoot)
+	{
+		return 0;
+	}
+
+	return TransformAPI::getChildCount(formationRoot);
+}
+
+void AelorinBossController::startSummonTimer()
+{
+	const AelorinAttackConfig* config =	getAelorinAttackConfig();
+	if (!config)
+	{
+		return;
+	}
+
+	m_summonTimerRemaining = isPhase2()	? config->m_phase2SummonInterval : config->m_phase1SummonInterval;
+}
+
 Transform* AelorinBossController::getTeleportCrowdingPlayer() const
 {
 	if (!m_aelorinDetectionAggro)
@@ -639,6 +674,61 @@ bool AelorinBossController::isTargetDowned(Transform* target) const
 }
 // -----------------------------
 
+int AelorinBossController::countLivingSummonsInFormation(Transform* formationRoot) const
+{
+	if (!formationRoot)
+	{
+		return 0;
+	}
+
+	int livingCount = 0;
+
+	const int slotCount = TransformAPI::getChildCount(formationRoot);
+
+	for (int i = 0; i < slotCount; ++i)
+	{
+		Transform* slotTransform = TransformAPI::getChild(formationRoot, i);
+		if (!slotTransform)
+		{
+			continue;
+		}
+
+		GameObject* slotObject = ComponentAPI::getOwner(slotTransform);
+		if (!slotObject)
+		{
+			continue;
+		}
+
+		AelorinSummonSlot* slot = GameObjectAPI::findScript<AelorinSummonSlot>(slotObject);
+		if (!slot)
+		{
+			continue;
+		}
+
+		if (slot->hasLivingEnemy())
+		{
+			++livingCount;
+		}
+	}
+
+	return livingCount;
+}
+
+void AelorinBossController::updateSummonTimer()
+{
+	if (m_summonTimerRemaining <= 0.0f)
+	{
+		return;
+	}
+
+	m_summonTimerRemaining -= Time::getDeltaTime();
+
+	if (m_summonTimerRemaining < 0.0f)
+	{
+		m_summonTimerRemaining = 0.0f;
+	}
+}
+
 std::vector<AelorinAbility> AelorinBossController::buildAbilityPool() const
 {
 	std::vector<AelorinAbility> pool
@@ -654,10 +744,10 @@ std::vector<AelorinAbility> AelorinBossController::buildAbilityPool() const
 	//	pool.push_back(AelorinAbility::Nova);
 	//}
 
-	//if (canSummon())
-	//{
-	//	pool.push_back(AelorinAbility::Summon);
-	//}
+	if (canSummon())
+	{
+		pool.push_back(AelorinAbility::Summon);
+	}
 
 	//if (isPhase2())
 	//{
@@ -691,7 +781,12 @@ bool AelorinBossController::canUseNova() const
 
 bool AelorinBossController::canSummon() const
 {
-	return false;
+	if (!isSummonReady())
+	{
+		return false;
+	}
+
+	return getLivingSummonCount() < getCurrentSummonCap();
 }
 
 bool AelorinBossController::canTeleport() const
