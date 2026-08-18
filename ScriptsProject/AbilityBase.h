@@ -86,6 +86,7 @@ protected:
 
     bool  m_attackWindowActive = false;
     bool  m_hitFired = false;
+    bool  m_sawOurClip = false;
     float m_attackWindowElapsed = 0.0f;
 
     std::string m_curAnimState = "";

@@ -178,6 +178,8 @@ void AbilityBase::updateAttackWindow(float dt)
 
         if (onOurClip)
         {
+            m_sawOurClip = true;
+
             const float duration = AnimationAPI::getPlaybackDuration(m_animComp);
             const float progress = (duration > 0.0001f)
                 ? (AnimationAPI::getPlaybackTime(m_animComp) / duration)
@@ -194,6 +196,19 @@ void AbilityBase::updateAttackWindow(float dt)
                 finishAttackWindow();
                 return;
             }
+        }
+        else if (m_sawOurClip)
+        {
+            // Our clip was playing and got replaced (interrupted, or it ended and the
+            // controller moved on) -> end the window instead of hanging on the safety cap.
+            finishAttackWindow();
+            return;
+        }
+        else if (m_attackStateTimer <= 0.0f)
+        {
+            // Clip tracking never engaged within the lock duration -> don't soft-lock.
+            finishAttackWindow();
+            return;
         }
 
         constexpr float k_animSafetyCap = 8.0f;
@@ -280,6 +295,7 @@ void AbilityBase::beginAttackWindow(float lockDuration)
     m_attackStateTimer = lockDuration;
     m_attackWindowActive = true;
     m_hitFired = false;
+    m_sawOurClip = false;
     m_attackWindowElapsed = 0.0f;
 }
 

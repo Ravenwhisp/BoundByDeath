@@ -28,7 +28,8 @@ IMPLEMENT_SCRIPT_FIELDS(CharacterAnimations,
         SERIALIZED_FLOAT(m_chargedSpeed, "Charged Speed", 0.0f, 5.0f, 0.01f),
         SERIALIZED_FLOAT(m_chargedBlendIn, "Charged Blend In", 0.0f, 2.0f, 0.01f),
         SERIALIZED_FLOAT(m_chargedActionPct, "Charged Action %", 0.0f, 1.0f, 0.01f),
-        SERIALIZED_FLOAT(m_chargedRecoverPct, "Charged Recover %", 0.0f, 1.0f, 0.01f)
+        SERIALIZED_FLOAT(m_chargedRecoverPct, "Charged Recover %", 0.0f, 1.0f, 0.01f),
+        SERIALIZED_FLOAT(m_chargedHoldPct, "Charged Hold %", 0.0f, 1.0f, 0.01f)
     ),
     FIELD_GROUP_COLLAPSE("Special Ability",
         SERIALIZED_STRING(m_specialState, "Special State"),
@@ -55,8 +56,9 @@ AttackAnimInfo CharacterAnimations::resolve(AttackAnimId id, int variant) const
     case AttackAnimId::Basic:
         if (!m_basicStates.empty())
         {
-            const int lastIndex = static_cast<int>(m_basicStates.size()) - 1;
-            const int index = variant < 0 ? 0 : (variant > lastIndex ? lastIndex : variant);
+            // Cycle through the combo clips (1-2-1-2...) instead of clamping on the last.
+            const int size = static_cast<int>(m_basicStates.size());
+            const int index = ((variant % size) + size) % size;
             info.stateName = m_basicStates[index];
         }
         info.speed = m_basicSpeed;
@@ -72,6 +74,7 @@ AttackAnimInfo CharacterAnimations::resolve(AttackAnimId id, int variant) const
         info.blendIn = m_chargedBlendIn;
         info.actionPct = m_chargedActionPct;
         info.recoverPct = m_chargedRecoverPct;
+        info.holdPct = m_chargedHoldPct;
         break;
 
     case AttackAnimId::Special:

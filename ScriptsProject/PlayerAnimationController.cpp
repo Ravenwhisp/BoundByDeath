@@ -22,6 +22,7 @@ IMPLEMENT_SCRIPT_FIELDS(PlayerAnimationController,
     SERIALIZED_STRING(m_deathStateName, "Death state name"),
     SERIALIZED_FLOAT(m_defaultBlendTime, "Default blend time", 0.0f, 2.0f, 0.01f),
     SERIALIZED_FLOAT(m_attackBlendTime, "Attack blend time", 0.0f, 2.0f, 0.01f),
+    SERIALIZED_FLOAT(m_dashBlendTime, "Dash blend time", 0.0f, 2.0f, 0.01f),
     SERIALIZED_FLOAT(m_damagedBlendTime, "Damaged blend time", 0.0f, 2.0f, 0.01f),
     SERIALIZED_FLOAT(m_downedBlendTime, "Downed blend time", 0.0f, 2.0f, 0.01f),
     SERIALIZED_FLOAT(m_deathBlendTime, "Death blend time", 0.0f, 2.0f, 0.01f)
@@ -47,6 +48,8 @@ void PlayerAnimationController::Update()
     const float dt = Time::getDeltaTime();
     if (m_damagedHoldTimer > 0.0f) m_damagedHoldTimer -= dt;
     if (m_recoveryHoldTimer > 0.0f) m_recoveryHoldTimer -= dt;
+    if (m_chargeReleaseTimer > 0.0f) m_chargeReleaseTimer -= dt;
+    if (m_dashHoldTimer > 0.0f) m_dashHoldTimer -= dt;
 
     const bool freshDamage = m_damagedRequested && !m_isDead && !m_isDowned;
     if (freshDamage)
@@ -72,35 +75,59 @@ void PlayerAnimationController::Update()
         desiredState = AnimState::Damaged;
         blendTime = m_damagedBlendTime;
     }
+    else if (m_chargeHoldActive || m_chargeReleaseTimer > 0.0f)
+    {
+        desiredState = AnimState::ChargeHold;
+        blendTime = m_chargeHoldBlend;
+    }
     else if (m_attackRequested || m_hasAttackOverride)
     {
         desiredState = AnimState::Attack;
         blendTime = m_attackBlendTime;
+    }
+    else if (m_isDashing || m_dashHoldTimer > 0.0f)
+    {
+        desiredState = AnimState::Dash;
+        blendTime = m_dashBlendTime;
+    }
+    else if (m_isMoving)
+    {
+        desiredState = AnimState::Move;
     }
     else if (m_recoveryHoldTimer > 0.0f)
     {
         desiredState = AnimState::Recovery;
         blendTime = m_recoveryBlend;
     }
-    else if (m_isDashing)
-    {
-        desiredState = AnimState::Dash;
-    }
-    else if (m_isMoving)
-    {
-        desiredState = AnimState::Move;
-    }
     else
     {
         desiredState = AnimState::Idle;
     }
 
-    const bool forceReplay = freshDamage && desiredState == AnimState::Damaged;
+    const bool forceReplay = (freshDamage && desiredState == AnimState::Damaged)
+                          || (m_dashJustStarted && desiredState == AnimState::Dash);
     if (desiredState != m_currentState || forceReplay)
     {
+        if (m_chargeHoldPaused && desiredState != AnimState::ChargeHold)
+        {
+            AnimationAPI::play(m_animationComponent);
+            m_chargeHoldPaused = false;
+        }
+
         if (playAnimState(desiredState, blendTime))
         {
             m_currentState = desiredState;
+
+            if (desiredState == AnimState::Dash)
+            {
+                const float target = m_dashMoveDuration > 0.01f ? m_dashMoveDuration : 0.4f;
+                const float dur = AnimationAPI::getPlaybackDuration(m_animationComponent);
+                if (dur > 0.0001f)
+                {
+                    AnimationAPI::setSpeedMultiplier(m_animationComponent, dur / target);
+                }
+                m_dashHoldTimer = target;
+            }
 
             if (desiredState == AnimState::Damaged)
             {
@@ -115,8 +142,24 @@ void PlayerAnimationController::Update()
         }
     }
 
+    // While charging, scrub the windup to the charge progress (playback frozen, driven manually)
+    if (m_currentState == AnimState::ChargeHold && m_chargeHoldActive)
+    {
+        if (!m_chargeHoldPaused)
+        {
+            AnimationAPI::pause(m_animationComponent);
+            m_chargeHoldPaused = true;
+        }
+        const float dur = AnimationAPI::getPlaybackDuration(m_animationComponent);
+        if (dur > 0.0001f)
+        {
+            AnimationAPI::setPlaybackTime(m_animationComponent, m_chargeProgress * m_chargeHoldPausePct * dur);
+        }
+    }
+
     m_attackRequested = false;
     m_damagedRequested = false;
+    m_dashJustStarted = false;
 }
 
 void PlayerAnimationController::setMoving(bool moving)
@@ -124,8 +167,16 @@ void PlayerAnimationController::setMoving(bool moving)
     m_isMoving = moving;
 }
 
-void PlayerAnimationController::setDashing(bool dashing)
+void PlayerAnimationController::setDashing(bool dashing, float dashDurationSeconds)
 {
+    if (dashing && !m_isDashing)
+    {
+        m_dashJustStarted = true;
+    }
+    if (dashing && dashDurationSeconds > 0.01f)
+    {
+        m_dashMoveDuration = dashDurationSeconds;
+    }
     m_isDashing = dashing;
 }
 
@@ -181,8 +232,49 @@ void PlayerAnimationController::playRecovery(const std::string& stateName, float
     {
         m_currentState = AnimState::Recovery;
         const float dur = AnimationAPI::getPlaybackDuration(m_animationComponent);
-        m_recoveryHoldTimer = dur > 0.0f ? dur : 0.3f;
+        const float spd = speed > 0.01f ? speed : 1.0f;
+        m_recoveryHoldTimer = dur > 0.0f ? (dur / spd) : 0.3f;
     }
+}
+
+void PlayerAnimationController::beginChargeHold(const std::string& stateName, float blendTime, float speed, float pausePct)
+{
+    m_chargeHoldState = trimmed(stateName);
+    m_chargeHoldBlend = blendTime;
+    m_chargeHoldSpeed = speed;
+    m_chargeHoldPausePct = pausePct;
+    m_chargeHoldActive = true;
+    m_chargeHoldPaused = false;
+    m_chargeProgress = 0.0f;
+    m_hasAttackOverride = false;
+}
+
+void PlayerAnimationController::setChargeProgress(float progress01)
+{
+    m_chargeProgress = progress01 < 0.0f ? 0.0f : (progress01 > 1.0f ? 1.0f : progress01);
+}
+
+void PlayerAnimationController::endChargeHold()
+{
+    m_chargeHoldActive = false;
+
+    if (!m_animationComponent)
+    {
+        return;
+    }
+
+    if (m_chargeHoldPaused)
+    {
+        AnimationAPI::play(m_animationComponent);
+        m_chargeHoldPaused = false;
+    }
+
+    // Resume from the held frame and keep the release playing to the end (no replay)
+    const float dur = AnimationAPI::getPlaybackDuration(m_animationComponent);
+    const float cur = AnimationAPI::getPlaybackTime(m_animationComponent);
+    const float spd = m_chargeHoldSpeed > 0.01f ? m_chargeHoldSpeed : 1.0f;
+    const float remaining = dur > 0.0001f ? ((dur - cur) / spd) : 0.5f;
+    m_chargeReleaseTimer = remaining > 0.0f ? remaining : 0.5f;
 }
 
 const std::string& PlayerAnimationController::pickDamagedState()
@@ -217,6 +309,7 @@ bool PlayerAnimationController::playAnimState(AnimState state, float blendTime)
     case AnimState::Move:    stateName = m_moveStateName; break;
     case AnimState::Dash:    stateName = m_dashStateName; break;
     case AnimState::Attack:  stateName = m_attackStateName; break;
+    case AnimState::ChargeHold: stateName = m_chargeHoldState; break;
     case AnimState::Damaged: stateName = m_currentDamagedState; break;
     case AnimState::Recovery: stateName = m_recoveryState; break;
     case AnimState::Downed: stateName = m_downedStateName; break;
@@ -234,6 +327,10 @@ bool PlayerAnimationController::playAnimState(AnimState state, float blendTime)
     else if (state == AnimState::Recovery)
     {
         speed = m_recoverySpeed;
+    }
+    else if (state == AnimState::ChargeHold)
+    {
+        speed = m_chargeHoldSpeed;
     }
 
     stateName = trimmed(stateName);

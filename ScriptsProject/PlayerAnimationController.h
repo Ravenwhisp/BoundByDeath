@@ -13,6 +13,7 @@ enum class AnimState
     Move,
     Dash,
     Attack,
+    ChargeHold,
     Damaged,
     Recovery,
     Downed,
@@ -32,7 +33,7 @@ public:
     FieldList getExposedFields() const override;
 
     void setMoving(bool moving);
-    void setDashing(bool dashing);
+    void setDashing(bool dashing, float dashDurationSeconds = 0.0f);
     void setDowned(bool downed);
     void setDead(bool dead);
 
@@ -43,6 +44,10 @@ public:
     void clearAttackOverride();
 
     void playRecovery(const std::string& stateName, float blendTime, float speed);
+
+    void beginChargeHold(const std::string& stateName, float blendTime, float speed, float pausePct);
+    void setChargeProgress(float progress01);
+    void endChargeHold();
 
 private:
     AnimationComponent* findAnimationComponent();
@@ -60,6 +65,7 @@ public:
 
     float m_defaultBlendTime = 0.25f;
     float m_attackBlendTime = 0.15f;
+    float m_dashBlendTime = 0.06f;
     float m_damagedBlendTime = 0.10f;
     float m_downedBlendTime = 0.10f;
     float m_deathBlendTime = 0.10f;
@@ -90,4 +96,17 @@ private:
     float m_recoveryBlend = 0.15f;
     float m_recoverySpeed = 1.0f;
     float m_recoveryHoldTimer = 0.0f;
+
+    bool m_chargeHoldActive = false;
+    bool m_chargeHoldPaused = false;
+    std::string m_chargeHoldState = "";
+    float m_chargeHoldBlend = 0.15f;
+    float m_chargeHoldSpeed = 1.0f;
+    float m_chargeHoldPausePct = 0.5f;
+    float m_chargeProgress = 0.0f;
+    float m_chargeReleaseTimer = 0.0f;
+
+    float m_dashMoveDuration = 0.4f;
+    float m_dashHoldTimer = 0.0f;
+    bool  m_dashJustStarted = false;
 };

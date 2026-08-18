@@ -21,6 +21,7 @@ struct AttackAnimInfo
     float actionPct = 0.30f;
     float recoverPct = 0.90f;
     std::string recoveryState;
+    float holdPct = 0.5f;
 };
 
 class CharacterAnimations : public Script
@@ -46,6 +47,7 @@ public:
     float m_chargedBlendIn = 0.15f;
     float m_chargedActionPct = 0.50f;
     float m_chargedRecoverPct = 0.90f;
+    float m_chargedHoldPct = 0.5f;
 
     std::string m_specialState = "";
     float m_specialSpeed = 1.0f;
