@@ -178,10 +178,15 @@
     <ClInclude Include="CameraTransitionStep.h" />
     <ClInclude Include="CameraTransitionStepAction.h" />
     <ClInclude Include="ChargedAttackBase.h" />
-    <ClInclude Include="CombatAreaEvent.h" />
+    <ClInclude Include="Checkpoint1_Level1_Event.h" />
+    <ClInclude Include="CheckpointEvent.h" />
     <ClInclude Include="CrystalVisuals.h" />
+    <ClInclude Include="PersistingManager.h" />
+    <ClInclude Include="PersistingCheckpointState.h" />
+    <ClInclude Include="CombatAreaEvent.h" />
     <ClInclude Include="DeathParticles.h" />
     <ClInclude Include="EnemyAttackState.h" />
+    <ClInclude Include="PaladinUI.h" />
     <ClInclude Include="PlayerAttackType.h" />
     <ClInclude Include="EnemyBaseAttackConfig.h" />
     <ClInclude Include="CharacterUI.h" />
@@ -224,7 +229,6 @@
     <ClInclude Include="EnergyBallProjectile.h" />
     <ClInclude Include="GameplayEventAction.h" />
     <ClInclude Include="GameplayEventTrigger.h" />
-    <ClInclude Include="HapticTester.h" />
     <ClInclude Include="HUDFader.h" />
     <ClInclude Include="LinkedDeathController.h" />
     <ClInclude Include="LocalMultiplayerSetup.h" />
@@ -246,7 +250,6 @@
     <ClInclude Include="EnemyShadowMark.h" />
     <ClInclude Include="HealthDropSpawner.h" />
     <ClInclude Include="HeartbeatHaptic.h" />
-    <ClInclude Include="PlayerGamepadBinding.h" />
     <ClInclude Include="LightZoneManager.h" />
     <ClInclude Include="LightZoneTrigger.h" />
     <ClInclude Include="LyrielTargetIndicatorUI.h" />
@@ -267,6 +270,7 @@
     <ClInclude Include="PersistingPowerupState.h" />
     <ClInclude Include="PlayAnimationAction.h" />
     <ClInclude Include="PlayerController.h" />
+    <ClInclude Include="PlayerGamepadBinding.h" />
     <ClInclude Include="PopUpController.h" />
     <ClInclude Include="PopUpEvent.h" />
     <ClInclude Include="ObjectiveTypes.h" />
@@ -349,8 +353,13 @@
     <ClCompile Include="CameraTransitionStep.cpp" />
     <ClCompile Include="CameraTransitionStepAction.cpp" />
     <ClCompile Include="ChargedAttackBase.cpp" />
-    <ClCompile Include="CombatAreaEvent.cpp" />
+    <ClCompile Include="Checkpoint1_Level1_Event.cpp" />
+    <ClCompile Include="CheckpointEvent.cpp" />
     <ClCompile Include="CrystalVisuals.cpp" />
+    <ClCompile Include="GameplayEventAction.cpp" />
+    <ClCompile Include="PersistingManager.cpp" />
+    <ClCompile Include="PersistingCheckpointState.cpp" />
+    <ClCompile Include="CombatAreaEvent.cpp" />
     <ClCompile Include="DeathParticles.cpp" />
     <ClCompile Include="EnemyAttackState.cpp" />
     <ClCompile Include="EnemyBaseAttackConfig.cpp" />
@@ -393,7 +402,6 @@
     <ClCompile Include="EnemyStunParticles.cpp" />
     <ClCompile Include="EnergyBallProjectile.cpp" />
     <ClCompile Include="GameplayEventTrigger.cpp" />
-    <ClCompile Include="HapticTester.cpp" />
     <ClCompile Include="HUDFader.cpp" />
     <ClCompile Include="LinkedDeathController.cpp" />
     <ClCompile Include="LocalMultiplayerSetup.cpp" />
@@ -416,7 +424,7 @@
     <ClCompile Include="EnemyShadowMark.cpp" />
     <ClCompile Include="HealthDropSpawner.cpp" />
     <ClCompile Include="HeartbeatHaptic.cpp" />
-    <ClCompile Include="PlayerGamepadBinding.cpp" />
+    <ClCompile Include="PaladinUI.cpp" />
     <ClCompile Include="LightZoneManager.cpp" />
     <ClCompile Include="LightZoneTrigger.cpp" />
     <ClCompile Include="LyrielTargetIndicatorUI.cpp" />
@@ -436,6 +444,7 @@
     <ClCompile Include="PersistingPowerupState.cpp" />
     <ClCompile Include="PlayAnimationAction.cpp" />
     <ClCompile Include="PlayerController.cpp" />
+    <ClCompile Include="PlayerGamepadBinding.cpp" />
     <ClCompile Include="PopUpController.cpp" />
     <ClCompile Include="PopUpEvent.cpp" />
     <ClCompile Include="PowerupCollectible.cpp" />
