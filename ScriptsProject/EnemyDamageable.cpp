@@ -177,6 +177,22 @@ void EnemyDamageable::playShadowExecutionHitPreview()
 	Transform2DAPI::setAlpha(m_shadowExecutionPreviewTransform, m_shadowExecutionPreviewLethal ? m_shadowExecutionPreviewLethalAlpha : m_shadowExecutionPreviewNonLethalAlpha);
 }
 
+void EnemyDamageable::startDissolve()
+{
+	if (!m_dissolve)
+	{
+		return;
+	}
+
+	m_dissolveTimer = 0.0f;
+	m_dissolveActive = true;
+}
+
+bool EnemyDamageable::isDissolveFinished() const
+{
+	return !m_dissolve || m_dissolveTimer >= m_dissolveDuration;
+}
+
 void EnemyDamageable::kill()
 {
 	auto* barrier = GameObjectAPI::findScript<BarrierComponent>(m_owner);
@@ -227,8 +243,6 @@ void EnemyDamageable::onDeath()
 	Damageable::onDeath();
 
 	setShadowExecutionThresholdMarkerVisible(false);
-
-	m_dissolveActive = true;
 
 	if (m_shadowMark)
 	{

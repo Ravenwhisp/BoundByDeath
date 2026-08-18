@@ -38,6 +38,9 @@ public:
 
 	void playShadowExecutionHitPreview();
 
+	void startDissolve();
+	bool isDissolveFinished() const;
+
 protected:
 	void onDamaged(float amount) override;
 	void onDeath() override;

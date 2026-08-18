@@ -3,9 +3,10 @@
 #include "HealthPickup.h"
 #include "HealthDropSpawner.h"
 #include "EnemySound.h"
+#include "EnemyDamageable.h"
 
 IMPLEMENT_SCRIPT_FIELDS(EnemyDeathState,
-	SERIALIZED_FLOAT(m_destroyDelay, "Destroy Delay", 0.0f, 30.0f, 0.1f),
+	SERIALIZED_FLOAT(m_dissolveDelay, "Dissolve Delay", 0.0f, 30.0f, 0.1f),
 	SERIALIZED_BOOL(m_shouldDropHealth, "Should Drop Health"),
 	SERIALIZED_ASSET_REF(m_healthPrefab, "Health Prefab", AssetType::PREFAB),
 	SERIALIZED_INT(m_healthDropQuantity, "Health Drop Quantity"),
@@ -23,6 +24,9 @@ void EnemyDeathState::OnStateEnter()
 {
 	Debug::log("[EnemyDeathState] ENTER");
 
+	m_enemyDamageable = GameObjectAPI::findScript<EnemyDamageable>(getOwner());
+	m_dissolveStarted = false;
+
 	EnemySound* enemySound = GameObjectAPI::findScript<EnemySound>(getOwner());
 	if (enemySound)
 	{
@@ -37,7 +41,7 @@ void EnemyDeathState::OnStateEnter()
 		dropRewards();
 	}
 
-	startDestroyCountdown(m_destroyDelay);
+	startDestroyCountdown(m_dissolveDelay);
 }
 
 void EnemyDeathState::OnStateUpdate()
@@ -49,7 +53,29 @@ void EnemyDeathState::OnStateUpdate()
 
 	m_deathTimer -= Time::getDeltaTime();
 
-	if (m_deathTimer <= 0.0f)
+	if (!m_dissolveStarted)
+	{
+		m_deathTimer -= Time::getDeltaTime();
+
+		if (m_deathTimer <= 0.0f)
+		{
+			if (m_enemyDamageable)
+			{
+				m_enemyDamageable->startDissolve();
+				m_dissolveStarted = true;
+			}
+			else
+			{
+				m_deathFinished = true;
+				m_waitingToDestroy = false;
+				onDeathFinished();
+			}
+		}
+
+		return;
+	}
+
+	if (m_enemyDamageable->isDissolveFinished())
 	{
 		m_deathFinished = true;
 		m_waitingToDestroy = false;
@@ -127,7 +153,7 @@ void EnemyDeathState::finalizeDeathNow()
 	{
 		dropRewards();
 	}
-	startDestroyCountdown(m_destroyDelay);
+	startDestroyCountdown(m_dissolveDelay);
 }
 
 void EnemyDeathState::abortDeathForRevival()
