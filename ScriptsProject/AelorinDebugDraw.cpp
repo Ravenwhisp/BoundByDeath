@@ -3,6 +3,7 @@
 
 #include "AelorinAttackConfig.h"
 #include "AelorinBossController.h"
+#include "AelorinSummonSlot.h"
 
 IMPLEMENT_SCRIPT_FIELDS(AelorinDebugDraw,
 	FIELD_GROUP_COLLAPSE("Seeker Sigils",
@@ -30,6 +31,11 @@ IMPLEMENT_SCRIPT_FIELDS(AelorinDebugDraw,
 
 	FIELD_GROUP_COLLAPSE("Teleport",
 		SERIALIZED_BOOL(m_drawTeleport, "Draw Teleport")
+	),
+
+	FIELD_GROUP_COLLAPSE("Summon",
+		SERIALIZED_BOOL(m_drawPhase1SummonSlots, "Draw Phase 1 Summon Slots"),
+		SERIALIZED_BOOL(m_drawPhase2SummonSlots, "Draw Phase 2 Summon Slots")
 	),
 
 	SERIALIZED_BOOL(m_debugEnabled, "Debug Enabled"),
@@ -219,6 +225,16 @@ void AelorinDebugDraw::drawGizmo()
 			}
 		}
 	}
+
+	if (m_drawPhase1SummonSlots)
+	{
+		drawSummonSlots(m_controller->getPhase1SummonFormation(), cyan);
+	}
+
+	if (m_drawPhase2SummonSlots)
+	{
+		drawSummonSlots(m_controller->getPhase2SummonFormation(), orange);
+	}
 }
 
 void AelorinDebugDraw::drawImpactCircle(const Vector3& position, float radius, const Vector3& color) const
@@ -270,6 +286,46 @@ void AelorinDebugDraw::drawBeam(const Vector3& origin, const Vector3& direction,
 
 	// Center firing line
 	DebugDrawAPI::drawArrow(origin, endCenter, color, 0.25f, 0, true);
+}
+
+void AelorinDebugDraw::drawSummonSlots(Transform* formationRoot, const Vector3& freeColor) const
+{
+	if (!formationRoot)
+	{
+		return;
+	}
+
+	const int childCount =
+		TransformAPI::getChildCount(
+			formationRoot
+		);
+
+	for (int i = 0; i < childCount; ++i)
+	{
+		Transform* slotTransform = TransformAPI::getChild(formationRoot, i);
+		if (!slotTransform)
+		{
+			continue;
+		}
+
+		GameObject* slotObject = ComponentAPI::getOwner(slotTransform);
+		if (!slotObject)
+		{
+			continue;
+		}
+
+		AelorinSummonSlot* slot = GameObjectAPI::findScript<AelorinSummonSlot>(slotObject);
+		if (!slot)
+		{
+			continue;
+		}
+
+		const Vector3 position = TransformAPI::getGlobalPosition(slotTransform);
+		const bool occupied = slot->hasLivingEnemy();
+		const Vector3 color = occupied ? Vector3(1.0f, 0.0f, 0.0f) : freeColor;
+
+		drawImpactCircle(position, 0.6f, color);
+	}
 }
 
 IMPLEMENT_SCRIPT(AelorinDebugDraw)

@@ -41,6 +41,10 @@ public:
 	// Teleport
 	bool m_drawTeleport = true;
 
+	// Summon
+	bool m_drawPhase1SummonSlots = true;
+	bool m_drawPhase2SummonSlots = true;
+
 	float m_heightOffset = 0.15f;
 
 private:
@@ -50,4 +54,7 @@ private:
 private:
 	void drawImpactCircle(const Vector3& position, float radius, const Vector3& color) const;
 	void drawBeam(const Vector3& origin, const Vector3& direction, float length, float width, const Vector3& color);
+
+	// Ability draw helpers
+	void drawSummonSlots(Transform* formationRoot, const Vector3& freeColor) const;
 };
