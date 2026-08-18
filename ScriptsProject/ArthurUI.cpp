@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "ArthurUI.h"
-#include "BarrierEnemyDamageable.h"
+#include "BarrierComponent.h"
 
 IMPLEMENT_SCRIPT_FIELDS(ArthurUI,
 	FIELD_GROUP_COLLAPSE("Health Bar",
@@ -64,11 +64,11 @@ void ArthurUI::Start()
 {
 	setupHealthUI();
 
-	m_barrierDamageable = GameObjectAPI::findScript<BarrierEnemyDamageable>(getOwner());
+	m_barrierComponent = GameObjectAPI::findScript<BarrierComponent>(getOwner());
 
-	if (!m_barrierDamageable)
+	if (!m_barrierComponent)
 	{
-		Debug::warn("[ArthurUI] BarrierEnemyDamageable script is missing.");
+		Debug::warn("[ArthurUI] BarrierComponent script is missing.");
 	}
 
 	m_heavySwipeUICanvasTransform = m_heavySwipeUICanvas.getReferencedComponent();
@@ -263,7 +263,7 @@ void ArthurUI::updateHealthMarkers()
 		return;
 	}
 
-	if (!m_barrierDamageable)
+	if (!m_barrierComponent)
 	{
 		setHealthMarkerVisible(m_healthBarMarker25Transform2D, false);
 		setHealthMarkerVisible(m_healthBarPhaseMarkerTransform2D, false);
@@ -271,9 +271,9 @@ void ArthurUI::updateHealthMarkers()
 		return;
 	}
 
-	setHealthMarkerVisible(m_healthBarMarker25Transform2D, m_barrierDamageable->hasActiveBarrierAt(0.25f));
-	setHealthMarkerVisible(m_healthBarPhaseMarkerTransform2D, m_barrierDamageable->hasActiveBarrierAt(0.50f));
-	setHealthMarkerVisible(m_healthBarMarker75Transform2D, m_barrierDamageable->hasActiveBarrierAt(0.75f));
+	setHealthMarkerVisible(m_healthBarMarker25Transform2D, m_barrierComponent->hasActiveBarrierAt(0.25f));
+	setHealthMarkerVisible(m_healthBarPhaseMarkerTransform2D, m_barrierComponent->hasActiveBarrierAt(0.50f));
+	setHealthMarkerVisible(m_healthBarMarker75Transform2D, m_barrierComponent->hasActiveBarrierAt(0.75f));
 }
 
 void ArthurUI::setupHeavySwipeUI()
