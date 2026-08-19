@@ -28,6 +28,7 @@ void UIPause::Start()
 {
     m_isPause = false;
     m_isControlsOpen = false;
+    Time::setTimeScale(1.0f);
 
     findPlayerControllers();
 
