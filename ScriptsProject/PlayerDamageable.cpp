@@ -6,6 +6,7 @@
 
 #include "PlayerDownState.h"
 #include "PlayerAnimationController.h"
+#include "PersistingCheckpointState.h"
 
 IMPLEMENT_SCRIPT_FIELDS_INHERITED(PlayerDamageable, Damageable,
     SERIALIZED_COMPONENT_REF(m_healthGlow, "Health Glow", ComponentType::UISLIDER),
@@ -40,6 +41,18 @@ void PlayerDamageable::Start()
 
     m_deathSound  = GameObjectAPI::findScript<DeathSound>(m_owner);
     m_lyrielSound = GameObjectAPI::findScript<LyrielSound>(m_owner);
+    
+    if (PersistingCheckpointState::Get().m_lastCheckpointId > CheckpointId::NONE)
+    {
+        if (m_deathSound)
+        {
+            m_currentHp = PersistingCheckpointState::Get().m_savedDeathHealth;
+        }
+        if (m_lyrielSound)
+        {
+            m_currentHp = PersistingCheckpointState::Get().m_savedLyrielHealth;
+        }
+    }
 
     Transform* rendererTransform = m_renderer.getReferencedComponent();
 

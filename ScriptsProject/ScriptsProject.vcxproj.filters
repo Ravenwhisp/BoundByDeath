@@ -154,6 +154,15 @@
     <Filter Include="Enemies\Movement">
       <UniqueIdentifier>{59fd20a4-f8fa-40db-81e4-287d22402309}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Systems\Checkpoints">
+      <UniqueIdentifier>{0f665952-af70-44af-8a12-0776d009bf1f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems\Checkpoints\Events">
+      <UniqueIdentifier>{b70f8551-d726-4848-a743-f27a359de712}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems\Checkpoints\Events\Level1">
+      <UniqueIdentifier>{3e016832-71fe-45ec-a36a-8528048419f6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -163,6 +172,12 @@
     </ClInclude>
     <ClInclude Include="PlayerDamageable.h">
       <Filter>Player</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerVitalsMonitor.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="OutlineStyleSetup.h">
+      <Filter>Systems</Filter>
     </ClInclude>
     <ClInclude Include="PlayerAnimationController.h">
       <Filter>Player\Animation</Filter>
@@ -628,6 +643,21 @@
     <ClInclude Include="CrystalVisuals.h">
       <Filter>Interaction/Gameplay\Puzzles</Filter>
     </ClInclude>
+    <ClInclude Include="CheckpointManager.h">
+      <Filter>Systems\Checkpoints</Filter>
+    </ClInclude>
+    <ClInclude Include="Checkpoint1_Level1_Event.h">
+      <Filter>Systems\Checkpoints\Events\Level1</Filter>
+    </ClInclude>
+    <ClInclude Include="CheckpointEvent.h">
+      <Filter>Systems\Checkpoints\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="HapticTester.h" />
+    <ClInclude Include="PlayerGamepadBinding.h" />
+    <ClInclude Include="ShadowExecutionConfig.h" />
+    <ClInclude Include="PaladinUI.h">
+      <Filter>Enemies\Paladin</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
@@ -638,6 +668,12 @@
     </ClCompile>
     <ClCompile Include="PlayerDamageable.cpp">
       <Filter>Player</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerVitalsMonitor.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="OutlineStyleSetup.cpp">
+      <Filter>Systems</Filter>
     </ClCompile>
     <ClCompile Include="PlayerAnimationController.cpp">
       <Filter>Player\Animation</Filter>
@@ -1088,6 +1124,21 @@
     <ClCompile Include="EnemyBaseDataConfig.cpp" />
     <ClCompile Include="CrystalVisuals.cpp">
       <Filter>Interaction/Gameplay\Puzzles</Filter>
+    </ClCompile>
+    <ClCompile Include="CheckpointManager.cpp">
+      <Filter>Systems\Checkpoints</Filter>
+    </ClCompile>
+    <ClCompile Include="Checkpoint1_Level1_Event.cpp">
+      <Filter>Systems\Checkpoints\Events\Level1</Filter>
+    </ClCompile>
+    <ClCompile Include="CheckpointEvent.cpp">
+      <Filter>Systems\Checkpoints\Events</Filter>
+    </ClCompile>
+    <ClCompile Include="HapticTester.cpp" />
+    <ClCompile Include="PlayerGamepadBinding.cpp" />
+    <ClCompile Include="ShadowExecutionConfig.cpp" />
+    <ClCompile Include="PaladinUI.cpp">
+      <Filter>Enemies\Paladin</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

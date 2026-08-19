@@ -25,7 +25,8 @@ void CrystalShadowMark::Start()
         return;
 	}
 	managerScript = GameObjectAPI::findScript<PuzzleManagerLVL1>(managerObject);
-    if (managerScript == nullptr)
+    managerScript2 = GameObjectAPI::findScript<PuzzleManagerLVL2>(managerObject);
+    if (managerScript == nullptr && managerScript2 == nullptr)
     {
         Debug::log("[CrystalMark] ERROR: PuzzleManager script not found on referenced object!");
     }
@@ -43,6 +44,10 @@ void CrystalShadowMark::Update()
     EnemyShadowMark::Update();
 
     if (!m_puzzleCompleted && managerScript != nullptr && managerScript->isPuzzleSolved(m_puzzleID))
+    {
+        completeCrystal();
+    }
+    if (!m_puzzleCompleted && managerScript2 != nullptr && managerScript2->isPuzzleSolved(m_puzzleID))
     {
         completeCrystal();
     }
@@ -80,10 +85,14 @@ void CrystalShadowMark::Update()
     {
         managerScript->onCrystalsDeactivated(m_puzzleID);
     }
+    else if (managerScript2 != nullptr)
+    {
+        managerScript2->onCrystalsDeactivated(m_puzzleID);
+    }
     else
     {
-        Debug::log("[CrystalMark] WARNING: PuzzleManagerLVL1 not found!");
-    } 
+        Debug::log("[CrystalMark] WARNING: PuzzleManager not found!");
+    }
 }
 
 bool CrystalShadowMark::processAttack(PlayerAttackType attackType)
@@ -143,11 +152,12 @@ void CrystalShadowMark::activateCrystal()
         m_activatedLoopStarted = true;
     }
 
-    if (managerScript == nullptr)
+    if (managerScript == nullptr && managerScript2 == nullptr)
     {
-        Debug::log("[CrystalMark] WARNING: PuzzleManagerLVL1 not found!");
+        Debug::log("[CrystalMark] WARNING: PuzzleManagerLVL2 not found!");
         return;
     }
+    
 
     m_activationTimer = 0.0f;
     m_activated = true;
@@ -158,13 +168,28 @@ void CrystalShadowMark::activateCrystal()
     }
 
     activeEffect();
-    Debug::log("[CrystalMark] '%s' activating puzzle %d using manager '%s'.", GameObjectAPI::getName(getOwner()), m_puzzleID, GameObjectAPI::getName(managerObject));
-    managerScript->onCrystalsActivated(m_puzzleID);
-
-    if (managerScript->isPuzzleSolved(m_puzzleID))
+    if (managerScript != nullptr)
     {
-        completeCrystal();
+        Debug::log("[CrystalMark] '%s' activating puzzle %d using manager '%s'.", GameObjectAPI::getName(getOwner()), m_puzzleID, GameObjectAPI::getName(managerObject));
+        managerScript->onCrystalsActivated(m_puzzleID);
+
+        if (managerScript->isPuzzleSolved(m_puzzleID))
+        {
+            completeCrystal();
+        }
     }
+
+    if (managerScript2 != nullptr)
+    {
+        Debug::log("[CrystalMark] '%s' activating puzzle %d using manager '%s'.", GameObjectAPI::getName(getOwner()), m_puzzleID, GameObjectAPI::getName(managerObject));
+        managerScript2->onCrystalsActivated(m_puzzleID);
+
+        if (managerScript2->isPuzzleSolved(m_puzzleID))
+        {
+            completeCrystal();
+        }
+    }
+    
 }
 
 void CrystalShadowMark::completeCrystal()
