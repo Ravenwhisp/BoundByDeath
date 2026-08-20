@@ -240,7 +240,8 @@ void ShadowExecution::updateExecution(float dt)
     float progress = m_shadowExecutionConfig->m_executionDuration > 0.0f ? (m_executionTimer / m_shadowExecutionConfig->m_executionDuration) : 1.0f;
     if (progress > 1.0f) progress = 1.0f;
 
-    m_currentRadius = progress * m_maxRadius;
+    //m_currentRadius = progress * m_maxRadius;
+    m_currentRadius = 100.0f;
 
     applyAoEDamage();
 

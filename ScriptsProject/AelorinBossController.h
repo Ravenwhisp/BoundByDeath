@@ -62,7 +62,8 @@ public:
 	AelorinAttackExecutor* getAttackExecutor() const { return m_attackExecutor; }
 
 	// Ability Choosing
-	AelorinAbility chooseNextAbility();
+	AelorinAbility chooseNextAbility(); // normal ability
+	AelorinAbility chooseNextFuryAbility(); // fury ability
 	AelorinAbility consumeRequestedAbility();
 	bool requestAbility(AelorinAbility ability);
 
@@ -138,6 +139,16 @@ public:
 	void startSummonTimer();
 	float getSummonTimerRemaining() const { return m_summonTimerRemaining; }
 
+	// Fury helpers
+	void requestFury();
+	void beginFury();
+	void recordFuryCast();
+	bool isFuryRequested() const { return m_furyRequested; }
+	bool isFuryActive() const { return m_furyActive; }
+	bool isFuryBarrageComplete() const;
+	int getFuryCastTarget() const;
+	int getFuryCastsCompleted() const { return m_furyCastsCompleted; }
+
 	// Health drop
 	void spawnHealthDrops();
 
@@ -199,6 +210,12 @@ private:
 	int countLivingSummonsInFormation(Transform* formationRoot) const;
 	void updateSummonTimer();
 
+	// Fury
+	bool m_furyRequested = false;
+	bool m_furyActive = false;
+	int m_furyIndex = 0;
+	int m_furyCastsCompleted = 0;
+
 	// Debug Draw
 	bool m_hasSpiritCannonDebugLine = false;
 	Vector3 m_spiritCannonDebugOrigin = Vector3::Zero;
@@ -207,7 +224,8 @@ private:
 
 private:
 	// Abilities
-	std::vector<AelorinAbility> buildAbilityPool() const;
+	std::vector<AelorinAbility> buildAbilityPool() const; // Normal ability pool
+	std::vector<AelorinAbility> buildFuryAbilityPool() const; // Fury ability pool
 	void removeLastUsedAbility(std::vector<AelorinAbility>& pool) const;
 
 	bool canUseNova() const;

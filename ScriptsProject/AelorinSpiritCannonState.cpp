@@ -32,6 +32,7 @@ void AelorinSpiritCannonState::OnStateEnter()
 	m_stateTimer = 0.0f;
 	m_shotCount = 0;
 	m_completed = false;
+	m_isFuryCast = false;
 
 	if (!m_controller)
 	{
@@ -68,6 +69,12 @@ void AelorinSpiritCannonState::OnStateEnter()
 		return;
 	}
 
+	m_isFuryCast = m_controller->isFuryActive();
+	if (m_isFuryCast)
+	{
+		m_controller->recordFuryCast();
+	}
+
 	Debug::log("[AelorinSpiritCannonState] ENTER");
 }
 
@@ -85,6 +92,10 @@ void AelorinSpiritCannonState::OnStateUpdate()
 	}
 
 	m_stateTimer += Time::getDeltaTime();
+
+	// Pick Fury or Normal delay
+	const float windupDuration = m_isFuryCast ? 0.0f : config->m_spiritCannonWindupDuration;
+	const float recoveryDuration = m_isFuryCast ? 0.0f : config->m_spiritCannonRecoveryDuration;
 
 	// PHASE 1
 	// Windup -> Shot 1 -> Re-aim -> Shot 2 -> Recovery
@@ -120,7 +131,7 @@ void AelorinSpiritCannonState::OnStateUpdate()
 	// PHASE 2
 	// Windup -> Quick Shot 1 -> Quick Shot 2 -> Quick Shot 3 -> Final Slow Wide Shot -> Recovery
 
-	const float shot1Time = config->m_spiritCannonWindupDuration;
+	const float shot1Time = windupDuration;
 	const float shot2Time = shot1Time + config->m_spiritCannonPhase2ShotInterval;
 	const float shot3Time = shot2Time + config->m_spiritCannonPhase2ShotInterval;
 	const float finalShotTime = shot3Time + config->m_spiritCannonPhase2FinalShotDelay;
@@ -157,7 +168,7 @@ void AelorinSpiritCannonState::OnStateUpdate()
 		return;
 	}
 
-	if (m_shotCount >= 4 && m_stateTimer >= finalShotTime + config->m_spiritCannonRecoveryDuration)
+	if (m_shotCount >= 4 && m_stateTimer >= finalShotTime + recoveryDuration)
 	{
 		finishAbility();
 	}
@@ -171,6 +182,7 @@ void AelorinSpiritCannonState::OnStateExit()
 	m_stateTimer = 0.0f;
 	m_shotCount = 0;
 	m_completed = false;
+	m_isFuryCast = false;
 
 	if (m_controller)
 	{

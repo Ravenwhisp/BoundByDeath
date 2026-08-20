@@ -30,6 +30,7 @@ void AelorinNovaState::OnStateEnter()
 	m_firstWaveApplied = false;
 	m_secondWaveApplied = false;
 	m_completed = false;
+	m_isFuryCast = false;
 
 	if (!m_controller)
 	{
@@ -50,6 +51,8 @@ void AelorinNovaState::OnStateEnter()
 		Debug::warn("[AelorinNovaState] Unexpected requested ability!");
 		return;
 	}
+
+	m_isFuryCast = m_controller->isFuryActive();
 
 	if (m_controller->hasNovaCenterOverride())
 	{
@@ -78,7 +81,11 @@ void AelorinNovaState::OnStateUpdate()
 
 	m_stateTimer += Time::getDeltaTime();
 
-	if (!m_firstWaveApplied && m_stateTimer >= config->m_novaChargeTime)
+	// Fury strips the nova windup + recovery
+	const float chargeTime = m_isFuryCast ? 0.0f : config->m_novaChargeTime;
+	const float recoveryDuration = m_isFuryCast ? 0.0f : config->m_novaRecoveryDuration;
+
+	if (!m_firstWaveApplied && m_stateTimer >= chargeTime)
 	{
 		executeFirstNovaWave();
 		m_firstWaveApplied = true;
@@ -87,15 +94,15 @@ void AelorinNovaState::OnStateUpdate()
 	if (m_controller->isPhase2() &&
 		m_firstWaveApplied &&
 		!m_secondWaveApplied &&
-		m_stateTimer >= config->m_novaChargeTime + config->m_novaPhase2SecondWaveDelay)
+		m_stateTimer >= chargeTime + config->m_novaPhase2SecondWaveDelay)
 	{
 		executeSecondNovaWave();
 		m_secondWaveApplied = true;
 	}
 
-	const float lastWaveTime = m_controller->isPhase2() ? config->m_novaChargeTime + config->m_novaPhase2SecondWaveDelay : config->m_novaChargeTime;
+	const float lastWaveTime = m_controller->isPhase2() ? chargeTime + config->m_novaPhase2SecondWaveDelay : chargeTime;
 
-	if (m_stateTimer < lastWaveTime + config->m_novaRecoveryDuration)
+	if (m_stateTimer < lastWaveTime + recoveryDuration)
 	{
 		return;
 	}
@@ -110,6 +117,7 @@ void AelorinNovaState::OnStateExit()
 	m_firstWaveApplied = false;
 	m_secondWaveApplied = false;
 	m_completed = false;
+	m_isFuryCast = false;
 
 	Debug::log("[AelorinNovaState] EXIT");
 }

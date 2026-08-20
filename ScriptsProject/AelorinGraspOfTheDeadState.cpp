@@ -34,6 +34,7 @@ void AelorinGraspOfTheDeadState::OnStateEnter()
 	m_activeAbility = AelorinAbility::None;
 	m_stateTimer = 0.0f;
 	m_completed = false;
+	m_isFuryCast = false;
 
 	if (!m_controller)
 	{
@@ -100,6 +101,12 @@ void AelorinGraspOfTheDeadState::OnStateEnter()
 		Debug::warn("[AelorinGraspOfTheDeadState] Death PlayerMovement not found.");
 	}
 
+	m_isFuryCast = m_controller->isFuryActive();
+	if (m_isFuryCast)
+	{
+		m_controller->recordFuryCast();
+	}
+
 	Debug::log("[AelorinGraspOfTheDeadState] ENTER");
 }
 
@@ -137,6 +144,7 @@ void AelorinGraspOfTheDeadState::OnStateExit()
 	m_deathMovement = nullptr;
 	m_stateTimer = 0.0f;
 	m_completed = false;
+	m_isFuryCast = false;
 
 	Debug::log("[AelorinGraspOfTheDeadState] EXIT");
 }

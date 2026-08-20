@@ -198,9 +198,12 @@ void AelorinDamageable::processShadowExecution(const EnemyHitContext& ctx)
     }
     case AelorinThresholdType::Fury:
     {
-        // request fury
-        // advance threshold after fury/exhaustion
         advanceThreshold();
+
+        if (m_controller)
+        {
+            m_controller->requestFury();
+        }
 
         Debug::log("[AelorinDamageable] Fury threshold broken.");
         break;

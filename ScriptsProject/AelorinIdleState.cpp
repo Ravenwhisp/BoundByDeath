@@ -59,7 +59,46 @@ void AelorinIdleState::OnStateUpdate()
 	{
 		return;
 	}
+	
+	// FURY
+	if (m_controller->isFuryRequested())
+	{
+		m_controller->beginFury();
+	}
 
+	if (m_controller->isFuryActive())
+	{
+		if (m_controller->isFuryBarrageComplete())
+		{
+			Debug::log("[AelorinIdleState] Fury barrage complete");
+			return;
+		}
+
+		const AelorinAbility furyAbility = m_controller->chooseNextFuryAbility();
+		if (furyAbility == AelorinAbility::None)
+		{
+			Debug::warn("[AelorinIdleState] No valid Fury ability");
+			return;
+		}
+
+		if (!m_controller->requestAbility(furyAbility))
+		{
+			Debug::warn("[AelorinIdleState] Failed to request Fury ability.");
+			return;
+		}
+
+		if (!m_controller->trySendRequestedAbilityTrigger(m_animation))
+		{
+			Debug::warn("[AelorinIdleState] Failed to send Fury ability trigger.");
+
+			m_controller->clearRequestedAbility();
+			return;
+		}
+
+		return;
+	}
+
+	// NORMAL
 	if (m_decisionMade)
 	{
 		return;

@@ -33,6 +33,8 @@ private:
 	bool m_finalProjectileLaunched = false;
 	bool m_completed = false;
 
+	bool m_isFuryCast = false;
+
 private:
 	void launchCurrentWave();
 	void launchProjectileAt(ProjectilePool* projectilePool, const Vector3& targetPosition, float impactRadius, float damage);

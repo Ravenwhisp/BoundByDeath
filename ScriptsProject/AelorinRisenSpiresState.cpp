@@ -30,6 +30,7 @@ void AelorinRisenSpiresState::OnStateEnter()
 	m_firstPassExecuted = false;
 	m_secondPassExecuted = false;
 	m_completed = false;
+	m_isFuryCast = false;
 
 	if (!m_controller)
 	{
@@ -59,6 +60,12 @@ void AelorinRisenSpiresState::OnStateEnter()
 		return;
 	}
 
+	m_isFuryCast = m_controller->isFuryActive();
+	if (m_isFuryCast)
+	{
+		m_controller->recordFuryCast();
+	}
+
 	Debug::log("[AelorinRisenSpiresState] ENTER");
 }
 
@@ -77,23 +84,27 @@ void AelorinRisenSpiresState::OnStateUpdate()
 
 	m_stateTimer += Time::getDeltaTime();
 
+	// Pick Fury type cast or Normal
+	const float windupDuration = m_isFuryCast ? 0.0f : config->m_risenSpiresWindupDuration;
+	const float recoveryDuration = m_isFuryCast ? 0.0f : config->m_risenSpiresRecoveryDuration;
+
 	// First pass after the 3 second windup
-	if (!m_firstPassExecuted && m_stateTimer >= config->m_risenSpiresWindupDuration)
+	if (!m_firstPassExecuted && m_stateTimer >= windupDuration)
 	{
 		executePattern(m_controller->getRisenSpiresPatternARoot(), "Risen Spires Pass 1");
 		m_firstPassExecuted = true;
 	}
 
 	// Phase 2 gets opposite pattern 2 seconds later
-	if (m_controller->isPhase2() && m_firstPassExecuted && !m_secondPassExecuted && m_stateTimer >= config->m_risenSpiresWindupDuration + config->m_risenSpiresPhase2SecondPassDelay)
+	if (m_controller->isPhase2() && m_firstPassExecuted && !m_secondPassExecuted && m_stateTimer >= windupDuration + config->m_risenSpiresPhase2SecondPassDelay)
 	{
 		executePattern(m_controller->getRisenSpiresPatternBRoot(), "Risen Spires Pass 2");
 		m_secondPassExecuted = true;
 	}
 
-	const float lastPassTime = m_controller->isPhase2() ? config->m_risenSpiresWindupDuration + config->m_risenSpiresPhase2SecondPassDelay : config->m_risenSpiresWindupDuration;
+	const float lastPassTime = m_controller->isPhase2() ? windupDuration + config->m_risenSpiresPhase2SecondPassDelay : windupDuration;
 
-	if (m_stateTimer < lastPassTime + config->m_risenSpiresRecoveryDuration)
+	if (m_stateTimer < lastPassTime + recoveryDuration)
 	{
 		return;
 	}
@@ -107,6 +118,7 @@ void AelorinRisenSpiresState::OnStateExit()
 	m_firstPassExecuted = false;
 	m_secondPassExecuted = false;
 	m_completed = false;
+	m_isFuryCast = false;
 
 	Debug::log("[AelorinRisenSpiresState] EXIT");
 }

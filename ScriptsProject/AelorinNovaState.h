@@ -36,4 +36,6 @@ private:
 	bool m_firstWaveApplied = false;
 	bool m_secondWaveApplied = false;
 	bool m_completed = false;
+
+	bool m_isFuryCast = false;
 };

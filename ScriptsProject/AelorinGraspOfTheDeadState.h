@@ -37,4 +37,6 @@ private:
 
 	float m_stateTimer = 0.0f;
 	bool m_completed = false;
+
+	bool m_isFuryCast = false;
 };

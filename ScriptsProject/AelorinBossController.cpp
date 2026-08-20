@@ -171,14 +171,22 @@ float AelorinBossController::getClosestPlayerDistance() const
 
 AelorinAbility AelorinBossController::chooseNextAbility()
 {
-	if (canTeleport())
-	{
-		return AelorinAbility::Teleport;
-	}
+	//if (canTeleport())
+	//{
+	//	return AelorinAbility::Teleport;
+	//}
 
 	std::vector<AelorinAbility> pool = buildAbilityPool();
 	removeLastUsedAbility(pool);
 	
+	return chooseRandomAbility(pool);
+}
+
+AelorinAbility AelorinBossController::chooseNextFuryAbility()
+{
+	std::vector<AelorinAbility> pool = buildFuryAbilityPool();
+	removeLastUsedAbility(pool);
+
 	return chooseRandomAbility(pool);
 }
 
@@ -526,6 +534,68 @@ void AelorinBossController::startSummonTimer()
 	m_summonTimerRemaining = isPhase2()	? config->m_phase2SummonInterval : config->m_phase1SummonInterval;
 }
 
+void AelorinBossController::requestFury()
+{
+	if (!isPhase2())
+	{
+		return;
+	}
+
+	if (m_furyRequested)
+	{
+		return;
+	}
+
+	m_furyRequested = true;
+
+	Debug::log("[AelorinBossController] Fury %d requested", m_furyIndex + 1);
+}
+
+void AelorinBossController::beginFury()
+{
+	if (!m_furyRequested || m_furyActive)
+	{
+		return;
+	}
+
+	m_furyRequested = false;
+	m_furyActive = true;
+	m_furyCastsCompleted = 0;
+
+	Debug::log("[AelorinBossController] Fury %d started", m_furyIndex + 1);
+}
+
+void AelorinBossController::recordFuryCast()
+{
+	if (!m_furyActive)
+	{
+		return;
+	}
+
+	++m_furyCastsCompleted;
+}
+
+bool AelorinBossController::isFuryBarrageComplete() const
+{
+	if (!m_furyActive)
+	{
+		return false;
+	}
+
+	return m_furyCastsCompleted >= getFuryCastTarget();
+}
+
+int AelorinBossController::getFuryCastTarget() const
+{
+	const AelorinAttackConfig* config = m_attackConfig.get();
+	if (!config)
+	{
+		return m_furyIndex == 0 ? 6 : 10;
+	}
+
+	return m_furyIndex == 0 ? config->m_firstFuryCastCount : config->m_secondFuryCastCount;
+}
+
 Transform* AelorinBossController::getTeleportCrowdingPlayer() const
 {
 	if (!m_aelorinDetectionAggro)
@@ -733,7 +803,7 @@ std::vector<AelorinAbility> AelorinBossController::buildAbilityPool() const
 {
 	std::vector<AelorinAbility> pool
 	{
-		//AelorinAbility::SeekerSigils,
+		AelorinAbility::SeekerSigils
 		//AelorinAbility::RisenSpires,
 		//AelorinAbility::SpiritCannon
 		//AelorinAbility::GraspOfTheDead
@@ -744,15 +814,28 @@ std::vector<AelorinAbility> AelorinBossController::buildAbilityPool() const
 	//	pool.push_back(AelorinAbility::Nova);
 	//}
 
-	if (canSummon())
-	{
-		pool.push_back(AelorinAbility::Summon);
-	}
+	//if (canSummon())
+	//{
+	//	pool.push_back(AelorinAbility::Summon);
+	//}
 
 	//if (isPhase2())
 	//{
 	//	pool.push_back(AelorinAbility::GraspOfTheDead);
 	//}
+
+	return pool;
+}
+
+std::vector<AelorinAbility> AelorinBossController::buildFuryAbilityPool() const
+{
+	std::vector<AelorinAbility> pool
+	{
+		AelorinAbility::SeekerSigils,
+		AelorinAbility::RisenSpires,
+		AelorinAbility::SpiritCannon,
+		AelorinAbility::GraspOfTheDead
+	};
 
 	return pool;
 }

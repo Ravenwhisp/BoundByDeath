@@ -32,6 +32,7 @@ void AelorinSeekerSigilsState::OnStateEnter()
 	m_currentWave = 0;
 	m_finalProjectileLaunched = false;
 	m_completed = false;
+	m_isFuryCast = false;
 
 	if (!m_controller)
 	{
@@ -65,6 +66,12 @@ void AelorinSeekerSigilsState::OnStateEnter()
 		return;
 	}
 
+	m_isFuryCast = m_controller->isFuryActive();
+	if (m_isFuryCast)
+	{
+		m_controller->recordFuryCast();
+	}
+
 	Debug::log("[AelorinSeekerSigilsState] ENTER");
 }
 
@@ -84,7 +91,9 @@ void AelorinSeekerSigilsState::OnStateUpdate()
 
 	m_waveTimer += Time::getDeltaTime();
 
-	const float nextWaveTime = m_currentWave == 0 ? config->m_seekerSigilsInitialDelay : config->m_seekerSigilsWaveInterval;
+	// If in fury mode -> delays + recovery is 0
+	const float initialDelay = m_isFuryCast ? 0.0f : config->m_seekerSigilsInitialDelay;
+	const float nextWaveTime = m_currentWave == 0 ? initialDelay : config->m_seekerSigilsWaveInterval;
 
 	if (m_currentWave < config->m_seekerSigilsWaveCount)
 	{
@@ -116,7 +125,10 @@ void AelorinSeekerSigilsState::OnStateUpdate()
 		return;
 	}
 
-	if (m_waveTimer < config->m_seekerSigilsRecoveryDuration)
+	// Fury
+	const float recoveryDuration = m_isFuryCast ? 0.0f : config->m_seekerSigilsRecoveryDuration;
+
+	if (m_waveTimer < recoveryDuration)
 	{
 		return;
 	}
@@ -130,6 +142,7 @@ void AelorinSeekerSigilsState::OnStateExit()
 	m_currentWave = 0;
 	m_finalProjectileLaunched = false;
 	m_completed = false;
+	m_isFuryCast = false;
 
 	Debug::log("[AelorinSeekerSigilsState] EXIT");
 }

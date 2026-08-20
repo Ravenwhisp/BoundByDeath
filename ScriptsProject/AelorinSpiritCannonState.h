@@ -41,4 +41,6 @@ private:
 	float m_stateTimer = 0.0f;
 	int m_shotCount = 0;
 	bool m_completed = false;
+
+	bool m_isFuryCast = false;
 };

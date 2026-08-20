@@ -97,6 +97,10 @@ public:
 	float m_summonCastDuration = 2.0f;
 	float m_summonRecoveryDuration = 0.75f;
 
+	// Fury
+	int m_firstFuryCastCount = 6;
+	int m_secondFuryCastCount = 10;
+
 	// Health Drops
 	PrefabRef m_healthPickupPrefab;
 	int m_healthDropQuantity = 3;
@@ -182,6 +186,11 @@ public:
 			SERIALIZED_FLOAT(m_phase2SummonInterval, "Phase 2 Summon Interval", 0.0f, 60.0f, 0.5f),
 			SERIALIZED_FLOAT(m_summonCastDuration, "Summon Cast Duration", 0.0f, 10.0f,	0.05f),
 			SERIALIZED_FLOAT(m_summonRecoveryDuration, "Summon Recovery Duration", 0.0f, 5.0f, 0.05f)
+		),
+
+		FIELD_GROUP_COLLAPSE("Fury",
+			SERIALIZED_INT(m_firstFuryCastCount, "First Fury Cast Count", 0, 20, 1),
+			SERIALIZED_INT(m_secondFuryCastCount, "Second Fury Cast Count", 0, 20, 1)
 		),
 
 		FIELD_GROUP_COLLAPSE("Health Drops",

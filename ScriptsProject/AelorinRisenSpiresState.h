@@ -35,4 +35,6 @@ private:
 	bool m_firstPassExecuted = false;
 	bool m_secondPassExecuted = false;
 	bool m_completed = false;
+
+	bool m_isFuryCast = false;
 };
