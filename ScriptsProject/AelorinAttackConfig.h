@@ -101,6 +101,14 @@ public:
 	int m_firstFuryCastCount = 6;
 	int m_secondFuryCastCount = 10;
 
+	// Soul Cataclysm
+	float m_soulCataclysmChannelDuration = 1.0f;
+	float m_soulCataclysmSafeZoneRadius = 2.0f;
+	float m_soulCataclysmDamage = 100.0f;
+
+	// Exhaustion
+	float m_furyExhaustionDuration = 5.0f;
+
 	// Health Drops
 	PrefabRef m_healthPickupPrefab;
 	int m_healthDropQuantity = 3;
@@ -191,6 +199,16 @@ public:
 		FIELD_GROUP_COLLAPSE("Fury",
 			SERIALIZED_INT(m_firstFuryCastCount, "First Fury Cast Count", 0, 20, 1),
 			SERIALIZED_INT(m_secondFuryCastCount, "Second Fury Cast Count", 0, 20, 1)
+		),
+
+		FIELD_GROUP_COLLAPSE("Soul Cataclysm",
+			SERIALIZED_FLOAT(m_soulCataclysmChannelDuration, "Channel Duration", 0.0f, 20.0f, 0.05f),
+			SERIALIZED_FLOAT(m_soulCataclysmSafeZoneRadius, "Safe Zone Radius", 0.1f, 20.0f, 0.1f),
+			SERIALIZED_FLOAT(m_soulCataclysmDamage, "Damage", 0.0f, 999.0f, 1.0f)
+		),
+
+		FIELD_GROUP_COLLAPSE("Exhaustion",
+			SERIALIZED_FLOAT(m_furyExhaustionDuration, "Duration", 0.0f, 30.0f, 0.05f)
 		),
 
 		FIELD_GROUP_COLLAPSE("Health Drops",

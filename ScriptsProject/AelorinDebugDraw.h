@@ -45,6 +45,9 @@ public:
 	bool m_drawPhase1SummonSlots = true;
 	bool m_drawPhase2SummonSlots = true;
 
+	// Soul Cataclysm
+	bool m_drawSoulCataclysmSafeZones = true;
+
 	float m_heightOffset = 0.15f;
 
 private:

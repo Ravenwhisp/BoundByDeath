@@ -713,6 +713,14 @@
     <ClInclude Include="AelorinSummonSlot.h">
       <Filter>Enemies\Aelorin</Filter>
     </ClInclude>
+    <ClInclude Include="AelorinSummonState.h" />
+    <ClInclude Include="SceneCapacityPrewarm.h" />
+    <ClInclude Include="AelorinSoulCataclysmState.h">
+      <Filter>Enemies\Aelorin\States\Combat</Filter>
+    </ClInclude>
+    <ClInclude Include="AelorinExhaustionState.h">
+      <Filter>Enemies\Aelorin\States</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
@@ -1238,6 +1246,14 @@
     </ClCompile>
     <ClCompile Include="AelorinSummonSlot.cpp">
       <Filter>Enemies\Aelorin</Filter>
+    </ClCompile>
+    <ClCompile Include="AelorinSummonState.cpp" />
+    <ClCompile Include="SceneCapacityPrewarm.cpp" />
+    <ClCompile Include="AelorinSoulCataclysmState.cpp">
+      <Filter>Enemies\Aelorin\States\Combat</Filter>
+    </ClCompile>
+    <ClCompile Include="AelorinExhaustionState.cpp">
+      <Filter>Enemies\Aelorin\States</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -102,14 +102,6 @@ void SeekerSigilProjectile::applyImpactDamage()
 	}
 
 	m_attackExecutor->applyDamageInRadius(m_targetPosition, m_impactRadius, m_damage, "Aelorin Seeker Sigils");
-
-	Debug::log(
-		"[SeekerSigilProjectile] Impact at position "
-		"(%.2f, %.2f, %.2f).",
-		m_targetPosition.x,
-		m_targetPosition.y,
-		m_targetPosition.z
-	);
 }
 
 void SeekerSigilProjectile::resetProjectile()

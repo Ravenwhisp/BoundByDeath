@@ -38,6 +38,10 @@ IMPLEMENT_SCRIPT_FIELDS(AelorinDebugDraw,
 		SERIALIZED_BOOL(m_drawPhase2SummonSlots, "Draw Phase 2 Summon Slots")
 	),
 
+	FIELD_GROUP_COLLAPSE("Soul Cataclysm",
+		SERIALIZED_BOOL(m_drawSoulCataclysmSafeZones, "Draw Safe Zones")
+	),
+
 	SERIALIZED_BOOL(m_debugEnabled, "Debug Enabled"),
 	SERIALIZED_FLOAT(m_heightOffset, "Height Offset", 0.0f, 5.0f, 0.05f)
 )
@@ -77,16 +81,16 @@ void AelorinDebugDraw::drawGizmo()
 		return;
 	}
 
-	const Vector3 normalColor =	Vector3(0.0f, 1.0f, 1.0f);
-	const Vector3 phase2FinalColor = Vector3(1.0f, 0.0f, 0.0f);
+	const Vector3 red = Vector3(1.0f, 0.0f, 0.0f);
 	const Vector3 cyan = Vector3(0.0f, 1.0f, 1.0f);
 	const Vector3 orange = Vector3(1.0f, 0.5f, 0.0f);
 	const Vector3 yellow = Vector3(1.0f, 1.0f, 0.0f);
+	const Vector3 green = Vector3(0.0f, 1.0f, 0.0f);
 
 	if (m_drawSeekerSigilsNormal)
 	{
-		drawImpactCircle(m_controller->getLyrielPosition(), config->m_seekerSigilsRadius, normalColor);
-		drawImpactCircle(m_controller->getDeathPosition(), config->m_seekerSigilsRadius, normalColor);
+		drawImpactCircle(m_controller->getLyrielPosition(), config->m_seekerSigilsRadius, cyan);
+		drawImpactCircle(m_controller->getDeathPosition(), config->m_seekerSigilsRadius, cyan);
 	}
 
 	if (m_drawSeekerSigilsLarge)
@@ -95,7 +99,7 @@ void AelorinDebugDraw::drawGizmo()
 		const Vector3 deathPosition = m_controller->getDeathPosition();
 		const Vector3 midpoint = (lyrielPosition + deathPosition) * 0.5f;
 
-		drawImpactCircle(midpoint, config->m_seekerSigilsPhase2FinalRadius,	phase2FinalColor);
+		drawImpactCircle(midpoint, config->m_seekerSigilsPhase2FinalRadius, red);
 	}
 
 	if (m_drawNova)
@@ -107,7 +111,7 @@ void AelorinDebugDraw::drawGizmo()
 		}
 
 		const Vector3 bossPosition = TransformAPI::getGlobalPosition(ownerTransform);
-		drawImpactCircle(bossPosition, config->m_novaTriggerDistance, phase2FinalColor); // trigger distance
+		drawImpactCircle(bossPosition, config->m_novaTriggerDistance, red); // trigger distance
 		drawImpactCircle(bossPosition, config->m_novaRadius, cyan); // first wave radius
 		drawImpactCircle(bossPosition, config->m_novaPhase2SecondRadius, orange); // second wave radius
 	}
@@ -128,7 +132,7 @@ void AelorinDebugDraw::drawGizmo()
 				}
 
 				const Vector3 position = TransformAPI::getGlobalPosition(point);
-				drawImpactCircle(position, config->m_risenSpiresRadius, normalColor);
+				drawImpactCircle(position, config->m_risenSpiresRadius, cyan);
 			}
 		}
 	}
@@ -234,6 +238,28 @@ void AelorinDebugDraw::drawGizmo()
 	if (m_drawPhase2SummonSlots)
 	{
 		drawSummonSlots(m_controller->getPhase2SummonFormation(), orange);
+	}
+
+	if (m_drawSoulCataclysmSafeZones)
+	{
+		Transform* safeZonesRoot = m_controller->getSoulCataclysmSafeZonesRoot();
+		if (safeZonesRoot)
+		{
+			const int childCount = TransformAPI::getChildCount(safeZonesRoot);
+
+			for (int i = 0; i < childCount; ++i)
+			{
+				Transform* safeZone = TransformAPI::getChild(safeZonesRoot, i);
+				if (!safeZone)
+				{
+					continue;
+				}
+
+				const Vector3 position = TransformAPI::getGlobalPosition(safeZone);
+
+				drawImpactCircle(position, config->m_soulCataclysmSafeZoneRadius, green);
+			}
+		}
 	}
 }
 

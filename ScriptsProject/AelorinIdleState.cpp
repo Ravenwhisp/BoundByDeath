@@ -70,7 +70,7 @@ void AelorinIdleState::OnStateUpdate()
 	{
 		if (m_controller->isFuryBarrageComplete())
 		{
-			Debug::log("[AelorinIdleState] Fury barrage complete");
+			m_controller->trySendSoulCataclysmTrigger(m_animation);
 			return;
 		}
 

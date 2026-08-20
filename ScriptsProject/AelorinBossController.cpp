@@ -25,7 +25,8 @@ IMPLEMENT_SCRIPT_FIELDS_INHERITED(AelorinBossController, EnemyBaseController,
 	SERIALIZED_COMPONENT_REF(m_graspCenter, "Grasp Center", ComponentType::TRANSFORM),
 	SERIALIZED_COMPONENT_REF(m_teleportAnchorsRoot, "Teleport Anchors Root", ComponentType::TRANSFORM),
 	SERIALIZED_COMPONENT_REF(m_phase1SummonFormation, "Phase 1 Summon Formation", ComponentType::TRANSFORM),
-	SERIALIZED_COMPONENT_REF(m_phase2SummonFormation, "Phase 2 Summon Formation", ComponentType::TRANSFORM)
+	SERIALIZED_COMPONENT_REF(m_phase2SummonFormation, "Phase 2 Summon Formation", ComponentType::TRANSFORM),
+	SERIALIZED_COMPONENT_REF(m_soulCataclysmSafeZonesRoot, "Soul Cataclysm Safe Zones Root", ComponentType::TRANSFORM)
 )
 
 AelorinBossController::AelorinBossController(GameObject* owner) : EnemyBaseController(owner)
@@ -541,7 +542,12 @@ void AelorinBossController::requestFury()
 		return;
 	}
 
-	if (m_furyRequested)
+	if (m_furyIndex >= 2)
+	{
+		return;
+	}
+
+	if (m_furyRequested || m_furyActive)
 	{
 		return;
 	}
@@ -561,6 +567,7 @@ void AelorinBossController::beginFury()
 	m_furyRequested = false;
 	m_furyActive = true;
 	m_furyCastsCompleted = 0;
+	m_soulCataclysmTriggered = false;
 
 	Debug::log("[AelorinBossController] Fury %d started", m_furyIndex + 1);
 }
@@ -573,6 +580,24 @@ void AelorinBossController::recordFuryCast()
 	}
 
 	++m_furyCastsCompleted;
+}
+
+void AelorinBossController::finishFury()
+{
+	if (!m_furyActive)
+	{
+		return;
+	}
+
+	m_furyRequested = false;
+	m_furyActive = false;
+	m_furyCastsCompleted = 0;
+	m_soulCataclysmTriggered = false;
+
+	clearRequestedAbility();
+	m_lastUsedAbility = AelorinAbility::None;
+
+	++m_furyIndex;
 }
 
 bool AelorinBossController::isFuryBarrageComplete() const
@@ -693,6 +718,40 @@ Transform* AelorinBossController::chooseTeleportAnchor(Transform* crowdingPlayer
 	const int randomIndex = std::rand() % static_cast<int>(suitableAnchors.size());
 
 	return suitableAnchors[randomIndex];
+}
+
+bool AelorinBossController::trySendSoulCataclysmTrigger(AnimationComponent* animation)
+{
+	if (!m_furyActive)
+	{
+		return false;
+	}
+
+	if (!isFuryBarrageComplete())
+	{
+		return false;
+	}
+
+	if (m_soulCataclysmTriggered)
+	{
+		return false;
+	}
+
+	if (!animation)
+	{
+		return false;
+	}
+
+	const bool sent = AnimationAPI::sendTrigger(animation, "ToSoulCataclysm");
+	if (!sent)
+	{
+		return false;
+	}
+
+	m_soulCataclysmTriggered = true;
+	Debug::log("[AelorinBossController] Soul Cataclysm triggered");
+
+	return true;
 }
 
 void AelorinBossController::spawnHealthDrops()

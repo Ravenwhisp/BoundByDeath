@@ -143,11 +143,16 @@ public:
 	void requestFury();
 	void beginFury();
 	void recordFuryCast();
+	void finishFury();
 	bool isFuryRequested() const { return m_furyRequested; }
 	bool isFuryActive() const { return m_furyActive; }
 	bool isFuryBarrageComplete() const;
 	int getFuryCastTarget() const;
 	int getFuryCastsCompleted() const { return m_furyCastsCompleted; }
+
+	// Soul Cataclysm helpers
+	Transform* getSoulCataclysmSafeZonesRoot() const { return m_soulCataclysmSafeZonesRoot.getReferencedComponent(); }
+	bool trySendSoulCataclysmTrigger(AnimationComponent* animation);
 
 	// Health drop
 	void spawnHealthDrops();
@@ -215,6 +220,10 @@ private:
 	bool m_furyActive = false;
 	int m_furyIndex = 0;
 	int m_furyCastsCompleted = 0;
+
+	// Soul Cataclysm
+	ComponentRef<Transform> m_soulCataclysmSafeZonesRoot;
+	bool m_soulCataclysmTriggered = false;
 
 	// Debug Draw
 	bool m_hasSpiritCannonDebugLine = false;
