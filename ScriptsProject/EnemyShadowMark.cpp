@@ -41,7 +41,8 @@ void EnemyShadowMark::Start()
     if (!m_markContainerTransform2D || !m_deathFragmentTransform2D || !m_lyrielFragmentTransform2D)
     {
         Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
-        Transform* shadowMarkTransform = TransformAPI::findChildByName(ownerTransform, "Shadow Mark");
+        Transform* healthBarTransform = TransformAPI::findChildByName(ownerTransform, "Health Bar");
+        Transform* shadowMarkTransform = healthBarTransform ? TransformAPI::findChildByName(healthBarTransform, "Shadow Mark") : nullptr;
 
         if (shadowMarkTransform)
         {

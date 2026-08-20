@@ -68,9 +68,9 @@ public:
     float m_volleyCooldownReduction = 0.20f;  // % of base cooldown removed per exploit
 
     // Effects
-    float m_inactivePulseMinAlpha = 0.2f;
-    float m_inactivePulseMaxAlpha = 0.5f;
-    float m_inactivePulseFrequency = 1.5f;
+    float m_inactivePulseMinAlpha = 0.1f;
+    float m_inactivePulseMaxAlpha = 0.4f;
+    float m_inactivePulseFrequency = 0.75f;
 
     float m_explosionDuration = 0.2f;
     float m_explosionScaleMultiplier = 1.3f;
