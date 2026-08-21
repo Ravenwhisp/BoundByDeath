@@ -9,6 +9,8 @@ IMPLEMENT_SCRIPT_FIELDS(EnemyShadowMark,
     SERIALIZED_FLOAT(m_markDuration, "Mark Duration", 0.5f, 10.0f, 0.1f),
     SERIALIZED_FLOAT(m_markFadeDuration, "Mark Fade Duration", 0.0f, 5.0f, 0.1f),
     SERIALIZED_COMPONENT_REF(m_markContainer, "Mark Container Transform", ComponentType::TRANSFORM2D),
+    SERIALIZED_COMPONENT_REF(m_backgroundGlow, "Background Glow", ComponentType::TRANSFORM2D),
+    SERIALIZED_COMPONENT_REF(m_backgroundBlur, "Background Blur", ComponentType::TRANSFORM2D),
     SERIALIZED_COMPONENT_REF(m_deathFragment, "Death Fragment", ComponentType::TRANSFORM2D),
     SERIALIZED_COMPONENT_REF(m_lyrielFragment, "Lyriel Fragment", ComponentType::TRANSFORM2D),
     FIELD_GROUP_COLLAPSE("Effects",
@@ -36,9 +38,11 @@ void EnemyShadowMark::Start()
 {
     m_markContainerTransform2D = m_markContainer.getReferencedComponent();
     m_deathFragmentTransform2D = m_deathFragment.getReferencedComponent();
+    m_backgroundGlowTransform2D = m_backgroundGlow.getReferencedComponent();
+    m_backgroundBlurTransform2D = m_backgroundBlur.getReferencedComponent();
     m_lyrielFragmentTransform2D = m_lyrielFragment.getReferencedComponent();
 
-    if (!m_markContainerTransform2D || !m_deathFragmentTransform2D || !m_lyrielFragmentTransform2D)
+    if (!m_markContainerTransform2D || !m_backgroundGlowTransform2D || !m_backgroundBlurTransform2D || !m_deathFragmentTransform2D || !m_lyrielFragmentTransform2D)
     {
         Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
         Transform* healthBarTransform = TransformAPI::findChildByName(ownerTransform, "Health Bar");
@@ -72,6 +76,28 @@ void EnemyShadowMark::Start()
                 {
                     GameObject* lyrielObject = ComponentAPI::getOwner(lyrielFragment);
                     m_lyrielFragmentTransform2D = static_cast<Transform2D*>(GameObjectAPI::getComponent(lyrielObject, ComponentType::TRANSFORM2D));
+                }
+            }
+
+            if (!m_backgroundGlowTransform2D)
+            {
+                Transform* backgroundGlow = TransformAPI::findChildByName(shadowMarkTransform, "Background Glow");
+
+                if (backgroundGlow)
+                {
+                    GameObject* backgroundGlowObject = ComponentAPI::getOwner(backgroundGlow);
+                    m_backgroundGlowTransform2D = static_cast<Transform2D*>(GameObjectAPI::getComponent(backgroundGlowObject, ComponentType::TRANSFORM2D));
+                }
+            }
+
+            if (!m_backgroundBlurTransform2D)
+            {
+                Transform* backgroundBlur = TransformAPI::findChildByName(shadowMarkTransform, "Background Blur");
+
+                if (backgroundBlur)
+                {
+                    GameObject* backgroundBlurObject = ComponentAPI::getOwner(backgroundBlur);
+                    m_backgroundBlurTransform2D = static_cast<Transform2D*>(GameObjectAPI::getComponent(backgroundBlurObject, ComponentType::TRANSFORM2D));
                 }
             }
         }
@@ -182,6 +208,8 @@ void EnemyShadowMark::updateUI()
 
     float deathAlpha = 0.0f;
     float lyrielAlpha = 0.0f;
+    float backgroundGlowAlpha = 0.0f;
+    float backgroundBlurAlpha = 0.0f;
 
     switch (m_state)
     {
@@ -191,16 +219,20 @@ void EnemyShadowMark::updateUI()
     case ShadowMarkState::DeathOnly:
         deathAlpha = 1.0f;
         lyrielAlpha = pulseAlpha;
+        backgroundGlowAlpha = 1.0f;
         break;
 
     case ShadowMarkState::LyrielOnly:
         deathAlpha = pulseAlpha;
         lyrielAlpha = 1.0f;
+        backgroundGlowAlpha = 1.0f;
         break;
 
     case ShadowMarkState::Ready:
         deathAlpha = 1.0f;
         lyrielAlpha = 1.0f;
+        backgroundGlowAlpha = 1.0f;
+        backgroundBlurAlpha = 1.0f;
         break;
     }
 
@@ -212,6 +244,16 @@ void EnemyShadowMark::updateUI()
     if (m_lyrielFragmentTransform2D)
     {
         Transform2DAPI::setAlpha(m_lyrielFragmentTransform2D, lyrielAlpha);
+    }
+
+    if (m_backgroundGlowTransform2D)
+    {
+        Transform2DAPI::setAlpha(m_backgroundGlowTransform2D, backgroundGlowAlpha);
+    }
+
+    if (m_backgroundBlurTransform2D)
+    {
+        Transform2DAPI::setAlpha(m_backgroundBlurTransform2D, backgroundBlurAlpha);
     }
 
     if (!m_markContainerTransform2D || m_isExploding || m_isEntryPopping)

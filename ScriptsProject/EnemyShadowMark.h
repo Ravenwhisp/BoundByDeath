@@ -64,6 +64,8 @@ public:
     ComponentRef<Transform2D> m_markContainer;
     ComponentRef<Transform2D> m_deathFragment;
     ComponentRef<Transform2D> m_lyrielFragment;
+    ComponentRef<Transform2D> m_backgroundGlow;
+    ComponentRef<Transform2D> m_backgroundBlur;
 
     float m_volleyCooldownReduction = 0.20f;  // % of base cooldown removed per exploit
 
@@ -90,6 +92,8 @@ private:
     Transform2D* m_markContainerTransform2D = nullptr;
     Transform2D* m_deathFragmentTransform2D = nullptr;
     Transform2D* m_lyrielFragmentTransform2D = nullptr;
+    Transform2D* m_backgroundGlowTransform2D = nullptr;
+    Transform2D* m_backgroundBlurTransform2D = nullptr;
 
     // Effects
     bool m_isExploding = false;
