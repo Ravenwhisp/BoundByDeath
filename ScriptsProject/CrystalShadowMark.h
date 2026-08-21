@@ -2,6 +2,7 @@
 #include "ScriptAPI.h"
 #include "EnemyShadowMark.h"
 #include "PuzzleManagerLVL1.h"
+#include "PuzzleManagerLVL2.h"
 
 class CrystalVisuals;
 
@@ -38,6 +39,7 @@ public:
 private:
     GameObject* managerObject = nullptr;
     PuzzleManagerLVL1* managerScript = nullptr;
+    PuzzleManagerLVL2* managerScript2 = nullptr;
     CrystalVisuals* m_visualsController = nullptr;
 
     bool m_activated = false;

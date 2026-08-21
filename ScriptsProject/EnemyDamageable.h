@@ -38,6 +38,9 @@ public:
 
 	void playShadowExecutionHitPreview();
 
+	void startDissolve();
+	bool isDissolveFinished() const;
+
 protected:
 	void onDamaged(float amount) override;
 	void onDeath() override;
@@ -48,9 +51,17 @@ protected:
 
 	virtual void setHealthBarAlpha(float alpha);
 
+	ComponentRef<Transform> m_renderer;
+	DissolveComponent* m_dissolve = nullptr;
+	bool m_dissolveActive = false;
+	float m_dissolveTimer = 0.0f;
+	float m_dissolveDuration = 1.0f;
+	void loadDissolveComponent();
+
 private: 
 	void resolveHealthBarReferences();
 	void updateHealthBarFade();
+	void updateDissolveEffect();
 
 	void resolveReaperGauge();
 	void updateShadowExecutionPreviewAvailability();

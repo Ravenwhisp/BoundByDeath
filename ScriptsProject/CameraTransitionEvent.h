@@ -61,4 +61,5 @@ public:
 private:
     std::vector<Transform*> m_targetPoints;
     std::vector<CameraTransitionStep*> m_transitionSteps;
+
 };

@@ -2,6 +2,8 @@
 #include "PuzzleManagerLVL1.h"
 #include "EnvironmentSound.h"
 
+#include "PersistingCheckpointState.h"
+
 namespace
 {
     constexpr const char* k_openDoor = "Play_Environment_Open_Door";
@@ -46,6 +48,13 @@ void PuzzleManagerLVL1::Start()
 	blocker3 = m_navBlocker3.getReferencedComponent()->getOwner();
 	blocker4 = m_navBlocker4.getReferencedComponent()->getOwner();
 
+	for (int i = 0; i < 3; ++i)
+	{
+		if (PersistingCheckpointState::Get().m_solvedPuzzlesPersistent[i])
+		{
+			onPuzzleSolved(i);
+		}
+	}
 }
 
 void PuzzleManagerLVL1::Update()
@@ -63,6 +72,8 @@ void PuzzleManagerLVL1::puzzle1Solved()
 	NavRuntimeBlockerComponent* blocker2Comp = NavigationAPI::getRuntimeBlockerComponent(blocker2);
 	NavigationAPI::setBlocked(blocker1Comp, false);
 	NavigationAPI::setBlocked(blocker2Comp, true);
+
+	PersistingCheckpointState::Get().m_solvedPuzzles[static_cast<size_t>(PuzzleId::PUZZLE1_LEVEL1)] = true;
 }
 
 void PuzzleManagerLVL1::puzzle2Solved()
@@ -94,6 +105,8 @@ void PuzzleManagerLVL1::puzzle2Solved()
 
 	// Chains loop while it lowers (stopped + thud at the bottom in updateBridgeLowering).
 	EnvironmentSound::play(m_bridgeSoundEmitter, "Play_Environment_Chain_Bridge");
+
+	PersistingCheckpointState::Get().m_solvedPuzzles[static_cast<size_t>(PuzzleId::PUZZLE2_LEVEL1)] = true;
 }
 
 void PuzzleManagerLVL1::updateBridgeLowering(float dt)
@@ -148,6 +161,8 @@ void PuzzleManagerLVL1::puzzle3Solved()
 
 	NavRuntimeBlockerComponent* blocker4Comp = NavigationAPI::getRuntimeBlockerComponent(blocker4);
 	NavigationAPI::setBlocked(blocker4Comp, false);
+
+	PersistingCheckpointState::Get().m_solvedPuzzles[static_cast<size_t>(PuzzleId::PUZZLE3_LEVEL1)] = true;
 }
 
 void PuzzleManagerLVL1::onCrystalsActivated(int puzzleID)

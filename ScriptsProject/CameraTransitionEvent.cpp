@@ -24,6 +24,7 @@ IMPLEMENT_SCRIPT_FIELDS(CameraTransitionEvent,
 CameraTransitionEvent::CameraTransitionEvent(GameObject* owner)
     : GameplayEventAction(owner)
 {
+    m_isPersistent = true;
 }
 
 void CameraTransitionEvent::Start()

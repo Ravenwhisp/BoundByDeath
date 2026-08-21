@@ -10,6 +10,9 @@
 #include "Transform2D.h"
 #include "ReaperGauge.h"
 #include "ShadowExecution.h"
+#include "PersistingCheckpointState.h"
+
+#include <algorithm>
 
 IMPLEMENT_SCRIPT_FIELDS_INHERITED(EnemyDamageable, Damageable,
 	FIELD_GROUP_LABEL("Health Bar"),
@@ -21,7 +24,10 @@ IMPLEMENT_SCRIPT_FIELDS_INHERITED(EnemyDamageable, Damageable,
 	SERIALIZED_FLOAT(m_shadowExecutionPreviewFadeTime, "Shadow Preview Fade Time", 0.0f, 2.0f, 0.05f),
 	SERIALIZED_FLOAT(m_shadowExecutionPreviewHitTime, "Shadow Preview Hit Time", 0.05f, 1.0f, 0.05f),
 	SERIALIZED_FLOAT(m_shadowExecutionPreviewNonLethalAlpha, "Shadow Preview Non-Lethal Alpha", 0.0f, 1.0f, 0.05f),
-	SERIALIZED_FLOAT(m_shadowExecutionPreviewLethalAlpha, "Shadow Preview Lethal Alpha", 0.0f, 1.0f, 0.05f)
+	SERIALIZED_FLOAT(m_shadowExecutionPreviewLethalAlpha, "Shadow Preview Lethal Alpha", 0.0f, 1.0f, 0.05f),
+	FIELD_GROUP_LABEL("DissolveEffect"),
+	SERIALIZED_COMPONENT_REF(m_renderer, "Mesh Renderer", ComponentType::TRANSFORM),
+	SERIALIZED_FLOAT(m_dissolveDuration, "Dissolve Duration", 0.1f, 5.0f, 0.0f)
 )
 
 EnemyDamageable::EnemyDamageable(GameObject* owner)
@@ -31,6 +37,17 @@ EnemyDamageable::EnemyDamageable(GameObject* owner)
 
 void EnemyDamageable::Start()
 {
+	if (!PersistingCheckpointState::Get().IsStartOfLevel())
+	{
+		std::vector<UID>* deadEnemies = &PersistingCheckpointState::Get().m_deadEnemiesPersistent;
+
+		if (std::find(deadEnemies->begin(), deadEnemies->end(), m_owner->GetID()) != deadEnemies->end())
+		{
+			GameObjectAPI::removeGameObject(m_owner);
+			return;
+		}
+	}
+
 	resolveHealthBarReferences();
 	resolveReaperGauge();
 	resolveShadowExecution();
@@ -85,6 +102,8 @@ void EnemyDamageable::Start()
 	}
 
 	setHealthBarAlpha(0.0f);
+
+	loadDissolveComponent();
 }
 
 void EnemyDamageable::Update()
@@ -93,6 +112,11 @@ void EnemyDamageable::Update()
 	updateHealthBarFade();
 	updateShadowExecutionPreviewAvailability();
 	updateShadowExecutionPreviewAnimation(Time::getDeltaTime());
+
+	if (m_dissolve != nullptr && m_dissolveActive)
+	{
+		updateDissolveEffect();
+	}
 }
 
 void EnemyDamageable::takeDamage(const HitContext& ctx)
@@ -153,6 +177,22 @@ void EnemyDamageable::playShadowExecutionHitPreview()
 	Transform2DAPI::setAlpha(m_shadowExecutionPreviewTransform, m_shadowExecutionPreviewLethal ? m_shadowExecutionPreviewLethalAlpha : m_shadowExecutionPreviewNonLethalAlpha);
 }
 
+void EnemyDamageable::startDissolve()
+{
+	if (!m_dissolve)
+	{
+		return;
+	}
+
+	m_dissolveTimer = 0.0f;
+	m_dissolveActive = true;
+}
+
+bool EnemyDamageable::isDissolveFinished() const
+{
+	return !m_dissolve || m_dissolveTimer >= m_dissolveDuration;
+}
+
 void EnemyDamageable::kill()
 {
 	auto* barrier = GameObjectAPI::findScript<BarrierComponent>(m_owner);
@@ -208,6 +248,8 @@ void EnemyDamageable::onDeath()
 	{
 		m_shadowMark->clearMark();
 	}
+	
+	PersistingCheckpointState::Get().m_deadEnemies.push_back(m_owner->GetID());
 }
 
 bool EnemyDamageable::processShadowMarkHit(PlayerAttackType attackType)
@@ -357,6 +399,20 @@ void EnemyDamageable::updateHealthBarFade()
 		setHealthBarAlpha(1.0f);
 		m_healthBarFadeActive = false;
 	}
+}
+
+void EnemyDamageable::updateDissolveEffect()
+{
+	m_dissolveTimer += (Time::getDeltaTime());
+	if (m_dissolveTimer >= m_dissolveDuration)
+	{
+		m_dissolveTimer = m_dissolveDuration;
+		m_dissolveActive = false;
+	}
+
+	float amount = m_dissolveTimer / m_dissolveDuration;
+
+	ShadersAPI::setDissolveAmount(m_dissolve, amount);
 }
 
 void EnemyDamageable::setHealthBarAlpha(float alpha)
@@ -578,6 +634,25 @@ void EnemyDamageable::updateShadowExecutionThresholdMarker()
 	const float markerX = leftEdge + containerSize.x * thresholdPercent;
 
 	Transform2DAPI::setPosition(m_shadowExecutionThresholdMarkerTransform, Vector2(markerX, markerPosition.y));
+}
+
+void EnemyDamageable::loadDissolveComponent()
+{
+	Transform* rendererTransform = m_renderer.getReferencedComponent();
+
+	if (rendererTransform == nullptr)
+	{
+		Debug::warn("EnemyDamageable on '%s' has a missing renderer reference.", GameObjectAPI::getName(getOwner()));
+	}
+	else
+	{
+		m_dissolve = ShadersAPI::getDissolveComponent(ComponentAPI::getOwner(rendererTransform));
+
+		if (m_dissolve == nullptr)
+		{
+			Debug::warn("Renderer referenced in EnemyDamageable on '%s' does not have a Dissolve component.", GameObjectAPI::getName(getOwner()));
+		}
+	}
 }
 
 IMPLEMENT_SCRIPT(EnemyDamageable)

@@ -3,10 +3,10 @@
 #include "HeartbeatHaptic.h"
 #include "DeathSound.h"
 #include "LyrielSound.h"
-#include "SharedPlayerParticles.h"
 
 #include "PlayerDownState.h"
 #include "PlayerAnimationController.h"
+#include "PersistingCheckpointState.h"
 
 IMPLEMENT_SCRIPT_FIELDS_INHERITED(PlayerDamageable, Damageable,
     SERIALIZED_COMPONENT_REF(m_healthGlow, "Health Glow", ComponentType::UISLIDER),
@@ -41,11 +41,17 @@ void PlayerDamageable::Start()
 
     m_deathSound  = GameObjectAPI::findScript<DeathSound>(m_owner);
     m_lyrielSound = GameObjectAPI::findScript<LyrielSound>(m_owner);
-    m_playerParticles = GameObjectAPI::findScript<SharedPlayerParticles>(m_owner);
-
-    if (m_playerParticles == nullptr)
+    
+    if (PersistingCheckpointState::Get().m_lastCheckpointId > CheckpointId::NONE)
     {
-        Debug::warn("%s has PlayerDamageable but no PlayerParticles.", GameObjectAPI::getName(m_owner));
+        if (m_deathSound)
+        {
+            m_currentHp = PersistingCheckpointState::Get().m_savedDeathHealth;
+        }
+        if (m_lyrielSound)
+        {
+            m_currentHp = PersistingCheckpointState::Get().m_savedLyrielHealth;
+        }
     }
 
     Transform* rendererTransform = m_renderer.getReferencedComponent();
@@ -104,11 +110,6 @@ void PlayerDamageable::onDamaged(float amount)
     if (m_playerAnimationController != nullptr)
     {
         m_playerAnimationController->requestDamaged();
-    }
-
-    if (m_playerParticles != nullptr)
-    {
-        m_playerParticles->playDamageParticle();
     }
 
     if (isLastDamageContinuous())
