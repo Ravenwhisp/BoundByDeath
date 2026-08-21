@@ -172,6 +172,9 @@
     <Filter Include="Enemies\Aelorin\States\Combat">
       <UniqueIdentifier>{9096c954-dc28-4c7f-a954-bcde71212b80}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Enemies\Aelorin\UI">
+      <UniqueIdentifier>{c7d23cbd-96c5-4175-a8b4-628cdd048398}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -721,6 +724,10 @@
     <ClInclude Include="AelorinExhaustionState.h">
       <Filter>Enemies\Aelorin\States</Filter>
     </ClInclude>
+    <ClInclude Include="PuzzleManagerLVL2.h" />
+    <ClInclude Include="AelorinUI.h">
+      <Filter>Enemies\Aelorin\UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
@@ -1254,6 +1261,10 @@
     </ClCompile>
     <ClCompile Include="AelorinExhaustionState.cpp">
       <Filter>Enemies\Aelorin\States</Filter>
+    </ClCompile>
+    <ClCompile Include="PuzzleManagerLVL2.cpp" />
+    <ClCompile Include="AelorinUI.cpp">
+      <Filter>Enemies\Aelorin\UI</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

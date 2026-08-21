@@ -35,8 +35,6 @@ void SeekerSigilProjectile::launch(const Vector3& startPosition, const Vector3& 
 	}
 
 	TransformAPI::setGlobalPosition(projectileTransform, startPosition);
-
-	TransformAPI::lookAt(projectileTransform,	m_targetPosition);
 }
 
 void SeekerSigilProjectile::Update()
@@ -89,8 +87,6 @@ void SeekerSigilProjectile::Update()
 	toTarget.Normalize();
 
 	TransformAPI::translateGlobal(projectileTransform, toTarget * movementThisFrame);
-
-	TransformAPI::lookAt(projectileTransform, currentPosition + toTarget);
 }
 
 void SeekerSigilProjectile::applyImpactDamage()

@@ -7,6 +7,7 @@
 
 class AnimationComponent;
 class ProjectilePool;
+class AelorinUI;
 
 class AelorinSeekerSigilsState : public StateMachineScript
 {
@@ -24,6 +25,7 @@ private:
 	AnimationComponent* m_animation = nullptr;
 	ProjectilePool* m_normalProjectilePool = nullptr;
 	ProjectilePool* m_largeProjectilePool = nullptr;
+	AelorinUI* m_aelorinUI = nullptr;
 
 	AelorinAbility m_activeAbility = AelorinAbility::None;
 

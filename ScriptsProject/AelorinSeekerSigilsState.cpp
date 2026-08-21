@@ -3,6 +3,7 @@
 #include "AelorinAttackConfig.h"
 #include "ProjectilePool.h"
 #include "SeekerSigilProjectile.h"
+#include "AelorinUI.h"
 
 AelorinSeekerSigilsState::AelorinSeekerSigilsState(GameObject* owner)
 	: StateMachineScript(owner)
@@ -25,6 +26,7 @@ void AelorinSeekerSigilsState::OnStateEnter()
 	m_animation = AnimationAPI::getAnimationComponent(getOwner());
 	m_normalProjectilePool = m_controller->getSeekerSigilsProjectilePool();
 	m_largeProjectilePool = m_controller->getSeekerSigilsLargeProjectilePool();
+	m_aelorinUI = GameObjectAPI::findScript<AelorinUI>(parentGameObject);
 
 	// reset members
 	m_activeAbility = AelorinAbility::None;
@@ -56,6 +58,11 @@ void AelorinSeekerSigilsState::OnStateEnter()
 	{
 		Debug::error("[AelorinSeekerSigilsState] Large ProjectilePool not found.");
 		return;
+	}
+
+	if (!m_aelorinUI)
+	{
+		Debug::error("[AelorinSeekerSigilsState] AelorinUI not found.");
 	}
 
 	// consume ability
@@ -206,6 +213,14 @@ void AelorinSeekerSigilsState::launchProjectileAt(ProjectilePool* projectilePool
 	Vector3 spawnPosition = impactPosition;
 	spawnPosition.y += config->m_seekerSigilsSpawnHeight;
 
+	// UI
+	if (!m_isFuryCast && m_aelorinUI && config->m_seekerSigilsFallSpeed > 0.0f)
+	{
+		const float telegraphDuration = config->m_seekerSigilsSpawnHeight / config->m_seekerSigilsFallSpeed;
+		m_aelorinUI->showSeekerSigilsUI(impactPosition, impactRadius, telegraphDuration);
+	}
+
+	// Gameplay
 	projectile->launch(spawnPosition, impactPosition, config->m_seekerSigilsFallSpeed, config->m_seekerSigilsProjectileLifetime, impactRadius, damage, executor);
 }
 
