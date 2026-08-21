@@ -129,18 +129,18 @@ public:
 		),
 
 		FIELD_GROUP_COLLAPSE("Seeker Sigils",
-			SERIALIZED_INT(m_seekerSigilsWaveCount, "Wave Count", 0, 10, 1),
-			SERIALIZED_FLOAT(m_seekerSigilsInitialDelay, "Initial Delay", 0.0f, 5.0f, 0.01f),
-			SERIALIZED_FLOAT(m_seekerSigilsWaveInterval, "Wave Interval", 0.0f, 5.0f, 0.01f),
-			SERIALIZED_FLOAT(m_seekerSigilsRecoveryDuration, "Recovery Duration", 0.0f, 10.0f, 0.1f),
-			SERIALIZED_FLOAT(m_seekerSigilsRadius, "Radius", 0.0f, 10.0f, 0.1f),
-			SERIALIZED_FLOAT(m_seekerSigilsDamage, "Damage", 0.0f, 50.0f, 1.0f),
-			SERIALIZED_FLOAT(m_seekerSigilsPhase2FinalDelay, "Phase 2 Delay", 0.0f, 5.0f, 0.01f),
-			SERIALIZED_FLOAT(m_seekerSigilsPhase2FinalRadius, "Phase 2 Radius", 0.0f, 20.0f, 0.1f),
-			SERIALIZED_FLOAT(m_seekerSigilsPhase2FinalDamage, "Phase 2 Damage", 0.0f, 50.0f, 1.0f),
-			SERIALIZED_FLOAT(m_seekerSigilsSpawnHeight, "Spawn Height", 0.0f, 50.0f, 0.1f),
-			SERIALIZED_FLOAT(m_seekerSigilsFallSpeed, "Fall Speed", 0.0f, 50.0f, 0.1f),
-			SERIALIZED_FLOAT(m_seekerSigilsProjectileLifetime, "Lifetime", 0.0f, 20.0f, 0.1f)
+			SERIALIZED_INT(m_seekerSigilsWaveCount, "Sigils Wave Count", 0, 10, 1),
+			SERIALIZED_FLOAT(m_seekerSigilsInitialDelay, "Sigils Initial Delay", 0.0f, 5.0f, 0.01f),
+			SERIALIZED_FLOAT(m_seekerSigilsWaveInterval, "Sigils Wave Interval", 0.0f, 5.0f, 0.01f),
+			SERIALIZED_FLOAT(m_seekerSigilsRecoveryDuration, "Sigils Recovery Duration", 0.0f, 10.0f, 0.1f),
+			SERIALIZED_FLOAT(m_seekerSigilsRadius, "Sigils Radius", 0.0f, 10.0f, 0.1f),
+			SERIALIZED_FLOAT(m_seekerSigilsDamage, "Sigils Damage", 0.0f, 50.0f, 1.0f),
+			SERIALIZED_FLOAT(m_seekerSigilsPhase2FinalDelay, "Sigils Phase 2 Delay", 0.0f, 5.0f, 0.01f),
+			SERIALIZED_FLOAT(m_seekerSigilsPhase2FinalRadius, "Sigils Phase 2 Radius", 0.0f, 20.0f, 0.1f),
+			SERIALIZED_FLOAT(m_seekerSigilsPhase2FinalDamage, "Sigils Phase 2 Damage", 0.0f, 50.0f, 1.0f),
+			SERIALIZED_FLOAT(m_seekerSigilsSpawnHeight, "Sigils Spawn Height", 0.0f, 50.0f, 0.1f),
+			SERIALIZED_FLOAT(m_seekerSigilsFallSpeed, "Sigils Fall Speed", 0.0f, 50.0f, 0.1f),
+			SERIALIZED_FLOAT(m_seekerSigilsProjectileLifetime, "Sigils Lifetime", 0.0f, 20.0f, 0.1f)
 		),
 
 		FIELD_GROUP_COLLAPSE("Nova",
@@ -155,38 +155,38 @@ public:
 		),
 
 		FIELD_GROUP_COLLAPSE("Risen Spires",
-			SERIALIZED_FLOAT(m_risenSpiresWindupDuration, "Windup Duration", 0.0f, 10.0f, 0.1f),
+			SERIALIZED_FLOAT(m_risenSpiresWindupDuration, "Spires Windup Duration", 0.0f, 10.0f, 0.1f),
 			SERIALIZED_FLOAT(m_risenSpiresRadius, "Spire Radius", 0.0f, 10.0f, 0.1f),
 			SERIALIZED_FLOAT(m_risenSpiresDamage, "Spire Damage", 0.0f,	9999.0f, 1.0f),
-			SERIALIZED_FLOAT(m_risenSpiresPhase2SecondPassDelay, "Phase 2 Second Pass Delay", 0.0f, 10.0f, 0.1f),
-			SERIALIZED_FLOAT(m_risenSpiresRecoveryDuration, "Recovery Duration", 0.0f, 10.0f, 0.1f)
+			SERIALIZED_FLOAT(m_risenSpiresPhase2SecondPassDelay, "Spires Phase 2 Second Pass Delay", 0.0f, 10.0f, 0.1f),
+			SERIALIZED_FLOAT(m_risenSpiresRecoveryDuration, "Spires Recovery Duration", 0.0f, 10.0f, 0.1f)
 		),
 
 		FIELD_GROUP_COLLAPSE("Spirit Cannon",
-			SERIALIZED_FLOAT(m_spiritCannonWindupDuration, "Windup Duration", 0.0f, 10.0f, 0.1f),
-			SERIALIZED_FLOAT(m_spiritCannonBeamLength, "Beam Length", 0.0f, 200.0f, 1.0f),
-			SERIALIZED_FLOAT(m_spiritCannonBeamWidth, "Beam Width", 0.0f, 20.0f, 0.1f),
-			SERIALIZED_FLOAT(m_spiritCannonDamage, "Beam Damage", 0.0f, 100.0f, 1.0f),
-			SERIALIZED_FLOAT(m_spiritCannonPhase1ShotInterval, "Phase 1 Shot Interval", 0.0f, 10.0f, 0.05f),
-			SERIALIZED_FLOAT(m_spiritCannonPhase2ShotInterval, "Phase 2 Shot Interval", 0.0f, 10.0f, 0.05f),
-			SERIALIZED_FLOAT(m_spiritCannonPhase2FinalShotDelay, "Phase 2 Final Shot Delay", 0.0f, 10.0f, 0.05f),
-			SERIALIZED_FLOAT(m_spiritCannonPhase2FinalBeamWidth, "Phase 2 Final Beam Width", 0.0f, 20.0f, 0.1f),
-			SERIALIZED_FLOAT(m_spiritCannonPhase2FinalDamage, "Phase 2 Final Beam Damage", 0.0f, 200.0f, 1.0f),
-			SERIALIZED_FLOAT(m_spiritCannonRecoveryDuration, "Recovery Duration", 0.0f, 10.0f, 0.1f)
+			SERIALIZED_FLOAT(m_spiritCannonWindupDuration, "Cannon Windup Duration", 0.0f, 10.0f, 0.1f),
+			SERIALIZED_FLOAT(m_spiritCannonBeamLength, "Cannon Beam Length", 0.0f, 200.0f, 1.0f),
+			SERIALIZED_FLOAT(m_spiritCannonBeamWidth, "Cannon Beam Width", 0.0f, 20.0f, 0.1f),
+			SERIALIZED_FLOAT(m_spiritCannonDamage, "Cannon Beam Damage", 0.0f, 100.0f, 1.0f),
+			SERIALIZED_FLOAT(m_spiritCannonPhase1ShotInterval, "Cannon Phase 1 Shot Interval", 0.0f, 10.0f, 0.05f),
+			SERIALIZED_FLOAT(m_spiritCannonPhase2ShotInterval, "Cannon Phase 2 Shot Interval", 0.0f, 10.0f, 0.05f),
+			SERIALIZED_FLOAT(m_spiritCannonPhase2FinalShotDelay, "Cannon Phase 2 Final Shot Delay", 0.0f, 10.0f, 0.05f),
+			SERIALIZED_FLOAT(m_spiritCannonPhase2FinalBeamWidth, "Cannon Phase 2 Final Beam Width", 0.0f, 20.0f, 0.1f),
+			SERIALIZED_FLOAT(m_spiritCannonPhase2FinalDamage, "Cannon Phase 2 Final Beam Damage", 0.0f, 200.0f, 1.0f),
+			SERIALIZED_FLOAT(m_spiritCannonRecoveryDuration, "Cannon Recovery Duration", 0.0f, 10.0f, 0.1f)
 		),
 
 		FIELD_GROUP_COLLAPSE("Grasp of the Dead",
-			SERIALIZED_FLOAT(m_graspPullDuration, "Pull Duration", 0.0f, 10.0f, 0.1f),
-			SERIALIZED_FLOAT(m_graspPullStrength, "Pull Strength", 0.0f, 30.0f, 0.1f)
+			SERIALIZED_FLOAT(m_graspPullDuration, "Grasp Pull Duration", 0.0f, 10.0f, 0.1f),
+			SERIALIZED_FLOAT(m_graspPullStrength, "Grasp Pull Strength", 0.0f, 30.0f, 0.1f)
 		),
 
 		FIELD_GROUP_COLLAPSE("Teleport",
-			SERIALIZED_FLOAT(m_teleportCastDuration, "Cast Duration", 0.0f, 10.0f, 0.1f),
-			SERIALIZED_FLOAT(m_teleportCooldownDuration, "Cooldown Duration", 0.0f, 60.0f, 0.5f),
-			SERIALIZED_FLOAT(m_teleportTriggerDistance, "Trigger Distance", 0.0f, 20.0f, 0.1f),
-			SERIALIZED_FLOAT(m_teleportPhase2BurstRadius, "Phase 2 Burst Radius", 0.0f, 20.0f, 0.1f),
-			SERIALIZED_FLOAT(m_teleportPhase2BurstDamage, "Phase 2 Burst Damage", 0.0f, 9999.0f, 1.0f),
-			SERIALIZED_FLOAT(m_teleportRecoveryDuration, "Recovery Duration", 0.0f, 5.0f, 0.05f)
+			SERIALIZED_FLOAT(m_teleportCastDuration, "Teleport Cast Duration", 0.0f, 10.0f, 0.1f),
+			SERIALIZED_FLOAT(m_teleportCooldownDuration, "Teleport Cooldown Duration", 0.0f, 60.0f, 0.5f),
+			SERIALIZED_FLOAT(m_teleportTriggerDistance, "Teleport Trigger Distance", 0.0f, 20.0f, 0.1f),
+			SERIALIZED_FLOAT(m_teleportPhase2BurstRadius, "Teleport Phase 2 Burst Radius", 0.0f, 20.0f, 0.1f),
+			SERIALIZED_FLOAT(m_teleportPhase2BurstDamage, "Teleport Phase 2 Burst Damage", 0.0f, 9999.0f, 1.0f),
+			SERIALIZED_FLOAT(m_teleportRecoveryDuration, "Teleport Recovery Duration", 0.0f, 5.0f, 0.05f)
 		),
 
 		FIELD_GROUP_COLLAPSE("Summons",
@@ -202,13 +202,13 @@ public:
 		),
 
 		FIELD_GROUP_COLLAPSE("Soul Cataclysm",
-			SERIALIZED_FLOAT(m_soulCataclysmChannelDuration, "Channel Duration", 0.0f, 20.0f, 0.05f),
-			SERIALIZED_FLOAT(m_soulCataclysmSafeZoneRadius, "Safe Zone Radius", 0.1f, 20.0f, 0.1f),
-			SERIALIZED_FLOAT(m_soulCataclysmDamage, "Damage", 0.0f, 999.0f, 1.0f)
+			SERIALIZED_FLOAT(m_soulCataclysmChannelDuration, "Cataclysm Channel Duration", 0.0f, 20.0f, 0.05f),
+			SERIALIZED_FLOAT(m_soulCataclysmSafeZoneRadius, "Cataclysm Safe Zone Radius", 0.1f, 20.0f, 0.1f),
+			SERIALIZED_FLOAT(m_soulCataclysmDamage, "Cataclysm Damage", 0.0f, 999.0f, 1.0f)
 		),
 
 		FIELD_GROUP_COLLAPSE("Exhaustion",
-			SERIALIZED_FLOAT(m_furyExhaustionDuration, "Duration", 0.0f, 30.0f, 0.05f)
+			SERIALIZED_FLOAT(m_furyExhaustionDuration, "Exhaustion Duration", 0.0f, 30.0f, 0.05f)
 		),
 
 		FIELD_GROUP_COLLAPSE("Health Drops",

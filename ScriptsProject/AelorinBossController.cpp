@@ -25,8 +25,7 @@ IMPLEMENT_SCRIPT_FIELDS_INHERITED(AelorinBossController, EnemyBaseController,
 	SERIALIZED_COMPONENT_REF(m_graspCenter, "Grasp Center", ComponentType::TRANSFORM),
 	SERIALIZED_COMPONENT_REF(m_teleportAnchorsRoot, "Teleport Anchors Root", ComponentType::TRANSFORM),
 	SERIALIZED_COMPONENT_REF(m_phase1SummonFormation, "Phase 1 Summon Formation", ComponentType::TRANSFORM),
-	SERIALIZED_COMPONENT_REF(m_phase2SummonFormation, "Phase 2 Summon Formation", ComponentType::TRANSFORM),
-	SERIALIZED_COMPONENT_REF(m_soulCataclysmSafeZonesRoot, "Soul Cataclysm Safe Zones Root", ComponentType::TRANSFORM)
+	SERIALIZED_COMPONENT_REF(m_phase2SummonFormation, "Phase 2 Summon Formation", ComponentType::TRANSFORM)
 )
 
 AelorinBossController::AelorinBossController(GameObject* owner) : EnemyBaseController(owner)

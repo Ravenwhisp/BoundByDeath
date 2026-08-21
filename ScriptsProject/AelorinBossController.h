@@ -151,7 +151,6 @@ public:
 	int getFuryCastsCompleted() const { return m_furyCastsCompleted; }
 
 	// Soul Cataclysm helpers
-	Transform* getSoulCataclysmSafeZonesRoot() const { return m_soulCataclysmSafeZonesRoot.getReferencedComponent(); }
 	bool trySendSoulCataclysmTrigger(AnimationComponent* animation);
 
 	// Health drop
@@ -222,7 +221,6 @@ private:
 	int m_furyCastsCompleted = 0;
 
 	// Soul Cataclysm
-	ComponentRef<Transform> m_soulCataclysmSafeZonesRoot;
 	bool m_soulCataclysmTriggered = false;
 
 	// Debug Draw

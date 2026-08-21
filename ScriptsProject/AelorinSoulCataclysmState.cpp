@@ -50,9 +50,9 @@ void AelorinSoulCataclysmState::OnStateEnter()
 		return;
 	}
 
-	if (!m_controller->getSoulCataclysmSafeZonesRoot())
+	if (!m_controller->getTeleportAnchorsRoot())
 	{
-		Debug::warn("[AelorinSoulCataclysmState] Soul Cataclysm Safe Zones Root not assigned.");
+		Debug::warn("[AelorinSoulCataclysmState] Teleport Anchors Root not assigned.");
 	}
 
 	Debug::log("[AelorinSoulCataclysmState] ENTER");
@@ -139,7 +139,7 @@ bool AelorinSoulCataclysmState::isPlayerInsideSafeZone(Transform* playerTransfor
 		return false;
 	}
 
-	Transform* safeZonesRoot = m_controller->getSoulCataclysmSafeZonesRoot();
+	Transform* safeZonesRoot = m_controller->getTeleportAnchorsRoot();
 	if (!safeZonesRoot)
 	{
 		return false;

@@ -242,7 +242,7 @@ void AelorinDebugDraw::drawGizmo()
 
 	if (m_drawSoulCataclysmSafeZones)
 	{
-		Transform* safeZonesRoot = m_controller->getSoulCataclysmSafeZonesRoot();
+		Transform* safeZonesRoot = m_controller->getTeleportAnchorsRoot();
 		if (safeZonesRoot)
 		{
 			const int childCount = TransformAPI::getChildCount(safeZonesRoot);
