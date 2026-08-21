@@ -1,0 +1,514 @@
+{
+    "Version": 2,
+    "sourcePath": "Assets\\Prefabs\\Particles\\VFXRemake\\Enemies\\Enemies_Level1\\Ranged\\PS_ArrowBarrage.prefab",
+    "Name": "PS_ArrowBarrage",
+    "Active": true,
+    "Static": false,
+    "Layer": "DEFAULT",
+    "Tag": "DEFAULT",
+    "Transform": {
+        "Position": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "Rotation": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ],
+        "Scale": [
+            1.0,
+            1.0,
+            1.0
+        ]
+    },
+    "Components": [],
+    "Children": [
+        {
+            "Name": "PS_ArrowBarrageEmbers",
+            "Active": true,
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0,
+                    1.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [
+                {
+                    "UID": 11468246201455764738,
+                    "ComponentType": "PARTICLE_SYSTEM",
+                    "Active": true,
+                    "TextureAssetId": {
+                        "uid": 2565268715019002335,
+                        "libId": "2399aa4e102161dfe061fed6c8d6bb83",
+                        "type": "TEXTURE"
+                    },
+                    "ParticleEmitters": [
+                        {
+                            "Modules": [
+                                {
+                                    "ModuleType": 2,
+                                    "Looping": true,
+                                    "Duration": 1.0,
+                                    "RateOverTime": 5.0,
+                                    "RateOverDistance": 0.0
+                                },
+                                {
+                                    "ModuleType": 4,
+                                    "LifeTimeType": "RANDOM_BETWEEN_TWO",
+                                    "StartLifeTime": 0.5,
+                                    "StartLifeTime2": 0.20000000298023224
+                                },
+                                {
+                                    "ModuleType": 1,
+                                    "ShapeType": "CIRCLE",
+                                    "Radius": 0.25,
+                                    "RadiusThickness": 1.0,
+                                    "RadiusScale": 1.0
+                                },
+                                {
+                                    "ModuleType": 3,
+                                    "ColorOverTime": [
+                                        {
+                                            "IsAlphaMark": false,
+                                            "Position": 0.02310231514275074,
+                                            "Color": [
+                                                1.0,
+                                                1.0,
+                                                1.0
+                                            ]
+                                        },
+                                        {
+                                            "IsAlphaMark": false,
+                                            "Position": 0.40924134850502014,
+                                            "Color": [
+                                                1.0,
+                                                0.9254902005195618,
+                                                0.3607843220233917
+                                            ]
+                                        },
+                                        {
+                                            "IsAlphaMark": false,
+                                            "Position": 0.7359747886657715,
+                                            "Color": [
+                                                1.0,
+                                                0.48235294222831726,
+                                                0.0
+                                            ]
+                                        },
+                                        {
+                                            "IsAlphaMark": true,
+                                            "Position": 0.796180784702301,
+                                            "Alpha": 1.0
+                                        },
+                                        {
+                                            "IsAlphaMark": true,
+                                            "Position": 0.9704918265342712,
+                                            "Alpha": 0.0
+                                        }
+                                    ],
+                                    "ColorCurve": [
+                                        0.546875,
+                                        0.015625,
+                                        1.0,
+                                        1.0
+                                    ]
+                                },
+                                {
+                                    "ModuleType": 5,
+                                    "VelocityType": "CONSTANT",
+                                    "InitialVelocity": 0.0
+                                },
+                                {
+                                    "ModuleType": 6,
+                                    "StartScaleType": "RANDOM_BETWEEN_TWO",
+                                    "StartScale": [
+                                        0.10000000149011612,
+                                        0.10000000149011612,
+                                        0.0
+                                    ],
+                                    "StartScale2": [
+                                        0.05000000074505806,
+                                        0.05000000074505806,
+                                        0.0
+                                    ],
+                                    "ChangeSizeOverTime": false
+                                },
+                                {
+                                    "ModuleType": 7,
+                                    "RotationType": "CONSTANT",
+                                    "StartRotation": 1.5707963705062866,
+                                    "VelocityType": "CONSTANT",
+                                    "AngularVelocity": 0.0,
+                                    "FlipRotation": 0.0
+                                },
+                                {
+                                    "ModuleType": 8,
+                                    "TileRows": 1,
+                                    "TileColumns": 1,
+                                    "FPS": 0.0,
+                                    "StartFrameType": "CONSTANT",
+                                    "StartFrame": 0.0
+                                },
+                                {
+                                    "ModuleType": 9,
+                                    "RenderMode": "VERTICAL",
+                                    "RenderLayer": 0
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "UID": 16367444543370622102,
+                    "ComponentType": "PREFAB_INSTANCE",
+                    "Active": true,
+                    "sourcePath": "Assets\\Prefabs\\Particles\\VFXRemake\\Enemies\\Enemies_Level1\\Ranged\\PS_ArrowBarrageEmbers.prefab",
+                    "assetUID": 14333854703650152407
+                }
+            ],
+            "Children": []
+        },
+        {
+            "Name": "PS_ArrowBarrageCircle",
+            "Active": true,
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0,
+                    1.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [
+                {
+                    "UID": 2219094980022908015,
+                    "ComponentType": "PARTICLE_SYSTEM",
+                    "Active": true,
+                    "TextureAssetId": {
+                        "uid": 1904114361493236932,
+                        "libId": "1501206fcec4d1faef583923168e4b84",
+                        "type": "TEXTURE"
+                    },
+                    "ParticleEmitters": [
+                        {
+                            "Modules": [
+                                {
+                                    "ModuleType": 2,
+                                    "Looping": true,
+                                    "Duration": 1.0,
+                                    "RateOverTime": 1.0,
+                                    "RateOverDistance": 0.0
+                                },
+                                {
+                                    "ModuleType": 4,
+                                    "LifeTimeType": "CONSTANT",
+                                    "StartLifeTime": 5.0
+                                },
+                                {
+                                    "ModuleType": 1,
+                                    "ShapeType": "CIRCLE",
+                                    "Radius": 0.0,
+                                    "RadiusThickness": 1.0,
+                                    "RadiusScale": 3.0
+                                },
+                                {
+                                    "ModuleType": 3,
+                                    "ColorOverTime": [
+                                        {
+                                            "IsAlphaMark": false,
+                                            "Position": 0.0,
+                                            "Color": [
+                                                1.0,
+                                                0.9254902005195618,
+                                                0.3607843220233917
+                                            ]
+                                        },
+                                        {
+                                            "IsAlphaMark": false,
+                                            "Position": 0.12541256844997406,
+                                            "Color": [
+                                                1.0,
+                                                0.7647058963775635,
+                                                0.0
+                                            ]
+                                        },
+                                        {
+                                            "IsAlphaMark": false,
+                                            "Position": 0.7425755262374878,
+                                            "Color": [
+                                                1.0,
+                                                0.48235294222831726,
+                                                0.0
+                                            ]
+                                        },
+                                        {
+                                            "IsAlphaMark": true,
+                                            "Position": 0.7953795194625854,
+                                            "Alpha": 1.0
+                                        },
+                                        {
+                                            "IsAlphaMark": true,
+                                            "Position": 0.9967213273048401,
+                                            "Alpha": 0.0
+                                        }
+                                    ],
+                                    "ColorCurve": [
+                                        0.765625,
+                                        -0.0078125,
+                                        0.296875,
+                                        1.015625
+                                    ]
+                                },
+                                {
+                                    "ModuleType": 5,
+                                    "VelocityType": "CONSTANT",
+                                    "InitialVelocity": 0.0
+                                },
+                                {
+                                    "ModuleType": 6,
+                                    "StartScaleType": "CONSTANT",
+                                    "StartScale": [
+                                        1.0,
+                                        1.0,
+                                        0.0
+                                    ],
+                                    "ChangeSizeOverTime": false
+                                },
+                                {
+                                    "ModuleType": 7,
+                                    "RotationType": "CONSTANT",
+                                    "StartRotation": 0.0,
+                                    "VelocityType": "CONSTANT",
+                                    "AngularVelocity": 0.0,
+                                    "FlipRotation": 0.0
+                                },
+                                {
+                                    "ModuleType": 8,
+                                    "TileRows": 1,
+                                    "TileColumns": 1,
+                                    "FPS": 0.0,
+                                    "StartFrameType": "CONSTANT",
+                                    "StartFrame": 0.0
+                                },
+                                {
+                                    "ModuleType": 9,
+                                    "RenderMode": "HORIZONTAL",
+                                    "RenderLayer": 0
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "UID": 7222574424173789438,
+                    "ComponentType": "PREFAB_INSTANCE",
+                    "Active": true,
+                    "sourcePath": "Assets\\Prefabs\\Particles\\VFXRemake\\Enemies\\Enemies_Level1\\Ranged\\PS_ArrowBarrageCircle.prefab",
+                    "assetUID": 17071696270675495089
+                }
+            ],
+            "Children": []
+        },
+        {
+            "Name": "PS_ArrowBarrageSmoke",
+            "Active": true,
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0,
+                    1.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [
+                {
+                    "UID": 11010617119956637893,
+                    "ComponentType": "PARTICLE_SYSTEM",
+                    "Active": true,
+                    "TextureAssetId": {
+                        "uid": 9516829490310755625,
+                        "libId": "841291ffc5ef3529e0930d5a137ac76d",
+                        "type": "TEXTURE"
+                    },
+                    "ParticleEmitters": [
+                        {
+                            "Modules": [
+                                {
+                                    "ModuleType": 2,
+                                    "Looping": true,
+                                    "Duration": 1.0,
+                                    "RateOverTime": 5.0,
+                                    "RateOverDistance": 0.0
+                                },
+                                {
+                                    "ModuleType": 4,
+                                    "LifeTimeType": "RANDOM_BETWEEN_TWO",
+                                    "StartLifeTime": 1.0,
+                                    "StartLifeTime2": 2.0
+                                },
+                                {
+                                    "ModuleType": 1,
+                                    "ShapeType": "CONE",
+                                    "Radius": 0.05000000074505806,
+                                    "RadiusThickness": 0.5,
+                                    "RadiusScale": 1.0
+                                },
+                                {
+                                    "ModuleType": 3,
+                                    "ColorOverTime": [
+                                        {
+                                            "IsAlphaMark": false,
+                                            "Position": 0.02310231514275074,
+                                            "Color": [
+                                                1.0,
+                                                1.0,
+                                                1.0
+                                            ]
+                                        },
+                                        {
+                                            "IsAlphaMark": false,
+                                            "Position": 0.40924134850502014,
+                                            "Color": [
+                                                1.0,
+                                                0.9254902005195618,
+                                                0.3607843220233917
+                                            ]
+                                        },
+                                        {
+                                            "IsAlphaMark": false,
+                                            "Position": 0.7359747886657715,
+                                            "Color": [
+                                                1.0,
+                                                0.48235294222831726,
+                                                0.0
+                                            ]
+                                        },
+                                        {
+                                            "IsAlphaMark": true,
+                                            "Position": 0.796180784702301,
+                                            "Alpha": 0.5
+                                        },
+                                        {
+                                            "IsAlphaMark": true,
+                                            "Position": 0.9704918265342712,
+                                            "Alpha": 0.0
+                                        }
+                                    ],
+                                    "ColorCurve": [
+                                        0.546875,
+                                        0.015625,
+                                        1.0,
+                                        1.0
+                                    ]
+                                },
+                                {
+                                    "ModuleType": 5,
+                                    "VelocityType": "RANDOM_BETWEEN_TWO",
+                                    "InitialVelocity": 0.20000000298023224,
+                                    "InitialVelocity2": 0.05000000074505806
+                                },
+                                {
+                                    "ModuleType": 6,
+                                    "StartScaleType": "RANDOM_BETWEEN_TWO",
+                                    "StartScale": [
+                                        0.4000000059604645,
+                                        0.4000000059604645,
+                                        0.0
+                                    ],
+                                    "StartScale2": [
+                                        0.20000000298023224,
+                                        0.20000000298023224,
+                                        0.0
+                                    ],
+                                    "ChangeSizeOverTime": false
+                                },
+                                {
+                                    "ModuleType": 7,
+                                    "RotationType": "RANDOM_BETWEEN_TWO",
+                                    "StartRotation": 0.0,
+                                    "StartRotation2": 4.71238899230957,
+                                    "VelocityType": "RANDOM_BETWEEN_TWO",
+                                    "AngularVelocity": 0.2617993950843811,
+                                    "AngularVelocity2": -0.2617993950843811,
+                                    "FlipRotation": 0.0
+                                },
+                                {
+                                    "ModuleType": 8,
+                                    "TileRows": 1,
+                                    "TileColumns": 1,
+                                    "FPS": 0.0,
+                                    "StartFrameType": "CONSTANT",
+                                    "StartFrame": 0.0
+                                },
+                                {
+                                    "ModuleType": 9,
+                                    "RenderMode": "BILLBOARD",
+                                    "RenderLayer": 0
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "UID": 10937330376904708882,
+                    "ComponentType": "PREFAB_INSTANCE",
+                    "Active": true,
+                    "sourcePath": "Assets\\Prefabs\\Particles\\VFXRemake\\Enemies\\Enemies_Level1\\Ranged\\PS_ArrowBarrageEmbers.prefab",
+                    "assetUID": 14333854703650152407
+                },
+                {
+                    "UID": 16608440290066805046,
+                    "ComponentType": "PREFAB_INSTANCE",
+                    "Active": true,
+                    "sourcePath": "Assets\\Prefabs\\Particles\\VFXRemake\\Enemies\\Enemies_Level1\\Ranged\\PS_ArrowBarrageSmoke.prefab",
+                    "assetUID": 4846617487806328219
+                }
+            ],
+            "Children": []
+        }
+    ]
+}

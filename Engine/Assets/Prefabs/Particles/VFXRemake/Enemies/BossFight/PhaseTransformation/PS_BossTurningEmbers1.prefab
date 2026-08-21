@@ -1,0 +1,143 @@
+{
+    "Version": 2,
+    "sourcePath": "Assets\\Prefabs\\Particles\\VFXRemake\\Enemies\\BossFight\\PhaseTransformation\\PS_BossTurningEmbers1.prefab",
+    "Name": "PS_BossTurningEmbers1",
+    "Active": true,
+    "Static": false,
+    "Layer": "DEFAULT",
+    "Tag": "DEFAULT",
+    "Transform": {
+        "Position": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "Rotation": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ],
+        "Scale": [
+            1.0,
+            1.0,
+            1.0
+        ]
+    },
+    "Components": [
+        {
+            "UID": 6147481534436190845,
+            "ComponentType": "PARTICLE_SYSTEM",
+            "Active": true,
+            "TextureAssetId": {
+                "uid": 14944502442081492448,
+                "libId": "b5ba4a8b80e041a6d6c3fa6d490c4859",
+                "type": "TEXTURE"
+            },
+            "ParticleEmitters": [
+                {
+                    "Modules": [
+                        {
+                            "ModuleType": 2,
+                            "Looping": true,
+                            "Duration": 20.0,
+                            "RateOverTime": 15.0,
+                            "RateOverDistance": 0.0
+                        },
+                        {
+                            "ModuleType": 4,
+                            "LifeTimeType": "RANDOM_BETWEEN_TWO",
+                            "StartLifeTime": 0.5,
+                            "StartLifeTime2": 1.0
+                        },
+                        {
+                            "ModuleType": 1,
+                            "ShapeType": "CONE",
+                            "Radius": 0.5,
+                            "RadiusThickness": 1.0,
+                            "RadiusScale": 2.0
+                        },
+                        {
+                            "ModuleType": 3,
+                            "ColorOverTime": [
+                                {
+                                    "IsAlphaMark": false,
+                                    "Position": 0.0,
+                                    "Color": [
+                                        1.0,
+                                        0.8666666746139526,
+                                        0.3333333432674408
+                                    ]
+                                },
+                                {
+                                    "IsAlphaMark": false,
+                                    "Position": 0.6798686385154724,
+                                    "Color": [
+                                        1.0,
+                                        0.3333333432674408,
+                                        0.12941177189350128
+                                    ]
+                                }
+                            ],
+                            "ColorCurve": [
+                                0.125,
+                                0.8203125,
+                                1.0,
+                                1.0
+                            ]
+                        },
+                        {
+                            "ModuleType": 5,
+                            "VelocityType": "RANDOM_BETWEEN_TWO",
+                            "InitialVelocity": 1.0,
+                            "InitialVelocity2": 3.0
+                        },
+                        {
+                            "ModuleType": 6,
+                            "StartScaleType": "RANDOM_BETWEEN_TWO",
+                            "StartScale": [
+                                0.5,
+                                0.5,
+                                0.0
+                            ],
+                            "StartScale2": [
+                                0.25,
+                                0.5,
+                                0.0
+                            ],
+                            "ChangeSizeOverTime": true,
+                            "EndScaleType": "CONSTANT",
+                            "EndScale": [
+                                0.10000000149011612,
+                                0.10000000149011612,
+                                0.0
+                            ]
+                        },
+                        {
+                            "ModuleType": 7,
+                            "RotationType": "CONSTANT",
+                            "StartRotation": 0.0,
+                            "VelocityType": "CONSTANT",
+                            "AngularVelocity": 0.0,
+                            "FlipRotation": 0.0
+                        },
+                        {
+                            "ModuleType": 8,
+                            "TileRows": 1,
+                            "TileColumns": 1,
+                            "FPS": 0.0,
+                            "StartFrameType": "CONSTANT",
+                            "StartFrame": 0.0
+                        },
+                        {
+                            "ModuleType": 9,
+                            "RenderMode": "BILLBOARD",
+                            "RenderLayer": 0
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "Children": []
+}

@@ -1,0 +1,159 @@
+{
+    "Version": 2,
+    "sourcePath": "Assets\\Prefabs\\Particles\\VFXRemake\\Objects\\Cristals\\PS_CristalGlow2.prefab",
+    "Name": "PS_CristalGlow2",
+    "Active": true,
+    "Static": false,
+    "Layer": "DEFAULT",
+    "Tag": "DEFAULT",
+    "Transform": {
+        "Position": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "Rotation": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ],
+        "Scale": [
+            1.0,
+            1.0,
+            1.0
+        ]
+    },
+    "Components": [
+        {
+            "UID": 14272078815614156152,
+            "ComponentType": "PARTICLE_SYSTEM",
+            "Active": true,
+            "TextureAssetId": {
+                "uid": 14705584805046184271,
+                "libId": "cc14bb777728e94fe84c4da86f0907cf",
+                "type": "TEXTURE"
+            },
+            "ParticleEmitters": [
+                {
+                    "Modules": [
+                        {
+                            "ModuleType": 2,
+                            "Looping": true,
+                            "Duration": 1.0,
+                            "RateOverTime": 1.0,
+                            "RateOverDistance": 0.0
+                        },
+                        {
+                            "ModuleType": 4,
+                            "LifeTimeType": "CONSTANT",
+                            "StartLifeTime": 1.0
+                        },
+                        {
+                            "ModuleType": 1,
+                            "ShapeType": "CIRCLE",
+                            "Radius": 0.0,
+                            "RadiusThickness": 1.0,
+                            "RadiusScale": 3.0
+                        },
+                        {
+                            "ModuleType": 3,
+                            "ColorOverTime": [
+                                {
+                                    "IsAlphaMark": true,
+                                    "Position": 0.0,
+                                    "Alpha": 0.2029999941587448
+                                },
+                                {
+                                    "IsAlphaMark": false,
+                                    "Position": 0.13201436400413513,
+                                    "Color": [
+                                        0.2666666805744171,
+                                        0.8980392217636108,
+                                        0.9058823585510254
+                                    ]
+                                },
+                                {
+                                    "IsAlphaMark": true,
+                                    "Position": 0.2032782882452011,
+                                    "Alpha": 1.0
+                                },
+                                {
+                                    "IsAlphaMark": false,
+                                    "Position": 0.5016507506370544,
+                                    "Color": [
+                                        0.4435795545578003,
+                                        0.9808495044708252,
+                                        0.8306002616882324
+                                    ]
+                                },
+                                {
+                                    "IsAlphaMark": true,
+                                    "Position": 0.7540977001190186,
+                                    "Alpha": 1.0
+                                },
+                                {
+                                    "IsAlphaMark": false,
+                                    "Position": 0.8679874539375305,
+                                    "Color": [
+                                        0.2666666805744171,
+                                        0.8980392217636108,
+                                        0.9058823585510254
+                                    ]
+                                },
+                                {
+                                    "IsAlphaMark": true,
+                                    "Position": 0.9967213273048401,
+                                    "Alpha": 0.22100000083446503
+                                }
+                            ],
+                            "ColorCurve": [
+                                0.5859375,
+                                0.109375,
+                                0.359375,
+                                0.921875
+                            ]
+                        },
+                        {
+                            "ModuleType": 5,
+                            "VelocityType": "CONSTANT",
+                            "InitialVelocity": 0.0
+                        },
+                        {
+                            "ModuleType": 6,
+                            "StartScaleType": "CONSTANT",
+                            "StartScale": [
+                                1.0,
+                                1.0,
+                                0.0
+                            ],
+                            "ChangeSizeOverTime": false
+                        },
+                        {
+                            "ModuleType": 7,
+                            "RotationType": "CONSTANT",
+                            "StartRotation": 0.3228859007358551,
+                            "VelocityType": "CONSTANT",
+                            "AngularVelocity": 0.0,
+                            "FlipRotation": 0.0
+                        },
+                        {
+                            "ModuleType": 8,
+                            "TileRows": 1,
+                            "TileColumns": 1,
+                            "FPS": 0.0,
+                            "StartFrameType": "CONSTANT",
+                            "StartFrame": 0.0
+                        },
+                        {
+                            "ModuleType": 9,
+                            "RenderMode": "BILLBOARD",
+                            "RenderLayer": 0
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "Children": []
+}

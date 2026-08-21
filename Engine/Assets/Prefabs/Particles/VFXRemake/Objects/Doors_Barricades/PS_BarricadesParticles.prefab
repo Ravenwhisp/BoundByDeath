@@ -1,0 +1,194 @@
+{
+    "Version": 2,
+    "sourcePath": "Assets\\Prefabs\\Particles\\VFXRemake\\Objects\\Doors_Barricades\\PS_BarricadesParticles.prefab",
+    "Name": "PS_BarricadesParticles",
+    "Active": true,
+    "Static": false,
+    "Layer": "DEFAULT",
+    "Tag": "DEFAULT",
+    "Transform": {
+        "Position": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "Rotation": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ],
+        "Scale": [
+            1.0,
+            1.0,
+            1.0
+        ]
+    },
+    "Components": [
+        {
+            "UID": 1536059478716477220,
+            "ComponentType": "PARTICLE_SYSTEM",
+            "Active": true,
+            "TextureAssetId": {
+                "uid": 4380675350421491452,
+                "libId": "905768d99beecfb4fcc4d8b87cc52809",
+                "type": "TEXTURE"
+            },
+            "ParticleEmitters": [
+                {
+                    "Modules": [
+                        {
+                            "ModuleType": 2,
+                            "Looping": true,
+                            "Duration": 1.0,
+                            "RateOverTime": 2.0,
+                            "RateOverDistance": 0.0
+                        },
+                        {
+                            "ModuleType": 4,
+                            "LifeTimeType": "RANDOM_BETWEEN_TWO",
+                            "StartLifeTime": 1.0,
+                            "StartLifeTime2": 2.0
+                        },
+                        {
+                            "ModuleType": 1,
+                            "ShapeType": "SPHERE",
+                            "Radius": 0.20000000298023224,
+                            "RadiusThickness": 1.0,
+                            "RadiusScale": 3.0
+                        },
+                        {
+                            "ModuleType": 3,
+                            "ColorOverTime": [
+                                {
+                                    "IsAlphaMark": true,
+                                    "Position": 0.013114754110574722,
+                                    "Alpha": 0.5
+                                },
+                                {
+                                    "IsAlphaMark": false,
+                                    "Position": 0.03300410136580467,
+                                    "Color": [
+                                        0.4000000059604645,
+                                        0.20000000298023224,
+                                        0.6000000238418579
+                                    ]
+                                },
+                                {
+                                    "IsAlphaMark": false,
+                                    "Position": 0.17841193079948425,
+                                    "Color": [
+                                        0.9843137264251709,
+                                        0.843137264251709,
+                                        0.32549020648002625
+                                    ]
+                                },
+                                {
+                                    "IsAlphaMark": true,
+                                    "Position": 0.3016393482685089,
+                                    "Alpha": 1.0
+                                },
+                                {
+                                    "IsAlphaMark": true,
+                                    "Position": 0.7311801910400391,
+                                    "Alpha": 1.0
+                                },
+                                {
+                                    "IsAlphaMark": false,
+                                    "Position": 0.8382824659347534,
+                                    "Color": [
+                                        0.9531166553497314,
+                                        0.8108326196670532,
+                                        0.3352739214897156
+                                    ]
+                                },
+                                {
+                                    "IsAlphaMark": false,
+                                    "Position": 0.9801977872848511,
+                                    "Color": [
+                                        0.32156863808631897,
+                                        0.1568627506494522,
+                                        0.5333333611488342
+                                    ]
+                                },
+                                {
+                                    "IsAlphaMark": true,
+                                    "Position": 0.9836065769195557,
+                                    "Alpha": 0.5
+                                }
+                            ],
+                            "ColorCurve": [
+                                0.0,
+                                0.0,
+                                1.0,
+                                1.0
+                            ]
+                        },
+                        {
+                            "ModuleType": 5,
+                            "VelocityType": "CURVE",
+                            "InitialVelocity": 0.10000000149011612,
+                            "InitialVelocity2": 0.20000000298023224,
+                            "VelocityCurve": [
+                                0.1484375,
+                                0.9453125,
+                                1.0,
+                                1.0
+                            ]
+                        },
+                        {
+                            "ModuleType": 6,
+                            "StartScaleType": "RANDOM_BETWEEN_TWO",
+                            "StartScale": [
+                                0.20000000298023224,
+                                0.20000000298023224,
+                                0.0
+                            ],
+                            "StartScale2": [
+                                0.05000000074505806,
+                                0.05000000074505806,
+                                0.0
+                            ],
+                            "ChangeSizeOverTime": true,
+                            "EndScaleType": "RANDOM_BETWEEN_TWO",
+                            "EndScale": [
+                                0.10000000149011612,
+                                0.10000000149011612,
+                                0.0
+                            ],
+                            "EndScale2": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "ModuleType": 7,
+                            "RotationType": "RANDOM_BETWEEN_TWO",
+                            "StartRotation": 0.0,
+                            "StartRotation2": 4.71238899230957,
+                            "VelocityType": "RANDOM_BETWEEN_TWO",
+                            "AngularVelocity": 0.4363323152065277,
+                            "AngularVelocity2": -0.4363323152065277,
+                            "FlipRotation": 0.0
+                        },
+                        {
+                            "ModuleType": 8,
+                            "TileRows": 1,
+                            "TileColumns": 1,
+                            "FPS": 0.0,
+                            "StartFrameType": "CONSTANT",
+                            "StartFrame": 0.0
+                        },
+                        {
+                            "ModuleType": 9,
+                            "RenderMode": "BILLBOARD",
+                            "RenderLayer": 0
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "Children": []
+}

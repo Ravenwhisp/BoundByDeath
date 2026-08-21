@@ -29,6 +29,21 @@ void BarrierComponent::Update()
 	processPendingDestruction();
 }
 
+bool BarrierComponent::hasActiveBarrierAt(float hpPercent) const
+{
+	constexpr float tolerance = 0.0001f;
+
+	for (const Barrier& barrier : m_barriers)
+	{
+		if (std::abs(barrier.hpPercent - hpPercent) <= tolerance)
+		{
+			return !barrier.broken;
+		}
+	}
+
+	return false;
+}
+
 void BarrierComponent::buildBarriers()
 {
 	m_barriers.clear();

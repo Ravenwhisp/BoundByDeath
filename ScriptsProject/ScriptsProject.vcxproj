@@ -178,11 +178,16 @@
     <ClInclude Include="CameraTransitionStep.h" />
     <ClInclude Include="CameraTransitionStepAction.h" />
     <ClInclude Include="ChargedAttackBase.h" />
-    <ClInclude Include="CombatAreaEvent.h" />
+    <ClInclude Include="Checkpoint1_Level1_Event.h" />
+    <ClInclude Include="CheckpointEvent.h" />
     <ClInclude Include="CrystalVisuals.h" />
+    <ClInclude Include="PersistingManager.h" />
+    <ClInclude Include="PersistingCheckpointState.h" />
+    <ClInclude Include="CombatAreaEvent.h" />
     <ClInclude Include="DeathParticles.h" />
     <ClInclude Include="ElevatorManager.h" />
     <ClInclude Include="EnemyAttackState.h" />
+    <ClInclude Include="PaladinUI.h" />
     <ClInclude Include="PlayerAttackType.h" />
     <ClInclude Include="EnemyBaseAttackConfig.h" />
     <ClInclude Include="CharacterUI.h" />
@@ -225,7 +230,6 @@
     <ClInclude Include="EnergyBallProjectile.h" />
     <ClInclude Include="GameplayEventAction.h" />
     <ClInclude Include="GameplayEventTrigger.h" />
-    <ClInclude Include="HapticTester.h" />
     <ClInclude Include="HUDFader.h" />
     <ClInclude Include="LinkedDeathController.h" />
     <ClInclude Include="LocalMultiplayerSetup.h" />
@@ -247,7 +251,6 @@
     <ClInclude Include="EnemyShadowMark.h" />
     <ClInclude Include="HealthDropSpawner.h" />
     <ClInclude Include="HeartbeatHaptic.h" />
-    <ClInclude Include="PlayerGamepadBinding.h" />
     <ClInclude Include="LightZoneManager.h" />
     <ClInclude Include="LightZoneTrigger.h" />
     <ClInclude Include="LyrielTargetIndicatorUI.h" />
@@ -268,6 +271,7 @@
     <ClInclude Include="PersistingPowerupState.h" />
     <ClInclude Include="PlayAnimationAction.h" />
     <ClInclude Include="PlayerController.h" />
+    <ClInclude Include="PlayerGamepadBinding.h" />
     <ClInclude Include="PopUpController.h" />
     <ClInclude Include="PopUpEvent.h" />
     <ClInclude Include="ObjectiveTypes.h" />
@@ -277,6 +281,7 @@
     <ClInclude Include="ProjectileBase.h" />
     <ClInclude Include="ProjectilePool.h" />
     <ClInclude Include="PuzzleManagerLVL1.h" />
+    <ClInclude Include="PuzzleManagerLVL2.h" />
     <ClInclude Include="RangedEnemyController.h" />
     <ClInclude Include="ReaperGauge.h" />
     <ClInclude Include="ShadowExecution.h" />
@@ -294,6 +299,7 @@
     <ClInclude Include="AbilityDash.h" />
     <ClInclude Include="LyrielDash.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="ShadowExecutionConfig.h" />
     <ClInclude Include="SkeletonAttackConfig.h" />
     <ClInclude Include="SkeletonAttackDebugDraw.h" />
     <ClInclude Include="SkeletonChaseState.h" />
@@ -312,6 +318,8 @@
     <ClInclude Include="PlayerRotation.h" />
     <ClInclude Include="PlayerState.h" />
     <ClInclude Include="PlayerTargetController.h" />
+    <ClInclude Include="PlayerVitalsMonitor.h" />
+    <ClInclude Include="OutlineStyleSetup.h" />
     <ClInclude Include="SummonerAttackConfig.h" />
     <ClInclude Include="SummonerEnergyBallState.h" />
     <ClInclude Include="SummonerEnemyController.h" />
@@ -347,8 +355,13 @@
     <ClCompile Include="CameraTransitionStep.cpp" />
     <ClCompile Include="CameraTransitionStepAction.cpp" />
     <ClCompile Include="ChargedAttackBase.cpp" />
-    <ClCompile Include="CombatAreaEvent.cpp" />
+    <ClCompile Include="Checkpoint1_Level1_Event.cpp" />
+    <ClCompile Include="CheckpointEvent.cpp" />
     <ClCompile Include="CrystalVisuals.cpp" />
+    <ClCompile Include="GameplayEventAction.cpp" />
+    <ClCompile Include="PersistingManager.cpp" />
+    <ClCompile Include="PersistingCheckpointState.cpp" />
+    <ClCompile Include="CombatAreaEvent.cpp" />
     <ClCompile Include="DeathParticles.cpp" />
     <ClCompile Include="ElevatorManager.cpp" />
     <ClCompile Include="EnemyAttackState.cpp" />
@@ -392,7 +405,6 @@
     <ClCompile Include="EnemyStunParticles.cpp" />
     <ClCompile Include="EnergyBallProjectile.cpp" />
     <ClCompile Include="GameplayEventTrigger.cpp" />
-    <ClCompile Include="HapticTester.cpp" />
     <ClCompile Include="HUDFader.cpp" />
     <ClCompile Include="LinkedDeathController.cpp" />
     <ClCompile Include="LocalMultiplayerSetup.cpp" />
@@ -415,7 +427,7 @@
     <ClCompile Include="EnemyShadowMark.cpp" />
     <ClCompile Include="HealthDropSpawner.cpp" />
     <ClCompile Include="HeartbeatHaptic.cpp" />
-    <ClCompile Include="PlayerGamepadBinding.cpp" />
+    <ClCompile Include="PaladinUI.cpp" />
     <ClCompile Include="LightZoneManager.cpp" />
     <ClCompile Include="LightZoneTrigger.cpp" />
     <ClCompile Include="LyrielTargetIndicatorUI.cpp" />
@@ -435,6 +447,7 @@
     <ClCompile Include="PersistingPowerupState.cpp" />
     <ClCompile Include="PlayAnimationAction.cpp" />
     <ClCompile Include="PlayerController.cpp" />
+    <ClCompile Include="PlayerGamepadBinding.cpp" />
     <ClCompile Include="PopUpController.cpp" />
     <ClCompile Include="PopUpEvent.cpp" />
     <ClCompile Include="PowerupCollectible.cpp" />
@@ -443,6 +456,7 @@
     <ClCompile Include="ProjectileBase.cpp" />
     <ClCompile Include="ProjectilePool.cpp" />
     <ClCompile Include="PuzzleManagerLVL1.cpp" />
+    <ClCompile Include="PuzzleManagerLVL2.cpp" />
     <ClCompile Include="RangedEnemyController.cpp" />
     <ClCompile Include="ReaperGauge.cpp" />
     <ClCompile Include="ShadowExecution.cpp" />
@@ -468,6 +482,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="ShadowExecutionConfig.cpp" />
     <ClCompile Include="SkeletonAttackConfig.cpp" />
     <ClCompile Include="SkeletonAttackDebugDraw.cpp" />
     <ClCompile Include="SkeletonChaseState.cpp" />
@@ -486,6 +501,8 @@
     <ClCompile Include="PlayerRotation.cpp" />
     <ClCompile Include="PlayerState.cpp" />
     <ClCompile Include="PlayerTargetController.cpp" />
+    <ClCompile Include="PlayerVitalsMonitor.cpp" />
+    <ClCompile Include="OutlineStyleSetup.cpp" />
     <ClCompile Include="SummonerEnergyBallState.cpp" />
     <ClCompile Include="SummonerEnemyController.cpp" />
     <ClCompile Include="SummonerIdleState.cpp" />

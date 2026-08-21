@@ -1,0 +1,528 @@
+{
+    "Version": 2,
+    "sourcePath": "Assets\\Prefabs\\Particles\\VFXRemake\\Objects\\Barrels\\PS_BarrelsHeal.prefab",
+    "Name": "PS_BarrelsHeal",
+    "Active": true,
+    "Static": false,
+    "Layer": "DEFAULT",
+    "Tag": "DEFAULT",
+    "Transform": {
+        "Position": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "Rotation": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ],
+        "Scale": [
+            1.0,
+            1.0,
+            1.0
+        ]
+    },
+    "Components": [],
+    "Children": [
+        {
+            "Name": "PS_BarrelsHealParticles2",
+            "Active": true,
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0,
+                    1.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [
+                {
+                    "UID": 12408244228221574563,
+                    "ComponentType": "PARTICLE_SYSTEM",
+                    "Active": true,
+                    "TextureAssetId": {
+                        "uid": 15233043859842995764,
+                        "libId": "d366a4aeb1e31634779c02d33b3631dc",
+                        "type": "TEXTURE"
+                    },
+                    "ParticleEmitters": [
+                        {
+                            "Modules": [
+                                {
+                                    "ModuleType": 2,
+                                    "Looping": false,
+                                    "Duration": 20.0,
+                                    "RateOverTime": 10.0,
+                                    "RateOverDistance": 0.0
+                                },
+                                {
+                                    "ModuleType": 4,
+                                    "LifeTimeType": "RANDOM_BETWEEN_TWO",
+                                    "StartLifeTime": 0.20000000298023224,
+                                    "StartLifeTime2": 0.10000000149011612
+                                },
+                                {
+                                    "ModuleType": 1,
+                                    "ShapeType": "CONE",
+                                    "Radius": 0.20000000298023224,
+                                    "RadiusThickness": 1.0,
+                                    "RadiusScale": 1.0
+                                },
+                                {
+                                    "ModuleType": 3,
+                                    "ColorOverTime": [
+                                        {
+                                            "IsAlphaMark": false,
+                                            "Position": 0.1221124604344368,
+                                            "Color": [
+                                                0.800000011920929,
+                                                1.0,
+                                                0.20000000298023224
+                                            ]
+                                        },
+                                        {
+                                            "IsAlphaMark": false,
+                                            "Position": 0.415842205286026,
+                                            "Color": [
+                                                0.43921568989753723,
+                                                0.8784313797950745,
+                                                0.0
+                                            ]
+                                        },
+                                        {
+                                            "IsAlphaMark": false,
+                                            "Position": 0.7689770460128784,
+                                            "Color": [
+                                                0.0,
+                                                0.3921568691730499,
+                                                0.0
+                                            ]
+                                        },
+                                        {
+                                            "IsAlphaMark": true,
+                                            "Position": 0.796721339225769,
+                                            "Alpha": 1.0
+                                        },
+                                        {
+                                            "IsAlphaMark": true,
+                                            "Position": 0.9867987036705017,
+                                            "Alpha": 0.09099999815225601
+                                        }
+                                    ],
+                                    "ColorCurve": [
+                                        0.0,
+                                        0.0,
+                                        0.171875,
+                                        1.0234375
+                                    ]
+                                },
+                                {
+                                    "ModuleType": 5,
+                                    "VelocityType": "CONSTANT",
+                                    "InitialVelocity": 2.0
+                                },
+                                {
+                                    "ModuleType": 6,
+                                    "StartScaleType": "RANDOM_BETWEEN_TWO",
+                                    "StartScale": [
+                                        0.10000000149011612,
+                                        0.10000000149011612,
+                                        0.0
+                                    ],
+                                    "StartScale2": [
+                                        0.20000000298023224,
+                                        0.20000000298023224,
+                                        0.0
+                                    ],
+                                    "ChangeSizeOverTime": false
+                                },
+                                {
+                                    "ModuleType": 7,
+                                    "RotationType": "CONSTANT",
+                                    "StartRotation": 0.0,
+                                    "VelocityType": "CONSTANT",
+                                    "AngularVelocity": 0.0,
+                                    "FlipRotation": 0.0
+                                },
+                                {
+                                    "ModuleType": 8,
+                                    "TileRows": 1,
+                                    "TileColumns": 1,
+                                    "FPS": 0.0,
+                                    "StartFrameType": "CONSTANT",
+                                    "StartFrame": 0.0
+                                },
+                                {
+                                    "ModuleType": 9,
+                                    "RenderMode": "VERTICAL",
+                                    "RenderLayer": 0
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "UID": 8308684569702392455,
+                    "ComponentType": "PREFAB_INSTANCE",
+                    "Active": true,
+                    "sourcePath": "Assets\\Prefabs\\Particles\\VFXRemake\\Objects\\Barrels\\PS_BarrelsHealParticles1.prefab",
+                    "assetUID": 10539269014952362662
+                },
+                {
+                    "UID": 11776213302921925349,
+                    "ComponentType": "PREFAB_INSTANCE",
+                    "Active": true,
+                    "sourcePath": "Assets\\Prefabs\\Particles\\VFXRemake\\Objects\\Barrels\\PS_BarrelsHealParticles2.prefab",
+                    "assetUID": 17178564372776870994
+                }
+            ],
+            "Children": []
+        },
+        {
+            "Name": "PS_BarrelsHealParticles1",
+            "Active": true,
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0,
+                    1.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [
+                {
+                    "UID": 13992663596608684090,
+                    "ComponentType": "PARTICLE_SYSTEM",
+                    "Active": true,
+                    "TextureAssetId": {
+                        "uid": 10764966982965910805,
+                        "libId": "79aa7d0194ab9b0020aa064e26131741",
+                        "type": "TEXTURE"
+                    },
+                    "ParticleEmitters": [
+                        {
+                            "Modules": [
+                                {
+                                    "ModuleType": 2,
+                                    "Looping": false,
+                                    "Duration": 20.0,
+                                    "RateOverTime": 10.0,
+                                    "RateOverDistance": 0.0
+                                },
+                                {
+                                    "ModuleType": 4,
+                                    "LifeTimeType": "RANDOM_BETWEEN_TWO",
+                                    "StartLifeTime": 0.20000000298023224,
+                                    "StartLifeTime2": 0.10000000149011612
+                                },
+                                {
+                                    "ModuleType": 1,
+                                    "ShapeType": "CONE",
+                                    "Radius": 0.20000000298023224,
+                                    "RadiusThickness": 1.0,
+                                    "RadiusScale": 1.0
+                                },
+                                {
+                                    "ModuleType": 3,
+                                    "ColorOverTime": [
+                                        {
+                                            "IsAlphaMark": false,
+                                            "Position": 0.1221124604344368,
+                                            "Color": [
+                                                0.800000011920929,
+                                                1.0,
+                                                0.20000000298023224
+                                            ]
+                                        },
+                                        {
+                                            "IsAlphaMark": false,
+                                            "Position": 0.415842205286026,
+                                            "Color": [
+                                                0.43921568989753723,
+                                                0.8784313797950745,
+                                                0.0
+                                            ]
+                                        },
+                                        {
+                                            "IsAlphaMark": false,
+                                            "Position": 0.7689770460128784,
+                                            "Color": [
+                                                0.0,
+                                                0.3921568691730499,
+                                                0.0
+                                            ]
+                                        },
+                                        {
+                                            "IsAlphaMark": true,
+                                            "Position": 0.796721339225769,
+                                            "Alpha": 1.0
+                                        },
+                                        {
+                                            "IsAlphaMark": true,
+                                            "Position": 0.9867987036705017,
+                                            "Alpha": 0.09099999815225601
+                                        }
+                                    ],
+                                    "ColorCurve": [
+                                        0.0,
+                                        0.0,
+                                        0.171875,
+                                        1.0234375
+                                    ]
+                                },
+                                {
+                                    "ModuleType": 5,
+                                    "VelocityType": "CONSTANT",
+                                    "InitialVelocity": 5.0
+                                },
+                                {
+                                    "ModuleType": 6,
+                                    "StartScaleType": "RANDOM_BETWEEN_TWO",
+                                    "StartScale": [
+                                        0.10000000149011612,
+                                        0.10000000149011612,
+                                        0.0
+                                    ],
+                                    "StartScale2": [
+                                        0.05000000074505806,
+                                        0.05000000074505806,
+                                        0.0
+                                    ],
+                                    "ChangeSizeOverTime": false
+                                },
+                                {
+                                    "ModuleType": 7,
+                                    "RotationType": "CONSTANT",
+                                    "StartRotation": 0.0,
+                                    "VelocityType": "CONSTANT",
+                                    "AngularVelocity": 0.0,
+                                    "FlipRotation": 0.0
+                                },
+                                {
+                                    "ModuleType": 8,
+                                    "TileRows": 1,
+                                    "TileColumns": 1,
+                                    "FPS": 0.0,
+                                    "StartFrameType": "CONSTANT",
+                                    "StartFrame": 0.0
+                                },
+                                {
+                                    "ModuleType": 9,
+                                    "RenderMode": "VERTICAL",
+                                    "RenderLayer": 0
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "UID": 18061445110361674300,
+                    "ComponentType": "PREFAB_INSTANCE",
+                    "Active": true,
+                    "sourcePath": "Assets\\Prefabs\\Particles\\VFXRemake\\Objects\\Barrels\\PS_BarrelsHealParticles1.prefab",
+                    "assetUID": 10539269014952362662
+                }
+            ],
+            "Children": []
+        },
+        {
+            "Name": "PS_BarrelsDustHeal",
+            "Active": true,
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    1.0,
+                    0.0,
+                    0.0,
+                    -1.1920930376163597e-7
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [
+                {
+                    "UID": 15278833705680238452,
+                    "ComponentType": "PARTICLE_SYSTEM",
+                    "Active": true,
+                    "TextureAssetId": {
+                        "uid": 9516829490310755625,
+                        "libId": "841291ffc5ef3529e0930d5a137ac76d",
+                        "type": "TEXTURE"
+                    },
+                    "ParticleEmitters": [
+                        {
+                            "Modules": [
+                                {
+                                    "ModuleType": 2,
+                                    "Looping": false,
+                                    "Duration": 2.0,
+                                    "RateOverTime": 2.0,
+                                    "RateOverDistance": 0.0
+                                },
+                                {
+                                    "ModuleType": 4,
+                                    "LifeTimeType": "RANDOM_BETWEEN_TWO",
+                                    "StartLifeTime": 1.0,
+                                    "StartLifeTime2": 2.0
+                                },
+                                {
+                                    "ModuleType": 1,
+                                    "ShapeType": "CONE",
+                                    "Radius": 0.20000000298023224,
+                                    "RadiusThickness": 1.0,
+                                    "RadiusScale": 25.100000381469727
+                                },
+                                {
+                                    "ModuleType": 3,
+                                    "ColorOverTime": [
+                                        {
+                                            "IsAlphaMark": false,
+                                            "Position": 0.04290478676557541,
+                                            "Color": [
+                                                0.6196078658103943,
+                                                0.9411764740943909,
+                                                0.10196078568696976
+                                            ]
+                                        },
+                                        {
+                                            "IsAlphaMark": true,
+                                            "Position": 0.4786885380744934,
+                                            "Alpha": 1.0
+                                        },
+                                        {
+                                            "IsAlphaMark": false,
+                                            "Position": 0.5940603017807007,
+                                            "Color": [
+                                                0.0,
+                                                0.3921568691730499,
+                                                0.0
+                                            ]
+                                        },
+                                        {
+                                            "IsAlphaMark": true,
+                                            "Position": 0.9834983348846436,
+                                            "Alpha": 0.0
+                                        }
+                                    ],
+                                    "ColorCurve": [
+                                        0.0,
+                                        0.0,
+                                        0.265625,
+                                        0.921875
+                                    ]
+                                },
+                                {
+                                    "ModuleType": 5,
+                                    "VelocityType": "CURVE",
+                                    "InitialVelocity": 0.30000001192092896,
+                                    "InitialVelocity2": 0.0,
+                                    "VelocityCurve": [
+                                        0.0,
+                                        0.0,
+                                        0.0859375,
+                                        0.9375
+                                    ]
+                                },
+                                {
+                                    "ModuleType": 6,
+                                    "StartScaleType": "RANDOM_BETWEEN_TWO",
+                                    "StartScale": [
+                                        0.20000000298023224,
+                                        0.20000000298023224,
+                                        0.0
+                                    ],
+                                    "StartScale2": [
+                                        0.5,
+                                        0.5,
+                                        0.0
+                                    ],
+                                    "ChangeSizeOverTime": true,
+                                    "EndScaleType": "CONSTANT",
+                                    "EndScale": [
+                                        0.5,
+                                        0.5,
+                                        0.0
+                                    ]
+                                },
+                                {
+                                    "ModuleType": 7,
+                                    "RotationType": "CONSTANT",
+                                    "StartRotation": 0.0,
+                                    "VelocityType": "CONSTANT",
+                                    "AngularVelocity": 0.0,
+                                    "FlipRotation": 0.0
+                                },
+                                {
+                                    "ModuleType": 8,
+                                    "TileRows": 1,
+                                    "TileColumns": 1,
+                                    "FPS": 0.0,
+                                    "StartFrameType": "CONSTANT",
+                                    "StartFrame": 0.0
+                                },
+                                {
+                                    "ModuleType": 9,
+                                    "RenderMode": "BILLBOARD",
+                                    "RenderLayer": 0
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "UID": 422206703711576088,
+                    "ComponentType": "PREFAB_INSTANCE",
+                    "Active": true,
+                    "sourcePath": "Assets\\Prefabs\\Particles\\VFXRemake\\Objects\\Barrels\\PS_BarrelsDust.prefab",
+                    "assetUID": 17971424705439715790
+                },
+                {
+                    "UID": 16412297484672894486,
+                    "ComponentType": "PREFAB_INSTANCE",
+                    "Active": true,
+                    "sourcePath": "Assets\\Prefabs\\Particles\\VFXRemake\\Objects\\Barrels\\PS_BarrelsDustHeal.prefab",
+                    "assetUID": 886958361445201272
+                }
+            ],
+            "Children": []
+        }
+    ]
+}
