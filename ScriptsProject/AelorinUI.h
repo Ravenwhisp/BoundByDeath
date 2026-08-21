@@ -21,6 +21,9 @@ public:
 	// Seeker Sigils
 	void showSeekerSigilsUI(const Vector3& impactPosition, float radius, float telegraphDuration);
 
+	// Nova
+	void showNovaUI(const Vector3& center, float firstRadius, float firstChargeDuration, bool hasSecondWave, float secondRadius = 0.0f, float secondChargeDuration = 0.0f);
+
 private:
 
 	// Seeker Sigils
@@ -44,6 +47,10 @@ private:
 	void hideSeekerSigilsUISlot(SeekerSigilsUISlot& slot);
 	SeekerSigilsUISlot* acquireSeekerSigilsUISlot();
 
+	// Nova
+	void hideNovaUI();
+	void setNovaContainerRadius(float radius);
+	void updateNovaUI(float deltaTime);
 
 private:
 
@@ -61,4 +68,31 @@ private:
 	Transform2D* m_seekerSigilsUIGlowTransform2D = nullptr;
 
 	std::vector<SeekerSigilsUISlot> m_seekerSigilsUISlots;
+
+	// Nova
+	ComponentRef<Transform> m_novaUICanvas;
+	ComponentRef<Transform2D> m_novaUIContainer;
+	ComponentRef<Transform2D> m_novaUIBackground;
+	ComponentRef<Transform2D> m_novaUIBorder;
+	ComponentRef<Transform2D> m_novaUIGlow;
+
+	Transform* m_novaUICanvasTransform = nullptr;
+	Transform2D* m_novaUIContainerTransform2D = nullptr;
+	Transform2D* m_novaUIBackgroundTransform2D = nullptr;
+	Transform2D* m_novaUIBorderTransform2D = nullptr;
+	Transform2D* m_novaUIGlowTransform2D = nullptr;
+
+	bool m_novaUIActive = false;
+	bool m_novaUIHasSecondWave = false;
+	bool m_novaUISecondWaveStarted = false;
+
+	float m_novaUITimer = 0.0f;
+
+	float m_novaUIFirstChargeDuration = 0.0f;
+	float m_novaUISecondChargeDuration = 0.0f;
+
+	float m_novaUIFirstRadius = 0.0f;
+	float m_novaUISecondRadius = 0.0f;
+
+	static constexpr float m_novaUIImpactFadeDuration = 0.15f;
 };

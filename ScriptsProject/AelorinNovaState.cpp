@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "AelorinNovaState.h"
 #include "AelorinAttackExecutor.h"
+#include "AelorinUI.h"
 
 #include "AelorinAttackConfig.h"
 
@@ -23,6 +24,7 @@ void AelorinNovaState::OnStateEnter()
 	// get scripts
 	m_controller = GameObjectAPI::findScript<AelorinBossController>(parentGameObject);
 	m_animation = AnimationAPI::getAnimationComponent(getOwner());
+	m_aelorinUI = GameObjectAPI::findScript<AelorinUI>(parentGameObject);
 
 	// reset members
 	m_activeAbility = AelorinAbility::None;
@@ -44,6 +46,12 @@ void AelorinNovaState::OnStateEnter()
 		return;
 	}
 
+	if (!m_aelorinUI)
+	{
+		Debug::error("[AelorinNovaState] AelorinUI not found.");
+		return;
+	}
+
 	// consume ability
 	m_activeAbility = m_controller->consumeRequestedAbility();
 	if (m_activeAbility != AelorinAbility::Nova)
@@ -61,6 +69,22 @@ void AelorinNovaState::OnStateEnter()
 	else
 	{
 		m_novaCenter = TransformAPI::getGlobalPosition(parentTransform);
+	}
+
+	if (!m_isFuryCast && m_aelorinUI)
+	{
+		const AelorinAttackConfig* config = m_controller->getAelorinAttackConfig();
+		if (config)
+		{
+			m_aelorinUI->showNovaUI(
+				m_novaCenter,
+				config->m_novaRadius,
+				config->m_novaChargeTime,
+				m_controller->isPhase2(),
+				config->m_novaPhase2SecondRadius,
+				config->m_novaPhase2SecondWaveDelay
+			);
+		}
 	}
 
 	Debug::log("[AelorinNovaState] ENTER");

@@ -13,6 +13,14 @@ IMPLEMENT_SCRIPT_FIELDS(AelorinUI,
 		SERIALIZED_COMPONENT_REF(m_seekerSigilsUIBackground, "Seeker Sigils UI Background", ComponentType::TRANSFORM2D),
 		SERIALIZED_COMPONENT_REF(m_seekerSigilsUIBorder, "Seeker Sigils UI Border", ComponentType::TRANSFORM2D),
 		SERIALIZED_COMPONENT_REF(m_seekerSigilsUIGlow, "Seeker Sigils UI Glow", ComponentType::TRANSFORM2D)
+	),
+
+	FIELD_GROUP_COLLAPSE("Nova",
+		SERIALIZED_COMPONENT_REF(m_novaUICanvas, "Nova UI Canvas", ComponentType::TRANSFORM),
+		SERIALIZED_COMPONENT_REF(m_novaUIContainer, "Nova UI Container", ComponentType::TRANSFORM2D),
+		SERIALIZED_COMPONENT_REF(m_novaUIBackground, "Nova UI Background", ComponentType::TRANSFORM2D),
+		SERIALIZED_COMPONENT_REF(m_novaUIBorder, "Nova UI Border", ComponentType::TRANSFORM2D),
+		SERIALIZED_COMPONENT_REF(m_novaUIGlow, "Nova UI Glow", ComponentType::TRANSFORM2D)
 	)
 )
 
@@ -38,11 +46,23 @@ void AelorinUI::Start()
 
 	setupSeekerSigilsUI();
 	hideAllSeekerSigilsUI();
+
+	// Nova
+	m_novaUICanvasTransform = m_novaUICanvas.getReferencedComponent();
+	m_novaUIContainerTransform2D = m_novaUIContainer.getReferencedComponent();
+	m_novaUIBackgroundTransform2D = m_novaUIBackground.getReferencedComponent();
+	m_novaUIBorderTransform2D = m_novaUIBorder.getReferencedComponent();
+	m_novaUIGlowTransform2D = m_novaUIGlow.getReferencedComponent();
+
+	hideNovaUI();
 }
 
 void AelorinUI::Update()
 {
-	updateSeekerSigilsUI(Time::getDeltaTime());
+	const float deltaTime = Time::getDeltaTime();
+
+	updateSeekerSigilsUI(deltaTime);
+	updateNovaUI(deltaTime);
 }
 
 void AelorinUI::showSeekerSigilsUI(const Vector3& impactPosition, float radius, float telegraphDuration)
@@ -84,6 +104,76 @@ void AelorinUI::showSeekerSigilsUI(const Vector3& impactPosition, float radius, 
 	Transform2DAPI::setAlpha(slot->glow, 0.0f);
 
 	Transform2DAPI::setScale(slot->background, Vector2(0.1f, 0.1f));
+}
+
+void AelorinUI::setNovaContainerRadius(float radius)
+{
+	if (!m_novaUIContainerTransform2D)
+	{
+		return;
+	}
+
+	const float baseDiameterUI = Transform2DAPI::getBaseSize(m_novaUIContainerTransform2D).x;
+	if (baseDiameterUI <= 0.001f)
+	{
+		return;
+	}
+
+	const float desiredDiameterUI = radius * 2.0f * 100.0f;
+	const float scale = desiredDiameterUI / baseDiameterUI;
+
+	Transform2DAPI::setScale(m_novaUIContainerTransform2D, Vector2(scale, scale));
+}
+
+void AelorinUI::showNovaUI(const Vector3& center, float firstRadius, float firstChargeDuration, bool hasSecondWave, float secondRadius, float secondChargeDuration)
+{
+	if (!m_novaUICanvasTransform ||
+		!m_novaUIContainerTransform2D ||
+		!m_novaUIBackgroundTransform2D ||
+		!m_novaUIBorderTransform2D ||
+		!m_novaUIGlowTransform2D)
+	{
+		return;
+	}
+
+	GameObject* canvasObject = ComponentAPI::getOwner(m_novaUICanvasTransform);
+	if (!canvasObject)
+	{
+		return;
+	}
+
+	m_novaUIActive = true;
+	m_novaUIHasSecondWave = hasSecondWave && secondRadius > firstRadius && secondChargeDuration > 0.0f;
+	m_novaUISecondWaveStarted = false;
+	m_novaUITimer = 0.0f;
+	m_novaUIFirstRadius = firstRadius;
+	m_novaUISecondRadius = secondRadius;
+	m_novaUIFirstChargeDuration = (std::max)(firstChargeDuration, 0.001f);
+	m_novaUISecondChargeDuration = (std::max)(secondChargeDuration, 0.001f);
+
+	GameObjectAPI::setActive(canvasObject, true);
+
+	Vector3 uiPosition = center;
+	uiPosition.y += 0.05f;
+
+	TransformAPI::setGlobalPosition(m_novaUICanvasTransform, uiPosition);
+	TransformAPI::setGlobalRotationEuler(m_novaUICanvasTransform, Vector3(90.0f, 0.0f, 0.0f));
+
+	// start with wave 1 gameplay radius
+	setNovaContainerRadius(firstRadius);
+
+	// reset visuals
+	Transform2DAPI::setAlpha(m_novaUIContainerTransform2D, 1.0f);
+	Transform2DAPI::setAlpha(m_novaUIBorderTransform2D, 1.0f);
+	Transform2DAPI::setAlpha(m_novaUIBackgroundTransform2D, 1.0f);
+	Transform2DAPI::setAlpha(m_novaUIGlowTransform2D, 0.0f);
+
+	// wave 1 starts from the center and expands until it reaches the first damage radius
+	Transform2DAPI::setScale(m_novaUIBackgroundTransform2D, Vector2(0.1f, 0.1f));
+
+	// glow uses the full current radius
+	// in phase 2 resize it at wave 1 impact
+	Transform2DAPI::setScale(m_novaUIGlowTransform2D, Vector2(1.0f, 1.0f));
 }
 
 void AelorinUI::setupSeekerSigilsUI()
@@ -266,6 +356,128 @@ AelorinUI::SeekerSigilsUISlot* AelorinUI::acquireSeekerSigilsUISlot()
 	}
 
 	return nullptr;
+}
+
+void AelorinUI::hideNovaUI()
+{
+	if (m_novaUICanvasTransform)
+	{
+		GameObject* canvasObject = ComponentAPI::getOwner(m_novaUICanvasTransform);
+		if (canvasObject)
+		{
+			GameObjectAPI::setActive(canvasObject, false);
+		}
+	}
+
+	m_novaUIActive = false;
+	m_novaUIHasSecondWave = false;
+	m_novaUISecondWaveStarted = false;
+	m_novaUITimer = 0.0f;
+	m_novaUIFirstChargeDuration = 0.0f;
+	m_novaUISecondChargeDuration = 0.0f;
+	m_novaUIFirstRadius = 0.0f;
+	m_novaUISecondRadius = 0.0f;
+}
+
+void AelorinUI::updateNovaUI(float deltaTime)
+{
+	if (!m_novaUIActive)
+	{
+		return;
+	}
+
+	if (!m_novaUIContainerTransform2D ||
+		!m_novaUIBackgroundTransform2D ||
+		!m_novaUIGlowTransform2D)
+	{
+		hideNovaUI();
+		return;
+	}
+
+	m_novaUITimer += deltaTime;
+
+	// wave 1 charge
+	if (!m_novaUISecondWaveStarted && m_novaUITimer < m_novaUIFirstChargeDuration)
+	{
+		const float t = std::clamp(m_novaUITimer / m_novaUIFirstChargeDuration, 0.0f, 1.0f);
+		const float easedT = MathAPI::evaluateEasing(MathAPI::EasingType::EaseInQuad, t);
+		const float fillScale = 0.1f + 0.9f * easedT;
+
+		Transform2DAPI::setScale(m_novaUIBackgroundTransform2D, Vector2(fillScale, fillScale));
+
+		return;
+	}
+
+	// phase 1 - wave 1 is the final impact
+	if (!m_novaUIHasSecondWave)
+	{
+		const float impactTimer = m_novaUITimer - m_novaUIFirstChargeDuration;
+		const float impactT = std::clamp(impactTimer / m_novaUIImpactFadeDuration, 0.0f, 1.0f);
+
+		Transform2DAPI::setScale(m_novaUIBackgroundTransform2D, Vector2(1.0f, 1.0f));
+		Transform2DAPI::setAlpha(m_novaUIGlowTransform2D, 1.0f - impactT);
+		Transform2DAPI::setAlpha(m_novaUIContainerTransform2D, 1.0f - impactT);
+
+		if (impactT >= 1.0f)
+		{
+			hideNovaUI();
+		}
+
+		return;
+	}
+	
+	// phase 2 - wave 1 impact -> continue outward immediately
+	if (!m_novaUISecondWaveStarted)
+	{
+		m_novaUISecondWaveStarted = true;
+
+		// background visually at wave 1 radius after container becomes wave 2 size
+		const float firstToSecondRatio = m_novaUISecondRadius > 0.001f ? m_novaUIFirstRadius / m_novaUISecondRadius : 1.0f;
+
+		// border instantly becomes wave 2 radius
+		setNovaContainerRadius(m_novaUISecondRadius);
+
+		// continue charge from wave 1 radius
+		Transform2DAPI::setScale(m_novaUIBackgroundTransform2D, Vector2(firstToSecondRatio, firstToSecondRatio));
+		Transform2DAPI::setScale(m_novaUIGlowTransform2D, Vector2(firstToSecondRatio, firstToSecondRatio));
+		Transform2DAPI::setAlpha(m_novaUIGlowTransform2D, 1.0f);
+
+		return;
+	}
+
+	// wave 2 charge
+	const float secondWaveTimer = m_novaUITimer - m_novaUIFirstChargeDuration;
+	if (secondWaveTimer < m_novaUISecondChargeDuration)
+	{
+		const float t = std::clamp(secondWaveTimer / m_novaUISecondChargeDuration, 0.0f, 1.0f);
+		const float easedT = MathAPI::evaluateEasing(MathAPI::EasingType::EaseInQuad, t);
+		const float startScale = m_novaUISecondRadius > 0.001f ? m_novaUIFirstRadius / m_novaUISecondRadius : 1.0f;
+		const float fillScale = startScale + (1.0f - startScale) * easedT;
+
+		Transform2DAPI::setScale(m_novaUIBackgroundTransform2D, Vector2(fillScale, fillScale));
+
+		// fade wave 1 flash quickly
+		const float glowT = std::clamp(secondWaveTimer / SeekerSigilsImpactFadeDuration, 0.0f, 1.0f);
+		
+		Transform2DAPI::setAlpha(m_novaUIGlowTransform2D, 1.0f - glowT);
+
+		return;
+	}
+
+	// wave 2 impact
+	Transform2DAPI::setScale(m_novaUIBackgroundTransform2D, Vector2(1.0f, 1.0f));
+	Transform2DAPI::setScale(m_novaUIGlowTransform2D, Vector2(1.0f, 1.0f));
+
+	const float finalImpactTimer = secondWaveTimer - m_novaUISecondChargeDuration;
+	const float finalImpactT = std::clamp(finalImpactTimer / m_novaUIImpactFadeDuration, 0.0f, 1.0f);
+
+	Transform2DAPI::setAlpha(m_novaUIGlowTransform2D, 1.0f - finalImpactT);
+	Transform2DAPI::setAlpha(m_novaUIContainerTransform2D, 1.0f - finalImpactT);
+
+	if (finalImpactT >= 1.0f)
+	{
+		hideNovaUI();
+	}
 }
 
 IMPLEMENT_SCRIPT(AelorinUI)

@@ -6,6 +6,7 @@
 #include "AelorinBossController.h"
 
 class AnimationComponent;
+class AelorinUI;
 
 class AelorinNovaState : public StateMachineScript
 {
@@ -27,6 +28,7 @@ private:
 private:
 	AelorinBossController* m_controller = nullptr;
 	AnimationComponent* m_animation = nullptr;
+	AelorinUI* m_aelorinUI = nullptr;
 
 	AelorinAbility m_activeAbility = AelorinAbility::None;
 
