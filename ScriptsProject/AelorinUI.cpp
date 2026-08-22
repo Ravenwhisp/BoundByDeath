@@ -37,6 +37,14 @@ IMPLEMENT_SCRIPT_FIELDS(AelorinUI,
 		SERIALIZED_COMPONENT_REF(m_spiritCannonUIBackground, "Spirit Cannon UI Background", ComponentType::TRANSFORM2D),
 		SERIALIZED_COMPONENT_REF(m_spiritCannonUIBorder, "Spirit Cannon UI Border", ComponentType::TRANSFORM2D),
 		SERIALIZED_COMPONENT_REF(m_spiritCannonUIGlow, "Spirit Cannon UI Glow", ComponentType::TRANSFORM2D)
+	),
+
+	FIELD_GROUP_COLLAPSE("Grasp of the Dead",
+		SERIALIZED_COMPONENT_REF(m_graspOfTheDeadUICanvas, "Grasp of the Dead UI Canvas", ComponentType::TRANSFORM),
+		SERIALIZED_COMPONENT_REF(m_graspOfTheDeadUIContainer, "Grasp of the Dead UI Container", ComponentType::TRANSFORM2D),
+		SERIALIZED_COMPONENT_REF(m_graspOfTheDeadUIBackground, "Grasp of the Dead UI Background", ComponentType::TRANSFORM2D),
+		SERIALIZED_COMPONENT_REF(m_graspOfTheDeadUIBorder, "Grasp of the Dead UI Border", ComponentType::TRANSFORM2D),
+		SERIALIZED_COMPONENT_REF(m_graspOfTheDeadUIGlow, "Grasp of the Dead UI Glow", ComponentType::TRANSFORM2D)
 	)
 )
 
@@ -84,6 +92,15 @@ void AelorinUI::Start()
 	m_spiritCannonUIGlowTransform2D = m_spiritCannonUIGlow.getReferencedComponent();
 
 	hideSpiritCannonUI();
+
+	// Grasp of the Dead
+	m_graspOfTheDeadUICanvasTransform =	m_graspOfTheDeadUICanvas.getReferencedComponent();
+	m_graspOfTheDeadUIContainerTransform2D = m_graspOfTheDeadUIContainer.getReferencedComponent();
+	m_graspOfTheDeadUIBackgroundTransform2D = m_graspOfTheDeadUIBackground.getReferencedComponent();
+	m_graspOfTheDeadUIBorderTransform2D = m_graspOfTheDeadUIBorder.getReferencedComponent();
+	m_graspOfTheDeadUIGlowTransform2D =	m_graspOfTheDeadUIGlow.getReferencedComponent();
+
+	hideGraspOfTheDeadUI();
 }
 
 void AelorinUI::Update()
@@ -94,6 +111,7 @@ void AelorinUI::Update()
 	updateNovaUI(deltaTime);
 	updateRisenSpiresUI(deltaTime);
 	updateSpiritCannonUI(deltaTime);
+	updateGraspOfTheDeadUI(deltaTime);
 }
 
 void AelorinUI::showSeekerSigilsUI(const Vector3& impactPosition, float radius, float telegraphDuration)
@@ -301,6 +319,50 @@ void AelorinUI::showSpiritCannonUI(Transform* originTransform, Transform* target
 	Transform2DAPI::setAlpha(m_spiritCannonUIBackgroundTransform2D, 0.0f);
 	Transform2DAPI::setAlpha(m_spiritCannonUIGlowTransform2D, 0.0f);
 	Transform2DAPI::setScale(m_spiritCannonUIBackgroundTransform2D,	Vector2(1.0f, 1.0f));
+}
+
+void AelorinUI::showGraspOfTheDeadUI(const Vector3& center, float radius, float pullDuration)
+{
+	if (!m_graspOfTheDeadUICanvasTransform ||
+		!m_graspOfTheDeadUIContainerTransform2D ||
+		!m_graspOfTheDeadUIBackgroundTransform2D ||
+		!m_graspOfTheDeadUIBorderTransform2D ||
+		!m_graspOfTheDeadUIGlowTransform2D)
+	{
+		return;
+	}
+
+	GameObject* canvasObject = ComponentAPI::getOwner(m_graspOfTheDeadUICanvasTransform);
+	if (!canvasObject)
+	{
+		return;
+	}
+
+	m_graspOfTheDeadUIActive = true;
+	m_graspOfTheDeadUITimer = 0.0f;
+	m_graspOfTheDeadUIDuration = (std::max)(pullDuration, 0.001f);
+
+	GameObjectAPI::setActive(canvasObject, true);
+
+	Vector3 uiPosition = center;
+	uiPosition.y += 0.05f;
+
+	TransformAPI::setGlobalPosition(m_graspOfTheDeadUICanvasTransform, uiPosition);
+	TransformAPI::setGlobalRotationEuler(m_graspOfTheDeadUICanvasTransform, Vector3(90.0f, 0.0f, 0.0f));
+
+	setGraspOfTheDeadRadius(radius);
+
+	// reset visuals
+	Transform2DAPI::setAlpha(m_graspOfTheDeadUIContainerTransform2D, 1.0f);
+	Transform2DAPI::setAlpha(m_graspOfTheDeadUIBackgroundTransform2D, 1.0f);
+	Transform2DAPI::setAlpha(m_graspOfTheDeadUIBorderTransform2D, 1.0f);
+	Transform2DAPI::setAlpha(m_graspOfTheDeadUIGlowTransform2D, 0.0f);
+
+	// grasp starts at full radius
+	Transform2DAPI::setScale(m_graspOfTheDeadUIBackgroundTransform2D, Vector2(1.0f, 1.0f));
+	Transform2DAPI::setScale(m_graspOfTheDeadUIBorderTransform2D, Vector2(1.0f, 1.0f));
+	Transform2DAPI::setScale(m_graspOfTheDeadUIGlowTransform2D, Vector2(1.0f, 1.0f));
+
 }
 
 void AelorinUI::setupSeekerSigilsUI()
@@ -958,6 +1020,77 @@ void AelorinUI::setSpiritCannonSize(float beamLength, float beamWidth)
 	}
 
 	Transform2DAPI::setScale(m_spiritCannonUIContainerTransform2D, Vector2(beamLength, beamWidth));
+}
+
+void AelorinUI::setGraspOfTheDeadRadius(float radius)
+{
+	if (!m_graspOfTheDeadUIContainerTransform2D)
+	{
+		return;
+	}
+
+	const float baseDiameterUI = Transform2DAPI::getBaseSize(m_graspOfTheDeadUIContainerTransform2D).x;
+
+	if (baseDiameterUI <= 0.001f)
+	{
+		return;
+	}
+
+	const float desiredDiameterUI =	radius * 2.0f * 100.0f;
+	const float scale =	desiredDiameterUI / baseDiameterUI;
+
+	Transform2DAPI::setScale(m_graspOfTheDeadUIContainerTransform2D, Vector2(scale, scale));
+}
+
+void AelorinUI::updateGraspOfTheDeadUI(float deltaTime)
+{
+	if (!m_graspOfTheDeadUIActive)
+	{
+		return;
+	}
+
+	if (!m_graspOfTheDeadUIBackgroundTransform2D ||	!m_graspOfTheDeadUIGlowTransform2D)
+	{
+		hideGraspOfTheDeadUI();
+		return;
+	}
+
+	m_graspOfTheDeadUITimer += deltaTime;
+
+	const float t =	std::clamp(m_graspOfTheDeadUITimer / m_graspOfTheDeadUIDuration, 0.0f, 1.0f);
+	const float easedT = MathAPI::evaluateEasing(MathAPI::EasingType::EaseInQuad, t);
+	const float pullScale =	1.0f - 0.9f * easedT;
+
+	Transform2DAPI::setScale(m_graspOfTheDeadUIBackgroundTransform2D, Vector2(pullScale, pullScale));
+	Transform2DAPI::setScale(m_graspOfTheDeadUIBorderTransform2D, Vector2(pullScale, pullScale));
+	Transform2DAPI::setScale(m_graspOfTheDeadUIGlowTransform2D, Vector2(pullScale, pullScale));
+	Transform2DAPI::setAlpha(m_graspOfTheDeadUIGlowTransform2D,	easedT);
+
+	if (t >= 1.0f)
+	{
+		hideGraspOfTheDeadUI();
+	}
+}
+
+void AelorinUI::hideGraspOfTheDeadUI()
+{
+	if (m_graspOfTheDeadUICanvasTransform)
+	{
+		GameObject* canvasObject = ComponentAPI::getOwner(m_graspOfTheDeadUICanvasTransform);
+		if (canvasObject)
+		{
+			GameObjectAPI::setActive(canvasObject, false);
+		}
+	}
+
+	m_graspOfTheDeadUIActive = false;
+	m_graspOfTheDeadUITimer = 0.0f;
+	m_graspOfTheDeadUIDuration = 0.0f;
+
+	if (m_graspOfTheDeadUIGlowTransform2D)
+	{
+		Transform2DAPI::setAlpha(m_graspOfTheDeadUIGlowTransform2D,	0.0f);
+	}
 }
 
 IMPLEMENT_SCRIPT(AelorinUI)

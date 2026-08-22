@@ -30,6 +30,9 @@ public:
 	// Spirit Cannon
 	void showSpiritCannonUI(Transform* originTransform, Transform* targetTransform, float beamLength, float beamWidth, float chargeDuration);
 
+	// Grasp of the Dead
+	void showGraspOfTheDeadUI(const Vector3& center, float radius, float pullDuration);
+
 private:
 
 	// Seeker Sigils
@@ -82,6 +85,11 @@ private:
 	void playSpiritCannonImpactUI();
 	void hideSpiritCannonUI();
 	void setSpiritCannonSize(float beamLength, float beamWidth);
+
+	// Grasp of the Dead
+	void setGraspOfTheDeadRadius(float radius);
+	void updateGraspOfTheDeadUI(float deltaTime);
+	void hideGraspOfTheDeadUI();
 
 private:
 
@@ -177,4 +185,22 @@ private:
 	float m_spiritCannonImpactUITimer = 0.0f;
 
 	static constexpr float m_spiritCannonUIImpactFadeDuration = 0.15f;
+
+	// Grasp of the Dead
+	ComponentRef<Transform> m_graspOfTheDeadUICanvas;
+	ComponentRef<Transform2D> m_graspOfTheDeadUIContainer;
+	ComponentRef<Transform2D> m_graspOfTheDeadUIBackground;
+	ComponentRef<Transform2D> m_graspOfTheDeadUIBorder;
+	ComponentRef<Transform2D> m_graspOfTheDeadUIGlow;
+
+	Transform* m_graspOfTheDeadUICanvasTransform = nullptr;
+	Transform2D* m_graspOfTheDeadUIContainerTransform2D = nullptr;
+	Transform2D* m_graspOfTheDeadUIBackgroundTransform2D = nullptr;
+	Transform2D* m_graspOfTheDeadUIBorderTransform2D = nullptr;
+	Transform2D* m_graspOfTheDeadUIGlowTransform2D = nullptr;
+
+	bool m_graspOfTheDeadUIActive = false;
+
+	float m_graspOfTheDeadUITimer = 0.0f;
+	float m_graspOfTheDeadUIDuration = 0.0f;
 };

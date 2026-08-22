@@ -79,6 +79,7 @@ public:
 	// Grasp of the Dead
 	float m_graspPullDuration = 2.0f;
 	float m_graspPullStrength = 3.0f;
+	float m_graspVisualRadius = 5.0f;
 
 	// Teleport
 	float m_teleportCastDuration = 3.0f;
@@ -177,7 +178,8 @@ public:
 
 		FIELD_GROUP_COLLAPSE("Grasp of the Dead",
 			SERIALIZED_FLOAT(m_graspPullDuration, "Grasp Pull Duration", 0.0f, 10.0f, 0.1f),
-			SERIALIZED_FLOAT(m_graspPullStrength, "Grasp Pull Strength", 0.0f, 30.0f, 0.1f)
+			SERIALIZED_FLOAT(m_graspPullStrength, "Grasp Pull Strength", 0.0f, 30.0f, 0.1f),
+			SERIALIZED_FLOAT(m_graspVisualRadius, "Grasp Visual Radius", 0.0f, 30.0f, 0.1f)
 		),
 
 		FIELD_GROUP_COLLAPSE("Teleport",

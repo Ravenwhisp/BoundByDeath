@@ -3,6 +3,7 @@
 
 #include "AelorinAttackConfig.h"
 #include "AelorinAttackExecutor.h"
+#include "AelorinUI.h"
 
 #include "PlayerMovement.h"
 
@@ -27,6 +28,7 @@ void AelorinGraspOfTheDeadState::OnStateEnter()
 	// get scripts
 	m_controller = GameObjectAPI::findScript<AelorinBossController>(parentGameObject);
 	m_animation = AnimationAPI::getAnimationComponent(getOwner());
+	m_aelorinUI = GameObjectAPI::findScript<AelorinUI>(parentGameObject);
 
 	// reset members
 	m_lyrielMovement = nullptr;
@@ -45,6 +47,12 @@ void AelorinGraspOfTheDeadState::OnStateEnter()
 	if (!m_animation)
 	{
 		Debug::error("[AelorinGraspOfTheDeadState] AnimationComponent not found.");
+		return;
+	}
+
+	if (!m_aelorinUI)
+	{
+		Debug::error("[AelorinGraspOfTheDeadState] AelorinUI not found.");
 		return;
 	}
 
@@ -105,6 +113,19 @@ void AelorinGraspOfTheDeadState::OnStateEnter()
 	if (m_isFuryCast)
 	{
 		m_controller->recordFuryCast();
+	}
+
+	// UI
+	if (!m_isFuryCast && m_aelorinUI)
+	{
+		const AelorinAttackConfig* config = m_controller->getAelorinAttackConfig();
+		Transform* graspCenter = m_controller->getGraspCenter();
+
+		if (config && graspCenter)
+		{
+			const Vector3 center = TransformAPI::getGlobalPosition(graspCenter);
+			m_aelorinUI->showGraspOfTheDeadUI(center, config->m_graspVisualRadius, config->m_graspPullDuration);
+		}
 	}
 
 	Debug::log("[AelorinGraspOfTheDeadState] ENTER");
