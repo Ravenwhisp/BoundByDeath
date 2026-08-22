@@ -115,7 +115,7 @@ void AelorinBossController::Update()
 {
 	updateEncounter();
 	updateTeleportCooldown();
-	updateSummonTimer();
+	updateSummonTimer();	
 }
 
 Transform* AelorinBossController::getLyrielTransform() const
