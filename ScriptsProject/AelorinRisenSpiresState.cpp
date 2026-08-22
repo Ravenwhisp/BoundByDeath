@@ -3,6 +3,7 @@
 
 #include "AelorinAttackConfig.h"
 #include "AelorinAttackExecutor.h"
+#include "AelorinUI.h"
 
 AelorinRisenSpiresState::AelorinRisenSpiresState(GameObject* owner)
 	: StateMachineScript(owner)
@@ -23,6 +24,7 @@ void AelorinRisenSpiresState::OnStateEnter()
 	// get scripts
 	m_controller = GameObjectAPI::findScript<AelorinBossController>(parentGameObject);
 	m_animation = AnimationAPI::getAnimationComponent(getOwner());
+	m_aelorinUI = GameObjectAPI::findScript<AelorinUI>(parentGameObject);
 
 	// reset members
 	m_activeAbility = AelorinAbility::None;
@@ -42,6 +44,11 @@ void AelorinRisenSpiresState::OnStateEnter()
 	{
 		Debug::error("[AelorinRisenSpiresState] AnimationComponent not found.");
 		return;
+	}
+
+	if (!m_aelorinUI)
+	{
+		Debug::error("[AelorinRisenSpiresState] AelorinUI not found.");
 	}
 
 	m_attackExecutor = m_controller->getAttackExecutor();
@@ -64,6 +71,15 @@ void AelorinRisenSpiresState::OnStateEnter()
 	if (m_isFuryCast)
 	{
 		m_controller->recordFuryCast();
+	}
+
+	if (!m_isFuryCast && m_aelorinUI)
+	{
+		const AelorinAttackConfig* config = m_controller->getAelorinAttackConfig();
+		if (config)
+		{
+			m_aelorinUI->showRisenSpiresUI(m_controller->getRisenSpiresPatternARoot(), config->m_risenSpiresRadius, config->m_risenSpiresWindupDuration);
+		}
 	}
 
 	Debug::log("[AelorinRisenSpiresState] ENTER");
@@ -93,6 +109,12 @@ void AelorinRisenSpiresState::OnStateUpdate()
 	{
 		executePattern(m_controller->getRisenSpiresPatternARoot(), "Risen Spires Pass 1");
 		m_firstPassExecuted = true;
+
+		// UI Phase 2 reveal pattern B
+		if (!m_isFuryCast && m_controller->isPhase2() && m_aelorinUI)
+		{
+			m_aelorinUI->showRisenSpiresUI(m_controller->getRisenSpiresPatternBRoot(), config->m_risenSpiresRadius, config->m_risenSpiresPhase2SecondPassDelay);
+		}
 	}
 
 	// Phase 2 gets opposite pattern 2 seconds later

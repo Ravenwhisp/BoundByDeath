@@ -49,7 +49,6 @@ void AelorinNovaState::OnStateEnter()
 	if (!m_aelorinUI)
 	{
 		Debug::error("[AelorinNovaState] AelorinUI not found.");
-		return;
 	}
 
 	// consume ability

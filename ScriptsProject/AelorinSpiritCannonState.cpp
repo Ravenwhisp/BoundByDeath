@@ -101,7 +101,7 @@ void AelorinSpiritCannonState::OnStateUpdate()
 	// Windup -> Shot 1 -> Re-aim -> Shot 2 -> Recovery
 	if (!m_controller->isPhase2())
 	{
-		const float shot1Time = config->m_spiritCannonWindupDuration;
+		const float shot1Time = windupDuration;
 		const float shot2Time = shot1Time + config->m_spiritCannonPhase1ShotInterval;
 
 		if (m_shotCount == 0 && m_stateTimer >= shot1Time)
@@ -120,7 +120,7 @@ void AelorinSpiritCannonState::OnStateUpdate()
 			return;
 		}
 
-		if (m_shotCount >= 2 && m_stateTimer >= shot2Time + config->m_spiritCannonRecoveryDuration)
+		if (m_shotCount >= 2 && m_stateTimer >= shot2Time + recoveryDuration)
 		{
 			finishAbility();
 		}
@@ -163,7 +163,7 @@ void AelorinSpiritCannonState::OnStateUpdate()
 	if (m_shotCount == 3 && m_stateTimer >= finalShotTime)
 	{
 		ensureValidLockedTarget();
-		fireBeamShot(config->m_spiritCannonPhase2FinalBeamWidth, config->m_seekerSigilsPhase2FinalDamage, "Aelorin Spirit Cannon Final Shot");
+		fireBeamShot(config->m_spiritCannonPhase2FinalBeamWidth, config->m_spiritCannonPhase2FinalDamage, "Aelorin Spirit Cannon Final Shot");
 		++m_shotCount;
 		return;
 	}

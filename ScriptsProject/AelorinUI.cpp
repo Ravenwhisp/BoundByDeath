@@ -21,14 +21,16 @@ IMPLEMENT_SCRIPT_FIELDS(AelorinUI,
 		SERIALIZED_COMPONENT_REF(m_novaUIBackground, "Nova UI Background", ComponentType::TRANSFORM2D),
 		SERIALIZED_COMPONENT_REF(m_novaUIBorder, "Nova UI Border", ComponentType::TRANSFORM2D),
 		SERIALIZED_COMPONENT_REF(m_novaUIGlow, "Nova UI Glow", ComponentType::TRANSFORM2D)
+	),
+
+	FIELD_GROUP_COLLAPSE("Risen Spires",
+		SERIALIZED_COMPONENT_REF(m_risenSpiresUICanvas, "Risen Spires UI Canvas", ComponentType::TRANSFORM),
+		SERIALIZED_COMPONENT_REF(m_risenSpiresUIContainer, "Risen Spires UI Container", ComponentType::TRANSFORM2D),
+		SERIALIZED_COMPONENT_REF(m_risenSpiresUIBackground, "Risen Spires UI Background", ComponentType::TRANSFORM2D),
+		SERIALIZED_COMPONENT_REF(m_risenSpiresUIBorder, "Risen Spires UI Border", ComponentType::TRANSFORM2D),
+		SERIALIZED_COMPONENT_REF(m_risenSpiresUIGlow, "Risen Spires UI Glow", ComponentType::TRANSFORM2D)
 	)
 )
-
-namespace
-{
-	constexpr float SeekerSigilsUIYOffset = 0.15f;
-	constexpr float SeekerSigilsImpactFadeDuration = 0.15f;
-}
 
 AelorinUI::AelorinUI(GameObject* owner) 
 	: Script(owner)
@@ -55,6 +57,16 @@ void AelorinUI::Start()
 	m_novaUIGlowTransform2D = m_novaUIGlow.getReferencedComponent();
 
 	hideNovaUI();
+
+	// Risen Spires
+	m_risenSpiresUICanvasTransform = m_risenSpiresUICanvas.getReferencedComponent();
+	m_risenSpiresUIContainerTransform2D = m_risenSpiresUIContainer.getReferencedComponent();
+	m_risenSpiresUIBackgroundTransform2D = m_risenSpiresUIBackground.getReferencedComponent();
+	m_risenSpiresUIBorderTransform2D = m_risenSpiresUIBorder.getReferencedComponent();
+	m_risenSpiresUIGlowTransform2D = m_risenSpiresUIGlow.getReferencedComponent();
+
+	setupRisenSpiresUI();
+	hideAllRisenSpiresUI();
 }
 
 void AelorinUI::Update()
@@ -63,6 +75,7 @@ void AelorinUI::Update()
 
 	updateSeekerSigilsUI(deltaTime);
 	updateNovaUI(deltaTime);
+	updateRisenSpiresUI(deltaTime);
 }
 
 void AelorinUI::showSeekerSigilsUI(const Vector3& impactPosition, float radius, float telegraphDuration)
@@ -92,7 +105,7 @@ void AelorinUI::showSeekerSigilsUI(const Vector3& impactPosition, float radius, 
 	GameObjectAPI::setActive(canvasObject, true);
 
 	Vector3 uiPosition = impactPosition;
-	uiPosition.y += SeekerSigilsUIYOffset;
+	uiPosition.y += 0.05f;
 
 	TransformAPI::setGlobalPosition(slot->canvas, uiPosition);
 	TransformAPI::setGlobalRotationEuler(slot->canvas, Vector3(90.0f, 0.0f, 0.0f));
@@ -174,6 +187,74 @@ void AelorinUI::showNovaUI(const Vector3& center, float firstRadius, float first
 	// glow uses the full current radius
 	// in phase 2 resize it at wave 1 impact
 	Transform2DAPI::setScale(m_novaUIGlowTransform2D, Vector2(1.0f, 1.0f));
+}
+
+void AelorinUI::showRisenSpiresUI(Transform* patternRoot, float radius, float chargeDuration)
+{
+	if (!patternRoot)
+	{
+		return;
+	}
+
+	hideAllRisenSpiresUI();
+
+	m_risenSpiresUIActive = true;
+	m_risenSpiresUITimer = 0.0f;
+	m_risenSpiresUIChargeDuration = (std::max)(chargeDuration, 0.001f);
+
+	const int pointCount = TransformAPI::getChildCount(patternRoot);
+
+	for (int i = 0; i < pointCount; ++i)
+	{
+		Transform* spirePoint = TransformAPI::getChild(patternRoot, i);
+		if (!spirePoint)
+		{
+			continue;
+		}
+
+		RisenSpiresUISlot* slot = acquireRisenSpiresUISlot();
+		if (!slot)
+		{
+			Debug::warn("[AelorinUI] Not enough Risen Spires UI slots for pattern");
+			break;
+		}
+
+		if (!slot->canvas ||
+			!slot->container ||
+			!slot->background ||
+			!slot->border ||
+			!slot->glow)
+		{
+			continue;
+		}
+
+		GameObject* slotObject = ComponentAPI::getOwner(slot->canvas);
+		if (!slotObject)
+		{
+			continue;
+		}
+
+		Vector3 uiPosition = TransformAPI::getGlobalPosition(spirePoint);
+		uiPosition.y += 0.05f;
+		
+		GameObjectAPI::setActive(slotObject, true);
+		TransformAPI::setGlobalPosition(slot->canvas, uiPosition);
+		TransformAPI::setGlobalRotationEuler(slot->canvas, Vector3(90.0f, 0.0f, 0.0f));
+
+		setRisenSpiresSlotRadius(*slot, radius);
+
+		// reset visuals
+		Transform2DAPI::setAlpha(slot->container, 1.0f);
+		Transform2DAPI::setAlpha(slot->background, 1.0f);
+		Transform2DAPI::setAlpha(slot->border, 1.0f);
+		Transform2DAPI::setAlpha(slot->glow, 0.0f);
+
+		// telegraph starts from the center
+		Transform2DAPI::setScale(slot->background, Vector2(0.1f, 0.1f));
+		Transform2DAPI::setScale(slot->glow, Vector2(1.0f, 1.0f));
+
+		slot->active = true;
+	}
 }
 
 void AelorinUI::setupSeekerSigilsUI()
@@ -314,7 +395,7 @@ void AelorinUI::updateSeekerSigilsUI(float deltaTime)
 		}
 
 		const float impactTimer = slot.timer - slot.duration;
-		const float impactT = std::clamp(impactTimer / SeekerSigilsImpactFadeDuration, 0.0f, 1.0f);
+		const float impactT = std::clamp(impactTimer / m_seekerSigilsImpactFadeDuration, 0.0f, 1.0f);
 		Transform2DAPI::setScale(slot.background, Vector2(1.0f, 1.0f));
 
 		const float fadeAlpha = 1.0f - MathAPI::evaluateEasing(MathAPI::EasingType::EaseOutQuad, impactT);
@@ -457,7 +538,7 @@ void AelorinUI::updateNovaUI(float deltaTime)
 		Transform2DAPI::setScale(m_novaUIBackgroundTransform2D, Vector2(fillScale, fillScale));
 
 		// fade wave 1 flash quickly
-		const float glowT = std::clamp(secondWaveTimer / SeekerSigilsImpactFadeDuration, 0.0f, 1.0f);
+		const float glowT = std::clamp(secondWaveTimer / m_seekerSigilsImpactFadeDuration, 0.0f, 1.0f);
 		
 		Transform2DAPI::setAlpha(m_novaUIGlowTransform2D, 1.0f - glowT);
 
@@ -478,6 +559,226 @@ void AelorinUI::updateNovaUI(float deltaTime)
 	{
 		hideNovaUI();
 	}
+}
+
+void AelorinUI::hideAllRisenSpiresUI()
+{
+	for (RisenSpiresUISlot& slot : m_risenSpiresUISlots)
+	{
+		hideRisenSpiresUISlot(slot);
+	}
+
+	m_risenSpiresUIActive = false;
+	m_risenSpiresUITimer = 0.0f;
+	m_risenSpiresUIChargeDuration = 0.0f;
+}
+
+void AelorinUI::setupRisenSpiresUI()
+{
+	m_risenSpiresUISlots.clear();
+
+	// first UI is assigned in the editor and acts as a template for the remaining slots
+	if (!m_risenSpiresUICanvasTransform ||
+		!m_risenSpiresUIContainerTransform2D ||
+		!m_risenSpiresUIBackgroundTransform2D ||
+		!m_risenSpiresUIBorderTransform2D ||
+		!m_risenSpiresUIGlowTransform2D)
+	{
+		Debug::warn("[AelorinUI] Risen Spires template UI is incomplete");
+		return;
+	}
+
+	// add the first slot
+	RisenSpiresUISlot firstSlot;
+	firstSlot.canvas = m_risenSpiresUICanvasTransform;
+	firstSlot.container = m_risenSpiresUIContainerTransform2D;
+	firstSlot.background = m_risenSpiresUIBackgroundTransform2D;
+	firstSlot.border = m_risenSpiresUIBorderTransform2D;
+	firstSlot.glow = m_risenSpiresUIGlowTransform2D;
+	firstSlot.active = false;
+
+	m_risenSpiresUISlots.push_back(firstSlot);
+
+	// the rest are siblings to the first canvas
+	Transform* uiRoot = TransformAPI::getParent(m_risenSpiresUICanvasTransform);
+	if (!uiRoot)
+	{
+		Debug::warn("[AelorinUI] Risen Spires UI root not found");
+		return;
+	}
+
+	const int childCount = TransformAPI::getChildCount(uiRoot);
+
+	for (int i = 0; i < childCount; ++i)
+	{
+		Transform* canvas = TransformAPI::getChild(uiRoot, i);
+		if (!canvas)
+		{
+			continue;
+		}
+
+		// first one was already added
+		if (canvas == m_risenSpiresUICanvasTransform)
+		{
+			continue;
+		}
+
+		Transform* containerTransform = TransformAPI::findChildByName(canvas, "Container");
+		if (!containerTransform)
+		{
+			continue;
+		}
+
+		Transform* backgroundTransform = TransformAPI::findChildByName(containerTransform, "Background");
+		Transform* borderTransform = TransformAPI::findChildByName(containerTransform, "Border");
+		Transform* glowTransform = TransformAPI::findChildByName(containerTransform, "Glow");
+
+		if (!backgroundTransform || !borderTransform || !glowTransform)
+		{
+			continue;
+		}
+
+		GameObject* containerObject = ComponentAPI::getOwner(containerTransform);
+		GameObject* backgroundObject = ComponentAPI::getOwner(backgroundTransform);
+		GameObject* borderObject = ComponentAPI::getOwner(borderTransform);
+		GameObject* glowObject = ComponentAPI::getOwner(glowTransform);
+
+		if (!containerObject || !backgroundObject || !borderObject || !glowObject)
+		{
+			continue;
+		}
+
+		Transform2D* container = static_cast<Transform2D*>(GameObjectAPI::getComponent(containerObject, ComponentType::TRANSFORM2D));
+		Transform2D* background = static_cast<Transform2D*>(GameObjectAPI::getComponent(backgroundObject, ComponentType::TRANSFORM2D));
+		Transform2D* border = static_cast<Transform2D*>(GameObjectAPI::getComponent(borderObject, ComponentType::TRANSFORM2D));
+		Transform2D* glow = static_cast<Transform2D*>(GameObjectAPI::getComponent(glowObject, ComponentType::TRANSFORM2D));
+
+		if (!container || !background || !border || !glow)
+		{
+			continue;
+		}
+
+		RisenSpiresUISlot slot;
+		slot.canvas = canvas;
+		slot.container = container;
+		slot.background = background;
+		slot.border = border;
+		slot.glow = glow;
+		slot.active = false;
+
+		m_risenSpiresUISlots.push_back(slot);
+	}
+
+	Debug::log("[AelorinUI] Cached %d Risen Spires UI slots", static_cast<int>(m_risenSpiresUISlots.size()));
+}
+
+void AelorinUI::setRisenSpiresSlotRadius(RisenSpiresUISlot& slot, float radius)
+{
+	if (!slot.container)
+	{
+		return;
+	}
+
+	const float baseDiameterUI = Transform2DAPI::getBaseSize(slot.container).x;
+	if (baseDiameterUI <= 0.001f)
+	{
+		return;
+	}
+
+	const float desiredDiameterUI = radius * 2.0f * 100.0f;
+	const float radiusScale = desiredDiameterUI / baseDiameterUI;
+
+	Transform2DAPI::setScale(slot.container, Vector2(radiusScale, radiusScale));
+}
+
+void AelorinUI::updateRisenSpiresUI(float deltaTime)
+{
+	if (!m_risenSpiresUIActive)
+	{
+		return;
+	}
+
+	m_risenSpiresUITimer += deltaTime;
+
+	// charge
+	if (m_risenSpiresUITimer < m_risenSpiresUIChargeDuration)
+	{
+		const float t = std::clamp(m_risenSpiresUITimer / m_risenSpiresUIChargeDuration, 0.0f, 1.0f);
+		const float easedT = MathAPI::evaluateEasing(MathAPI::EasingType::EaseInQuad, t);
+		const float chargeScale = 0.1f + 0.9 * easedT;
+
+		for (RisenSpiresUISlot& slot : m_risenSpiresUISlots)
+		{
+			if (!slot.active || !slot.background)
+			{
+				continue;
+			}
+
+			Transform2DAPI::setScale(slot.background, Vector2(chargeScale, chargeScale));
+		}
+
+		return;
+	}
+
+	// impact
+	const float impactTimer = m_risenSpiresUITimer - m_risenSpiresUIChargeDuration;
+	const float impactT = std::clamp(impactTimer / m_risenSpiresUIImpactFadeDuration, 0.0f, 1.0f);
+	const float fadeAlpha = 1.0f - impactT;
+
+	for (RisenSpiresUISlot& slot : m_risenSpiresUISlots)
+	{
+		if (!slot.active)
+		{
+			continue;
+		}
+
+		if (slot.background)
+		{
+			Transform2DAPI::setScale(slot.background, Vector2(1.0f, 1.0f));
+		}
+
+		if (slot.glow)
+		{
+			Transform2DAPI::setAlpha(slot.glow, fadeAlpha);
+		}
+
+		if (slot.container)
+		{
+			Transform2DAPI::setAlpha(slot.container, fadeAlpha);
+		}
+	}
+
+	if (impactT >= 1.0f)
+	{
+		hideAllRisenSpiresUI();
+	}
+}
+
+void AelorinUI::hideRisenSpiresUISlot(RisenSpiresUISlot& slot)
+{
+	if (slot.canvas)
+	{
+		GameObject* canvasObject = ComponentAPI::getOwner(slot.canvas);
+		if (canvasObject)
+		{
+			GameObjectAPI::setActive(canvasObject, false);
+		}
+	}
+
+	slot.active = false;
+}
+
+AelorinUI::RisenSpiresUISlot* AelorinUI::acquireRisenSpiresUISlot()
+{
+	for (RisenSpiresUISlot& slot : m_risenSpiresUISlots)
+	{
+		if (!slot.active)
+		{
+			return &slot;
+		}
+	}
+
+	return nullptr;
 }
 
 IMPLEMENT_SCRIPT(AelorinUI)
