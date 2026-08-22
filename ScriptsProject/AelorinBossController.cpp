@@ -861,7 +861,7 @@ std::vector<AelorinAbility> AelorinBossController::buildAbilityPool() const
 {
 	std::vector<AelorinAbility> pool
 	{
-		//AelorinAbility::SeekerSigils,
+		//AelorinAbility::SeekerSigils
 		//AelorinAbility::RisenSpires
 		//AelorinAbility::SpiritCannon
 		//AelorinAbility::GraspOfTheDead
@@ -872,10 +872,10 @@ std::vector<AelorinAbility> AelorinBossController::buildAbilityPool() const
 	//	pool.push_back(AelorinAbility::Nova);
 	//}
 
-	//if (canSummon())
-	//{
-	//	pool.push_back(AelorinAbility::Summon);
-	//}
+	if (canSummon())
+	{
+		pool.push_back(AelorinAbility::Summon);
+	}
 
 	//if (isPhase2())
 	//{
