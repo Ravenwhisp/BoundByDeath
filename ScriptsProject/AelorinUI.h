@@ -33,6 +33,9 @@ public:
 	// Grasp of the Dead
 	void showGraspOfTheDeadUI(const Vector3& center, float radius, float pullDuration);
 
+	// Soul Cataclysm
+	void showSoulCataclysmUI(const Vector3& center, float radius, Transform* safeZonesRoot, float safeZoneRadius, float channelDuration);
+
 private:
 
 	// Seeker Sigils
@@ -90,6 +93,27 @@ private:
 	void setGraspOfTheDeadRadius(float radius);
 	void updateGraspOfTheDeadUI(float deltaTime);
 	void hideGraspOfTheDeadUI();
+
+	// Soul Cataclysm
+	struct SoulCataclysmSafeZoneUISlot
+	{
+		Transform* canvas = nullptr;
+		Transform2D* container = nullptr;
+		Transform2D* background = nullptr;
+		Transform2D* border = nullptr;
+		Transform2D* glow = nullptr;
+
+		bool active = false;
+	};
+
+	void setupSoulCataclysmSafeZonesUI();
+	void hideSoulCataclysmUI();
+	void hideAllSoulCataclysmSafeZonesUI();
+	void setSoulCataclysmArenaRadius(float radius);
+	void setSoulCataclysmSafeZoneRadius(SoulCataclysmSafeZoneUISlot& slot, float radius);
+	void updateSoulCataclysmUI(float deltaTime);
+	void hideSoulCataclysmSafeZoneUISlot(SoulCataclysmSafeZoneUISlot& slot);
+	SoulCataclysmSafeZoneUISlot* acquireSoulCataclysmSafeZoneUISlot();
 
 private:
 
@@ -203,4 +227,36 @@ private:
 
 	float m_graspOfTheDeadUITimer = 0.0f;
 	float m_graspOfTheDeadUIDuration = 0.0f;
+
+	// Soul Cataclysm - Arena
+	ComponentRef<Transform> m_soulCataclysmUICanvas;
+	ComponentRef<Transform2D> m_soulCataclysmUIContainer;
+	ComponentRef<Transform2D> m_soulCataclysmUIBackground;
+	ComponentRef<Transform2D> m_soulCataclysmUIBorder;
+	ComponentRef<Transform2D> m_soulCataclysmUIGlow;
+
+	Transform* m_soulCataclysmUICanvasTransform = nullptr;
+	Transform2D* m_soulCataclysmUIContainerTransform2D = nullptr;
+	Transform2D* m_soulCataclysmUIBackgroundTransform2D = nullptr;
+	Transform2D* m_soulCataclysmUIBorderTransform2D = nullptr;
+	Transform2D* m_soulCataclysmUIGlowTransform2D = nullptr;
+
+	// Soul Cataclysm - Safe Zone
+	ComponentRef<Transform> m_soulCataclysmSafeZoneUICanvas;
+	ComponentRef<Transform2D> m_soulCataclysmSafeZoneUIContainer;
+	ComponentRef<Transform2D> m_soulCataclysmSafeZoneUIBackground;
+	ComponentRef<Transform2D> m_soulCataclysmSafeZoneUIBorder;
+	ComponentRef<Transform2D> m_soulCataclysmSafeZoneUIGlow;
+
+	Transform* m_soulCataclysmSafeZoneUICanvasTransform = nullptr;
+	Transform2D* m_soulCataclysmSafeZoneUIContainerTransform2D = nullptr;
+	Transform2D* m_soulCataclysmSafeZoneUIBackgroundTransform2D = nullptr;
+	Transform2D* m_soulCataclysmSafeZoneUIBorderTransform2D = nullptr;
+	Transform2D* m_soulCataclysmSafeZoneUIGlowTransform2D = nullptr;
+
+	std::vector<SoulCataclysmSafeZoneUISlot>m_soulCataclysmSafeZoneUISlots;
+
+	bool m_soulCataclysmUIActive = false;
+	float m_soulCataclysmUITimer = 0.0f;
+	float m_soulCataclysmUIChannelDuration = 0.0f;
 };

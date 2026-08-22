@@ -25,7 +25,8 @@ IMPLEMENT_SCRIPT_FIELDS_INHERITED(AelorinBossController, EnemyBaseController,
 	SERIALIZED_COMPONENT_REF(m_graspCenter, "Grasp Center", ComponentType::TRANSFORM),
 	SERIALIZED_COMPONENT_REF(m_teleportAnchorsRoot, "Teleport Anchors Root", ComponentType::TRANSFORM),
 	SERIALIZED_COMPONENT_REF(m_phase1SummonFormation, "Phase 1 Summon Formation", ComponentType::TRANSFORM),
-	SERIALIZED_COMPONENT_REF(m_phase2SummonFormation, "Phase 2 Summon Formation", ComponentType::TRANSFORM)
+	SERIALIZED_COMPONENT_REF(m_phase2SummonFormation, "Phase 2 Summon Formation", ComponentType::TRANSFORM),
+	SERIALIZED_COMPONENT_REF(m_soulCataclysmCenter, "Soul Cataclysm Center", ComponentType::TRANSFORM)
 )
 
 AelorinBossController::AelorinBossController(GameObject* owner) : EnemyBaseController(owner)
@@ -861,26 +862,25 @@ std::vector<AelorinAbility> AelorinBossController::buildAbilityPool() const
 {
 	std::vector<AelorinAbility> pool
 	{
-		//AelorinAbility::SeekerSigils
-		//AelorinAbility::RisenSpires
-		//AelorinAbility::SpiritCannon
-		AelorinAbility::GraspOfTheDead
+		AelorinAbility::SeekerSigils,
+		AelorinAbility::RisenSpires,
+		AelorinAbility::SpiritCannon
 	};
 
-	//if (canUseNova())
-	//{
-	//	pool.push_back(AelorinAbility::Nova);
-	//}
+	if (canUseNova())
+	{
+		pool.push_back(AelorinAbility::Nova);
+	}
 
-	//if (canSummon())
-	//{
-	//	pool.push_back(AelorinAbility::Summon);
-	//}
+	if (canSummon())
+	{
+		pool.push_back(AelorinAbility::Summon);
+	}
 
-	//if (isPhase2())
-	//{
-	//	pool.push_back(AelorinAbility::GraspOfTheDead);
-	//}
+	if (isPhase2())
+	{
+		pool.push_back(AelorinAbility::GraspOfTheDead);
+	}
 
 	return pool;
 }

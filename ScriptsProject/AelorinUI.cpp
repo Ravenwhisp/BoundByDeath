@@ -45,6 +45,20 @@ IMPLEMENT_SCRIPT_FIELDS(AelorinUI,
 		SERIALIZED_COMPONENT_REF(m_graspOfTheDeadUIBackground, "Grasp of the Dead UI Background", ComponentType::TRANSFORM2D),
 		SERIALIZED_COMPONENT_REF(m_graspOfTheDeadUIBorder, "Grasp of the Dead UI Border", ComponentType::TRANSFORM2D),
 		SERIALIZED_COMPONENT_REF(m_graspOfTheDeadUIGlow, "Grasp of the Dead UI Glow", ComponentType::TRANSFORM2D)
+	),
+
+	FIELD_GROUP_COLLAPSE("Soul Cataclysm",
+		SERIALIZED_COMPONENT_REF(m_soulCataclysmUICanvas, "Soul Cataclysm UI Canvas",	ComponentType::TRANSFORM),
+		SERIALIZED_COMPONENT_REF(m_soulCataclysmUIContainer, "Soul Cataclysm UI Container", ComponentType::TRANSFORM2D),
+		SERIALIZED_COMPONENT_REF(m_soulCataclysmUIBackground, "Soul Cataclysm UI Background", ComponentType::TRANSFORM2D),
+		SERIALIZED_COMPONENT_REF(m_soulCataclysmUIBorder, "Soul Cataclysm UI Border",	ComponentType::TRANSFORM2D),
+		SERIALIZED_COMPONENT_REF(m_soulCataclysmUIGlow, "Soul Cataclysm UI Glow", ComponentType::TRANSFORM2D),
+
+		SERIALIZED_COMPONENT_REF(m_soulCataclysmSafeZoneUICanvas, "Soul Cataclysm Safe Zone UI Canvas", ComponentType::TRANSFORM),
+		SERIALIZED_COMPONENT_REF(m_soulCataclysmSafeZoneUIContainer, "Soul Cataclysm Safe Zone UI Container", ComponentType::TRANSFORM2D),
+		SERIALIZED_COMPONENT_REF(m_soulCataclysmSafeZoneUIBackground, "Soul Cataclysm Safe Zone UI Background", ComponentType::TRANSFORM2D),
+		SERIALIZED_COMPONENT_REF(m_soulCataclysmSafeZoneUIBorder, "Soul Cataclysm Safe Zone UI Border", ComponentType::TRANSFORM2D),
+		SERIALIZED_COMPONENT_REF(m_soulCataclysmSafeZoneUIGlow, "Soul Cataclysm Safe Zone UI Glow",	ComponentType::TRANSFORM2D)
 	)
 )
 
@@ -101,6 +115,23 @@ void AelorinUI::Start()
 	m_graspOfTheDeadUIGlowTransform2D =	m_graspOfTheDeadUIGlow.getReferencedComponent();
 
 	hideGraspOfTheDeadUI();
+
+	// Soul Cataclysm - Arena
+	m_soulCataclysmUICanvasTransform = m_soulCataclysmUICanvas.getReferencedComponent();
+	m_soulCataclysmUIContainerTransform2D =	m_soulCataclysmUIContainer.getReferencedComponent();
+	m_soulCataclysmUIBackgroundTransform2D = m_soulCataclysmUIBackground.getReferencedComponent();
+	m_soulCataclysmUIBorderTransform2D = m_soulCataclysmUIBorder.getReferencedComponent();
+	m_soulCataclysmUIGlowTransform2D = m_soulCataclysmUIGlow.getReferencedComponent();
+
+	// Soul Cataclysm - Safe Zone
+	m_soulCataclysmSafeZoneUICanvasTransform = m_soulCataclysmSafeZoneUICanvas.getReferencedComponent();
+	m_soulCataclysmSafeZoneUIContainerTransform2D = m_soulCataclysmSafeZoneUIContainer.getReferencedComponent();
+	m_soulCataclysmSafeZoneUIBackgroundTransform2D = m_soulCataclysmSafeZoneUIBackground.getReferencedComponent();
+	m_soulCataclysmSafeZoneUIBorderTransform2D = m_soulCataclysmSafeZoneUIBorder.getReferencedComponent();
+	m_soulCataclysmSafeZoneUIGlowTransform2D = m_soulCataclysmSafeZoneUIGlow.getReferencedComponent();
+
+	setupSoulCataclysmSafeZonesUI();
+	hideSoulCataclysmUI();
 }
 
 void AelorinUI::Update()
@@ -112,6 +143,7 @@ void AelorinUI::Update()
 	updateRisenSpiresUI(deltaTime);
 	updateSpiritCannonUI(deltaTime);
 	updateGraspOfTheDeadUI(deltaTime);
+	updateSoulCataclysmUI(deltaTime);
 }
 
 void AelorinUI::showSeekerSigilsUI(const Vector3& impactPosition, float radius, float telegraphDuration)
@@ -363,6 +395,91 @@ void AelorinUI::showGraspOfTheDeadUI(const Vector3& center, float radius, float 
 	Transform2DAPI::setScale(m_graspOfTheDeadUIBorderTransform2D, Vector2(1.0f, 1.0f));
 	Transform2DAPI::setScale(m_graspOfTheDeadUIGlowTransform2D, Vector2(1.0f, 1.0f));
 
+}
+
+void AelorinUI::showSoulCataclysmUI(const Vector3& center, float radius, Transform* safeZonesRoot, float safeZoneRadius, float channelDuration)
+{
+	if (!m_soulCataclysmUICanvasTransform ||
+		!m_soulCataclysmUIContainerTransform2D ||
+		!m_soulCataclysmUIBackgroundTransform2D ||
+		!m_soulCataclysmUIBorderTransform2D ||
+		!m_soulCataclysmUIGlowTransform2D ||
+		!safeZonesRoot)
+	{
+		return;
+	}
+
+	GameObject* arenaObject = ComponentAPI::getOwner(m_soulCataclysmUICanvasTransform);
+	if (!arenaObject)
+	{
+		return;
+	}
+
+	// reset previous visualization
+	hideAllSoulCataclysmSafeZonesUI();
+
+	m_soulCataclysmUIActive = true;
+	m_soulCataclysmUITimer = 0.0f;
+	m_soulCataclysmUIChannelDuration = (std::max)(channelDuration, 0.001f);
+
+	// arena
+	GameObjectAPI::setActive(arenaObject, true);
+
+	Vector3 arenaPosition = center;
+	arenaPosition.y += 0.05f;
+
+	TransformAPI::setGlobalPosition(m_soulCataclysmUICanvasTransform, arenaPosition);
+	TransformAPI::setGlobalRotationEuler(m_soulCataclysmUICanvasTransform, Vector3(90.0f, 0.0f, 0.0f));
+
+	setSoulCataclysmArenaRadius(radius);
+
+	Transform2DAPI::setAlpha(m_soulCataclysmUIContainerTransform2D, 1.0f);
+	Transform2DAPI::setAlpha(m_soulCataclysmUIBackgroundTransform2D, 0.25f);
+	Transform2DAPI::setAlpha(m_soulCataclysmUIBorderTransform2D, 1.0f);
+	Transform2DAPI::setAlpha(m_soulCataclysmUIGlowTransform2D, 0.0f);
+
+	// safe zones
+	const int safeZoneCount = TransformAPI::getChildCount(safeZonesRoot);
+
+	for (int i = 0; i < safeZoneCount; ++i)
+	{
+		Transform* safeZoneAnchor = TransformAPI::getChild(safeZonesRoot, i);
+		if (!safeZoneAnchor)
+		{
+			continue;
+		}
+
+		SoulCataclysmSafeZoneUISlot* slot =	acquireSoulCataclysmSafeZoneUISlot();
+		if (!slot)
+		{
+			Debug::warn("[AelorinUI] Not enough Soul Cataclysm Safe Zone UI slots");
+
+			break;
+		}
+
+		GameObject* slotObject = ComponentAPI::getOwner(slot->canvas);
+		if (!slotObject)
+		{
+			continue;
+		}
+
+		Vector3 safePosition = TransformAPI::getGlobalPosition(safeZoneAnchor);
+		safePosition.y += 0.06f;
+
+		GameObjectAPI::setActive(slotObject, true);
+
+		TransformAPI::setGlobalPosition(slot->canvas, safePosition);
+		TransformAPI::setGlobalRotationEuler(slot->canvas, Vector3(90.0f, 0.0f, 0.0f));
+
+		setSoulCataclysmSafeZoneRadius(*slot, safeZoneRadius);
+
+		Transform2DAPI::setAlpha(slot->container, 1.0f);		
+		Transform2DAPI::setAlpha(slot->background, 1.0f);
+		Transform2DAPI::setAlpha(slot->border, 1.0f);
+		Transform2DAPI::setAlpha(slot->glow, 0.35f);
+
+		slot->active = true;
+	}
 }
 
 void AelorinUI::setupSeekerSigilsUI()
@@ -1094,3 +1211,236 @@ void AelorinUI::hideGraspOfTheDeadUI()
 }
 
 IMPLEMENT_SCRIPT(AelorinUI)
+
+void AelorinUI::setupSoulCataclysmSafeZonesUI()
+{
+	m_soulCataclysmSafeZoneUISlots.clear();
+
+	if (!m_soulCataclysmSafeZoneUICanvasTransform ||
+		!m_soulCataclysmSafeZoneUIContainerTransform2D ||
+		!m_soulCataclysmSafeZoneUIBackgroundTransform2D ||
+		!m_soulCataclysmSafeZoneUIBorderTransform2D ||
+		!m_soulCataclysmSafeZoneUIGlowTransform2D)
+	{
+		Debug::warn("[AelorinUI] Soul Cataclysm Safe Zone template UI is incomplete");
+
+		return;
+	}
+
+	// Slot01 - assigned in editor
+	SoulCataclysmSafeZoneUISlot firstSlot;
+	firstSlot.canvas = m_soulCataclysmSafeZoneUICanvasTransform;
+	firstSlot.container = m_soulCataclysmSafeZoneUIContainerTransform2D;
+	firstSlot.background = m_soulCataclysmSafeZoneUIBackgroundTransform2D;
+	firstSlot.border = m_soulCataclysmSafeZoneUIBorderTransform2D;
+	firstSlot.glow = m_soulCataclysmSafeZoneUIGlowTransform2D;
+
+	m_soulCataclysmSafeZoneUISlots.push_back(firstSlot);
+
+	// parent should be "SafeZones"
+	Transform* safeZonesUIRoot = TransformAPI::getParent(m_soulCataclysmSafeZoneUICanvasTransform);
+	if (!safeZonesUIRoot)
+	{
+		Debug::warn("[AelorinUI] Soul Cataclysm Safe Zones UI root not found");
+
+		return;
+	}
+
+	const int childCount = TransformAPI::getChildCount(safeZonesUIRoot);
+
+	for (int i = 0; i < childCount; ++i)
+	{
+		Transform* canvas = TransformAPI::getChild(safeZonesUIRoot, i);
+
+		if (!canvas || canvas == m_soulCataclysmSafeZoneUICanvasTransform)
+		{
+			continue;
+		}
+
+		Transform* containerTransform = TransformAPI::findChildByName(canvas, "Container");
+		if (!containerTransform)
+		{
+			continue;
+		}
+
+		Transform* backgroundTransform = TransformAPI::findChildByName(containerTransform, "Background");
+		Transform* borderTransform = TransformAPI::findChildByName(containerTransform, "Border");
+		Transform* glowTransform = TransformAPI::findChildByName(containerTransform, "Glow");
+
+		if (!backgroundTransform ||
+			!borderTransform ||
+			!glowTransform)
+		{
+			continue;
+		}
+
+		GameObject* containerObject = ComponentAPI::getOwner(containerTransform);
+
+		GameObject* backgroundObject = ComponentAPI::getOwner(backgroundTransform);
+
+		GameObject* borderObject = ComponentAPI::getOwner(borderTransform);
+
+		GameObject* glowObject = ComponentAPI::getOwner(glowTransform);
+
+		if (!containerObject ||
+			!backgroundObject ||
+			!borderObject ||
+			!glowObject)
+		{
+			continue;
+		}
+
+		Transform2D* container = static_cast<Transform2D*>(GameObjectAPI::getComponent(containerObject, ComponentType::TRANSFORM2D));
+		Transform2D* background = static_cast<Transform2D*>(GameObjectAPI::getComponent(backgroundObject, ComponentType::TRANSFORM2D));
+		Transform2D* border = static_cast<Transform2D*>(GameObjectAPI::getComponent(borderObject, ComponentType::TRANSFORM2D));
+		Transform2D* glow =	static_cast<Transform2D*>(GameObjectAPI::getComponent(glowObject, ComponentType::TRANSFORM2D));
+
+		if (!container ||
+			!background ||
+			!border ||
+			!glow)
+		{
+			continue;
+		}
+
+		SoulCataclysmSafeZoneUISlot slot;
+
+		slot.canvas = canvas;
+		slot.container = container;
+		slot.background = background;
+		slot.border = border;
+		slot.glow = glow;
+
+		m_soulCataclysmSafeZoneUISlots.push_back(slot);
+	}
+
+	Debug::log("[AelorinUI] Cached %d Soul Cataclysm Safe Zone UI slots",static_cast<int>(m_soulCataclysmSafeZoneUISlots.size()));
+}
+
+void AelorinUI::hideSoulCataclysmUI()
+{
+	if (m_soulCataclysmUICanvasTransform)
+	{
+		GameObject* arenaObject = ComponentAPI::getOwner(m_soulCataclysmUICanvasTransform);
+		if (arenaObject)
+		{
+			GameObjectAPI::setActive(arenaObject, false);
+		}
+	}
+
+	hideAllSoulCataclysmSafeZonesUI();
+
+	m_soulCataclysmUIActive = false;
+	m_soulCataclysmUITimer = 0.0f;
+	m_soulCataclysmUIChannelDuration = 0.0f;
+
+	if (m_soulCataclysmUIGlowTransform2D)
+	{
+		Transform2DAPI::setAlpha(m_soulCataclysmUIGlowTransform2D, 0.0f);
+	}
+}
+
+void AelorinUI::hideAllSoulCataclysmSafeZonesUI()
+{
+	for (SoulCataclysmSafeZoneUISlot& slot : m_soulCataclysmSafeZoneUISlots)
+	{
+		hideSoulCataclysmSafeZoneUISlot(slot);
+	}
+}
+
+void AelorinUI::setSoulCataclysmArenaRadius(float radius)
+{
+	if (!m_soulCataclysmUIContainerTransform2D)
+	{
+		return;
+	}
+
+	const float baseDiameterUI = Transform2DAPI::getBaseSize(m_soulCataclysmUIContainerTransform2D).x;
+	if (baseDiameterUI <= 0.001f)
+	{
+		return;
+	}
+
+	const float desiredDiameterUI = radius * 2.0f * 100.0f;
+	const float scale = desiredDiameterUI / baseDiameterUI;
+
+	Transform2DAPI::setScale(m_soulCataclysmUIContainerTransform2D, Vector2(scale, scale));
+}
+
+void AelorinUI::setSoulCataclysmSafeZoneRadius(SoulCataclysmSafeZoneUISlot& slot, float radius)
+{
+	if (!slot.container)
+	{
+		return;
+	}
+
+	const float baseDiameterUI = Transform2DAPI::getBaseSize(slot.container).x;
+	if (baseDiameterUI <= 0.001f)
+	{
+		return;
+	}
+
+	const float desiredDiameterUI = radius * 2.0f * 100.0f;
+	const float scale = desiredDiameterUI / baseDiameterUI;
+
+	Transform2DAPI::setScale(slot.container, Vector2(scale, scale));
+}
+
+void AelorinUI::updateSoulCataclysmUI(float deltaTime)
+{
+	if (!m_soulCataclysmUIActive)
+	{
+		return;
+	}
+
+	if (!m_soulCataclysmUIBackgroundTransform2D || !m_soulCataclysmUIGlowTransform2D)
+	{
+		hideSoulCataclysmUI();
+		return;
+	}
+
+	m_soulCataclysmUITimer += deltaTime;
+
+	const float t = std::clamp(m_soulCataclysmUITimer / m_soulCataclysmUIChannelDuration, 0.0f, 1.0f);
+	const float easedT = MathAPI::evaluateEasing(MathAPI::EasingType::EaseInQuad, t);
+
+	// stronger danger area as cataclysm nears execution
+	const float backgroundAlpha = 0.25f + 0.55f * easedT;
+
+	Transform2DAPI::setAlpha(m_soulCataclysmUIBackgroundTransform2D, backgroundAlpha);
+
+	// impact
+	Transform2DAPI::setAlpha(m_soulCataclysmUIGlowTransform2D, easedT);
+
+	if (t >= 1.0f)
+	{
+		hideSoulCataclysmUI();
+	}
+}
+
+void AelorinUI::hideSoulCataclysmSafeZoneUISlot(SoulCataclysmSafeZoneUISlot& slot)
+{
+	if (slot.canvas)
+	{
+		GameObject* slotObject = ComponentAPI::getOwner(slot.canvas);
+		if (slotObject)
+		{
+			GameObjectAPI::setActive(slotObject, false);
+		}
+	}
+
+	slot.active = false;
+}
+
+AelorinUI::SoulCataclysmSafeZoneUISlot* AelorinUI::acquireSoulCataclysmSafeZoneUISlot()
+{
+	for (SoulCataclysmSafeZoneUISlot& slot :m_soulCataclysmSafeZoneUISlots)
+	{
+		if (!slot.active)
+		{
+			return &slot;
+		}
+	}
+
+	return nullptr;
+}

@@ -39,7 +39,8 @@ IMPLEMENT_SCRIPT_FIELDS(AelorinDebugDraw,
 	),
 
 	FIELD_GROUP_COLLAPSE("Soul Cataclysm",
-		SERIALIZED_BOOL(m_drawSoulCataclysmSafeZones, "Draw Safe Zones")
+		SERIALIZED_BOOL(m_drawSoulCataclysmSafeZones, "Draw Safe Zones"),
+		SERIALIZED_BOOL(m_drawSoulCataclysmRadius, "Draw Cataclysm Radius")
 	),
 
 	SERIALIZED_BOOL(m_debugEnabled, "Debug Enabled"),
@@ -259,6 +260,22 @@ void AelorinDebugDraw::drawGizmo()
 
 				drawImpactCircle(position, config->m_soulCataclysmSafeZoneRadius, green);
 			}
+		}
+	}
+
+	if (m_drawSoulCataclysmRadius)
+	{
+		Transform* cataclysmCenter = m_controller->getSoulCataclysmCenter();
+		if (cataclysmCenter)
+		{
+			Vector3 centerPosition = TransformAPI::getGlobalPosition(cataclysmCenter);
+			centerPosition.y += m_heightOffset;
+
+			drawImpactCircle(
+				centerPosition,
+				config->m_soulCataclysmRadius,
+				red
+			);
 		}
 	}
 }

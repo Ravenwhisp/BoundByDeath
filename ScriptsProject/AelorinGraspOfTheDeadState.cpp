@@ -161,6 +161,7 @@ void AelorinGraspOfTheDeadState::OnStateUpdate()
 
 void AelorinGraspOfTheDeadState::OnStateExit()
 {
+	m_aelorinUI = nullptr;
 	m_lyrielMovement = nullptr;
 	m_deathMovement = nullptr;
 	m_stateTimer = 0.0f;

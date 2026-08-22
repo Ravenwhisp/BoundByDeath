@@ -135,6 +135,7 @@ void AelorinNovaState::OnStateUpdate()
 
 void AelorinNovaState::OnStateExit()
 {
+	m_aelorinUI = nullptr;
 	m_stateTimer = 0.0f;
 	m_novaCenter = Vector3::Zero;
 	m_firstWaveApplied = false;

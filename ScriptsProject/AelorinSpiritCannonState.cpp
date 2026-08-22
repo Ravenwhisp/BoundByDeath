@@ -244,6 +244,7 @@ void AelorinSpiritCannonState::OnStateUpdate()
 
 void AelorinSpiritCannonState::OnStateExit()
 {
+	m_aelorinUI = nullptr;
 	m_lockedTarget = nullptr;
 	m_aelorinTransform = nullptr;
 

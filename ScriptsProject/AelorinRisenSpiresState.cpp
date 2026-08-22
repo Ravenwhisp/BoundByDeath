@@ -136,6 +136,7 @@ void AelorinRisenSpiresState::OnStateUpdate()
 
 void AelorinRisenSpiresState::OnStateExit()
 {
+	m_aelorinUI = nullptr;
 	m_stateTimer = 0.0f;
 	m_firstPassExecuted = false;
 	m_secondPassExecuted = false;

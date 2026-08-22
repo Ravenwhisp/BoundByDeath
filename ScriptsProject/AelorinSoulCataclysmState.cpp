@@ -4,6 +4,7 @@
 #include "AelorinBossController.h"
 #include "AelorinAttackConfig.h"
 #include "AelorinAttackExecutor.h"
+#include "AelorinUI.h"
 
 AelorinSoulCataclysmState::AelorinSoulCataclysmState(GameObject* owner)
 	: StateMachineScript(owner)
@@ -24,6 +25,7 @@ void AelorinSoulCataclysmState::OnStateEnter()
 	// get scripts
 	m_controller = GameObjectAPI::findScript<AelorinBossController>(parentGameObject);
 	m_animation = AnimationAPI::getAnimationComponent(getOwner());
+	m_aelorinUI = GameObjectAPI::findScript<AelorinUI>(parentGameObject);
 
 	// reset members
 	m_stateTimer = 0.0f;
@@ -42,6 +44,11 @@ void AelorinSoulCataclysmState::OnStateEnter()
 		return;
 	}
 
+	if (!m_aelorinUI)
+	{
+		Debug::error("[AelorinSoulCataclysmState] AelorinUI not found.");
+	}
+
 	m_attackExecutor = m_controller->getAttackExecutor();
 
 	if (!m_attackExecutor)
@@ -50,9 +57,39 @@ void AelorinSoulCataclysmState::OnStateEnter()
 		return;
 	}
 
-	if (!m_controller->getTeleportAnchorsRoot())
+	const AelorinAttackConfig* config = m_controller->getAelorinAttackConfig();
+	if (!config)
+	{
+		Debug::error("[AelorinSoulCataclysmState] Attack Config not found.");
+		return;
+	}
+
+	Transform* cataclysmCenter = m_controller->getSoulCataclysmCenter();
+	Transform* safeZonesRoot = m_controller->getTeleportAnchorsRoot();
+
+	if (!cataclysmCenter)
+	{
+		Debug::warn("[AelorinSoulCataclysmState] Soul Cataclysm Center not assigned.");
+		return;
+	}
+
+	if (!safeZonesRoot)
 	{
 		Debug::warn("[AelorinSoulCataclysmState] Teleport Anchors Root not assigned.");
+		return;
+	}
+
+	if (m_aelorinUI)
+	{
+		const Vector3 center = TransformAPI::getGlobalPosition(cataclysmCenter);
+
+		m_aelorinUI->showSoulCataclysmUI(
+			center,
+			config->m_soulCataclysmRadius,
+			safeZonesRoot,
+			config->m_soulCataclysmSafeZoneRadius,
+			config->m_soulCataclysmChannelDuration
+		);
 	}
 
 	Debug::log("[AelorinSoulCataclysmState] ENTER");
@@ -83,6 +120,7 @@ void AelorinSoulCataclysmState::OnStateUpdate()
 
 void AelorinSoulCataclysmState::OnStateExit()
 {
+	m_aelorinUI = nullptr;
 	m_stateTimer = 0.0f;
 	m_cataclysmExecuted = false;
 	m_completed = false;
@@ -115,21 +153,27 @@ void AelorinSoulCataclysmState::damagePlayerIfUnsafe(Transform* playerTransform)
 		return;
 	}
 
+	const AelorinAttackConfig* config =	m_controller->getAelorinAttackConfig();
+	if (!config)
+	{
+		return;
+	}
+
+	Transform* cataclysmCenter = m_controller->getSoulCataclysmCenter();
+	if (!cataclysmCenter)
+	{
+		return;
+	}
+
 	if (isPlayerInsideSafeZone(playerTransform))
 	{
 		Debug::log("[AelorinSoulCataclysmState] Player is inside a safe zone");
 		return;
 	}
 
-	const AelorinAttackConfig* config = m_controller->getAelorinAttackConfig();
-	if (!config)
-	{
-		return;
-	}
+	const Vector3 center = TransformAPI::getGlobalPosition(cataclysmCenter);
 
-	const Vector3 playerPosition = TransformAPI::getGlobalPosition(playerTransform);
-
-	m_attackExecutor->tryDamageTargetInRadius(playerTransform, playerPosition, 0.1f, config->m_soulCataclysmDamage, "Aelorin Soul Cataclysm");
+	m_attackExecutor->tryDamageTargetInRadius(playerTransform, center, config->m_soulCataclysmRadius, config->m_soulCataclysmDamage, "Aelorin Soul Cataclysm");
 }
 
 bool AelorinSoulCataclysmState::isPlayerInsideSafeZone(Transform* playerTransform) const

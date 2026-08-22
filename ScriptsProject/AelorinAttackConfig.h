@@ -103,7 +103,8 @@ public:
 	int m_secondFuryCastCount = 10;
 
 	// Soul Cataclysm
-	float m_soulCataclysmChannelDuration = 1.0f;
+	float m_soulCataclysmChannelDuration = 10.0f;
+	float m_soulCataclysmRadius = 20.0f;
 	float m_soulCataclysmSafeZoneRadius = 2.0f;
 	float m_soulCataclysmDamage = 100.0f;
 
@@ -205,6 +206,7 @@ public:
 
 		FIELD_GROUP_COLLAPSE("Soul Cataclysm",
 			SERIALIZED_FLOAT(m_soulCataclysmChannelDuration, "Cataclysm Channel Duration", 0.0f, 20.0f, 0.05f),
+			SERIALIZED_FLOAT(m_soulCataclysmRadius, "Cataclysm Radius", 0.0f, 300.0f, 1.0f),
 			SERIALIZED_FLOAT(m_soulCataclysmSafeZoneRadius, "Cataclysm Safe Zone Radius", 0.1f, 20.0f, 0.1f),
 			SERIALIZED_FLOAT(m_soulCataclysmDamage, "Cataclysm Damage", 0.0f, 999.0f, 1.0f)
 		),

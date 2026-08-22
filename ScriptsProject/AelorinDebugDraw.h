@@ -47,6 +47,7 @@ public:
 
 	// Soul Cataclysm
 	bool m_drawSoulCataclysmSafeZones = true;
+	bool m_drawSoulCataclysmRadius = true;
 
 	float m_heightOffset = 0.15f;
 

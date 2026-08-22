@@ -152,6 +152,7 @@ public:
 
 	// Soul Cataclysm helpers
 	bool trySendSoulCataclysmTrigger(AnimationComponent* animation);
+	Transform* getSoulCataclysmCenter() const { return m_soulCataclysmCenter.getReferencedComponent(); }
 
 	// Health drop
 	void spawnHealthDrops();
@@ -221,6 +222,7 @@ private:
 	int m_furyCastsCompleted = 0;
 
 	// Soul Cataclysm
+	ComponentRef<Transform> m_soulCataclysmCenter;
 	bool m_soulCataclysmTriggered = false;
 
 	// Debug Draw

@@ -145,6 +145,7 @@ void AelorinSeekerSigilsState::OnStateUpdate()
 
 void AelorinSeekerSigilsState::OnStateExit()
 {
+	m_aelorinUI = nullptr;
 	m_waveTimer = 0.0f;
 	m_currentWave = 0;
 	m_finalProjectileLaunched = false;

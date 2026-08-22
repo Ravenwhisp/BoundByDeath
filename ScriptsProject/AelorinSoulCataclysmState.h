@@ -6,6 +6,7 @@
 class AelorinBossController;
 class AelorinAttackExecutor;
 class AnimationComponent;
+class AelorinUI;
 
 class AelorinSoulCataclysmState : public StateMachineScript
 {
@@ -28,6 +29,7 @@ private:
 	AelorinBossController* m_controller = nullptr;
 	AelorinAttackExecutor* m_attackExecutor = nullptr;
 	AnimationComponent* m_animation = nullptr;
+	AelorinUI* m_aelorinUI = nullptr;
 
 	float m_stateTimer = 0.0f;
 
