@@ -3,6 +3,7 @@
 
 #include "AelorinAttackConfig.h"
 #include "AelorinAttackExecutor.h"
+#include "AelorinUI.h"
 
 #include <cstdlib>
 
@@ -25,6 +26,7 @@ void AelorinSpiritCannonState::OnStateEnter()
 	// get scripts
 	m_controller = GameObjectAPI::findScript<AelorinBossController>(parentGameObject);
 	m_animation = AnimationAPI::getAnimationComponent(getOwner());
+	m_aelorinUI = GameObjectAPI::findScript<AelorinUI>(parentGameObject);
 
 	// reset members
 	m_lockedTarget = nullptr;
@@ -44,6 +46,11 @@ void AelorinSpiritCannonState::OnStateEnter()
 	{
 		Debug::error("[AelorinSpiritCannonState] AnimationComponent not found.");
 		return;
+	}
+
+	if (!m_aelorinUI)
+	{
+		Debug::error("[AelorinSpiritCannonState] AelorinUI not found.");
 	}
 
 	m_attackExecutor = m_controller->getAttackExecutor();
@@ -73,6 +80,20 @@ void AelorinSpiritCannonState::OnStateEnter()
 	if (m_isFuryCast)
 	{
 		m_controller->recordFuryCast();
+	}
+
+	if (!m_isFuryCast && m_aelorinUI)
+	{
+		const AelorinAttackConfig* config = m_controller->getAelorinAttackConfig();
+		if (config)
+		{
+			m_aelorinUI->showSpiritCannonUI(
+				m_aelorinTransform,
+				m_lockedTarget,
+				config->m_spiritCannonBeamLength,
+				config->m_spiritCannonBeamWidth,
+				config->m_spiritCannonWindupDuration);
+		}
 	}
 
 	Debug::log("[AelorinSpiritCannonState] ENTER");
@@ -109,6 +130,17 @@ void AelorinSpiritCannonState::OnStateUpdate()
 			ensureValidLockedTarget();
 			fireBeamShot(config->m_spiritCannonBeamWidth, config->m_spiritCannonDamage, "Aelorin Spirit Cannon Shot 1");
 			++m_shotCount;
+
+			// UI
+			if (!m_isFuryCast && m_aelorinUI && m_lockedTarget)
+			{
+				m_aelorinUI->showSpiritCannonUI(
+					m_aelorinTransform,
+					m_lockedTarget,
+					config->m_spiritCannonBeamLength,
+					config->m_spiritCannonBeamWidth,
+					config->m_spiritCannonPhase1ShotInterval);
+			}
 			return;
 		}
 
@@ -141,6 +173,18 @@ void AelorinSpiritCannonState::OnStateUpdate()
 		ensureValidLockedTarget();
 		fireBeamShot(config->m_spiritCannonBeamWidth, config->m_spiritCannonDamage, "Aelorin Spirit Cannon Quick Shot 1");
 		++m_shotCount;
+
+		// UI
+		if (!m_isFuryCast && m_aelorinUI && m_lockedTarget)
+		{
+			m_aelorinUI->showSpiritCannonUI(
+				m_aelorinTransform,
+				m_lockedTarget,
+				config->m_spiritCannonBeamLength,
+				config->m_spiritCannonBeamWidth,
+				config->m_spiritCannonPhase2ShotInterval);
+		}
+
 		return;
 	}
 
@@ -149,6 +193,18 @@ void AelorinSpiritCannonState::OnStateUpdate()
 		ensureValidLockedTarget();
 		fireBeamShot(config->m_spiritCannonBeamWidth, config->m_spiritCannonDamage, "Aelorin Spirit Cannon Quick Shot 2");
 		++m_shotCount;
+
+		// UI
+		if (!m_isFuryCast && m_aelorinUI && m_lockedTarget)
+		{
+			m_aelorinUI->showSpiritCannonUI(
+				m_aelorinTransform,
+				m_lockedTarget,
+				config->m_spiritCannonBeamLength,
+				config->m_spiritCannonBeamWidth,
+				config->m_spiritCannonPhase2ShotInterval);
+		}
+
 		return;
 	}
 
@@ -157,6 +213,18 @@ void AelorinSpiritCannonState::OnStateUpdate()
 		ensureValidLockedTarget();
 		fireBeamShot(config->m_spiritCannonBeamWidth, config->m_spiritCannonDamage, "Aelorin Spirit Cannon Quick Shot 3");
 		++m_shotCount;
+
+		// UI
+		if (!m_isFuryCast && m_aelorinUI && m_lockedTarget)
+		{
+			m_aelorinUI->showSpiritCannonUI(
+				m_aelorinTransform,
+				m_lockedTarget,
+				config->m_spiritCannonBeamLength,
+				config->m_spiritCannonPhase2FinalBeamWidth,
+				config->m_spiritCannonPhase2FinalShotDelay);
+		}
+
 		return;
 	}
 

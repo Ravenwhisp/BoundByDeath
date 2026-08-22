@@ -27,6 +27,9 @@ public:
 	// Risen Spires
 	void showRisenSpiresUI(Transform* patternRoot, float radius, float chargeDuration);
 
+	// Spirit Cannon
+	void showSpiritCannonUI(Transform* originTransform, Transform* targetTransform, float beamLength, float beamWidth, float chargeDuration);
+
 private:
 
 	// Seeker Sigils
@@ -74,6 +77,12 @@ private:
 	void hideRisenSpiresUISlot(RisenSpiresUISlot& slot);
 	RisenSpiresUISlot* acquireRisenSpiresUISlot();
 
+	// Spirit Cannon
+	void updateSpiritCannonUI(float deltaTime);
+	void playSpiritCannonImpactUI();
+	void hideSpiritCannonUI();
+	void setSpiritCannonSize(float beamLength, float beamWidth);
+
 private:
 
 	// Seeker Sigils
@@ -92,7 +101,6 @@ private:
 	std::vector<SeekerSigilsUISlot> m_seekerSigilsUISlots;
 
 	static constexpr float m_seekerSigilsImpactFadeDuration = 0.15f;
-
 
 	// Nova
 	ComponentRef<Transform> m_novaUICanvas;
@@ -143,4 +151,30 @@ private:
 
 	static constexpr float m_risenSpiresUIImpactFadeDuration = 0.15f;
 
+	// Spirit Cannon
+	ComponentRef<Transform> m_spiritCannonUICanvas;
+	ComponentRef<Transform2D> m_spiritCannonUIContainer;
+	ComponentRef<Transform2D> m_spiritCannonUIBackground;
+	ComponentRef<Transform2D> m_spiritCannonUIBorder;
+	ComponentRef<Transform2D> m_spiritCannonUIGlow;
+
+	Transform* m_spiritCannonUICanvasTransform = nullptr;
+	Transform2D* m_spiritCannonUIContainerTransform2D = nullptr;
+	Transform2D* m_spiritCannonUIBackgroundTransform2D = nullptr;
+	Transform2D* m_spiritCannonUIBorderTransform2D = nullptr;
+	Transform2D* m_spiritCannonUIGlowTransform2D = nullptr;
+
+	Transform* m_spiritCannonOriginTransform = nullptr;
+	Transform* m_spiritCannonTargetTransform = nullptr;
+
+	bool m_spiritCannonUIActive = false;
+	bool m_spiritCannonUICharging = false;
+	bool m_spiritCannonImpactUIPlaying = false;
+	float m_spiritCannonUITimer = 0.0f;
+	float m_spiritCannonUIChargeDuration = 0.0f;
+	float m_spiritCannonBeamLength = 0.0f;
+	float m_spiritCannonBeamWidth = 0.0f;
+	float m_spiritCannonImpactUITimer = 0.0f;
+
+	static constexpr float m_spiritCannonUIImpactFadeDuration = 0.15f;
 };
