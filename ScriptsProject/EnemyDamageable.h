@@ -51,12 +51,12 @@ protected:
 
 	virtual void setHealthBarAlpha(float alpha);
 
-	ComponentRef<Transform> m_renderer;
 	DissolveComponent* m_dissolve = nullptr;
 	bool m_dissolveActive = false;
 	float m_dissolveTimer = 0.0f;
 	float m_dissolveDuration = 1.0f;
 	void loadDissolveComponent();
+	DissolveComponent* findDissolveInHierarchy(Transform* transform);
 
 private: 
 	void resolveHealthBarReferences();
