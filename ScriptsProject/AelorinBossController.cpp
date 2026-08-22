@@ -172,10 +172,10 @@ float AelorinBossController::getClosestPlayerDistance() const
 
 AelorinAbility AelorinBossController::chooseNextAbility()
 {
-	//if (canTeleport())
-	//{
-	//	return AelorinAbility::Teleport;
-	//}
+	if (canTeleport())
+	{
+		return AelorinAbility::Teleport;
+	}
 
 	std::vector<AelorinAbility> pool = buildAbilityPool();
 	removeLastUsedAbility(pool);
