@@ -21,6 +21,11 @@ public:
 
     bool getDesiredCameraTransform(Vector3& outPosition, Vector3& outRotation);
 
+    void beginVerticalOnlyFollow(Transform* anchor);
+    void endVerticalOnlyFollow();
+
+    bool isVerticalOnlyFollowActive() const { return m_verticalOnlyFollowActive; }
+
 public:
     ComponentRef<Transform> m_firstTarget;
     ComponentRef<Transform> m_secondTarget;
@@ -50,4 +55,7 @@ private:
 
     bool m_followEnabled = true;
     float m_currentExtraHeight = 0.0f;
+
+    bool m_verticalOnlyFollowActive = false;
+    Transform* m_verticalFollowAnchor = nullptr;
 };
