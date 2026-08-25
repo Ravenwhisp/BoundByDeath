@@ -93,6 +93,11 @@ void ShadowExecution::Update()
         return;
     }
 
+    if (Time::getTimeScale() == 0.0f)
+    {
+        return;
+    }
+
     if (m_p0WindowTimer > 0.0f)
     {
         if (m_reaperGauge->isFull())
