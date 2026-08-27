@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "SkeletonParticles.h"
+#include "ParticleLifecycle.h"
 
 IMPLEMENT_SCRIPT_FIELDS(SkeletonParticles,
     SERIALIZED_ASSET_REF(m_reviveParticlePrefab, "Revive Particle Prefab", AssetType::PREFAB),
@@ -26,9 +27,16 @@ void SkeletonParticles::Start()
     }
 }
 
+void SkeletonParticles::OnGameStop()
+{
+    ParticleLifecycle::destroy(m_reviveParticle);
+    m_reviveParticleTransform = nullptr;
+    ParticleLifecycle::destroy(m_shockwaveParticle);
+}
+
 void SkeletonParticles::Update()
 {
-    if (m_reviveParticle)
+    if (m_reviveParticle && GameObjectAPI::isActiveSelf(m_reviveParticle))
     {
         updateReviveParticle();
     }
@@ -46,27 +54,36 @@ void SkeletonParticles::Update()
     }
 }
 
+void SkeletonParticles::ensureReviveParticle()
+{
+    if (!m_ownerTransform)
+    {
+        m_ownerTransform = GameObjectAPI::getTransform(getOwner());
+    }
+
+    ParticleLifecycle::ensurePersistent(
+        m_reviveParticle,
+        m_reviveParticlePrefab.m_id,
+        getReviveParticlePosition(),
+        getOwnerRotation(),
+        nullptr
+    );
+
+    if (m_reviveParticle)
+    {
+        m_reviveParticleTransform = GameObjectAPI::getTransform(m_reviveParticle);
+    }
+}
+
 void SkeletonParticles::startReviveParticle()
 {
-    stopReviveParticle();
-
     if (!m_reviveParticlePrefab.m_id.isValid())
     {
         Debug::warn("[SkeletonParticles] Revive particle prefab is missing on '%s'.", GameObjectAPI::getName(getOwner()));
         return;
     }
 
-    if (!m_ownerTransform)
-    {
-        m_ownerTransform = GameObjectAPI::getTransform(getOwner());
-
-        if (!m_ownerTransform)
-        {
-            return;
-        }
-    }
-
-    m_reviveParticle = GameObjectAPI::instantiatePrefab(m_reviveParticlePrefab.m_id, getReviveParticlePosition(), getOwnerRotation());
+    ensureReviveParticle();
 
     if (!m_reviveParticle)
     {
@@ -74,18 +91,13 @@ void SkeletonParticles::startReviveParticle()
         return;
     }
 
-    m_reviveParticleTransform = GameObjectAPI::getTransform(m_reviveParticle);
+    updateReviveParticle();
+    ParticleLifecycle::activate(m_reviveParticle);
 }
 
 void SkeletonParticles::stopReviveParticle()
 {
-    if (m_reviveParticle)
-    {
-        GameObjectAPI::removeGameObject(m_reviveParticle);
-    }
-
-    m_reviveParticle = nullptr;
-    m_reviveParticleTransform = nullptr;
+    ParticleLifecycle::deactivate(m_reviveParticle);
 }
 
 void SkeletonParticles::playShockwaveParticle()
@@ -108,7 +120,10 @@ void SkeletonParticles::playShockwaveParticle()
 
     removeShockwaveParticle();
 
-    m_shockwaveParticle = GameObjectAPI::instantiatePrefab(m_shockwaveParticlePrefab.m_id, getShockwaveParticlePosition(), getOwnerRotation());
+    m_shockwaveParticle = GameObjectAPI::instantiatePrefab(
+        m_shockwaveParticlePrefab.m_id,
+        getShockwaveParticlePosition(),
+        getOwnerRotation());
 
     if (!m_shockwaveParticle)
     {

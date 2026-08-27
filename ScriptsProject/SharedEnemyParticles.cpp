@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "SharedEnemyParticles.h"
+#include "ParticleLifecycle.h"
 
 IMPLEMENT_SCRIPT_FIELDS(SharedEnemyParticles,
     SERIALIZED_ASSET_REF(m_movementParticlePrefab, "Movement Particle Prefab", AssetType::PREFAB),
@@ -23,6 +24,13 @@ void SharedEnemyParticles::Start()
     }
 }
 
+void SharedEnemyParticles::OnGameStop()
+{
+    ParticleLifecycle::destroy(m_movementParticle);
+    m_movementParticleTransform = nullptr;
+    m_movementParticleActive = false;
+}
+
 void SharedEnemyParticles::Update()
 {
     if (m_movementNotificationTimer > 0.0f)
@@ -30,7 +38,7 @@ void SharedEnemyParticles::Update()
         m_movementNotificationTimer -= Time::getDeltaTime();
     }
 
-    if (m_movementParticle == nullptr)
+    if (!m_movementParticleActive)
     {
         return;
     }
@@ -48,31 +56,36 @@ void SharedEnemyParticles::notifyMoving()
 {
     m_movementNotificationTimer = m_movementNotificationTimeout;
 
-    if (m_movementParticle == nullptr)
+    if (!m_movementParticleActive)
     {
         startMovementParticle();
     }
 }
 
-void SharedEnemyParticles::startMovementParticle()
+void SharedEnemyParticles::ensureMovementParticle()
 {
-    if (!m_movementParticlePrefab.m_id.isValid())
-    {
-        Debug::warn("SharedEnemyParticles on '%s' has no movement particle prefab.", GameObjectAPI::getName(getOwner()));
-        return;
-    }
-
     if (m_ownerTransform == nullptr)
     {
         m_ownerTransform = GameObjectAPI::getTransform(getOwner());
-
-        if (m_ownerTransform == nullptr)
-        {
-            return;
-        }
     }
 
-    m_movementParticle = GameObjectAPI::instantiatePrefab(m_movementParticlePrefab.m_id, getMovementParticlePosition(), getOwnerRotation());
+    ParticleLifecycle::ensurePersistent(
+        m_movementParticle,
+        m_movementParticlePrefab.m_id,
+        getMovementParticlePosition(),
+        getOwnerRotation(),
+        nullptr
+    );
+
+    if (m_movementParticle != nullptr)
+    {
+        m_movementParticleTransform = GameObjectAPI::getTransform(m_movementParticle);
+    }
+}
+
+void SharedEnemyParticles::startMovementParticle()
+{
+    ensureMovementParticle();
 
     if (m_movementParticle == nullptr)
     {
@@ -80,19 +93,16 @@ void SharedEnemyParticles::startMovementParticle()
         return;
     }
 
-    m_movementParticleTransform = GameObjectAPI::getTransform(m_movementParticle);
+    updateMovementParticle();
+    ParticleLifecycle::activate(m_movementParticle);
+    m_movementParticleActive = true;
 }
 
 void SharedEnemyParticles::stopMovementParticle()
 {
-    if (m_movementParticle != nullptr)
-    {
-        GameObjectAPI::removeGameObject(m_movementParticle);
-    }
-
-    m_movementParticle = nullptr;
-    m_movementParticleTransform = nullptr;
+    ParticleLifecycle::deactivate(m_movementParticle);
     m_movementNotificationTimer = 0.0f;
+    m_movementParticleActive = false;
 }
 
 void SharedEnemyParticles::updateMovementParticle()

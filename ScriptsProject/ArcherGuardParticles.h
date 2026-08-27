@@ -9,6 +9,7 @@ public:
     explicit ArcherGuardParticles(GameObject* owner);
     void Start() override;
     void Update() override;
+    void OnGameStop() override;
 
     FieldList getExposedFields() const override;
 
@@ -39,6 +40,10 @@ public:
     float m_barrageImpactLifetime = 1.0f;
 
 private:
+    void ensureTrailParticle(const Vector3& pos);
+    void ensureBarrageFloorParticle(const Vector3& position);
+    void ensureSomersaultParticle();
+
     GameObject* m_trailGO  = nullptr;
     GameObject* m_barrageFloorParticle = nullptr;
     GameObject* m_barrageImpactParticle = nullptr;

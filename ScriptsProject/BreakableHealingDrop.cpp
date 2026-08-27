@@ -3,6 +3,7 @@
 
 #include "HealthDropSpawner.h"
 #include "EnvironmentSound.h"
+#include "ParticleLifecycle.h"
 
 IMPLEMENT_SCRIPT_FIELDS_INHERITED(BreakableHealingDrop, BreakableObject,
     SERIALIZED_ASSET_REF(m_healthPickupPrefab, "Health Pickup Prefab", AssetType::PREFAB),
@@ -20,7 +21,20 @@ BreakableHealingDrop::BreakableHealingDrop(GameObject* owner)
 
 void BreakableHealingDrop::Start()
 {
-    BreakableObject::Start(); //si no hay nada aqui, quitamos el start
+    BreakableObject::Start();
+}
+
+void BreakableHealingDrop::OnGameStop()
+{
+    ParticleLifecycle::destroy(m_healthBreakEffectInstance);
+    BreakableObject::OnGameStop();
+}
+
+void BreakableHealingDrop::ensureHealthBreakEffect()
+{
+    Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
+    const Vector3 spawnPosition = ownerTransform != nullptr ? TransformAPI::getGlobalPosition(ownerTransform) : Vector3::Zero;
+    ParticleLifecycle::ensurePersistent(m_healthBreakEffectInstance, m_healthBreakEffectParticle.m_id, spawnPosition, Vector3::Zero, nullptr);
 }
 
 void BreakableHealingDrop::Update()
@@ -47,7 +61,16 @@ void BreakableHealingDrop::onBreak()
 
     if (m_healthBreakEffectParticle.m_id.isValid())
     {
-        GameObject* healthBreakEffect = GameObjectAPI::instantiatePrefab(m_healthBreakEffectParticle.m_id, breakablePosition, Vector3::Zero);
+        ensureHealthBreakEffect();
+        if (m_healthBreakEffectInstance != nullptr)
+        {
+            Transform* effectTransform = GameObjectAPI::getTransform(m_healthBreakEffectInstance);
+            if (effectTransform != nullptr)
+            {
+                TransformAPI::setGlobalPosition(effectTransform, breakablePosition);
+            }
+            ParticleLifecycle::activate(m_healthBreakEffectInstance);
+        }
     }
 
     // It's still a barrel/crate breaking → same break SFX.

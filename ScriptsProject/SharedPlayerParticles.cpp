@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "SharedPlayerParticles.h"
+#include "ParticleLifecycle.h"
 
 IMPLEMENT_SCRIPT_FIELDS(SharedPlayerParticles,
     SERIALIZED_ASSET_REF(m_damageParticlePrefab, "Damage Particle Prefab", AssetType::PREFAB),
@@ -12,6 +13,33 @@ SharedPlayerParticles::SharedPlayerParticles(GameObject* owner)
 {
 }
 
+void SharedPlayerParticles::Start()
+{
+    m_ownerTransform = GameObjectAPI::getTransform(getOwner());
+}
+
+void SharedPlayerParticles::OnGameStop()
+{
+    ParticleLifecycle::destroy(m_activeDamageParticle);
+    m_activeDamageParticleTransform = nullptr;
+}
+
+void SharedPlayerParticles::ensureDamageParticle()
+{
+    if (m_ownerTransform == nullptr)
+    {
+        m_ownerTransform = GameObjectAPI::getTransform(getOwner());
+    }
+
+    const Vector3 spawnPosition = m_ownerTransform != nullptr ? TransformAPI::getGlobalPosition(m_ownerTransform) : Vector3::Zero;
+    ParticleLifecycle::ensurePersistent(m_activeDamageParticle, m_damageParticlePrefab.m_id, spawnPosition, Vector3::Zero, nullptr);
+
+    if (m_activeDamageParticle != nullptr)
+    {
+        m_activeDamageParticleTransform = GameObjectAPI::getTransform(m_activeDamageParticle);
+    }
+}
+
 void SharedPlayerParticles::Update()
 {
     const float deltaTime = Time::getDeltaTime();
@@ -21,7 +49,7 @@ void SharedPlayerParticles::Update()
         m_damageParticleCooldownTimer -= deltaTime;
     }
 
-    if (m_activeDamageParticle == nullptr)
+    if (m_damageParticleTimer <= 0.0f)
     {
         return;
     }
@@ -36,10 +64,7 @@ void SharedPlayerParticles::Update()
 
     if (m_damageParticleTimer <= 0.0f)
     {
-        GameObjectAPI::removeGameObject(m_activeDamageParticle);
-
-        m_activeDamageParticle = nullptr;
-        m_activeDamageParticleTransform = nullptr;
+        ParticleLifecycle::deactivate(m_activeDamageParticle);
         m_damageParticleTimer = 0.0f;
     }
 }
@@ -51,29 +76,13 @@ void SharedPlayerParticles::playDamageParticle()
         return;
     }
 
+    ensureDamageParticle();
+
     if (m_ownerTransform == nullptr)
     {
-        m_ownerTransform = GameObjectAPI::getTransform(getOwner());
-
-        if (m_ownerTransform == nullptr)
-        {
-            Debug::warn("PlayerParticles on '%s' could not find the owner transform.", GameObjectAPI::getName(getOwner()));
-            return;
-        }
+        Debug::warn("PlayerParticles on '%s' could not find the owner transform.", GameObjectAPI::getName(getOwner()));
+        return;
     }
-
-    if (m_activeDamageParticle != nullptr)
-    {
-        GameObjectAPI::removeGameObject(m_activeDamageParticle);
-
-        m_activeDamageParticle = nullptr;
-        m_activeDamageParticleTransform = nullptr;
-    }
-
-    const Vector3 spawnPosition = TransformAPI::getGlobalPosition(m_ownerTransform);
-    const Vector3 spawnRotation(0.0f, 0.0f, 0.0f);
-
-    m_activeDamageParticle = GameObjectAPI::instantiatePrefab(m_damageParticlePrefab.m_id, spawnPosition, spawnRotation);
 
     if (m_activeDamageParticle == nullptr)
     {
@@ -81,7 +90,13 @@ void SharedPlayerParticles::playDamageParticle()
         return;
     }
 
-    m_activeDamageParticleTransform = GameObjectAPI::getTransform(m_activeDamageParticle);
+    const Vector3 spawnPosition = TransformAPI::getGlobalPosition(m_ownerTransform);
+    if (m_activeDamageParticleTransform != nullptr)
+    {
+        TransformAPI::setGlobalPosition(m_activeDamageParticleTransform, spawnPosition);
+    }
+
+    ParticleLifecycle::activate(m_activeDamageParticle);
     m_damageParticleTimer = m_damageParticleLifetime;
     m_damageParticleCooldownTimer = m_damageParticleCooldown;
 }

@@ -2,6 +2,7 @@
 #include "BreakableObject.h"
 
 #include "EnvironmentSound.h"
+#include "ParticleLifecycle.h"
 
 namespace
 {
@@ -55,6 +56,30 @@ void BreakableObject::Start()
     }
 }
 
+void BreakableObject::OnGameStop()
+{
+    ParticleLifecycle::destroy(m_dustEffectInstance);
+}
+
+void BreakableObject::ensureDustEffect()
+{
+    Vector3 spawnPosition = Vector3::Zero;
+    if (m_brokenObjectTransform != nullptr)
+    {
+        spawnPosition = TransformAPI::getGlobalPosition(m_brokenObjectTransform);
+    }
+    else
+    {
+        Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
+        if (ownerTransform != nullptr)
+        {
+            spawnPosition = TransformAPI::getGlobalPosition(ownerTransform);
+        }
+    }
+
+    ParticleLifecycle::ensurePersistent(m_dustEffectInstance, m_dustEffectParticle.m_id, spawnPosition, Vector3::Zero, nullptr);
+}
+
 void BreakableObject::onBreak()
 {
     breakObject();
@@ -80,7 +105,17 @@ void BreakableObject::breakObject()
     {
         GameObject* brokenObject = ComponentAPI::getOwner(m_brokenObjectTransform);
         GameObjectAPI::setActive(brokenObject, true);
-		GameObject* dustEffect = GameObjectAPI::instantiatePrefab(m_dustEffectParticle.m_id, TransformAPI::getGlobalPosition(m_brokenObjectTransform), Vector3(0.0f, 0.0f, 0.0f));
+
+        ensureDustEffect();
+        if (m_dustEffectInstance != nullptr)
+        {
+            Transform* dustTransform = GameObjectAPI::getTransform(m_dustEffectInstance);
+            if (dustTransform != nullptr)
+            {
+                TransformAPI::setGlobalPosition(dustTransform, TransformAPI::getGlobalPosition(m_brokenObjectTransform));
+            }
+            ParticleLifecycle::activate(m_dustEffectInstance);
+        }
     }
 
     if (m_navBlocker != nullptr)

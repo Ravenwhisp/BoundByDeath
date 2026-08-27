@@ -11,6 +11,7 @@ public:
 
     void Start() override;
     void Update() override;
+    void OnGameStop() override;
 
     FieldList getExposedFields() const override;
 
@@ -26,6 +27,7 @@ private:
 
     void updateReviveParticle();
     void removeShockwaveParticle();
+    void ensureReviveParticle();
 
 private:
     PrefabRef m_reviveParticlePrefab;

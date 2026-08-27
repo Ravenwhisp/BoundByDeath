@@ -13,6 +13,7 @@ public:
     explicit BreakableObject(GameObject* owner);
 
     void Start() override;
+    void OnGameStop() override;
 
     FieldList getExposedFields() const override;
 
@@ -24,7 +25,9 @@ public:
 protected:
 	Transform* m_normalObjectTransform = nullptr;
 	Transform* m_brokenObjectTransform = nullptr;
+    GameObject* m_dustEffectInstance = nullptr;
     void breakObject();
+    void ensureDustEffect();
 
 public:
     PrefabRef m_dustEffectParticle;

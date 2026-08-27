@@ -13,6 +13,7 @@ public:
 
     void Start() override;
     void Update() override;
+    void OnGameStop() override;
 
     FieldList getExposedFields() const override;
 
@@ -29,5 +30,8 @@ public:
 
 private:
     void onBreak() override;
+    void ensureHealthBreakEffect();
+
+    GameObject* m_healthBreakEffectInstance = nullptr;
 
 };

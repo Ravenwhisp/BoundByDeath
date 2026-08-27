@@ -11,6 +11,7 @@ public:
 
     void Start() override;
     void Update() override;
+    void OnGameStop() override;
 
     FieldList getExposedFields() const override;
 
@@ -53,6 +54,11 @@ private:
     void addBasicAttackEffect();
     void removeBasicAttackEffect();
     void updateBasicAttackEffectLifetime(float deltaTime);
+
+    void ensureWalkingDust();
+    void ensureChargeAttackEffect();
+    void ensureBasicAttackTelegraph(const Vector3& position, const Vector3& rotation);
+    void ensureBasicAttackEffect();
 
 public:
     PrefabRef m_walkingDustPrefab;

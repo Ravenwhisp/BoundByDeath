@@ -11,6 +11,7 @@ public:
 
     void Start() override;
     void Update() override;
+    void OnGameStop() override;
 
     FieldList getExposedFields() const override;
 
@@ -20,6 +21,7 @@ public:
 private:
     void startMovementParticle();
     void updateMovementParticle();
+    void ensureMovementParticle();
 
     Vector3 getMovementParticlePosition() const;
     Vector3 getOwnerRotation() const;
@@ -37,4 +39,5 @@ private:
     Transform* m_movementParticleTransform = nullptr;
 
     float m_movementNotificationTimer = 0.0f;
+    bool m_movementParticleActive = false;
 };

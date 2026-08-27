@@ -3,6 +3,7 @@
 #include "EnvironmentSound.h"
 #include "EnemyDamageable.h"
 #include "CrystalVisuals.h"
+#include "ParticleLifecycle.h"
 
 IMPLEMENT_SCRIPT_FIELDS_INHERITED(CrystalShadowMark, EnemyShadowMark,
     SERIALIZED_COMPONENT_REF(m_puzzleManager, "PuzzleManager", ComponentType::TRANSFORM),
@@ -36,6 +37,11 @@ void CrystalShadowMark::Start()
     {
         Debug::warn("[CrystalMark] CrystalVisuals not found on '%s'.", GameObjectAPI::getName(getOwner()));
     }
+}
+
+void CrystalShadowMark::OnGameStop()
+{
+    ParticleLifecycle::destroy(m_effectObject);
 }
 
 void CrystalShadowMark::Update() 
@@ -111,25 +117,35 @@ bool CrystalShadowMark::processAttack(PlayerAttackType attackType)
     return markExploited;
 }
 
-void CrystalShadowMark::activeEffect()
+void CrystalShadowMark::ensureEffect()
 {
     const Vector3 effectPosition = TransformAPI::getGlobalPosition(GameObjectAPI::getTransform(getOwner())) + Vector3(0.0f, 1.0f, 0.0f);
+    ParticleLifecycle::ensurePersistent(m_effectObject, m_crystalEffectPrefab.m_id, effectPosition, Vector3::Zero, nullptr);
+}
 
-    m_effectObject = GameObjectAPI::instantiatePrefab(m_crystalEffectPrefab.m_id, effectPosition, Vector3(0.0f, 0.0f, 0.0f));
+void CrystalShadowMark::activeEffect()
+{
+    ensureEffect();
 
     if (m_effectObject == nullptr)
     {
         Debug::warn("[CrystalMark] Could not instantiate crystal effect on '%s'.", GameObjectAPI::getName(getOwner()));
+        return;
     }
+
+    Transform* effectTransform = GameObjectAPI::getTransform(m_effectObject);
+    if (effectTransform != nullptr)
+    {
+        const Vector3 effectPosition = TransformAPI::getGlobalPosition(GameObjectAPI::getTransform(getOwner())) + Vector3(0.0f, 1.0f, 0.0f);
+        TransformAPI::setGlobalPosition(effectTransform, effectPosition);
+    }
+
+    ParticleLifecycle::activate(m_effectObject);
 }
 
 void CrystalShadowMark::deactivateEffect()
 {
-    if (m_effectObject != nullptr)
-    {
-        GameObjectAPI::removeGameObject(m_effectObject);
-        m_effectObject = nullptr;
-    }
+    ParticleLifecycle::deactivate(m_effectObject);
 }
 
 void CrystalShadowMark::activateCrystal()

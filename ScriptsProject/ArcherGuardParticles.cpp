@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "ArcherGuardParticles.h"
+#include "ParticleLifecycle.h"
 
 IMPLEMENT_SCRIPT_FIELDS(ArcherGuardParticles,
     SERIALIZED_ASSET_REF(m_trailPrefab, "Trail Particle Prefab", AssetType::PREFAB),
@@ -20,6 +21,15 @@ void ArcherGuardParticles::Start()
 {
 }
 
+void ArcherGuardParticles::OnGameStop()
+{
+    ParticleLifecycle::destroy(m_trailGO);
+    ParticleLifecycle::destroy(m_barrageFloorParticle);
+    ParticleLifecycle::destroy(m_barrageImpactParticle);
+    ParticleLifecycle::destroy(m_somersaultParticle);
+    m_somersaultParticleTransform = nullptr;
+}
+
 void ArcherGuardParticles::Update()
 {
     if (!m_barrageImpactParticle)
@@ -37,18 +47,43 @@ void ArcherGuardParticles::Update()
     }
 }
 
+void ArcherGuardParticles::ensureTrailParticle(const Vector3& pos)
+{
+    ParticleLifecycle::ensurePersistent(m_trailGO, m_trailPrefab.m_id, pos, Vector3::Zero, nullptr);
+}
+
+void ArcherGuardParticles::ensureBarrageFloorParticle(const Vector3& position)
+{
+    ParticleLifecycle::ensurePersistent(m_barrageFloorParticle, m_barrageFloorPrefab.m_id, position, Vector3::Zero, nullptr);
+}
+
+void ArcherGuardParticles::ensureSomersaultParticle()
+{
+    Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
+    const Vector3 position = ownerTransform ? TransformAPI::getGlobalPosition(ownerTransform) : Vector3::Zero;
+    const Vector3 rotation = ownerTransform ? TransformAPI::getGlobalEulerDegrees(ownerTransform) : Vector3::Zero;
+
+    ParticleLifecycle::ensurePersistent(m_somersaultParticle, m_somersaultPrefab.m_id, position, rotation, nullptr);
+
+    if (m_somersaultParticle)
+    {
+        m_somersaultParticleTransform = GameObjectAPI::getTransform(m_somersaultParticle);
+    }
+}
+
 // ── Basic attack trail ────────────────────────────────────────────────────────
 
 void ArcherGuardParticles::spawnBasicAttackTrail(const Vector3& pos)
 {
-    stopBasicAttackTrail();
+    ensureTrailParticle(pos);
 
-    if (!m_trailPrefab.m_id.isValid())
+    if (!m_trailGO)
     {
         return;
     }
 
-    m_trailGO = GameObjectAPI::instantiatePrefab(m_trailPrefab.m_id, pos, Vector3::Zero);
+    syncBasicAttackTrail(pos, Vector3::Zero);
+    ParticleLifecycle::activate(m_trailGO);
 }
 
 void ArcherGuardParticles::syncBasicAttackTrail(const Vector3& pos, const Vector3& eulerDeg)
@@ -71,40 +106,36 @@ void ArcherGuardParticles::syncBasicAttackTrail(const Vector3& pos, const Vector
 
 void ArcherGuardParticles::stopBasicAttackTrail()
 {
-    if (m_trailGO)
-    {
-        GameObjectAPI::removeGameObject(m_trailGO);
-    }
-
-    m_trailGO = nullptr;
+    ParticleLifecycle::deactivate(m_trailGO);
 }
 
 // ── Arrow barrage ─────────────────────────────────────────────────────────────
 
 void ArcherGuardParticles::startBarrageFloorParticle(const Vector3& position)
 {
-    stopBarrageFloorParticle();
+    Vector3 particlePosition = position;
+    particlePosition.y += m_barrageFloorYOffset;
 
-    if (!m_barrageFloorPrefab.m_id.isValid())
+    ensureBarrageFloorParticle(particlePosition);
+
+    if (!m_barrageFloorParticle)
     {
         Debug::warn("[ArcherGuardParticles] Barrage floor particle prefab is missing.");
         return;
     }
 
-    Vector3 particlePosition = position;
-    particlePosition.y += m_barrageFloorYOffset;
+    Transform* floorTransform = GameObjectAPI::getTransform(m_barrageFloorParticle);
+    if (floorTransform)
+    {
+        TransformAPI::setGlobalPosition(floorTransform, particlePosition);
+    }
 
-    m_barrageFloorParticle = GameObjectAPI::instantiatePrefab(m_barrageFloorPrefab.m_id, particlePosition, Vector3::Zero);
+    ParticleLifecycle::activate(m_barrageFloorParticle);
 }
 
 void ArcherGuardParticles::stopBarrageFloorParticle()
 {
-    if (m_barrageFloorParticle)
-    {
-        GameObjectAPI::removeGameObject(m_barrageFloorParticle);
-    }
-
-    m_barrageFloorParticle = nullptr;
+    ParticleLifecycle::deactivate(m_barrageFloorParticle);
 }
 
 void ArcherGuardParticles::playBarrageImpactParticle(const Vector3& position)
@@ -139,27 +170,16 @@ void ArcherGuardParticles::playBarrageImpactParticle(const Vector3& position)
 
 void ArcherGuardParticles::startChargeParticle()
 {
-    stopChargeParticle();
+    ensureSomersaultParticle();
 
-    if (!m_somersaultPrefab.m_id.isValid())
+    if (!m_somersaultParticle)
     {
         Debug::warn("[ArcherGuardParticles] Somersault particle prefab is missing.");
         return;
     }
 
-    Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
-
-    const Vector3 position = TransformAPI::getGlobalPosition(ownerTransform);
-    const Vector3 rotation = TransformAPI::getGlobalEulerDegrees(ownerTransform);
-
-    m_somersaultParticle = GameObjectAPI::instantiatePrefab(m_somersaultPrefab.m_id, position, rotation);
-
-    if (!m_somersaultParticle)
-    {
-        return;
-    }
-
-    m_somersaultParticleTransform = GameObjectAPI::getTransform(m_somersaultParticle);
+    updateChargeParticle();
+    ParticleLifecycle::activate(m_somersaultParticle);
 }
 
 void ArcherGuardParticles::updateChargeParticle()
@@ -182,13 +202,7 @@ void ArcherGuardParticles::updateChargeParticle()
 
 void ArcherGuardParticles::stopChargeParticle()
 {
-    if (m_somersaultParticle)
-    {
-        GameObjectAPI::removeGameObject(m_somersaultParticle);
-    }
-
-    m_somersaultParticle = nullptr;
-    m_somersaultParticleTransform = nullptr;
+    ParticleLifecycle::deactivate(m_somersaultParticle);
 }
 
 IMPLEMENT_SCRIPT(ArcherGuardParticles)

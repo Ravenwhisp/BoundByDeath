@@ -1,5 +1,6 @@
 ﻿#include "pch.h"
 #include "DeathParticles.h"
+#include "ParticleLifecycle.h"
 
 
 IMPLEMENT_SCRIPT_FIELDS(DeathParticles,
@@ -13,9 +14,20 @@ DeathParticles::DeathParticles(GameObject* owner) : Script(owner)
 
 }
 
+void DeathParticles::Start()
+{
+}
+
+void DeathParticles::OnGameStop()
+{
+    ParticleLifecycle::destroy(m_activeTauntParticle);
+    m_tauntParticleActive = false;
+    m_tauntParticleLifetime = 0.0f;
+}
+
 void DeathParticles::Update()
 {
-    if (m_activeTauntParticle == nullptr)
+    if (!m_tauntParticleActive)
     {
         return;
     }
@@ -24,8 +36,7 @@ void DeathParticles::Update()
 
     if (m_tauntParticleLifetime <= 0.0f)
     {
-        GameObjectAPI::removeGameObject(m_activeTauntParticle);
-        m_activeTauntParticle = nullptr;
+        SetTauntInactive();
     }
 }
 
@@ -40,6 +51,11 @@ Transform* DeathParticles::getTransform(ComponentRef<Transform> controller)
     }
 
     return particleTransform;
+}
+
+void DeathParticles::ensureTauntParticle(const Vector3& position, const Vector3& rotation)
+{
+    ParticleLifecycle::ensurePersistent(m_activeTauntParticle, m_tauntParticle.m_id, position, rotation, nullptr);
 }
 
 
@@ -105,14 +121,23 @@ void DeathParticles::SetTauntActive(const Vector3& direction)
 
     Vector3 particleRootRotation(0.0f, yawDeg, 0.0f);
 
-    if (m_activeTauntParticle != nullptr)
+    ensureTauntParticle(spawnPosition, particleRootRotation);
+
+    if (m_activeTauntParticle == nullptr)
     {
-        GameObjectAPI::removeGameObject(m_activeTauntParticle);
-        m_activeTauntParticle = nullptr;
+        Debug::warn("[DeathParticles] Could not instantiate taunt particle.");
+        return;
     }
 
-    m_activeTauntParticle = GameObjectAPI::instantiatePrefab(m_tauntParticle.m_id, spawnPosition, particleRootRotation);
+    Transform* particleTransform = GameObjectAPI::getTransform(m_activeTauntParticle);
+    if (particleTransform != nullptr)
+    {
+        TransformAPI::setGlobalPosition(particleTransform, spawnPosition);
+        TransformAPI::setGlobalRotationEuler(particleTransform, particleRootRotation);
+    }
 
+    ParticleLifecycle::activate(m_activeTauntParticle);
+    m_tauntParticleActive = true;
     m_tauntParticleLifetime = 1.0f;
 }
 
@@ -154,12 +179,8 @@ void DeathParticles::SetScytheInactive()
 
 void DeathParticles::SetTauntInactive()
 {
-    if (m_activeTauntParticle != nullptr)
-    {
-        GameObjectAPI::removeGameObject(m_activeTauntParticle);
-        m_activeTauntParticle = nullptr;
-    }
-
+    ParticleLifecycle::deactivate(m_activeTauntParticle);
+    m_tauntParticleActive = false;
     m_tauntParticleLifetime = 0.0f;
 }
 

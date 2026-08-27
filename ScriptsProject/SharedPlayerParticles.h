@@ -9,13 +9,16 @@ class SharedPlayerParticles final : public Script
 public:
     explicit SharedPlayerParticles(GameObject* owner);
 
+    void Start() override;
     void Update() override;
+    void OnGameStop() override;
 
     FieldList getExposedFields() const override;
 
     void playDamageParticle();
 
 private:
+    void ensureDamageParticle();
     PrefabRef m_damageParticlePrefab;
 
     float m_damageParticleLifetime = 0.75f;

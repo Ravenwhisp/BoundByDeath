@@ -14,6 +14,7 @@ public:
 
     void Start()  override;
     void Update() override;
+    void OnGameStop() override;
 
     FieldList getExposedFields() const override;
 
@@ -26,6 +27,7 @@ public:
 private:
 	void activeEffect();
 	void deactivateEffect();
+    void ensureEffect();
 
     void activateCrystal();
     void completeCrystal();
