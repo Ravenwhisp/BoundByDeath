@@ -5,7 +5,6 @@
 class EnemyDetectionAggro;
 class SummonerAttackConfig;
 class Transform;
-class SummonerParticles;
 
 class SummonerEnemyController : public EnemyBaseController
 {
@@ -26,7 +25,7 @@ public:
 
 	bool isSummonReady() const;
 	void consumeSummonCooldown();
-	void beginSummoningSpiders();
+	void summonSpidersAroundSelf();
 
 	float getRecoveryDuration() const;
 
@@ -42,20 +41,8 @@ private:
 	void updateSummonCooldown(float dt);
 	void updateAttackCooldown(float dt);
 
-	struct PendingSpiderSummon
-	{
-		Vector3 position = Vector3::Zero;
-		float timer = 0.0f;
-	};
-
-	void updatePendingSpiderSummons(float dt);
-	void spawnPendingSpider(const Vector3& position);
-
 private:
 	EnemyDetectionAggro* m_enemyDetectionAggro = nullptr;
-	SummonerParticles* m_particles = nullptr;
-
-	std::vector<PendingSpiderSummon> m_pendingSpiderSummons;
 
 	float m_attackCooldownTimer = 0.0f;
 	float m_teleportCooldownTimer = 0.0f;

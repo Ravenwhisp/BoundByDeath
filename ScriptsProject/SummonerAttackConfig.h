@@ -29,8 +29,7 @@ public:
     int m_summonCount = 3;
     float m_summonRadius = 2.0f;
     float m_summonCastTime = 0.5f;
-    float m_spiderSpawnDelay = 0.75f;
-    float m_summonTotalDuration = 1.5f;
+    float m_summonTotalDuration = 1.0f;
     float m_summonCooldown = 8.0f;
     float m_summonRecoverDuration = 3.0f;
 
@@ -49,7 +48,6 @@ public:
             SERIALIZED_INT(m_summonCount, "Summon Count"),
             SERIALIZED_FLOAT(m_summonRadius, "Summon Radius", 0.0f, 10.0f, 0.1f),
             SERIALIZED_FLOAT(m_summonCastTime, "Summon Cast Time", 0.0f, 10.0f, 0.1f),
-            SERIALIZED_FLOAT(m_spiderSpawnDelay, "Spider Spawn Delay", 0.0f, 10.0f, 0.1f),
             SERIALIZED_FLOAT(m_summonTotalDuration, "Summon Total Duration", 1.0f, 10.0f, 0.1f),
             SERIALIZED_FLOAT(m_summonCooldown, "Summon Cooldown", 0.0f, 30.0f, 0.1f),
             SERIALIZED_FLOAT(m_summonRecoverDuration, "Summon Recover Duration", 0.0f, 10.0f, 0.1f)

@@ -48,7 +48,7 @@ void SummonerSummonState::OnStateUpdate()
 
 	if (!m_hasSummoned && m_stateTimer >= m_controller->m_attackConfig.get()->m_summonCastTime)
 	{
-		m_controller->beginSummoningSpiders();
+		m_controller->summonSpidersAroundSelf();
 		m_controller->consumeSummonCooldown();
 		m_hasSummoned = true;
 	}
