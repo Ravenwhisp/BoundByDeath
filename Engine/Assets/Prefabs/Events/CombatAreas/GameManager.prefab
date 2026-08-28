@@ -1,0 +1,387 @@
+{
+    "Version": 2,
+    "sourcePath": "Assets\\Prefabs\\Events\\CombatAreas\\GameManager.prefab",
+    "Name": "GameManager",
+    "Active": true,
+    "Static": false,
+    "Layer": "DEFAULT",
+    "Tag": "DEFAULT",
+    "Transform": {
+        "Position": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "Rotation": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ],
+        "Scale": [
+            1.0,
+            1.0,
+            1.0
+        ]
+    },
+    "Components": [
+        {
+            "UID": 668490530874088773,
+            "ComponentType": "SCRIPT",
+            "Active": true,
+            "ScriptName": "Bound",
+            "ScriptFields": {
+                "Player 1 Transform": 2279250574770119910,
+                "Player 2 Transform": 659283076957368297,
+                "Bound UI": 2603452984763347084,
+                "Boundary Warning UI": 16808076373456474888,
+                "Bound Config": {
+                    "uid": 15485811048515601887,
+                    "libId": "4728fc45109707d09168c831df5673d1",
+                    "type": "DATA_CONTAINER"
+                }
+            }
+        },
+        {
+            "UID": 12189808147692326919,
+            "ComponentType": "SCRIPT",
+            "Active": true,
+            "ScriptName": "DefeatConditionManager",
+            "ScriptFields": {
+                "Player 1 Transform": 2279250574770119910,
+                "Player 2 Transform": 659283076957368297
+            }
+        },
+        {
+            "UID": 7279897601691676777,
+            "ComponentType": "SCRIPT",
+            "Active": true,
+            "ScriptName": "ReaperGauge",
+            "ScriptFields": {
+                "Max Gauge": 100.0,
+                "Num Segments": 3,
+                "Gain Per Exploit": 33.400001525878906,
+                "Grace Period": 10.0,
+                "Decay Per Second": 2.0,
+                "Reaper Gauge UI": 10098568798684013835,
+                "Glow UI": 11424460098674019802,
+                "Blink Alpha UI": 14543210795706877830,
+                "Blink Speed": 5.0,
+                "Blink Alpha": 0.25
+            }
+        },
+        {
+            "UID": 16552987667513912774,
+            "ComponentType": "SCRIPT",
+            "Active": true,
+            "ScriptName": "ShadowExecution",
+            "ScriptFields": {
+                "Co-op Window (s)": 2.5,
+                "Execution Duration (s)": 1.0,
+                "Insta Kill HP %": 0.3499999940395355,
+                "Standard Damage (max HP %)": 0.20000000298023224,
+                "Particle Prefab": {
+                    "uid": 0,
+                    "libId": "",
+                    "type": "UNKNOWN"
+                },
+                "Reaper Gauge UI": 10098568798684013835,
+                "Execution Canvas": 5436775058170958979,
+                "Execution Sprite": 10087723957977547286
+            }
+        },
+        {
+            "UID": 11420466570530191797,
+            "ComponentType": "SCRIPT",
+            "Active": true,
+            "ScriptName": "HeartbeatHaptic",
+            "ScriptFields": {
+                "Heartbeat Intensity": 1.0
+            }
+        },
+        {
+            "UID": 16775221339744225452,
+            "ComponentType": "SCRIPT",
+            "Active": true,
+            "ScriptName": "CooperativeSound",
+            "ScriptFields": {}
+        },
+        {
+            "UID": 314261608720526439,
+            "ComponentType": "SOUND_SOURCE",
+            "Active": true
+        },
+        {
+            "UID": 6402430662771878497,
+            "ComponentType": "SCRIPT",
+            "Active": true,
+            "ScriptName": "Level2Cheats",
+            "ScriptFields": {}
+        },
+        {
+            "UID": 8750435185305539142,
+            "ComponentType": "SCRIPT",
+            "Active": true,
+            "ScriptName": "MusicManager",
+            "ScriptFields": {
+                "Scene Base State": 5,
+                "Play Music On Start": true
+            }
+        },
+        {
+            "UID": 17200867584820547632,
+            "ComponentType": "SCRIPT",
+            "Active": true,
+            "ScriptName": "ElevatorManager",
+            "ScriptFields": {
+                "Crystals": [
+                    6309274253389442419,
+                    6335913363339378838,
+                    8474516620537419944,
+                    308318014636702314
+                ],
+                "Combat Area Roots": [
+                    2355666181890610474,
+                    5121230630906896872,
+                    3278958789980076752,
+                    11052308964151196743
+                ],
+                "Wall Top": 1160134745951852651,
+                "Wall Bottom": 2883053870493929034,
+                "Wall Piece Height": 86.927001953125,
+                "Wall Threshold": 100.0,
+                "Wall Scroll Speed": 5.0,
+                "Platform": 662894892709334521,
+                "Platform Targets": [
+                    5153404665588559180,
+                    16662278065318510932,
+                    17103514824999210898,
+                    120840087431787160
+                ],
+                "Move Duration": 5.0,
+                "Lerp Power": 1.0,
+                "Waves Per Cycle": 2
+            }
+        }
+    ],
+    "Children": [
+        {
+            "Name": "Bound",
+            "Active": true,
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.7071068286895752,
+                    0.0,
+                    0.0,
+                    0.7071068286895752
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [
+                {
+                    "UID": 795402898383819651,
+                    "ComponentType": "CANVAS",
+                    "Active": true,
+                    "RenderMode": "WORLD_SPACE",
+                    "ZTest": true
+                }
+            ],
+            "Children": [
+                {
+                    "Name": "Bound Sprite",
+                    "Active": true,
+                    "Static": false,
+                    "Layer": "DEFAULT",
+                    "Tag": "DEFAULT",
+                    "Transform": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "Rotation": [
+                            -0.0,
+                            0.0,
+                            -0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "Components": [
+                        {
+                            "UID": 16808076373456474888,
+                            "ComponentType": "TRANSFORM2D",
+                            "Active": true,
+                            "Position": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "Scale": [
+                                0.8600000143051147,
+                                0.8600000143051147,
+                                0.0
+                            ],
+                            "Pivot": [
+                                0.5,
+                                0.5,
+                                0.0
+                            ],
+                            "AnchorMin": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "AnchorMax": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "BaseSize": [
+                                1408.0,
+                                1408.0,
+                                0.0
+                            ],
+                            "StretchMode": "NONE",
+                            "SizingMode": "KEEP_ASPECT_RATIO",
+                            "AspectRatio": 1.0,
+                            "Alpha": 1.0
+                        },
+                        {
+                            "UID": 15693203175533679093,
+                            "ComponentType": "UIIMAGE",
+                            "Active": true,
+                            "TextureAssetId": {
+                                "uid": 3945407729052878187,
+                                "libId": "e9767a31912931a9ed31b40481aa39be",
+                                "type": "TEXTURE"
+                            },
+                            "FillAmount": [
+                                0.0,
+                                1.0
+                            ],
+                            "FillMethod": "Horizontal",
+                            "FillOrigin": 0,
+                            "SheetColumns": 1,
+                            "SheetRows": 1,
+                            "SheetOffset": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "StretchDrawMode": "Stretch"
+                        }
+                    ],
+                    "Children": []
+                },
+                {
+                    "Name": "Execution Sprite",
+                    "Active": true,
+                    "Static": false,
+                    "Layer": "DEFAULT",
+                    "Tag": "DEFAULT",
+                    "Transform": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "Rotation": [
+                            0.0,
+                            0.0,
+                            -0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "Components": [
+                        {
+                            "UID": 10087723957977547286,
+                            "ComponentType": "TRANSFORM2D",
+                            "Active": true,
+                            "Position": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "Scale": [
+                                1.0,
+                                1.0,
+                                0.0
+                            ],
+                            "Pivot": [
+                                0.5,
+                                0.5,
+                                0.0
+                            ],
+                            "AnchorMin": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "AnchorMax": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "BaseSize": [
+                                350.0,
+                                350.0,
+                                0.0
+                            ],
+                            "StretchMode": "NONE",
+                            "SizingMode": "KEEP_ASPECT_RATIO",
+                            "AspectRatio": 1.0,
+                            "Alpha": 1.0
+                        },
+                        {
+                            "UID": 13130980115324819947,
+                            "ComponentType": "UIIMAGE",
+                            "Active": true,
+                            "TextureAssetId": {
+                                "uid": 3025574558990789754,
+                                "libId": "a4b6b0f2e2a839014289c281db245573",
+                                "type": "TEXTURE"
+                            },
+                            "FillAmount": [
+                                0.0,
+                                1.0
+                            ],
+                            "FillMethod": "Horizontal",
+                            "FillOrigin": 0,
+                            "SheetColumns": 1,
+                            "SheetRows": 1,
+                            "SheetOffset": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "StretchDrawMode": "Stretch"
+                        }
+                    ],
+                    "Children": []
+                }
+            ]
+        }
+    ]
+}

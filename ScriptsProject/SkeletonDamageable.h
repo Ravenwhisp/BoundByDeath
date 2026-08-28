@@ -44,6 +44,7 @@ private:
 
 private:
 	SkeletonEnemyController* m_skeletonController = nullptr;
+	const SkeletonAttackConfig* m_attackConfig = nullptr;
 
 	Transform2D* m_healthBarBackgroundTransform2D = nullptr;
 	Vector2 m_originalHealthBarScale = Vector2(1.0f, 1.0f);

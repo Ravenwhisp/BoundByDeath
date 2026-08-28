@@ -26,6 +26,7 @@ void EnemyDeathState::OnStateEnter()
 
 	m_enemyDamageable = GameObjectAPI::findScript<EnemyDamageable>(getOwner());
 	m_dissolveStarted = false;
+	m_destroyQueued = false;
 
 	EnemySound* enemySound = GameObjectAPI::findScript<EnemySound>(getOwner());
 	if (enemySound)
@@ -46,6 +47,13 @@ void EnemyDeathState::OnStateEnter()
 
 void EnemyDeathState::OnStateUpdate()
 {
+	if (m_destroyQueued)
+	{
+		m_destroyQueued = false;
+		GameObjectAPI::removeGameObject(getOwner());
+		return;
+	}
+
 	if (!m_waitingToDestroy || m_deathFinished || m_deathPaused)
 	{
 		return;
@@ -108,7 +116,7 @@ void EnemyDeathState::startDestroyCountdown(float delay)
 void EnemyDeathState::destroyEnemyNow()
 {
 	m_waitingToDestroy = false;
-	GameObjectAPI::removeGameObject(getOwner());
+	m_destroyQueued = true;
 }
 
 void EnemyDeathState::dropRewards()

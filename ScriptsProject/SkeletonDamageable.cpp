@@ -27,6 +27,8 @@ void SkeletonDamageable::Start()
 		Debug::warn("[SkeletonDamageable] SkeletonEnemyController not found.");
 	}
 
+	m_attackConfig = static_cast<const SkeletonAttackConfig*>(m_skeletonController->getAttackConfig());
+
 	cacheHealthBarBackgroundTransform();
 	applyHealthBarScaleForState();
 }
@@ -75,8 +77,8 @@ void SkeletonDamageable::startDowned()
 {
 	m_lifeState = SkeletonLifeState::Downed;
 	m_previousMaxHp = getMaxHp();
-	m_maxHp = m_skeletonController->m_attackConfig.get()->m_downedHP;
-	m_currentHp = m_skeletonController->m_attackConfig.get()->m_downedHP;
+	m_maxHp = m_attackConfig->m_downedHP;
+	m_currentHp = m_attackConfig->m_downedHP;
 	m_isDead = false;
 
 	applyHealthBarScaleForState();
@@ -171,6 +173,11 @@ bool SkeletonDamageable::shouldBlockDamage(const EnemyHitContext& enemyCtx) cons
 		return false;
 	}
 
+	if (!m_attackConfig)
+	{
+		return false;
+	}
+
 	if (!m_skeletonController->isGuarding())
 	{
 		return false;
@@ -213,7 +220,7 @@ bool SkeletonDamageable::shouldBlockDamage(const EnemyHitContext& enemyCtx) cons
 	const float dot = forward.Dot(toAttacker);
 
 	constexpr float degreesToRadians = 3.14159265f / 180.0f;
-	const float minDot = std::cos(m_skeletonController->m_attackConfig.get()->m_guardBlockHalfAngleDegrees * degreesToRadians);
+	const float minDot = std::cos(m_attackConfig->m_guardBlockHalfAngleDegrees * degreesToRadians);
 
 	return dot >= minDot; // if dot >= minDot - attacker is in front | if dot < minDot - attacker is side/back
 }
