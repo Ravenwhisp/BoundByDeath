@@ -50,4 +50,5 @@ private:
 	bool m_waitingToDestroy = false;
 	bool m_deathFinished = false;
 	bool m_deathPaused = false;
+	bool m_destroyQueued = false;
 };
