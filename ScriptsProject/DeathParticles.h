@@ -46,7 +46,7 @@ public:
 	std::string m_chargeGlowPath = "Assets/Prefabs/Particles/Death/DeathChargeGlow.prefab";
 	std::string m_hitFlashPath = "Assets/Prefabs/Particles/Death/DeathHitFlash.prefab";
 	std::string m_chargedHitFlashPath = "Assets/Prefabs/Particles/Death/DeathChargedHitFlash.prefab";
-	std::string m_scytheAnchorName = "kosa";
+	std::string m_scytheAnchorName = "ScytheAnchor";
 
 private:
 	Transform* getTransform(ComponentRef<Transform> controller);
