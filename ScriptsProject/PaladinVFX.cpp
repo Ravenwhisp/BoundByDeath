@@ -1,13 +1,21 @@
 #include "pch.h"
 #include "PaladinVFX.h"
 #include "ParticleLifecycle.h"
+#include "EnemyDetectionAggro.h"
+
+#include <cmath>
 
 IMPLEMENT_SCRIPT_FIELDS(PaladinVFX,
     SERIALIZED_ASSET_REF(m_walkingDustPrefab, "Walking Dust Prefab", AssetType::PREFAB),
     SERIALIZED_ASSET_REF(m_chargeAttackEffectPrefab, "Charge Attack Effect Prefab", AssetType::PREFAB),
     SERIALIZED_ASSET_REF(m_basicAttackEffectPrefab, "Basic Attack Effect Prefab", AssetType::PREFAB),
+    SERIALIZED_STRING(m_shieldAttackParticlesPath, "Shield Attack Particles Prefab Path"),
+    SERIALIZED_ASSET_REF(m_shieldAttackParticlesPrefab, "Shield Attack Particles Prefab", AssetType::PREFAB),
+    SERIALIZED_STRING(m_shieldAttackHitPath, "Shield Attack Hit Prefab Path"),
+    SERIALIZED_ASSET_REF(m_shieldAttackHitPrefab, "Shield Attack Hit Prefab", AssetType::PREFAB),
     SERIALIZED_FLOAT(walkingDustYOffset, "Walking Dust Y Offset", -5.0f, 5.0f, 0.05f),
-    SERIALIZED_FLOAT(walkingDustForwardOffset, "Walking Dust Forward Offset", -5.0f, 5.0f, 0.05f)
+    SERIALIZED_FLOAT(walkingDustForwardOffset, "Walking Dust Forward Offset", -5.0f, 5.0f, 0.05f),
+    SERIALIZED_FLOAT(m_shieldAttackParticlesYOffset, "Shield Attack Particles Y Offset", -5.0f, 5.0f, 0.05f)
 )
 
 PaladinVFX::PaladinVFX(GameObject* owner)
@@ -20,6 +28,7 @@ void PaladinVFX::Start()
     walkingDustActive = false;
     chargeAttackEffectActive = false;
     basicAttackEffectTimer = 0.0f;
+    m_detectionAggro = GameObjectAPI::findScript<EnemyDetectionAggro>(getOwner());
 }
 
 void PaladinVFX::OnGameStop()
@@ -105,6 +114,103 @@ void PaladinVFX::playBasicAttackEffect()
     else
     {
         basicAttackEffectTimer = 0.0f;
+    }
+}
+
+void PaladinVFX::playShieldAttackStart(const Vector3& position, const Vector3& direction)
+{
+    if (!m_shieldAttackParticlesPrefab.m_id.isValid())
+    {
+        return;
+    }
+
+    Vector3 flatDirection = direction;
+    flatDirection.y = 0.0f;
+
+    Vector3 rotation = Vector3::Zero;
+    if (flatDirection.LengthSquared() > 0.0001f)
+    {
+        flatDirection.Normalize();
+        const float yawDegrees = std::atan2(flatDirection.x, flatDirection.z) * (180.0f / 3.14159265f);
+        rotation = Vector3(0.0f, yawDegrees, 0.0f);
+    }
+
+    Vector3 spawnPosition = position;
+    spawnPosition.y += m_shieldAttackParticlesYOffset;
+
+    GameObject* instance = GameObjectAPI::instantiatePrefab(m_shieldAttackParticlesPrefab.m_id, spawnPosition, rotation, nullptr);
+    (void)instance;
+}
+
+void PaladinVFX::spawnShieldAttackHit(const Vector3& position)
+{
+    ParticleLifecycle::spawnOneShot(m_shieldAttackHitPrefab.m_id, position);
+}
+
+bool PaladinVFX::isTargetInRectangle(
+    Transform* targetTransform,
+    const Vector3& origin,
+    const Vector3& direction,
+    float length,
+    float width
+) const
+{
+    if (!targetTransform || length <= 0.0f || width <= 0.0f)
+    {
+        return false;
+    }
+
+    Vector3 flatDirection = direction;
+    flatDirection.y = 0.0f;
+
+    if (flatDirection.LengthSquared() < 0.0001f)
+    {
+        return false;
+    }
+
+    flatDirection.Normalize();
+
+    Vector3 rightDirection(flatDirection.z, 0.0f, -flatDirection.x);
+
+    Vector3 toTarget = TransformAPI::getGlobalPosition(targetTransform) - origin;
+    toTarget.y = 0.0f;
+
+    const float forwardDistance = flatDirection.Dot(toTarget);
+
+    if (forwardDistance < 0.0f || forwardDistance > length)
+    {
+        return false;
+    }
+
+    const float lateralDistance = rightDirection.Dot(toTarget);
+    const float halfWidth = width * 0.5f;
+
+    return lateralDistance >= -halfWidth && lateralDistance <= halfWidth;
+}
+
+void PaladinVFX::playShieldAttackHits(
+    const Vector3& origin,
+    const Vector3& direction,
+    float length,
+    float width
+)
+{
+    if (!m_shieldAttackHitPrefab.m_id.isValid() || !m_detectionAggro)
+    {
+        return;
+    }
+
+    Transform* lyrielTransform = m_detectionAggro->getLyrielTransform();
+    Transform* deathTransform = m_detectionAggro->getDeathTransform();
+
+    if (isTargetInRectangle(lyrielTransform, origin, direction, length, width))
+    {
+        spawnShieldAttackHit(TransformAPI::getGlobalPosition(lyrielTransform));
+    }
+
+    if (isTargetInRectangle(deathTransform, origin, direction, length, width))
+    {
+        spawnShieldAttackHit(TransformAPI::getGlobalPosition(deathTransform));
     }
 }
 

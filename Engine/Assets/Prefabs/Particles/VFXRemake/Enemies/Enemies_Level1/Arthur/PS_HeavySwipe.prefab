@@ -2,7 +2,7 @@
     "Version": 2,
     "sourcePath": "Assets\\Prefabs\\Particles\\VFXRemake\\Enemies\\Enemies_Level1\\Arthur\\PS_HeavySwipe.prefab",
     "Name": "PS_HeavySwipe",
-    "Active": false,
+    "Active": true,
     "Static": false,
     "Layer": "DEFAULT",
     "Tag": "DEFAULT",
@@ -52,7 +52,7 @@
             },
             "Components": [
                 {
-                    "UID": 5993748587954931764,
+                    "UID": 13264912726828012831,
                     "ComponentType": "PARTICLE_SYSTEM",
                     "Active": true,
                     "TextureAssetId": {
@@ -120,13 +120,20 @@
                                         0.0,
                                         1.0,
                                         1.0
-                                    ]
+                                    ],
+                                    "HDRColor": [
+                                        0.0,
+                                        0.0,
+                                        0.0
+                                    ],
+                                    "HDRIntensity": 0.0
                                 },
                                 {
                                     "ModuleType": 5,
                                     "VelocityType": "RANDOM_BETWEEN_TWO",
                                     "InitialVelocity": 5.0,
-                                    "InitialVelocity2": 8.0
+                                    "InitialVelocity2": 8.0,
+                                    "Gravity": 0.0
                                 },
                                 {
                                     "ModuleType": 6,
@@ -163,14 +170,15 @@
                                 {
                                     "ModuleType": 9,
                                     "RenderMode": "BILLBOARD",
-                                    "RenderLayer": 0
+                                    "RenderLayer": 0,
+                                    "BlendMode": "ALPHA"
                                 }
                             ]
                         }
                     ]
                 },
                 {
-                    "UID": 15220607739181685173,
+                    "UID": 16260469146901111516,
                     "ComponentType": "PREFAB_INSTANCE",
                     "Active": true,
                     "sourcePath": "Assets\\Prefabs\\Particles\\VFXRemake\\Enemies\\Enemies_Level1\\Arthur\\PS_HeavySwipeParticles.prefab",
@@ -205,7 +213,7 @@
             },
             "Components": [
                 {
-                    "UID": 6622108537101543393,
+                    "UID": 3284796956732946365,
                     "ComponentType": "PARTICLE_SYSTEM",
                     "Active": true,
                     "TextureAssetId": {
@@ -218,7 +226,7 @@
                             "Modules": [
                                 {
                                     "ModuleType": 2,
-                                    "Looping": true,
+                                    "Looping": false,
                                     "Duration": 1.0,
                                     "RateOverTime": 1.0,
                                     "RateOverDistance": 0.0
@@ -262,12 +270,19 @@
                                         0.0,
                                         1.0,
                                         1.0
-                                    ]
+                                    ],
+                                    "HDRColor": [
+                                        0.0,
+                                        0.0,
+                                        0.0
+                                    ],
+                                    "HDRIntensity": 0.0
                                 },
                                 {
                                     "ModuleType": 5,
                                     "VelocityType": "CONSTANT",
-                                    "InitialVelocity": 0.0
+                                    "InitialVelocity": 0.0,
+                                    "Gravity": 0.0
                                 },
                                 {
                                     "ModuleType": 6,
@@ -298,14 +313,15 @@
                                 {
                                     "ModuleType": 9,
                                     "RenderMode": "BILLBOARD",
-                                    "RenderLayer": 0
+                                    "RenderLayer": 0,
+                                    "BlendMode": "ALPHA"
                                 }
                             ]
                         }
                     ]
                 },
                 {
-                    "UID": 6360477221716001046,
+                    "UID": 4734038244558476448,
                     "ComponentType": "PREFAB_INSTANCE",
                     "Active": true,
                     "sourcePath": "Assets\\Prefabs\\Particles\\VFXRemake\\Enemies\\Enemies_Level1\\Arthur\\PS_HeavySwipeShine1.prefab",
@@ -340,7 +356,7 @@
             },
             "Components": [
                 {
-                    "UID": 12465166972644331404,
+                    "UID": 9896666981257638925,
                     "ComponentType": "PARTICLE_SYSTEM",
                     "Active": true,
                     "TextureAssetId": {
@@ -353,7 +369,7 @@
                             "Modules": [
                                 {
                                     "ModuleType": 2,
-                                    "Looping": true,
+                                    "Looping": false,
                                     "Duration": 1.0,
                                     "RateOverTime": 1.0,
                                     "RateOverDistance": 0.0
@@ -393,12 +409,19 @@
                                         0.0,
                                         1.0,
                                         1.0
-                                    ]
+                                    ],
+                                    "HDRColor": [
+                                        0.0,
+                                        0.0,
+                                        0.0
+                                    ],
+                                    "HDRIntensity": 0.0
                                 },
                                 {
                                     "ModuleType": 5,
                                     "VelocityType": "CONSTANT",
-                                    "InitialVelocity": 0.0
+                                    "InitialVelocity": 0.0,
+                                    "Gravity": 0.0
                                 },
                                 {
                                     "ModuleType": 6,
@@ -429,21 +452,22 @@
                                 {
                                     "ModuleType": 9,
                                     "RenderMode": "BILLBOARD",
-                                    "RenderLayer": 1
+                                    "RenderLayer": 1,
+                                    "BlendMode": "ALPHA"
                                 }
                             ]
                         }
                     ]
                 },
                 {
-                    "UID": 13921992796124496250,
+                    "UID": 2369152558423349824,
                     "ComponentType": "PREFAB_INSTANCE",
                     "Active": true,
                     "sourcePath": "Assets\\Prefabs\\Particles\\VFXRemake\\Enemies\\Enemies_Level1\\Arthur\\PS_HeavySwipeShine1.prefab",
                     "assetUID": 12922253604366692158
                 },
                 {
-                    "UID": 2450482453289935368,
+                    "UID": 2645439828820362107,
                     "ComponentType": "PREFAB_INSTANCE",
                     "Active": true,
                     "sourcePath": "Assets\\Prefabs\\Particles\\VFXRemake\\Enemies\\Enemies_Level1\\Arthur\\PS_HeavySwipeShine2.prefab",

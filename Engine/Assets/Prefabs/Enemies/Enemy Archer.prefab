@@ -150,6 +150,69 @@
             "Active": true,
             "ScriptName": "EnemyForcedMovement",
             "ScriptFields": {}
+        },
+        {
+            "UID": 4829103748291037465,
+            "ComponentType": "SCRIPT",
+            "Active": true,
+            "ScriptName": "ArcherGuardParticles",
+            "ScriptFields": {
+                "Barrage Floor Prefab Path": "Assets/Prefabs/Particles/VFXRemake/Enemies/Enemies_Level1/Ranged/PS_ArrowBarrage.prefab",
+                "Barrage Floor Particle Prefab": {
+                    "uid": 12433916950761827335,
+                    "libId": "efef889e27dde5595732d6180959405c",
+                    "type": "PREFAB"
+                },
+                "Arrow Sparks Prefab Path": "Assets/Prefabs/Particles/VFXRemake/Enemies/Enemies_Level1/Ranged/PS_ArcherArrowSparks.prefab",
+                "Arrow Sparks Prefab": {
+                    "uid": 13860010988260617149,
+                    "libId": "6223151c1e660df986b48df04ef7f7fb",
+                    "type": "PREFAB"
+                },
+                "Barrage Impact Particle Prefab": {
+                    "uid": 0,
+                    "libId": "",
+                    "type": "UNKNOWN"
+                },
+                "Somersault Particle Prefab": {
+                    "uid": 0,
+                    "libId": "",
+                    "type": "UNKNOWN"
+                },
+                "Barrage Floor Y Offset": 0.05000000074505806,
+                "Barrage Impact Y Offset": 0.05000000074505806,
+                "Barrage Impact Lifetime": 1.0
+            }
+        },
+        {
+            "UID": 5738291047382910384,
+            "ComponentType": "SCRIPT",
+            "Active": true,
+            "ScriptName": "ArcherArrowShooter",
+            "ScriptFields": {
+                "Arrow Prefab": {
+                    "uid": 10925177900199698713,
+                    "libId": "7601b1ffee4925fd0cb919320ed4c990",
+                    "type": "PREFAB"
+                }
+            }
+        },
+        {
+            "UID": 9182736450182736451,
+            "ComponentType": "SCRIPT",
+            "Active": true,
+            "ScriptName": "SharedEnemyParticles",
+            "ScriptFields": {
+                "Movement Particle Prefab Path": "Assets/Prefabs/Particles/VFXRemake/Enemies/PS_RunEnemy.prefab",
+                "Movement Particle Prefab": {
+                    "uid": 12829264890513720375,
+                    "libId": "dbd7fa1fccd2fe94ddf13e6437cd2846",
+                    "type": "PREFAB"
+                },
+                "Movement Particle Y Offset": 0.05000000074505806,
+                "Movement Particle Forward Offset": -0.3499999940395355,
+                "Movement Notification Timeout": 0.15000000596046448
+            }
         }
     ],
     "Children": [

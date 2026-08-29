@@ -28,6 +28,7 @@ private:
 
 private:
     PrefabRef m_movementParticlePrefab;
+    std::string m_movementParticlePath = "Assets/Prefabs/Particles/VFXRemake/Enemies/PS_RunEnemy.prefab";
 
     float m_movementParticleYOffset = 0.05f;
     float m_movementParticleForwardOffset = -0.35f;

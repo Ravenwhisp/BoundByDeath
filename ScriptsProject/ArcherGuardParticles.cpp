@@ -4,7 +4,10 @@
 
 IMPLEMENT_SCRIPT_FIELDS(ArcherGuardParticles,
     SERIALIZED_ASSET_REF(m_trailPrefab, "Trail Particle Prefab", AssetType::PREFAB),
+    SERIALIZED_STRING(m_barrageFloorPath, "Barrage Floor Prefab Path"),
     SERIALIZED_ASSET_REF(m_barrageFloorPrefab, "Barrage Floor Particle Prefab", AssetType::PREFAB),
+    SERIALIZED_STRING(m_arrowSparksPath, "Arrow Sparks Prefab Path"),
+    SERIALIZED_ASSET_REF(m_arrowSparksPrefab, "Arrow Sparks Prefab", AssetType::PREFAB),
     SERIALIZED_ASSET_REF(m_barrageImpactPrefab, "Barrage Impact Particle Prefab", AssetType::PREFAB),
     SERIALIZED_ASSET_REF(m_somersaultPrefab, "Somersault Particle Prefab", AssetType::PREFAB),
     SERIALIZED_FLOAT(m_barrageFloorYOffset, "Barrage Floor Y Offset", -5.0f, 5.0f, 0.05f),
@@ -24,6 +27,7 @@ void ArcherGuardParticles::Start()
 void ArcherGuardParticles::OnGameStop()
 {
     ParticleLifecycle::destroy(m_trailGO);
+    ParticleLifecycle::destroy(m_arrowSparksGO);
     ParticleLifecycle::destroy(m_barrageFloorParticle);
     ParticleLifecycle::destroy(m_barrageImpactParticle);
     ParticleLifecycle::destroy(m_somersaultParticle);
@@ -50,6 +54,11 @@ void ArcherGuardParticles::Update()
 void ArcherGuardParticles::ensureTrailParticle(const Vector3& pos)
 {
     ParticleLifecycle::ensurePersistent(m_trailGO, m_trailPrefab.m_id, pos, Vector3::Zero, nullptr);
+}
+
+void ArcherGuardParticles::ensureArrowSparksParticle(const Vector3& pos)
+{
+    ParticleLifecycle::ensurePersistent(m_arrowSparksGO, m_arrowSparksPrefab.m_id, pos, Vector3::Zero, nullptr);
 }
 
 void ArcherGuardParticles::ensureBarrageFloorParticle(const Vector3& position)
@@ -109,7 +118,43 @@ void ArcherGuardParticles::stopBasicAttackTrail()
     ParticleLifecycle::deactivate(m_trailGO);
 }
 
-// ── Arrow barrage ─────────────────────────────────────────────────────────────
+// ── Basic attack arrow sparks ─────────────────────────────────────────────────
+
+void ArcherGuardParticles::spawnArrowSparks(const Vector3& pos)
+{
+    ensureArrowSparksParticle(pos);
+
+    if (!m_arrowSparksGO)
+    {
+        return;
+    }
+
+    syncArrowSparks(pos, Vector3::Zero);
+    ParticleLifecycle::activate(m_arrowSparksGO);
+}
+
+void ArcherGuardParticles::syncArrowSparks(const Vector3& pos, const Vector3& eulerDeg)
+{
+    if (!m_arrowSparksGO)
+    {
+        return;
+    }
+
+    Transform* sparksTransform = GameObjectAPI::getTransform(m_arrowSparksGO);
+
+    if (!sparksTransform)
+    {
+        return;
+    }
+
+    TransformAPI::setGlobalPosition(sparksTransform, pos);
+    TransformAPI::setGlobalRotationEuler(sparksTransform, eulerDeg);
+}
+
+void ArcherGuardParticles::stopArrowSparks()
+{
+    ParticleLifecycle::deactivate(m_arrowSparksGO);
+}
 
 void ArcherGuardParticles::startBarrageFloorParticle(const Vector3& position)
 {
@@ -165,8 +210,6 @@ void ArcherGuardParticles::playBarrageImpactParticle(const Vector3& position)
 
     m_barrageImpactTimer = m_barrageImpactLifetime;
 }
-
-// ── Somersault ────────────────────────────────────────────────────────────────
 
 void ArcherGuardParticles::startChargeParticle()
 {

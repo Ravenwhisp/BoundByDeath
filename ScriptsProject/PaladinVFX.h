@@ -30,7 +30,13 @@ public:
 
     void playBasicAttackEffect();
 
+    void playShieldAttackStart(const Vector3& position, const Vector3& direction);
+    void playShieldAttackHits(const Vector3& origin, const Vector3& direction, float length, float width);
+
 private:
+    bool isTargetInRectangle(Transform* targetTransform, const Vector3& origin, const Vector3& direction, float length, float width) const;
+    void spawnShieldAttackHit(const Vector3& position);
+
     Vector3 getWalkingDustPosition() const;
     Vector3 getOwnerRotation() const;
     Vector3 getChargeAttackEffectPosition() const;
@@ -64,6 +70,11 @@ public:
     PrefabRef m_walkingDustPrefab;
     PrefabRef m_chargeAttackEffectPrefab;
     PrefabRef m_basicAttackEffectPrefab;
+    PrefabRef m_shieldAttackParticlesPrefab;
+    PrefabRef m_shieldAttackHitPrefab;
+
+    std::string m_shieldAttackParticlesPath = "Assets/Prefabs/Particles/VFXRemake/Enemies/Enemies_Level1/Melee/Shield/PS_ShieldAttackParticles.prefab";
+    std::string m_shieldAttackHitPath = "Assets/Prefabs/Particles/VFXRemake/Enemies/Enemies_Level1/Melee/PS_ShieldAttack.prefab";
 
     float walkingDustYOffset = 0.05f;
     float walkingDustForwardOffset = -0.35f;
@@ -86,4 +97,7 @@ private:
     float basicAttackForwardOffset = 0.75f;
     float basicAttackEffectLifetime = 1.0f;
     float basicAttackEffectTimer = 0.0f;
+
+    class EnemyDetectionAggro* m_detectionAggro = nullptr;
+    float m_shieldAttackParticlesYOffset = 0.05f;
 };

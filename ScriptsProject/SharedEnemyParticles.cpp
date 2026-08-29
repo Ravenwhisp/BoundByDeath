@@ -3,6 +3,7 @@
 #include "ParticleLifecycle.h"
 
 IMPLEMENT_SCRIPT_FIELDS(SharedEnemyParticles,
+    SERIALIZED_STRING(m_movementParticlePath, "Movement Particle Prefab Path"),
     SERIALIZED_ASSET_REF(m_movementParticlePrefab, "Movement Particle Prefab", AssetType::PREFAB),
     SERIALIZED_FLOAT(m_movementParticleYOffset, "Movement Particle Y Offset", -5.0f, 5.0f, 0.05f),
     SERIALIZED_FLOAT(m_movementParticleForwardOffset, "Movement Particle Forward Offset", -5.0f, 5.0f, 0.05f),

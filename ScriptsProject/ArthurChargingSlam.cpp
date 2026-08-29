@@ -6,6 +6,7 @@
 #include "EnemyAttackExecutor.h"
 #include "ArthurUI.h"
 #include "ArthurSound.h"
+#include "ArthurParticles.h"
 
 #include "Transform2D.h"
 
@@ -28,6 +29,7 @@ void ArthurChargingSlam::OnStateEnter()
     m_animation = AnimationAPI::getAnimationComponent(getOwner());
     m_arthurUI = GameObjectAPI::findScript<ArthurUI>(getOwner());
     m_arthurSound = GameObjectAPI::findScript<ArthurSound>(getOwner());
+    m_arthurParticles = GameObjectAPI::findScript<ArthurParticles>(getOwner());
 
     m_stateTimer = 0.0f;
 
@@ -317,6 +319,11 @@ void ArthurChargingSlam::applyImpact()
     {
         m_arthurSound->stopGallopingLoop();
         m_arthurSound->playBodyImpact();
+    }
+
+    if (m_arthurParticles)
+    {
+        m_arthurParticles->playChargingSlamImpact(m_lockedTargetPosition);
     }
 
     Debug::log("[ArthurChargingSlam] Impact applied.");
