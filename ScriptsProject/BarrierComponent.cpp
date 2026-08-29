@@ -21,6 +21,12 @@ void BarrierComponent::Start()
 	buildBarriers();
 	instantiateBarrierUIs();
 	setBarrierUIAlpha(0.0f);
+	m_pendingDestroyBarrierIndex = -1;
+}
+
+void BarrierComponent::Update()
+{
+	processPendingDestruction();
 }
 
 bool BarrierComponent::hasActiveBarrierAt(float hpPercent) const
@@ -185,12 +191,21 @@ void BarrierComponent::breakNextBarrier()
 
 		m_barriers[i].broken = true;
 		m_nextBarrierIndex = i + 1;
-		destroyBrokenBarrierUI(i);
+		m_pendingDestroyBarrierIndex = static_cast<int>(i);
 
 		Debug::log("[Barrier] %s broke barrier at %.0f%% HP through Shadow Mark exploit.", GameObjectAPI::getName(m_owner), m_barriers[i].hpPercent * 100.0f);
 
 		return;
 	}
+}
+
+void BarrierComponent::processPendingDestruction()
+{
+	if (m_pendingDestroyBarrierIndex < 0)
+		return;
+
+	destroyBrokenBarrierUI(static_cast<size_t>(m_pendingDestroyBarrierIndex));
+	m_pendingDestroyBarrierIndex = -1;
 }
 
 void BarrierComponent::setBarrierUIAlpha(float alpha)

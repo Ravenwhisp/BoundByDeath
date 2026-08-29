@@ -18,9 +18,9 @@ IMPLEMENT_SCRIPT_FIELDS(ShadowExecution,
     SERIALIZED_COMPONENT_REF(m_reaperGaugeBar, "Reaper Gauge UI", ComponentType::UISLIDER),
     SERIALIZED_COMPONENT_REF(m_executionCanvas, "Execution Canvas", ComponentType::TRANSFORM),
     SERIALIZED_COMPONENT_REF(m_executionSprite, "Execution Sprite", ComponentType::TRANSFORM2D),
-)
+    )
 
-ShadowExecution::ShadowExecution(GameObject* owner)
+    ShadowExecution::ShadowExecution(GameObject* owner)
     : Script(owner)
 {
 }
@@ -33,7 +33,7 @@ void ShadowExecution::Start()
     if (m_executionTransform)
     {
         GameObjectAPI::setActive(m_executionTransform->getOwner(), false);
-	}
+    }
 
     m_reaperGauge = GameObjectAPI::findScript<ReaperGauge>(getOwner());
     if (m_reaperGauge == nullptr)
@@ -43,16 +43,16 @@ void ShadowExecution::Start()
 
     m_sound = GameObjectAPI::findScript<CooperativeSound>(getOwner());
 
-	Bound* bound = GameObjectAPI::findScript<Bound>(getOwner());
+    Bound* bound = GameObjectAPI::findScript<Bound>(getOwner());
 
-    if(!bound)
+    if (!bound)
     {
         Debug::warn("[ShadowExecution] Bound not found on GameController. Add it as a sibling script.");
     }
     else
     {
         m_maxRadius = bound->m_config.get()->m_minDistance * 0.5f;
-	}
+    }
 
     m_shadowExecutionConfig = m_config.get();
 
@@ -107,7 +107,7 @@ void ShadowExecution::Update()
         else
         {
             m_p0WindowTimer = 0.0f;
-		}
+        }
     }
     if (m_p1WindowTimer > 0.0f)
     {
@@ -140,7 +140,7 @@ void ShadowExecution::Update()
         else
         {
             Debug::log("[ShadowExecution] Player 0 pressed Triangle but gauge not full (%.0f%%). Keep exploiting marks!",
-				m_reaperGauge->getGaugePercent() * 100.0f);
+                m_reaperGauge->getGaugePercent() * 100.0f);
         }
     }
     if (Input::isFaceButtonTopJustPressed(1))
@@ -192,19 +192,19 @@ void ShadowExecution::tryTrigger()
 
 void ShadowExecution::beginExecution()
 {
-    Transform* deathTransform  = GameObjectAPI::getTransform(m_deathCharacter->getOwner());
+    Transform* deathTransform = GameObjectAPI::getTransform(m_deathCharacter->getOwner());
     Transform* lyrielTransform = GameObjectAPI::getTransform(m_lyrielCharacter->getOwner());
     if (deathTransform == nullptr || lyrielTransform == nullptr)
         return;
 
-    const Vector3 deathPos  = TransformAPI::getGlobalPosition(deathTransform);
+    const Vector3 deathPos = TransformAPI::getGlobalPosition(deathTransform);
     const Vector3 lyrielPos = TransformAPI::getGlobalPosition(lyrielTransform);
 
-    m_center         = (deathPos + lyrielPos) * 0.5f;
-    m_currentRadius  = 0.0f;
+    m_center = (deathPos + lyrielPos) * 0.5f;
+    m_currentRadius = 0.0f;
     m_executionTimer = 0.0f;
-    m_p0WindowTimer  = 0.0f;
-    m_p1WindowTimer  = 0.0f;
+    m_p0WindowTimer = 0.0f;
+    m_p1WindowTimer = 0.0f;
     m_hitEnemies.clear();
 
     m_isActive = true;
@@ -307,9 +307,9 @@ void ShadowExecution::endExecution()
 {
     lockPlayers(false);
 
-    m_isActive       = false;
+    m_isActive = false;
     m_executionTimer = 0.0f;
-    m_currentRadius  = 0.0f;
+    m_currentRadius = 0.0f;
     m_hitEnemies.clear();
 
     Transform2DAPI::setAlpha(m_executionTransform2D, 0);
@@ -317,7 +317,7 @@ void ShadowExecution::endExecution()
 
     if (m_executionTransform)
     {
-		GameObjectAPI::setActive(m_executionTransform->getOwner(), false);
+        GameObjectAPI::setActive(m_executionTransform->getOwner(), false);
     }
 
     Debug::log("[ShadowExecution] Execution finished.");
@@ -364,10 +364,10 @@ void ShadowExecution::drawGizmo()
     const Vector3 up = Vector3(0.0f, 1.0f, 0.0f);
 
     const Vector3 expandingColor = Vector3(0.85f, 0.10f, 0.10f);
-    const Vector3 maxColor       = Vector3(0.40f, 0.00f, 0.40f);
+    const Vector3 maxColor = Vector3(0.40f, 0.00f, 0.40f);
 
     DebugDrawAPI::drawCircle(m_center, up, expandingColor, m_currentRadius, 48.0f);
-    DebugDrawAPI::drawCircle(m_center, up, maxColor,       m_maxRadius,     48.0f);
+    DebugDrawAPI::drawCircle(m_center, up, maxColor, m_maxRadius, 48.0f);
     DebugDrawAPI::drawPoint(m_center, Vector3(1.0f, 1.0f, 0.0f), 5.0f);
 }
 
@@ -379,9 +379,9 @@ void ShadowExecution::updateUI()
     }
 
     const float t = m_executionTimer / m_shadowExecutionConfig->m_executionDuration;
-	SliderAPI::setFillAmount(m_reaperGaugeSlider, 1.0f - t);
-	Transform2DAPI::setAlpha(m_executionTransform2D, t);
-	Transform2DAPI::setScale(m_executionTransform2D, Vector2(m_currentRadius, m_currentRadius));
+    SliderAPI::setFillAmount(m_reaperGaugeSlider, 1.0f - t);
+    Transform2DAPI::setAlpha(m_executionTransform2D, t);
+    Transform2DAPI::setScale(m_executionTransform2D, Vector2(m_currentRadius, m_currentRadius));
 }
 
 ShadowExecutionPreview ShadowExecution::calculatePreview(const EnemyDamageable* damageable) const
