@@ -146,4 +146,57 @@ namespace ParticleLifecycle
         GameObjectAPI::removeGameObject(gameObject);
         gameObject = nullptr;
     }
+
+    inline Transform* findChildRecursive(Transform* root, const char* name)
+    {
+        if (root == nullptr || name == nullptr || name[0] == '\0')
+        {
+            return nullptr;
+        }
+
+        Transform* direct = TransformAPI::findChildByName(root, name);
+        if (direct != nullptr)
+        {
+            return direct;
+        }
+
+        const int childCount = TransformAPI::getChildCount(root);
+        for (int i = 0; i < childCount; ++i)
+        {
+            Transform* found = findChildRecursive(TransformAPI::getChild(root, i), name);
+            if (found != nullptr)
+            {
+                return found;
+            }
+        }
+
+        return nullptr;
+    }
+
+    inline void syncToTransform(GameObject* instance, Transform* target)
+    {
+        if (instance == nullptr || target == nullptr)
+        {
+            return;
+        }
+
+        Transform* instanceTransform = GameObjectAPI::getTransform(instance);
+        if (instanceTransform == nullptr)
+        {
+            return;
+        }
+
+        TransformAPI::setGlobalPosition(instanceTransform, TransformAPI::getGlobalPosition(target));
+        TransformAPI::setGlobalRotationEuler(instanceTransform, TransformAPI::getGlobalEulerDegrees(target));
+    }
+
+    inline GameObject* spawnOneShot(const AssetId& prefabId, const Vector3& position)
+    {
+        if (!prefabId.isValid())
+        {
+            return nullptr;
+        }
+
+        return GameObjectAPI::instantiatePrefab(prefabId, position, Vector3::Zero, nullptr);
+    }
 }

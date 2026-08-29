@@ -6,6 +6,7 @@
 class LyrielCharacter;
 class LyrielConfig;
 class LyrielUI;
+class LyrielParticles;
 
 class LyrielChargedAttack : public ChargedAttackBase
 {
@@ -52,6 +53,7 @@ private:
     LyrielCharacter* m_lyrielCharacter = nullptr;
     LyrielConfig* m_config = nullptr;
     LyrielUI* m_lyrielUI = nullptr;
+    LyrielParticles* m_particles = nullptr;
 
     bool m_isCharging = false;
     float m_chargeTimer = 0.0f;
