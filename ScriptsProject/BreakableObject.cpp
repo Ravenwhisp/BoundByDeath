@@ -2,16 +2,13 @@
 #include "BreakableObject.h"
 
 #include "EnvironmentSound.h"
+#include "ObjectVfxIds.h"
 #include "ParticleLifecycle.h"
 
 namespace
 {
     constexpr const char* k_barrelBreak = "Play_Environment_Barrel_Break";
 }
-
-IMPLEMENT_SCRIPT_FIELDS(BreakableObject,
-    SERIALIZED_ASSET_REF(m_dustEffectParticle, "Dust Effect Particle", AssetType::PREFAB)
-)
 
 BreakableObject::BreakableObject(GameObject* owner)
     : Script(owner)
@@ -56,34 +53,45 @@ void BreakableObject::Start()
     }
 }
 
-void BreakableObject::OnGameStop()
+void BreakableObject::Update()
 {
-    ParticleLifecycle::destroy(m_dustEffectInstance);
+    m_timedBreakEffects.update(Time::getDeltaTime());
 }
 
-void BreakableObject::ensureDustEffect()
+void BreakableObject::OnGameStop()
 {
-    Vector3 spawnPosition = Vector3::Zero;
+    m_timedBreakEffects.clear();
+}
+
+Vector3 BreakableObject::getBreakEffectPosition() const
+{
     if (m_brokenObjectTransform != nullptr)
     {
-        spawnPosition = TransformAPI::getGlobalPosition(m_brokenObjectTransform);
-    }
-    else
-    {
-        Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
-        if (ownerTransform != nullptr)
-        {
-            spawnPosition = TransformAPI::getGlobalPosition(ownerTransform);
-        }
+        return TransformAPI::getGlobalPosition(m_brokenObjectTransform);
     }
 
-    ParticleLifecycle::ensurePersistent(m_dustEffectInstance, m_dustEffectParticle.m_id, spawnPosition, Vector3::Zero, nullptr);
+    Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
+    if (ownerTransform != nullptr)
+    {
+        return TransformAPI::getGlobalPosition(ownerTransform);
+    }
+
+    return Vector3::Zero;
+}
+
+void BreakableObject::spawnBreakBaseEffect()
+{
+    ParticleLifecycle::spawnOneShotTimed(
+        m_timedBreakEffects,
+        ObjectVfxIds::barrelBreakBase(),
+        getBreakEffectPosition()
+    );
 }
 
 void BreakableObject::onBreak()
 {
     breakObject();
-    EnvironmentSound::play(getOwner(), k_barrelBreak);   // barrels & crates (same prefab)
+    EnvironmentSound::play(getOwner(), k_barrelBreak);
 }
 
 void BreakableObject::breakObject()
@@ -105,18 +113,9 @@ void BreakableObject::breakObject()
     {
         GameObject* brokenObject = ComponentAPI::getOwner(m_brokenObjectTransform);
         GameObjectAPI::setActive(brokenObject, true);
-
-        ensureDustEffect();
-        if (m_dustEffectInstance != nullptr)
-        {
-            Transform* dustTransform = GameObjectAPI::getTransform(m_dustEffectInstance);
-            if (dustTransform != nullptr)
-            {
-                TransformAPI::setGlobalPosition(dustTransform, TransformAPI::getGlobalPosition(m_brokenObjectTransform));
-            }
-            ParticleLifecycle::activate(m_dustEffectInstance);
-        }
     }
+
+    spawnBreakBaseEffect();
 
     if (m_navBlocker != nullptr)
     {

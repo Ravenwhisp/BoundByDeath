@@ -13,7 +13,6 @@ public:
 
     void Start() override;
     void Update() override;
-    void OnGameStop() override;
 
     FieldList getExposedFields() const override;
 
@@ -21,7 +20,6 @@ public:
 
 public:
     PrefabRef m_healthPickupPrefab;
-    PrefabRef m_healthBreakEffectParticle;
 
     float m_healthDropAmount = 10.0f;
     float m_dropRadius = 1.0f;
@@ -30,8 +28,4 @@ public:
 
 private:
     void onBreak() override;
-    void ensureHealthBreakEffect();
-
-    GameObject* m_healthBreakEffectInstance = nullptr;
-
 };

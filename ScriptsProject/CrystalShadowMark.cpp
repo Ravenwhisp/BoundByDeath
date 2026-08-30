@@ -4,12 +4,12 @@
 #include "EnemyDamageable.h"
 #include "CrystalVisuals.h"
 #include "ParticleLifecycle.h"
+#include "ObjectVfxIds.h"
 
 IMPLEMENT_SCRIPT_FIELDS_INHERITED(CrystalShadowMark, EnemyShadowMark,
     SERIALIZED_COMPONENT_REF(m_puzzleManager, "PuzzleManager", ComponentType::TRANSFORM),
 	SERIALIZED_INT(m_puzzleID, "Puzzle ID"),
-	SERIALIZED_FLOAT(m_activeTime, "Active Time", 0.0f, 10.0f, 0.1f),
-    SERIALIZED_ASSET_REF(m_crystalEffectPrefab, "Crystal Activated Particle", AssetType::PREFAB)
+	SERIALIZED_FLOAT(m_activeTime, "Active Time", 0.0f, 10.0f, 0.1f)
 )
 
 CrystalShadowMark::CrystalShadowMark(GameObject* owner) : EnemyShadowMark(owner) {}
@@ -120,7 +120,7 @@ bool CrystalShadowMark::processAttack(PlayerAttackType attackType)
 void CrystalShadowMark::ensureEffect()
 {
     const Vector3 effectPosition = TransformAPI::getGlobalPosition(GameObjectAPI::getTransform(getOwner())) + Vector3(0.0f, 1.0f, 0.0f);
-    ParticleLifecycle::ensurePersistent(m_effectObject, m_crystalEffectPrefab.m_id, effectPosition, Vector3::Zero, nullptr);
+    ParticleLifecycle::ensurePersistent(m_effectObject, ObjectVfxIds::crystalActiveEffect(), effectPosition, Vector3::Zero, nullptr);
 }
 
 void CrystalShadowMark::activeEffect()
