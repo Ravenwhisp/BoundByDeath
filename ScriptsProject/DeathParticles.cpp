@@ -34,6 +34,7 @@ void DeathParticles::OnGameStop()
     ParticleLifecycle::destroy(m_activeTauntParticle);
     ParticleLifecycle::destroy(m_dashParticleInstance);
     ParticleLifecycle::destroy(m_chargeGlowInstance);
+    m_timedOneShots.clear();
     m_tauntParticleActive = false;
     m_dashParticleActive = false;
     m_chargeGlowActive = false;
@@ -42,6 +43,7 @@ void DeathParticles::OnGameStop()
 
 void DeathParticles::Update()
 {
+    m_timedOneShots.update(Time::getDeltaTime());
     syncActiveParticles();
 
     if (!m_tauntParticleActive)
@@ -252,12 +254,20 @@ void DeathParticles::SetTauntInactive()
 
 void DeathParticles::playHitFlash(const Vector3& position)
 {
-    ParticleLifecycle::spawnOneShot(m_hitFlashPrefab.m_id, position);
+    ParticleLifecycle::spawnOneShotTimed(
+        m_timedOneShots,
+        m_hitFlashPrefab.m_id,
+        position
+    );
 }
 
 void DeathParticles::playChargedHitFlash(const Vector3& position)
 {
-    ParticleLifecycle::spawnOneShot(m_chargedHitFlashPrefab.m_id, position);
+    ParticleLifecycle::spawnOneShotTimed(
+        m_timedOneShots,
+        m_chargedHitFlashPrefab.m_id,
+        position
+    );
 }
 
 IMPLEMENT_SCRIPT(DeathParticles)

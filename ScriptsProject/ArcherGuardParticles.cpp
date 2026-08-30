@@ -208,7 +208,9 @@ void ArcherGuardParticles::playBarrageImpactParticle(const Vector3& position)
         return;
     }
 
-    m_barrageImpactTimer = m_barrageImpactLifetime;
+    m_barrageImpactTimer = m_barrageImpactLifetime > 0.0f
+        ? m_barrageImpactLifetime
+        : ParticleLifecycle::kDefaultOneShotLifetime;
 }
 
 void ArcherGuardParticles::startChargeParticle()

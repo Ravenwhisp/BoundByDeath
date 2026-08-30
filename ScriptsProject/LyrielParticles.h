@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include <Script.h>
 #include "ScriptAPI.h"
+#include "ParticleLifecycle.h"
 
 #include <string>
 
@@ -45,4 +46,5 @@ private:
 	GameObject* m_dashParticleInstance = nullptr;
 	bool m_chargeGlowActive = false;
 	bool m_dashParticleActive = false;
+	ParticleLifecycle::TimedParticleTracker m_timedOneShots;
 };

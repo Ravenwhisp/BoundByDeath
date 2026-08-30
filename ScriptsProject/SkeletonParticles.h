@@ -1,6 +1,9 @@
 #pragma once
 
 #include "ScriptAPI.h"
+#include "ParticleLifecycle.h"
+
+#include <string>
 
 class SkeletonParticles final : public Script
 {
@@ -18,33 +21,33 @@ public:
     void startReviveParticle();
     void stopReviveParticle();
 
-    void playShockwaveParticle();
+    const AssetId& getShieldHitVfxId() const { return m_shieldHitPrefab.m_id; }
+    const AssetId& getThirdAttackHitVfxId() const { return m_thirdAttackHitPrefab.m_id; }
 
 private:
     Vector3 getReviveParticlePosition() const;
-    Vector3 getShockwaveParticlePosition() const;
     Vector3 getOwnerRotation() const;
 
     void updateReviveParticle();
-    void removeShockwaveParticle();
     void ensureReviveParticle();
 
 private:
     PrefabRef m_reviveParticlePrefab;
-    PrefabRef m_shockwaveParticlePrefab;
+    PrefabRef m_shieldHitPrefab;
+    PrefabRef m_thirdAttackHitPrefab;
+
+    std::string m_reviveParticlePath = "Assets/Prefabs/Particles/VFXRemake/Enemies/Enemies_Level2/Skeletons/PS_Revive.prefab";
+    std::string m_shieldHitPath = "Assets/Prefabs/Particles/VFXRemake/Enemies/Enemies_Level2/Skeletons/PS_ShockwaveSmallParticles.prefab";
+    std::string m_thirdAttackHitPath = "Assets/Prefabs/Particles/VFXRemake/Enemies/Enemies_Level2/Skeletons/PS_Skeleton3rdAttack.prefab";
 
     float m_reviveYOffset = 0.0f;
     float m_reviveForwardOffset = 0.0f;
-
-    float m_shockwaveYOffset = 0.05f;
-    float m_shockwaveForwardOffset = 0.75f;
-    float m_shockwaveLifetime = 1.0f;
+    float m_reviveDeactivateDelay = 2.0f;
 
     Transform* m_ownerTransform = nullptr;
 
     GameObject* m_reviveParticle = nullptr;
     Transform* m_reviveParticleTransform = nullptr;
 
-    GameObject* m_shockwaveParticle = nullptr;
-    float m_shockwaveTimer = 0.0f;
+    ParticleLifecycle::TimedParticleTracker m_timedParticles;
 };

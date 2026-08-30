@@ -2,6 +2,8 @@
 
 #include "ProjectileBase.h"
 
+#include <string>
+
 class EnergyBallProjectile : public ProjectileBase
 {
 	DECLARE_SCRIPT(EnergyBallProjectile)
@@ -10,6 +12,7 @@ public:
 	explicit EnergyBallProjectile(GameObject* owner);
 
 	void Update() override;
+	void OnGameStop() override;
 
 	FieldList getExposedFields() const override;
 
@@ -18,21 +21,17 @@ public:
 
 private:
 	void applyImpactDamage();
+	void ensureEnergyBallParticle();
+	void updateEnergyBallParticle();
+	void removeEnergyBallParticle();
 
-	void spawnEnergyBallParticles();
-	void updateEnergyBallParticles();
-	void removeEnergyBallParticles();
-
-public: 
-	PrefabRef m_energyBallSparks1Prefab;
-	PrefabRef m_energyBallSparks2Prefab;
+public:
+	PrefabRef m_energyBallParticlePrefab;
+	std::string m_energyBallParticlePath = "Assets/Prefabs/Particles/VFXRemake/Enemies/Enemies_Level2/Summoner/PS_EnergyBall.prefab";
 
 private:
-	GameObject* m_energyBallSparks1 = nullptr;
-	GameObject* m_energyBallSparks2 = nullptr;
-
-	Transform* m_energyBallSparks1Transform = nullptr;
-	Transform* m_energyBallSparks2Transform = nullptr;
+	GameObject* m_energyBallParticle = nullptr;
+	Transform* m_energyBallParticleTransform = nullptr;
 
 	Vector3 m_direction = Vector3::Zero;
 

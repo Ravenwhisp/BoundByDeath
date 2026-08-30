@@ -218,9 +218,16 @@ void SkeletonScimitarState::applyHit(bool shouldStun)
 	const Vector3 center = TransformAPI::getGlobalPosition(ownerTransform);
 	const Vector3 forward = TransformAPI::getForward(ownerTransform);
 
-	if (m_particles)
+	if (m_particles && m_attackExecutor)
 	{
-		m_particles->playShockwaveParticle();
+		if (shouldStun)
+		{
+			m_attackExecutor->setNextPlayerHitVfx(m_particles->getThirdAttackHitVfxId());
+		}
+		else
+		{
+			m_attackExecutor->setNextPlayerHitVfx(m_particles->getShieldHitVfxId());
+		}
 	}
 
 	if (shouldStun)

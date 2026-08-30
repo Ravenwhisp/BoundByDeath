@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ScriptAPI.h"
+#include "ParticleLifecycle.h"
 
 #include <string>
 #include <vector>
@@ -76,4 +77,5 @@ private:
     Transform* m_ownerTransform = nullptr;
 
     std::vector<TimedEffect> m_timedEffects;
+    ParticleLifecycle::TimedParticleTracker m_timedOneShots;
 };

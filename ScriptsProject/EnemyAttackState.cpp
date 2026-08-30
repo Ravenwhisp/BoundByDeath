@@ -455,6 +455,16 @@ void EnemyAttackState::tryDamageTarget(
     const EnemyBaseAttackConfig* attackConfig =
         m_controller->getAttackConfig();
 
+    if (m_attackExecutor)
+    {
+        m_attackExecutor->damageTarget(
+            targetTransform,
+            attackConfig->m_basicAttackDamage,
+            "EnemyBasicAttack"
+        );
+        return;
+    }
+
     damageable->takeDamage(
         attackConfig->m_basicAttackDamage
     );

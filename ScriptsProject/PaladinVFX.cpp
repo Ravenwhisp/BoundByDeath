@@ -33,6 +33,7 @@ void PaladinVFX::Start()
 
 void PaladinVFX::OnGameStop()
 {
+    m_timedHitVfx.clear();
     ParticleLifecycle::destroy(walkingDustEffect);
     ParticleLifecycle::destroy(chargeAttackEffect);
     ParticleLifecycle::destroy(basicAttackTelegraph);
@@ -41,6 +42,8 @@ void PaladinVFX::OnGameStop()
 
 void PaladinVFX::Update()
 {
+    m_timedHitVfx.update(Time::getDeltaTime());
+
     if (walkingDustActive && walkingDustEffect)
     {
         updateWalkingDustPosition();
@@ -139,12 +142,21 @@ void PaladinVFX::playShieldAttackStart(const Vector3& position, const Vector3& d
     spawnPosition.y += m_shieldAttackParticlesYOffset;
 
     GameObject* instance = GameObjectAPI::instantiatePrefab(m_shieldAttackParticlesPrefab.m_id, spawnPosition, rotation, nullptr);
-    (void)instance;
+    if (instance != nullptr)
+    {
+        m_timedHitVfx.scheduleDestroy(instance, ParticleLifecycle::kDefaultOneShotLifetime);
+    }
 }
 
 void PaladinVFX::spawnShieldAttackHit(const Vector3& position)
 {
-    ParticleLifecycle::spawnOneShot(m_shieldAttackHitPrefab.m_id, position);
+    ParticleLifecycle::spawnOneShotTimed(
+        m_timedHitVfx,
+        m_shieldAttackHitPrefab.m_id,
+        position,
+        Vector3::Zero,
+        ParticleLifecycle::kDefaultOneShotLifetime
+    );
 }
 
 bool PaladinVFX::isTargetInRectangle(

@@ -1,6 +1,7 @@
 #pragma once
 #include <Script.h>
 #include "ScriptAPI.h"
+#include "ParticleLifecycle.h"
 
 #include <string>
 
@@ -64,4 +65,5 @@ private:
 
 	Transform* m_dashTrailController = nullptr;
 	Transform* m_scytheTrailController = nullptr;
+	ParticleLifecycle::TimedParticleTracker m_timedOneShots;
 };

@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "ScriptAPI.h"
+#include "ParticleLifecycle.h"
 
 class PaladinVFX : public Script
 {
@@ -100,4 +101,6 @@ private:
 
     class EnemyDetectionAggro* m_detectionAggro = nullptr;
     float m_shieldAttackParticlesYOffset = 0.05f;
+
+    ParticleLifecycle::TimedParticleTracker m_timedHitVfx;
 };

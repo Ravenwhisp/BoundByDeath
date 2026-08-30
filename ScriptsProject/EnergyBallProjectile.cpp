@@ -3,15 +3,22 @@
 
 #include "Damageable.h"
 #include "PlayerState.h"
+#include "ProjectilePool.h"
+#include "EnemyAttackExecutor.h"
 
 IMPLEMENT_SCRIPT_FIELDS(EnergyBallProjectile,
-	SERIALIZED_ASSET_REF(m_energyBallSparks1Prefab, "Energy Ball Sparks 1 Prefab", AssetType::PREFAB),
-	SERIALIZED_ASSET_REF(m_energyBallSparks2Prefab, "Energy Ball Sparks 2 Prefab", AssetType::PREFAB)
+	SERIALIZED_STRING(m_energyBallParticlePath, "Energy Ball Particle Prefab Path"),
+	SERIALIZED_ASSET_REF(m_energyBallParticlePrefab, "Energy Ball Particle Prefab", AssetType::PREFAB)
 )
 
 EnergyBallProjectile::EnergyBallProjectile(GameObject* owner)
 	: ProjectileBase(owner)
 {
+}
+
+void EnergyBallProjectile::OnGameStop()
+{
+	removeEnergyBallParticle();
 }
 
 void EnergyBallProjectile::launch(const Vector3& startPosition, const Vector3& direction, float speed, float lifetime, GameObject* target, float damage)
@@ -41,20 +48,24 @@ void EnergyBallProjectile::launch(const Vector3& startPosition, const Vector3& d
 		TransformAPI::lookAt(transform, startPosition + m_direction);
 	}
 
-	spawnEnergyBallParticles();
+	ensureEnergyBallParticle();
+	updateEnergyBallParticle();
+
+	if (m_energyBallParticle)
+	{
+		ParticleLifecycle::activate(m_energyBallParticle);
+	}
 }
 
 void EnergyBallProjectile::resetProjectile()
 {
-	removeEnergyBallParticles();
+	removeEnergyBallParticle();
 
 	m_direction = Vector3::Zero;
-
 	m_speed = 0.0f;
 	m_lifetime = 0.0f;
 	m_aliveTimer = 0.0f;
 	m_damage = 0.0f;
-
 	m_target = nullptr;
 	m_isLaunched = false;
 
@@ -120,7 +131,7 @@ void EnergyBallProjectile::Update()
 	const Vector3 updatedPosition = TransformAPI::getGlobalPosition(projectileTransform);
 	TransformAPI::lookAt(projectileTransform, updatedPosition + m_direction);
 
-	updateEnergyBallParticles();
+	updateEnergyBallParticle();
 }
 
 void EnergyBallProjectile::applyImpactDamage()
@@ -144,45 +155,22 @@ void EnergyBallProjectile::applyImpactDamage()
 
 	damageable->takeDamage(m_damage);
 
+	Transform* targetTransform = GameObjectAPI::getTransform(m_target);
+	if (m_pool && targetTransform)
+	{
+		GameObject* summonerObject = m_pool->getOwner();
+		EnemyAttackExecutor* attackExecutor = GameObjectAPI::findScript<EnemyAttackExecutor>(summonerObject);
+
+		if (attackExecutor)
+		{
+			attackExecutor->playPlayerHitVfx(targetTransform);
+		}
+	}
+
 	Debug::log("[EnergyBallProjectile] Damaged target for %.2f.", m_damage);
 }
 
-void EnergyBallProjectile::spawnEnergyBallParticles()
-{
-	removeEnergyBallParticles();
-
-	Transform* projectileTransform = GameObjectAPI::getTransform(getOwner());
-
-	if (!projectileTransform)
-	{
-		return;
-	}
-
-	const Vector3 position = TransformAPI::getGlobalPosition(projectileTransform);
-	const Vector3 rotation = TransformAPI::getGlobalEulerDegrees(projectileTransform);
-
-	if (m_energyBallSparks1Prefab.m_id.isValid())
-	{
-		m_energyBallSparks1 = GameObjectAPI::instantiatePrefab(m_energyBallSparks1Prefab.m_id, position, rotation);
-
-		if (m_energyBallSparks1)
-		{
-			m_energyBallSparks1Transform = GameObjectAPI::getTransform(m_energyBallSparks1);
-		}
-	}
-
-	if (m_energyBallSparks2Prefab.m_id.isValid())
-	{
-		m_energyBallSparks2 = GameObjectAPI::instantiatePrefab(m_energyBallSparks2Prefab.m_id, position, rotation);
-
-		if (m_energyBallSparks2)
-		{
-			m_energyBallSparks2Transform = GameObjectAPI::getTransform(m_energyBallSparks2);
-		}
-	}
-}
-
-void EnergyBallProjectile::updateEnergyBallParticles()
+void EnergyBallProjectile::ensureEnergyBallParticle()
 {
 	Transform* projectileTransform = GameObjectAPI::getTransform(getOwner());
 
@@ -194,36 +182,40 @@ void EnergyBallProjectile::updateEnergyBallParticles()
 	const Vector3 position = TransformAPI::getGlobalPosition(projectileTransform);
 	const Vector3 rotation = TransformAPI::getGlobalEulerDegrees(projectileTransform);
 
-	if (m_energyBallSparks1Transform)
-	{
-		TransformAPI::setGlobalPosition(m_energyBallSparks1Transform, position);
-		TransformAPI::setGlobalRotationEuler(m_energyBallSparks1Transform, rotation);
-	}
+	ParticleLifecycle::ensurePersistent(
+		m_energyBallParticle,
+		m_energyBallParticlePrefab.m_id,
+		position,
+		rotation,
+		nullptr
+	);
 
-	if (m_energyBallSparks2Transform)
+	if (m_energyBallParticle)
 	{
-		TransformAPI::setGlobalPosition(m_energyBallSparks2Transform, position);
-		TransformAPI::setGlobalRotationEuler(m_energyBallSparks2Transform, rotation);
+		m_energyBallParticleTransform = GameObjectAPI::getTransform(m_energyBallParticle);
 	}
 }
 
-void EnergyBallProjectile::removeEnergyBallParticles()
+void EnergyBallProjectile::updateEnergyBallParticle()
 {
-	if (m_energyBallSparks1)
+	Transform* projectileTransform = GameObjectAPI::getTransform(getOwner());
+
+	if (!projectileTransform || !m_energyBallParticleTransform)
 	{
-		GameObjectAPI::removeGameObject(m_energyBallSparks1);
+		return;
 	}
 
-	if (m_energyBallSparks2)
-	{
-		GameObjectAPI::removeGameObject(m_energyBallSparks2);
-	}
+	const Vector3 position = TransformAPI::getGlobalPosition(projectileTransform);
+	const Vector3 rotation = TransformAPI::getGlobalEulerDegrees(projectileTransform);
 
-	m_energyBallSparks1 = nullptr;
-	m_energyBallSparks2 = nullptr;
+	TransformAPI::setGlobalPosition(m_energyBallParticleTransform, position);
+	TransformAPI::setGlobalRotationEuler(m_energyBallParticleTransform, rotation);
+}
 
-	m_energyBallSparks1Transform = nullptr;
-	m_energyBallSparks2Transform = nullptr;
+void EnergyBallProjectile::removeEnergyBallParticle()
+{
+	ParticleLifecycle::deactivate(m_energyBallParticle);
+	m_energyBallParticleTransform = nullptr;
 }
 
 IMPLEMENT_SCRIPT(EnergyBallProjectile)

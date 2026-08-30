@@ -26,12 +26,14 @@ void LyrielParticles::OnGameStop()
 {
     ParticleLifecycle::destroy(m_chargeGlowInstance);
     ParticleLifecycle::destroy(m_dashParticleInstance);
+    m_timedOneShots.clear();
     m_chargeGlowActive = false;
     m_dashParticleActive = false;
 }
 
 void LyrielParticles::Update()
 {
+    m_timedOneShots.update(Time::getDeltaTime());
     syncActiveParticles();
 }
 
@@ -144,7 +146,11 @@ void LyrielParticles::SetChargeInactive()
 
 void LyrielParticles::playHitFlash(const Vector3& position)
 {
-    ParticleLifecycle::spawnOneShot(m_hitFlashPrefab.m_id, position);
+    ParticleLifecycle::spawnOneShotTimed(
+        m_timedOneShots,
+        m_hitFlashPrefab.m_id,
+        position
+    );
 }
 
 IMPLEMENT_SCRIPT(LyrielParticles)

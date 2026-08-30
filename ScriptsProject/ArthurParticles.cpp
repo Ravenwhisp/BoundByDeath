@@ -35,6 +35,7 @@ void ArthurParticles::Start()
 void ArthurParticles::OnGameStop()
 {
     m_timedEffects.clear();
+    m_timedOneShots.clear();
     ParticleLifecycle::destroy(m_earthHammerShockwaveInstance);
     m_earthHammerShockwaveActive = false;
 }
@@ -42,6 +43,7 @@ void ArthurParticles::OnGameStop()
 void ArthurParticles::Update()
 {
     processTimedEffects(Time::getDeltaTime());
+    m_timedOneShots.update(Time::getDeltaTime());
 
     if (m_earthHammerShockwaveActive && m_earthHammerShockwaveInstance != nullptr)
     {
@@ -96,17 +98,35 @@ void ArthurParticles::processTimedEffects(float deltaTime)
 
 void ArthurParticles::spawnGroundDust(const Vector3& position)
 {
-    ParticleLifecycle::spawnOneShot(m_groundDustPrefab.m_id, position);
+    ParticleLifecycle::spawnOneShotTimed(
+        m_timedOneShots,
+        m_groundDustPrefab.m_id,
+        position,
+        Vector3::Zero,
+        ParticleLifecycle::kDefaultOneShotLifetime
+    );
 }
 
 void ArthurParticles::spawnChargingSlam(const Vector3& position)
 {
-    ParticleLifecycle::spawnOneShot(m_chargingSlamPrefab.m_id, position);
+    ParticleLifecycle::spawnOneShotTimed(
+        m_timedOneShots,
+        m_chargingSlamPrefab.m_id,
+        position,
+        Vector3::Zero,
+        ParticleLifecycle::kDefaultOneShotLifetime
+    );
 }
 
 void ArthurParticles::spawnHeavySwipeHit(const Vector3& position)
 {
-    ParticleLifecycle::spawnOneShot(m_heavySwipePrefab.m_id, position);
+    ParticleLifecycle::spawnOneShotTimed(
+        m_timedOneShots,
+        m_heavySwipePrefab.m_id,
+        position,
+        Vector3::Zero,
+        ParticleLifecycle::kDefaultOneShotLifetime
+    );
 }
 
 void ArthurParticles::activateEarthHammerShockwave()
