@@ -18,7 +18,7 @@ public:
 
 public:
     ComponentRef<Transform> m_videoObject;
-    std::string m_sceneName;
+    AssetReference<Scene> m_sceneToLoad;
 
 private:
     ComponentVideo* m_videoComponent = nullptr;
