@@ -6,17 +6,17 @@
 
 namespace
 {
-    constexpr const char* k_openDoor = "Play_Environment_Open_Door";
+	constexpr const char* k_openDoor = "Play_Environment_Open_Door";
 
-    // Plays the door-open SFX from the door's own GameObject (positional 3D).
-    void playDoorOpen(const ComponentRef<Transform>& doorRef)
-    {
-        Transform* doorTransform = doorRef.getReferencedComponent();
-        if (doorTransform != nullptr)
-        {
-            EnvironmentSound::play(ComponentAPI::getOwner(doorTransform), k_openDoor);
-        }
-    }
+	// Plays the door-open SFX from the door's own GameObject (positional 3D).
+	void playDoorOpen(const ComponentRef<Transform>& doorRef)
+	{
+		Transform* doorTransform = doorRef.getReferencedComponent();
+		if (doorTransform != nullptr)
+		{
+			EnvironmentSound::play(ComponentAPI::getOwner(doorTransform), k_openDoor);
+		}
+	}
 }
 
 IMPLEMENT_SCRIPT_FIELDS(PuzzleManagerLVL1,
@@ -33,7 +33,7 @@ IMPLEMENT_SCRIPT_FIELDS(PuzzleManagerLVL1,
 )
 
 PuzzleManagerLVL1::PuzzleManagerLVL1(GameObject* owner)
-    : Script(owner)
+	: Script(owner)
 {
 }
 
@@ -167,15 +167,15 @@ void PuzzleManagerLVL1::puzzle3Solved()
 
 void PuzzleManagerLVL1::onCrystalsActivated(int puzzleID)
 {
-	if(m_puzzles.find(puzzleID) == m_puzzles.end())
+	if (m_puzzles.find(puzzleID) == m_puzzles.end())
 	{
 		Debug::log("Invalid puzzle ID: %d", puzzleID);
 		return;
 	}
 
 	PuzzleData& puzzle = m_puzzles[puzzleID];
-	
-	if(puzzle.puzzleSolved)
+
+	if (puzzle.puzzleSolved)
 	{
 		Debug::log("Puzzle %d already solved, ignoring crystal activation.", puzzleID);
 		return;
@@ -226,14 +226,14 @@ void PuzzleManagerLVL1::onPuzzleSolved(int puzzleID)
 
 void PuzzleManagerLVL1::onCrystalsDeactivated(int puzzleID)
 {
-	if(m_puzzles.find(puzzleID) == m_puzzles.end())
+	if (m_puzzles.find(puzzleID) == m_puzzles.end())
 	{
 		Debug::log("Invalid puzzle ID: %d", puzzleID);
 		return;
 	}
 
 	PuzzleData& puzzle = m_puzzles[puzzleID];
-	if(puzzle.puzzleSolved)
+	if (puzzle.puzzleSolved)
 	{
 		Debug::log("Puzzle %d already solved, ignoring crystal deactivation.", puzzleID);
 		return;

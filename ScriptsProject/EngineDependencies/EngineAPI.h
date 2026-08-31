@@ -35,6 +35,8 @@ class DamageHighlightComponent;
 class TrailComponent;
 struct AssetId;
 class DissolveComponent;
+class SpectralComponent;
+class ComponentVideo;
 
 struct HapticEffectDefinition;
 
@@ -182,6 +184,7 @@ namespace SceneAPI
     ENGINE_API void setDefaultCameraByGameObject(GameObject* gameObject);
 
     ENGINE_API void requestSceneChange(const char* sceneName);
+    ENGINE_API void requestSceneChange(const AssetId& ref);
 }
 
 namespace Time
@@ -198,6 +201,8 @@ namespace Input
 
     ENGINE_API Vector2 getMoveAxis(int player = 0);
     ENGINE_API Vector2 getLookAxis(int player = 0);
+
+    ENGINE_API Vector3 getAimDirection(const Vector3& originWorldPos, int player = 0, float gamepadDeadzoneSq = 0.0225f);
 
     ENGINE_API bool isLeftStickPressed(int player = 0);
     ENGINE_API bool isRightStickPressed(int player = 0);
@@ -493,6 +498,12 @@ namespace ShadersAPI
     ENGINE_API void    setDissolveColor(DissolveComponent* component, Vector3 value);
     ENGINE_API float   getDissolveThikness(DissolveComponent* component);
     ENGINE_API void    setDissolveThikness(DissolveComponent* component, float value);
+
+    ENGINE_API SpectralComponent* getSpectralComponent(GameObject* gameObject);
+    ENGINE_API const SpectralComponent* getSpectralComponent(const GameObject* gameObject);
+
+    ENGINE_API Vector3 getSpectralColor(SpectralComponent* component);
+    ENGINE_API void    setSpectralColor(SpectralComponent* component, Vector3 value);
 }
 
 namespace PostProcessAPI
@@ -553,4 +564,20 @@ namespace PostProcessAPI
     ENGINE_API float   getOutlineBreakup();
 }
 
+namespace VideoAPI
+{
+    ENGINE_API ComponentVideo* getVideoComponent(GameObject* gameObject);
+    ENGINE_API const ComponentVideo* getVideoComponent(const GameObject* gameObject);
+
+    ENGINE_API void play(ComponentVideo* component);
+    ENGINE_API void pause(ComponentVideo* component);
+    ENGINE_API void resume(ComponentVideo* component);
+    ENGINE_API void stop(ComponentVideo* component);
+
+    ENGINE_API bool isPlaying(const ComponentVideo* component);
+    ENGINE_API bool isPaused(const ComponentVideo* component);
+
+    ENGINE_API void setPath(ComponentVideo* component, const char* path);
+    ENGINE_API const char* getPath(const ComponentVideo* component);
+}
 #include "EngineAPI.inl"

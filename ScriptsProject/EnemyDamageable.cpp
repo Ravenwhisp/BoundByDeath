@@ -26,7 +26,6 @@ IMPLEMENT_SCRIPT_FIELDS_INHERITED(EnemyDamageable, Damageable,
 	SERIALIZED_FLOAT(m_shadowExecutionPreviewNonLethalAlpha, "Shadow Preview Non-Lethal Alpha", 0.0f, 1.0f, 0.05f),
 	SERIALIZED_FLOAT(m_shadowExecutionPreviewLethalAlpha, "Shadow Preview Lethal Alpha", 0.0f, 1.0f, 0.05f),
 	FIELD_GROUP_LABEL("DissolveEffect"),
-	SERIALIZED_COMPONENT_REF(m_renderer, "Mesh Renderer", ComponentType::TRANSFORM),
 	SERIALIZED_FLOAT(m_dissolveDuration, "Dissolve Duration", 0.1f, 5.0f, 0.0f)
 )
 
@@ -638,21 +637,41 @@ void EnemyDamageable::updateShadowExecutionThresholdMarker()
 
 void EnemyDamageable::loadDissolveComponent()
 {
-	Transform* rendererTransform = m_renderer.getReferencedComponent();
+	m_dissolve = findDissolveInHierarchy(GameObjectAPI::getTransform(m_owner));
 
-	if (rendererTransform == nullptr)
+	if (!m_dissolve)
 	{
-		Debug::warn("EnemyDamageable on '%s' has a missing renderer reference.", GameObjectAPI::getName(getOwner()));
+		Debug::warn("[EnemyDamageable] Dissolve component not found in hierarchy of '%s'.", GameObjectAPI::getName(m_owner));
 	}
-	else
-	{
-		m_dissolve = ShadersAPI::getDissolveComponent(ComponentAPI::getOwner(rendererTransform));
+}
 
-		if (m_dissolve == nullptr)
+DissolveComponent* EnemyDamageable::findDissolveInHierarchy(Transform* transform)
+{
+	if (!transform)
+	{
+		return nullptr;
+	}
+
+	GameObject* object = ComponentAPI::getOwner(transform);
+
+	if (DissolveComponent* dissolve = ShadersAPI::getDissolveComponent(object))
+	{
+		return dissolve;
+	}
+
+	const int childCount = TransformAPI::getChildCount(transform);
+
+	for (int i = 0; i < childCount; ++i)
+	{
+		Transform* child = TransformAPI::getChild(transform, i);
+
+		if (DissolveComponent* dissolve = findDissolveInHierarchy(child))
 		{
-			Debug::warn("Renderer referenced in EnemyDamageable on '%s' does not have a Dissolve component.", GameObjectAPI::getName(getOwner()));
+			return dissolve;
 		}
 	}
+
+	return nullptr;
 }
 
 IMPLEMENT_SCRIPT(EnemyDamageable)

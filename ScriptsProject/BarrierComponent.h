@@ -19,6 +19,7 @@ public:
 	explicit BarrierComponent(GameObject* owner);
 
 	void Start() override;
+	void Update() override;
 
 	FieldList getExposedFields() const override;
 
@@ -57,7 +58,10 @@ private:
 	float getNextBarrierAbsoluteHp(float maxHp) const;
 	void breakNextBarrier();
 
+	void processPendingDestruction();
+
 	std::vector<Barrier> m_barriers;
 	std::vector<BarrierUI> m_barrierUIs;
 	size_t m_nextBarrierIndex = 0;
+	int m_pendingDestroyBarrierIndex = -1;
 };
