@@ -5,6 +5,7 @@
 #include "AelorinAttackConfig.h"
 #include "AelorinAttackExecutor.h"
 #include "AelorinUI.h"
+#include "AelorinLavaController.h"
 
 AelorinSoulCataclysmState::AelorinSoulCataclysmState(GameObject* owner)
 	: StateMachineScript(owner)
@@ -26,6 +27,7 @@ void AelorinSoulCataclysmState::OnStateEnter()
 	m_controller = GameObjectAPI::findScript<AelorinBossController>(parentGameObject);
 	m_animation = AnimationAPI::getAnimationComponent(getOwner());
 	m_aelorinUI = GameObjectAPI::findScript<AelorinUI>(parentGameObject);
+	m_lavaController = GameObjectAPI::findScript<AelorinLavaController>(parentGameObject);
 
 	// reset members
 	m_stateTimer = 0.0f;
@@ -47,6 +49,11 @@ void AelorinSoulCataclysmState::OnStateEnter()
 	if (!m_aelorinUI)
 	{
 		Debug::error("[AelorinSoulCataclysmState] AelorinUI not found.");
+	}
+
+	if (!m_lavaController)
+	{
+		Debug::error("[AelorinSoulCataclysmState] AelorinLavaController not found.");
 	}
 
 	m_attackExecutor = m_controller->getAttackExecutor();
@@ -90,6 +97,11 @@ void AelorinSoulCataclysmState::OnStateEnter()
 			config->m_soulCataclysmSafeZoneRadius,
 			config->m_soulCataclysmChannelDuration
 		);
+	}
+
+	if (m_lavaController)
+	{
+		m_lavaController->StartLavaRise(10.736f, 10.0f);
 	}
 
 	Debug::log("[AelorinSoulCataclysmState] ENTER");
@@ -228,6 +240,11 @@ void AelorinSoulCataclysmState::finishCataclysm()
 	}
 
 	m_completed = true;
+
+	if(m_lavaController)
+	{
+		m_lavaController->StartLavaFall(7.0f, 10.0f);
+	}
 
 	const bool sent = AnimationAPI::sendTrigger(m_animation, "ToExhaustion");
 	if (!sent)
