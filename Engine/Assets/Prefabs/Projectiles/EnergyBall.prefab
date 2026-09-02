@@ -1,6 +1,6 @@
 {
     "Version": 2,
-    "sourcePath": "Assets\\Prefabs\\Particles\\EnergyBall.prefab",
+    "sourcePath": "Assets\\Prefabs\\Projectiles\\EnergyBall.prefab",
     "Name": "EnergyBall",
     "Active": true,
     "Static": false,
@@ -26,7 +26,7 @@
     },
     "Components": [
         {
-            "UID": 12167277562891252813,
+            "UID": 620796709385259050,
             "ComponentType": "MODEL",
             "Active": true,
             "MeshAssetId": {
@@ -37,7 +37,7 @@
             "SkinAssetId": {
                 "uid": 0,
                 "libId": "",
-                "type": "DATA_CONTAINER"
+                "type": "UNKNOWN"
             },
             "Materials": [
                 {
@@ -49,11 +49,18 @@
             "Render Mode": 0
         },
         {
-            "UID": 7312920512202314285,
+            "UID": 3815101825241703487,
             "ComponentType": "SCRIPT",
             "Active": true,
             "ScriptName": "EnergyBallProjectile",
-            "ScriptFields": {}
+            "ScriptFields": {
+                "Energy Ball Particle Prefab Path": "Assets/Prefabs/Particles/VFXRemake/Enemies/Enemies_Level2/Summoner/PS_EnergyBall.prefab",
+                "Energy Ball Particle Prefab": {
+                    "uid": 7863957821145485724,
+                    "libId": "d4682459c46ce0df6983a7516393b6c1",
+                    "type": "PREFAB"
+                }
+            }
         }
     ],
     "Children": []

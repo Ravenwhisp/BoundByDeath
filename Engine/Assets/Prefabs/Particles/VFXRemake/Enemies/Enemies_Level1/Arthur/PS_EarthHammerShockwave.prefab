@@ -26,7 +26,7 @@
     },
     "Components": [
         {
-            "UID": 14808045183505371886,
+            "UID": 14363659946802742142,
             "ComponentType": "PARTICLE_SYSTEM",
             "Active": true,
             "TextureAssetId": {
@@ -93,12 +93,19 @@
                                 0.0,
                                 1.0,
                                 1.0
-                            ]
+                            ],
+                            "HDRColor": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "HDRIntensity": 0.0
                         },
                         {
                             "ModuleType": 5,
                             "VelocityType": "CONSTANT",
-                            "InitialVelocity": 0.0
+                            "InitialVelocity": 0.0,
+                            "Gravity": 0.0
                         },
                         {
                             "ModuleType": 6,
@@ -111,8 +118,8 @@
                             "ChangeSizeOverTime": true,
                             "EndScaleType": "CONSTANT",
                             "EndScale": [
-                                3.0,
-                                3.0,
+                                6.0,
+                                6.0,
                                 0.0
                             ]
                         },
@@ -135,7 +142,8 @@
                         {
                             "ModuleType": 9,
                             "RenderMode": "HORIZONTAL",
-                            "RenderLayer": 0
+                            "RenderLayer": 0,
+                            "BlendMode": "ALPHA"
                         }
                     ]
                 }

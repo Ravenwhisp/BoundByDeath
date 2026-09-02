@@ -26,7 +26,7 @@
     },
     "Components": [
         {
-            "UID": 15427257672195952905,
+            "UID": 16478885722423544323,
             "ComponentType": "PARTICLE_SYSTEM",
             "Active": true,
             "TextureAssetId": {
@@ -53,7 +53,7 @@
                         {
                             "ModuleType": 1,
                             "ShapeType": "HEMISPHERE",
-                            "Radius": 0.20000000298023224,
+                            "Radius": 1.0,
                             "RadiusThickness": 1.0,
                             "RadiusScale": 3.0
                         },
@@ -149,32 +149,39 @@
                                 0.046875,
                                 1.0,
                                 1.0
-                            ]
+                            ],
+                            "HDRColor": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "HDRIntensity": 0.0
                         },
                         {
                             "ModuleType": 5,
                             "VelocityType": "RANDOM_BETWEEN_TWO",
                             "InitialVelocity": 0.0,
-                            "InitialVelocity2": 0.10000000149011612
+                            "InitialVelocity2": 0.10000000149011612,
+                            "Gravity": 0.0
                         },
                         {
                             "ModuleType": 6,
                             "StartScaleType": "RANDOM_BETWEEN_TWO",
                             "StartScale": [
-                                0.20000000298023224,
-                                0.20000000298023224,
+                                1.0,
+                                1.0,
                                 0.0
                             ],
                             "StartScale2": [
-                                0.05000000074505806,
-                                0.05000000074505806,
+                                0.5,
+                                0.5,
                                 0.0
                             ],
                             "ChangeSizeOverTime": true,
                             "EndScaleType": "CONSTANT",
                             "EndScale": [
-                                0.10000000149011612,
-                                0.10000000149011612,
+                                0.5,
+                                0.5,
                                 0.0
                             ]
                         },
@@ -199,7 +206,8 @@
                         {
                             "ModuleType": 9,
                             "RenderMode": "BILLBOARD",
-                            "RenderLayer": 0
+                            "RenderLayer": 0,
+                            "BlendMode": "ALPHA"
                         }
                     ]
                 }

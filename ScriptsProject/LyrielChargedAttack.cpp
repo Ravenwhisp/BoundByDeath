@@ -11,6 +11,7 @@
 #include "PlayerState.h"
 #include "BreakableDamageable.h"
 #include "LyrielUI.h"
+#include "LyrielParticles.h"
 #include "LyrielConfig.h"
 #include "PlayerRotation.h"
 
@@ -30,6 +31,7 @@ void LyrielChargedAttack::Start()
     m_lyrielCharacter = dynamic_cast<LyrielCharacter*>(m_character);
     m_config = m_lyrielCharacter->getConfig();
     m_lyrielUI = GameObjectAPI::findScript<LyrielUI>(getOwner());
+    m_particles = GameObjectAPI::findScript<LyrielParticles>(getOwner());
 
     if (m_lyrielCharacter == nullptr)
     {
@@ -44,6 +46,11 @@ void LyrielChargedAttack::Start()
     if (m_lyrielUI == nullptr)
     {
         Debug::warn("[LyrielChargedAttack] LyrielUI not found.");
+    }
+
+    if (m_particles == nullptr)
+    {
+        Debug::warn("[LyrielChargedAttack] LyrielParticles not found.");
     }
 }
 
@@ -150,6 +157,11 @@ void LyrielChargedAttack::beginCharge()
     {
         sound->startChargedTenseLoop();
     }
+
+    if (m_particles != nullptr)
+    {
+        m_particles->SetChargeActive();
+    }
 }
 
 void LyrielChargedAttack::updateCharge()
@@ -183,6 +195,11 @@ void LyrielChargedAttack::updateCharge()
 void LyrielChargedAttack::releaseChargeAndShoot()
 {
     m_isCharging = false;
+
+    if (m_particles != nullptr)
+    {
+        m_particles->SetChargeInactive();
+    }
 
     resetChargingMovementSlowdown();
 

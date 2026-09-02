@@ -6,6 +6,7 @@
 #include "EnemyAttackExecutor.h"
 #include "ArthurUI.h"
 #include "ArthurSound.h"
+#include "ArthurParticles.h"
 #include "CameraShake.h"
 
 ArthurHeavySwipe::ArthurHeavySwipe(GameObject* owner)
@@ -20,6 +21,7 @@ void ArthurHeavySwipe::OnStateEnter()
     m_animation = AnimationAPI::getAnimationComponent(getOwner());
     m_arthurUI = GameObjectAPI::findScript<ArthurUI>(getOwner());
     m_arthurSound = GameObjectAPI::findScript<ArthurSound>(getOwner());
+    m_arthurParticles = GameObjectAPI::findScript<ArthurParticles>(getOwner());
 
     GameObject* cameraObject = SceneAPI::getDefaultCameraGameObject();
     m_cameraShake = cameraObject ? GameObjectAPI::findScript<CameraShake>(cameraObject) : nullptr;
@@ -174,6 +176,17 @@ void ArthurHeavySwipe::tryApplyHit(int hitIndex)
     Vector3 forward = TransformAPI::getForward(ownerTransform);
 
     const int hits = m_attackExecutor->applyDamageInCone(center, forward, m_arthurController->m_attackConfig.get()->m_heavySwipeRange, m_arthurController->m_attackConfig.get()->m_heavySwipeHalfAngleDegrees, m_arthurController->m_attackConfig.get()->m_heavySwipeDamage, "HeavySwipe");
+
+    if (m_arthurParticles)
+    {
+        m_arthurParticles->playHeavySwipeHitsInCone(
+            center,
+            forward,
+            m_arthurController->m_attackConfig.get()->m_heavySwipeRange,
+            m_arthurController->m_attackConfig.get()->m_heavySwipeHalfAngleDegrees,
+            hits
+        );
+    }
 
     if (m_arthurSound)
     {

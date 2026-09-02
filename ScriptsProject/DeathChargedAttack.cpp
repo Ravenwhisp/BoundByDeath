@@ -90,6 +90,11 @@ void DeathChargedAttack::startCharging()
     setAbilityLocked(true);
     applyChargingMovementSlowdown(m_config->m_chargedMovementSlowdownPercentage);
 
+    if (m_particles != nullptr)
+    {
+        m_particles->SetChargeActive();
+    }
+
     DeathSound* sound = m_deathCharacter != nullptr ? m_deathCharacter->getSound() : nullptr;
     if (sound != nullptr)
         sound->startChargeLoop();
@@ -130,6 +135,12 @@ void DeathChargedAttack::fireAttack()
     notifyAbilitySuccessfullyStarted();
 
     m_isCharging = false;
+
+    if (m_particles != nullptr)
+    {
+        m_particles->SetChargeInactive();
+    }
+
     resetChargingMovementSlowdown();
     m_chargeTime = 0.0f;
 
