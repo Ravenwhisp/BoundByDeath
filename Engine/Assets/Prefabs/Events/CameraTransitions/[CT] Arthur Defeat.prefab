@@ -1,0 +1,381 @@
+{
+    "Version": 2,
+    "sourcePath": "Assets\\Prefabs\\Events\\CameraTransitions\\[CT] Arthur Defeat.prefab",
+    "Name": "[CT] Arthur Defeat",
+    "Active": true,
+    "Static": false,
+    "Layer": "DEFAULT",
+    "Tag": "DEFAULT",
+    "Transform": {
+        "Position": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "Rotation": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ],
+        "Scale": [
+            1.0,
+            1.0,
+            1.0
+        ]
+    },
+    "Components": [
+        {
+            "UID": 9200000000000000018,
+            "ComponentType": "SCRIPT",
+            "Active": true,
+            "ScriptName": "CameraTransitionEvent",
+            "ScriptFields": {
+                "Transition Mode": 0,
+                "Lock Gameplay Input": true,
+                "Make Players Invulnerable": true,
+                "Fade HUD": true,
+                "Return Duration": 1.0
+            }
+        }
+    ],
+    "Children": [
+        {
+            "Name": "CameraPoints",
+            "Active": true,
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [],
+            "Children": [
+                {
+                    "Name": "Point1",
+                    "Active": true,
+                    "Static": false,
+                    "Layer": "DEFAULT",
+                    "Tag": "DEFAULT",
+                    "Transform": {
+                        "Position": [
+                            -64.30000305175781,
+                            -3.9200000762939453,
+                            127.98999786376953
+                        ],
+                        "Rotation": [
+                            0.3535533845424652,
+                            -0.3535533845424652,
+                            0.1464466005563736,
+                            0.8535534143447876
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "Components": [
+                        {
+                            "UID": 9200000000000000025,
+                            "ComponentType": "SCRIPT",
+                            "Active": true,
+                            "ScriptName": "CameraTransitionStep",
+                            "ScriptFields": {
+                                "Move Mode": 1,
+                                "Move Duration": 1.0,
+                                "Hold Duration": 2.5,
+                                "Use FOV Transition": false,
+                                "Target FOV": 48.0
+                            }
+                        },
+                        {
+                            "UID": 9200000000000000026,
+                            "ComponentType": "CAMERA",
+                            "Active": true,
+                            "HorizontalFOV": 48.0,
+                            "NearPlane": 0.5,
+                            "FarPlane": 500.0,
+                            "AspectRatio": 1.7777777910232544
+                        },
+                        {
+                            "UID": 9200000000000000027,
+                            "ComponentType": "SCRIPT",
+                            "Active": true,
+                            "ScriptName": "PlayAnimationAction",
+                            "ScriptFields": {
+                                "Trigger Moment": 1,
+                                "Start Delay": 0.0,
+                                "Animation Target": 778122098755891756,
+                                "Clip Name": "",
+                                "Loop": false,
+                                "Duration": 2.5
+                            }
+                        }
+                    ],
+                    "Children": []
+                },
+                {
+                    "Name": "Point2",
+                    "Active": true,
+                    "Static": false,
+                    "Layer": "DEFAULT",
+                    "Tag": "DEFAULT",
+                    "Transform": {
+                        "Position": [
+                            -76.62000274658203,
+                            -1.2899999618530273,
+                            125.9800033569336
+                        ],
+                        "Rotation": [
+                            0.3535533845424652,
+                            -0.3535533845424652,
+                            0.1464466005563736,
+                            0.8535534143447876
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "Components": [
+                        {
+                            "UID": 9200000000000000030,
+                            "ComponentType": "SCRIPT",
+                            "Active": true,
+                            "ScriptName": "CameraTransitionStep",
+                            "ScriptFields": {
+                                "Move Mode": 1,
+                                "Move Duration": 3.0,
+                                "Hold Duration": 1.0,
+                                "Use FOV Transition": false,
+                                "Target FOV": 48.0
+                            }
+                        },
+                        {
+                            "UID": 9200000000000000031,
+                            "ComponentType": "CAMERA",
+                            "Active": true,
+                            "HorizontalFOV": 48.0,
+                            "NearPlane": 0.5,
+                            "FarPlane": 500.0,
+                            "AspectRatio": 1.7777777910232544
+                        }
+                    ],
+                    "Children": []
+                },
+                {
+                    "Name": "Point3",
+                    "Active": true,
+                    "Static": false,
+                    "Layer": "DEFAULT",
+                    "Tag": "DEFAULT",
+                    "Transform": {
+                        "Position": [
+                            -76.62000274658203,
+                            -1.2899999618530273,
+                            125.9800033569336
+                        ],
+                        "Rotation": [
+                            0.3535533845424652,
+                            -0.3535533845424652,
+                            0.1464466005563736,
+                            0.8535534143447876
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "Components": [
+                        {
+                            "UID": 9200000000000000406,
+                            "ComponentType": "SCRIPT",
+                            "Active": true,
+                            "ScriptName": "CameraTransitionStep",
+                            "ScriptFields": {
+                                "Move Mode": 1,
+                                "Move Duration": 0.10000000149011612,
+                                "Hold Duration": 3.5,
+                                "Use FOV Transition": false,
+                                "Target FOV": 48.0
+                            }
+                        },
+                        {
+                            "UID": 9200000000000000407,
+                            "ComponentType": "CAMERA",
+                            "Active": true,
+                            "HorizontalFOV": 48.0,
+                            "NearPlane": 0.5,
+                            "FarPlane": 500.0,
+                            "AspectRatio": 1.7777777910232544
+                        },
+                        {
+                            "UID": 9200000000000000408,
+                            "ComponentType": "SCRIPT",
+                            "Active": true,
+                            "ScriptName": "MoveObjectToTransformAction",
+                            "ScriptFields": {
+                                "Trigger Moment": 1,
+                                "Start Delay": 0.0,
+                                "Object To Move": 16300621772314671924,
+                                "Target Transform": 9200000000000000403,
+                                "Move Duration": 2.0,
+                                "Play Animation While Moving": false,
+                                "Moving Clip Name": "",
+                                "Clear Animation On Finish": true
+                            }
+                        },
+                        {
+                            "UID": 1770696704029993980,
+                            "ComponentType": "SCRIPT",
+                            "Active": true,
+                            "ScriptName": "MoveObjectToTransformAction",
+                            "ScriptFields": {
+                                "Trigger Moment": 1,
+                                "Start Delay": 0.5,
+                                "Object To Move": 10663616037795538768,
+                                "Target Transform": 3955786148634924134,
+                                "Move Duration": 2.0,
+                                "Play Animation While Moving": false,
+                                "Moving Clip Name": "",
+                                "Clear Animation On Finish": true
+                            }
+                        },
+                        {
+                            "UID": 10137978946938821969,
+                            "ComponentType": "SCRIPT",
+                            "Active": true,
+                            "ScriptName": "MoveObjectToTransformAction",
+                            "ScriptFields": {
+                                "Trigger Moment": 1,
+                                "Start Delay": 1.0,
+                                "Object To Move": 5384960042103715542,
+                                "Target Transform": 4854100298496258483,
+                                "Move Duration": 2.0,
+                                "Play Animation While Moving": false,
+                                "Moving Clip Name": "",
+                                "Clear Animation On Finish": true
+                            }
+                        },
+                        {
+                            "UID": 7509170088643692910,
+                            "ComponentType": "SCRIPT",
+                            "Active": true,
+                            "ScriptName": "MoveObjectToTransformAction",
+                            "ScriptFields": {
+                                "Trigger Moment": 1,
+                                "Start Delay": 1.0,
+                                "Object To Move": 7746065323032628185,
+                                "Target Transform": 4854100298496258483,
+                                "Move Duration": 2.0,
+                                "Play Animation While Moving": false,
+                                "Moving Clip Name": "",
+                                "Clear Animation On Finish": true
+                            }
+                        }
+                    ],
+                    "Children": []
+                }
+            ]
+        },
+        {
+            "Name": "ThroneLeftTarget",
+            "Active": true,
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    -81.62606811523438,
+                    -10.0,
+                    134.95706176757813
+                ],
+                "Rotation": [
+                    0.0,
+                    0.7071068286895752,
+                    0.0,
+                    0.7071067094802856
+                ],
+                "Scale": [
+                    0.9999861717224121,
+                    1.0,
+                    0.9999861717224121
+                ]
+            },
+            "Components": [],
+            "Children": []
+        },
+        {
+            "Name": "FrontWallTarget",
+            "Active": true,
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    -83.61499786376953,
+                    -16.093000411987305,
+                    134.9810028076172
+                ],
+                "Rotation": [
+                    0.0,
+                    0.7071068286895752,
+                    0.0,
+                    0.7071067094802856
+                ],
+                "Scale": [
+                    0.9999903440475464,
+                    1.0,
+                    0.9999903440475464
+                ]
+            },
+            "Components": [],
+            "Children": []
+        },
+        {
+            "Name": "BackWallTarget",
+            "Active": true,
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    -90.11599731445313,
+                    -16.593000411987305,
+                    134.9810028076172
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.7071068286895752,
+                    0.0,
+                    0.7071067690849304
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [],
+            "Children": []
+        }
+    ]
+}

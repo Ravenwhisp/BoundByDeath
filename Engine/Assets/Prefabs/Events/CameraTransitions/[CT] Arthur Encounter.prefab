@@ -1,0 +1,213 @@
+{
+    "Version": 2,
+    "sourcePath": "Assets\\Prefabs\\Events\\CameraTransitions\\[CT] Arthur Encounter.prefab",
+    "Name": "[CT] Arthur Encounter",
+    "Active": true,
+    "Static": false,
+    "Layer": "DEFAULT",
+    "Tag": "DEFAULT",
+    "Transform": {
+        "Position": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "Rotation": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ],
+        "Scale": [
+            1.0,
+            1.0,
+            1.0
+        ]
+    },
+    "Components": [
+        {
+            "UID": 9200000000000000001,
+            "ComponentType": "SCRIPT",
+            "Active": true,
+            "ScriptName": "CameraTransitionEvent",
+            "ScriptFields": {
+                "Transition Mode": 0,
+                "Lock Gameplay Input": true,
+                "Make Players Invulnerable": true,
+                "Fade HUD": true,
+                "Return Duration": 1.0
+            }
+        }
+    ],
+    "Children": [
+        {
+            "Name": "CameraPoints",
+            "Active": true,
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [],
+            "Children": [
+                {
+                    "Name": "Point1",
+                    "Active": true,
+                    "Static": false,
+                    "Layer": "DEFAULT",
+                    "Tag": "DEFAULT",
+                    "Transform": {
+                        "Position": [
+                            -53.400001525878906,
+                            12.880000114440918,
+                            117.08999633789063
+                        ],
+                        "Rotation": [
+                            0.3535533845424652,
+                            -0.3535533845424652,
+                            0.1464466005563736,
+                            0.8535534143447876
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "Components": [
+                        {
+                            "UID": 9200000000000000008,
+                            "ComponentType": "SCRIPT",
+                            "Active": true,
+                            "ScriptName": "CameraTransitionStep",
+                            "ScriptFields": {
+                                "Move Mode": 1,
+                                "Move Duration": 2.0,
+                                "Hold Duration": 1.5,
+                                "Use FOV Transition": false,
+                                "Target FOV": 48.0
+                            }
+                        },
+                        {
+                            "UID": 9200000000000000009,
+                            "ComponentType": "CAMERA",
+                            "Active": true,
+                            "HorizontalFOV": 48.0,
+                            "NearPlane": 0.5,
+                            "FarPlane": 500.0,
+                            "AspectRatio": 1.7777777910232544
+                        }
+                    ],
+                    "Children": []
+                },
+                {
+                    "Name": "Point2",
+                    "Active": true,
+                    "Static": false,
+                    "Layer": "DEFAULT",
+                    "Tag": "DEFAULT",
+                    "Transform": {
+                        "Position": [
+                            -64.0,
+                            -4.119999885559082,
+                            127.69000244140625
+                        ],
+                        "Rotation": [
+                            0.3535533845424652,
+                            -0.3535533845424652,
+                            0.1464466005563736,
+                            0.8535534143447876
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "Components": [
+                        {
+                            "UID": 9200000000000000012,
+                            "ComponentType": "SCRIPT",
+                            "Active": true,
+                            "ScriptName": "CameraTransitionStep",
+                            "ScriptFields": {
+                                "Move Mode": 1,
+                                "Move Duration": 1.5,
+                                "Hold Duration": 2.5,
+                                "Use FOV Transition": false,
+                                "Target FOV": 48.0
+                            }
+                        },
+                        {
+                            "UID": 9200000000000000013,
+                            "ComponentType": "CAMERA",
+                            "Active": true,
+                            "HorizontalFOV": 48.0,
+                            "NearPlane": 0.5,
+                            "FarPlane": 500.0,
+                            "AspectRatio": 1.7777777910232544
+                        },
+                        {
+                            "UID": 9200000000000000015,
+                            "ComponentType": "SCRIPT",
+                            "Active": true,
+                            "ScriptName": "PlayAnimationAction",
+                            "ScriptFields": {
+                                "Trigger Moment": 2,
+                                "Start Delay": 0.20000000298023224,
+                                "Animation Target": 778122098755891756,
+                                "Clip Name": "",
+                                "Loop": false,
+                                "Duration": 2.0
+                            }
+                        }
+                    ],
+                    "Children": []
+                }
+            ]
+        },
+        {
+            "Name": "ArthurEntranceTarget",
+            "Active": true,
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    -69.0,
+                    -11.119999885559082,
+                    132.69000244140625
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [],
+            "Children": []
+        }
+    ]
+}
