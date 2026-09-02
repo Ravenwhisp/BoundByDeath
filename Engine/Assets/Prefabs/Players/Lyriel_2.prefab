@@ -1,0 +1,2564 @@
+{
+    "Version": 2,
+    "sourcePath": "Assets\\Prefabs\\Players\\Lyriel_2.prefab",
+    "Name": "Lyriel",
+    "Active": true,
+    "Static": false,
+    "Layer": "DEFAULT",
+    "Tag": "PLAYER",
+    "Transform": {
+        "Position": [
+            9.522283554077148,
+            1.4107118844985962,
+            29.579275131225586
+        ],
+        "Rotation": [
+            -0.0,
+            0.0,
+            -0.0,
+            1.0
+        ],
+        "Scale": [
+            1.0,
+            1.0,
+            1.0
+        ]
+    },
+    "Components": [
+        {
+            "UID": 14413652627432396355,
+            "ComponentType": "ANIMATION",
+            "Active": true,
+            "StateMachineUID": {
+                "uid": 777067863971163611,
+                "libId": "89cd552fbcea2badd8d2f4d280210797",
+                "type": "ANIMATION_STATE_MACHINE"
+            },
+            "AnimationSourceUID": {
+                "uid": 0,
+                "libId": "",
+                "type": "ANIMATION"
+            },
+            "PlayOnStart": true,
+            "ApplyScale": false,
+            "ForceWorldAfterApply": true
+        },
+        {
+            "UID": 5255364326591347785,
+            "ComponentType": "SCRIPT",
+            "Active": true,
+            "ScriptName": "PlayerController",
+            "ScriptFields": {
+                "Player Index": 1,
+                "God Mode": false
+            }
+        },
+        {
+            "UID": 13273095133190690114,
+            "ComponentType": "SCRIPT",
+            "Active": true,
+            "ScriptName": "PlayerMovement",
+            "ScriptFields": {
+                "Player Type": 0,
+                "Move Speed": 3.5,
+                "Constrain To NavMesh": true,
+                "Nav Extents": [
+                    2.0,
+                    4.0,
+                    2.0
+                ]
+            }
+        },
+        {
+            "UID": 3963684577182289275,
+            "ComponentType": "SCRIPT",
+            "Active": true,
+            "ScriptName": "PlayerRotation",
+            "ScriptFields": {
+                "Turn Speed (deg/s)": 720.0
+            }
+        },
+        {
+            "UID": 16738551237847756101,
+            "ComponentType": "SCRIPT",
+            "Active": true,
+            "ScriptName": "PlayerDamageable",
+            "ScriptFields": {
+                "Max HP": 200.0,
+                "Health Slider": 11807308055134515393,
+                "Health Slider 2": 14799380608339418362,
+                "UI Update Time (Slider 2)": 1.0,
+                "UI Wait Time (Slider 2)": 0.6000000238418579,
+                "Health Glow": 10683445822567039365,
+                "Heartbeat Threshold": 0.30000001192092896,
+                "Mesh Renderer": 2296724506962632860,
+                "Damage Highlight Speed": 1.0
+            }
+        },
+        {
+            "UID": 9601404892397315605,
+            "ComponentType": "SCRIPT",
+            "Active": true,
+            "ScriptName": "PlayerTargetController",
+            "ScriptFields": {
+                "Target Range": 8.0,
+                "Target Cone Angle": 50.0,
+                "Angle Weight": 0.8500000238418579,
+                "Distance Weight": 0.15000000596046448,
+                "Switch Margin": 0.15000000596046448,
+                "Switch Cooldown": 0.25
+            }
+        },
+        {
+            "UID": 5847377815722299779,
+            "ComponentType": "SCRIPT",
+            "Active": true,
+            "ScriptName": "PlayerState",
+            "ScriptFields": {}
+        },
+        {
+            "UID": 4972516726167857950,
+            "ComponentType": "SCRIPT",
+            "Active": true,
+            "ScriptName": "PlayerDownState",
+            "ScriptFields": {
+                "Self Revive Time": 10.0,
+                "Assist Radius": 1.5,
+                "Assist Speed Multiplier": 2.0,
+                "Revive HP": 50.0,
+                "Teammate Transform": 16858939129400802547,
+                "Downed Sprite Transform": 5325312057202991072
+            }
+        },
+        {
+            "UID": 1521830558643290217,
+            "ComponentType": "SCRIPT",
+            "Active": true,
+            "ScriptName": "PlayerStunState",
+            "ScriptFields": {}
+        },
+        {
+            "UID": 9582549970651370498,
+            "ComponentType": "SCRIPT",
+            "Active": true,
+            "ScriptName": "LyrielCharacter",
+            "ScriptFields": {
+                "Lyriel Config": {
+                    "uid": 14804353614806962425,
+                    "libId": "6a6064a402f80fba1903abb2e8ac24f4",
+                    "type": "DATA_CONTAINER"
+                },
+                "Arrow Spawn Child Name": "ArrowSpawn"
+            }
+        },
+        {
+            "UID": 12548231841197928188,
+            "ComponentType": "SCRIPT",
+            "Active": true,
+            "ScriptName": "LyrielUI",
+            "ScriptFields": {
+                "Basic Attack Cooldown UI": 0,
+                "Charged Attack Cooldown UI": 7153592802156577370,
+                "Ability Cooldown UI": 11722555987665055337,
+                "Dash Cooldown UI": 7564997437559120436,
+                "Cooldown End Time": 1.0,
+                "Charged Attack UI": 7583186410258693041,
+                "Arrow Volley UI": 6970298795764427921,
+                "Charge 1 UI": 12952113309768478083,
+                "Charge 2 UI": 15373360302345157834,
+                "Charge 3 UI": 4690175269390567074,
+                "Charged Scale": 1.0,
+                "Empty Scale": 0.5,
+                "UI Scale Speed": 3.0
+            }
+        },
+        {
+            "UID": 11919529036538968054,
+            "ComponentType": "SCRIPT",
+            "Active": true,
+            "ScriptName": "LyrielBasicAttack",
+            "ScriptFields": {
+                "UI Slot": 0
+            }
+        },
+        {
+            "UID": 11643555535969008567,
+            "ComponentType": "SCRIPT",
+            "Active": true,
+            "ScriptName": "LyrielChargedAttack",
+            "ScriptFields": {
+                "UI Slot": 1
+            }
+        },
+        {
+            "UID": 5668886285396298404,
+            "ComponentType": "SCRIPT",
+            "Active": true,
+            "ScriptName": "LyrielArrowVolley",
+            "ScriptFields": {
+                "UI Slot": 2
+            }
+        },
+        {
+            "UID": 11278313077691165418,
+            "ComponentType": "SCRIPT",
+            "Active": true,
+            "ScriptName": "LyrielDash",
+            "ScriptFields": {
+                "UI Slot": 3
+            }
+        },
+        {
+            "UID": 15090091026904199520,
+            "ComponentType": "SCRIPT",
+            "Active": true,
+            "ScriptName": "ProjectilePool",
+            "ScriptFields": {
+                "Max Projectiles": 8,
+                "Projectile Prefab": {
+                    "uid": 3489519555909484788,
+                    "libId": "bd74170f3174124b5076afda03c08503",
+                    "type": "PREFAB"
+                }
+            }
+        },
+        {
+            "UID": 14318639074181404303,
+            "ComponentType": "SCRIPT",
+            "Active": true,
+            "ScriptName": "PlayerAnimationController",
+            "ScriptFields": {
+                "Idle state name": "Elf_arbalester_Idle",
+                "Move state name": "Elf_arbalester_Run",
+                "Dash state name": "Elf_arbalester_Run",
+                "Attack state name": "Elf_arbalester_Attack",
+                "Damaged state names": [
+                    "Elf_arbalester_Damage"
+                ],
+                "Downed state name": "Elf_arbalester_Death",
+                "Death state name": "Elf_arbalester_Death",
+                "Default blend time": 0.25,
+                "Attack blend time": 0.15000000596046448,
+                "Dash blend time": 0.05999999865889549,
+                "Damaged blend time": 0.10000000149011612,
+                "Downed blend time": 0.10000000149011612,
+                "Death blend time": 0.10000000149011612,
+                "Dash anim duration": 1.0,
+                "Dash anim start %": 0.30000001192092896
+            }
+        },
+        {
+            "UID": 10504447755180242968,
+            "ComponentType": "TRIGGER",
+            "Active": true,
+            "Shape": "Box",
+            "Center": [
+                0.15531444549560547,
+                0.5140420794487,
+                -0.030968666076660156
+            ],
+            "Size": [
+                1.3639049530029297,
+                1.0287200212478638,
+                0.3885936737060547
+            ]
+        },
+        {
+            "UID": 18050630391751669138,
+            "ComponentType": "SCRIPT",
+            "Active": true,
+            "ScriptName": "HeartbeatHaptic",
+            "ScriptFields": {
+                "Heartbeat Intensity": 1.0
+            }
+        },
+        {
+            "UID": 6492721575209967628,
+            "ComponentType": "SOUND_SOURCE",
+            "Active": true
+        },
+        {
+            "UID": 960818706364132969,
+            "ComponentType": "SCRIPT",
+            "Active": true,
+            "ScriptName": "LyrielSound",
+            "ScriptFields": {}
+        },
+        {
+            "UID": 1355841675909281774,
+            "ComponentType": "SCRIPT",
+            "Active": true,
+            "ScriptName": "LyrielParticles",
+            "ScriptFields": {
+                "Dash": 493398076632057800
+            }
+        },
+        {
+            "UID": 6894923481231074528,
+            "ComponentType": "SCRIPT",
+            "Active": true,
+            "ScriptName": "CharacterAnimations",
+            "ScriptFields": {
+                "Basic Combo States": [
+                    "Elf_arbalester_Attack"
+                ],
+                "Basic Recovery State": "",
+                "Basic Speed": 1.0,
+                "Basic Blend In": 0.15000000596046448,
+                "Basic Action %": 0.3499999940395355,
+                "Basic Recover %": 0.8999999761581421,
+                "Charged State": "Elf_arbalester_Attack",
+                "Charged Speed": 1.0,
+                "Charged Blend In": 0.15000000596046448,
+                "Charged Action %": 0.5,
+                "Charged Recover %": 0.8999999761581421,
+                "Charged Hold %": 0.4000000059604645,
+                "Special State": "Elf_arbalester_Attack",
+                "Special Speed": 1.0,
+                "Special Blend In": 0.15000000596046448,
+                "Special Action %": 0.3499999940395355,
+                "Special Recover %": 0.8999999761581421,
+                "Shadow State": "",
+                "Shadow Speed": 1.0,
+                "Shadow Blend In": 0.15000000596046448,
+                "Shadow Action %": 0.3499999940395355,
+                "Shadow Recover %": 0.8999999761581421
+            }
+        }
+    ],
+    "Children": [
+        {
+            "Name": "Elf_arbalester",
+            "Active": true,
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0,
+                    1.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [
+                {
+                    "UID": 3619857893315840468,
+                    "ComponentType": "MODEL",
+                    "Active": true,
+                    "MeshAssetId": {
+                        "uid": 14635568674677801531,
+                        "libId": "50f5031146ba250012a83fb0507f36c0",
+                        "type": "MESH"
+                    },
+                    "SkinAssetId": {
+                        "uid": 16161442646977434278,
+                        "libId": "a153d0b74ebb99af0520891a9b45a25a",
+                        "type": "SKIN"
+                    },
+                    "Materials": [
+                        {
+                            "uid": 764602938670521024,
+                            "libId": "252f103f755dc8c2e2c477bda8b19f3f",
+                            "type": "MATERIAL"
+                        }
+                    ],
+                    "Render Mode": 0
+                },
+                {
+                    "UID": 18413932039259201154,
+                    "ComponentType": "DAMAGE_HIGHLIGHT",
+                    "Active": true,
+                    "DamageHighlight": 0.0,
+                    "CenterColor": [
+                        1.0,
+                        0.3921568691730499,
+                        0.3921568691730499
+                    ],
+                    "RimColor": [
+                        1.0,
+                        0.19607843458652496,
+                        0.19607843458652496
+                    ],
+                    "RimIntensity": 25.0
+                }
+            ],
+            "Children": []
+        },
+        {
+            "Name": "bones",
+            "Active": true,
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0,
+                    1.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [],
+            "Children": [
+                {
+                    "Name": "body",
+                    "Active": true,
+                    "Static": false,
+                    "Layer": "DEFAULT",
+                    "Tag": "DEFAULT",
+                    "Transform": {
+                        "Position": [
+                            -0.002570000011473894,
+                            0.3708021938800812,
+                            -0.06528792530298233
+                        ],
+                        "Rotation": [
+                            0.03895392641425133,
+                            -0.32389843463897705,
+                            0.013348684646189213,
+                            0.9451953768730164
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "Components": [],
+                    "Children": [
+                        {
+                            "Name": "chest",
+                            "Active": true,
+                            "Static": false,
+                            "Layer": "DEFAULT",
+                            "Tag": "DEFAULT",
+                            "Transform": {
+                                "Position": [
+                                    -2.3980815637837487e-16,
+                                    0.14274147152900696,
+                                    0.007417409215122461
+                                ],
+                                "Rotation": [
+                                    0.11757294833660126,
+                                    -0.11625969409942627,
+                                    0.023406077176332474,
+                                    0.985957682132721
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ]
+                            },
+                            "Components": [],
+                            "Children": [
+                                {
+                                    "Name": "head",
+                                    "Active": true,
+                                    "Static": false,
+                                    "Layer": "DEFAULT",
+                                    "Tag": "DEFAULT",
+                                    "Transform": {
+                                        "Position": [
+                                            -8.881783998477905e-18,
+                                            0.179299995303154,
+                                            0.00022999999055173248
+                                        ],
+                                        "Rotation": [
+                                            0.02788768894970417,
+                                            0.290825754404068,
+                                            -0.05391525477170944,
+                                            0.95484858751297
+                                        ],
+                                        "Scale": [
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ]
+                                    },
+                                    "Components": [],
+                                    "Children": []
+                                },
+                                {
+                                    "Name": "arm_1_L",
+                                    "Active": true,
+                                    "Static": false,
+                                    "Layer": "DEFAULT",
+                                    "Tag": "DEFAULT",
+                                    "Transform": {
+                                        "Position": [
+                                            0.08696991950273514,
+                                            0.09748287498950958,
+                                            -0.006478442344814539
+                                        ],
+                                        "Rotation": [
+                                            -0.6049870848655701,
+                                            0.2875944674015045,
+                                            -0.4982609748840332,
+                                            0.5504689812660217
+                                        ],
+                                        "Scale": [
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ]
+                                    },
+                                    "Components": [],
+                                    "Children": [
+                                        {
+                                            "Name": "arm_2_L",
+                                            "Active": true,
+                                            "Static": false,
+                                            "Layer": "DEFAULT",
+                                            "Tag": "DEFAULT",
+                                            "Transform": {
+                                                "Position": [
+                                                    0.14420633018016815,
+                                                    0.010767519474029541,
+                                                    -0.0015679050702601671
+                                                ],
+                                                "Rotation": [
+                                                    2.0782166773482297e-17,
+                                                    4.806873718564824e-19,
+                                                    -0.47308772802352905,
+                                                    0.8810153603553772
+                                                ],
+                                                "Scale": [
+                                                    1.0,
+                                                    1.0,
+                                                    1.0
+                                                ]
+                                            },
+                                            "Components": [],
+                                            "Children": [
+                                                {
+                                                    "Name": "hand_L_1",
+                                                    "Active": true,
+                                                    "Static": false,
+                                                    "Layer": "DEFAULT",
+                                                    "Tag": "DEFAULT",
+                                                    "Transform": {
+                                                        "Position": [
+                                                            0.14411228895187378,
+                                                            0.0007049119449220598,
+                                                            -0.0015679050702601671
+                                                        ],
+                                                        "Rotation": [
+                                                            -2.943861022948851e-17,
+                                                            -2.596367079826754e-17,
+                                                            -0.06259891390800476,
+                                                            0.9980387687683105
+                                                        ],
+                                                        "Scale": [
+                                                            1.0,
+                                                            1.0,
+                                                            1.0
+                                                        ]
+                                                    },
+                                                    "Components": [],
+                                                    "Children": [
+                                                        {
+                                                            "Name": "hand_L_2",
+                                                            "Active": true,
+                                                            "Static": false,
+                                                            "Layer": "DEFAULT",
+                                                            "Tag": "DEFAULT",
+                                                            "Transform": {
+                                                                "Position": [
+                                                                    0.05375789478421211,
+                                                                    0.0011203876929357648,
+                                                                    -0.007119128946214914
+                                                                ],
+                                                                "Rotation": [
+                                                                    -0.7586235404014587,
+                                                                    0.0424993596971035,
+                                                                    -0.03788059204816818,
+                                                                    0.6490371823310852
+                                                                ],
+                                                                "Scale": [
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0
+                                                                ]
+                                                            },
+                                                            "Components": [],
+                                                            "Children": []
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "Name": "joint1",
+                                    "Active": true,
+                                    "Static": false,
+                                    "Layer": "DEFAULT",
+                                    "Tag": "DEFAULT",
+                                    "Transform": {
+                                        "Position": [
+                                            0.037950001657009125,
+                                            0.0637499988079071,
+                                            -0.10988999903202057
+                                        ],
+                                        "Rotation": [
+                                            0.1698586791753769,
+                                            0.05645254626870155,
+                                            -0.0740661695599556,
+                                            0.9810582995414734
+                                        ],
+                                        "Scale": [
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ]
+                                    },
+                                    "Components": [],
+                                    "Children": []
+                                },
+                                {
+                                    "Name": "arm_1_R",
+                                    "Active": true,
+                                    "Static": false,
+                                    "Layer": "DEFAULT",
+                                    "Tag": "DEFAULT",
+                                    "Transform": {
+                                        "Position": [
+                                            -0.0873720720410347,
+                                            0.09748253971338272,
+                                            -0.006478502415120602
+                                        ],
+                                        "Rotation": [
+                                            0.8518015146255493,
+                                            0.3234706223011017,
+                                            0.08551894128322601,
+                                            0.40309736132621765
+                                        ],
+                                        "Scale": [
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ]
+                                    },
+                                    "Components": [],
+                                    "Children": [
+                                        {
+                                            "Name": "arm_2_R",
+                                            "Active": true,
+                                            "Static": false,
+                                            "Layer": "DEFAULT",
+                                            "Tag": "DEFAULT",
+                                            "Transform": {
+                                                "Position": [
+                                                    -0.1442061960697174,
+                                                    -0.010767510160803795,
+                                                    0.0015680105425417423
+                                                ],
+                                                "Rotation": [
+                                                    1.5331604056490706e-17,
+                                                    2.2764185819749183e-17,
+                                                    -0.7766084671020508,
+                                                    0.6299836039543152
+                                                ],
+                                                "Scale": [
+                                                    1.0,
+                                                    1.0,
+                                                    1.0
+                                                ]
+                                            },
+                                            "Components": [],
+                                            "Children": [
+                                                {
+                                                    "Name": "hand_R_1",
+                                                    "Active": true,
+                                                    "Static": false,
+                                                    "Layer": "DEFAULT",
+                                                    "Tag": "DEFAULT",
+                                                    "Transform": {
+                                                        "Position": [
+                                                            -0.14411263167858124,
+                                                            -0.0007049497799016535,
+                                                            0.001567301107570529
+                                                        ],
+                                                        "Rotation": [
+                                                            -2.2230582359939188e-18,
+                                                            -2.1587220304649532e-17,
+                                                            -0.06259891390800476,
+                                                            0.9980387687683105
+                                                        ],
+                                                        "Scale": [
+                                                            1.0,
+                                                            1.0,
+                                                            1.0
+                                                        ]
+                                                    },
+                                                    "Components": [],
+                                                    "Children": [
+                                                        {
+                                                            "Name": "hand_R_2",
+                                                            "Active": true,
+                                                            "Static": false,
+                                                            "Layer": "DEFAULT",
+                                                            "Tag": "DEFAULT",
+                                                            "Transform": {
+                                                                "Position": [
+                                                                    -0.053757235407829285,
+                                                                    -0.0011202575406059623,
+                                                                    0.007119039539247751
+                                                                ],
+                                                                "Rotation": [
+                                                                    -0.30137914419174194,
+                                                                    -0.15956774353981018,
+                                                                    -0.006583139766007662,
+                                                                    0.940034806728363
+                                                                ],
+                                                                "Scale": [
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0
+                                                                ]
+                                                            },
+                                                            "Components": [],
+                                                            "Children": []
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "Name": "plash_L_1",
+                                    "Active": true,
+                                    "Static": false,
+                                    "Layer": "DEFAULT",
+                                    "Tag": "DEFAULT",
+                                    "Transform": {
+                                        "Position": [
+                                            0.049799997359514236,
+                                            0.12982000410556793,
+                                            -0.06876000016927719
+                                        ],
+                                        "Rotation": [
+                                            0.23805350065231323,
+                                            -0.31265002489089966,
+                                            0.1972942352294922,
+                                            0.8981400728225708
+                                        ],
+                                        "Scale": [
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ]
+                                    },
+                                    "Components": [],
+                                    "Children": [
+                                        {
+                                            "Name": "plash_L_2",
+                                            "Active": true,
+                                            "Static": false,
+                                            "Layer": "DEFAULT",
+                                            "Tag": "DEFAULT",
+                                            "Transform": {
+                                                "Position": [
+                                                    0.00045999998110346496,
+                                                    -0.24122998118400574,
+                                                    0.036639999598264694
+                                                ],
+                                                "Rotation": [
+                                                    -0.444532185792923,
+                                                    0.029524944722652435,
+                                                    0.10856069624423981,
+                                                    0.8886698484420776
+                                                ],
+                                                "Scale": [
+                                                    1.0,
+                                                    1.0,
+                                                    1.0
+                                                ]
+                                            },
+                                            "Components": [],
+                                            "Children": [
+                                                {
+                                                    "Name": "plash_L_3",
+                                                    "Active": true,
+                                                    "Static": false,
+                                                    "Layer": "DEFAULT",
+                                                    "Tag": "DEFAULT",
+                                                    "Transform": {
+                                                        "Position": [
+                                                            0.01006999984383583,
+                                                            -0.19493000209331512,
+                                                            -0.06939999759197235
+                                                        ],
+                                                        "Rotation": [
+                                                            -0.011857611127197742,
+                                                            -0.006791668012738228,
+                                                            -0.11744683980941772,
+                                                            0.992985188961029
+                                                        ],
+                                                        "Scale": [
+                                                            1.0,
+                                                            1.0,
+                                                            1.0
+                                                        ]
+                                                    },
+                                                    "Components": [],
+                                                    "Children": []
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "Name": "hood",
+                                    "Active": true,
+                                    "Static": false,
+                                    "Layer": "DEFAULT",
+                                    "Tag": "DEFAULT",
+                                    "Transform": {
+                                        "Position": [
+                                            9.769962563761818e-17,
+                                            0.16862061619758606,
+                                            -0.036676619201898575
+                                        ],
+                                        "Rotation": [
+                                            0.14340925216674805,
+                                            2.5478476429445987e-17,
+                                            -1.7714746142841706e-17,
+                                            0.9896634817123413
+                                        ],
+                                        "Scale": [
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ]
+                                    },
+                                    "Components": [],
+                                    "Children": []
+                                },
+                                {
+                                    "Name": "plash_R_1",
+                                    "Active": true,
+                                    "Static": false,
+                                    "Layer": "DEFAULT",
+                                    "Tag": "DEFAULT",
+                                    "Transform": {
+                                        "Position": [
+                                            -0.049799997359514236,
+                                            0.12982000410556793,
+                                            -0.06876000016927719
+                                        ],
+                                        "Rotation": [
+                                            0.963440477848053,
+                                            0.13110831379890442,
+                                            -0.16545560956001282,
+                                            -0.16497758030891418
+                                        ],
+                                        "Scale": [
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ]
+                                    },
+                                    "Components": [],
+                                    "Children": [
+                                        {
+                                            "Name": "plash_R_2",
+                                            "Active": true,
+                                            "Static": false,
+                                            "Layer": "DEFAULT",
+                                            "Tag": "DEFAULT",
+                                            "Transform": {
+                                                "Position": [
+                                                    -0.00045999998110346496,
+                                                    0.24122998118400574,
+                                                    -0.036639999598264694
+                                                ],
+                                                "Rotation": [
+                                                    -0.405412495136261,
+                                                    -0.033261239528656006,
+                                                    0.15418608486652374,
+                                                    0.9004226922988892
+                                                ],
+                                                "Scale": [
+                                                    1.0,
+                                                    1.0,
+                                                    1.0
+                                                ]
+                                            },
+                                            "Components": [],
+                                            "Children": [
+                                                {
+                                                    "Name": "plash_R_3",
+                                                    "Active": true,
+                                                    "Static": false,
+                                                    "Layer": "DEFAULT",
+                                                    "Tag": "DEFAULT",
+                                                    "Transform": {
+                                                        "Position": [
+                                                            -0.011519999243319035,
+                                                            0.1958799958229065,
+                                                            0.06424999982118607
+                                                        ],
+                                                        "Rotation": [
+                                                            0.06849545985460281,
+                                                            0.16896483302116394,
+                                                            0.08594955503940582,
+                                                            0.9794753193855286
+                                                        ],
+                                                        "Scale": [
+                                                            1.0,
+                                                            1.0,
+                                                            1.0
+                                                        ]
+                                                    },
+                                                    "Components": [],
+                                                    "Children": []
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "Name": "lyriel_dash_trail_controller",
+                                    "Active": true,
+                                    "Static": false,
+                                    "Layer": "DEFAULT",
+                                    "Tag": "DEFAULT",
+                                    "Transform": {
+                                        "Position": [
+                                            -0.017999999225139618,
+                                            0.03200000151991844,
+                                            -0.14100000262260437
+                                        ],
+                                        "Rotation": [
+                                            0.4999956786632538,
+                                            -0.5000043511390686,
+                                            -0.5000043511390686,
+                                            0.499995619058609
+                                        ],
+                                        "Scale": [
+                                            1.000006079673767,
+                                            1.0000066757202148,
+                                            1.0000076293945313
+                                        ]
+                                    },
+                                    "Components": [
+                                        {
+                                            "UID": 3292236162563984790,
+                                            "ComponentType": "PREFAB_INSTANCE",
+                                            "Active": true,
+                                            "sourcePath": "Assets\\Prefabs\\Trails\\lyriel_dash_trail_controller.prefab",
+                                            "assetUID": 16860122038098711449
+                                        }
+                                    ],
+                                    "Children": [
+                                        {
+                                            "Name": "main_stream",
+                                            "Active": true,
+                                            "Static": false,
+                                            "Layer": "DEFAULT",
+                                            "Tag": "DEFAULT",
+                                            "Transform": {
+                                                "Position": [
+                                                    0.0,
+                                                    0.0,
+                                                    0.0
+                                                ],
+                                                "Rotation": [
+                                                    0.0,
+                                                    0.0,
+                                                    0.0,
+                                                    1.0
+                                                ],
+                                                "Scale": [
+                                                    0.9999998807907104,
+                                                    1.0,
+                                                    0.9999999403953552
+                                                ]
+                                            },
+                                            "Components": [
+                                                {
+                                                    "UID": 5013498545236026531,
+                                                    "ComponentType": "TRAIL",
+                                                    "Active": true,
+                                                    "StartWidth": 0.20000000298023224,
+                                                    "EndWidth": 0.0,
+                                                    "SpawnDistance": 0.15000000596046448,
+                                                    "PointLifetime": 0.5,
+                                                    "ColorOverTime": [
+                                                        {
+                                                            "IsAlphaMark": true,
+                                                            "Position": 4.245934346904196e-43,
+                                                            "Alpha": -4.604972839355469
+                                                        },
+                                                        {
+                                                            "IsAlphaMark": true,
+                                                            "Position": 4.245934346904196e-43,
+                                                            "Alpha": -4.603950500488281
+                                                        },
+                                                        {
+                                                            "IsAlphaMark": true,
+                                                            "Position": 4.245934346904196e-43,
+                                                            "Alpha": -4.604942321777344
+                                                        },
+                                                        {
+                                                            "IsAlphaMark": true,
+                                                            "Position": 4.245934346904196e-43,
+                                                            "Alpha": -33278153177803260000.0
+                                                        }
+                                                    ],
+                                                    "ColorCurve": [
+                                                        0.0,
+                                                        0.0,
+                                                        0.0,
+                                                        0.0
+                                                    ]
+                                                }
+                                            ],
+                                            "Children": []
+                                        },
+                                        {
+                                            "Name": "head_stream",
+                                            "Active": true,
+                                            "Static": false,
+                                            "Layer": "DEFAULT",
+                                            "Tag": "DEFAULT",
+                                            "Transform": {
+                                                "Position": [
+                                                    -0.26498115062713623,
+                                                    -0.000002205371856689453,
+                                                    0.05193138122558594
+                                                ],
+                                                "Rotation": [
+                                                    -2.0722492166669326e-8,
+                                                    9.779706822143908e-9,
+                                                    -5.2156146068682574e-8,
+                                                    1.0
+                                                ],
+                                                "Scale": [
+                                                    0.9999169111251831,
+                                                    0.9999924898147583,
+                                                    0.9999158978462219
+                                                ]
+                                            },
+                                            "Components": [
+                                                {
+                                                    "UID": 3558625361021376760,
+                                                    "ComponentType": "TRAIL",
+                                                    "Active": true,
+                                                    "StartWidth": 0.10000000149011612,
+                                                    "EndWidth": 0.0,
+                                                    "SpawnDistance": 0.15000000596046448,
+                                                    "PointLifetime": 0.5,
+                                                    "ColorOverTime": [
+                                                        {
+                                                            "IsAlphaMark": false,
+                                                            "Position": 4.245934346904196e-43,
+                                                            "Color": [
+                                                                -24371552.0,
+                                                                4.245934346904196e-43,
+                                                                -58967.875
+                                                            ]
+                                                        },
+                                                        {
+                                                            "IsAlphaMark": true,
+                                                            "Position": 4.245934346904196e-43,
+                                                            "Alpha": -24377536.0
+                                                        },
+                                                        {
+                                                            "IsAlphaMark": true,
+                                                            "Position": 4.245934346904196e-43,
+                                                            "Alpha": -4.604393005371094
+                                                        },
+                                                        {
+                                                            "IsAlphaMark": true,
+                                                            "Position": 4.245934346904196e-43,
+                                                            "Alpha": -2.1589283836094646e22
+                                                        }
+                                                    ],
+                                                    "ColorCurve": [
+                                                        0.0,
+                                                        0.0,
+                                                        0.0,
+                                                        0.0
+                                                    ]
+                                                }
+                                            ],
+                                            "Children": []
+                                        },
+                                        {
+                                            "Name": "left_arm_stream",
+                                            "Active": true,
+                                            "Static": false,
+                                            "Layer": "DEFAULT",
+                                            "Tag": "DEFAULT",
+                                            "Transform": {
+                                                "Position": [
+                                                    0.031101703643798828,
+                                                    0.10039985179901123,
+                                                    -0.13742446899414063
+                                                ],
+                                                "Rotation": [
+                                                    -3.3762315165830614e-9,
+                                                    7.4221073731450815e-9,
+                                                    1.4902417078133112e-8,
+                                                    1.0
+                                                ],
+                                                "Scale": [
+                                                    0.9999157786369324,
+                                                    0.9999912977218628,
+                                                    0.9999145269393921
+                                                ]
+                                            },
+                                            "Components": [
+                                                {
+                                                    "UID": 6348735580463129121,
+                                                    "ComponentType": "TRAIL",
+                                                    "Active": true,
+                                                    "StartWidth": 0.05000000074505806,
+                                                    "EndWidth": 0.0,
+                                                    "SpawnDistance": 0.15000000596046448,
+                                                    "PointLifetime": 0.5,
+                                                    "ColorOverTime": [
+                                                        {
+                                                            "IsAlphaMark": false,
+                                                            "Position": 4.245934346904196e-43,
+                                                            "Color": [
+                                                                -24373728.0,
+                                                                4.245934346904196e-43,
+                                                                -58966.0
+                                                            ]
+                                                        },
+                                                        {
+                                                            "IsAlphaMark": true,
+                                                            "Position": 4.245934346904196e-43,
+                                                            "Alpha": -4.604682922363281
+                                                        },
+                                                        {
+                                                            "IsAlphaMark": true,
+                                                            "Position": 4.245934346904196e-43,
+                                                            "Alpha": -4.604774475097656
+                                                        },
+                                                        {
+                                                            "IsAlphaMark": false,
+                                                            "Position": 1.0,
+                                                            "Color": [
+                                                                1.0,
+                                                                1.0,
+                                                                1.0
+                                                            ]
+                                                        }
+                                                    ],
+                                                    "ColorCurve": [
+                                                        0.0,
+                                                        0.0,
+                                                        0.0,
+                                                        0.0
+                                                    ]
+                                                }
+                                            ],
+                                            "Children": []
+                                        },
+                                        {
+                                            "Name": "right_arm_stream",
+                                            "Active": true,
+                                            "Static": false,
+                                            "Layer": "DEFAULT",
+                                            "Tag": "DEFAULT",
+                                            "Transform": {
+                                                "Position": [
+                                                    -0.000002384185791015625,
+                                                    0.06901884078979492,
+                                                    0.18999481201171875
+                                                ],
+                                                "Rotation": [
+                                                    -1.4435517670108311e-8,
+                                                    3.552713678800501e-15,
+                                                    -8.941106699467127e-8,
+                                                    1.0
+                                                ],
+                                                "Scale": [
+                                                    0.9999169111251831,
+                                                    0.9999914169311523,
+                                                    0.9999150633811951
+                                                ]
+                                            },
+                                            "Components": [
+                                                {
+                                                    "UID": 4001316457641974522,
+                                                    "ComponentType": "TRAIL",
+                                                    "Active": true,
+                                                    "StartWidth": 0.05000000074505806,
+                                                    "EndWidth": 0.0,
+                                                    "SpawnDistance": 0.15000000596046448,
+                                                    "PointLifetime": 0.5,
+                                                    "ColorOverTime": [
+                                                        {
+                                                            "IsAlphaMark": true,
+                                                            "Position": 0.0,
+                                                            "Alpha": 1.0
+                                                        },
+                                                        {
+                                                            "IsAlphaMark": true,
+                                                            "Position": 4.245934346904196e-43,
+                                                            "Alpha": -3.8781890869140625
+                                                        },
+                                                        {
+                                                            "IsAlphaMark": false,
+                                                            "Position": 1.0,
+                                                            "Color": [
+                                                                1.0,
+                                                                1.0,
+                                                                1.0
+                                                            ]
+                                                        },
+                                                        {
+                                                            "IsAlphaMark": false,
+                                                            "Position": 1.0,
+                                                            "Color": [
+                                                                1.0,
+                                                                1.0,
+                                                                1.0
+                                                            ]
+                                                        }
+                                                    ],
+                                                    "ColorCurve": [
+                                                        0.0,
+                                                        0.0,
+                                                        0.0,
+                                                        0.0
+                                                    ]
+                                                }
+                                            ],
+                                            "Children": []
+                                        },
+                                        {
+                                            "Name": "right_leg_stream",
+                                            "Active": true,
+                                            "Static": false,
+                                            "Layer": "DEFAULT",
+                                            "Tag": "DEFAULT",
+                                            "Transform": {
+                                                "Position": [
+                                                    0.36878037452697754,
+                                                    0.22437381744384766,
+                                                    0.18127059936523438
+                                                ],
+                                                "Rotation": [
+                                                    -2.794108411308116e-8,
+                                                    -3.725624697636931e-9,
+                                                    -2.682349986571353e-7,
+                                                    1.0
+                                                ],
+                                                "Scale": [
+                                                    0.9999102354049683,
+                                                    0.9999846816062927,
+                                                    0.9999096989631653
+                                                ]
+                                            },
+                                            "Components": [
+                                                {
+                                                    "UID": 10084433972892040989,
+                                                    "ComponentType": "TRAIL",
+                                                    "Active": true,
+                                                    "StartWidth": 0.10000000149011612,
+                                                    "EndWidth": 0.0,
+                                                    "SpawnDistance": 0.15000000596046448,
+                                                    "PointLifetime": 0.5,
+                                                    "ColorOverTime": [
+                                                        {
+                                                            "IsAlphaMark": true,
+                                                            "Position": 4.245934346904196e-43,
+                                                            "Alpha": -4.605339050292969
+                                                        },
+                                                        {
+                                                            "IsAlphaMark": false,
+                                                            "Position": 4.245934346904196e-43,
+                                                            "Color": [
+                                                                -4.605247497558594,
+                                                                4.245934346904196e-43,
+                                                                -4.605934143066406
+                                                            ]
+                                                        },
+                                                        {
+                                                            "IsAlphaMark": true,
+                                                            "Position": 4.245934346904196e-43,
+                                                            "Alpha": -4.605491638183594
+                                                        },
+                                                        {
+                                                            "IsAlphaMark": false,
+                                                            "Position": 1.0,
+                                                            "Color": [
+                                                                1.0,
+                                                                1.0,
+                                                                1.0
+                                                            ]
+                                                        }
+                                                    ],
+                                                    "ColorCurve": [
+                                                        0.0,
+                                                        0.0,
+                                                        0.0,
+                                                        0.0
+                                                    ]
+                                                }
+                                            ],
+                                            "Children": []
+                                        },
+                                        {
+                                            "Name": "left_leg_stream",
+                                            "Active": true,
+                                            "Static": false,
+                                            "Layer": "DEFAULT",
+                                            "Tag": "DEFAULT",
+                                            "Transform": {
+                                                "Position": [
+                                                    0.3361036777496338,
+                                                    0.19202852249145508,
+                                                    -0.17940902709960938
+                                                ],
+                                                "Rotation": [
+                                                    -8.184314026493666e-8,
+                                                    -5.0761357783812855e-8,
+                                                    -0.0,
+                                                    1.0
+                                                ],
+                                                "Scale": [
+                                                    0.9999157786369324,
+                                                    0.999991238117218,
+                                                    0.9999157190322876
+                                                ]
+                                            },
+                                            "Components": [
+                                                {
+                                                    "UID": 885100644878871384,
+                                                    "ComponentType": "TRAIL",
+                                                    "Active": true,
+                                                    "StartWidth": 0.10000000149011612,
+                                                    "EndWidth": 0.0,
+                                                    "SpawnDistance": 0.15000000596046448,
+                                                    "PointLifetime": 0.5,
+                                                    "ColorOverTime": [
+                                                        {
+                                                            "IsAlphaMark": true,
+                                                            "Position": 4.245934346904196e-43,
+                                                            "Alpha": -4.607872009277344
+                                                        },
+                                                        {
+                                                            "IsAlphaMark": true,
+                                                            "Position": 4.245934346904196e-43,
+                                                            "Alpha": -4.605094909667969
+                                                        },
+                                                        {
+                                                            "IsAlphaMark": false,
+                                                            "Position": 5.59118087265602e-43,
+                                                            "Color": [
+                                                                -5.122743839617474e24,
+                                                                4.590513639281668e-41,
+                                                                1.2611686178923354e-44
+                                                            ]
+                                                        },
+                                                        {
+                                                            "IsAlphaMark": true,
+                                                            "Position": 1.0,
+                                                            "Alpha": 1.0
+                                                        }
+                                                    ],
+                                                    "ColorCurve": [
+                                                        0.0,
+                                                        0.0,
+                                                        0.0,
+                                                        0.0
+                                                    ]
+                                                }
+                                            ],
+                                            "Children": []
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "Name": "leg_1_L",
+                            "Active": true,
+                            "Static": false,
+                            "Layer": "DEFAULT",
+                            "Tag": "DEFAULT",
+                            "Transform": {
+                                "Position": [
+                                    0.06305060535669327,
+                                    -0.028068160638213158,
+                                    -0.003176699858158827
+                                ],
+                                "Rotation": [
+                                    0.8643015027046204,
+                                    -0.22242633998394012,
+                                    0.38498103618621826,
+                                    -0.2351575642824173
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ]
+                            },
+                            "Components": [],
+                            "Children": [
+                                {
+                                    "Name": "leg_2_L",
+                                    "Active": true,
+                                    "Static": false,
+                                    "Layer": "DEFAULT",
+                                    "Tag": "DEFAULT",
+                                    "Transform": {
+                                        "Position": [
+                                            0.2020539939403534,
+                                            -0.03159166872501373,
+                                            -1.4210854397564648e-16
+                                        ],
+                                        "Rotation": [
+                                            -6.816670937367312e-18,
+                                            7.640601143703312e-18,
+                                            0.6054322123527527,
+                                            0.7958968877792358
+                                        ],
+                                        "Scale": [
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ]
+                                    },
+                                    "Components": [],
+                                    "Children": [
+                                        {
+                                            "Name": "foot_L",
+                                            "Active": true,
+                                            "Static": false,
+                                            "Layer": "DEFAULT",
+                                            "Tag": "DEFAULT",
+                                            "Transform": {
+                                                "Position": [
+                                                    0.20205000042915344,
+                                                    8.881783998477905e-18,
+                                                    -1.5987210866387985e-16
+                                                ],
+                                                "Rotation": [
+                                                    0.0033277745824307203,
+                                                    0.06135731562972069,
+                                                    -0.15135511755943298,
+                                                    0.9865677356719971
+                                                ],
+                                                "Scale": [
+                                                    1.0,
+                                                    1.0,
+                                                    1.0
+                                                ]
+                                            },
+                                            "Components": [],
+                                            "Children": [
+                                                {
+                                                    "Name": "toe_L",
+                                                    "Active": true,
+                                                    "Static": false,
+                                                    "Layer": "DEFAULT",
+                                                    "Tag": "DEFAULT",
+                                                    "Transform": {
+                                                        "Position": [
+                                                            0.03900947794318199,
+                                                            -0.05214730650186539,
+                                                            -0.008106333203613758
+                                                        ],
+                                                        "Rotation": [
+                                                            -0.023529084399342537,
+                                                            -0.6424530744552612,
+                                                            -0.022660283371806145,
+                                                            0.765628457069397
+                                                        ],
+                                                        "Scale": [
+                                                            1.0,
+                                                            1.0,
+                                                            1.0
+                                                        ]
+                                                    },
+                                                    "Components": [],
+                                                    "Children": []
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "Name": "leg_1_R",
+                            "Active": true,
+                            "Static": false,
+                            "Layer": "DEFAULT",
+                            "Tag": "DEFAULT",
+                            "Transform": {
+                                "Position": [
+                                    -0.06305059790611267,
+                                    -0.028068069368600845,
+                                    -0.0031767201144248247
+                                ],
+                                "Rotation": [
+                                    0.5772715210914612,
+                                    0.385882169008255,
+                                    0.28663381934165955,
+                                    0.6600708961486816
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ]
+                            },
+                            "Components": [],
+                            "Children": [
+                                {
+                                    "Name": "leg_2_R",
+                                    "Active": true,
+                                    "Static": false,
+                                    "Layer": "DEFAULT",
+                                    "Tag": "DEFAULT",
+                                    "Transform": {
+                                        "Position": [
+                                            -0.20205442607402802,
+                                            0.031591784209012985,
+                                            8.805643147979936e-8
+                                        ],
+                                        "Rotation": [
+                                            3.7230625129958426e-17,
+                                            3.106785163375255e-17,
+                                            0.46395939588546753,
+                                            0.8858565092086792
+                                        ],
+                                        "Scale": [
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ]
+                                    },
+                                    "Components": [],
+                                    "Children": [
+                                        {
+                                            "Name": "foot_R",
+                                            "Active": true,
+                                            "Static": false,
+                                            "Layer": "DEFAULT",
+                                            "Tag": "DEFAULT",
+                                            "Transform": {
+                                                "Position": [
+                                                    -0.20204965770244598,
+                                                    1.2189945053364681e-8,
+                                                    -3.7697489574384235e-7
+                                                ],
+                                                "Rotation": [
+                                                    -0.0019211870385333896,
+                                                    0.2272631973028183,
+                                                    -0.31841734051704407,
+                                                    0.9203032851219177
+                                                ],
+                                                "Scale": [
+                                                    1.0,
+                                                    1.0,
+                                                    1.0
+                                                ]
+                                            },
+                                            "Components": [],
+                                            "Children": [
+                                                {
+                                                    "Name": "toe_R",
+                                                    "Active": true,
+                                                    "Static": false,
+                                                    "Layer": "DEFAULT",
+                                                    "Tag": "DEFAULT",
+                                                    "Transform": {
+                                                        "Position": [
+                                                            -0.039009399712085724,
+                                                            0.052147120237350464,
+                                                            0.00810684822499752
+                                                        ],
+                                                        "Rotation": [
+                                                            -0.023529084399342537,
+                                                            -0.6424530744552612,
+                                                            -0.022660283371806145,
+                                                            0.765628457069397
+                                                        ],
+                                                        "Scale": [
+                                                            1.0,
+                                                            1.0,
+                                                            1.0
+                                                        ]
+                                                    },
+                                                    "Components": [],
+                                                    "Children": []
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "Name": "arbalet",
+                    "Active": true,
+                    "Static": false,
+                    "Layer": "DEFAULT",
+                    "Tag": "DEFAULT",
+                    "Transform": {
+                        "Position": [
+                            -0.11846400052309036,
+                            0.39339327812194824,
+                            0.0011222934117540717
+                        ],
+                        "Rotation": [
+                            0.663690984249115,
+                            0.035055696964263916,
+                            0.677165150642395,
+                            -0.31580501794815063
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "Components": [],
+                    "Children": [
+                        {
+                            "Name": "teteva",
+                            "Active": true,
+                            "Static": false,
+                            "Layer": "DEFAULT",
+                            "Tag": "DEFAULT",
+                            "Transform": {
+                                "Position": [
+                                    0.021803533658385277,
+                                    -0.1029379665851593,
+                                    -9.769962563761818e-17
+                                ],
+                                "Rotation": [
+                                    1.0408340855860843e-17,
+                                    -1.3877787807814457e-17,
+                                    1.4444474582904269e-34,
+                                    1.0
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ]
+                            },
+                            "Components": [],
+                            "Children": []
+                        },
+                        {
+                            "Name": "strela",
+                            "Active": true,
+                            "Static": false,
+                            "Layer": "DEFAULT",
+                            "Tag": "DEFAULT",
+                            "Transform": {
+                                "Position": [
+                                    0.07506666332483292,
+                                    -0.1029379665851593,
+                                    -1.4210854397564648e-16
+                                ],
+                                "Rotation": [
+                                    1.0408340855860843e-17,
+                                    -1.3877787807814457e-17,
+                                    1.4444474582904269e-34,
+                                    1.0
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ]
+                            },
+                            "Components": [],
+                            "Children": []
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "Name": "ArrowSpawn",
+            "Active": true,
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    0.0,
+                    0.3500000238418579,
+                    0.4500007629394531
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0,
+                    1.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [],
+            "Children": []
+        },
+        {
+            "Name": "Revive UI",
+            "Active": true,
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0,
+                    1.0
+                ],
+                "Scale": [
+                    1.2999999523162842,
+                    1.0,
+                    1.2999999523162842
+                ]
+            },
+            "Components": [],
+            "Children": [
+                {
+                    "Name": "Ground Canvas",
+                    "Active": false,
+                    "Static": false,
+                    "Layer": "DEFAULT",
+                    "Tag": "DEFAULT",
+                    "Transform": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "Rotation": [
+                            0.7071068286895752,
+                            0.0,
+                            0.0,
+                            0.7071068286895752
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "Components": [
+                        {
+                            "UID": 2723568383851347328,
+                            "ComponentType": "CANVAS",
+                            "Active": true,
+                            "RenderMode": "WORLD_SPACE",
+                            "ZTest": true
+                        }
+                    ],
+                    "Children": [
+                        {
+                            "Name": "Slider",
+                            "Active": true,
+                            "Static": false,
+                            "Layer": "DEFAULT",
+                            "Tag": "DEFAULT",
+                            "Transform": {
+                                "Position": [
+                                    9.5367431640625e-7,
+                                    0.0,
+                                    9.094947017729282e-13
+                                ],
+                                "Rotation": [
+                                    -0.0,
+                                    0.0,
+                                    -0.0,
+                                    1.0
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0000001192092896,
+                                    1.0000001192092896
+                                ]
+                            },
+                            "Components": [
+                                {
+                                    "UID": 2158020357536026233,
+                                    "ComponentType": "TRANSFORM2D",
+                                    "Active": true,
+                                    "Position": [
+                                        0.0,
+                                        0.0,
+                                        0.0
+                                    ],
+                                    "Scale": [
+                                        0.5,
+                                        0.5,
+                                        0.0
+                                    ],
+                                    "Pivot": [
+                                        0.5,
+                                        0.5,
+                                        0.0
+                                    ],
+                                    "AnchorMin": [
+                                        0.0,
+                                        0.0,
+                                        0.0
+                                    ],
+                                    "AnchorMax": [
+                                        0.0,
+                                        0.0,
+                                        0.0
+                                    ],
+                                    "BaseSize": [
+                                        500.0,
+                                        500.0,
+                                        0.0
+                                    ],
+                                    "StretchMode": "NONE",
+                                    "SizingMode": "KEEP_ASPECT_RATIO",
+                                    "AspectRatio": 1.0,
+                                    "Alpha": 1.0
+                                },
+                                {
+                                    "UID": 17568556803331770806,
+                                    "ComponentType": "UIIMAGE",
+                                    "Active": true,
+                                    "TextureAssetId": {
+                                        "uid": 3471763468123391006,
+                                        "libId": "525469310db95b9b14f5a38e2692f084",
+                                        "type": "TEXTURE"
+                                    },
+                                    "FillAmount": [
+                                        0.0,
+                                        1.0
+                                    ],
+                                    "FillMethod": "Radial360",
+                                    "FillOrigin": 0,
+                                    "SheetColumns": 1,
+                                    "SheetRows": 1,
+                                    "SheetOffset": [
+                                        0.0,
+                                        0.0,
+                                        0.0
+                                    ],
+                                    "StretchDrawMode": "Stretch"
+                                },
+                                {
+                                    "UID": 11949907353487980845,
+                                    "ComponentType": "UISLIDER",
+                                    "Active": true,
+                                    "FillAmount": [
+                                        0.0,
+                                        1.0
+                                    ],
+                                    "FillMethod": "Radial360",
+                                    "FillOrigin": 0
+                                }
+                            ],
+                            "Children": []
+                        },
+                        {
+                            "Name": "Slider 2",
+                            "Active": true,
+                            "Static": false,
+                            "Layer": "DEFAULT",
+                            "Tag": "DEFAULT",
+                            "Transform": {
+                                "Position": [
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "Rotation": [
+                                    0.0,
+                                    0.0,
+                                    -0.0,
+                                    1.0
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    0.9999998807907104,
+                                    0.9999998807907104
+                                ]
+                            },
+                            "Components": [
+                                {
+                                    "UID": 1801575197262948663,
+                                    "ComponentType": "TRANSFORM2D",
+                                    "Active": true,
+                                    "Position": [
+                                        0.0,
+                                        0.0,
+                                        0.0
+                                    ],
+                                    "Scale": [
+                                        0.5,
+                                        0.5,
+                                        0.0
+                                    ],
+                                    "Pivot": [
+                                        0.5,
+                                        0.5,
+                                        0.0
+                                    ],
+                                    "AnchorMin": [
+                                        0.0,
+                                        0.0,
+                                        0.0
+                                    ],
+                                    "AnchorMax": [
+                                        0.0,
+                                        0.0,
+                                        0.0
+                                    ],
+                                    "BaseSize": [
+                                        500.0,
+                                        500.0,
+                                        0.0
+                                    ],
+                                    "StretchMode": "NONE",
+                                    "SizingMode": "KEEP_ASPECT_RATIO",
+                                    "AspectRatio": 1.0,
+                                    "Alpha": 1.0
+                                },
+                                {
+                                    "UID": 15905860561937856140,
+                                    "ComponentType": "UISLIDER",
+                                    "Active": true,
+                                    "FillAmount": [
+                                        0.0,
+                                        1.0
+                                    ],
+                                    "FillMethod": "Radial360",
+                                    "FillOrigin": 0
+                                },
+                                {
+                                    "UID": 16543181975769299077,
+                                    "ComponentType": "UIIMAGE",
+                                    "Active": true,
+                                    "TextureAssetId": {
+                                        "uid": 9771884856223029865,
+                                        "libId": "a782c97ce029e684d8e2a4863ca5b96a",
+                                        "type": "TEXTURE"
+                                    },
+                                    "FillAmount": [
+                                        0.0,
+                                        1.0
+                                    ],
+                                    "FillMethod": "Radial360",
+                                    "FillOrigin": 0,
+                                    "SheetColumns": 1,
+                                    "SheetRows": 1,
+                                    "SheetOffset": [
+                                        0.0,
+                                        0.0,
+                                        0.0
+                                    ],
+                                    "StretchDrawMode": "Stretch"
+                                }
+                            ],
+                            "Children": []
+                        }
+                    ]
+                },
+                {
+                    "Name": "Canvas Pivot",
+                    "Active": true,
+                    "Static": false,
+                    "Layer": "DEFAULT",
+                    "Tag": "DEFAULT",
+                    "Transform": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "Rotation": [
+                            -0.0,
+                            0.0,
+                            -0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "Components": [],
+                    "Children": [
+                        {
+                            "Name": "Handle",
+                            "Active": false,
+                            "Static": false,
+                            "Layer": "DEFAULT",
+                            "Tag": "DEFAULT",
+                            "Transform": {
+                                "Position": [
+                                    0.05000019073486328,
+                                    0.10000002384185791,
+                                    -0.049999237060546875
+                                ],
+                                "Rotation": [
+                                    -0.0,
+                                    0.0,
+                                    -0.0,
+                                    1.0
+                                ],
+                                "Scale": [
+                                    0.949999988079071,
+                                    1.0,
+                                    0.949999988079071
+                                ]
+                            },
+                            "Components": [
+                                {
+                                    "UID": 6104690368537724297,
+                                    "ComponentType": "CANVAS",
+                                    "Active": true,
+                                    "RenderMode": "WORLD_SPACE_CAMERA",
+                                    "ZTest": false
+                                }
+                            ],
+                            "Children": [
+                                {
+                                    "Name": "Sprite",
+                                    "Active": true,
+                                    "Static": false,
+                                    "Layer": "DEFAULT",
+                                    "Tag": "DEFAULT",
+                                    "Transform": {
+                                        "Position": [
+                                            -1.2400000095367432,
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Rotation": [
+                                            -0.0,
+                                            0.0,
+                                            0.0,
+                                            1.0
+                                        ],
+                                        "Scale": [
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ]
+                                    },
+                                    "Components": [
+                                        {
+                                            "UID": 18100539556064177602,
+                                            "ComponentType": "TRANSFORM2D",
+                                            "Active": true,
+                                            "Position": [
+                                                0.0,
+                                                0.0,
+                                                0.0
+                                            ],
+                                            "Scale": [
+                                                0.5,
+                                                0.5,
+                                                0.0
+                                            ],
+                                            "Pivot": [
+                                                0.5,
+                                                0.5,
+                                                0.0
+                                            ],
+                                            "AnchorMin": [
+                                                0.0,
+                                                0.0,
+                                                0.0
+                                            ],
+                                            "AnchorMax": [
+                                                0.0,
+                                                0.0,
+                                                0.0
+                                            ],
+                                            "BaseSize": [
+                                                100.0,
+                                                100.0,
+                                                0.0
+                                            ],
+                                            "StretchMode": "NONE",
+                                            "SizingMode": "KEEP_ASPECT_RATIO",
+                                            "AspectRatio": 1.0,
+                                            "Alpha": 1.0
+                                        },
+                                        {
+                                            "UID": 3715875156193716067,
+                                            "ComponentType": "UIIMAGE",
+                                            "Active": true,
+                                            "TextureAssetId": {
+                                                "uid": 5368158092630199673,
+                                                "libId": "7a9c29bd7fcb14acbb8f7dca22e2961c",
+                                                "type": "TEXTURE"
+                                            },
+                                            "FillAmount": [
+                                                0.0,
+                                                1.0
+                                            ],
+                                            "FillMethod": "Horizontal",
+                                            "FillOrigin": 0,
+                                            "SheetColumns": 1,
+                                            "SheetRows": 1,
+                                            "SheetOffset": [
+                                                0.0,
+                                                0.0,
+                                                0.0
+                                            ],
+                                            "StretchDrawMode": "Stretch"
+                                        }
+                                    ],
+                                    "Children": []
+                                },
+                                {
+                                    "Name": "Sprite 2",
+                                    "Active": true,
+                                    "Static": false,
+                                    "Layer": "DEFAULT",
+                                    "Tag": "DEFAULT",
+                                    "Transform": {
+                                        "Position": [
+                                            -1.2400000095367432,
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Rotation": [
+                                            -0.0,
+                                            0.0,
+                                            -0.0,
+                                            1.0
+                                        ],
+                                        "Scale": [
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ]
+                                    },
+                                    "Components": [
+                                        {
+                                            "UID": 8340716914399777528,
+                                            "ComponentType": "TRANSFORM2D",
+                                            "Active": true,
+                                            "Position": [
+                                                0.0,
+                                                0.0,
+                                                0.0
+                                            ],
+                                            "Scale": [
+                                                0.5,
+                                                0.5,
+                                                0.0
+                                            ],
+                                            "Pivot": [
+                                                0.5,
+                                                0.5,
+                                                0.0
+                                            ],
+                                            "AnchorMin": [
+                                                0.0,
+                                                0.0,
+                                                0.0
+                                            ],
+                                            "AnchorMax": [
+                                                0.0,
+                                                0.0,
+                                                0.0
+                                            ],
+                                            "BaseSize": [
+                                                100.0,
+                                                100.0,
+                                                0.0
+                                            ],
+                                            "StretchMode": "NONE",
+                                            "SizingMode": "KEEP_ASPECT_RATIO",
+                                            "AspectRatio": 1.0,
+                                            "Alpha": 1.0
+                                        },
+                                        {
+                                            "UID": 16559621921255349671,
+                                            "ComponentType": "UIIMAGE",
+                                            "Active": true,
+                                            "TextureAssetId": {
+                                                "uid": 984757606205292243,
+                                                "libId": "bb8b19fb5a28c6b90099780d685a88e7",
+                                                "type": "TEXTURE"
+                                            },
+                                            "FillAmount": [
+                                                0.0,
+                                                1.0
+                                            ],
+                                            "FillMethod": "Horizontal",
+                                            "FillOrigin": 0,
+                                            "SheetColumns": 1,
+                                            "SheetRows": 1,
+                                            "SheetOffset": [
+                                                0.0,
+                                                0.0,
+                                                0.0
+                                            ],
+                                            "StretchDrawMode": "Stretch"
+                                        }
+                                    ],
+                                    "Children": []
+                                }
+                            ]
+                        },
+                        {
+                            "Name": "Icon",
+                            "Active": false,
+                            "Static": false,
+                            "Layer": "DEFAULT",
+                            "Tag": "DEFAULT",
+                            "Transform": {
+                                "Position": [
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "Rotation": [
+                                    0.7071068286895752,
+                                    0.0,
+                                    -0.0,
+                                    0.7071067690849304
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ]
+                            },
+                            "Components": [
+                                {
+                                    "UID": 1858682783151829054,
+                                    "ComponentType": "CANVAS",
+                                    "Active": true,
+                                    "RenderMode": "WORLD_SPACE",
+                                    "ZTest": false
+                                }
+                            ],
+                            "Children": [
+                                {
+                                    "Name": "Sprite",
+                                    "Active": true,
+                                    "Static": false,
+                                    "Layer": "DEFAULT",
+                                    "Tag": "DEFAULT",
+                                    "Transform": {
+                                        "Position": [
+                                            0.0,
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Rotation": [
+                                            0.0,
+                                            0.0,
+                                            -0.0,
+                                            1.0
+                                        ],
+                                        "Scale": [
+                                            1.0,
+                                            1.0000001192092896,
+                                            1.0000001192092896
+                                        ]
+                                    },
+                                    "Components": [
+                                        {
+                                            "UID": 8349195812600467667,
+                                            "ComponentType": "TRANSFORM2D",
+                                            "Active": true,
+                                            "Position": [
+                                                0.0,
+                                                0.0,
+                                                0.0
+                                            ],
+                                            "Scale": [
+                                                0.5,
+                                                0.5,
+                                                0.0
+                                            ],
+                                            "Pivot": [
+                                                0.5,
+                                                0.5,
+                                                0.0
+                                            ],
+                                            "AnchorMin": [
+                                                0.0,
+                                                0.0,
+                                                0.0
+                                            ],
+                                            "AnchorMax": [
+                                                0.0,
+                                                0.0,
+                                                0.0
+                                            ],
+                                            "BaseSize": [
+                                                500.0,
+                                                500.0,
+                                                0.0
+                                            ],
+                                            "StretchMode": "NONE",
+                                            "SizingMode": "KEEP_ASPECT_RATIO",
+                                            "AspectRatio": 1.0,
+                                            "Alpha": 1.0
+                                        },
+                                        {
+                                            "UID": 17203608144132484360,
+                                            "ComponentType": "UIIMAGE",
+                                            "Active": true,
+                                            "TextureAssetId": {
+                                                "uid": 1241624822446573334,
+                                                "libId": "8c6e86e594629fac8adc8896006e069d",
+                                                "type": "TEXTURE"
+                                            },
+                                            "FillAmount": [
+                                                0.0,
+                                                1.0
+                                            ],
+                                            "FillMethod": "Horizontal",
+                                            "FillOrigin": 0,
+                                            "SheetColumns": 2,
+                                            "SheetRows": 2,
+                                            "SheetOffset": [
+                                                0.0,
+                                                0.0,
+                                                0.0
+                                            ],
+                                            "StretchDrawMode": "Stretch"
+                                        },
+                                        {
+                                            "UID": 10839050840744237199,
+                                            "ComponentType": "UISHEET",
+                                            "Active": true,
+                                            "Columns": 2,
+                                            "Rows": 2,
+                                            "Offset": [
+                                                0.0,
+                                                0.0,
+                                                0.0
+                                            ],
+                                            "FPS": 4.0,
+                                            "Loop": true,
+                                            "Playing": true,
+                                            "StartFrame": 0,
+                                            "EndFrame": 3,
+                                            "CurrentFrame": 0
+                                        }
+                                    ],
+                                    "Children": []
+                                },
+                                {
+                                    "Name": "Sprite 2",
+                                    "Active": true,
+                                    "Static": false,
+                                    "Layer": "DEFAULT",
+                                    "Tag": "DEFAULT",
+                                    "Transform": {
+                                        "Position": [
+                                            0.0,
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Rotation": [
+                                            0.0,
+                                            0.0,
+                                            -0.0,
+                                            1.0
+                                        ],
+                                        "Scale": [
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ]
+                                    },
+                                    "Components": [
+                                        {
+                                            "UID": 5631286169126035607,
+                                            "ComponentType": "TRANSFORM2D",
+                                            "Active": true,
+                                            "Position": [
+                                                0.0,
+                                                0.0,
+                                                0.0
+                                            ],
+                                            "Scale": [
+                                                0.5,
+                                                0.5,
+                                                0.0
+                                            ],
+                                            "Pivot": [
+                                                0.5,
+                                                0.5,
+                                                0.0
+                                            ],
+                                            "AnchorMin": [
+                                                0.0,
+                                                0.0,
+                                                0.0
+                                            ],
+                                            "AnchorMax": [
+                                                0.0,
+                                                0.0,
+                                                0.0
+                                            ],
+                                            "BaseSize": [
+                                                500.0,
+                                                500.0,
+                                                0.0
+                                            ],
+                                            "StretchMode": "NONE",
+                                            "SizingMode": "KEEP_ASPECT_RATIO",
+                                            "AspectRatio": 1.0,
+                                            "Alpha": 1.0
+                                        },
+                                        {
+                                            "UID": 3237986695486907091,
+                                            "ComponentType": "UIIMAGE",
+                                            "Active": true,
+                                            "TextureAssetId": {
+                                                "uid": 7805039298958628959,
+                                                "libId": "77addb285ea274434e992954237deba1",
+                                                "type": "TEXTURE"
+                                            },
+                                            "FillAmount": [
+                                                0.0,
+                                                1.0
+                                            ],
+                                            "FillMethod": "Horizontal",
+                                            "FillOrigin": 0,
+                                            "SheetColumns": 2,
+                                            "SheetRows": 2,
+                                            "SheetOffset": [
+                                                0.0,
+                                                0.0,
+                                                0.0
+                                            ],
+                                            "StretchDrawMode": "Stretch"
+                                        },
+                                        {
+                                            "UID": 6437696086412749570,
+                                            "ComponentType": "UISHEET",
+                                            "Active": true,
+                                            "Columns": 2,
+                                            "Rows": 2,
+                                            "Offset": [
+                                                0.0,
+                                                0.0,
+                                                0.0
+                                            ],
+                                            "FPS": 4.0,
+                                            "Loop": true,
+                                            "Playing": true,
+                                            "StartFrame": 0,
+                                            "EndFrame": 3,
+                                            "CurrentFrame": 0
+                                        }
+                                    ],
+                                    "Children": []
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "Name": "LyrielLight",
+            "Active": true,
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    0.0,
+                    0.8845345973968506,
+                    0.0
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0,
+                    1.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [
+                {
+                    "UID": 8657966761279811992,
+                    "ComponentType": "LIGHT",
+                    "Active": true,
+                    "LightType": 1,
+                    "Color": [
+                        0.9382239580154419,
+                        0.9352588057518005,
+                        0.1702568531036377
+                    ],
+                    "Intensity": 6.099999904632568,
+                    "CastShadows": false,
+                    "ShadowMapSize": 4096,
+                    "ShadowPcfEnabled": true,
+                    "ShadowPcfRadius": 1,
+                    "ShadowBias": 0.0005000000237487257,
+                    "ShadowStrength": 1.0,
+                    "ShadowCascadeCount": 4,
+                    "ShadowCascadeSplit0": 0.10000000149011612,
+                    "ShadowCascadeSplit1": 0.30000001192092896,
+                    "ShadowCascadeSplit2": 0.6000000238418579,
+                    "ShadowCascadeFitMode": 1,
+                    "ShadowCascadeDebugEnabled": false,
+                    "Radius": 5.599999904632568,
+                    "InnerAngleDegrees": 0.0,
+                    "OuterAngleDegrees": 0.0
+                }
+            ],
+            "Children": []
+        }
+    ]
+}

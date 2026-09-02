@@ -25,7 +25,9 @@ IMPLEMENT_SCRIPT_FIELDS(PlayerAnimationController,
     SERIALIZED_FLOAT(m_dashBlendTime, "Dash blend time", 0.0f, 2.0f, 0.01f),
     SERIALIZED_FLOAT(m_damagedBlendTime, "Damaged blend time", 0.0f, 2.0f, 0.01f),
     SERIALIZED_FLOAT(m_downedBlendTime, "Downed blend time", 0.0f, 2.0f, 0.01f),
-    SERIALIZED_FLOAT(m_deathBlendTime, "Death blend time", 0.0f, 2.0f, 0.01f)
+    SERIALIZED_FLOAT(m_deathBlendTime, "Death blend time", 0.0f, 2.0f, 0.01f),
+    SERIALIZED_FLOAT(m_dashAnimDuration, "Dash anim duration", 0.0f, 3.0f, 0.01f),
+    SERIALIZED_FLOAT(m_dashAnimStartPct, "Dash anim start %", 0.0f, 0.9f, 0.01f)
 )
 
 PlayerAnimationController::PlayerAnimationController(GameObject* owner)
@@ -120,11 +122,19 @@ void PlayerAnimationController::Update()
 
             if (desiredState == AnimState::Dash)
             {
-                const float target = m_dashMoveDuration > 0.01f ? m_dashMoveDuration : 0.4f;
+                const float target = m_dashAnimDuration > 0.01f ? m_dashAnimDuration : 0.5f;
                 const float dur = AnimationAPI::getPlaybackDuration(m_animationComponent);
-                if (dur > 0.0001f)
+                const float startPct = m_dashAnimStartPct < 0.0f ? 0.0f : (m_dashAnimStartPct > 0.9f ? 0.9f : m_dashAnimStartPct);
+                const float span = dur * (1.0f - startPct);
+
+                // Skip the clip's anticipation so the dash motion reads from the first frame.
+                if (dur > 0.0001f && startPct > 0.0f)
                 {
-                    AnimationAPI::setSpeedMultiplier(m_animationComponent, dur / target);
+                    AnimationAPI::setPlaybackTime(m_animationComponent, dur * startPct);
+                }
+                if (span > 0.0001f)
+                {
+                    AnimationAPI::setSpeedMultiplier(m_animationComponent, span / target);
                 }
                 m_dashHoldTimer = target;
             }
@@ -254,7 +264,7 @@ void PlayerAnimationController::setChargeProgress(float progress01)
     m_chargeProgress = progress01 < 0.0f ? 0.0f : (progress01 > 1.0f ? 1.0f : progress01);
 }
 
-void PlayerAnimationController::endChargeHold()
+void PlayerAnimationController::endChargeHold(float releaseFraction)
 {
     m_chargeHoldActive = false;
 
@@ -263,17 +273,26 @@ void PlayerAnimationController::endChargeHold()
         return;
     }
 
+    const float dur = AnimationAPI::getPlaybackDuration(m_animationComponent);
+    const float releaseStart = m_chargeHoldPausePct * dur;
+    const float spd = m_chargeHoldSpeed > 0.01f ? m_chargeHoldSpeed : 1.0f;
+    const float frac = releaseFraction < 0.05f ? 0.05f : (releaseFraction > 1.0f ? 1.0f : releaseFraction);
+
+    // Resume and jump straight to the release frame, then play its follow-through.
     if (m_chargeHoldPaused)
     {
         AnimationAPI::play(m_animationComponent);
         m_chargeHoldPaused = false;
     }
+    AnimationAPI::setSpeedMultiplier(m_animationComponent, spd);
+    if (dur > 0.0001f)
+    {
+        AnimationAPI::setPlaybackTime(m_animationComponent, releaseStart);
+    }
 
-    // Resume from the held frame and keep the release playing to the end (no replay)
-    const float dur = AnimationAPI::getPlaybackDuration(m_animationComponent);
-    const float cur = AnimationAPI::getPlaybackTime(m_animationComponent);
-    const float spd = m_chargeHoldSpeed > 0.01f ? m_chargeHoldSpeed : 1.0f;
-    const float remaining = dur > 0.0001f ? ((dur - cur) / spd) : 0.5f;
+    // Follow-through length scales with charge (Death: full spin at any decent charge).
+    const float releaseSpan = (dur - releaseStart) * frac;
+    const float remaining = dur > 0.0001f ? (releaseSpan / spd) : 0.5f;
     m_chargeReleaseTimer = remaining > 0.0f ? remaining : 0.5f;
 }
 

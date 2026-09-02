@@ -1,201 +1,280 @@
 {
-  "name": "Ghost_StateMachine",
-  "defaultState": "Death_Idle",
-  "clips": [
-    {
-      "name": "Death_Idle",
-      "uid": 14199741254574568641,
-      "libId": "20fbc74cbf4b7b70fd47e56eb77f0934",
-      "type": "ANIMATION",
-      "loop": true
-    },
-    {
-      "name": "Death_Run.001",
-      "uid": 6305097273897305217,
-      "libId": "204e08569468882b9e034a9d4459d1f4",
-      "type": "ANIMATION",
-      "loop": true
-    },
-    {
-      "name": "Death_Atk1.001",
-      "uid": 16259659905940049556,
-      "libId": "3bbc6d14a05d518906ca6690dc0e12a8",
-      "type": "ANIMATION",
-      "loop": false
-    },
-    {
-      "name": "Death_Atk2",
-      "uid": 13468629528477703923,
-      "libId": "7ce740a12348d49200b46c7fafe988da",
-      "type": "ANIMATION",
-      "loop": false
-    },
-    {
-      "name": "Death_Atk1Recover",
-      "uid": 9533535938206922414,
-      "libId": "3384babe1aba8ca9e4e02164435bd4f7",
-      "type": "ANIMATION",
-      "loop": false
-    },
-    {
-      "name": "Death_ChargeAtk",
-      "uid": 15784693465937695785,
-      "libId": "0bbfd906a34218937c1efdccf15ebb67",
-      "type": "ANIMATION",
-      "loop": false
-    },
-    {
-      "name": "Death_Dash",
-      "uid": 4255812996545272822,
-      "libId": "548fd394c882624d5b976fde29b4dff7",
-      "type": "ANIMATION",
-      "loop": false
-    },
-    {
-      "name": "Death_Dead",
-      "uid": 3766463860614034078,
-      "libId": "e7d24eea7d49e7074ad2d4d58d52f6e4",
-      "type": "ANIMATION",
-      "loop": false
-    },
-    {
-      "name": "Death_Downed",
-      "uid": 6613413446870529052,
-      "libId": "916934671cc54435c7208793caef7389",
-      "type": "ANIMATION",
-      "loop": false
-    },
-    {
-      "name": "Death_Harm1",
-      "uid": 15936092199439396887,
-      "libId": "bc9d6ff8f7a763fee28b658e99a8c436",
-      "type": "ANIMATION",
-      "loop": false
-    },
-    {
-      "name": "Death_Harm2",
-      "uid": 16241598405390866989,
-      "libId": "85286e2d518caa9dcf17000ccfdc2eab",
-      "type": "ANIMATION",
-      "loop": false
-    },
-    {
-      "name": "Death_Harm3",
-      "uid": 8774850750711231115,
-      "libId": "c725a10e20598726ecec169bd7876d14",
-      "type": "ANIMATION",
-      "loop": false
-    }
-  ],
-  "states": [
-    {
-      "name": "Death_Idle",
-      "clipName": "Death_Idle",
-      "speed": 1.0,
-      "behaviourScriptName": "",
-      "behaviourFieldsJson": "",
-      "overrideLoop": false,
-      "loop": true
-    },
-    {
-      "name": "Death_Run.001",
-      "clipName": "Death_Run.001",
-      "speed": 1.0,
-      "behaviourScriptName": "",
-      "behaviourFieldsJson": "",
-      "overrideLoop": false,
-      "loop": true
-    },
-    {
-      "name": "Death_Atk1.001",
-      "clipName": "Death_Atk1.001",
-      "speed": 1.0,
-      "behaviourScriptName": "",
-      "behaviourFieldsJson": "",
-      "overrideLoop": false,
-      "loop": false
-    },
-    {
-      "name": "Death_Atk2",
-      "clipName": "Death_Atk2",
-      "speed": 1.0,
-      "behaviourScriptName": "",
-      "behaviourFieldsJson": "",
-      "overrideLoop": false,
-      "loop": false
-    },
-    {
-      "name": "Death_Atk1Recover",
-      "clipName": "Death_Atk1Recover",
-      "speed": 1.0,
-      "behaviourScriptName": "",
-      "behaviourFieldsJson": "",
-      "overrideLoop": false,
-      "loop": false
-    },
-    {
-      "name": "Death_ChargeAtk",
-      "clipName": "Death_ChargeAtk",
-      "speed": 1.0,
-      "behaviourScriptName": "",
-      "behaviourFieldsJson": "",
-      "overrideLoop": false,
-      "loop": false
-    },
-    {
-      "name": "Death_Dash",
-      "clipName": "Death_Dash",
-      "speed": 1.0,
-      "behaviourScriptName": "",
-      "behaviourFieldsJson": "",
-      "overrideLoop": false,
-      "loop": false
-    },
-    {
-      "name": "Death_Dead",
-      "clipName": "Death_Dead",
-      "speed": 1.0,
-      "behaviourScriptName": "",
-      "behaviourFieldsJson": "",
-      "overrideLoop": false,
-      "loop": false
-    },
-    {
-      "name": "Death_Downed",
-      "clipName": "Death_Downed",
-      "speed": 1.0,
-      "behaviourScriptName": "",
-      "behaviourFieldsJson": "",
-      "overrideLoop": false,
-      "loop": false
-    },
-    {
-      "name": "Death_Harm1",
-      "clipName": "Death_Harm1",
-      "speed": 1.0,
-      "behaviourScriptName": "",
-      "behaviourFieldsJson": "",
-      "overrideLoop": false,
-      "loop": false
-    },
-    {
-      "name": "Death_Harm2",
-      "clipName": "Death_Harm2",
-      "speed": 1.0,
-      "behaviourScriptName": "",
-      "behaviourFieldsJson": "",
-      "overrideLoop": false,
-      "loop": false
-    },
-    {
-      "name": "Death_Harm3",
-      "clipName": "Death_Harm3",
-      "speed": 1.0,
-      "behaviourScriptName": "",
-      "behaviourFieldsJson": "",
-      "overrideLoop": false,
-      "loop": false
-    }
-  ],
-  "transitions": []
+ "name": "Ghost_StateMachine",
+ "defaultState": "Death_Idle",
+ "clips": [
+  {
+   "name": "Death_Idle",
+   "uid": 14199741254574568641,
+   "libId": "f96573023be18c38d6ee5f3283c4ee6d",
+   "type": "ANIMATION",
+   "loop": true
+  },
+  {
+   "name": "Death_Run",
+   "uid": 15784693465937695785,
+   "libId": "2d420f1695638cec39efae8f38d35670",
+   "type": "ANIMATION",
+   "loop": true
+  },
+  {
+   "name": "Death_Dash2",
+   "uid": 15847975138670898137,
+   "libId": "601dbd3bf28db0988bc8a3d97dcf0df8",
+   "type": "ANIMATION",
+   "loop": false
+  },
+  {
+   "name": "Death_Dash",
+   "uid": 12685289671684081333,
+   "libId": "b0a797950f476f90dda7ff058227da7a",
+   "type": "ANIMATION",
+   "loop": false
+  },
+  {
+   "name": "Death_Atk1",
+   "uid": 5325678055632561385,
+   "libId": "bb5b9948e012486e9eaec3cb8b4c5104",
+   "type": "ANIMATION",
+   "loop": false
+  },
+  {
+   "name": "Death_Atk2",
+   "uid": 5985239081070581017,
+   "libId": "573a716cdf2c4c325fa2a9af9bf9f7a4",
+   "type": "ANIMATION",
+   "loop": false
+  },
+  {
+   "name": "Death_Atk1Recover",
+   "uid": 14941368399133216475,
+   "libId": "8e11cd1c300bc0e023ca8fe1eed059fb",
+   "type": "ANIMATION",
+   "loop": false
+  },
+  {
+   "name": "Death_ChargeAtk2",
+   "uid": 9639721254371782621,
+   "libId": "dddd6dc240cf0efcbf7694462a975a5c",
+   "type": "ANIMATION",
+   "loop": false
+  },
+  {
+   "name": "Death_ChargeAtk",
+   "uid": 12320228368466371797,
+   "libId": "4888f0f052a5f0d5879142afb485f970",
+   "type": "ANIMATION",
+   "loop": false
+  },
+  {
+   "name": "Death_Taunt2",
+   "uid": 16259659905940049556,
+   "libId": "925cbf93bee2ca30309db9f5a9d65c2c",
+   "type": "ANIMATION",
+   "loop": false
+  },
+  {
+   "name": "Death_Taunt",
+   "uid": 13468629528477703923,
+   "libId": "a3687544407c5cf72d1490b934ab4f9b",
+   "type": "ANIMATION",
+   "loop": false
+  },
+  {
+   "name": "Death_ShadowExecution",
+   "uid": 9533535938206922414,
+   "libId": "2762c6000a5bfc71774d74d14bd37fe3",
+   "type": "ANIMATION",
+   "loop": false
+  },
+  {
+   "name": "Death_Harm1",
+   "uid": 11143455331694328179,
+   "libId": "7236ec1cd7cf4dade491fceb9a354d8d",
+   "type": "ANIMATION",
+   "loop": false
+  },
+  {
+   "name": "Death_Harm2",
+   "uid": 3766463860614034078,
+   "libId": "ef101ffde5fe4fe929c215f9ff3f9f75",
+   "type": "ANIMATION",
+   "loop": false
+  },
+  {
+   "name": "Death_Harm3",
+   "uid": 4255812996545272822,
+   "libId": "24fcf42110a7916f70ba46c4d5a7342e",
+   "type": "ANIMATION",
+   "loop": false
+  },
+  {
+   "name": "Death_Downed",
+   "uid": 16609234580317719944,
+   "libId": "8479fabd1608360c7681948f6a6ed245",
+   "type": "ANIMATION",
+   "loop": false
+  },
+  {
+   "name": "Death_Dead",
+   "uid": 2106796958813066592,
+   "libId": "c65cb3b20ab2577f40a049515a0563b6",
+   "type": "ANIMATION",
+   "loop": false
+  }
+ ],
+ "states": [
+  {
+   "name": "Death_Idle",
+   "clipName": "Death_Idle",
+   "speed": 1.0,
+   "behaviourScriptName": "",
+   "behaviourFieldsJson": "",
+   "overrideLoop": false,
+   "loop": true
+  },
+  {
+   "name": "Death_Run",
+   "clipName": "Death_Run",
+   "speed": 1.0,
+   "behaviourScriptName": "",
+   "behaviourFieldsJson": "",
+   "overrideLoop": false,
+   "loop": true
+  },
+  {
+   "name": "Death_Dash2",
+   "clipName": "Death_Dash2",
+   "speed": 1.0,
+   "behaviourScriptName": "",
+   "behaviourFieldsJson": "",
+   "overrideLoop": false,
+   "loop": false
+  },
+  {
+   "name": "Death_Dash",
+   "clipName": "Death_Dash",
+   "speed": 1.0,
+   "behaviourScriptName": "",
+   "behaviourFieldsJson": "",
+   "overrideLoop": false,
+   "loop": false
+  },
+  {
+   "name": "Death_Atk1",
+   "clipName": "Death_Atk1",
+   "speed": 1.0,
+   "behaviourScriptName": "",
+   "behaviourFieldsJson": "",
+   "overrideLoop": false,
+   "loop": false
+  },
+  {
+   "name": "Death_Atk2",
+   "clipName": "Death_Atk2",
+   "speed": 1.0,
+   "behaviourScriptName": "",
+   "behaviourFieldsJson": "",
+   "overrideLoop": false,
+   "loop": false
+  },
+  {
+   "name": "Death_Atk1Recover",
+   "clipName": "Death_Atk1Recover",
+   "speed": 1.0,
+   "behaviourScriptName": "",
+   "behaviourFieldsJson": "",
+   "overrideLoop": false,
+   "loop": false
+  },
+  {
+   "name": "Death_ChargeAtk2",
+   "clipName": "Death_ChargeAtk2",
+   "speed": 1.0,
+   "behaviourScriptName": "",
+   "behaviourFieldsJson": "",
+   "overrideLoop": false,
+   "loop": false
+  },
+  {
+   "name": "Death_ChargeAtk",
+   "clipName": "Death_ChargeAtk",
+   "speed": 1.0,
+   "behaviourScriptName": "",
+   "behaviourFieldsJson": "",
+   "overrideLoop": false,
+   "loop": false
+  },
+  {
+   "name": "Death_Taunt2",
+   "clipName": "Death_Taunt2",
+   "speed": 1.0,
+   "behaviourScriptName": "",
+   "behaviourFieldsJson": "",
+   "overrideLoop": false,
+   "loop": false
+  },
+  {
+   "name": "Death_Taunt",
+   "clipName": "Death_Taunt",
+   "speed": 1.0,
+   "behaviourScriptName": "",
+   "behaviourFieldsJson": "",
+   "overrideLoop": false,
+   "loop": false
+  },
+  {
+   "name": "Death_ShadowExecution",
+   "clipName": "Death_ShadowExecution",
+   "speed": 1.0,
+   "behaviourScriptName": "",
+   "behaviourFieldsJson": "",
+   "overrideLoop": false,
+   "loop": false
+  },
+  {
+   "name": "Death_Harm1",
+   "clipName": "Death_Harm1",
+   "speed": 1.0,
+   "behaviourScriptName": "",
+   "behaviourFieldsJson": "",
+   "overrideLoop": false,
+   "loop": false
+  },
+  {
+   "name": "Death_Harm2",
+   "clipName": "Death_Harm2",
+   "speed": 1.0,
+   "behaviourScriptName": "",
+   "behaviourFieldsJson": "",
+   "overrideLoop": false,
+   "loop": false
+  },
+  {
+   "name": "Death_Harm3",
+   "clipName": "Death_Harm3",
+   "speed": 1.0,
+   "behaviourScriptName": "",
+   "behaviourFieldsJson": "",
+   "overrideLoop": false,
+   "loop": false
+  },
+  {
+   "name": "Death_Downed",
+   "clipName": "Death_Downed",
+   "speed": 1.0,
+   "behaviourScriptName": "",
+   "behaviourFieldsJson": "",
+   "overrideLoop": false,
+   "loop": false
+  },
+  {
+   "name": "Death_Dead",
+   "clipName": "Death_Dead",
+   "speed": 1.0,
+   "behaviourScriptName": "",
+   "behaviourFieldsJson": "",
+   "overrideLoop": false,
+   "loop": false
+  }
+ ]
 }

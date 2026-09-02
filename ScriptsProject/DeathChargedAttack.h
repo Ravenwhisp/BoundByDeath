@@ -43,6 +43,7 @@ private:
     DeathParticles* m_particles = nullptr;
 
     float   m_chargeTime = 0.0f;
+    float   m_maxHoldTimer = 0.0f;
     bool    m_isCharging = false;
 
     float   m_pendingDamage = 0.0f;

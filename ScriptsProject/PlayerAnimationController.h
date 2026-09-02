@@ -47,7 +47,7 @@ public:
 
     void beginChargeHold(const std::string& stateName, float blendTime, float speed, float pausePct);
     void setChargeProgress(float progress01);
-    void endChargeHold();
+    void endChargeHold(float releaseFraction = 1.0f);
 
 private:
     AnimationComponent* findAnimationComponent();
@@ -69,6 +69,9 @@ public:
     float m_damagedBlendTime = 0.10f;
     float m_downedBlendTime = 0.10f;
     float m_deathBlendTime = 0.10f;
+
+    float m_dashAnimDuration = 0.5f;
+    float m_dashAnimStartPct = 0.2f;
 
 private:
     AnimationComponent* m_animationComponent = nullptr;

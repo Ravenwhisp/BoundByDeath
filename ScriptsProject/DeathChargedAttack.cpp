@@ -14,6 +14,9 @@
 
 #include <cmath>
 
+// When fully charged, keep the charge held (aiming) for this long before auto-releasing.
+static constexpr float k_maxChargeHoldGrace = 2.0f;
+
 DeathChargedAttack::DeathChargedAttack(GameObject* owner)
     : ChargedAttackBase(owner)
 {
@@ -50,6 +53,9 @@ void DeathChargedAttack::Update()
         if (m_chargeTime > m_config->m_chargedMaxChargeTime)
             m_chargeTime = m_config->m_chargedMaxChargeTime;
 
+        if (isMaxCharge)
+            m_maxHoldTimer += Time::getDeltaTime();
+
         const float chargeRatio = m_config->m_chargedMaxChargeTime > 0.0f
             ? (m_chargeTime / m_config->m_chargedMaxChargeTime) : 1.0f;
 
@@ -71,7 +77,7 @@ void DeathChargedAttack::Update()
             }
         }
 
-        if (isMaxCharge || Input::isRightTriggerReleased(getPlayerIndex()))
+        if (Input::isRightTriggerReleased(getPlayerIndex()) || m_maxHoldTimer >= k_maxChargeHoldGrace)
         {
             fireAttack();
         }
@@ -96,6 +102,7 @@ bool DeathChargedAttack::canStartSpecificAbility() const
 void DeathChargedAttack::startCharging()
 {
     m_chargeTime   = 0.0f;
+    m_maxHoldTimer = 0.0f;
     m_isCharging   = true;
 
     setAbilityLocked(true);
@@ -165,7 +172,12 @@ void DeathChargedAttack::fireAttack()
     {
         PlayerAnimationController* anim = m_character->getAnimationController();
         if (anim != nullptr)
-            anim->endChargeHold();
+        {
+            // Always play the full spin (circular damage); charge only adds follow-through.
+            const float chargeRatio = m_config->m_chargedMaxChargeTime > 0.0f
+                ? (m_chargeTime / m_config->m_chargedMaxChargeTime) : 1.0f;
+            anim->endChargeHold(0.55f + 0.45f * chargeRatio);
+        }
 
         PlayerState* playerState = m_character->getPlayerState();
         if (playerState != nullptr && !playerState->isDowned())
