@@ -10,8 +10,8 @@ IMPLEMENT_SCRIPT_FIELDS(ArcherGuardParticles,
     SERIALIZED_ASSET_REF(m_arrowSparksPrefab, "Arrow Sparks Prefab", AssetType::PREFAB),
     SERIALIZED_ASSET_REF(m_barrageImpactPrefab, "Barrage Impact Particle Prefab", AssetType::PREFAB),
     SERIALIZED_ASSET_REF(m_somersaultPrefab, "Somersault Particle Prefab", AssetType::PREFAB),
-    SERIALIZED_FLOAT(m_barrageFloorYOffset, "Barrage Floor Y Offset", -5.0f, 5.0f, 0.05f),
-    SERIALIZED_FLOAT(m_barrageImpactYOffset, "Barrage Impact Y Offset", -5.0f, 5.0f, 0.05f),
+    SERIALIZED_FLOAT(m_barrageFloorYOffset, "Barrage Floor Y Offset", -5.0f, 5.0f, 0.5f),
+    SERIALIZED_FLOAT(m_barrageImpactYOffset, "Barrage Impact Y Offset", -5.0f, 5.0f, 0.5f),
     SERIALIZED_FLOAT(m_barrageImpactLifetime, "Barrage Impact Lifetime", 0.0f, 10.0f, 0.1f)
 )
 
