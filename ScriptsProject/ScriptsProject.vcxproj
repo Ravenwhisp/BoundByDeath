@@ -120,7 +120,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)../Engine/Assets/;$(SolutionDir)EngineDependencies</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)../Engine/Assets/;$(SolutionDir)EngineDependencies;$(SolutionDir)EngineDependencies\ffmpeg\include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -143,7 +143,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)../Engine/Assets/;$(SolutionDir)EngineDependencies</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)../Engine/Assets/;$(SolutionDir)EngineDependencies;$(SolutionDir)EngineDependencies\ffmpeg\include</AdditionalIncludeDirectories>
       <AdditionalHeaderUnitDependencies>
       </AdditionalHeaderUnitDependencies>
       <LanguageStandard>stdcpp20</LanguageStandard>
@@ -169,6 +169,7 @@
     <ClInclude Include="AelorinExhaustionState.h" />
     <ClInclude Include="AelorinGraspOfTheDeadState.h" />
     <ClInclude Include="AelorinIdleState.h" />
+    <ClInclude Include="AelorinLavaController.h" />
     <ClInclude Include="AelorinNovaState.h" />
     <ClInclude Include="AelorinPhaseTransitionState.h" />
     <ClInclude Include="AelorinRisenSpiresState.h" />
@@ -361,6 +362,7 @@
     <ClInclude Include="MenuSound.h" />
     <ClInclude Include="UIPause.h" />
     <ClInclude Include="UISplashScreen.h" />
+    <ClInclude Include="VideoManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AbilityBase.cpp" />
@@ -373,6 +375,7 @@
     <ClCompile Include="AelorinExhaustionState.cpp" />
     <ClCompile Include="AelorinGraspOfTheDeadState.cpp" />
     <ClCompile Include="AelorinIdleState.cpp" />
+    <ClCompile Include="AelorinLavaController.cpp" />
     <ClCompile Include="AelorinNovaState.cpp" />
     <ClCompile Include="AelorinPhaseTransitionState.cpp" />
     <ClCompile Include="AelorinRisenSpiresState.cpp" />
@@ -569,6 +572,7 @@
     <ClCompile Include="MenuSound.cpp" />
     <ClCompile Include="UIPause.cpp" />
     <ClCompile Include="UISplashScreen.cpp" />
+    <ClCompile Include="VideoManager.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
