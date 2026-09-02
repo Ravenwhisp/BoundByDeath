@@ -6,6 +6,7 @@
 #include "EnemyAttackExecutor.h"
 #include "ArthurUI.h"
 #include "ArthurSound.h"
+#include "CameraShake.h"
 
 ArthurEarthHammer::ArthurEarthHammer(GameObject* owner)
     : StateMachineScript(owner)
@@ -19,6 +20,9 @@ void ArthurEarthHammer::OnStateEnter()
     m_animation = AnimationAPI::getAnimationComponent(getOwner());
     m_arthurUI = GameObjectAPI::findScript<ArthurUI>(getOwner());
     m_arthurSound = GameObjectAPI::findScript<ArthurSound>(getOwner());
+
+    GameObject* cameraObject = SceneAPI::getDefaultCameraGameObject();
+    m_cameraShake = cameraObject ? GameObjectAPI::findScript<CameraShake>(cameraObject) : nullptr;
 
     m_stateTimer = 0.0f;
     m_hasAppliedImpact = false;
@@ -137,6 +141,11 @@ void ArthurEarthHammer::applyImpact()
     if (m_arthurSound)
     {
         m_arthurSound->playHammerImpact();
+    }
+
+    if (m_cameraShake)
+    {
+        m_cameraShake->shakeImpact();
     }
 }
 

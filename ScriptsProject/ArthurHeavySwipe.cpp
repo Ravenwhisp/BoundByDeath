@@ -6,6 +6,7 @@
 #include "EnemyAttackExecutor.h"
 #include "ArthurUI.h"
 #include "ArthurSound.h"
+#include "CameraShake.h"
 
 ArthurHeavySwipe::ArthurHeavySwipe(GameObject* owner)
     : StateMachineScript(owner)
@@ -19,6 +20,9 @@ void ArthurHeavySwipe::OnStateEnter()
     m_animation = AnimationAPI::getAnimationComponent(getOwner());
     m_arthurUI = GameObjectAPI::findScript<ArthurUI>(getOwner());
     m_arthurSound = GameObjectAPI::findScript<ArthurSound>(getOwner());
+
+    GameObject* cameraObject = SceneAPI::getDefaultCameraGameObject();
+    m_cameraShake = cameraObject ? GameObjectAPI::findScript<CameraShake>(cameraObject) : nullptr;
 
     m_stateTimer = 0.0f;
 
@@ -178,6 +182,11 @@ void ArthurHeavySwipe::tryApplyHit(int hitIndex)
         {
             m_arthurSound->playClawImpact();     // impact only when the strike connects
         }
+    }
+
+    if (hits > 0 && m_cameraShake)
+    {
+        m_cameraShake->shakeLight();             // light kick only when the strike connects
     }
 
     Debug::log("[ArthurHeavySwipe] Hit %d applied.", hitIndex);
