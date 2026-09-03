@@ -56,7 +56,7 @@ void LevelCheats::Update()
     {
         if (KeyComboPressed(KeyCode::Num1))
         {
-            restartLevel();
+            toLevel1();
         }
         else if (KeyComboPressed(KeyCode::Num2))
         {
@@ -188,7 +188,7 @@ void LevelCheats::DownState()
     }
 }
 
-void LevelCheats::restartLevel()
+void LevelCheats::toLevel1()
 {
     Debug::log("Restart Level activated!");
     SceneAPI::requestSceneChange("Level1");
