@@ -23,6 +23,8 @@ public:
 	void DownState();
 	void restartLevel();
 	void killEnemies();
+	void toLevel2();
+	void toBossLevel();
 
 private:
 
