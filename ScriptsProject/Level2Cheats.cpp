@@ -24,6 +24,7 @@ void Level2Cheats::Update()
     if (KeyComboPressed(KeyCode::T)) ToggleInvincibility();
     /*if (KeyComboPressed(KeyCode::Num3)) SpawnEnemy(0);
     if (KeyComboPressed(KeyCode::Num4)) SpawnEnemy(1);*/
+    if (KeyComboPressed(KeyCode::F)) killEnemies();
     if (Input::isKeyDown(KeyCode::RightShift) && Input::isKeyDown(KeyCode::A))
     {
         if (KeyComboPressed(KeyCode::Num1))
@@ -198,6 +199,20 @@ void Level2Cheats::toBossLevel()
 {
     Debug::log("Load Boss Level activated!");
     SceneAPI::requestSceneChange("BossLevel");
+}
+
+void Level2Cheats::killEnemies()
+{
+    Debug::log("Kill Enemies activated!");
+    std::vector<GameObject*> enemies = SceneAPI::findAllGameObjectsByTag(Tag::ENEMY);
+    for (GameObject* enemy : enemies)
+    {
+        Damageable* damageable = GameObjectAPI::findScript<Damageable>(enemy);
+        if (damageable)
+        {
+            damageable->takeDamage(damageable->getCurrentHp());
+        }
+    }
 }
 
 
