@@ -158,6 +158,8 @@ void ArthurEarthHammer::applyImpact()
     if (m_arthurParticles)
     {
         m_arthurParticles->playEarthHammerImpact(center);
+    }
+
     if (m_cameraShake)
     {
         m_cameraShake->shakeImpact();
