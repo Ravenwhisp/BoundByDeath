@@ -111,6 +111,35 @@
             "ScriptFields": {}
         },
         {
+            "UID": 7283640192837465192,
+            "ComponentType": "SCRIPT",
+            "Active": true,
+            "ScriptName": "SkeletonParticles",
+            "ScriptFields": {
+                "Revive Particle Prefab Path": "Assets/Prefabs/Particles/VFXRemake/Enemies/Enemies_Level2/Skeletons/PS_Revive.prefab",
+                "Revive Particle Prefab": {
+                    "uid": 18327182067288946140,
+                    "libId": "c1dc6a4e33ec8f842aa794bb7a248452",
+                    "type": "PREFAB"
+                },
+                "Shield Hit Particle Prefab Path": "Assets/Prefabs/Particles/VFXRemake/Enemies/Enemies_Level2/Skeletons/PS_ShockwaveSmallParticles.prefab",
+                "Shield Hit Particle Prefab": {
+                    "uid": 10587344930246394123,
+                    "libId": "f0a1cb5004afcc48962d0e90e516211e",
+                    "type": "PREFAB"
+                },
+                "Third Attack Hit Particle Prefab Path": "Assets/Prefabs/Particles/VFXRemake/Enemies/Enemies_Level2/Skeletons/PS_Skeleton3rdAttack.prefab",
+                "Third Attack Hit Particle Prefab": {
+                    "uid": 861060698712994543,
+                    "libId": "c7035e05e5700d986abc75dd44e0bb5e",
+                    "type": "PREFAB"
+                },
+                "Revive Y Offset": 0.0,
+                "Revive Forward Offset": 0.0,
+                "Revive Deactivate Delay": 2.0
+            }
+        },
+        {
             "UID": 9624734678425773717,
             "ComponentType": "SCRIPT",
             "Active": true,
@@ -155,6 +184,23 @@
             "Active": true,
             "ScriptName": "EnemyForcedMovement",
             "ScriptFields": {}
+        },
+        {
+            "UID": 9182736450182736455,
+            "ComponentType": "SCRIPT",
+            "Active": true,
+            "ScriptName": "SharedEnemyParticles",
+            "ScriptFields": {
+                "Movement Particle Prefab Path": "Assets/Prefabs/Particles/VFXRemake/Enemies/PS_RunEnemy.prefab",
+                "Movement Particle Prefab": {
+                    "uid": 12829264890513720375,
+                    "libId": "dbd7fa1fccd2fe94ddf13e6437cd2846",
+                    "type": "PREFAB"
+                },
+                "Movement Particle Y Offset": 0.05000000074505806,
+                "Movement Particle Forward Offset": -0.3499999940395355,
+                "Movement Notification Timeout": 0.15000000596046448
+            }
         }
     ],
     "Children": [

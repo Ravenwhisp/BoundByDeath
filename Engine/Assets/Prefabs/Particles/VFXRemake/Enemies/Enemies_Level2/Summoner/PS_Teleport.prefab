@@ -2,7 +2,7 @@
     "Version": 2,
     "sourcePath": "Assets\\Prefabs\\Particles\\VFXRemake\\Enemies\\Enemies_Level2\\Summoner\\PS_Teleport.prefab",
     "Name": "PS_Teleport",
-    "Active": false,
+    "Active": true,
     "Static": false,
     "Layer": "DEFAULT",
     "Tag": "DEFAULT",
@@ -52,7 +52,7 @@
             },
             "Components": [
                 {
-                    "UID": 1780085260291244279,
+                    "UID": 3645002295337860440,
                     "ComponentType": "PARTICLE_SYSTEM",
                     "Active": true,
                     "TextureAssetId": {
@@ -67,19 +67,19 @@
                                     "ModuleType": 2,
                                     "Looping": true,
                                     "Duration": 20.0,
-                                    "RateOverTime": 15.0,
+                                    "RateOverTime": 20.0,
                                     "RateOverDistance": 0.0
                                 },
                                 {
                                     "ModuleType": 4,
                                     "LifeTimeType": "RANDOM_BETWEEN_TWO",
                                     "StartLifeTime": 0.10000000149011612,
-                                    "StartLifeTime2": 0.800000011920929
+                                    "StartLifeTime2": 0.5
                                 },
                                 {
                                     "ModuleType": 1,
                                     "ShapeType": "CONE",
-                                    "Radius": 0.5,
+                                    "Radius": 0.75,
                                     "RadiusThickness": 1.0,
                                     "RadiusScale": 1.0
                                 },
@@ -137,7 +137,7 @@
                                     ],
                                     "StartScale2": [
                                         0.5,
-                                        0.5,
+                                        0.800000011920929,
                                         0.0
                                     ],
                                     "ChangeSizeOverTime": true,
@@ -174,7 +174,7 @@
                     ]
                 },
                 {
-                    "UID": 186386564992291174,
+                    "UID": 2403213370170431510,
                     "ComponentType": "PREFAB_INSTANCE",
                     "Active": true,
                     "sourcePath": "Assets\\Prefabs\\Particles\\VFXRemake\\Enemies\\Enemies_Level2\\Summoner\\PS_TeleportParticlesUp1.prefab",
@@ -209,7 +209,7 @@
             },
             "Components": [
                 {
-                    "UID": 18134957059786509032,
+                    "UID": 16083535530647749102,
                     "ComponentType": "PARTICLE_SYSTEM",
                     "Active": true,
                     "TextureAssetId": {
@@ -236,7 +236,7 @@
                                 {
                                     "ModuleType": 1,
                                     "ShapeType": "CONE",
-                                    "Radius": 0.5,
+                                    "Radius": 0.75,
                                     "RadiusThickness": 1.0,
                                     "RadiusScale": 1.0
                                 },
@@ -332,14 +332,14 @@
                     ]
                 },
                 {
-                    "UID": 1234907603570962228,
+                    "UID": 17345450390578257723,
                     "ComponentType": "PREFAB_INSTANCE",
                     "Active": true,
                     "sourcePath": "Assets\\Prefabs\\Particles\\VFXRemake\\Enemies\\Enemies_Level2\\Summoner\\PS_TeleportParticlesUp1.prefab",
                     "assetUID": 6057807684360281996
                 },
                 {
-                    "UID": 8835932447340650963,
+                    "UID": 3273115595189556973,
                     "ComponentType": "PREFAB_INSTANCE",
                     "Active": true,
                     "sourcePath": "Assets\\Prefabs\\Particles\\VFXRemake\\Enemies\\Enemies_Level2\\Summoner\\PS_TeleportParticlesUp2.prefab",
@@ -374,7 +374,7 @@
             },
             "Components": [
                 {
-                    "UID": 9568343945687141644,
+                    "UID": 3276252247384042193,
                     "ComponentType": "PARTICLE_SYSTEM",
                     "Active": true,
                     "TextureAssetId": {
@@ -458,8 +458,8 @@
                                     "ChangeSizeOverTime": true,
                                     "EndScaleType": "CONSTANT",
                                     "EndScale": [
-                                        1.0,
-                                        1.0,
+                                        4.0,
+                                        4.0,
                                         0.0
                                     ]
                                 },
@@ -489,7 +489,7 @@
                     ]
                 },
                 {
-                    "UID": 4256083495661383039,
+                    "UID": 9437047052398577567,
                     "ComponentType": "PREFAB_INSTANCE",
                     "Active": true,
                     "sourcePath": "Assets\\Prefabs\\Particles\\VFXRemake\\Enemies\\Enemies_Level2\\Summoner\\PS_TeleportFlash.prefab",

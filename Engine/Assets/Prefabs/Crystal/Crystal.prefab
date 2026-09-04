@@ -8,9 +8,9 @@
     "Tag": "ENEMY",
     "Transform": {
         "Position": [
-            24.989999771118164,
-            1.031999945640564,
-            -11.860002517700195
+            0.0,
+            0.0,
+            0.0
         ],
         "Rotation": [
             -0.0,
@@ -26,7 +26,7 @@
     },
     "Components": [
         {
-            "UID": 7396801583077014401,
+            "UID": 5543355813976370548,
             "ComponentType": "SCRIPT",
             "Active": true,
             "ScriptName": "EnemyDamageable",
@@ -37,11 +37,17 @@
                 "UI Update Time (Slider 2)": 1.0,
                 "UI Wait Time (Slider 2)": 0.6000000238418579,
                 "Health Bar Container": 0,
-                "Health Bar Fade Time": 0.25
+                "Health Bar Fade Time": 0.25,
+                "Shadow Execution Preview": 0,
+                "Shadow Execution Threshold Marker": 0,
+                "Shadow Preview Fade Time": 0.20000000298023224,
+                "Shadow Preview Hit Time": 0.20000000298023224,
+                "Shadow Preview Non-Lethal Alpha": 0.699999988079071,
+                "Shadow Preview Lethal Alpha": 1.0
             }
         },
         {
-            "UID": 1636950113159003580,
+            "UID": 38616109651408,
             "ComponentType": "SCRIPT",
             "Active": true,
             "ScriptName": "CrystalShadowMark",
@@ -61,26 +67,16 @@
                 "Ready Pop Peak Scale": 1.2000000476837158,
                 "PuzzleManager": 5103596312343383342,
                 "Puzzle ID": 0,
-                "Active Time": 15.0,
-                "Crystal Sparks Particle": {
-                    "uid": 10185809864374214726,
-                    "libId": "aeb38406b357fce567163bc8508de46b",
-                    "type": "PREFAB"
-                },
-                "Crystal Stars Particle": {
-                    "uid": 18054063780599687445,
-                    "libId": "669aec13cf6ebc0b2a5ade300762fbde",
-                    "type": "PREFAB"
-                }
+                "Active Time": 15.0
             }
         },
         {
-            "UID": 8098445358458774245,
+            "UID": 10382494409151041336,
             "ComponentType": "SOUND_SOURCE",
             "Active": true
         },
         {
-            "UID": 1005285692095850388,
+            "UID": 11702319813155044852,
             "ComponentType": "SCRIPT",
             "Active": true,
             "ScriptName": "CrystalVisuals",
@@ -119,7 +115,7 @@
             },
             "Components": [
                 {
-                    "UID": 214106334227325531,
+                    "UID": 11011024199557821370,
                     "ComponentType": "ANIMATION",
                     "Active": true,
                     "StateMachineUID": {
@@ -190,7 +186,7 @@
                             },
                             "Components": [
                                 {
-                                    "UID": 16219672185244193402,
+                                    "UID": 874222903368700620,
                                     "ComponentType": "MODEL",
                                     "Active": true,
                                     "MeshAssetId": {
@@ -241,7 +237,7 @@
                             },
                             "Components": [
                                 {
-                                    "UID": 1754423652634124572,
+                                    "UID": 10363269432664470523,
                                     "ComponentType": "MODEL",
                                     "Active": true,
                                     "MeshAssetId": {
@@ -294,7 +290,7 @@
                     },
                     "Components": [
                         {
-                            "UID": 8329503965134933407,
+                            "UID": 7570221652184634719,
                             "ComponentType": "MODEL",
                             "Active": true,
                             "MeshAssetId": {
@@ -347,14 +343,14 @@
             },
             "Components": [
                 {
-                    "UID": 13899274306407801187,
+                    "UID": 16954122891113931284,
                     "ComponentType": "CANVAS",
                     "Active": true,
                     "RenderMode": "WORLD_SPACE_CAMERA",
                     "ZTest": true
                 },
                 {
-                    "UID": 14367312689376951944,
+                    "UID": 16541344396351928945,
                     "ComponentType": "TRANSFORM2D",
                     "Active": true,
                     "Position": [
@@ -393,7 +389,7 @@
                     "Alpha": 1.0
                 },
                 {
-                    "UID": 14026326424391730810,
+                    "UID": 7995002114052443455,
                     "ComponentType": "PREFAB_INSTANCE",
                     "Active": true,
                     "sourcePath": "Assets\\Prefabs\\UI\\Shadow Mark.prefab",
@@ -427,7 +423,7 @@
                     },
                     "Components": [
                         {
-                            "UID": 5019246595635998457,
+                            "UID": 10216166084896996016,
                             "ComponentType": "TRANSFORM2D",
                             "Active": true,
                             "Position": [
@@ -466,7 +462,7 @@
                             "Alpha": 1.0
                         },
                         {
-                            "UID": 7677994614620137323,
+                            "UID": 5520890993443542100,
                             "ComponentType": "UIIMAGE",
                             "Active": true,
                             "TextureAssetId": {
@@ -518,7 +514,7 @@
                     },
                     "Components": [
                         {
-                            "UID": 14858126714880005603,
+                            "UID": 14696373395787622098,
                             "ComponentType": "TRANSFORM2D",
                             "Active": true,
                             "Position": [
@@ -557,7 +553,7 @@
                             "Alpha": 1.0
                         },
                         {
-                            "UID": 9127848626717369518,
+                            "UID": 17761900709103104119,
                             "ComponentType": "UIIMAGE",
                             "Active": true,
                             "TextureAssetId": {
@@ -609,7 +605,7 @@
                     },
                     "Components": [
                         {
-                            "UID": 14038749692220374304,
+                            "UID": 9593258060028979202,
                             "ComponentType": "TRANSFORM2D",
                             "Active": true,
                             "Position": [
@@ -648,7 +644,7 @@
                             "Alpha": 1.0
                         },
                         {
-                            "UID": 685560157298689338,
+                            "UID": 15217524474699884019,
                             "ComponentType": "UIIMAGE",
                             "Active": true,
                             "TextureAssetId": {

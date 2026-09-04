@@ -1,158 +1,169 @@
 {
-  "sourcePath": "Assets\\Prefabs\\Breakables\\Breakable Vase (Normal).prefab",
-  "Name": "Breakable Vase (Normal)",
-  "Active": true,
-  "Static": false,
-  "Layer": "DEFAULT",
-  "Tag": "BREAKABLE",
-  "Transform": {
-    "Position": [
-      0.0,
-      0.0,
-      0.0
-    ],
-    "Rotation": [
-      0.0,
-      0.0,
-      0.0,
-      1.0
-    ],
-    "Scale": [
-      1.0,
-      1.0,
-      1.0
-    ]
-  },
-  "Components": [
-    {
-      "UID": 1484589094645315132,
-      "ComponentType": "SCRIPT",
-      "Active": true,
-      "ScriptName": "BreakableObject",
-      "ScriptFields": {
-        "Normal Object": 1009010319038716922,
-        "Broken Object": 1725358833335515947
-      }
-    },
-    {
-      "UID": 1559550874554872103,
-      "ComponentType": "SCRIPT",
-      "Active": true,
-      "ScriptName": "BreakableDamageable",
-      "ScriptFields": {
-        "Max HP": 1.0,
-        "Health Slider": 0,
-        "Health Slider 2": 0,
-        "UI Update Time (Slider 2)": 1.0
-      }
-    }
-  ],
-  "Children": [
-    {
-      "Name": "Normal",
-      "Active": true,
-      "Static": false,
-      "Layer": "DEFAULT",
-      "Tag": "DEFAULT",
-      "Transform": {
+    "Version": 2,
+    "sourcePath": "Assets\\Prefabs\\Breakables\\Breakable Vase (Normal).prefab",
+    "Name": "Breakable Vase (Normal)",
+    "Active": true,
+    "Static": false,
+    "Layer": "DEFAULT",
+    "Tag": "BREAKABLE",
+    "Transform": {
         "Position": [
-          0.0,
-          0.0,
-          0.0
+            0.0,
+            0.0,
+            0.0
         ],
         "Rotation": [
-          0.7071068286895752,
-          0.0,
-          0.0,
-          0.7071068286895752
+            0.0,
+            0.0,
+            0.0,
+            1.0
         ],
         "Scale": [
-          0.009999999776482582,
-          0.010000000707805157,
-          0.010000000707805157
+            1.0,
+            1.0,
+            1.0
         ]
-      },
-      "Components": [
+    },
+    "Components": [
         {
-          "UID": 12457376769172077711,
-          "ComponentType": "MODEL",
-          "Active": true,
-          "MeshAssetId": {
-            "uid": 8827485997632395468,
-            "libId": "00e953f7b76004729e992db75ca9dac8",
-            "type": "MESH"
-          },
-          "SkinAssetId": {
-            "uid": 0,
-            "libId": "",
-            "type": "SKIN"
-          },
-          "Materials": [
-            {
-              "uid": 3669557967766827765,
-              "libId": "aa0605c15f91e03f4bd5f585271f24bd",
-              "type": "MATERIAL"
+            "UID": 2885750445040160457,
+            "ComponentType": "SCRIPT",
+            "Active": true,
+            "ScriptName": "BreakableObject",
+            "ScriptFields": {}
+        },
+        {
+            "UID": 16396519372427370225,
+            "ComponentType": "SCRIPT",
+            "Active": true,
+            "ScriptName": "BreakableDamageable",
+            "ScriptFields": {
+                "Max HP": 1.0,
+                "Health Slider": 0,
+                "Health Slider 2": 0,
+                "UI Update Time (Slider 2)": 1.0,
+                "UI Wait Time (Slider 2)": 0.6000000238418579
             }
-          ]
-        }
-      ],
-      "Children": []
-    },
-    {
-      "Name": "Broken",
-      "Active": true,
-      "Static": false,
-      "Layer": "DEFAULT",
-      "Tag": "DEFAULT",
-      "Transform": {
-        "Position": [
-          0.0,
-          0.0,
-          0.0
-        ],
-        "Rotation": [
-          -0.0,
-          0.0,
-          -0.0,
-          1.0
-        ],
-        "Scale": [
-          1.0,
-          1.0,
-          1.0
-        ]
-      },
-      "Components": [
+        },
         {
-          "UID": 1272015272914257476,
-          "ComponentType": "MODEL",
-          "Active": true,
-          "MeshAssetId": {
-            "uid": 5005769554318868917,
-            "libId": "0dcb007fd1a9c11075322c2d68c7ace1",
-            "type": "MESH"
-          },
-          "SkinAssetId": {
-            "uid": 0,
-            "libId": "",
-            "type": "SKIN"
-          },
-          "Materials": [
-            {
-              "uid": 8395065788512522984,
-              "libId": "42253496e4d62d806d9a5dbdd0e032c7",
-              "type": "MATERIAL"
+            "UID": 438307519265348343,
+            "ComponentType": "NAV_RUNTIME_BLOCKER",
+            "Active": true,
+            "HalfExtents": [
+                0.25,
+                1.0,
+                0.25
+            ],
+            "Blocked": false
+        }
+    ],
+    "Children": [
+        {
+            "Name": "Normal",
+            "Active": true,
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.7071068286895752,
+                    0.0,
+                    0.0,
+                    0.7071068286895752
+                ],
+                "Scale": [
+                    0.009999999776482582,
+                    0.010000000707805157,
+                    0.010000000707805157
+                ]
             },
-            {
-              "uid": 13300934354793628661,
-              "libId": "f4f37cc3262c611166e43aef84eb7242",
-              "type": "MATERIAL"
-            }
-          ]
+            "Components": [
+                {
+                    "UID": 3064106268898079204,
+                    "ComponentType": "MODEL",
+                    "Active": true,
+                    "MeshAssetId": {
+                        "uid": 8827485997632395468,
+                        "libId": "fb1e6c937f1b0f15cc0b17e0afbac37e",
+                        "type": "MESH"
+                    },
+                    "SkinAssetId": {
+                        "uid": 0,
+                        "libId": "",
+                        "type": "SKIN"
+                    },
+                    "Materials": [
+                        {
+                            "uid": 3669557967766827765,
+                            "libId": "776c2553b0b8825380cf9c1accfab159",
+                            "type": "MATERIAL"
+                        }
+                    ],
+                    "Render Mode": 0
+                }
+            ],
+            "Children": []
+        },
+        {
+            "Name": "Broken",
+            "Active": true,
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0,
+                    1.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [
+                {
+                    "UID": 3807618746599600071,
+                    "ComponentType": "MODEL",
+                    "Active": true,
+                    "MeshAssetId": {
+                        "uid": 5005769554318868917,
+                        "libId": "f2c7e1bd7612f03afa6e6bc085da130b",
+                        "type": "MESH"
+                    },
+                    "SkinAssetId": {
+                        "uid": 0,
+                        "libId": "",
+                        "type": "SKIN"
+                    },
+                    "Materials": [
+                        {
+                            "uid": 8395065788512522984,
+                            "libId": "1f9c737448ce332c65fb5b7c57107496",
+                            "type": "MATERIAL"
+                        },
+                        {
+                            "uid": 13300934354793628661,
+                            "libId": "cf66caad0674ac69f9ed9523ddcb49fb",
+                            "type": "MATERIAL"
+                        }
+                    ],
+                    "Render Mode": 0
+                }
+            ],
+            "Children": []
         }
-      ],
-      "Children": []
-    }
-  ],
-  "Version": 2
+    ]
 }

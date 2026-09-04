@@ -52,7 +52,7 @@
             },
             "Components": [
                 {
-                    "UID": 12408244228221574563,
+                    "UID": 12673915066125060248,
                     "ComponentType": "PARTICLE_SYSTEM",
                     "Active": true,
                     "TextureAssetId": {
@@ -67,7 +67,7 @@
                                     "ModuleType": 2,
                                     "Looping": false,
                                     "Duration": 20.0,
-                                    "RateOverTime": 10.0,
+                                    "RateOverTime": 20.0,
                                     "RateOverDistance": 0.0
                                 },
                                 {
@@ -79,7 +79,7 @@
                                 {
                                     "ModuleType": 1,
                                     "ShapeType": "CONE",
-                                    "Radius": 0.20000000298023224,
+                                    "Radius": 1.0,
                                     "RadiusThickness": 1.0,
                                     "RadiusScale": 1.0
                                 },
@@ -129,12 +129,19 @@
                                         0.0,
                                         0.171875,
                                         1.0234375
-                                    ]
+                                    ],
+                                    "HDRColor": [
+                                        0.0,
+                                        0.0,
+                                        0.0
+                                    ],
+                                    "HDRIntensity": 0.0
                                 },
                                 {
                                     "ModuleType": 5,
                                     "VelocityType": "CONSTANT",
-                                    "InitialVelocity": 2.0
+                                    "InitialVelocity": 2.0,
+                                    "Gravity": 0.0
                                 },
                                 {
                                     "ModuleType": 6,
@@ -170,21 +177,22 @@
                                 {
                                     "ModuleType": 9,
                                     "RenderMode": "VERTICAL",
-                                    "RenderLayer": 0
+                                    "RenderLayer": 0,
+                                    "BlendMode": "ALPHA"
                                 }
                             ]
                         }
                     ]
                 },
                 {
-                    "UID": 8308684569702392455,
+                    "UID": 9395364312991347131,
                     "ComponentType": "PREFAB_INSTANCE",
                     "Active": true,
                     "sourcePath": "Assets\\Prefabs\\Particles\\VFXRemake\\Objects\\Barrels\\PS_BarrelsHealParticles1.prefab",
                     "assetUID": 10539269014952362662
                 },
                 {
-                    "UID": 11776213302921925349,
+                    "UID": 10150378833826744735,
                     "ComponentType": "PREFAB_INSTANCE",
                     "Active": true,
                     "sourcePath": "Assets\\Prefabs\\Particles\\VFXRemake\\Objects\\Barrels\\PS_BarrelsHealParticles2.prefab",
@@ -202,7 +210,7 @@
             "Transform": {
                 "Position": [
                     0.0,
-                    0.0,
+                    0.14854848384857178,
                     0.0
                 ],
                 "Rotation": [
@@ -219,7 +227,7 @@
             },
             "Components": [
                 {
-                    "UID": 13992663596608684090,
+                    "UID": 5160162659778849728,
                     "ComponentType": "PARTICLE_SYSTEM",
                     "Active": true,
                     "TextureAssetId": {
@@ -246,7 +254,7 @@
                                 {
                                     "ModuleType": 1,
                                     "ShapeType": "CONE",
-                                    "Radius": 0.20000000298023224,
+                                    "Radius": 0.800000011920929,
                                     "RadiusThickness": 1.0,
                                     "RadiusScale": 1.0
                                 },
@@ -296,12 +304,19 @@
                                         0.0,
                                         0.171875,
                                         1.0234375
-                                    ]
+                                    ],
+                                    "HDRColor": [
+                                        0.34932395815849304,
+                                        0.84555983543396,
+                                        0.36848360300064087
+                                    ],
+                                    "HDRIntensity": -1.0
                                 },
                                 {
                                     "ModuleType": 5,
                                     "VelocityType": "CONSTANT",
-                                    "InitialVelocity": 5.0
+                                    "InitialVelocity": 5.0,
+                                    "Gravity": 0.0
                                 },
                                 {
                                     "ModuleType": 6,
@@ -312,8 +327,8 @@
                                         0.0
                                     ],
                                     "StartScale2": [
-                                        0.05000000074505806,
-                                        0.05000000074505806,
+                                        0.20000000298023224,
+                                        0.20000000298023224,
                                         0.0
                                     ],
                                     "ChangeSizeOverTime": false
@@ -337,14 +352,15 @@
                                 {
                                     "ModuleType": 9,
                                     "RenderMode": "VERTICAL",
-                                    "RenderLayer": 0
+                                    "RenderLayer": 0,
+                                    "BlendMode": "ALPHA"
                                 }
                             ]
                         }
                     ]
                 },
                 {
-                    "UID": 18061445110361674300,
+                    "UID": 17556044362515424594,
                     "ComponentType": "PREFAB_INSTANCE",
                     "Active": true,
                     "sourcePath": "Assets\\Prefabs\\Particles\\VFXRemake\\Objects\\Barrels\\PS_BarrelsHealParticles1.prefab",
@@ -362,8 +378,8 @@
             "Transform": {
                 "Position": [
                     0.0,
-                    0.0,
-                    0.0
+                    0.4806050956249237,
+                    1.1458519111329224e-7
                 ],
                 "Rotation": [
                     1.0,
@@ -379,7 +395,7 @@
             },
             "Components": [
                 {
-                    "UID": 15278833705680238452,
+                    "UID": 4814817640614829105,
                     "ComponentType": "PARTICLE_SYSTEM",
                     "Active": true,
                     "TextureAssetId": {
@@ -394,21 +410,21 @@
                                     "ModuleType": 2,
                                     "Looping": false,
                                     "Duration": 2.0,
-                                    "RateOverTime": 2.0,
+                                    "RateOverTime": 10.0,
                                     "RateOverDistance": 0.0
                                 },
                                 {
                                     "ModuleType": 4,
                                     "LifeTimeType": "RANDOM_BETWEEN_TWO",
-                                    "StartLifeTime": 1.0,
-                                    "StartLifeTime2": 2.0
+                                    "StartLifeTime": 2.0,
+                                    "StartLifeTime2": 4.0
                                 },
                                 {
                                     "ModuleType": 1,
-                                    "ShapeType": "CONE",
-                                    "Radius": 0.20000000298023224,
+                                    "ShapeType": "SPHERE",
+                                    "Radius": 0.5,
                                     "RadiusThickness": 1.0,
-                                    "RadiusScale": 25.100000381469727
+                                    "RadiusScale": 15.0
                                 },
                                 {
                                     "ModuleType": 3,
@@ -425,7 +441,7 @@
                                         {
                                             "IsAlphaMark": true,
                                             "Position": 0.4786885380744934,
-                                            "Alpha": 1.0
+                                            "Alpha": 0.5360000133514404
                                         },
                                         {
                                             "IsAlphaMark": false,
@@ -443,11 +459,17 @@
                                         }
                                     ],
                                     "ColorCurve": [
+                                        0.4921875,
+                                        0.09375,
+                                        0.6796875,
+                                        0.5078125
+                                    ],
+                                    "HDRColor": [
                                         0.0,
                                         0.0,
-                                        0.265625,
-                                        0.921875
-                                    ]
+                                        0.0
+                                    ],
+                                    "HDRIntensity": 0.0
                                 },
                                 {
                                     "ModuleType": 5,
@@ -459,14 +481,15 @@
                                         0.0,
                                         0.0859375,
                                         0.9375
-                                    ]
+                                    ],
+                                    "Gravity": 0.0
                                 },
                                 {
                                     "ModuleType": 6,
                                     "StartScaleType": "RANDOM_BETWEEN_TWO",
                                     "StartScale": [
-                                        0.20000000298023224,
-                                        0.20000000298023224,
+                                        0.699999988079071,
+                                        0.699999988079071,
                                         0.0
                                     ],
                                     "StartScale2": [
@@ -501,21 +524,22 @@
                                 {
                                     "ModuleType": 9,
                                     "RenderMode": "BILLBOARD",
-                                    "RenderLayer": 0
+                                    "RenderLayer": 0,
+                                    "BlendMode": "ALPHA"
                                 }
                             ]
                         }
                     ]
                 },
                 {
-                    "UID": 422206703711576088,
+                    "UID": 17363062239527709860,
                     "ComponentType": "PREFAB_INSTANCE",
                     "Active": true,
                     "sourcePath": "Assets\\Prefabs\\Particles\\VFXRemake\\Objects\\Barrels\\PS_BarrelsDust.prefab",
                     "assetUID": 17971424705439715790
                 },
                 {
-                    "UID": 16412297484672894486,
+                    "UID": 6571548760177695017,
                     "ComponentType": "PREFAB_INSTANCE",
                     "Active": true,
                     "sourcePath": "Assets\\Prefabs\\Particles\\VFXRemake\\Objects\\Barrels\\PS_BarrelsDustHeal.prefab",

@@ -458,6 +458,9 @@
     <ClInclude Include="ArthurChargingSlam.h">
       <Filter>Enemies\Arthur\States</Filter>
     </ClInclude>
+    <ClInclude Include="ArthurParticles.h">
+      <Filter>Enemies\Arthur</Filter>
+    </ClInclude>
     <ClInclude Include="ArthurEarthHammer.h">
       <Filter>Enemies\Arthur\States</Filter>
     </ClInclude>
@@ -529,6 +532,9 @@
     </ClInclude>
     <ClInclude Include="HUDFader.h" />
     <ClInclude Include="CameraFollow.h">
+      <Filter>Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraShake.h">
       <Filter>Camera</Filter>
     </ClInclude>
     <ClInclude Include="AudioListenerFollow.h">
@@ -644,6 +650,7 @@
       <Filter>Enemies\Paladin</Filter>
     </ClInclude>
     <ClInclude Include="LinkedDeathController.h" />
+    <ClInclude Include="ParticleLifecycle.h" />
     <ClInclude Include="ParticleManager.h" />
     <ClInclude Include="EnemyForcedMovement.h">
       <Filter>Enemies\Movement</Filter>
@@ -737,6 +744,7 @@
       <Filter>Enemies\Aelorin\States</Filter>
     </ClInclude>
     <ClInclude Include="ElevatorManager.h" />
+    <ClInclude Include="AelorinLavaController.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
@@ -1018,6 +1026,9 @@
     <ClCompile Include="ArthurChargingSlam.cpp">
       <Filter>Enemies\Arthur\States</Filter>
     </ClCompile>
+    <ClCompile Include="ArthurParticles.cpp">
+      <Filter>Enemies\Arthur</Filter>
+    </ClCompile>
     <ClCompile Include="ArthurEarthHammer.cpp">
       <Filter>Enemies\Arthur\States</Filter>
     </ClCompile>
@@ -1086,6 +1097,9 @@
     </ClCompile>
     <ClCompile Include="HUDFader.cpp" />
     <ClCompile Include="CameraFollow.cpp">
+      <Filter>Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraShake.cpp">
       <Filter>Camera</Filter>
     </ClCompile>
     <ClCompile Include="AudioListenerFollow.cpp">
@@ -1284,5 +1298,6 @@
       <Filter>Enemies\Aelorin\States</Filter>
     </ClCompile>
     <ClCompile Include="ElevatorManager.cpp" />
+    <ClCompile Include="AelorinLavaController.cpp" />
   </ItemGroup>
 </Project>
