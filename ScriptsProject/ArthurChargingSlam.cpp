@@ -328,12 +328,13 @@ void ArthurChargingSlam::applyImpact()
     if (m_arthurParticles)
     {
         m_arthurParticles->playChargingSlamImpact(m_lockedTargetPosition);
-    if (m_cameraShake)
-    {
-        m_cameraShake->shakeImpact();
     }
+        if (m_cameraShake)
+        {
+            m_cameraShake->shakeImpact();
+        }
 
-    Debug::log("[ArthurChargingSlam] Impact applied.");
+        Debug::log("[ArthurChargingSlam] Impact applied.");
 }
 
 void ArthurChargingSlam::goToRecover()

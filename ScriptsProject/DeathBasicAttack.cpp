@@ -59,12 +59,24 @@ bool DeathBasicAttack::canStartSpecificAbility() const
 
 void DeathBasicAttack::startAbility()
 {
-    GameObject* target = m_character->getTargetController()
-        ? m_character->getTargetController()->getCurrentTarget()
+    PlayerTargetController* targetController = m_character
+        ? m_character->getTargetController()
+        : nullptr;
+
+    GameObject* target = targetController
+        ? targetController->getCurrentTarget()
         : nullptr;
 
     setAbilityLocked(true);
     m_movementLockedForCombo = true;
+
+    //Check first if the target is in range, if not, ask the target controller for the nearest target it tracks that is in attack range
+    if (target == nullptr || !isTargetInRange(target))
+    {
+        target = targetController && m_deathCharacter
+            ? targetController->findNearbyTargetInRange(m_deathCharacter->getConfig()->m_basicAttackRange)
+            : nullptr;
+    }
 
     snapFaceTarget(target);
     m_attackFacingTarget = target;
@@ -97,6 +109,28 @@ void DeathBasicAttack::startAbility()
     {
         Debug::log("[R1] step 3/3 - combo complete");
     }
+}
+
+bool DeathBasicAttack::isTargetInRange(GameObject* target) const
+{
+    if (target == nullptr || m_deathCharacter == nullptr)
+    {
+        return false;
+    }
+
+    Transform* myTransform     = GameObjectAPI::getTransform(getOwner());
+    Transform* targetTransform = GameObjectAPI::getTransform(target);
+    if (myTransform == nullptr || targetTransform == nullptr)
+    {
+        return false;
+    }
+
+    const float rangeSq = m_deathCharacter->getConfig()->m_basicAttackRange * m_deathCharacter->getConfig()->m_basicAttackRange;
+
+    Vector3 dir = TransformAPI::getGlobalPosition(targetTransform) - TransformAPI::getGlobalPosition(myTransform);
+    dir.y = 0.0f;
+
+    return dir.LengthSquared() <= rangeSq;
 }
 
 void DeathBasicAttack::onAttackWindowUpdate()
