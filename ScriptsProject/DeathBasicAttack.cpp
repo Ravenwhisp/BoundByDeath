@@ -82,6 +82,7 @@ void DeathBasicAttack::startAbility()
     m_attackFacingTarget = target;
 
     const int comboStep = m_deathCharacter->getComboStep();
+    m_comboVariant = comboStep;
 
     DeathSound* sound = m_deathCharacter->getSound();
     if (sound != nullptr)
@@ -89,7 +90,6 @@ void DeathBasicAttack::startAbility()
         sound->playLightSwing();
     }
 
-    dealDamageToTarget(target);
     notifyAbilitySuccessfullyStarted();
 
     m_deathCharacter->advanceCombo(false);
@@ -149,6 +149,11 @@ void DeathBasicAttack::onAttackWindowUpdate()
     }
 }
 
+void DeathBasicAttack::onHitFrame()
+{
+    dealDamageToTarget(m_attackFacingTarget);
+}
+
 void DeathBasicAttack::onAttackWindowFinished()
 {
     m_attackFacingTarget = nullptr;
@@ -162,6 +167,11 @@ void DeathBasicAttack::onAttackWindowFinished()
     {
         m_particles->SetScytheInactive();
     }
+}
+
+int DeathBasicAttack::getAttackVariant() const
+{
+    return m_comboVariant;
 }
 
 float DeathBasicAttack::getCooldown() const

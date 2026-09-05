@@ -1,61 +1,96 @@
 {
   "name": "Ghost_StateMachine",
-  "defaultState": "Ghost_Idle",
+  "defaultState": "Death_Idle",
   "clips": [
     {
-      "name": "Ghost_Idle",
+      "name": "Death_Idle",
       "uid": 14199741254574568641,
-      "libId": "32559c1f60a6dc04228a475d9158525f",
+      "libId": "20fbc74cbf4b7b70fd47e56eb77f0934",
       "type": "ANIMATION",
       "loop": true
     },
     {
-      "name": "Ghost_Idle_long",
+      "name": "Death_Run.001",
+      "uid": 6305097273897305217,
+      "libId": "204e08569468882b9e034a9d4459d1f4",
+      "type": "ANIMATION",
+      "loop": true
+    },
+    {
+      "name": "Death_Atk1.001",
       "uid": 16259659905940049556,
-      "libId": "664aeefaedfd881335500869580596b4",
+      "libId": "3bbc6d14a05d518906ca6690dc0e12a8",
       "type": "ANIMATION",
-      "loop": true
+      "loop": false
     },
     {
-      "name": "Ghost_Fly",
+      "name": "Death_Atk2",
       "uid": 13468629528477703923,
-      "libId": "1f60e2034ee4fa3a967121e24117c656",
+      "libId": "7ce740a12348d49200b46c7fafe988da",
       "type": "ANIMATION",
-      "loop": true
+      "loop": false
     },
     {
-      "name": "Ghost_Attack",
+      "name": "Death_Atk1Recover",
       "uid": 9533535938206922414,
-      "libId": "9fbc6a247e349857d1f7c5ec7ddab220",
+      "libId": "3384babe1aba8ca9e4e02164435bd4f7",
       "type": "ANIMATION",
       "loop": false
     },
     {
-      "name": "Ghost_Damage",
+      "name": "Death_ChargeAtk",
       "uid": 15784693465937695785,
-      "libId": "92bc768afb9d0f8e6723c3c46e40d0ee",
+      "libId": "0bbfd906a34218937c1efdccf15ebb67",
       "type": "ANIMATION",
       "loop": false
     },
     {
-      "name": "Ghost_Death",
+      "name": "Death_Dash",
       "uid": 4255812996545272822,
-      "libId": "a42fbd085113f325585fb04d9b75c199",
+      "libId": "548fd394c882624d5b976fde29b4dff7",
       "type": "ANIMATION",
       "loop": false
     },
     {
-      "name": "Ghost_Tpose",
+      "name": "Death_Dead",
       "uid": 3766463860614034078,
-      "libId": "e64299eda6b1b1a34907d059df7d3d2d",
+      "libId": "e7d24eea7d49e7074ad2d4d58d52f6e4",
       "type": "ANIMATION",
-      "loop": true
+      "loop": false
+    },
+    {
+      "name": "Death_Downed",
+      "uid": 6613413446870529052,
+      "libId": "916934671cc54435c7208793caef7389",
+      "type": "ANIMATION",
+      "loop": false
+    },
+    {
+      "name": "Death_Harm1",
+      "uid": 15936092199439396887,
+      "libId": "bc9d6ff8f7a763fee28b658e99a8c436",
+      "type": "ANIMATION",
+      "loop": false
+    },
+    {
+      "name": "Death_Harm2",
+      "uid": 16241598405390866989,
+      "libId": "85286e2d518caa9dcf17000ccfdc2eab",
+      "type": "ANIMATION",
+      "loop": false
+    },
+    {
+      "name": "Death_Harm3",
+      "uid": 8774850750711231115,
+      "libId": "c725a10e20598726ecec169bd7876d14",
+      "type": "ANIMATION",
+      "loop": false
     }
   ],
   "states": [
     {
-      "name": "Ghost_Idle",
-      "clipName": "Ghost_Idle",
+      "name": "Death_Idle",
+      "clipName": "Death_Idle",
       "speed": 1.0,
       "behaviourScriptName": "",
       "behaviourFieldsJson": "",
@@ -63,8 +98,8 @@
       "loop": true
     },
     {
-      "name": "Ghost_Idle_long",
-      "clipName": "Ghost_Idle_long",
+      "name": "Death_Run.001",
+      "clipName": "Death_Run.001",
       "speed": 1.0,
       "behaviourScriptName": "",
       "behaviourFieldsJson": "",
@@ -72,49 +107,94 @@
       "loop": true
     },
     {
-      "name": "Ghost_Fly",
-      "clipName": "Ghost_Fly",
+      "name": "Death_Atk1.001",
+      "clipName": "Death_Atk1.001",
       "speed": 1.0,
       "behaviourScriptName": "",
       "behaviourFieldsJson": "",
       "overrideLoop": false,
-      "loop": true
-    },
-    {
-      "name": "Ghost_Attack",
-      "clipName": "Ghost_Attack",
-      "speed": 1.0,
-      "behaviourScriptName": "",
-      "behaviourFieldsJson": "",
-      "overrideLoop": true,
       "loop": false
     },
     {
-      "name": "Ghost_Damage",
-      "clipName": "Ghost_Damage",
-      "speed": 1.0,
-      "behaviourScriptName": "",
-      "behaviourFieldsJson": "",
-      "overrideLoop": true,
-      "loop": false
-    },
-    {
-      "name": "Ghost_Death",
-      "clipName": "Ghost_Death",
-      "speed": 1.0,
-      "behaviourScriptName": "",
-      "behaviourFieldsJson": "",
-      "overrideLoop": true,
-      "loop": false
-    },
-    {
-      "name": "Ghost_Tpose",
-      "clipName": "Ghost_Tpose",
+      "name": "Death_Atk2",
+      "clipName": "Death_Atk2",
       "speed": 1.0,
       "behaviourScriptName": "",
       "behaviourFieldsJson": "",
       "overrideLoop": false,
-      "loop": true
+      "loop": false
+    },
+    {
+      "name": "Death_Atk1Recover",
+      "clipName": "Death_Atk1Recover",
+      "speed": 1.0,
+      "behaviourScriptName": "",
+      "behaviourFieldsJson": "",
+      "overrideLoop": false,
+      "loop": false
+    },
+    {
+      "name": "Death_ChargeAtk",
+      "clipName": "Death_ChargeAtk",
+      "speed": 1.0,
+      "behaviourScriptName": "",
+      "behaviourFieldsJson": "",
+      "overrideLoop": false,
+      "loop": false
+    },
+    {
+      "name": "Death_Dash",
+      "clipName": "Death_Dash",
+      "speed": 1.0,
+      "behaviourScriptName": "",
+      "behaviourFieldsJson": "",
+      "overrideLoop": false,
+      "loop": false
+    },
+    {
+      "name": "Death_Dead",
+      "clipName": "Death_Dead",
+      "speed": 1.0,
+      "behaviourScriptName": "",
+      "behaviourFieldsJson": "",
+      "overrideLoop": false,
+      "loop": false
+    },
+    {
+      "name": "Death_Downed",
+      "clipName": "Death_Downed",
+      "speed": 1.0,
+      "behaviourScriptName": "",
+      "behaviourFieldsJson": "",
+      "overrideLoop": false,
+      "loop": false
+    },
+    {
+      "name": "Death_Harm1",
+      "clipName": "Death_Harm1",
+      "speed": 1.0,
+      "behaviourScriptName": "",
+      "behaviourFieldsJson": "",
+      "overrideLoop": false,
+      "loop": false
+    },
+    {
+      "name": "Death_Harm2",
+      "clipName": "Death_Harm2",
+      "speed": 1.0,
+      "behaviourScriptName": "",
+      "behaviourFieldsJson": "",
+      "overrideLoop": false,
+      "loop": false
+    },
+    {
+      "name": "Death_Harm3",
+      "clipName": "Death_Harm3",
+      "speed": 1.0,
+      "behaviourScriptName": "",
+      "behaviourFieldsJson": "",
+      "overrideLoop": false,
+      "loop": false
     }
   ],
   "transitions": []

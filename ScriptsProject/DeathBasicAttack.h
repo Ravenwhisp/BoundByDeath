@@ -19,8 +19,11 @@ public:
 protected:
     void onAttackWindowUpdate()   override;
     void onAttackWindowFinished() override;
+    void onHitFrame()             override;
 
 	bool canStartSpecificAbility() const override;
+
+    int getAttackVariant() const override;
 
     float getCooldown() const override;
 
@@ -39,4 +42,6 @@ private:
     GameObject* m_attackFacingTarget = nullptr;
 
     DeathParticles* m_particles = nullptr;
+
+    int m_comboVariant = 0;
 };
