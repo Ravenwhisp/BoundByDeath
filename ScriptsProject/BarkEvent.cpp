@@ -3,32 +3,13 @@
 
 #include "GameplayEventTrigger.h"
 
-#include <algorithm>
-
-static const char* barkSpeakerNames[] =
-{
-	"Death",
-	"Lyriel"
-};
-
-constexpr int barkSpeakerCount = 2;
+#include <string>
+#include <vector>
 
 IMPLEMENT_SCRIPT_FIELDS(BarkEvent,
-	SERIALIZED_ENUM_INT_VECTOR(
-		m_speakers,
-		"Speakers",
-		barkSpeakerNames,
-		barkSpeakerCount
-	),
-
 	SERIALIZED_STRING_VECTOR(
-		m_texts,
-		"Texts"
-	),
-
-	SERIALIZED_FLOAT_VECTOR(
-		m_durations,
-		"Durations"
+		m_barks,
+		"Barks (Speaker|Duration|Text)"
 	),
 
 	SERIALIZED_FLOAT(
@@ -48,19 +29,10 @@ BarkEvent::BarkEvent(GameObject* owner)
 
 void BarkEvent::executeEvent(GameplayEventTrigger* trigger)
 {
-	if (m_texts.empty())
+	if (m_barks.empty())
 	{
 		Debug::warn(
-			"BarkEvent on '%s' has no bark texts.",
-			GameObjectAPI::getName(getOwner())
-		);
-		return;
-	}
-
-	if (m_speakers.size() != m_texts.size())
-	{
-		Debug::warn(
-			"BarkEvent on '%s' requires the same number of Speakers and Texts.",
+			"BarkEvent on '%s' has no barks.",
 			GameObjectAPI::getName(getOwner())
 		);
 		return;
@@ -78,22 +50,74 @@ void BarkEvent::executeEvent(GameplayEventTrigger* trigger)
 	}
 
 	std::vector<BarkLine> barks;
-	barks.reserve(m_texts.size());
+	barks.reserve(m_barks.size());
 
-	for (size_t i = 0; i < m_texts.size(); ++i)
+	for (size_t i = 0; i < m_barks.size(); ++i)
 	{
-		if (m_texts[i].empty())
+		const std::string& barkData = m_barks[i];
+
+		if (barkData.empty())
 		{
 			continue;
 		}
 
-		const int speakerIndex = m_speakers[i];
+		const size_t firstSeparator = barkData.find('|');
 
-		if (speakerIndex < 0 || speakerIndex >= barkSpeakerCount)
+		if (firstSeparator == std::string::npos)
 		{
 			Debug::warn(
-				"BarkEvent on '%s' has an invalid speaker at index %d.",
+				"BarkEvent on '%s' has an invalid bark at index %d. Expected Speaker|Duration|Text.",
 				GameObjectAPI::getName(getOwner()),
+				static_cast<int>(i)
+			);
+			continue;
+		}
+
+		const size_t secondSeparator = barkData.find('|', firstSeparator + 1);
+
+		if (secondSeparator == std::string::npos)
+		{
+			Debug::warn(
+				"BarkEvent on '%s' has an invalid bark at index %d. Expected Speaker|Duration|Text.",
+				GameObjectAPI::getName(getOwner()),
+				static_cast<int>(i)
+			);
+			continue;
+		}
+
+		const std::string speakerText =
+			barkData.substr(0, firstSeparator);
+
+		const std::string durationText =
+			barkData.substr(
+				firstSeparator + 1,
+				secondSeparator - firstSeparator - 1
+			);
+
+		const std::string text =
+			barkData.substr(secondSeparator + 1);
+
+		if (text.empty())
+		{
+			continue;
+		}
+
+		BarkSpeaker speaker;
+
+		if (speakerText == "Death")
+		{
+			speaker = BarkSpeaker::Death;
+		}
+		else if (speakerText == "Lyriel")
+		{
+			speaker = BarkSpeaker::Lyriel;
+		}
+		else
+		{
+			Debug::warn(
+				"BarkEvent on '%s' has an invalid speaker '%s' at index %d.",
+				GameObjectAPI::getName(getOwner()),
+				speakerText.c_str(),
 				static_cast<int>(i)
 			);
 			continue;
@@ -101,14 +125,31 @@ void BarkEvent::executeEvent(GameplayEventTrigger* trigger)
 
 		float duration = m_defaultDuration;
 
-		if (i < m_durations.size() && m_durations[i] > 0.0f)
+		if (!durationText.empty())
 		{
-			duration = m_durations[i];
+			try
+			{
+				const float parsedDuration = std::stof(durationText);
+
+				if (parsedDuration > 0.0f)
+				{
+					duration = parsedDuration;
+				}
+			}
+			catch (...)
+			{
+				Debug::warn(
+					"BarkEvent on '%s' has an invalid duration '%s' at index %d. Using default duration.",
+					GameObjectAPI::getName(getOwner()),
+					durationText.c_str(),
+					static_cast<int>(i)
+				);
+			}
 		}
 
 		BarkLine bark;
-		bark.speaker = static_cast<BarkSpeaker>(speakerIndex);
-		bark.text = m_texts[i];
+		bark.speaker = speaker;
+		bark.text = text;
 		bark.duration = duration;
 
 		barks.push_back(bark);

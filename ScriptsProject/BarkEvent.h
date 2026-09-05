@@ -23,9 +23,7 @@ private:
 	BarkManager* findBarkManager() const;
 
 private:
-	std::vector<int> m_speakers;
-	std::vector<std::string> m_texts;
-	std::vector<float> m_durations;
+	std::vector<std::string> m_barks;
 
 	float m_defaultDuration = 3.0f;
 };
