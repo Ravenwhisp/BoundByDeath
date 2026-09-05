@@ -30,6 +30,8 @@ public:
 
 	FieldList getExposedFields() const override;
 
+	bool isSeparationEnabled() const override { return false; }
+
 	// Phase helpers
 	void setPhase(ArthurBossPhase phase);
 	ArthurBossPhase getPhase() const { return m_phase; }

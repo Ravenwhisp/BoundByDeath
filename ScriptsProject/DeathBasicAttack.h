@@ -29,6 +29,7 @@ protected:
 
 private:
     void startAbility() override;
+    bool isTargetInRange(GameObject* target) const;
     void snapFaceTarget(GameObject* target);
     void faceTarget(GameObject* target);
 	void dealDamageToTarget(GameObject* target) const;
