@@ -55,11 +55,16 @@ void AelorinDamageable::takeDamage(const HitContext& ctx)
     const EnemyHitContext& enemyCtx = static_cast<const EnemyHitContext&>(ctx);
 
     resetLastShadowMarkResult();
-    processShadowMarkHit(enemyCtx.attackType);
 
-    if (isShadowExecution(enemyCtx))
+    const bool shadowMarkExploited = processShadowMarkHit(enemyCtx.attackType);
+
+    if (m_thresholdLocked)
     {
-        processShadowExecution(enemyCtx);
+        if (shadowMarkExploited)
+        {
+            processThresholdBreak(enemyCtx);
+        }
+
         return;
     }
 
@@ -89,11 +94,6 @@ const AelorinThreshold* AelorinDamageable::getCurrentThreshold() const
 bool AelorinDamageable::hasCurrentThreshold() const
 {
     return m_currentThresholdIndex < getActiveThresholds().size();
-}
-
-bool AelorinDamageable::isShadowExecution(const EnemyHitContext& ctx) const
-{
-    return ctx.attackType == PlayerAttackType::ShadowExecution;
 }
 
 float AelorinDamageable::getCurrentThresholdPercent() const
@@ -164,7 +164,7 @@ void AelorinDamageable::processNormalDamage(const EnemyHitContext& ctx)
     }
 }
 
-void AelorinDamageable::processShadowExecution(const EnemyHitContext& ctx)
+void AelorinDamageable::processThresholdBreak(const EnemyHitContext& ctx)
 {
     const AelorinThreshold* threshold = getCurrentThreshold();
 
@@ -175,11 +175,10 @@ void AelorinDamageable::processShadowExecution(const EnemyHitContext& ctx)
 
     if (!m_thresholdLocked)
     {
-        Debug::log("[AelorinDamageable] Shadow Execution ignored. The current threshold has not been reached.");
         return;
     }
 
-    Debug::log("[AelorinDamageable] Shadow Execution broke the %.0f%% threshold.", threshold->percent * 100.0f);
+    Debug::log("[AelorinDamageable] Shadow Mark broke the %.0f%% threshold.", threshold->percent * 100.0f);
 
     switch (threshold->type)
     {
