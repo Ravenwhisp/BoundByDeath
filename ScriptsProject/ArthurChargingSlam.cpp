@@ -334,8 +334,12 @@ void ArthurChargingSlam::applyImpact()
     {
         m_cameraShake->shakeImpact();
     }
+        if (m_cameraShake)
+        {
+            m_cameraShake->shakeImpact();
+        }
 
-    Debug::log("[ArthurChargingSlam] Impact applied.");
+        Debug::log("[ArthurChargingSlam] Impact applied.");
 }
 
 void ArthurChargingSlam::goToRecover()
