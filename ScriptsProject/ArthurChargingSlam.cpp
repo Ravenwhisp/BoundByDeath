@@ -329,6 +329,7 @@ void ArthurChargingSlam::applyImpact()
     {
         m_arthurParticles->playChargingSlamImpact(m_lockedTargetPosition);
     }
+
     if (m_cameraShake)
     {
         m_cameraShake->shakeImpact();
