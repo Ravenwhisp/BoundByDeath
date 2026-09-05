@@ -179,6 +179,8 @@ private:
 	bool m_phaseTransitionRequested = false;
 	bool m_phaseTransitionTriggered = false;
 
+	bool m_debugForcePhaseTransition = false; // Debug
+
 	// Encounter
 	bool m_hasStartedEncounter = false;
 
@@ -232,6 +234,15 @@ private:
 	Vector3 m_spiritCannonDebugOrigin = Vector3::Zero;
 	Vector3 m_spiritCannonDebugDirection = Vector3::Zero;
 	float m_spiritCannonDebugWidth = 0.0f;
+
+	// Shadow Mark
+	ComponentRef<Transform2D> m_shadowMarkPlacement;
+	float m_shadowMarkPhase1Y = 0.0f;
+	float m_shadowMarkPhase1Scale = 1.0f;
+	float m_shadowMarkPhase2Y = 0.0f;
+	float m_shadowMarkPhase2Scale = 1.0f;
+
+	void applyShadowMarkPlacement();
 
 private:
 	// Abilities
