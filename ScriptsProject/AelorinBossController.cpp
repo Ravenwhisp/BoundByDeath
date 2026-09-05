@@ -814,6 +814,34 @@ void AelorinBossController::spawnHealthDrops()
 	}
 }
 
+bool AelorinBossController::trySendPriorityInterrupt(AnimationComponent* animation)
+{
+	if (!animation)
+	{
+		return false;
+	}
+
+	// Highest priority
+	if (isPhase2() && trySendDeathTrigger(animation))
+	{
+		return true;
+	}
+
+	// Phase 1 only
+	if (trySendPhaseTransitionTrigger(animation))
+	{
+		return true;
+	}
+
+	// Standard / Fury threshold stagger
+	if (trySendThresholdStaggerTrigger(animation))
+	{
+		return true;
+	}
+
+	return false;
+}
+
 // These two will not be needed
 Transform* AelorinBossController::acquireCurrentTarget()
 {

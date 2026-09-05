@@ -159,6 +159,9 @@ public:
 	// Health drop
 	void spawnHealthDrops();
 
+	// Interrupt attacks when threshold is broken or when hp <= 0
+	bool trySendPriorityInterrupt(AnimationComponent* animation);
+
 protected:
 	Transform* acquireCurrentTarget() override;
 	bool isTargetDowned(Transform* target) const override;
