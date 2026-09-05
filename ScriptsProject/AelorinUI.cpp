@@ -325,7 +325,7 @@ void AelorinUI::showRisenSpiresUI(Transform* patternRoot, float radius, float ch
 	}
 }
 
-void AelorinUI::showSpiritCannonUI(Transform* originTransform, Transform* targetTransform, float beamLength, float beamWidth, float chargeDuration)
+void AelorinUI::showSpiritCannonUI(Transform* originTransform, const Vector3& aimDirection, float beamLength, float beamWidth, float chargeDuration)
 {
 	GameObject* canvasObject = ComponentAPI::getOwner(m_spiritCannonUICanvasTransform);
 	if (!canvasObject)
@@ -334,7 +334,7 @@ void AelorinUI::showSpiritCannonUI(Transform* originTransform, Transform* target
 	}
 
 	m_spiritCannonOriginTransform = originTransform;
-	m_spiritCannonTargetTransform =	targetTransform;
+	m_spiritCannonAimDirection = aimDirection;
 	m_spiritCannonBeamLength = beamLength;
 	m_spiritCannonBeamWidth = beamWidth;
 	m_spiritCannonUITimer = 0.0f;
@@ -351,6 +351,18 @@ void AelorinUI::showSpiritCannonUI(Transform* originTransform, Transform* target
 	Transform2DAPI::setAlpha(m_spiritCannonUIBackgroundTransform2D, 0.0f);
 	Transform2DAPI::setAlpha(m_spiritCannonUIGlowTransform2D, 0.0f);
 	Transform2DAPI::setScale(m_spiritCannonUIBackgroundTransform2D,	Vector2(1.0f, 1.0f));
+}
+
+void AelorinUI::setSpiritCannonAimDirection(const Vector3& aimDirection)
+{
+	if (aimDirection.LengthSquared() <= 0.00001f)
+	{
+		return;
+	}
+
+	m_spiritCannonAimDirection = aimDirection;
+	m_spiritCannonAimDirection.y = 0.0f;
+	m_spiritCannonAimDirection.Normalize();
 }
 
 void AelorinUI::showGraspOfTheDeadUI(const Vector3& center, float radius, float pullDuration)
@@ -1014,7 +1026,6 @@ void AelorinUI::updateSpiritCannonUI(float deltaTime)
 	}
 
 	if (!m_spiritCannonOriginTransform ||
-		!m_spiritCannonTargetTransform ||
 		!m_spiritCannonUICanvasTransform ||
 		!m_spiritCannonUIBackgroundTransform2D ||
 		!m_spiritCannonUIGlowTransform2D)
@@ -1024,11 +1035,8 @@ void AelorinUI::updateSpiritCannonUI(float deltaTime)
 	}
 
 	const Vector3 origin = TransformAPI::getGlobalPosition(m_spiritCannonOriginTransform);
-	const Vector3 targetPosition = TransformAPI::getGlobalPosition(m_spiritCannonTargetTransform);
-
-	Vector3 direction =	targetPosition - origin;
-	direction.y = 0.0f;
-
+	Vector3 direction = m_spiritCannonAimDirection;
+	
 	if (direction.LengthSquared() <= 0.00001f)
 	{
 		return;
@@ -1118,7 +1126,7 @@ void AelorinUI::hideSpiritCannonUI()
 	}
 
 	m_spiritCannonOriginTransform = nullptr;
-	m_spiritCannonTargetTransform = nullptr;
+	m_spiritCannonAimDirection = Vector3::Zero;
 	m_spiritCannonUIActive = false;
 	m_spiritCannonUICharging = false;
 	m_spiritCannonImpactUIPlaying = false;

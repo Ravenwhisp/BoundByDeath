@@ -28,7 +28,8 @@ public:
 	void showRisenSpiresUI(Transform* patternRoot, float radius, float chargeDuration);
 
 	// Spirit Cannon
-	void showSpiritCannonUI(Transform* originTransform, Transform* targetTransform, float beamLength, float beamWidth, float chargeDuration);
+	void showSpiritCannonUI(Transform* originTransform, const Vector3& aimDirection, float beamLength, float beamWidth, float chargeDuration);
+	void setSpiritCannonAimDirection(const Vector3& aimDirection);
 
 	// Grasp of the Dead
 	void showGraspOfTheDeadUI(const Vector3& center, float radius, float pullDuration);
@@ -197,7 +198,7 @@ private:
 	Transform2D* m_spiritCannonUIGlowTransform2D = nullptr;
 
 	Transform* m_spiritCannonOriginTransform = nullptr;
-	Transform* m_spiritCannonTargetTransform = nullptr;
+	Vector3 m_spiritCannonAimDirection = Vector3::Zero;
 
 	bool m_spiritCannonUIActive = false;
 	bool m_spiritCannonUICharging = false;
