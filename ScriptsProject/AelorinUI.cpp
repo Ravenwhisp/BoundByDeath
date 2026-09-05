@@ -187,6 +187,11 @@ void AelorinUI::showSeekerSigilsUI(const Vector3& impactPosition, float radius, 
 	Transform2DAPI::setScale(slot->background, Vector2(0.1f, 0.1f));
 }
 
+void AelorinUI::cancelSeekerSigils()
+{
+	hideAllSeekerSigilsUI();
+}
+
 void AelorinUI::setNovaContainerRadius(float radius)
 {
 	if (!m_novaUIContainerTransform2D)
@@ -257,6 +262,11 @@ void AelorinUI::showNovaUI(const Vector3& center, float firstRadius, float first
 	Transform2DAPI::setScale(m_novaUIGlowTransform2D, Vector2(1.0f, 1.0f));
 }
 
+void AelorinUI::cancelNova()
+{
+	hideNovaUI();
+}
+
 void AelorinUI::showRisenSpiresUI(Transform* patternRoot, float radius, float chargeDuration)
 {
 	if (!patternRoot)
@@ -325,6 +335,11 @@ void AelorinUI::showRisenSpiresUI(Transform* patternRoot, float radius, float ch
 	}
 }
 
+void AelorinUI::cancelRisenSpires()
+{
+	hideAllRisenSpiresUI();
+}
+
 void AelorinUI::showSpiritCannonUI(Transform* originTransform, const Vector3& aimDirection, float beamLength, float beamWidth, float chargeDuration)
 {
 	GameObject* canvasObject = ComponentAPI::getOwner(m_spiritCannonUICanvasTransform);
@@ -363,6 +378,11 @@ void AelorinUI::setSpiritCannonAimDirection(const Vector3& aimDirection)
 	m_spiritCannonAimDirection = aimDirection;
 	m_spiritCannonAimDirection.y = 0.0f;
 	m_spiritCannonAimDirection.Normalize();
+}
+
+void AelorinUI::cancelSpiritCannon()
+{
+	hideSpiritCannonUI();
 }
 
 void AelorinUI::showGraspOfTheDeadUI(const Vector3& center, float radius, float pullDuration)
@@ -407,6 +427,11 @@ void AelorinUI::showGraspOfTheDeadUI(const Vector3& center, float radius, float 
 	Transform2DAPI::setScale(m_graspOfTheDeadUIBorderTransform2D, Vector2(1.0f, 1.0f));
 	Transform2DAPI::setScale(m_graspOfTheDeadUIGlowTransform2D, Vector2(1.0f, 1.0f));
 
+}
+
+void AelorinUI::cancelGraspOfTheDead()
+{
+	hideGraspOfTheDeadUI();
 }
 
 void AelorinUI::showSoulCataclysmUI(const Vector3& center, float radius, Transform* safeZonesRoot, float safeZoneRadius, float channelDuration)

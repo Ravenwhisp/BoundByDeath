@@ -166,6 +166,11 @@ void AelorinGraspOfTheDeadState::OnStateUpdate()
 
 void AelorinGraspOfTheDeadState::OnStateExit()
 {
+	if (m_aelorinUI)
+	{
+		m_aelorinUI->cancelGraspOfTheDead();
+	}
+
 	m_aelorinUI = nullptr;
 	m_lyrielMovement = nullptr;
 	m_deathMovement = nullptr;

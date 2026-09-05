@@ -20,19 +20,24 @@ public:
 
 	// Seeker Sigils
 	void showSeekerSigilsUI(const Vector3& impactPosition, float radius, float telegraphDuration);
+	void cancelSeekerSigils();
 
 	// Nova
 	void showNovaUI(const Vector3& center, float firstRadius, float firstChargeDuration, bool hasSecondWave, float secondRadius = 0.0f, float secondChargeDuration = 0.0f);
+	void cancelNova();
 
 	// Risen Spires
 	void showRisenSpiresUI(Transform* patternRoot, float radius, float chargeDuration);
+	void cancelRisenSpires();
 
 	// Spirit Cannon
 	void showSpiritCannonUI(Transform* originTransform, const Vector3& aimDirection, float beamLength, float beamWidth, float chargeDuration);
 	void setSpiritCannonAimDirection(const Vector3& aimDirection);
+	void cancelSpiritCannon();
 
 	// Grasp of the Dead
 	void showGraspOfTheDeadUI(const Vector3& center, float radius, float pullDuration);
+	void cancelGraspOfTheDead();
 
 	// Soul Cataclysm
 	void showSoulCataclysmUI(const Vector3& center, float radius, Transform* safeZonesRoot, float safeZoneRadius, float channelDuration);

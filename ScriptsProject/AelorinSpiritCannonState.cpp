@@ -344,6 +344,16 @@ void AelorinSpiritCannonState::OnStateUpdate()
 
 void AelorinSpiritCannonState::OnStateExit()
 {
+	if (m_aelorinUI)
+	{
+		m_aelorinUI->cancelSpiritCannon();
+	}
+
+	if (m_controller)
+	{
+		m_controller->clearSpiritCannonDebugLine();
+	}
+
 	m_aelorinUI = nullptr;
 	m_lockedTarget = nullptr;
 	m_currentAimDirection = Vector3::Zero;

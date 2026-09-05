@@ -58,6 +58,7 @@ void AelorinDamageable::takeDamage(const HitContext& ctx)
 
     const bool shadowMarkExploited = processShadowMarkHit(enemyCtx.attackType);
 
+    // Boss is already sitting on a threshold
     if (m_thresholdLocked)
     {
         if (shadowMarkExploited)
@@ -68,7 +69,14 @@ void AelorinDamageable::takeDamage(const HitContext& ctx)
         return;
     }
 
+    // Apply normal damage
     processNormalDamage(enemyCtx);
+
+    // If same hit both exploited the Shadow Mark and reached the threshold -> break it
+    if (shadowMarkExploited && m_thresholdLocked)
+    {
+        processThresholdBreak(enemyCtx);
+    }
 }
 
 const std::vector<AelorinThreshold>& AelorinDamageable::getActiveThresholds() const
