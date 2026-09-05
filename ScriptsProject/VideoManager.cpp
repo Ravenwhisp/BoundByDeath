@@ -4,7 +4,7 @@
 
 IMPLEMENT_SCRIPT_FIELDS(VideoManager,
     SERIALIZED_COMPONENT_REF(m_videoObject, "Video Object", ComponentType::TRANSFORM),
-    SERIALIZED_ASSET_REF(m_sceneToLoad, "Next Scene", AssetType::SCENE)
+    SERIALIZED_STRING(m_sceneToLoad, "Next Scene")
 )
 
 VideoManager::VideoManager(GameObject* owner)
@@ -43,9 +43,9 @@ void VideoManager::Update()
     {
         VideoAPI::stop(m_videoComponent);
 
-        if (!m_sceneToLoad.get())
+        if (!m_sceneToLoad.empty())
         {
-            SceneAPI::requestSceneChange(m_sceneToLoad.m_id);
+            SceneAPI::requestSceneChange(m_sceneToLoad.c_str());
         }
     }
 }
