@@ -3,6 +3,8 @@
 #include "ScriptAPI.h"
 #include "ProjectileBase.h"
 
+class LyrielParticles;
+
 class LyrielArrowProjectile : public ProjectileBase
 {
     DECLARE_SCRIPT(LyrielArrowProjectile)
@@ -23,13 +25,14 @@ private:
     void activateEmbeddedParticles();
     void stopEmbeddedParticles();
 
+    LyrielParticles* getLyrielParticles() const;
+
 public:
     std::string m_legacyParticlePath;
     PrefabRef m_particlePrefab;
 
 private:
     Vector3 m_direction = Vector3::Zero;
-    Vector3 m_spawnPosition = Vector3::Zero;
 
     float m_speed = 0.0f;
     float m_currentLifetime = 0.0f;

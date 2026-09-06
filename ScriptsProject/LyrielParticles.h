@@ -26,6 +26,9 @@ public:
 
 	void playHitFlash(const Vector3& position);
 
+	void SetArrowTrailActive(Transform* arrowTransform);
+	void SetArrowTrailInactive(Transform* arrowTransform);
+
 	ComponentRef<Transform> m_dashTrail;
 	PrefabRef m_chargeGlowPrefab;
 	PrefabRef m_dashParticlePrefab;
