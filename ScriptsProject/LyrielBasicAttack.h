@@ -3,6 +3,7 @@
 #include "LyrielAbilityBase.h"
 
 class LyrielArrowProjectile;
+class LyrielParticles;
 
 class LyrielBasicAttack : public LyrielAbilityBase
 {
@@ -18,6 +19,8 @@ private:
     void startAbility() override;
     bool spawnArrowToTarget(GameObject* target);
     void faceTarget(GameObject* target);
+
+    LyrielParticles* m_particles = nullptr;
 
 protected:
     void onAttackWindowUpdate() override;
