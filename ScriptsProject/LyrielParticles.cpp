@@ -20,6 +20,7 @@ LyrielParticles::LyrielParticles(GameObject* owner)
 
 void LyrielParticles::Start()
 {
+    SetDashInactive();
 }
 
 void LyrielParticles::OnGameStop()
