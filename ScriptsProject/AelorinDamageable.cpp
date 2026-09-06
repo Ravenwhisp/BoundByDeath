@@ -334,9 +334,30 @@ void AelorinDamageable::beginPhase2()
 
 bool AelorinDamageable::hasActiveThresholdAt(float percent) const
 {
-    const std::vector<AelorinThreshold>& thresholds = getActiveThresholds();
-
     constexpr float tolerance = 0.001f;
+
+    // 0% threshold has special behaviour
+    if (std::abs(percent) <= tolerance)
+    {
+        if (m_controller && m_controller->isPhase2())
+        {
+            // Final Death has been broken
+            if (m_allowFinalDeath)
+            {
+                return false;
+            }
+        }
+        else
+        {
+            // Phase transition broken
+            if (m_phaseTransitionPending)
+            {
+                return false;
+            }
+        }
+    }
+
+    const std::vector<AelorinThreshold>& thresholds = getActiveThresholds();
 
     for (std::size_t i = m_currentThresholdIndex; i < thresholds.size(); ++i)
     {

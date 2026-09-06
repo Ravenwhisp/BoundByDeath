@@ -134,18 +134,23 @@ private:
 
 	// Health
 	ComponentRef<Transform2D> m_healthPhase1Marker50;
+	ComponentRef<Transform2D> m_healthPhase1Marker0;
 
 	ComponentRef<Transform2D> m_healthPhase2Marker70;
 	ComponentRef<Transform2D> m_healthPhase2Marker45;
 	ComponentRef<Transform2D> m_healthPhase2Marker25;
 	ComponentRef<Transform2D> m_healthPhase2Marker10;
+	ComponentRef<Transform2D> m_healthPhase2Marker0;
+
 
 	Transform2D* m_healthPhase1Marker50Transform2D = nullptr;
+	Transform2D* m_healthPhase1Marker0Transform2D = nullptr;
 
 	Transform2D* m_healthPhase2Marker70Transform2D = nullptr;
 	Transform2D* m_healthPhase2Marker45Transform2D = nullptr;
 	Transform2D* m_healthPhase2Marker25Transform2D = nullptr;
 	Transform2D* m_healthPhase2Marker10Transform2D = nullptr;
+	Transform2D* m_healthPhase2Marker0Transform2D = nullptr;
 
 	AelorinDamageable* m_aelorinDamageable = nullptr;
 	AelorinBossController* m_aelorinController = nullptr;
