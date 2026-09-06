@@ -193,10 +193,10 @@ float AelorinBossController::getClosestPlayerDistance() const
 
 AelorinAbility AelorinBossController::chooseNextAbility()
 {
-	if (canTeleport())
-	{
-		return AelorinAbility::Teleport;
-	}
+	//if (canTeleport())
+	//{
+	//	return AelorinAbility::Teleport;
+	//}
 
 	std::vector<AelorinAbility> pool = buildAbilityPool();
 	removeLastUsedAbility(pool);
@@ -950,25 +950,25 @@ std::vector<AelorinAbility> AelorinBossController::buildAbilityPool() const
 {
 	std::vector<AelorinAbility> pool
 	{
-		AelorinAbility::SeekerSigils,
-		AelorinAbility::RisenSpires,
-		AelorinAbility::SpiritCannon
+		//AelorinAbility::SeekerSigils,
+		//AelorinAbility::RisenSpires,
+		//AelorinAbility::SpiritCannon
 	};
 
-	if (canUseNova())
-	{
-		pool.push_back(AelorinAbility::Nova);
-	}
+	//if (canUseNova())
+	//{
+	//	pool.push_back(AelorinAbility::Nova);
+	//}
 
-	if (canSummon())
-	{
-		pool.push_back(AelorinAbility::Summon);
-	}
+	//if (canSummon())
+	//{
+	//	pool.push_back(AelorinAbility::Summon);
+	//}
 
-	if (isPhase2())
-	{
-		pool.push_back(AelorinAbility::GraspOfTheDead);
-	}
+	//if (isPhase2())
+	//{
+	//	pool.push_back(AelorinAbility::GraspOfTheDead);
+	//}
 
 	return pool;
 }

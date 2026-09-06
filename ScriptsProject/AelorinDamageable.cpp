@@ -3,8 +3,17 @@
 
 #include "AelorinBossController.h"
 #include "AelorinAttackConfig.h"
+#include "Transform2D.h"
 
 #include <algorithm>
+#include <cmath>
+
+IMPLEMENT_SCRIPT_FIELDS_INHERITED(AelorinDamageable, EnemyDamageable,
+    FIELD_GROUP_LABEL("Phase 2 Health Bar"),
+    SERIALIZED_COMPONENT_REF(m_phase2HealthBarContainer, "Health Bar Container Phase 2", ComponentType::TRANSFORM2D),
+    SERIALIZED_COMPONENT_REF(m_phase2HealthSlider, "Health Slider Phase 2", ComponentType::UISLIDER),
+    SERIALIZED_COMPONENT_REF(m_phase2HealthSlider2, "Health Slider 2 Phase 2", ComponentType::UISLIDER)
+)
 
 AelorinDamageable::AelorinDamageable(GameObject* owner)
     : EnemyDamageable(owner)
@@ -30,6 +39,8 @@ void AelorinDamageable::Start()
             m_currentHp = m_maxHp;
 
             // Refresh current HP bar after changing max HP
+            setHealthBarContainerActive(getHealthBarContainerTransform(), true);
+            setHealthBarContainerActive(m_phase2HealthBarContainer.getReferencedComponent(), false);
             setupUI();
         }
     }
@@ -316,9 +327,26 @@ void AelorinDamageable::beginPhase2()
     m_allowFinalDeath = false;
     m_isDead = false;
 
-    setupUI();
+    setupPhase2HealthBar();
 
     Debug::log("[AelorinDamageable] Phase 2 initialized. HP: %.0f / %.0f | First threshold: %.0f%%", m_currentHp, m_maxHp, getCurrentThresholdPercent() * 100.0f);
+}
+
+bool AelorinDamageable::hasActiveThresholdAt(float percent) const
+{
+    const std::vector<AelorinThreshold>& thresholds = getActiveThresholds();
+
+    constexpr float tolerance = 0.001f;
+
+    for (std::size_t i = m_currentThresholdIndex; i < thresholds.size(); ++i)
+    {
+        if (std::abs(thresholds[i].percent - percent) <= tolerance)
+        {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 void AelorinDamageable::handleFinalDeath(const EnemyHitContext& ctx)
@@ -339,6 +367,33 @@ void AelorinDamageable::handleFinalDeath(const EnemyHitContext& ctx)
     Debug::log("[AelorinDamageable] Final Shadow Execution received. Death is allowed.");
 
     applyDamageWithoutShadowMark(finalHit);
+}
+
+void AelorinDamageable::setupPhase2HealthBar()
+{
+    Transform2D* phase1Container = getHealthBarContainerTransform();
+    Transform2D* phase2Container = m_phase2HealthBarContainer.getReferencedComponent();
+
+    setHealthBarContainerActive(phase1Container, false);
+    setHealthBarContainerActive(phase2Container, true);
+
+    bindHealthBarUI(phase2Container, m_phase2HealthSlider.getReferencedComponent(), m_phase2HealthSlider2.getReferencedComponent());
+}
+
+void AelorinDamageable::setHealthBarContainerActive(Transform2D* container, bool active)
+{
+    if (!container)
+    {
+        return;
+    }
+
+    GameObject* object = container->getOwner();
+    if (!object)
+    {
+        return;
+    }
+
+    GameObjectAPI::setActive(object, active);
 }
 
 void AelorinDamageable::onHpDepleted()
