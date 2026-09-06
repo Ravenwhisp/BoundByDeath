@@ -1,74 +1,450 @@
 {
     "Version": 2,
-    "sourcePath": "Assets\\Prefabs\\Trails\\death_dash_trail_controller.prefab",
-    "Name": "death_dash_trail_controller",
+    "sourcePath": "Assets\\Prefabs\\Trails\\Death_dash_trail_controller_1.prefab",
+    "Name": "Death_dash_trail_controller",
     "Active": true,
     "Static": false,
     "Layer": "DEFAULT",
     "Tag": "DEFAULT",
     "Transform": {
         "Position": [
-            -0.028234481811523438,
-            -0.1753063201904297,
-            -0.10000000149011612
+            0.0,
+            0.0,
+            0.0
         ],
         "Rotation": [
-            0.49999988079071045,
-            0.5000001788139343,
-            0.5000001192092896,
-            0.4999998211860657
+            0.704677402973175,
+            -0.6788995862007141,
+            0.189564049243927,
+            -0.08118265867233276
         ],
         "Scale": [
-            0.9999390244483948,
-            0.9999896287918091,
-            0.9999271631240845
+            100.00092315673828,
+            99.9967269897461,
+            99.99706268310547
         ]
     },
-    "Components": [
+    "Components": [],
+    "Children": [
         {
-            "UID": 1903513521811118024,
-            "ComponentType": "TRAIL",
+            "Name": "main_stream",
             "Active": true,
-            "StartWidth": 1.0,
-            "EndWidth": 0.0,
-            "SpawnDistance": 0.15000000596046448,
-            "PointLifetime": 0.5,
-            "ColorOverTime": [
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "Scale": [
+                    0.9999998807907104,
+                    1.0,
+                    0.9999999403953552
+                ]
+            },
+            "Components": [
                 {
-                    "IsAlphaMark": true,
-                    "Position": 4.624284932271896e-43,
-                    "Alpha": 1.0
-                },
-                {
-                    "IsAlphaMark": true,
-                    "Position": 4.624284932271896e-43,
-                    "Alpha": 1.4880885142494683e26
-                },
-                {
-                    "IsAlphaMark": false,
-                    "Position": 0.056105583906173706,
-                    "Color": [
-                        0.180654838681221,
-                        0.13760976493358612,
-                        0.19691121578216553
-                    ]
-                },
-                {
-                    "IsAlphaMark": false,
-                    "Position": 0.9867987036705017,
-                    "Color": [
+                    "UID": 12854070541766078631,
+                    "ComponentType": "TRAIL",
+                    "Active": true,
+                    "StartWidth": 0.5,
+                    "EndWidth": 0.30000001192092896,
+                    "SpawnDistance": 0.15000000596046448,
+                    "PointLifetime": 0.5,
+                    "Bloom": true,
+                    "TextureAssetId": {
+                        "uid": 0,
+                        "libId": "",
+                        "type": "UNKNOWN"
+                    },
+                    "ColorOverTime": [
+                        {
+                            "IsAlphaMark": false,
+                            "Position": 0.0,
+                            "Color": [
+                                0.4470588266849518,
+                                0.0,
+                                1.0
+                            ]
+                        },
+                        {
+                            "IsAlphaMark": true,
+                            "Position": 0.0,
+                            "Alpha": 1.0
+                        },
+                        {
+                            "IsAlphaMark": true,
+                            "Position": 1.0,
+                            "Alpha": 0.0
+                        }
+                    ],
+                    "ColorCurve": [
+                        0.0,
                         0.0,
                         0.0,
                         0.0
                     ]
-                },
-                {
-                    "IsAlphaMark": true,
-                    "Position": 1.0,
-                    "Alpha": 0.0
                 }
-            ]
+            ],
+            "Children": []
+        },
+        {
+            "Name": "head_stream",
+            "Active": true,
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    -0.26498115062713623,
+                    -0.000002205371856689453,
+                    0.05193138122558594
+                ],
+                "Rotation": [
+                    -2.0722492166669326e-8,
+                    9.779706822143908e-9,
+                    -5.2156146068682574e-8,
+                    1.0
+                ],
+                "Scale": [
+                    0.9999169111251831,
+                    0.9999924898147583,
+                    0.9999158978462219
+                ]
+            },
+            "Components": [
+                {
+                    "UID": 4316632532556584762,
+                    "ComponentType": "TRAIL",
+                    "Active": true,
+                    "StartWidth": 0.25,
+                    "EndWidth": 0.10000000149011612,
+                    "SpawnDistance": 0.15000000596046448,
+                    "PointLifetime": 0.5,
+                    "Bloom": true,
+                    "TextureAssetId": {
+                        "uid": 0,
+                        "libId": "",
+                        "type": "UNKNOWN"
+                    },
+                    "ColorOverTime": [
+                        {
+                            "IsAlphaMark": false,
+                            "Position": 0.0,
+                            "Color": [
+                                0.4470588266849518,
+                                0.0,
+                                1.0
+                            ]
+                        },
+                        {
+                            "IsAlphaMark": true,
+                            "Position": 0.0,
+                            "Alpha": 1.0
+                        },
+                        {
+                            "IsAlphaMark": true,
+                            "Position": 1.0,
+                            "Alpha": 0.0
+                        }
+                    ],
+                    "ColorCurve": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
+                }
+            ],
+            "Children": []
+        },
+        {
+            "Name": "left_arm_stream",
+            "Active": true,
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    0.031101703643798828,
+                    0.10039985179901123,
+                    -0.13742446899414063
+                ],
+                "Rotation": [
+                    -3.3762315165830614e-9,
+                    7.4221073731450815e-9,
+                    1.4902417078133112e-8,
+                    1.0
+                ],
+                "Scale": [
+                    0.9999157786369324,
+                    0.9999912977218628,
+                    0.9999145269393921
+                ]
+            },
+            "Components": [
+                {
+                    "UID": 8917616185288074397,
+                    "ComponentType": "TRAIL",
+                    "Active": true,
+                    "StartWidth": 0.10000000149011612,
+                    "EndWidth": 0.05000000074505806,
+                    "SpawnDistance": 0.15000000596046448,
+                    "PointLifetime": 0.5,
+                    "Bloom": true,
+                    "TextureAssetId": {
+                        "uid": 0,
+                        "libId": "",
+                        "type": "UNKNOWN"
+                    },
+                    "ColorOverTime": [
+                        {
+                            "IsAlphaMark": false,
+                            "Position": 0.0,
+                            "Color": [
+                                0.4470588266849518,
+                                0.0,
+                                1.0
+                            ]
+                        },
+                        {
+                            "IsAlphaMark": true,
+                            "Position": 0.0,
+                            "Alpha": 1.0
+                        },
+                        {
+                            "IsAlphaMark": true,
+                            "Position": 1.0,
+                            "Alpha": 0.0
+                        }
+                    ],
+                    "ColorCurve": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
+                }
+            ],
+            "Children": []
+        },
+        {
+            "Name": "right_arm_stream",
+            "Active": true,
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    -0.000002384185791015625,
+                    0.06901884078979492,
+                    0.18999481201171875
+                ],
+                "Rotation": [
+                    -1.4435517670108311e-8,
+                    3.552713678800501e-15,
+                    -8.941106699467127e-8,
+                    1.0
+                ],
+                "Scale": [
+                    0.9999169111251831,
+                    0.9999914169311523,
+                    0.9999150633811951
+                ]
+            },
+            "Components": [
+                {
+                    "UID": 14836335511329776935,
+                    "ComponentType": "TRAIL",
+                    "Active": true,
+                    "StartWidth": 0.10000000149011612,
+                    "EndWidth": 0.05000000074505806,
+                    "SpawnDistance": 0.15000000596046448,
+                    "PointLifetime": 0.5,
+                    "Bloom": true,
+                    "TextureAssetId": {
+                        "uid": 0,
+                        "libId": "",
+                        "type": "UNKNOWN"
+                    },
+                    "ColorOverTime": [
+                        {
+                            "IsAlphaMark": false,
+                            "Position": 0.0,
+                            "Color": [
+                                0.4470588266849518,
+                                0.0,
+                                1.0
+                            ]
+                        },
+                        {
+                            "IsAlphaMark": true,
+                            "Position": 0.0,
+                            "Alpha": 1.0
+                        },
+                        {
+                            "IsAlphaMark": true,
+                            "Position": 1.0,
+                            "Alpha": 0.0
+                        }
+                    ],
+                    "ColorCurve": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
+                }
+            ],
+            "Children": []
+        },
+        {
+            "Name": "right_leg_stream",
+            "Active": true,
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    0.36878037452697754,
+                    0.22437381744384766,
+                    0.18127059936523438
+                ],
+                "Rotation": [
+                    -2.794108411308116e-8,
+                    -3.725624697636931e-9,
+                    -2.682349986571353e-7,
+                    1.0
+                ],
+                "Scale": [
+                    0.9999102354049683,
+                    0.9999846816062927,
+                    0.9999096989631653
+                ]
+            },
+            "Components": [
+                {
+                    "UID": 5156773179499975793,
+                    "ComponentType": "TRAIL",
+                    "Active": true,
+                    "StartWidth": 0.25,
+                    "EndWidth": 0.10000000149011612,
+                    "SpawnDistance": 0.15000000596046448,
+                    "PointLifetime": 0.5,
+                    "Bloom": true,
+                    "TextureAssetId": {
+                        "uid": 0,
+                        "libId": "",
+                        "type": "UNKNOWN"
+                    },
+                    "ColorOverTime": [
+                        {
+                            "IsAlphaMark": false,
+                            "Position": 0.0,
+                            "Color": [
+                                0.4470588266849518,
+                                0.0,
+                                1.0
+                            ]
+                        },
+                        {
+                            "IsAlphaMark": true,
+                            "Position": 0.0,
+                            "Alpha": 1.0
+                        },
+                        {
+                            "IsAlphaMark": true,
+                            "Position": 1.0,
+                            "Alpha": 0.0
+                        }
+                    ],
+                    "ColorCurve": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
+                }
+            ],
+            "Children": []
+        },
+        {
+            "Name": "left_leg_stream",
+            "Active": true,
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    0.3361036777496338,
+                    0.19202852249145508,
+                    -0.17940902709960938
+                ],
+                "Rotation": [
+                    -8.184314026493666e-8,
+                    -5.0761357783812855e-8,
+                    -0.0,
+                    1.0
+                ],
+                "Scale": [
+                    0.9999157786369324,
+                    0.999991238117218,
+                    0.9999157190322876
+                ]
+            },
+            "Components": [
+                {
+                    "UID": 1941675163670442261,
+                    "ComponentType": "TRAIL",
+                    "Active": true,
+                    "StartWidth": 0.25,
+                    "EndWidth": 0.10000000149011612,
+                    "SpawnDistance": 0.15000000596046448,
+                    "PointLifetime": 0.5,
+                    "Bloom": true,
+                    "TextureAssetId": {
+                        "uid": 0,
+                        "libId": "",
+                        "type": "UNKNOWN"
+                    },
+                    "ColorOverTime": [
+                        {
+                            "IsAlphaMark": false,
+                            "Position": 0.0,
+                            "Color": [
+                                0.4470588266849518,
+                                0.0,
+                                1.0
+                            ]
+                        },
+                        {
+                            "IsAlphaMark": true,
+                            "Position": 0.0,
+                            "Alpha": 1.0
+                        },
+                        {
+                            "IsAlphaMark": true,
+                            "Position": 1.0,
+                            "Alpha": 0.0
+                        }
+                    ],
+                    "ColorCurve": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
+                }
+            ],
+            "Children": []
         }
-    ],
-    "Children": []
+    ]
 }
