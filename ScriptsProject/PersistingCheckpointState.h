@@ -29,6 +29,10 @@ enum CheckpointId
     LEVEL_2 = 200, // Start of Level 2
 
 	CHECKPOINT_1_LEVEL_2 = 201,
+	CHECKPOINT_2_LEVEL_2,
+	CHECKPOINT_3_LEVEL_2,
+	CHECKPOINT_4_LEVEL_2,
+	CHECKPOINT_5_LEVEL_2,
 
     LEVEL_3 = 300, // Start of Level 3
 
