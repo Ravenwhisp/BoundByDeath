@@ -130,10 +130,9 @@ private:
     static constexpr size_t MAX_PATH_POINTS = 128;
 
     // Neighbor separation state
-    std::vector<Transform*> m_neighborCache;
+    std::vector<Vector3> m_neighborPositionCache;
     float m_separationQueryTimer = 0.0f;
 
-    // Footstep audio is driven from locomotion: ping the EnemySound each frame we step.
     EnemySound* m_enemySound = nullptr;
     bool m_enemySoundResolved = false;
 

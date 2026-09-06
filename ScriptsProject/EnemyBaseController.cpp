@@ -619,70 +619,85 @@ void EnemyBaseController::refreshNeighborCache()
     }
 
     m_separationQueryTimer = 0.0f;
+    m_neighborPositionCache.clear();
 
-    m_neighborCache.clear();
+    Transform* ownerTransform =
+        GameObjectAPI::getTransform(getOwner());
 
-    Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
+    if (!ownerTransform)
+    {
+        return;
+    }
 
-    const std::vector<GameObject*> enemies = SceneAPI::findAllGameObjectsByTag(Tag::ENEMY, true);
+    const std::vector<GameObject*> enemies =
+        SceneAPI::findAllGameObjectsByTag(Tag::ENEMY, true);
 
     for (GameObject* enemy : enemies)
     {
-        if (enemy == nullptr)
+        if (!enemy)
         {
             continue;
         }
 
-        Transform* enemyTransform = GameObjectAPI::getTransform(enemy);
+        Transform* enemyTransform =
+            GameObjectAPI::getTransform(enemy);
 
-        if (enemyTransform == nullptr || enemyTransform == ownerTransform)
+        if (!enemyTransform ||
+            enemyTransform == ownerTransform)
         {
             continue;
         }
 
-        Damageable* damageable = GameObjectAPI::findScript<Damageable>(enemy);
+        Damageable* damageable =
+            GameObjectAPI::findScript<Damageable>(enemy);
 
-        if (damageable != nullptr && damageable->isDead())
+        if (damageable && damageable->isDead())
         {
             continue;
         }
 
-        m_neighborCache.push_back(enemyTransform);
+        m_neighborPositionCache.push_back(
+            TransformAPI::getGlobalPosition(enemyTransform)
+        );
     }
 }
 
-Vector3 EnemyBaseController::computeSeparationOffset(const Vector3& ownerPosition)
+Vector3 EnemyBaseController::computeSeparationOffset(
+    const Vector3& ownerPosition)
 {
-    if (!isSeparationEnabled() || m_separationRadius <= 0.0f || m_separationStrength <= 0.0f)
+    if (!isSeparationEnabled() ||
+        m_separationRadius <= 0.0f ||
+        m_separationStrength <= 0.0f)
     {
         return Vector3::Zero;
     }
 
     refreshNeighborCache();
 
-    const float radiusSq = m_separationRadius * m_separationRadius;
+    const float radiusSq =
+        m_separationRadius * m_separationRadius;
 
     Vector3 separation = Vector3::Zero;
 
-    for (Transform* neighbor : m_neighborCache)
+    for (const Vector3& neighborPosition :
+        m_neighborPositionCache)
     {
-        if (neighbor == nullptr)
-        {
-            continue;
-        }
+        Vector3 away =
+            ownerPosition - neighborPosition;
 
-        Vector3 away = ownerPosition - TransformAPI::getGlobalPosition(neighbor);
         away.y = 0.0f;
 
         const float distSq = away.LengthSquared();
 
-        if (distSq > radiusSq || distSq <= 0.0001f)
+        if (distSq > radiusSq ||
+            distSq <= 0.0001f)
         {
             continue;
         }
 
         const float dist = std::sqrt(distSq);
-        const float weight = 1.0f - (dist / m_separationRadius);
+        const float weight =
+            1.0f - (dist / m_separationRadius);
 
         away /= dist;
 
