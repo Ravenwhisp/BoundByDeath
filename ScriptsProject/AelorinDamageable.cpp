@@ -2,6 +2,7 @@
 #include "AelorinDamageable.h"
 
 #include "AelorinBossController.h"
+#include "AelorinAttackConfig.h"
 
 #include <algorithm>
 
@@ -20,13 +21,25 @@ void AelorinDamageable::Start()
     {
         Debug::warn("[AelorinDamageable] AelorinBossController not found.");
     }
+    else
+    {
+        const AelorinAttackConfig* config = m_controller->getAelorinAttackConfig();
+        if (config)
+        {
+            m_maxHp = config->m_phase1MaxHp;
+            m_currentHp = m_maxHp;
+
+            // Refresh current HP bar after changing max HP
+            setupUI();
+        }
+    }
 
     m_currentThresholdIndex = 0;
     m_thresholdLocked = false;
     m_phaseTransitionPending = false;
     m_allowFinalDeath = false;
 
-    Debug::log("[AelorinDamageable] Started. First threshold: %.0f%%", getCurrentThresholdPercent() * 100.0f);
+    Debug::log("[AelorinDamageable] Phase 1 started. HP: %.0f / %.0f", m_currentHp, m_maxHp);
 }
 
 void AelorinDamageable::takeDamage(float amount)
@@ -290,7 +303,12 @@ void AelorinDamageable::requestPhaseTransition()
 void AelorinDamageable::beginPhase2()
 {
     // Controller must set its phase to Phase2 before calling this function
-    m_currentHp = getMaxHp();
+    const AelorinAttackConfig* config = m_controller ? m_controller->getAelorinAttackConfig() : nullptr;
+    if (config)
+    {
+        m_maxHp = config->m_phase2MaxHp;
+        m_currentHp = m_maxHp;
+    }
 
     m_currentThresholdIndex = 0;
     m_thresholdLocked = false;
@@ -298,7 +316,9 @@ void AelorinDamageable::beginPhase2()
     m_allowFinalDeath = false;
     m_isDead = false;
 
-    Debug::log("[AelorinDamageable] Phase 2 initialized. First threshold: %.0f%%", getCurrentThresholdPercent() * 100.0f);
+    setupUI();
+
+    Debug::log("[AelorinDamageable] Phase 2 initialized. HP: %.0f / %.0f | First threshold: %.0f%%", m_currentHp, m_maxHp, getCurrentThresholdPercent() * 100.0f);
 }
 
 void AelorinDamageable::handleFinalDeath(const EnemyHitContext& ctx)
