@@ -719,4 +719,15 @@ DissolveComponent* EnemyDamageable::findDissolveInHierarchy(Transform* transform
 	return nullptr;
 }
 
+void EnemyDamageable::bindHealthBarUI(Transform2D* container, UISlider* slider1, UISlider* slider2)
+{
+	m_healthBarContainerTransform = container;
+	m_healthBarSlider = slider1;
+	m_healthBar2Slider = slider2;
+	m_healthBarFadeTimer = 0.0f;
+	m_healthBarFadeActive = false;
+
+	setupUI();
+}
+
 IMPLEMENT_SCRIPT(EnemyDamageable)
