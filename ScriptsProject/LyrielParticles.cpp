@@ -147,11 +147,51 @@ void LyrielParticles::SetChargeInactive()
 
 void LyrielParticles::playHitFlash(const Vector3& position)
 {
-    ParticleLifecycle::spawnOneShotTimed(
-        m_timedOneShots,
-        m_hitFlashPrefab.m_id,
-        position
-    );
+    ParticleLifecycle::spawnOneShotTimed( m_timedOneShots, m_hitFlashPrefab.m_id, position);
+}
+
+void LyrielParticles::SetArrowTrailActive(Transform* arrowTransform)
+{
+    if (arrowTransform == nullptr)
+    {
+        return;
+    }
+
+    GameObject* arrowObject = ComponentAPI::getOwner(arrowTransform);
+
+    if (arrowObject == nullptr)
+    {
+        return;
+    }
+
+    TrailComponent* trailComponent = TrailAPI::getTrailComponent(arrowObject);
+
+    if (trailComponent != nullptr)
+    {
+        TrailAPI::generateTrail(trailComponent, true);
+    }
+}
+
+void LyrielParticles::SetArrowTrailInactive(Transform* arrowTransform)
+{
+    if (arrowTransform == nullptr)
+    {
+        return;
+    }
+
+    GameObject* arrowObject = ComponentAPI::getOwner(arrowTransform);
+
+    if (arrowObject == nullptr)
+    {
+        return;
+    }
+
+    TrailComponent* trailComponent = TrailAPI::getTrailComponent(arrowObject);
+
+    if (trailComponent != nullptr)
+    {
+        TrailAPI::generateTrail(trailComponent, false);
+    }
 }
 
 IMPLEMENT_SCRIPT(LyrielParticles)

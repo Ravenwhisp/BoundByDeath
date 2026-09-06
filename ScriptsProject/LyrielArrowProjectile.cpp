@@ -5,6 +5,7 @@
 #include "LyrielCharacter.h"
 #include "LyrielSound.h"
 #include "ParticleLifecycle.h"
+#include "LyrielParticles.h"
 
 IMPLEMENT_SCRIPT_FIELDS(LyrielArrowProjectile,
     SERIALIZED_STRING(m_legacyParticlePath, "Particle Prefab Path"),
@@ -42,8 +43,6 @@ void LyrielArrowProjectile::Update()
 
 void LyrielArrowProjectile::launch(const Vector3& startPosition, const Vector3& direction, float speed, float lifetime, GameObject* target, float damage)
 {
-    m_spawnPosition = startPosition;
-
     m_direction = direction;
     m_speed = speed;
     m_currentLifetime = lifetime;
@@ -56,7 +55,7 @@ void LyrielArrowProjectile::launch(const Vector3& startPosition, const Vector3& 
 
     if (transform != nullptr)
     {
-        TransformAPI::setGlobalPosition(transform, m_spawnPosition);
+        TransformAPI::setGlobalPosition(transform, startPosition);
     }
 
     m_inUse = true;
@@ -64,20 +63,27 @@ void LyrielArrowProjectile::launch(const Vector3& startPosition, const Vector3& 
     GameObjectAPI::setActive(getOwner(), true);
 
     activateEmbeddedParticles();
+
+    LyrielParticles* particles = getLyrielParticles();
+    if (particles != nullptr)
+    {
+        particles->SetArrowTrailActive(transform);
+    }
 }
 
 void LyrielArrowProjectile::resetProjectile()
 {
+    Transform* transform = GameObjectAPI::getTransform(getOwner());
+
+    LyrielParticles* particles = getLyrielParticles();
+    if (particles != nullptr)
+    {
+        particles->SetArrowTrailInactive(transform);
+    }
+
     stopEmbeddedParticles();
 
     GameObjectAPI::setActive(getOwner(), false);
-
-    Transform* transform = GameObjectAPI::getTransform(getOwner());
-
-    if (transform != nullptr)
-    {
-        TransformAPI::setGlobalPosition(transform, m_spawnPosition);
-    }
 
     m_direction = Vector3::Zero;
     m_speed = 0.0f;
@@ -159,6 +165,25 @@ void LyrielArrowProjectile::activateEmbeddedParticles()
 void LyrielArrowProjectile::stopEmbeddedParticles()
 {
     ParticleLifecycle::stop(getOwner());
+}
+
+LyrielParticles* LyrielArrowProjectile::getLyrielParticles() const
+{
+    Transform* projectileOwner = getProjectileOwnerTransform();
+
+    if (projectileOwner == nullptr)
+    {
+        return nullptr;
+    }
+
+    GameObject* lyriel = projectileOwner->getOwner();
+
+    if (lyriel == nullptr)
+    {
+        return nullptr;
+    }
+
+    return GameObjectAPI::findScript<LyrielParticles>(lyriel);
 }
 
 void LyrielArrowProjectile::syncParticleTransform()
