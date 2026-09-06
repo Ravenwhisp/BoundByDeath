@@ -40,54 +40,54 @@ void LyrielArrowProjectile::Update()
     }
 }
 
-void LyrielArrowProjectile::launch(const Vector3& start_position, const Vector3& direction, float speed, float lifetime, GameObject* target, float damage)
+void LyrielArrowProjectile::launch(const Vector3& startPosition, const Vector3& direction, float speed, float lifetime, GameObject* target, float damage)
 {
-    m_inUse = true;
+    m_spawnPosition = startPosition;
+
     m_direction = direction;
-    m_direction.Normalize();
     m_speed = speed;
-    m_lifeTimer = 0.0f;
     m_currentLifetime = lifetime;
+    m_lifeTimer = 0.0f;
+
     m_target = target;
     m_damage = damage;
 
     Transform* transform = GameObjectAPI::getTransform(getOwner());
+
     if (transform != nullptr)
     {
-        TransformAPI::setGlobalPosition(transform, start_position);
-        TransformAPI::lookAt(transform, start_position + m_direction);
+        TransformAPI::setGlobalPosition(transform, m_spawnPosition);
     }
+
+    m_inUse = true;
 
     GameObjectAPI::setActive(getOwner(), true);
-    activateEmbeddedParticles();
 
-    if (m_particlePrefab.m_id.isValid())
-    {
-        m_particleGO = GameObjectAPI::instantiatePrefab(m_particlePrefab.m_id, start_position, Vector3::Zero, nullptr);
-        if (m_particleGO != nullptr)
-        {
-            syncParticleTransform();
-        }
-    }
+    activateEmbeddedParticles();
 }
 
 void LyrielArrowProjectile::resetProjectile()
 {
+    stopEmbeddedParticles();
+
+    GameObjectAPI::setActive(getOwner(), false);
+
+    Transform* transform = GameObjectAPI::getTransform(getOwner());
+
+    if (transform != nullptr)
+    {
+        TransformAPI::setGlobalPosition(transform, m_spawnPosition);
+    }
+
     m_direction = Vector3::Zero;
     m_speed = 0.0f;
-    m_lifeTimer = 0.0f;
     m_currentLifetime = 0.0f;
+    m_lifeTimer = 0.0f;
+
     m_target = nullptr;
     m_damage = 0.0f;
 
-    if (m_particleGO != nullptr)
-    {
-        GameObjectAPI::removeGameObject(m_particleGO);
-        m_particleGO = nullptr;
-    }
-
-    stopEmbeddedParticles();
-    ProjectileBase::resetProjectile();
+    m_inUse = false;
 }
 
 void LyrielArrowProjectile::applyImpactDamage()

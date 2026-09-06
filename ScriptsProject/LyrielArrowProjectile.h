@@ -13,7 +13,8 @@ public:
     void Update() override;
     FieldList getExposedFields() const override;
 
-    void launch(const Vector3& start_position, const Vector3& direction, float speed, float lifetime, GameObject* target, float damage);
+    void launch(const Vector3& startPosition, const Vector3& direction, float speed, float lifetime, GameObject* target, float damage);
+
     void resetProjectile() override;
 
 private:
@@ -28,6 +29,8 @@ public:
 
 private:
     Vector3 m_direction = Vector3::Zero;
+    Vector3 m_spawnPosition = Vector3::Zero;
+
     float m_speed = 0.0f;
     float m_currentLifetime = 0.0f;
     float m_lifeTimer = 0.0f;
