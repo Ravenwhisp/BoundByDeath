@@ -8,9 +8,9 @@
     "Tag": "BREAKABLE",
     "Transform": {
         "Position": [
-            0.0,
-            0.0,
-            0.0
+            -7.989984512329102,
+            -1.7615890502929688,
+            16.944194793701172
         ],
         "Rotation": [
             -0.0,
@@ -26,17 +26,24 @@
     },
     "Components": [
         {
-            "UID": 2819295372236479562,
+            "UID": 14250666639795904766,
             "ComponentType": "SCRIPT",
             "Active": true,
             "ScriptName": "BreakableExplosive",
             "ScriptFields": {
                 "Explosion Radius": 5.0,
-                "Explosion Damage": 30.0
+                "Explosion Damage": 30.0,
+                "Telegraph Reveal Distance": 8.5,
+                "Telegraph Hide Distance": 9.5,
+                "Telegraph Fade Duration": 0.20000000298023224,
+                "Telegraph Max Alpha": 0.30000001192092896,
+                "Telegraph Height Offset": 0.05000000074505806,
+                "Telegraph Canvas": 0,
+                "Telegraph Visual": 0
             }
         },
         {
-            "UID": 8745776951334630282,
+            "UID": 4315015000291570586,
             "ComponentType": "SCRIPT",
             "Active": true,
             "ScriptName": "BreakableDamageable",
@@ -49,7 +56,7 @@
             }
         },
         {
-            "UID": 2905692691274564438,
+            "UID": 7954478475449813891,
             "ComponentType": "NAV_RUNTIME_BLOCKER",
             "Active": true,
             "HalfExtents": [
@@ -87,7 +94,7 @@
             },
             "Components": [
                 {
-                    "UID": 18304559464124427567,
+                    "UID": 11993590096907676057,
                     "ComponentType": "MODEL",
                     "Active": true,
                     "MeshAssetId": {
@@ -103,11 +110,24 @@
                     "Materials": [
                         {
                             "uid": 2403703750103720078,
-                            "libId": "fcfbb7f457b6064ee0bf8ff68608de60",
+                            "libId": "8d81b93d91e2dba2e2cd152ced1bbfc0",
                             "type": "MATERIAL"
                         }
                     ],
-                    "Render Mode": 0
+                    "Render Mode": 0,
+                    "BoundingBox": {
+                        "Custom": false,
+                        "Min": [
+                            -35.61669158935547,
+                            -40.07427215576172,
+                            -84.62469482421875
+                        ],
+                        "Max": [
+                            37.15675354003906,
+                            34.82677459716797,
+                            0.20278167724609375
+                        ]
+                    }
                 }
             ],
             "Children": [
@@ -137,7 +157,7 @@
                     },
                     "Components": [
                         {
-                            "UID": 17623175862873821402,
+                            "UID": 5417152589857290609,
                             "ComponentType": "PARTICLE_SYSTEM",
                             "Active": true,
                             "TextureAssetId": {
@@ -203,12 +223,19 @@
                                                 0.7734375,
                                                 1.0,
                                                 1.0
-                                            ]
+                                            ],
+                                            "HDRColor": [
+                                                0.0,
+                                                0.0,
+                                                0.0
+                                            ],
+                                            "HDRIntensity": 0.0
                                         },
                                         {
                                             "ModuleType": 5,
                                             "VelocityType": "CONSTANT",
-                                            "InitialVelocity": 1.0
+                                            "InitialVelocity": 1.0,
+                                            "Gravity": 0.0
                                         },
                                         {
                                             "ModuleType": 6,
@@ -245,7 +272,8 @@
                                         {
                                             "ModuleType": 9,
                                             "RenderMode": "BILLBOARD",
-                                            "RenderLayer": 0
+                                            "RenderLayer": 0,
+                                            "BlendMode": "ALPHA"
                                         }
                                     ]
                                 }
@@ -282,7 +310,7 @@
             },
             "Components": [
                 {
-                    "UID": 3526749603353697106,
+                    "UID": 1400705675764516624,
                     "ComponentType": "MODEL",
                     "Active": true,
                     "MeshAssetId": {
@@ -298,14 +326,161 @@
                     "Materials": [
                         {
                             "uid": 10422386566006367085,
-                            "libId": "a6d0e1066c4d050904fa60a18626e213",
+                            "libId": "a5ee4043a2a6ce4365af3d7c5bc369cb",
                             "type": "MATERIAL"
                         }
                     ],
-                    "Render Mode": 0
+                    "Render Mode": 0,
+                    "BoundingBox": {
+                        "Custom": false,
+                        "Min": [
+                            -1.0757344961166382,
+                            -0.1606377512216568,
+                            -0.9848719239234924
+                        ],
+                        "Max": [
+                            0.40359723567962646,
+                            0.44660425186157227,
+                            0.40215152502059937
+                        ]
+                    }
                 }
             ],
             "Children": []
+        },
+        {
+            "Name": "ExplosionTelegraphCanvas",
+            "Active": true,
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0,
+                    1.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [
+                {
+                    "UID": 9257923540371829196,
+                    "ComponentType": "CANVAS",
+                    "Active": true,
+                    "RenderMode": "WORLD_SPACE",
+                    "ZTest": true
+                },
+                {
+                    "UID": 10778378398921134042,
+                    "ComponentType": "PREFAB_INSTANCE",
+                    "Active": true,
+                    "sourcePath": "Assets\\Textures\\World UI\\ExplosiveBarrel\\ExplosionTelegraphCanvas.prefab",
+                    "assetUID": 14816958678758629583
+                }
+            ],
+            "Children": [
+                {
+                    "Name": "ExplosionTelegraphSprite",
+                    "Active": true,
+                    "Static": false,
+                    "Layer": "DEFAULT",
+                    "Tag": "DEFAULT",
+                    "Transform": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "Rotation": [
+                            -0.0,
+                            0.0,
+                            -0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "Components": [
+                        {
+                            "UID": 3854133439221664069,
+                            "ComponentType": "TRANSFORM2D",
+                            "Active": true,
+                            "Position": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "Scale": [
+                                1.0,
+                                1.0,
+                                0.0
+                            ],
+                            "Pivot": [
+                                0.5,
+                                0.5,
+                                0.0
+                            ],
+                            "AnchorMin": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "AnchorMax": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "BaseSize": [
+                                100.0,
+                                100.0,
+                                0.0
+                            ],
+                            "StretchMode": "NONE",
+                            "SizingMode": "KEEP_ASPECT_RATIO",
+                            "AspectRatio": 1.0,
+                            "Alpha": 1.0
+                        },
+                        {
+                            "UID": 6298713625070251525,
+                            "ComponentType": "UIIMAGE",
+                            "Active": true,
+                            "TextureAssetId": {
+                                "uid": 5270639378458287044,
+                                "libId": "983b38dabc6a97c70dc4b09989178f72",
+                                "type": "TEXTURE"
+                            },
+                            "FillAmount": [
+                                0.0,
+                                1.0
+                            ],
+                            "FillMethod": "Horizontal",
+                            "FillOrigin": 0,
+                            "SheetColumns": 1,
+                            "SheetRows": 1,
+                            "SheetOffset": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "StretchDrawMode": "Stretch"
+                        }
+                    ],
+                    "Children": []
+                }
+            ]
         }
     ]
 }
