@@ -59,8 +59,6 @@ void EnemyDeathState::OnStateUpdate()
 		return;
 	}
 
-	m_deathTimer -= Time::getDeltaTime();
-
 	if (!m_dissolveStarted)
 	{
 		m_deathTimer -= Time::getDeltaTime();

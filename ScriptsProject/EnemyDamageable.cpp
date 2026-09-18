@@ -99,10 +99,11 @@ void EnemyDamageable::Start()
 	if (!m_healthBarContainerTransform)
 	{
 		Debug::warn("Health Bar Container Transform2D is missing from %s", GameObjectAPI::getName(m_owner));
-		return;
 	}
-
-	setHealthBarAlpha(0.0f);
+	else
+	{
+		setHealthBarAlpha(0.0f);
+	}
 
 	loadDissolveComponent();
 }
