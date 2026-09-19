@@ -3,6 +3,7 @@
 
 #include "EnemyDetectionAggro.h"
 #include "EnemySound.h"
+#include "EnemyStunParticles.h"
 #include "EnemyBaseController.h"
 #include "EnemyBaseDataConfig.h"
 #include "EnemyShadowMark.h"
@@ -243,6 +244,11 @@ void EnemyDamageable::onDamaged(float amount)
 void EnemyDamageable::onDeath()
 {
 	Damageable::onDeath();
+
+	if (auto* stunVisuals = GameObjectAPI::findScript<EnemyStunParticles>(getOwner()))
+	{
+		stunVisuals->stopStunParticle(true);
+	}
 
 	setShadowExecutionThresholdMarkerVisible(false);
 
