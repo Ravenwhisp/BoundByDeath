@@ -42,7 +42,6 @@ void EnemyBaseController::Start()
 
     m_moveSpeed = cfg->m_moveSpeed;
     m_recoveryDuration = cfg->m_recoveryDuration;
-    m_stunnedDuration = cfg->m_stunnedDuration;
 }
 
 void EnemyBaseController::updateCurrentTarget()
@@ -314,11 +313,6 @@ void EnemyBaseController::setRecoveryDuration(float recoveryDuration)
     m_recoveryDuration = recoveryDuration;
 }
 
-void EnemyBaseController::setStunnedDuration(float stunnedDuration)
-{
-    m_stunnedDuration = stunnedDuration;
-}
-
 void EnemyBaseController::useStun(float duration)
 {
     if (duration <= 0.0f)
@@ -372,6 +366,7 @@ bool EnemyBaseController::trySendStunTrigger(AnimationComponent* animation)
 
 void EnemyBaseController::clearStun()
 {
+    m_stunnedTimer = 0.0f;
     m_isStunned = false;
     m_stunnedTriggerSent = false;
 }
