@@ -97,6 +97,11 @@ void ArthurHeavySwipe::OnStateUpdate()
         return;
     }
 
+    if (m_arthurController->trySendStunTrigger(m_animation))
+    {
+        return;
+    }
+
     m_stateTimer += Time::getDeltaTime();
 
     const bool isPhase2 = m_arthurController->isPhase2();
