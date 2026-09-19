@@ -80,6 +80,11 @@ void ArthurSideSweep::OnStateUpdate()
         return;
     }
 
+    if (m_arthurController->trySendStunTrigger(m_animation))
+    {
+        return;
+    }
+
     m_stateTimer += Time::getDeltaTime();
 
     float hitTime = m_arthurController->m_attackConfig.get()->m_sideSweepHitTime;
