@@ -26,7 +26,7 @@
     },
     "Components": [
         {
-            "UID": 1337064008888452664,
+            "UID": 1099812311302218697,
             "ComponentType": "ANIMATION",
             "Active": true,
             "StateMachineUID": {
@@ -44,7 +44,7 @@
             "ForceWorldAfterApply": true
         },
         {
-            "UID": 17241686442681542475,
+            "UID": 885947408983382939,
             "ComponentType": "SCRIPT",
             "Active": true,
             "ScriptName": "EnemyDetectionAggro",
@@ -57,7 +57,7 @@
             }
         },
         {
-            "UID": 8425675859909860159,
+            "UID": 16536900081695419504,
             "ComponentType": "SCRIPT",
             "Active": true,
             "ScriptName": "SkeletonEnemyController",
@@ -82,7 +82,7 @@
             }
         },
         {
-            "UID": 17949136140541169715,
+            "UID": 6490797856063505808,
             "ComponentType": "SCRIPT",
             "Active": true,
             "ScriptName": "SkeletonDamageable",
@@ -106,14 +106,14 @@
             }
         },
         {
-            "UID": 15089721100798242011,
+            "UID": 12355616613658064351,
             "ComponentType": "SCRIPT",
             "Active": true,
             "ScriptName": "EnemyAttackExecutor",
             "ScriptFields": {}
         },
         {
-            "UID": 16830313499927868399,
+            "UID": 10708624571065233528,
             "ComponentType": "SCRIPT",
             "Active": true,
             "ScriptName": "SkeletonParticles",
@@ -142,7 +142,7 @@
             }
         },
         {
-            "UID": 15934960426060059307,
+            "UID": 1485691514999809230,
             "ComponentType": "SCRIPT",
             "Active": true,
             "ScriptName": "SkeletonAttackDebugDraw",
@@ -156,7 +156,7 @@
             }
         },
         {
-            "UID": 9929450971360342366,
+            "UID": 10209363221234916089,
             "ComponentType": "SCRIPT",
             "Active": true,
             "ScriptName": "EnemyShadowMark",
@@ -181,14 +181,14 @@
             }
         },
         {
-            "UID": 14327039634780708300,
+            "UID": 16344306027370592419,
             "ComponentType": "SCRIPT",
             "Active": true,
             "ScriptName": "EnemyForcedMovement",
             "ScriptFields": {}
         },
         {
-            "UID": 9306158127523492787,
+            "UID": 14292982200474891480,
             "ComponentType": "SCRIPT",
             "Active": true,
             "ScriptName": "BarrierComponent",
@@ -207,7 +207,7 @@
             }
         },
         {
-            "UID": 13473955798646136947,
+            "UID": 11594911777842403791,
             "ComponentType": "SCRIPT",
             "Active": true,
             "ScriptName": "SharedEnemyParticles",
@@ -224,7 +224,7 @@
             }
         },
         {
-            "UID": 9743624162917918640,
+            "UID": 5308334958334118180,
             "ComponentType": "SCRIPT",
             "Active": true,
             "ScriptName": "SkeletonUI",
@@ -242,7 +242,7 @@
             }
         },
         {
-            "UID": 3797383688641239912,
+            "UID": 12097291413232419702,
             "ComponentType": "SCRIPT",
             "Active": true,
             "ScriptName": "EnemyStunParticles",
@@ -1222,6 +1222,1075 @@
                     },
                     "Components": [],
                     "Children": []
+                },
+                {
+                    "Name": "Health Bar",
+                    "Active": true,
+                    "Static": false,
+                    "Layer": "DEFAULT",
+                    "Tag": "DEFAULT",
+                    "Transform": {
+                        "Position": [
+                            0.0,
+                            1.2999961376190186,
+                            0.0
+                        ],
+                        "Rotation": [
+                            -0.0,
+                            0.0,
+                            -0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "Components": [
+                        {
+                            "UID": 8286700979841408608,
+                            "ComponentType": "CANVAS",
+                            "Active": true,
+                            "RenderMode": "WORLD_SPACE_CAMERA",
+                            "ZTest": true
+                        },
+                        {
+                            "UID": 6771576659868498787,
+                            "ComponentType": "PREFAB_INSTANCE",
+                            "Active": true,
+                            "sourcePath": "Assets\\Prefabs\\Enemies\\Health Bar.prefab",
+                            "assetUID": 12562405260630744767
+                        }
+                    ],
+                    "Children": [
+                        {
+                            "Name": "Background",
+                            "Active": true,
+                            "Static": false,
+                            "Layer": "DEFAULT",
+                            "Tag": "DEFAULT",
+                            "Transform": {
+                                "Position": [
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "Rotation": [
+                                    -0.0,
+                                    0.0,
+                                    -0.0,
+                                    1.0
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ]
+                            },
+                            "Components": [
+                                {
+                                    "UID": 14522320187872911080,
+                                    "ComponentType": "TRANSFORM2D",
+                                    "Active": true,
+                                    "Position": [
+                                        0.0,
+                                        0.0,
+                                        0.0
+                                    ],
+                                    "Scale": [
+                                        0.5,
+                                        0.5,
+                                        0.0
+                                    ],
+                                    "Pivot": [
+                                        0.5,
+                                        0.5,
+                                        0.0
+                                    ],
+                                    "AnchorMin": [
+                                        0.0,
+                                        0.0,
+                                        0.0
+                                    ],
+                                    "AnchorMax": [
+                                        0.0,
+                                        0.0,
+                                        0.0
+                                    ],
+                                    "BaseSize": [
+                                        189.0,
+                                        25.0,
+                                        0.0
+                                    ],
+                                    "StretchMode": "NONE",
+                                    "SizingMode": "KEEP_ASPECT_RATIO",
+                                    "AspectRatio": 1.0,
+                                    "Alpha": 1.0
+                                },
+                                {
+                                    "UID": 16138414098819301371,
+                                    "ComponentType": "UIIMAGE",
+                                    "Active": true,
+                                    "TextureAssetId": {
+                                        "uid": 14538694312607389381,
+                                        "libId": "2d5f24fa27461cdba4e38a08f027dbfa",
+                                        "type": "TEXTURE"
+                                    },
+                                    "FillAmount": [
+                                        0.0,
+                                        1.0
+                                    ],
+                                    "FillMethod": "Horizontal",
+                                    "FillOrigin": 0,
+                                    "SheetColumns": 1,
+                                    "SheetRows": 1,
+                                    "SheetOffset": [
+                                        0.0,
+                                        0.0,
+                                        0.0
+                                    ],
+                                    "StretchDrawMode": "Stretch"
+                                }
+                            ],
+                            "Children": [
+                                {
+                                    "Name": "Slider 2",
+                                    "Active": true,
+                                    "Static": false,
+                                    "Layer": "DEFAULT",
+                                    "Tag": "DEFAULT",
+                                    "Transform": {
+                                        "Position": [
+                                            0.0,
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Rotation": [
+                                            -0.0,
+                                            0.0,
+                                            -0.0,
+                                            1.0
+                                        ],
+                                        "Scale": [
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ]
+                                    },
+                                    "Components": [
+                                        {
+                                            "UID": 5944932063038889060,
+                                            "ComponentType": "TRANSFORM2D",
+                                            "Active": true,
+                                            "Position": [
+                                                0.0,
+                                                0.0,
+                                                0.0
+                                            ],
+                                            "Scale": [
+                                                1.0,
+                                                1.0,
+                                                0.0
+                                            ],
+                                            "Pivot": [
+                                                0.5,
+                                                0.5,
+                                                0.0
+                                            ],
+                                            "AnchorMin": [
+                                                0.5,
+                                                0.5,
+                                                0.0
+                                            ],
+                                            "AnchorMax": [
+                                                0.5,
+                                                0.5,
+                                                0.0
+                                            ],
+                                            "BaseSize": [
+                                                189.0,
+                                                25.0,
+                                                0.0
+                                            ],
+                                            "StretchMode": "NONE",
+                                            "SizingMode": "KEEP_ASPECT_RATIO",
+                                            "AspectRatio": 1.0,
+                                            "Alpha": 1.0
+                                        },
+                                        {
+                                            "UID": 9911845514234895100,
+                                            "ComponentType": "UIIMAGE",
+                                            "Active": true,
+                                            "TextureAssetId": {
+                                                "uid": 13066959920105547232,
+                                                "libId": "35770f3d2c3257ecc825ff18d3a2eb32",
+                                                "type": "TEXTURE"
+                                            },
+                                            "FillAmount": [
+                                                0.0,
+                                                1.0
+                                            ],
+                                            "FillMethod": "Horizontal",
+                                            "FillOrigin": 0,
+                                            "SheetColumns": 1,
+                                            "SheetRows": 1,
+                                            "SheetOffset": [
+                                                0.0,
+                                                0.0,
+                                                0.0
+                                            ],
+                                            "StretchDrawMode": "Stretch"
+                                        },
+                                        {
+                                            "UID": 15735917397204507069,
+                                            "ComponentType": "UISLIDER",
+                                            "Active": true,
+                                            "FillAmount": [
+                                                0.0,
+                                                1.0
+                                            ],
+                                            "FillMethod": "Horizontal",
+                                            "FillOrigin": 0
+                                        }
+                                    ],
+                                    "Children": []
+                                },
+                                {
+                                    "Name": "Slider 1",
+                                    "Active": true,
+                                    "Static": false,
+                                    "Layer": "DEFAULT",
+                                    "Tag": "DEFAULT",
+                                    "Transform": {
+                                        "Position": [
+                                            0.0,
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Rotation": [
+                                            -0.0,
+                                            0.0,
+                                            -0.0,
+                                            1.0
+                                        ],
+                                        "Scale": [
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ]
+                                    },
+                                    "Components": [
+                                        {
+                                            "UID": 4491364751335478341,
+                                            "ComponentType": "TRANSFORM2D",
+                                            "Active": true,
+                                            "Position": [
+                                                0.0,
+                                                0.0,
+                                                0.0
+                                            ],
+                                            "Scale": [
+                                                1.0,
+                                                1.0,
+                                                0.0
+                                            ],
+                                            "Pivot": [
+                                                0.5,
+                                                0.5,
+                                                0.0
+                                            ],
+                                            "AnchorMin": [
+                                                0.5,
+                                                0.5,
+                                                0.0
+                                            ],
+                                            "AnchorMax": [
+                                                0.5,
+                                                0.5,
+                                                0.0
+                                            ],
+                                            "BaseSize": [
+                                                189.0,
+                                                25.0,
+                                                0.0
+                                            ],
+                                            "StretchMode": "NONE",
+                                            "SizingMode": "KEEP_ASPECT_RATIO",
+                                            "AspectRatio": 1.0,
+                                            "Alpha": 1.0
+                                        },
+                                        {
+                                            "UID": 14602232529024152971,
+                                            "ComponentType": "UIIMAGE",
+                                            "Active": true,
+                                            "TextureAssetId": {
+                                                "uid": 13445409784538940101,
+                                                "libId": "70ac6644b69e35b4c1e2a2e364921877",
+                                                "type": "TEXTURE"
+                                            },
+                                            "FillAmount": [
+                                                0.0,
+                                                1.0
+                                            ],
+                                            "FillMethod": "Horizontal",
+                                            "FillOrigin": 0,
+                                            "SheetColumns": 1,
+                                            "SheetRows": 1,
+                                            "SheetOffset": [
+                                                0.0,
+                                                0.0,
+                                                0.0
+                                            ],
+                                            "StretchDrawMode": "Stretch"
+                                        },
+                                        {
+                                            "UID": 7803603158137802830,
+                                            "ComponentType": "UISLIDER",
+                                            "Active": true,
+                                            "FillAmount": [
+                                                0.0,
+                                                1.0
+                                            ],
+                                            "FillMethod": "Horizontal",
+                                            "FillOrigin": 0
+                                        }
+                                    ],
+                                    "Children": []
+                                },
+                                {
+                                    "Name": "Shadow Execution Preview",
+                                    "Active": true,
+                                    "Static": false,
+                                    "Layer": "DEFAULT",
+                                    "Tag": "DEFAULT",
+                                    "Transform": {
+                                        "Position": [
+                                            0.0,
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Rotation": [
+                                            -0.0,
+                                            0.0,
+                                            -0.0,
+                                            1.0
+                                        ],
+                                        "Scale": [
+                                            0.9999999403953552,
+                                            1.0,
+                                            0.9999999403953552
+                                        ]
+                                    },
+                                    "Components": [
+                                        {
+                                            "UID": 813971106678345182,
+                                            "ComponentType": "TRANSFORM2D",
+                                            "Active": true,
+                                            "Position": [
+                                                0.0,
+                                                0.0,
+                                                0.0
+                                            ],
+                                            "Scale": [
+                                                1.0,
+                                                1.0,
+                                                0.0
+                                            ],
+                                            "Pivot": [
+                                                0.5,
+                                                0.5,
+                                                0.0
+                                            ],
+                                            "AnchorMin": [
+                                                0.5,
+                                                0.5,
+                                                0.0
+                                            ],
+                                            "AnchorMax": [
+                                                0.5,
+                                                0.5,
+                                                0.0
+                                            ],
+                                            "BaseSize": [
+                                                189.0,
+                                                25.0,
+                                                0.0
+                                            ],
+                                            "StretchMode": "NONE",
+                                            "SizingMode": "KEEP_ASPECT_RATIO",
+                                            "AspectRatio": 1.0,
+                                            "Alpha": 1.0
+                                        },
+                                        {
+                                            "UID": 16843039752019702078,
+                                            "ComponentType": "UIIMAGE",
+                                            "Active": true,
+                                            "TextureAssetId": {
+                                                "uid": 9705071187105261286,
+                                                "libId": "41138c8e51466fca4e434b2b3cd761d2",
+                                                "type": "TEXTURE"
+                                            },
+                                            "FillAmount": [
+                                                0.0,
+                                                1.0
+                                            ],
+                                            "FillMethod": "Horizontal",
+                                            "FillOrigin": 0,
+                                            "SheetColumns": 1,
+                                            "SheetRows": 1,
+                                            "SheetOffset": [
+                                                0.0,
+                                                0.0,
+                                                0.0
+                                            ],
+                                            "StretchDrawMode": "Stretch"
+                                        },
+                                        {
+                                            "UID": 3240391447654428375,
+                                            "ComponentType": "UISLIDER",
+                                            "Active": true,
+                                            "FillAmount": [
+                                                0.0,
+                                                1.0
+                                            ],
+                                            "FillMethod": "Horizontal",
+                                            "FillOrigin": 0
+                                        }
+                                    ],
+                                    "Children": []
+                                },
+                                {
+                                    "Name": "Shadow Execution Threshold Marker",
+                                    "Active": true,
+                                    "Static": false,
+                                    "Layer": "DEFAULT",
+                                    "Tag": "DEFAULT",
+                                    "Transform": {
+                                        "Position": [
+                                            0.0,
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Rotation": [
+                                            0.0,
+                                            0.0,
+                                            0.0,
+                                            1.0
+                                        ],
+                                        "Scale": [
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ]
+                                    },
+                                    "Components": [
+                                        {
+                                            "UID": 12040629857505071298,
+                                            "ComponentType": "TRANSFORM2D",
+                                            "Active": true,
+                                            "Position": [
+                                                0.0,
+                                                0.0,
+                                                0.0
+                                            ],
+                                            "Scale": [
+                                                1.0,
+                                                1.0,
+                                                0.0
+                                            ],
+                                            "Pivot": [
+                                                0.5,
+                                                0.5,
+                                                0.0
+                                            ],
+                                            "AnchorMin": [
+                                                0.5,
+                                                0.5,
+                                                0.0
+                                            ],
+                                            "AnchorMax": [
+                                                0.5,
+                                                0.5,
+                                                0.0
+                                            ],
+                                            "BaseSize": [
+                                                3.0,
+                                                25.0,
+                                                0.0
+                                            ],
+                                            "StretchMode": "NONE",
+                                            "SizingMode": "KEEP_ASPECT_RATIO",
+                                            "AspectRatio": 1.0,
+                                            "Alpha": 1.0
+                                        },
+                                        {
+                                            "UID": 10529684796824059366,
+                                            "ComponentType": "UIIMAGE",
+                                            "Active": true,
+                                            "TextureAssetId": {
+                                                "uid": 2933435892883337952,
+                                                "libId": "9bd2b34a747e7444883ddb144371a4ef",
+                                                "type": "TEXTURE"
+                                            },
+                                            "FillAmount": [
+                                                0.0,
+                                                1.0
+                                            ],
+                                            "FillMethod": "Horizontal",
+                                            "FillOrigin": 0,
+                                            "SheetColumns": 1,
+                                            "SheetRows": 1,
+                                            "SheetOffset": [
+                                                0.0,
+                                                0.0,
+                                                0.0
+                                            ],
+                                            "StretchDrawMode": "Stretch"
+                                        }
+                                    ],
+                                    "Children": []
+                                }
+                            ]
+                        },
+                        {
+                            "Name": "Shadow Mark",
+                            "Active": true,
+                            "Static": false,
+                            "Layer": "DEFAULT",
+                            "Tag": "DEFAULT",
+                            "Transform": {
+                                "Position": [
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "Rotation": [
+                                    -0.0,
+                                    0.0,
+                                    -0.0,
+                                    1.0
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ]
+                            },
+                            "Components": [
+                                {
+                                    "UID": 8281623213038761489,
+                                    "ComponentType": "TRANSFORM2D",
+                                    "Active": true,
+                                    "Position": [
+                                        0.0,
+                                        0.0,
+                                        0.0
+                                    ],
+                                    "Scale": [
+                                        0.6499999761581421,
+                                        0.6499999761581421,
+                                        0.0
+                                    ],
+                                    "Pivot": [
+                                        0.0,
+                                        0.699999988079071,
+                                        0.0
+                                    ],
+                                    "AnchorMin": [
+                                        0.0,
+                                        0.0,
+                                        0.0
+                                    ],
+                                    "AnchorMax": [
+                                        0.0,
+                                        0.0,
+                                        0.0
+                                    ],
+                                    "BaseSize": [
+                                        100.0,
+                                        100.0,
+                                        0.0
+                                    ],
+                                    "StretchMode": "NONE",
+                                    "SizingMode": "KEEP_ASPECT_RATIO",
+                                    "AspectRatio": 1.0,
+                                    "Alpha": 1.0
+                                },
+                                {
+                                    "UID": 14744023736485913566,
+                                    "ComponentType": "PREFAB_INSTANCE",
+                                    "Active": true,
+                                    "sourcePath": "Assets\\Prefabs\\Enemies\\Shadow Mark.prefab",
+                                    "assetUID": 16425406405860610161
+                                }
+                            ],
+                            "Children": [
+                                {
+                                    "Name": "Background Glow",
+                                    "Active": true,
+                                    "Static": false,
+                                    "Layer": "DEFAULT",
+                                    "Tag": "DEFAULT",
+                                    "Transform": {
+                                        "Position": [
+                                            0.0,
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Rotation": [
+                                            -0.0,
+                                            0.0,
+                                            -0.0,
+                                            1.0
+                                        ],
+                                        "Scale": [
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ]
+                                    },
+                                    "Components": [
+                                        {
+                                            "UID": 8146226610728133650,
+                                            "ComponentType": "TRANSFORM2D",
+                                            "Active": true,
+                                            "Position": [
+                                                0.0,
+                                                0.0,
+                                                0.0
+                                            ],
+                                            "Scale": [
+                                                1.0,
+                                                1.0,
+                                                0.0
+                                            ],
+                                            "Pivot": [
+                                                0.5,
+                                                0.5,
+                                                0.0
+                                            ],
+                                            "AnchorMin": [
+                                                0.0,
+                                                0.0,
+                                                0.0
+                                            ],
+                                            "AnchorMax": [
+                                                0.0,
+                                                0.0,
+                                                0.0
+                                            ],
+                                            "BaseSize": [
+                                                100.0,
+                                                100.0,
+                                                0.0
+                                            ],
+                                            "StretchMode": "NONE",
+                                            "SizingMode": "KEEP_ASPECT_RATIO",
+                                            "AspectRatio": 1.0,
+                                            "Alpha": 1.0
+                                        },
+                                        {
+                                            "UID": 4880269694418996807,
+                                            "ComponentType": "UIIMAGE",
+                                            "Active": true,
+                                            "TextureAssetId": {
+                                                "uid": 5397616962974372729,
+                                                "libId": "a61a1cfb219a7490a64dd02eeee0b2f1",
+                                                "type": "TEXTURE"
+                                            },
+                                            "FillAmount": [
+                                                0.0,
+                                                1.0
+                                            ],
+                                            "FillMethod": "Horizontal",
+                                            "FillOrigin": 0,
+                                            "SheetColumns": 1,
+                                            "SheetRows": 1,
+                                            "SheetOffset": [
+                                                0.0,
+                                                0.0,
+                                                0.0
+                                            ],
+                                            "StretchDrawMode": "Stretch"
+                                        }
+                                    ],
+                                    "Children": []
+                                },
+                                {
+                                    "Name": "Background Blur",
+                                    "Active": true,
+                                    "Static": false,
+                                    "Layer": "DEFAULT",
+                                    "Tag": "DEFAULT",
+                                    "Transform": {
+                                        "Position": [
+                                            0.0,
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Rotation": [
+                                            -0.0,
+                                            0.0,
+                                            -0.0,
+                                            1.0
+                                        ],
+                                        "Scale": [
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ]
+                                    },
+                                    "Components": [
+                                        {
+                                            "UID": 15236483790430195753,
+                                            "ComponentType": "TRANSFORM2D",
+                                            "Active": true,
+                                            "Position": [
+                                                0.0,
+                                                0.0,
+                                                0.0
+                                            ],
+                                            "Scale": [
+                                                1.0,
+                                                1.0,
+                                                0.0
+                                            ],
+                                            "Pivot": [
+                                                0.5,
+                                                0.5,
+                                                0.0
+                                            ],
+                                            "AnchorMin": [
+                                                0.0,
+                                                0.0,
+                                                0.0
+                                            ],
+                                            "AnchorMax": [
+                                                0.0,
+                                                0.0,
+                                                0.0
+                                            ],
+                                            "BaseSize": [
+                                                100.0,
+                                                100.0,
+                                                0.0
+                                            ],
+                                            "StretchMode": "NONE",
+                                            "SizingMode": "KEEP_ASPECT_RATIO",
+                                            "AspectRatio": 1.0,
+                                            "Alpha": 1.0
+                                        },
+                                        {
+                                            "UID": 8657185331945611743,
+                                            "ComponentType": "UIIMAGE",
+                                            "Active": true,
+                                            "TextureAssetId": {
+                                                "uid": 9129158723835501861,
+                                                "libId": "4c778fc89616283d7d2fb9fbf21a9d3d",
+                                                "type": "TEXTURE"
+                                            },
+                                            "FillAmount": [
+                                                0.0,
+                                                1.0
+                                            ],
+                                            "FillMethod": "Horizontal",
+                                            "FillOrigin": 0,
+                                            "SheetColumns": 1,
+                                            "SheetRows": 1,
+                                            "SheetOffset": [
+                                                0.0,
+                                                0.0,
+                                                0.0
+                                            ],
+                                            "StretchDrawMode": "Stretch"
+                                        }
+                                    ],
+                                    "Children": []
+                                },
+                                {
+                                    "Name": "Lyriel Fragment",
+                                    "Active": true,
+                                    "Static": false,
+                                    "Layer": "DEFAULT",
+                                    "Tag": "DEFAULT",
+                                    "Transform": {
+                                        "Position": [
+                                            0.0,
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Rotation": [
+                                            -0.0,
+                                            0.0,
+                                            -0.0,
+                                            1.0
+                                        ],
+                                        "Scale": [
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ]
+                                    },
+                                    "Components": [
+                                        {
+                                            "UID": 12373000595791899539,
+                                            "ComponentType": "TRANSFORM2D",
+                                            "Active": true,
+                                            "Position": [
+                                                0.0,
+                                                0.0,
+                                                0.0
+                                            ],
+                                            "Scale": [
+                                                1.0,
+                                                1.0,
+                                                0.0
+                                            ],
+                                            "Pivot": [
+                                                0.5,
+                                                0.5,
+                                                0.0
+                                            ],
+                                            "AnchorMin": [
+                                                0.0,
+                                                0.0,
+                                                0.0
+                                            ],
+                                            "AnchorMax": [
+                                                0.0,
+                                                0.0,
+                                                0.0
+                                            ],
+                                            "BaseSize": [
+                                                100.0,
+                                                100.0,
+                                                0.0
+                                            ],
+                                            "StretchMode": "NONE",
+                                            "SizingMode": "KEEP_ASPECT_RATIO",
+                                            "AspectRatio": 1.0,
+                                            "Alpha": 1.0
+                                        },
+                                        {
+                                            "UID": 8135514959952284142,
+                                            "ComponentType": "UIIMAGE",
+                                            "Active": true,
+                                            "TextureAssetId": {
+                                                "uid": 16672526468069382122,
+                                                "libId": "1998aeca72c5caf2aa6ae88a370c3a10",
+                                                "type": "TEXTURE"
+                                            },
+                                            "FillAmount": [
+                                                0.0,
+                                                1.0
+                                            ],
+                                            "FillMethod": "Horizontal",
+                                            "FillOrigin": 0,
+                                            "SheetColumns": 1,
+                                            "SheetRows": 1,
+                                            "SheetOffset": [
+                                                0.0,
+                                                0.0,
+                                                0.0
+                                            ],
+                                            "StretchDrawMode": "Stretch"
+                                        }
+                                    ],
+                                    "Children": []
+                                },
+                                {
+                                    "Name": "Death Fragment",
+                                    "Active": true,
+                                    "Static": false,
+                                    "Layer": "DEFAULT",
+                                    "Tag": "DEFAULT",
+                                    "Transform": {
+                                        "Position": [
+                                            0.0,
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Rotation": [
+                                            -0.0,
+                                            0.0,
+                                            -0.0,
+                                            1.0
+                                        ],
+                                        "Scale": [
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ]
+                                    },
+                                    "Components": [
+                                        {
+                                            "UID": 11438048919370290361,
+                                            "ComponentType": "TRANSFORM2D",
+                                            "Active": true,
+                                            "Position": [
+                                                0.0,
+                                                0.0,
+                                                0.0
+                                            ],
+                                            "Scale": [
+                                                1.0,
+                                                1.0,
+                                                0.0
+                                            ],
+                                            "Pivot": [
+                                                0.5,
+                                                0.5,
+                                                0.0
+                                            ],
+                                            "AnchorMin": [
+                                                0.0,
+                                                0.0,
+                                                0.0
+                                            ],
+                                            "AnchorMax": [
+                                                0.0,
+                                                0.0,
+                                                0.0
+                                            ],
+                                            "BaseSize": [
+                                                100.0,
+                                                100.0,
+                                                0.0
+                                            ],
+                                            "StretchMode": "NONE",
+                                            "SizingMode": "KEEP_ASPECT_RATIO",
+                                            "AspectRatio": 1.0,
+                                            "Alpha": 1.0
+                                        },
+                                        {
+                                            "UID": 14132435740010784174,
+                                            "ComponentType": "UIIMAGE",
+                                            "Active": true,
+                                            "TextureAssetId": {
+                                                "uid": 8878390586589507693,
+                                                "libId": "72c6b0d5ff01011a75a353ee8c9d1352",
+                                                "type": "TEXTURE"
+                                            },
+                                            "FillAmount": [
+                                                0.0,
+                                                1.0
+                                            ],
+                                            "FillMethod": "Horizontal",
+                                            "FillOrigin": 0,
+                                            "SheetColumns": 1,
+                                            "SheetRows": 1,
+                                            "SheetOffset": [
+                                                0.0,
+                                                0.0,
+                                                0.0
+                                            ],
+                                            "StretchDrawMode": "Stretch"
+                                        }
+                                    ],
+                                    "Children": []
+                                }
+                            ]
+                        },
+                        {
+                            "Name": "Stun sprite",
+                            "Active": true,
+                            "Static": false,
+                            "Layer": "DEFAULT",
+                            "Tag": "DEFAULT",
+                            "Transform": {
+                                "Position": [
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "Rotation": [
+                                    -0.0,
+                                    0.0,
+                                    -0.0,
+                                    1.0
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ]
+                            },
+                            "Components": [
+                                {
+                                    "UID": 2022569493440683697,
+                                    "ComponentType": "TRANSFORM2D",
+                                    "Active": true,
+                                    "Position": [
+                                        -50.0,
+                                        0.0,
+                                        0.0
+                                    ],
+                                    "Scale": [
+                                        1.0,
+                                        1.0,
+                                        0.0
+                                    ],
+                                    "Pivot": [
+                                        1.0,
+                                        0.5,
+                                        0.0
+                                    ],
+                                    "AnchorMin": [
+                                        0.5,
+                                        0.5,
+                                        0.0
+                                    ],
+                                    "AnchorMax": [
+                                        0.5,
+                                        0.5,
+                                        0.0
+                                    ],
+                                    "BaseSize": [
+                                        30.0,
+                                        30.0,
+                                        0.0
+                                    ],
+                                    "StretchMode": "NONE",
+                                    "SizingMode": "KEEP_ASPECT_RATIO",
+                                    "AspectRatio": 1.0,
+                                    "Alpha": 1.0
+                                },
+                                {
+                                    "UID": 13843142349192487144,
+                                    "ComponentType": "UIIMAGE",
+                                    "Active": true,
+                                    "TextureAssetId": {
+                                        "uid": 3236333133085334804,
+                                        "libId": "b31fd6cd5fbfbf2d3fbbf92a0f74904d",
+                                        "type": "TEXTURE"
+                                    },
+                                    "FillAmount": [
+                                        0.0,
+                                        1.0
+                                    ],
+                                    "FillMethod": "Horizontal",
+                                    "FillOrigin": 0,
+                                    "SheetColumns": 1,
+                                    "SheetRows": 1,
+                                    "SheetOffset": [
+                                        0.0,
+                                        0.0,
+                                        0.0
+                                    ],
+                                    "StretchDrawMode": "Stretch"
+                                },
+                                {
+                                    "UID": 8687970303790688921,
+                                    "ComponentType": "PREFAB_INSTANCE",
+                                    "Active": true,
+                                    "sourcePath": "Assets\\Prefabs\\Enemies\\Stun sprite.prefab",
+                                    "assetUID": 380956341955627152
+                                }
+                            ],
+                            "Children": []
+                        }
+                    ]
                 }
             ]
         },
@@ -1251,7 +2320,7 @@
             },
             "Components": [
                 {
-                    "UID": 5794575605723344958,
+                    "UID": 7183936775343999215,
                     "ComponentType": "MODEL",
                     "Active": true,
                     "MeshAssetId": {
@@ -1287,7 +2356,7 @@
                     }
                 },
                 {
-                    "UID": 14724078853621554732,
+                    "UID": 9456603968998339260,
                     "ComponentType": "DISSOLVE",
                     "Active": true,
                     "DissolveAmount": 0.0,
@@ -1332,14 +2401,14 @@
             },
             "Components": [
                 {
-                    "UID": 5301627385148180407,
+                    "UID": 4732917656139831991,
                     "ComponentType": "CANVAS",
                     "Active": true,
                     "RenderMode": "WORLD_SPACE",
                     "ZTest": true
                 },
                 {
-                    "UID": 17756512349523338989,
+                    "UID": 10215542792986151363,
                     "ComponentType": "PREFAB_INSTANCE",
                     "Active": true,
                     "sourcePath": "Assets\\Prefabs\\Enemies\\SkeletonScimitarUI.prefab",
@@ -1373,7 +2442,7 @@
                     },
                     "Components": [
                         {
-                            "UID": 10360418996750636905,
+                            "UID": 10496841021472915542,
                             "ComponentType": "TRANSFORM2D",
                             "Active": true,
                             "Position": [
@@ -1412,7 +2481,7 @@
                             "Alpha": 1.0
                         },
                         {
-                            "UID": 12165874010100637916,
+                            "UID": 14580356628852034898,
                             "ComponentType": "UIIMAGE",
                             "Active": true,
                             "TextureAssetId": {
@@ -1464,7 +2533,7 @@
                     },
                     "Components": [
                         {
-                            "UID": 942137158994628982,
+                            "UID": 4560361452665567219,
                             "ComponentType": "TRANSFORM2D",
                             "Active": true,
                             "Position": [
@@ -1503,7 +2572,7 @@
                             "Alpha": 1.0
                         },
                         {
-                            "UID": 17337998877797917867,
+                            "UID": 6434758952600849331,
                             "ComponentType": "UIIMAGE",
                             "Active": true,
                             "TextureAssetId": {
@@ -1540,7 +2609,7 @@
             "Transform": {
                 "Position": [
                     0.0,
-                    1.2999999523162842,
+                    1.2999961376190186,
                     0.0
                 ],
                 "Rotation": [
@@ -1557,11 +2626,18 @@
             },
             "Components": [
                 {
-                    "UID": 5233946649930940080,
+                    "UID": 6821568327422429938,
                     "ComponentType": "CANVAS",
                     "Active": true,
                     "RenderMode": "WORLD_SPACE_CAMERA",
                     "ZTest": true
+                },
+                {
+                    "UID": 15969613516482123696,
+                    "ComponentType": "PREFAB_INSTANCE",
+                    "Active": true,
+                    "sourcePath": "Assets\\Prefabs\\Enemies\\Health Bar.prefab",
+                    "assetUID": 12562405260630744767
                 }
             ],
             "Children": [
@@ -1591,7 +2667,7 @@
                     },
                     "Components": [
                         {
-                            "UID": 17473500908344057476,
+                            "UID": 5790518488318225096,
                             "ComponentType": "TRANSFORM2D",
                             "Active": true,
                             "Position": [
@@ -1630,7 +2706,7 @@
                             "Alpha": 1.0
                         },
                         {
-                            "UID": 17051900701089550405,
+                            "UID": 17252733134545813608,
                             "ComponentType": "UIIMAGE",
                             "Active": true,
                             "TextureAssetId": {
@@ -1681,7 +2757,7 @@
                             },
                             "Components": [
                                 {
-                                    "UID": 14266947120211518789,
+                                    "UID": 12512054619817759872,
                                     "ComponentType": "TRANSFORM2D",
                                     "Active": true,
                                     "Position": [
@@ -1720,7 +2796,7 @@
                                     "Alpha": 1.0
                                 },
                                 {
-                                    "UID": 10309799924581341076,
+                                    "UID": 10366254717869356306,
                                     "ComponentType": "UIIMAGE",
                                     "Active": true,
                                     "TextureAssetId": {
@@ -1744,7 +2820,7 @@
                                     "StretchDrawMode": "Stretch"
                                 },
                                 {
-                                    "UID": 13387773781389376681,
+                                    "UID": 15739867908931741981,
                                     "ComponentType": "UISLIDER",
                                     "Active": true,
                                     "FillAmount": [
@@ -1783,7 +2859,7 @@
                             },
                             "Components": [
                                 {
-                                    "UID": 17286201229556700391,
+                                    "UID": 5529362634704561393,
                                     "ComponentType": "TRANSFORM2D",
                                     "Active": true,
                                     "Position": [
@@ -1822,7 +2898,7 @@
                                     "Alpha": 1.0
                                 },
                                 {
-                                    "UID": 14793378961834072796,
+                                    "UID": 2416770882163704010,
                                     "ComponentType": "UIIMAGE",
                                     "Active": true,
                                     "TextureAssetId": {
@@ -1846,7 +2922,7 @@
                                     "StretchDrawMode": "Stretch"
                                 },
                                 {
-                                    "UID": 17441885024485511874,
+                                    "UID": 9114395624810613071,
                                     "ComponentType": "UISLIDER",
                                     "Active": true,
                                     "FillAmount": [
@@ -1855,6 +2931,199 @@
                                     ],
                                     "FillMethod": "Horizontal",
                                     "FillOrigin": 0
+                                }
+                            ],
+                            "Children": []
+                        },
+                        {
+                            "Name": "Shadow Execution Preview",
+                            "Active": true,
+                            "Static": false,
+                            "Layer": "DEFAULT",
+                            "Tag": "DEFAULT",
+                            "Transform": {
+                                "Position": [
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "Rotation": [
+                                    -0.0,
+                                    0.0,
+                                    -0.0,
+                                    1.0
+                                ],
+                                "Scale": [
+                                    0.9999999403953552,
+                                    1.0,
+                                    0.9999999403953552
+                                ]
+                            },
+                            "Components": [
+                                {
+                                    "UID": 2778820248516453547,
+                                    "ComponentType": "TRANSFORM2D",
+                                    "Active": true,
+                                    "Position": [
+                                        0.0,
+                                        0.0,
+                                        0.0
+                                    ],
+                                    "Scale": [
+                                        1.0,
+                                        1.0,
+                                        0.0
+                                    ],
+                                    "Pivot": [
+                                        0.5,
+                                        0.5,
+                                        0.0
+                                    ],
+                                    "AnchorMin": [
+                                        0.5,
+                                        0.5,
+                                        0.0
+                                    ],
+                                    "AnchorMax": [
+                                        0.5,
+                                        0.5,
+                                        0.0
+                                    ],
+                                    "BaseSize": [
+                                        189.0,
+                                        25.0,
+                                        0.0
+                                    ],
+                                    "StretchMode": "NONE",
+                                    "SizingMode": "KEEP_ASPECT_RATIO",
+                                    "AspectRatio": 1.0,
+                                    "Alpha": 1.0
+                                },
+                                {
+                                    "UID": 14607945409951500570,
+                                    "ComponentType": "UIIMAGE",
+                                    "Active": true,
+                                    "TextureAssetId": {
+                                        "uid": 9705071187105261286,
+                                        "libId": "41138c8e51466fca4e434b2b3cd761d2",
+                                        "type": "TEXTURE"
+                                    },
+                                    "FillAmount": [
+                                        0.0,
+                                        1.0
+                                    ],
+                                    "FillMethod": "Horizontal",
+                                    "FillOrigin": 0,
+                                    "SheetColumns": 1,
+                                    "SheetRows": 1,
+                                    "SheetOffset": [
+                                        0.0,
+                                        0.0,
+                                        0.0
+                                    ],
+                                    "StretchDrawMode": "Stretch"
+                                },
+                                {
+                                    "UID": 7990279957460713779,
+                                    "ComponentType": "UISLIDER",
+                                    "Active": true,
+                                    "FillAmount": [
+                                        0.0,
+                                        1.0
+                                    ],
+                                    "FillMethod": "Horizontal",
+                                    "FillOrigin": 0
+                                }
+                            ],
+                            "Children": []
+                        },
+                        {
+                            "Name": "Shadow Execution Threshold Marker",
+                            "Active": true,
+                            "Static": false,
+                            "Layer": "DEFAULT",
+                            "Tag": "DEFAULT",
+                            "Transform": {
+                                "Position": [
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "Rotation": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    1.0
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ]
+                            },
+                            "Components": [
+                                {
+                                    "UID": 6575987512050339054,
+                                    "ComponentType": "TRANSFORM2D",
+                                    "Active": true,
+                                    "Position": [
+                                        0.0,
+                                        0.0,
+                                        0.0
+                                    ],
+                                    "Scale": [
+                                        1.0,
+                                        1.0,
+                                        0.0
+                                    ],
+                                    "Pivot": [
+                                        0.5,
+                                        0.5,
+                                        0.0
+                                    ],
+                                    "AnchorMin": [
+                                        0.5,
+                                        0.5,
+                                        0.0
+                                    ],
+                                    "AnchorMax": [
+                                        0.5,
+                                        0.5,
+                                        0.0
+                                    ],
+                                    "BaseSize": [
+                                        3.0,
+                                        25.0,
+                                        0.0
+                                    ],
+                                    "StretchMode": "NONE",
+                                    "SizingMode": "KEEP_ASPECT_RATIO",
+                                    "AspectRatio": 1.0,
+                                    "Alpha": 1.0
+                                },
+                                {
+                                    "UID": 111708582351800808,
+                                    "ComponentType": "UIIMAGE",
+                                    "Active": true,
+                                    "TextureAssetId": {
+                                        "uid": 2933435892883337952,
+                                        "libId": "9bd2b34a747e7444883ddb144371a4ef",
+                                        "type": "TEXTURE"
+                                    },
+                                    "FillAmount": [
+                                        0.0,
+                                        1.0
+                                    ],
+                                    "FillMethod": "Horizontal",
+                                    "FillOrigin": 0,
+                                    "SheetColumns": 1,
+                                    "SheetRows": 1,
+                                    "SheetOffset": [
+                                        0.0,
+                                        0.0,
+                                        0.0
+                                    ],
+                                    "StretchDrawMode": "Stretch"
                                 }
                             ],
                             "Children": []
@@ -1887,7 +3156,7 @@
                     },
                     "Components": [
                         {
-                            "UID": 7484061677215226265,
+                            "UID": 9546399750519141446,
                             "ComponentType": "TRANSFORM2D",
                             "Active": true,
                             "Position": [
@@ -1926,7 +3195,7 @@
                             "Alpha": 1.0
                         },
                         {
-                            "UID": 3811587116200164373,
+                            "UID": 6838724576576678172,
                             "ComponentType": "PREFAB_INSTANCE",
                             "Active": true,
                             "sourcePath": "Assets\\Prefabs\\Enemies\\Shadow Mark.prefab",
@@ -1960,7 +3229,7 @@
                             },
                             "Components": [
                                 {
-                                    "UID": 17478868137630533160,
+                                    "UID": 4112108766147839028,
                                     "ComponentType": "TRANSFORM2D",
                                     "Active": true,
                                     "Position": [
@@ -1999,7 +3268,7 @@
                                     "Alpha": 1.0
                                 },
                                 {
-                                    "UID": 12522715251053506805,
+                                    "UID": 15800182414253201487,
                                     "ComponentType": "UIIMAGE",
                                     "Active": true,
                                     "TextureAssetId": {
@@ -2051,7 +3320,7 @@
                             },
                             "Components": [
                                 {
-                                    "UID": 7403899699487703703,
+                                    "UID": 5829971951564839781,
                                     "ComponentType": "TRANSFORM2D",
                                     "Active": true,
                                     "Position": [
@@ -2090,7 +3359,7 @@
                                     "Alpha": 1.0
                                 },
                                 {
-                                    "UID": 8547286675010362879,
+                                    "UID": 12723211502913194518,
                                     "ComponentType": "UIIMAGE",
                                     "Active": true,
                                     "TextureAssetId": {
@@ -2142,7 +3411,7 @@
                             },
                             "Components": [
                                 {
-                                    "UID": 2528932270438799844,
+                                    "UID": 16540317595593955869,
                                     "ComponentType": "TRANSFORM2D",
                                     "Active": true,
                                     "Position": [
@@ -2181,7 +3450,7 @@
                                     "Alpha": 1.0
                                 },
                                 {
-                                    "UID": 6017304311825204200,
+                                    "UID": 17512748343361337465,
                                     "ComponentType": "UIIMAGE",
                                     "Active": true,
                                     "TextureAssetId": {
@@ -2233,7 +3502,7 @@
                             },
                             "Components": [
                                 {
-                                    "UID": 7354310863519690724,
+                                    "UID": 4258764619917470996,
                                     "ComponentType": "TRANSFORM2D",
                                     "Active": true,
                                     "Position": [
@@ -2272,7 +3541,7 @@
                                     "Alpha": 1.0
                                 },
                                 {
-                                    "UID": 7441251239411351069,
+                                    "UID": 15647677703528643954,
                                     "ComponentType": "UIIMAGE",
                                     "Active": true,
                                     "TextureAssetId": {
@@ -2326,7 +3595,7 @@
                     },
                     "Components": [
                         {
-                            "UID": 6785478674578440062,
+                            "UID": 7820573670908225071,
                             "ComponentType": "TRANSFORM2D",
                             "Active": true,
                             "Position": [
@@ -2365,7 +3634,7 @@
                             "Alpha": 1.0
                         },
                         {
-                            "UID": 7545389598894735634,
+                            "UID": 10280412749500402403,
                             "ComponentType": "UIIMAGE",
                             "Active": true,
                             "TextureAssetId": {
@@ -2389,7 +3658,7 @@
                             "StretchDrawMode": "Stretch"
                         },
                         {
-                            "UID": 1905759988300431692,
+                            "UID": 9304265265448089226,
                             "ComponentType": "PREFAB_INSTANCE",
                             "Active": true,
                             "sourcePath": "Assets\\Prefabs\\Enemies\\Stun sprite.prefab",
@@ -2426,7 +3695,7 @@
             },
             "Components": [
                 {
-                    "UID": 6849938835007311303,
+                    "UID": 18223828483687885249,
                     "ComponentType": "PREFAB_INSTANCE",
                     "Active": true,
                     "sourcePath": "Assets\\Prefabs\\Enemies\\Stun anchor.prefab",
