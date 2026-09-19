@@ -5,6 +5,7 @@
 
 IMPLEMENT_SCRIPT_FIELDS(EnemyStunParticles,
     SERIALIZED_ASSET_REF(m_stunPrefab, "Stun Particle Prefab", AssetType::PREFAB),
+    SERIALIZED_COMPONENT_REF(m_stunAnchor, "Stun Anchor", ComponentType::TRANSFORM),
     SERIALIZED_COMPONENT_REF(m_stunIcon, "Stun Sprite", ComponentType::TRANSFORM2D),
     SERIALIZED_FLOAT(m_iconFadeTime, "Stun Icon Fade Time", 0.0f, 1.0f, 0.01f),
     SERIALIZED_FLOAT(m_heightOffset, "Height Offset", 0.0f, 10.0f, 0.1f)
@@ -39,10 +40,32 @@ void EnemyStunParticles::OnGameStop()
 
 void EnemyStunParticles::ensureStunParticle()
 {
-    Transform* t = GameObjectAPI::getTransform(getOwner());
-    Vector3 pos = t ? TransformAPI::getGlobalPosition(t) : Vector3::Zero;
-    pos.y += m_heightOffset;
-    ParticleLifecycle::ensurePersistent(m_stunParticle, m_stunPrefab.m_id, pos, Vector3::Zero, getOwner());
+    if (!m_stunAnchorTransform)
+    {
+        m_stunAnchorTransform = m_stunAnchor.getReferencedComponent();
+        if (!m_stunAnchorTransform)
+        {
+            m_stunAnchorTransform = ParticleLifecycle::findChildRecursive(
+                GameObjectAPI::getTransform(getOwner()), "Stun anchor");
+        }
+    }
+
+    ParticleLifecycle::ensurePersistent(m_stunParticle, m_stunPrefab.m_id,
+        getStunParticlePosition(), Vector3::Zero, getOwner());
+}
+
+Vector3 EnemyStunParticles::getStunParticlePosition() const
+{
+    if (m_stunAnchorTransform)
+    {
+        // Anchor placement replaces the fallback height; prefab child offsets still apply.
+        return TransformAPI::getGlobalPosition(m_stunAnchorTransform);
+    }
+
+    Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
+    Vector3 position = ownerTransform ? TransformAPI::getGlobalPosition(ownerTransform) : Vector3::Zero;
+    position.y += m_heightOffset;
+    return position;
 }
 
 void EnemyStunParticles::resolveStunIcon()
@@ -92,13 +115,10 @@ void EnemyStunParticles::updateStunParticle()
         return;
     }
 
-    Transform* enemyT    = GameObjectAPI::getTransform(getOwner());
-    Transform* particleT = GameObjectAPI::getTransform(m_stunParticle);
-    if (enemyT && particleT)
+    Transform* particleTransform = GameObjectAPI::getTransform(m_stunParticle);
+    if (particleTransform)
     {
-        Vector3 pos = TransformAPI::getGlobalPosition(enemyT);
-        pos.y      += m_heightOffset;
-        TransformAPI::setGlobalPosition(particleT, pos);
+        TransformAPI::setGlobalPosition(particleTransform, getStunParticlePosition());
     }
 }
 
