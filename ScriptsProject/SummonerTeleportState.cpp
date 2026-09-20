@@ -39,6 +39,7 @@ void SummonerTeleportState::OnStateEnter()
 	if (!ownerTransform)
 	{
 		Debug::warn("[SummonerTeleportState] Owner transform not found.");
+		m_controller->delayTeleportRetry();
 		AnimationAPI::sendTrigger(m_animation, "ToIdle");
 		return;
 	}
@@ -67,6 +68,7 @@ void SummonerTeleportState::OnStateEnter()
 	}
 	else
 	{
+		m_controller->delayTeleportRetry();
 		Debug::warn("[SummonerTeleportState] No valid teleport position found.");
 	}
 
