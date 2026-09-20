@@ -954,12 +954,12 @@ std::vector<AelorinAbility> AelorinBossController::buildAbilityPool() const
 {
 	std::vector<AelorinAbility> pool
 	{
-		AelorinAbility::SeekerSigils,
+		//AelorinAbility::SeekerSigils,
 		AelorinAbility::RisenSpires,
-		AelorinAbility::SpiritCannon
+		//AelorinAbility::SpiritCannon
 	};
 
-	if (canUseNova())
+	/*if (canUseNova())
 	{
 		pool.push_back(AelorinAbility::Nova);
 	}
@@ -972,7 +972,7 @@ std::vector<AelorinAbility> AelorinBossController::buildAbilityPool() const
 	if (isPhase2())
 	{
 		pool.push_back(AelorinAbility::GraspOfTheDead);
-	}
+	}*/
 
 	return pool;
 }

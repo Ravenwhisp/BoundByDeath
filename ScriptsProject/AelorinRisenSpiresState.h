@@ -39,4 +39,9 @@ private:
 	bool m_completed = false;
 
 	bool m_isFuryCast = false;
+
+	uint64_t m_spireNumber = 0;
+
+	std::vector<Vector2> generateSpirePositions(int count, float arenaRadius, float minDistance, const AelorinAttackConfig* config);
+	Vector2 randomPointInArena(const AelorinAttackConfig* config);
 };
