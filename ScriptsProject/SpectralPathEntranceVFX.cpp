@@ -22,7 +22,7 @@ void SpectralPathEntranceVFX::Start()
         ObjectVfxIds::spectralPathEntrance(),
         position,
         rotation,
-        nullptr
+        getOwner()
     );
 
     if (m_entranceEffect != nullptr)

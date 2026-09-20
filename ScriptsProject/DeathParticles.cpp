@@ -132,7 +132,7 @@ void DeathParticles::SetDashActive()
     const Vector3 position = ownerTransform != nullptr ? TransformAPI::getGlobalPosition(ownerTransform) : Vector3::Zero;
     const Vector3 rotation = ownerTransform != nullptr ? TransformAPI::getGlobalEulerDegrees(ownerTransform) : Vector3::Zero;
 
-    ParticleLifecycle::ensurePersistent(m_dashParticleInstance, m_dashParticlePrefab.m_id, position, rotation, nullptr);
+    ParticleLifecycle::ensurePersistent(m_dashParticleInstance, m_dashParticlePrefab.m_id, position, rotation, getOwner());
     ParticleLifecycle::syncToTransform(m_dashParticleInstance, ownerTransform);
     ParticleLifecycle::activate(m_dashParticleInstance);
     m_dashParticleActive = m_dashParticleInstance != nullptr;
@@ -198,7 +198,7 @@ void DeathParticles::SetChargeActive()
     const Vector3 position = scytheTransform != nullptr ? TransformAPI::getGlobalPosition(scytheTransform) : Vector3::Zero;
     const Vector3 rotation = scytheTransform != nullptr ? TransformAPI::getGlobalEulerDegrees(scytheTransform) : Vector3::Zero;
 
-    ParticleLifecycle::ensurePersistent(m_chargeGlowInstance, m_chargeGlowPrefab.m_id, position, rotation, nullptr);
+    ParticleLifecycle::ensurePersistent(m_chargeGlowInstance, m_chargeGlowPrefab.m_id, position, rotation, getOwner());
     ParticleLifecycle::syncToTransform(m_chargeGlowInstance, scytheTransform);
     ParticleLifecycle::activate(m_chargeGlowInstance);
     m_chargeGlowActive = m_chargeGlowInstance != nullptr;

@@ -72,7 +72,7 @@ void ArcherGuardParticles::ensureSomersaultParticle()
     const Vector3 position = ownerTransform ? TransformAPI::getGlobalPosition(ownerTransform) : Vector3::Zero;
     const Vector3 rotation = ownerTransform ? TransformAPI::getGlobalEulerDegrees(ownerTransform) : Vector3::Zero;
 
-    ParticleLifecycle::ensurePersistent(m_somersaultParticle, m_somersaultPrefab.m_id, position, rotation, nullptr);
+    ParticleLifecycle::ensurePersistent(m_somersaultParticle, m_somersaultPrefab.m_id, position, rotation, getOwner());
 
     if (m_somersaultParticle)
     {

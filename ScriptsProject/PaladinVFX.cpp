@@ -326,7 +326,8 @@ void PaladinVFX::ensureWalkingDust()
         walkingDustEffect,
         m_walkingDustPrefab.m_id,
         getWalkingDustPosition(),
-        getOwnerRotation()
+        getOwnerRotation(),
+        getOwner()
     );
 }
 
@@ -336,7 +337,8 @@ void PaladinVFX::ensureChargeAttackEffect()
         chargeAttackEffect,
         m_chargeAttackEffectPrefab.m_id,
         getChargeAttackEffectPosition(),
-        getOwnerRotation()
+        getOwnerRotation(),
+        getOwner()
     );
 }
 
