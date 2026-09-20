@@ -129,7 +129,7 @@ void CombatAreaEvent::activateBarricadeVisuals(const ComponentRef<Transform>& vi
         ObjectVfxIds::barricadeMist(),
         position,
         rotation,
-        nullptr
+        getOwner()
     );
 
     if (slot.mistInstance != nullptr)
@@ -151,7 +151,7 @@ void CombatAreaEvent::activateBarricadeVisuals(const ComponentRef<Transform>& vi
             ObjectVfxIds::barricadeBurst(),
             position,
             rotation,
-            nullptr
+            getOwner()
         );
     }
     else

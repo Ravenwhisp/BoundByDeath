@@ -145,9 +145,9 @@ void LyrielParticles::SetChargeInactive()
     m_chargeGlowActive = false;
 }
 
-void LyrielParticles::playHitFlash(const Vector3& position)
+void LyrielParticles::playHitFlash(const Vector3& position, GameObject* target)
 {
-    ParticleLifecycle::spawnOneShotTimed( m_timedOneShots, m_hitFlashPrefab.m_id, position);
+    ParticleLifecycle::spawnOneShotTimed(m_timedOneShots, m_hitFlashPrefab.m_id, position, Vector3::Zero, ParticleLifecycle::kDefaultOneShotLifetime, target);
 }
 
 void LyrielParticles::SetArrowTrailActive(Transform* arrowTransform)

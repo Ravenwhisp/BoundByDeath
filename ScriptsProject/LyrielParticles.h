@@ -24,7 +24,7 @@ public:
 	void SetChargeActive();
 	void SetChargeInactive();
 
-	void playHitFlash(const Vector3& position);
+	void playHitFlash(const Vector3& position, GameObject* target);
 
 	void SetArrowTrailActive(Transform* arrowTransform);
 	void SetArrowTrailInactive(Transform* arrowTransform);

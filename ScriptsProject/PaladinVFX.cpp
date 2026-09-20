@@ -146,21 +146,25 @@ void PaladinVFX::playShieldAttackStart(const Vector3& position, const Vector3& d
     Vector3 spawnPosition = position;
     spawnPosition.y += m_shieldAttackParticlesYOffset;
 
-    GameObject* instance = GameObjectAPI::instantiatePrefab(m_shieldAttackParticlesPrefab.m_id, spawnPosition, rotation, nullptr);
-    if (instance != nullptr)
-    {
-        m_timedHitVfx.scheduleDestroy(instance, ParticleLifecycle::kDefaultOneShotLifetime);
-    }
+    ParticleLifecycle::spawnOneShotTimed(
+        m_timedHitVfx,
+        m_shieldAttackParticlesPrefab.m_id,
+        spawnPosition,
+        rotation,
+        ParticleLifecycle::kDefaultOneShotLifetime,
+        getOwner()
+    );
 }
 
-void PaladinVFX::spawnShieldAttackHit(const Vector3& position)
+void PaladinVFX::spawnShieldAttackHit(const Vector3& position, GameObject* target)
 {
     ParticleLifecycle::spawnOneShotTimed(
         m_timedHitVfx,
         m_shieldAttackHitPrefab.m_id,
         position,
         Vector3::Zero,
-        ParticleLifecycle::kDefaultOneShotLifetime
+        ParticleLifecycle::kDefaultOneShotLifetime,
+        target
     );
 }
 
@@ -222,12 +226,12 @@ void PaladinVFX::playShieldAttackHits(
 
     if (isTargetInRectangle(lyrielTransform, origin, direction, length, width))
     {
-        spawnShieldAttackHit(TransformAPI::getGlobalPosition(lyrielTransform));
+        spawnShieldAttackHit(TransformAPI::getGlobalPosition(lyrielTransform), ComponentAPI::getOwner(lyrielTransform));
     }
 
     if (isTargetInRectangle(deathTransform, origin, direction, length, width))
     {
-        spawnShieldAttackHit(TransformAPI::getGlobalPosition(deathTransform));
+        spawnShieldAttackHit(TransformAPI::getGlobalPosition(deathTransform), ComponentAPI::getOwner(deathTransform));
     }
 }
 

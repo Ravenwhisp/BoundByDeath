@@ -76,7 +76,8 @@ void EnemyAttackExecutor::playPlayerHitVfx(Transform* targetTransform, const Ass
         resolvedPrefab,
         position,
         Vector3::Zero,
-        ParticleLifecycle::kDefaultOneShotLifetime
+        ParticleLifecycle::kDefaultOneShotLifetime,
+        ComponentAPI::getOwner(targetTransform)
     );
 }
 

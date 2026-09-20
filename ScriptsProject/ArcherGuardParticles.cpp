@@ -59,7 +59,7 @@ void ArcherGuardParticles::Update()
 
 void ArcherGuardParticles::ensureTrailParticle(const Vector3& pos)
 {
-    ParticleLifecycle::ensurePersistent(m_trailGO, m_trailPrefab.m_id, pos, Vector3::Zero, nullptr);
+    ParticleLifecycle::ensurePersistent(m_trailGO, m_trailPrefab.m_id, pos, Vector3::Zero, ParticleLifecycle::getRuntimeVfxContainer());
 }
 
 void ArcherGuardParticles::ensureArrowSparksParticle(const Vector3& pos, GameObject* arrow)
@@ -69,7 +69,7 @@ void ArcherGuardParticles::ensureArrowSparksParticle(const Vector3& pos, GameObj
 
 void ArcherGuardParticles::ensureBarrageFloorParticle(const Vector3& position)
 {
-    ParticleLifecycle::ensurePersistent(m_barrageFloorParticle, m_barrageFloorPrefab.m_id, position, Vector3::Zero, nullptr);
+    ParticleLifecycle::ensurePersistent(m_barrageFloorParticle, m_barrageFloorPrefab.m_id, position, Vector3::Zero, ParticleLifecycle::getRuntimeVfxContainer());
 }
 
 void ArcherGuardParticles::ensureSomersaultParticle()
@@ -208,7 +208,7 @@ void ArcherGuardParticles::playBarrageImpactParticle(const Vector3& position)
     Vector3 particlePosition = position;
     particlePosition.y += m_barrageImpactYOffset;
 
-    m_barrageImpactParticle = GameObjectAPI::instantiatePrefab(m_barrageImpactPrefab.m_id, particlePosition, Vector3::Zero);
+    m_barrageImpactParticle = GameObjectAPI::instantiatePrefab(m_barrageImpactPrefab.m_id, particlePosition, Vector3::Zero, ParticleLifecycle::getRuntimeVfxContainer());
 
     if (!m_barrageImpactParticle)
     {

@@ -39,7 +39,7 @@ public:
 
 private:
     bool isTargetInRectangle(Transform* targetTransform, const Vector3& origin, const Vector3& direction, float length, float width) const;
-    void spawnShieldAttackHit(const Vector3& position);
+    void spawnShieldAttackHit(const Vector3& position, GameObject* target);
 
     Vector3 getWalkingDustPosition() const;
     Vector3 getOwnerRotation() const;

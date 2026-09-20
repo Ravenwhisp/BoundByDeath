@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "ShadowExecution.h"
 
+#include "ParticleLifecycle.h"
 #include "ReaperGauge.h"
 #include "DeathCharacter.h"
 #include "LyrielCharacter.h"
@@ -216,7 +217,7 @@ void ShadowExecution::beginExecution()
         m_sound->playShadowExecution();
     }
 
-    GameObject* fxCenter = GameObjectAPI::instantiatePrefab(m_particlePrefab.m_id, m_center, Vector3::Zero);
+    GameObject* fxCenter = GameObjectAPI::instantiatePrefab(m_particlePrefab.m_id, m_center, Vector3::Zero, ParticleLifecycle::getRuntimeVfxContainer());
     if (fxCenter)
     {
         m_temporaryPrefabs.push_back({ fxCenter, 1.0f });

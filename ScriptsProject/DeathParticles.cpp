@@ -107,7 +107,7 @@ void DeathParticles::syncActiveParticles()
 
 void DeathParticles::ensureTauntParticle(const Vector3& position, const Vector3& rotation)
 {
-    ParticleLifecycle::ensurePersistent(m_activeTauntParticle, m_tauntParticle.m_id, position, rotation, nullptr);
+    ParticleLifecycle::ensurePersistent(m_activeTauntParticle, m_tauntParticle.m_id, position, rotation, getOwner());
 }
 
 void DeathParticles::SetDashActive()
@@ -264,21 +264,27 @@ void DeathParticles::SetTauntInactive()
     m_tauntParticleLifetime = 0.0f;
 }
 
-void DeathParticles::playHitFlash(const Vector3& position)
+void DeathParticles::playHitFlash(const Vector3& position, GameObject* target)
 {
     ParticleLifecycle::spawnOneShotTimed(
         m_timedOneShots,
         m_hitFlashPrefab.m_id,
-        position
+        position,
+        Vector3::Zero,
+        ParticleLifecycle::kDefaultOneShotLifetime,
+        target
     );
 }
 
-void DeathParticles::playChargedHitFlash(const Vector3& position)
+void DeathParticles::playChargedHitFlash(const Vector3& position, GameObject* target)
 {
     ParticleLifecycle::spawnOneShotTimed(
         m_timedOneShots,
         m_chargedHitFlashPrefab.m_id,
-        position
+        position,
+        Vector3::Zero,
+        ParticleLifecycle::kDefaultOneShotLifetime,
+        target
     );
 }
 

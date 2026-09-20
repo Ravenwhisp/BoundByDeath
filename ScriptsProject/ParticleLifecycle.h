@@ -298,14 +298,36 @@ namespace ParticleLifecycle
         TransformAPI::setGlobalRotationEuler(instanceTransform, TransformAPI::getGlobalEulerDegrees(target));
     }
 
-    inline GameObject* spawnOneShot(const AssetId& prefabId, const Vector3& position, const Vector3& rotation = Vector3::Zero)
+    // Shared parent for world-fixed one-shot VFX. Keeps the scene root clean
+    // without making effects follow their emitter. The cached pointer is
+    // validated against the scene because the container is destroyed on
+    // scene changes.
+    inline GameObject* getRuntimeVfxContainer()
+    {
+        static GameObject* s_container = nullptr;
+
+        if (s_container != nullptr && SceneAPI::containsGameObject(s_container))
+        {
+            return s_container;
+        }
+
+        s_container = GameObjectAPI::createGameObject("RuntimeVFX", nullptr);
+        return s_container;
+    }
+
+    inline GameObject* spawnOneShot(const AssetId& prefabId, const Vector3& position, const Vector3& rotation = Vector3::Zero, GameObject* parent = nullptr)
     {
         if (!prefabId.isValid())
         {
             return nullptr;
         }
 
-        return GameObjectAPI::instantiatePrefab(prefabId, position, rotation, nullptr);
+        if (parent == nullptr)
+        {
+            parent = getRuntimeVfxContainer();
+        }
+
+        return GameObjectAPI::instantiatePrefab(prefabId, position, rotation, parent);
     }
 
     inline GameObject* spawnOneShotTimed(
@@ -313,10 +335,11 @@ namespace ParticleLifecycle
         const AssetId& prefabId,
         const Vector3& position,
         const Vector3& rotation = Vector3::Zero,
-        float lifetime = kDefaultOneShotLifetime
+        float lifetime = kDefaultOneShotLifetime,
+        GameObject* parent = nullptr
     )
     {
-        GameObject* instance = spawnOneShot(prefabId, position, rotation);
+        GameObject* instance = spawnOneShot(prefabId, position, rotation, parent);
 
         if (instance != nullptr)
         {
