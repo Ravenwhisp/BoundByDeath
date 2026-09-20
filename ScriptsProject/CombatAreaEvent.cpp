@@ -43,10 +43,8 @@ void CombatAreaEvent::Update()
 
 void CombatAreaEvent::OnGameStop()
 {
-    ParticleLifecycle::destroy(m_entranceBarricadeVfx.mistInstance);
-    ParticleLifecycle::destroy(m_entranceBarricadeVfx.burstInstance);
-    ParticleLifecycle::destroy(m_exitBarricadeVfx.mistInstance);
-    ParticleLifecycle::destroy(m_exitBarricadeVfx.burstInstance);
+    destroyBarricadeVisuals(m_entranceBarricadeVfx);
+    destroyBarricadeVisuals(m_exitBarricadeVfx);
     m_timedParticles.clear();
 }
 
@@ -76,8 +74,8 @@ void CombatAreaEvent::openArea()
 {
     setBlockerState(m_entranceBlocker, false);
     setBlockerState(m_exitBlocker, false);
-    deactivateBarricadeVisuals(m_entranceBarricadeVfx);
-    deactivateBarricadeVisuals(m_exitBarricadeVfx);
+    destroyBarricadeVisuals(m_entranceBarricadeVfx);
+    destroyBarricadeVisuals(m_exitBarricadeVfx);
 }
 
 void CombatAreaEvent::setBlockerState(const ComponentRef<Transform>& blockerTransformRef, bool blocked)
@@ -172,14 +170,11 @@ void CombatAreaEvent::activateBarricadeVisuals(const ComponentRef<Transform>& vi
     }
 }
 
-void CombatAreaEvent::deactivateBarricadeVisuals(BarricadeVisualSlot& slot)
+void CombatAreaEvent::destroyBarricadeVisuals(BarricadeVisualSlot& slot)
 {
-    ParticleLifecycle::deactivate(slot.mistInstance);
-
-    if (slot.burstInstance != nullptr)
-    {
-        ParticleLifecycle::deactivate(slot.burstInstance);
-    }
+    m_timedParticles.cancel(slot.burstInstance);
+    ParticleLifecycle::destroy(slot.mistInstance);
+    ParticleLifecycle::destroy(slot.burstInstance);
 }
 
 void CombatAreaEvent::removeDeadEnemies()

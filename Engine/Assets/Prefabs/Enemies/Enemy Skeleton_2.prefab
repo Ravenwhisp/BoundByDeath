@@ -26,7 +26,7 @@
     },
     "Components": [
         {
-            "UID": 12728682620635199137,
+            "UID": 13872031622885805659,
             "ComponentType": "ANIMATION",
             "Active": true,
             "StateMachineUID": {
@@ -44,7 +44,7 @@
             "ForceWorldAfterApply": true
         },
         {
-            "UID": 7807410793542028689,
+            "UID": 15639577910696636242,
             "ComponentType": "SCRIPT",
             "Active": true,
             "ScriptName": "EnemyDetectionAggro",
@@ -57,7 +57,7 @@
             }
         },
         {
-            "UID": 3811793514623133385,
+            "UID": 17712044800787860376,
             "ComponentType": "SCRIPT",
             "Active": true,
             "ScriptName": "SkeletonEnemyController",
@@ -76,13 +76,13 @@
                 "Separation Query Interval": 0.10000000149011612,
                 "Attack Config": {
                     "uid": 18141921027221041866,
-                    "libId": "b031407b69e77a522bc0e3ab1fccf103",
+                    "libId": "7dbd390c0861df37a08b978c5475b8d5",
                     "type": "DATA_CONTAINER"
                 }
             }
         },
         {
-            "UID": 7260162729329884953,
+            "UID": 18228624914076209803,
             "ComponentType": "SCRIPT",
             "Active": true,
             "ScriptName": "SkeletonDamageable",
@@ -106,14 +106,14 @@
             }
         },
         {
-            "UID": 17332867021309791420,
+            "UID": 9540995620235260637,
             "ComponentType": "SCRIPT",
             "Active": true,
             "ScriptName": "EnemyAttackExecutor",
             "ScriptFields": {}
         },
         {
-            "UID": 9541320192312655133,
+            "UID": 2553710647235368454,
             "ComponentType": "SCRIPT",
             "Active": true,
             "ScriptName": "SkeletonParticles",
@@ -142,7 +142,7 @@
             }
         },
         {
-            "UID": 15949897652150465633,
+            "UID": 11607945140811296279,
             "ComponentType": "SCRIPT",
             "Active": true,
             "ScriptName": "SkeletonAttackDebugDraw",
@@ -156,7 +156,7 @@
             }
         },
         {
-            "UID": 5344457282212968942,
+            "UID": 2228911723498823193,
             "ComponentType": "SCRIPT",
             "Active": true,
             "ScriptName": "EnemyShadowMark",
@@ -181,14 +181,14 @@
             }
         },
         {
-            "UID": 1596381722936694126,
+            "UID": 8263104278227605865,
             "ComponentType": "SCRIPT",
             "Active": true,
             "ScriptName": "EnemyForcedMovement",
             "ScriptFields": {}
         },
         {
-            "UID": 6642889289550802495,
+            "UID": 10393879636425482314,
             "ComponentType": "SCRIPT",
             "Active": true,
             "ScriptName": "SharedEnemyParticles",
@@ -205,7 +205,7 @@
             }
         },
         {
-            "UID": 9443483947516792442,
+            "UID": 1136943510764156660,
             "ComponentType": "SCRIPT",
             "Active": true,
             "ScriptName": "SkeletonUI",
@@ -220,6 +220,23 @@
                 "Height Offset": 0.05000000074505806,
                 "Telegraph Alpha": 0.44999998807907104,
                 "Impact Alpha": 1.0
+            }
+        },
+        {
+            "UID": 17709410721054198202,
+            "ComponentType": "SCRIPT",
+            "Active": true,
+            "ScriptName": "EnemyStunParticles",
+            "ScriptFields": {
+                "Stun Particle Prefab": {
+                    "uid": 16429819483841859569,
+                    "libId": "d2ab406a0db1abf36c38294c77de6943",
+                    "type": "PREFAB"
+                },
+                "Stun Anchor": 0,
+                "Stun Sprite": 0,
+                "Stun Icon Fade Time": 0.15000000596046448,
+                "Height Offset": 2.0
             }
         }
     ],
@@ -1215,7 +1232,7 @@
             },
             "Components": [
                 {
-                    "UID": 17774321293384244038,
+                    "UID": 11617318592114214295,
                     "ComponentType": "MODEL",
                     "Active": true,
                     "MeshAssetId": {
@@ -1235,10 +1252,23 @@
                             "type": "MATERIAL"
                         }
                     ],
-                    "Render Mode": 0
+                    "Render Mode": 0,
+                    "BoundingBox": {
+                        "Custom": false,
+                        "Min": [
+                            -0.6069284081459045,
+                            -0.0013796091079711914,
+                            -0.21523307263851166
+                        ],
+                        "Max": [
+                            0.9376491904258728,
+                            1.0597288608551025,
+                            0.4454469680786133
+                        ]
+                    }
                 },
                 {
-                    "UID": 13824675427097200392,
+                    "UID": 11093401629015816577,
                     "ComponentType": "DISSOLVE",
                     "Active": true,
                     "DissolveAmount": 0.0,
@@ -1283,14 +1313,14 @@
             },
             "Components": [
                 {
-                    "UID": 11209262987681525861,
+                    "UID": 9476139627747847878,
                     "ComponentType": "CANVAS",
                     "Active": true,
                     "RenderMode": "WORLD_SPACE",
                     "ZTest": true
                 },
                 {
-                    "UID": 3492562843288293571,
+                    "UID": 1168319757618051527,
                     "ComponentType": "PREFAB_INSTANCE",
                     "Active": true,
                     "sourcePath": "Assets\\Prefabs\\Enemies\\SkeletonScimitarUI.prefab",
@@ -1324,7 +1354,7 @@
                     },
                     "Components": [
                         {
-                            "UID": 14854644462948215639,
+                            "UID": 7010305195036168568,
                             "ComponentType": "TRANSFORM2D",
                             "Active": true,
                             "Position": [
@@ -1363,7 +1393,7 @@
                             "Alpha": 1.0
                         },
                         {
-                            "UID": 14842009198964592699,
+                            "UID": 15763927211314512746,
                             "ComponentType": "UIIMAGE",
                             "Active": true,
                             "TextureAssetId": {
@@ -1415,7 +1445,7 @@
                     },
                     "Components": [
                         {
-                            "UID": 3306518731532226898,
+                            "UID": 18187205720357070073,
                             "ComponentType": "TRANSFORM2D",
                             "Active": true,
                             "Position": [
@@ -1454,7 +1484,7 @@
                             "Alpha": 1.0
                         },
                         {
-                            "UID": 8788834003399426144,
+                            "UID": 3507863215855691173,
                             "ComponentType": "UIIMAGE",
                             "Active": true,
                             "TextureAssetId": {
@@ -1508,14 +1538,14 @@
             },
             "Components": [
                 {
-                    "UID": 5311102812537746591,
+                    "UID": 10810181650338294360,
                     "ComponentType": "CANVAS",
                     "Active": true,
                     "RenderMode": "WORLD_SPACE_CAMERA",
                     "ZTest": true
                 },
                 {
-                    "UID": 15580953829953157272,
+                    "UID": 17491283254417190818,
                     "ComponentType": "PREFAB_INSTANCE",
                     "Active": true,
                     "sourcePath": "Assets\\Prefabs\\UI\\Health Bar.prefab",
@@ -1549,7 +1579,7 @@
                     },
                     "Components": [
                         {
-                            "UID": 4670249193321970184,
+                            "UID": 18337530087046721318,
                             "ComponentType": "TRANSFORM2D",
                             "Active": true,
                             "Position": [
@@ -1588,7 +1618,7 @@
                             "Alpha": 1.0
                         },
                         {
-                            "UID": 14876378716407424109,
+                            "UID": 11900560061580716356,
                             "ComponentType": "UIIMAGE",
                             "Active": true,
                             "TextureAssetId": {
@@ -1639,7 +1669,7 @@
                             },
                             "Components": [
                                 {
-                                    "UID": 12158970542345441104,
+                                    "UID": 6998426665118627713,
                                     "ComponentType": "TRANSFORM2D",
                                     "Active": true,
                                     "Position": [
@@ -1678,7 +1708,7 @@
                                     "Alpha": 1.0
                                 },
                                 {
-                                    "UID": 13825869749870073086,
+                                    "UID": 9789762780202537661,
                                     "ComponentType": "UIIMAGE",
                                     "Active": true,
                                     "TextureAssetId": {
@@ -1702,7 +1732,7 @@
                                     "StretchDrawMode": "Stretch"
                                 },
                                 {
-                                    "UID": 8951475675381143337,
+                                    "UID": 18351372897454722613,
                                     "ComponentType": "UISLIDER",
                                     "Active": true,
                                     "FillAmount": [
@@ -1741,7 +1771,7 @@
                             },
                             "Components": [
                                 {
-                                    "UID": 4591540329856269417,
+                                    "UID": 7635382654187519119,
                                     "ComponentType": "TRANSFORM2D",
                                     "Active": true,
                                     "Position": [
@@ -1780,7 +1810,7 @@
                                     "Alpha": 1.0
                                 },
                                 {
-                                    "UID": 7391044912758630561,
+                                    "UID": 16201385949968332055,
                                     "ComponentType": "UIIMAGE",
                                     "Active": true,
                                     "TextureAssetId": {
@@ -1804,7 +1834,7 @@
                                     "StretchDrawMode": "Stretch"
                                 },
                                 {
-                                    "UID": 7455373682324104516,
+                                    "UID": 16370006734341077140,
                                     "ComponentType": "UISLIDER",
                                     "Active": true,
                                     "FillAmount": [
@@ -1843,7 +1873,7 @@
                             },
                             "Components": [
                                 {
-                                    "UID": 15555460652186590795,
+                                    "UID": 4500968100256908815,
                                     "ComponentType": "TRANSFORM2D",
                                     "Active": true,
                                     "Position": [
@@ -1882,7 +1912,7 @@
                                     "Alpha": 1.0
                                 },
                                 {
-                                    "UID": 10523887530462923169,
+                                    "UID": 6694456603448785826,
                                     "ComponentType": "UIIMAGE",
                                     "Active": true,
                                     "TextureAssetId": {
@@ -1906,7 +1936,7 @@
                                     "StretchDrawMode": "Stretch"
                                 },
                                 {
-                                    "UID": 5042214266279271768,
+                                    "UID": 10486690613237972785,
                                     "ComponentType": "UISLIDER",
                                     "Active": true,
                                     "FillAmount": [
@@ -1945,7 +1975,7 @@
                             },
                             "Components": [
                                 {
-                                    "UID": 7657086333952666521,
+                                    "UID": 3895753400329051930,
                                     "ComponentType": "TRANSFORM2D",
                                     "Active": true,
                                     "Position": [
@@ -1984,7 +2014,7 @@
                                     "Alpha": 1.0
                                 },
                                 {
-                                    "UID": 4930431270419312594,
+                                    "UID": 9104474578866619105,
                                     "ComponentType": "UIIMAGE",
                                     "Active": true,
                                     "TextureAssetId": {
@@ -2038,7 +2068,7 @@
                     },
                     "Components": [
                         {
-                            "UID": 11161000227508231154,
+                            "UID": 15038537507657594982,
                             "ComponentType": "TRANSFORM2D",
                             "Active": true,
                             "Position": [
@@ -2077,7 +2107,7 @@
                             "Alpha": 1.0
                         },
                         {
-                            "UID": 14343198323565619127,
+                            "UID": 18426889312398291114,
                             "ComponentType": "PREFAB_INSTANCE",
                             "Active": true,
                             "sourcePath": "Assets\\Prefabs\\Enemies\\Shadow Mark.prefab",
@@ -2111,7 +2141,7 @@
                             },
                             "Components": [
                                 {
-                                    "UID": 7414664520530286983,
+                                    "UID": 10194942822846294389,
                                     "ComponentType": "TRANSFORM2D",
                                     "Active": true,
                                     "Position": [
@@ -2150,7 +2180,7 @@
                                     "Alpha": 1.0
                                 },
                                 {
-                                    "UID": 10986696092201517253,
+                                    "UID": 2947761430958181128,
                                     "ComponentType": "UIIMAGE",
                                     "Active": true,
                                     "TextureAssetId": {
@@ -2202,7 +2232,7 @@
                             },
                             "Components": [
                                 {
-                                    "UID": 659380416727459235,
+                                    "UID": 15501580188998627640,
                                     "ComponentType": "TRANSFORM2D",
                                     "Active": true,
                                     "Position": [
@@ -2241,7 +2271,7 @@
                                     "Alpha": 1.0
                                 },
                                 {
-                                    "UID": 2055681581590330343,
+                                    "UID": 9529281367368301268,
                                     "ComponentType": "UIIMAGE",
                                     "Active": true,
                                     "TextureAssetId": {
@@ -2293,7 +2323,7 @@
                             },
                             "Components": [
                                 {
-                                    "UID": 2953198384657051312,
+                                    "UID": 1509282544737531815,
                                     "ComponentType": "TRANSFORM2D",
                                     "Active": true,
                                     "Position": [
@@ -2332,7 +2362,7 @@
                                     "Alpha": 1.0
                                 },
                                 {
-                                    "UID": 8877642525358506820,
+                                    "UID": 4017816981308942735,
                                     "ComponentType": "UIIMAGE",
                                     "Active": true,
                                     "TextureAssetId": {
@@ -2384,7 +2414,7 @@
                             },
                             "Components": [
                                 {
-                                    "UID": 17782409356159221941,
+                                    "UID": 14193054430821525180,
                                     "ComponentType": "TRANSFORM2D",
                                     "Active": true,
                                     "Position": [
@@ -2423,7 +2453,7 @@
                                     "Alpha": 1.0
                                 },
                                 {
-                                    "UID": 2871703803282954960,
+                                    "UID": 11817354477428304600,
                                     "ComponentType": "UIIMAGE",
                                     "Active": true,
                                     "TextureAssetId": {
@@ -2450,8 +2480,141 @@
                             "Children": []
                         }
                     ]
+                },
+                {
+                    "Name": "Stun sprite",
+                    "Active": true,
+                    "Static": false,
+                    "Layer": "DEFAULT",
+                    "Tag": "DEFAULT",
+                    "Transform": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "Rotation": [
+                            -0.0,
+                            0.0,
+                            -0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "Components": [
+                        {
+                            "UID": 15886223255610848047,
+                            "ComponentType": "TRANSFORM2D",
+                            "Active": true,
+                            "Position": [
+                                -50.0,
+                                0.0,
+                                0.0
+                            ],
+                            "Scale": [
+                                1.0,
+                                1.0,
+                                0.0
+                            ],
+                            "Pivot": [
+                                1.0,
+                                0.5,
+                                0.0
+                            ],
+                            "AnchorMin": [
+                                0.5,
+                                0.5,
+                                0.0
+                            ],
+                            "AnchorMax": [
+                                0.5,
+                                0.5,
+                                0.0
+                            ],
+                            "BaseSize": [
+                                30.0,
+                                30.0,
+                                0.0
+                            ],
+                            "StretchMode": "NONE",
+                            "SizingMode": "KEEP_ASPECT_RATIO",
+                            "AspectRatio": 1.0,
+                            "Alpha": 1.0
+                        },
+                        {
+                            "UID": 2472630231685490303,
+                            "ComponentType": "UIIMAGE",
+                            "Active": true,
+                            "TextureAssetId": {
+                                "uid": 3236333133085334804,
+                                "libId": "b31fd6cd5fbfbf2d3fbbf92a0f74904d",
+                                "type": "TEXTURE"
+                            },
+                            "FillAmount": [
+                                0.0,
+                                1.0
+                            ],
+                            "FillMethod": "Horizontal",
+                            "FillOrigin": 0,
+                            "SheetColumns": 1,
+                            "SheetRows": 1,
+                            "SheetOffset": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "StretchDrawMode": "Stretch"
+                        },
+                        {
+                            "UID": 8401600886182990080,
+                            "ComponentType": "PREFAB_INSTANCE",
+                            "Active": true,
+                            "sourcePath": "Assets\\Prefabs\\Enemies\\Stun sprite.prefab",
+                            "assetUID": 380956341955627152
+                        }
+                    ],
+                    "Children": []
                 }
             ]
+        },
+        {
+            "Name": "Stun anchor",
+            "Active": true,
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    0.0,
+                    1.600000023841858,
+                    0.0
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0,
+                    1.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [
+                {
+                    "UID": 7807308806312063532,
+                    "ComponentType": "PREFAB_INSTANCE",
+                    "Active": true,
+                    "sourcePath": "Assets\\Prefabs\\Enemies\\Stun anchor.prefab",
+                    "assetUID": 6490377938021588426
+                }
+            ],
+            "Children": []
         }
     ]
 }

@@ -1,6 +1,6 @@
 {
     "Version": 2,
-    "sourcePath": "Assets\\Prefabs\\Particles\\Stun\\StunStars.prefab",
+    "sourcePath": "Assets\\Prefabs\\Enemies\\StunStars.prefab",
     "Name": "StunStars",
     "Active": true,
     "Static": false,
@@ -35,7 +35,7 @@
             "Transform": {
                 "Position": [
                     0.0,
-                    1.6,
+                    0.0,
                     0.0
                 ],
                 "Rotation": [
@@ -52,12 +52,12 @@
             },
             "Components": [
                 {
-                    "UID": 7403317671168307646,
+                    "UID": 3942676659842078636,
                     "ComponentType": "PARTICLE_SYSTEM",
                     "Active": true,
                     "TextureAssetId": {
-                        "uid": 18273319153496833892,
-                        "libId": "9fc075901c14acaba243881e70af8c69",
+                        "uid": 18397412372386409293,
+                        "libId": "daec75fabdc85d041af40097e2ac1b24",
                         "type": "TEXTURE"
                     },
                     "ParticleEmitters": [
@@ -72,8 +72,9 @@
                                 },
                                 {
                                     "ModuleType": 4,
-                                    "LifeTimeType": "CONSTANT",
-                                    "StartLifeTime": 2.0
+                                    "LifeTimeType": "RANDOM_BETWEEN_TWO",
+                                    "StartLifeTime": 2.0,
+                                    "StartLifeTime2": 0.5
                                 },
                                 {
                                     "ModuleType": 1,
@@ -89,18 +90,9 @@
                                             "IsAlphaMark": false,
                                             "Position": 0.0,
                                             "Color": [
-                                                0.955973,
-                                                0.571125,
-                                                0.177888
-                                            ]
-                                        },
-                                        {
-                                            "IsAlphaMark": false,
-                                            "Position": 1.0,
-                                            "Color": [
-                                                0.491021,
-                                                0.177888,
-                                                0.008568
+                                                1.0,
+                                                0.9983005523681641,
+                                                0.5598455667495728
                                             ]
                                         },
                                         {
@@ -109,36 +101,62 @@
                                             "Alpha": 1.0
                                         },
                                         {
+                                            "IsAlphaMark": false,
+                                            "Position": 1.0,
+                                            "Color": [
+                                                0.4864864945411682,
+                                                0.15015731751918793,
+                                                0.020661592483520508
+                                            ]
+                                        },
+                                        {
                                             "IsAlphaMark": true,
                                             "Position": 1.0,
                                             "Alpha": 0.0
                                         }
                                     ],
                                     "ColorCurve": [
-                                        0.0,
-                                        0.0,
-                                        1.0,
-                                        1.0
-                                    ]
+                                        0.4449999928474426,
+                                        0.05000000074505806,
+                                        0.550000011920929,
+                                        0.949999988079071
+                                    ],
+                                    "HDRColor": [
+                                        0.7220077514648438,
+                                        0.5781465172767639,
+                                        0.4934183955192566
+                                    ],
+                                    "HDRIntensity": 0.2669999897480011
                                 },
                                 {
                                     "ModuleType": 5,
                                     "VelocityType": "CONSTANT",
-                                    "InitialVelocity": 0.10000000149011612
+                                    "InitialVelocity": 0.10000000149011612,
+                                    "Gravity": 0.0
                                 },
                                 {
                                     "ModuleType": 6,
-                                    "StartScaleType": "CONSTANT",
+                                    "StartScaleType": "RANDOM_BETWEEN_TWO",
                                     "StartScale": [
                                         0.30000001192092896,
                                         0.30000001192092896,
                                         0.0
                                     ],
+                                    "StartScale2": [
+                                        0.15000000596046448,
+                                        0.15000000596046448,
+                                        0.0
+                                    ],
                                     "ChangeSizeOverTime": true,
-                                    "EndScaleType": "CONSTANT",
+                                    "EndScaleType": "RANDOM_BETWEEN_TWO",
                                     "EndScale": [
                                         0.25,
                                         0.25,
+                                        0.0
+                                    ],
+                                    "EndScale2": [
+                                        0.10000000149011612,
+                                        0.10000000149011612,
                                         0.0
                                     ]
                                 },
@@ -161,7 +179,8 @@
                                 {
                                     "ModuleType": 9,
                                     "RenderMode": "BILLBOARD",
-                                    "RenderLayer": 0
+                                    "RenderLayer": 0,
+                                    "BlendMode": "ALPHA"
                                 }
                             ]
                         }
@@ -179,7 +198,7 @@
             "Transform": {
                 "Position": [
                     0.0,
-                    1.6,
+                    0.0,
                     0.0
                 ],
                 "Rotation": [
@@ -196,12 +215,12 @@
             },
             "Components": [
                 {
-                    "UID": 12200119753502949506,
+                    "UID": 15020710678544284853,
                     "ComponentType": "PARTICLE_SYSTEM",
                     "Active": true,
                     "TextureAssetId": {
-                        "uid": 15384188213969556184,
-                        "libId": "8b70a57c936fd81c3c2d5fa840d74406",
+                        "uid": 13260935233299167364,
+                        "libId": "2cc35274b28c91d8072584e599d5e1a9",
                         "type": "TEXTURE"
                     },
                     "ParticleEmitters": [
@@ -210,19 +229,19 @@
                                 {
                                     "ModuleType": 2,
                                     "Looping": true,
-                                    "Duration": 10.0,
-                                    "RateOverTime": 25.0,
+                                    "Duration": 1.0,
+                                    "RateOverTime": 1.0,
                                     "RateOverDistance": 0.0
                                 },
                                 {
                                     "ModuleType": 4,
                                     "LifeTimeType": "CONSTANT",
-                                    "StartLifeTime": 0.15000000596046448
+                                    "StartLifeTime": 1.0
                                 },
                                 {
                                     "ModuleType": 1,
                                     "ShapeType": "CIRCLE",
-                                    "Radius": 0.4000000059604645,
+                                    "Radius": 0.0,
                                     "RadiusThickness": 1.0,
                                     "RadiusScale": 1.0
                                 },
@@ -233,18 +252,9 @@
                                             "IsAlphaMark": false,
                                             "Position": 0.0,
                                             "Color": [
-                                                0.955973,
-                                                0.571125,
-                                                0.177888
-                                            ]
-                                        },
-                                        {
-                                            "IsAlphaMark": false,
-                                            "Position": 1.0,
-                                            "Color": [
-                                                0.863157,
-                                                0.346704,
-                                                0.020289
+                                                0.9559730291366577,
+                                                0.8808683156967163,
+                                                0.17788800597190857
                                             ]
                                         },
                                         {
@@ -253,9 +263,13 @@
                                             "Alpha": 1.0
                                         },
                                         {
-                                            "IsAlphaMark": true,
+                                            "IsAlphaMark": false,
                                             "Position": 1.0,
-                                            "Alpha": 0.0
+                                            "Color": [
+                                                0.9305019378662109,
+                                                0.7867534756660461,
+                                                0.06466808170080185
+                                            ]
                                         }
                                     ],
                                     "ColorCurve": [
@@ -263,35 +277,36 @@
                                         0.0,
                                         1.0,
                                         1.0
-                                    ]
+                                    ],
+                                    "HDRColor": [
+                                        0.7220077514648438,
+                                        0.7091349363327026,
+                                        0.46554169058799744
+                                    ],
+                                    "HDRIntensity": -1.0219999551773071
                                 },
                                 {
                                     "ModuleType": 5,
                                     "VelocityType": "CONSTANT",
-                                    "InitialVelocity": 0.20000000298023224
+                                    "InitialVelocity": 0.0,
+                                    "Gravity": 0.0
                                 },
                                 {
                                     "ModuleType": 6,
                                     "StartScaleType": "CONSTANT",
                                     "StartScale": [
-                                        0.5,
-                                        0.5,
+                                        1.0,
+                                        1.0,
                                         0.0
                                     ],
-                                    "ChangeSizeOverTime": true,
-                                    "EndScaleType": "CONSTANT",
-                                    "EndScale": [
-                                        0.05000000074505806,
-                                        0.05000000074505806,
-                                        0.0
-                                    ]
+                                    "ChangeSizeOverTime": false
                                 },
                                 {
                                     "ModuleType": 7,
                                     "RotationType": "CONSTANT",
                                     "StartRotation": 0.0,
                                     "VelocityType": "CONSTANT",
-                                    "AngularVelocity": 90.0,
+                                    "AngularVelocity": 6.2831854820251465,
                                     "FlipRotation": 0.0
                                 },
                                 {
@@ -304,8 +319,9 @@
                                 },
                                 {
                                     "ModuleType": 9,
-                                    "RenderMode": "BILLBOARD",
-                                    "RenderLayer": 0
+                                    "RenderMode": "HORIZONTAL",
+                                    "RenderLayer": 0,
+                                    "BlendMode": "ALPHA"
                                 }
                             ]
                         }

@@ -3,6 +3,7 @@
 
 #include "EnemyDetectionAggro.h"
 #include "EnemySound.h"
+#include "EnemyStunParticles.h"
 #include "EnemyBaseController.h"
 #include "EnemyBaseDataConfig.h"
 #include "EnemyShadowMark.h"
@@ -99,10 +100,11 @@ void EnemyDamageable::Start()
 	if (!m_healthBarContainerTransform)
 	{
 		Debug::warn("Health Bar Container Transform2D is missing from %s", GameObjectAPI::getName(m_owner));
-		return;
 	}
-
-	setHealthBarAlpha(0.0f);
+	else
+	{
+		setHealthBarAlpha(0.0f);
+	}
 
 	loadDissolveComponent();
 }
@@ -242,6 +244,11 @@ void EnemyDamageable::onDamaged(float amount)
 void EnemyDamageable::onDeath()
 {
 	Damageable::onDeath();
+
+	if (auto* stunVisuals = GameObjectAPI::findScript<EnemyStunParticles>(getOwner()))
+	{
+		stunVisuals->stopStunParticle(true);
+	}
 
 	setShadowExecutionThresholdMarkerVisible(false);
 
