@@ -19,6 +19,29 @@ void ArcherArrowShooter::Start()
 
 }
 
+void ArcherArrowShooter::OnGameStop()
+{
+    releaseRuntimeParticles();
+}
+
+void ArcherArrowShooter::releaseRuntimeParticles()
+{
+    // Sparks are parented to the arrow: destroy them first.
+    if (m_particles)
+    {
+        m_particles->stopArrowSparks();
+    }
+
+    if (m_arrowGO)
+    {
+        GameObjectAPI::removeGameObject(m_arrowGO);
+        m_arrowGO = nullptr;
+    }
+
+    m_inAttack = false;
+    m_fired    = false;
+}
+
 void ArcherArrowShooter::Update()
 {
     if (!m_animation || !m_config || !m_arrowPrefab.m_id.isValid()) return;

@@ -32,6 +32,7 @@ public:
 
     void Start()     override;
     void Update()    override;
+    void OnGameStop() override;
     void drawGizmo() override;
 
     FieldList getExposedFields() const override;

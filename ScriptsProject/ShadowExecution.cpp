@@ -67,6 +67,19 @@ void ShadowExecution::Start()
     cachePlayers();
 }
 
+void ShadowExecution::OnGameStop()
+{
+    for (SpawnedPrefab& prefab : m_temporaryPrefabs)
+    {
+        if (prefab.gameObject != nullptr && SceneAPI::containsGameObject(prefab.gameObject))
+        {
+            GameObjectAPI::removeGameObject(prefab.gameObject);
+        }
+    }
+
+    m_temporaryPrefabs.clear();
+}
+
 void ShadowExecution::Update()
 {
     const float dt = Time::getDeltaTime();
@@ -220,6 +233,8 @@ void ShadowExecution::beginExecution()
     GameObject* fxCenter = GameObjectAPI::instantiatePrefab(m_particlePrefab.m_id, m_center, Vector3::Zero, ParticleLifecycle::getRuntimeVfxContainer());
     if (fxCenter)
     {
+        // m_temporaryPrefabs is the sole lifetime owner of this instance.
+        ParticleLifecycle::disableSelfDestruct(fxCenter);
         m_temporaryPrefabs.push_back({ fxCenter, 1.0f });
     }
 

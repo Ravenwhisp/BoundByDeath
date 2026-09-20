@@ -353,11 +353,14 @@ void PaladinVFX::ensureChargeAttackEffect()
 
 void PaladinVFX::ensureBasicAttackTelegraph(const Vector3& position, const Vector3& rotation)
 {
+    // World-fixed ground marker: parented to the runtime container so the
+    // scene root stays clean without making it follow the paladin.
     ParticleLifecycle::ensurePersistent(
         basicAttackTelegraph,
         m_basicAttackEffectPrefab.m_id,
         position,
-        rotation
+        rotation,
+        ParticleLifecycle::getRuntimeVfxContainer()
     );
 }
 
@@ -367,7 +370,8 @@ void PaladinVFX::ensureBasicAttackEffect()
         basicAttackEffect,
         m_basicAttackEffectPrefab.m_id,
         getBasicAttackEffectPosition(),
-        getOwnerRotation()
+        getOwnerRotation(),
+        ParticleLifecycle::getRuntimeVfxContainer()
     );
 }
 

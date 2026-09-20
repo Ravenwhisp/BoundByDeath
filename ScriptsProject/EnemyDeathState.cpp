@@ -12,6 +12,7 @@
 #include "SummonerParticles.h"
 #include "EnemyStunParticles.h"
 #include "EnemyAttackExecutor.h"
+#include "ArcherArrowShooter.h"
 
 IMPLEMENT_SCRIPT_FIELDS(EnemyDeathState,
 	SERIALIZED_FLOAT(m_dissolveDelay, "Dissolve Delay", 0.0f, 30.0f, 0.1f),
@@ -163,6 +164,11 @@ void EnemyDeathState::cleanupRuntimeParticles()
 	if (EnemyAttackExecutor* executor = GameObjectAPI::findScript<EnemyAttackExecutor>(owner))
 	{
 		executor->releaseRuntimeParticles();
+	}
+
+	if (ArcherArrowShooter* shooter = GameObjectAPI::findScript<ArcherArrowShooter>(owner))
+	{
+		shooter->releaseRuntimeParticles();
 	}
 }
 
