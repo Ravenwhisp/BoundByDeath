@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "SpectralPathEntranceVFX.h"
 #include "ObjectVfxIds.h"
+#include "ParticleManager.h"
 
 SpectralPathEntranceVFX::SpectralPathEntranceVFX(GameObject* owner)
     : Script(owner)
@@ -28,11 +29,13 @@ void SpectralPathEntranceVFX::Start()
     if (m_entranceEffect != nullptr)
     {
         ParticleLifecycle::activate(m_entranceEffect);
+        ParticleManager::registerVfxRoot(m_entranceEffect);
     }
 }
 
 void SpectralPathEntranceVFX::OnGameStop()
 {
+    ParticleManager::unregisterVfxRoot(m_entranceEffect);
     ParticleLifecycle::destroy(m_entranceEffect);
 }
 

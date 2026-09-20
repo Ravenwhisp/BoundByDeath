@@ -4,6 +4,7 @@
 #include "GameplayEventTrigger.h"
 #include "Damageable.h"
 #include "ObjectVfxIds.h"
+#include "ParticleManager.h"
 
 IMPLEMENT_SCRIPT_FIELDS(CombatAreaEvent,
     SERIALIZED_COMPONENT_REF_VECTOR(m_enemies, "Enemies", ComponentType::TRANSFORM),
@@ -142,6 +143,7 @@ void CombatAreaEvent::activateBarricadeVisuals(const ComponentRef<Transform>& vi
         }
 
         ParticleLifecycle::activate(slot.mistInstance);
+        ParticleManager::registerVfxRoot(slot.mistInstance);
     }
 
     if (slot.burstInstance == nullptr)
@@ -172,6 +174,7 @@ void CombatAreaEvent::activateBarricadeVisuals(const ComponentRef<Transform>& vi
 
 void CombatAreaEvent::destroyBarricadeVisuals(BarricadeVisualSlot& slot)
 {
+    ParticleManager::unregisterVfxRoot(slot.mistInstance);
     m_timedParticles.cancel(slot.burstInstance);
     ParticleLifecycle::destroy(slot.mistInstance);
     ParticleLifecycle::destroy(slot.burstInstance);
