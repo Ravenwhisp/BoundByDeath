@@ -75,7 +75,7 @@ void SharedEnemyParticles::ensureMovementParticle()
         m_movementParticlePrefab.m_id,
         getMovementParticlePosition(),
         getOwnerRotation(),
-        nullptr
+        getOwner()
     );
 
     if (m_movementParticle != nullptr)

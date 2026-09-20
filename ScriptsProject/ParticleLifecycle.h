@@ -126,14 +126,15 @@ namespace ParticleLifecycle
 
         void update(float deltaTime)
         {
-            for (size_t i = 0; i < entries.size();)
+            // Iterate backwards so erasing an expired entry cannot cause the
+            // next entry to be updated twice during the same frame.
+            for (size_t i = entries.size(); i-- > 0;)
             {
                 TimedParticleEntry& entry = entries[i];
                 entry.remainingSeconds -= deltaTime;
 
                 if (entry.remainingSeconds > 0.0f)
                 {
-                    ++i;
                     continue;
                 }
 
@@ -174,11 +175,29 @@ namespace ParticleLifecycle
                 return;
             }
 
+            cancel(instance);
+
             TimedParticleEntry entry;
             entry.instance = instance;
             entry.remainingSeconds = lifetime;
             entry.deactivateOnExpire = true;
             entries.push_back(entry);
+        }
+
+        void cancel(GameObject* instance)
+        {
+            if (instance == nullptr)
+            {
+                return;
+            }
+
+            for (size_t i = entries.size(); i-- > 0;)
+            {
+                if (entries[i].instance == instance)
+                {
+                    entries.erase(entries.begin() + static_cast<std::ptrdiff_t>(i));
+                }
+            }
         }
 
         void clear()
@@ -299,6 +318,10 @@ namespace ParticleLifecycle
 
         if (instance != nullptr)
         {
+            // TimedParticleTracker is the sole lifetime owner for instances
+            // spawned through this helper. Prevent a DestroyParticles script
+            // in the prefab hierarchy from invalidating its stored pointer.
+            disableSelfDestruct(instance);
             tracker.scheduleDestroy(instance, lifetime);
         }
 
