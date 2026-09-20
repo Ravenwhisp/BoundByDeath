@@ -26,17 +26,22 @@ public:
 
     // Explicit registration of dedicated VFX roots: objects whose only purpose
     // is holding particle systems. The manager never owns nor destroys them;
-    // it only toggles their active state based on distance to the players.
+    // it only toggles their active state based on camera visibility.
     static void registerVfxRoot(GameObject* root);
     static void unregisterVfxRoot(GameObject* root);
 
 public:
-    float m_activationDistance   = 50.0f;
-    float m_deactivationDistance = 60.0f;
     float m_checkIntervalSeconds = 1.0f;
+    // Angular margins (degrees) added to the camera frustum for the enter/exit
+    // tests. The exit margin must be larger so boundary effects do not flicker.
+    float m_enterMarginDegrees   = 5.0f;
+    float m_exitMarginDegrees    = 20.0f;
+    // The engine camera FOV is horizontal; the vertical half-angle derives
+    // from this aspect ratio (16:9 by default).
+    float m_aspectRatio          = 1.78f;
     // When enabled, every particle system present in the scene at Start is
     // registered automatically, on top of the explicitly registered roots.
-    bool m_manageAllParticles    = false;
+    bool  m_manageAllParticles   = false;
 
 private:
     bool registerRoot(GameObject* root);

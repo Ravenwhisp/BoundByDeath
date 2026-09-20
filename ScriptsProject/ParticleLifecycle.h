@@ -131,6 +131,15 @@ namespace ParticleLifecycle
             for (size_t i = entries.size(); i-- > 0;)
             {
                 TimedParticleEntry& entry = entries[i];
+
+                // The instance may have been destroyed externally (e.g. with
+                // its parent). Drop the entry instead of touching a stale pointer.
+                if (entry.instance != nullptr && !SceneAPI::containsGameObject(entry.instance))
+                {
+                    entries.erase(entries.begin() + static_cast<std::ptrdiff_t>(i));
+                    continue;
+                }
+
                 entry.remainingSeconds -= deltaTime;
 
                 if (entry.remainingSeconds > 0.0f)
@@ -206,7 +215,7 @@ namespace ParticleLifecycle
         {
             for (TimedParticleEntry& entry : entries)
             {
-                if (entry.instance != nullptr)
+                if (entry.instance != nullptr && SceneAPI::containsGameObject(entry.instance))
                 {
                     GameObjectAPI::removeGameObject(entry.instance);
                 }
