@@ -175,11 +175,29 @@ namespace ParticleLifecycle
                 return;
             }
 
+            cancel(instance);
+
             TimedParticleEntry entry;
             entry.instance = instance;
             entry.remainingSeconds = lifetime;
             entry.deactivateOnExpire = true;
             entries.push_back(entry);
+        }
+
+        void cancel(GameObject* instance)
+        {
+            if (instance == nullptr)
+            {
+                return;
+            }
+
+            for (size_t i = entries.size(); i-- > 0;)
+            {
+                if (entries[i].instance == instance)
+                {
+                    entries.erase(entries.begin() + static_cast<std::ptrdiff_t>(i));
+                }
+            }
         }
 
         void clear()

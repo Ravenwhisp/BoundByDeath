@@ -57,7 +57,7 @@ void SkeletonParticles::ensureReviveParticle()
         m_reviveParticlePrefab.m_id,
         getReviveParticlePosition(),
         getOwnerRotation(),
-        nullptr
+        getOwner()
     );
 
     if (m_reviveParticle != nullptr)
