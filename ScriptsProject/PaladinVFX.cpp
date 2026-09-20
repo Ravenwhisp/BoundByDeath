@@ -33,6 +33,11 @@ void PaladinVFX::Start()
 
 void PaladinVFX::OnGameStop()
 {
+    releaseRuntimeParticles();
+}
+
+void PaladinVFX::releaseRuntimeParticles()
+{
     m_timedHitVfx.clear();
     ParticleLifecycle::destroy(walkingDustEffect);
     ParticleLifecycle::destroy(chargeAttackEffect);

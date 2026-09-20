@@ -26,12 +26,18 @@ void ArcherGuardParticles::Start()
 
 void ArcherGuardParticles::OnGameStop()
 {
+    releaseRuntimeParticles();
+}
+
+void ArcherGuardParticles::releaseRuntimeParticles()
+{
     ParticleLifecycle::destroy(m_trailGO);
     ParticleLifecycle::destroy(m_arrowSparksGO);
     ParticleLifecycle::destroy(m_barrageFloorParticle);
     ParticleLifecycle::destroy(m_barrageImpactParticle);
     ParticleLifecycle::destroy(m_somersaultParticle);
     m_somersaultParticleTransform = nullptr;
+    m_barrageImpactTimer = 0.0f;
 }
 
 void ArcherGuardParticles::Update()
@@ -56,9 +62,9 @@ void ArcherGuardParticles::ensureTrailParticle(const Vector3& pos)
     ParticleLifecycle::ensurePersistent(m_trailGO, m_trailPrefab.m_id, pos, Vector3::Zero, nullptr);
 }
 
-void ArcherGuardParticles::ensureArrowSparksParticle(const Vector3& pos)
+void ArcherGuardParticles::ensureArrowSparksParticle(const Vector3& pos, GameObject* arrow)
 {
-    ParticleLifecycle::ensurePersistent(m_arrowSparksGO, m_arrowSparksPrefab.m_id, pos, Vector3::Zero, nullptr);
+    ParticleLifecycle::ensurePersistent(m_arrowSparksGO, m_arrowSparksPrefab.m_id, pos, Vector3::Zero, arrow);
 }
 
 void ArcherGuardParticles::ensureBarrageFloorParticle(const Vector3& position)
@@ -120,9 +126,9 @@ void ArcherGuardParticles::stopBasicAttackTrail()
 
 // ── Basic attack arrow sparks ─────────────────────────────────────────────────
 
-void ArcherGuardParticles::spawnArrowSparks(const Vector3& pos)
+void ArcherGuardParticles::spawnArrowSparks(const Vector3& pos, GameObject* arrow)
 {
-    ensureArrowSparksParticle(pos);
+    ensureArrowSparksParticle(pos, arrow);
 
     if (!m_arrowSparksGO)
     {
@@ -153,7 +159,9 @@ void ArcherGuardParticles::syncArrowSparks(const Vector3& pos, const Vector3& eu
 
 void ArcherGuardParticles::stopArrowSparks()
 {
-    ParticleLifecycle::deactivate(m_arrowSparksGO);
+    // The sparks are parented to the arrow; destroy them explicitly so the
+    // stored pointer never dangles once the arrow is removed.
+    ParticleLifecycle::destroy(m_arrowSparksGO);
 }
 
 void ArcherGuardParticles::startBarrageFloorParticle(const Vector3& position)
@@ -207,6 +215,9 @@ void ArcherGuardParticles::playBarrageImpactParticle(const Vector3& position)
         m_barrageImpactTimer = 0.0f;
         return;
     }
+
+    // The manual timer below is the sole lifetime owner of this instance.
+    ParticleLifecycle::disableSelfDestruct(m_barrageImpactParticle);
 
     m_barrageImpactTimer = m_barrageImpactLifetime > 0.0f
         ? m_barrageImpactLifetime

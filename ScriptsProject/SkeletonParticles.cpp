@@ -30,6 +30,11 @@ void SkeletonParticles::Start()
 
 void SkeletonParticles::OnGameStop()
 {
+    releaseRuntimeParticles();
+}
+
+void SkeletonParticles::releaseRuntimeParticles()
+{
     m_timedParticles.clear();
     ParticleLifecycle::destroy(m_reviveParticle);
     m_reviveParticleTransform = nullptr;

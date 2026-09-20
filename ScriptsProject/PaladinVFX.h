@@ -34,6 +34,9 @@ public:
     void playShieldAttackStart(const Vector3& position, const Vector3& direction);
     void playShieldAttackHits(const Vector3& origin, const Vector3& direction, float length, float width);
 
+    // Destroys every runtime particle owned by this script. Safe to call more than once.
+    void releaseRuntimeParticles();
+
 private:
     bool isTargetInRectangle(Transform* targetTransform, const Vector3& origin, const Vector3& direction, float length, float width) const;
     void spawnShieldAttackHit(const Vector3& position);

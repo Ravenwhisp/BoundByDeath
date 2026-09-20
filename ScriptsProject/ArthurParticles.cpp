@@ -34,6 +34,11 @@ void ArthurParticles::Start()
 
 void ArthurParticles::OnGameStop()
 {
+    releaseRuntimeParticles();
+}
+
+void ArthurParticles::releaseRuntimeParticles()
+{
     m_timedEffects.clear();
     m_timedOneShots.clear();
     ParticleLifecycle::destroy(m_earthHammerShockwaveInstance);

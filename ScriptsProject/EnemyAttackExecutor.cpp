@@ -46,6 +46,11 @@ void EnemyAttackExecutor::Update()
 
 void EnemyAttackExecutor::OnGameStop()
 {
+    releaseRuntimeParticles();
+}
+
+void EnemyAttackExecutor::releaseRuntimeParticles()
+{
     m_timedHitVfx.clear();
     m_nextPlayerHitVfxOverride = AssetId();
 }
