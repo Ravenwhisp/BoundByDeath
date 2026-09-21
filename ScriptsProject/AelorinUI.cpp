@@ -55,7 +55,11 @@ IMPLEMENT_SCRIPT_FIELDS(AelorinUI,
 		SERIALIZED_COMPONENT_REF(m_graspOfTheDeadUIContainer, "Grasp of the Dead UI Container", ComponentType::TRANSFORM2D),
 		SERIALIZED_COMPONENT_REF(m_graspOfTheDeadUIBackground, "Grasp of the Dead UI Background", ComponentType::TRANSFORM2D),
 		SERIALIZED_COMPONENT_REF(m_graspOfTheDeadUIBorder, "Grasp of the Dead UI Border", ComponentType::TRANSFORM2D),
-		SERIALIZED_COMPONENT_REF(m_graspOfTheDeadUIGlow, "Grasp of the Dead UI Glow", ComponentType::TRANSFORM2D)
+		SERIALIZED_COMPONENT_REF(m_graspOfTheDeadUIGlow, "Grasp of the Dead UI Glow", ComponentType::TRANSFORM2D),
+		SERIALIZED_COMPONENT_REF(m_graspLyrielChainCanvas, "Lyriel Chain Canvas", ComponentType::TRANSFORM),
+		SERIALIZED_COMPONENT_REF(m_graspLyrielChainImage, "Lyriel Chain Image",	ComponentType::TRANSFORM2D),
+		SERIALIZED_COMPONENT_REF(m_graspDeathChainCanvas, "Death Chain Canvas",	ComponentType::TRANSFORM),
+		SERIALIZED_COMPONENT_REF(m_graspDeathChainImage, "Death Chain Image", ComponentType::TRANSFORM2D)
 	),
 
 	FIELD_GROUP_COLLAPSE("Soul Cataclysm",
@@ -124,7 +128,13 @@ void AelorinUI::Start()
 	m_graspOfTheDeadUIBorderTransform2D = m_graspOfTheDeadUIBorder.getReferencedComponent();
 	m_graspOfTheDeadUIGlowTransform2D =	m_graspOfTheDeadUIGlow.getReferencedComponent();
 
+	m_graspLyrielChainCanvasTransform = m_graspLyrielChainCanvas.getReferencedComponent();
+	m_graspLyrielChainImageTransform2D = m_graspLyrielChainImage.getReferencedComponent();
+	m_graspDeathChainCanvasTransform = m_graspDeathChainCanvas.getReferencedComponent();
+	m_graspDeathChainImageTransform2D = m_graspDeathChainImage.getReferencedComponent();
+
 	hideGraspOfTheDeadUI();
+	hideGraspChains();
 
 	// Soul Cataclysm - Arena
 	m_soulCataclysmUICanvasTransform = m_soulCataclysmUICanvas.getReferencedComponent();
@@ -156,6 +166,7 @@ void AelorinUI::Update()
 	updateRisenSpiresUI(deltaTime);
 	updateSpiritCannonUI(deltaTime);
 	updateGraspOfTheDeadUI(deltaTime);
+	updateGraspChains();
 	updateSoulCataclysmUI(deltaTime);
 	updateHealthMarkers();
 }
@@ -533,9 +544,56 @@ void AelorinUI::showGraspOfTheDeadUI(const Vector3& center, float radius, float 
 
 }
 
+void AelorinUI::showGraspChains(Transform* graspCenter, Transform* lyrielTransform, Transform* deathTransform)
+{
+	if (!graspCenter)
+	{
+		return;
+	}
+
+	m_graspChainCenterTransform = graspCenter;
+	m_graspChainLyrielTransform = lyrielTransform;
+	m_graspChainDeathTransform = deathTransform;
+
+	m_graspChainsActive = true;
+
+	// Lyriel chain
+	if (m_graspLyrielChainCanvasTransform &&
+		m_graspLyrielChainImageTransform2D &&
+		m_graspChainLyrielTransform)
+	{
+		GameObject* canvasObject = ComponentAPI::getOwner(m_graspLyrielChainCanvasTransform);
+		if (canvasObject)
+		{
+			GameObjectAPI::setActive(canvasObject, true);
+		}
+
+		Transform2DAPI::setAlpha(m_graspLyrielChainImageTransform2D, 1.0f);
+	}
+
+	// Death chain
+	if (m_graspDeathChainCanvasTransform &&
+		m_graspDeathChainImageTransform2D &&
+		m_graspChainDeathTransform)
+	{
+		GameObject* canvasObject = ComponentAPI::getOwner(m_graspDeathChainCanvasTransform);
+		if (canvasObject)
+		{
+			GameObjectAPI::setActive(canvasObject, true);
+		}
+
+		Transform2DAPI::setAlpha(m_graspDeathChainImageTransform2D, 1.0f);
+	}
+}
+
 void AelorinUI::cancelGraspOfTheDead()
 {
 	hideGraspOfTheDeadUI();
+}
+
+void AelorinUI::cancelGraspChains()
+{
+	hideGraspChains();
 }
 
 void AelorinUI::showSoulCataclysmUI(const Vector3& center, float radius, Transform* safeZonesRoot, float safeZoneRadius, float channelDuration)
@@ -1333,6 +1391,124 @@ void AelorinUI::hideGraspOfTheDeadUI()
 	{
 		Transform2DAPI::setAlpha(m_graspOfTheDeadUIGlowTransform2D,	0.0f);
 	}
+}
+
+void AelorinUI::updateGraspChains()
+{
+	if (!m_graspChainsActive)
+	{
+		return;
+	}
+
+	if (!m_graspChainCenterTransform)
+	{
+		hideGraspChains();
+		return;
+	}
+
+	// Lyriel
+	updateGraspChain(
+		m_graspLyrielChainCanvasTransform,
+		m_graspLyrielChainImageTransform2D,
+		m_graspChainLyrielTransform
+	);
+
+	// Death
+	updateGraspChain(
+		m_graspDeathChainCanvasTransform,
+		m_graspDeathChainImageTransform2D,
+		m_graspChainDeathTransform
+	);
+}
+
+void AelorinUI::updateGraspChain(Transform* canvasTransform, Transform2D* chainTransform2D, Transform* targetTransform)
+{
+	if (!m_graspChainCenterTransform ||
+		!canvasTransform ||
+		!chainTransform2D ||
+		!targetTransform)
+	{
+		return;
+	}
+
+	const Vector3 centerPosition = TransformAPI::getGlobalPosition(m_graspChainCenterTransform);
+	const Vector3 targetPosition = TransformAPI::getGlobalPosition(targetTransform);
+	Vector3 direction = targetPosition - centerPosition;
+
+	// Chain is on the XZ plane
+	direction.y = 0.0f;
+
+	const float distance = direction.Length();
+	if (distance <= 0.0001f)
+	{
+		return;
+	}
+
+	direction.Normalize();
+
+	// Position
+	Vector3 chainPosition = centerPosition + direction * (distance * 0.5f);
+	chainPosition.y += m_graspChainHeightOffset;
+
+	TransformAPI::setGlobalPosition(canvasTransform, chainPosition);
+
+	// Rotation
+	constexpr float radiansToDegrees = 180.0f / 3.14159265f;
+	const float angleDegrees = std::atan2(direction.z, direction.x) * radiansToDegrees;
+
+	TransformAPI::setGlobalRotationEuler(canvasTransform, Vector3(90.0f, 0.0f, angleDegrees));
+
+	// Length
+	const Vector2 baseSize = Transform2DAPI::getBaseSize(chainTransform2D);
+	if (baseSize.x <= 0.001f ||
+		baseSize.y <= 0.001f)
+	{
+		return;
+	}
+
+	const float desiredLengthUI = distance * 100.0f;
+	const float desiredWidthUI = m_graspChainWidth * 100.0f;
+	const float lengthScale = desiredLengthUI / baseSize.x;
+	const float widthScale = desiredWidthUI / baseSize.y;
+
+	Transform2DAPI::setScale(chainTransform2D, Vector2(lengthScale, widthScale));
+}
+
+void AelorinUI::hideGraspChains()
+{
+	if (m_graspLyrielChainCanvasTransform)
+	{
+		GameObject* canvasObject = ComponentAPI::getOwner(m_graspLyrielChainCanvasTransform);
+		if (canvasObject)
+		{
+			GameObjectAPI::setActive(canvasObject, false);
+		}
+	}
+
+	if (m_graspDeathChainCanvasTransform)
+	{
+		GameObject* canvasObject = ComponentAPI::getOwner(m_graspDeathChainCanvasTransform);
+		if (canvasObject)
+		{
+			GameObjectAPI::setActive(canvasObject, false);
+		}
+	}
+
+	if (m_graspLyrielChainImageTransform2D)
+	{
+		Transform2DAPI::setScale(m_graspLyrielChainImageTransform2D, Vector2(1.0f, 1.0f));
+	}
+
+	if (m_graspDeathChainImageTransform2D)
+	{
+		Transform2DAPI::setScale(m_graspDeathChainImageTransform2D, Vector2(1.0f, 1.0f));
+	}
+
+	m_graspChainCenterTransform = nullptr;
+	m_graspChainLyrielTransform = nullptr;
+	m_graspChainDeathTransform = nullptr;
+
+	m_graspChainsActive = false;
 }
 
 IMPLEMENT_SCRIPT(AelorinUI)

@@ -967,12 +967,12 @@ std::vector<AelorinAbility> AelorinBossController::buildAbilityPool() const
 	if (canSummon())
 	{
 		pool.push_back(AelorinAbility::Summon);
-	}
+	}*/
 
 	if (isPhase2())
 	{
 		pool.push_back(AelorinAbility::GraspOfTheDead);
-	}*/
+	}
 
 	return pool;
 }

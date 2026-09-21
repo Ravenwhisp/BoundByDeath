@@ -125,6 +125,7 @@ void AelorinGraspOfTheDeadState::OnStateEnter()
 		{
 			const Vector3 center = TransformAPI::getGlobalPosition(graspCenter);
 			m_aelorinUI->showGraspOfTheDeadUI(center, config->m_graspVisualRadius, config->m_graspPullDuration);
+			m_aelorinUI->showGraspChains(graspCenter, lyrielTransform, deathTransform);
 		}
 	}
 
@@ -169,6 +170,7 @@ void AelorinGraspOfTheDeadState::OnStateExit()
 	if (m_aelorinUI)
 	{
 		m_aelorinUI->cancelGraspOfTheDead();
+		m_aelorinUI->cancelGraspChains();
 	}
 
 	m_aelorinUI = nullptr;

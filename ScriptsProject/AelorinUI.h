@@ -44,7 +44,9 @@ public:
 
 	// Grasp of the Dead
 	void showGraspOfTheDeadUI(const Vector3& center, float radius, float pullDuration);
+	void showGraspChains(Transform* graspCenter, Transform* lyrielTransform, Transform* deathTransform);
 	void cancelGraspOfTheDead();
+	void cancelGraspChains();
 
 	// Soul Cataclysm
 	void showSoulCataclysmUI(const Vector3& center, float radius, Transform* safeZonesRoot, float safeZoneRadius, float channelDuration);
@@ -108,6 +110,9 @@ private:
 	void setGraspOfTheDeadRadius(float radius);
 	void updateGraspOfTheDeadUI(float deltaTime);
 	void hideGraspOfTheDeadUI();
+	void updateGraspChains();
+	void updateGraspChain(Transform* canvasTransform, Transform2D* chainTransform2D, Transform* targetTransform);
+	void hideGraspChains();
 
 	// Soul Cataclysm
 	struct SoulCataclysmSafeZoneUISlot
@@ -255,16 +260,34 @@ private:
 	ComponentRef<Transform2D> m_graspOfTheDeadUIBorder;
 	ComponentRef<Transform2D> m_graspOfTheDeadUIGlow;
 
+	ComponentRef<Transform> m_graspLyrielChainCanvas;
+	ComponentRef<Transform2D> m_graspLyrielChainImage;
+	ComponentRef<Transform> m_graspDeathChainCanvas;
+	ComponentRef<Transform2D> m_graspDeathChainImage;
+
 	Transform* m_graspOfTheDeadUICanvasTransform = nullptr;
 	Transform2D* m_graspOfTheDeadUIContainerTransform2D = nullptr;
 	Transform2D* m_graspOfTheDeadUIBackgroundTransform2D = nullptr;
 	Transform2D* m_graspOfTheDeadUIBorderTransform2D = nullptr;
 	Transform2D* m_graspOfTheDeadUIGlowTransform2D = nullptr;
 
+	Transform* m_graspLyrielChainCanvasTransform = nullptr;
+	Transform2D* m_graspLyrielChainImageTransform2D = nullptr;
+	Transform* m_graspDeathChainCanvasTransform = nullptr;
+	Transform2D* m_graspDeathChainImageTransform2D = nullptr;
+
+	Transform* m_graspChainCenterTransform = nullptr;
+	Transform* m_graspChainLyrielTransform = nullptr;
+	Transform* m_graspChainDeathTransform = nullptr;
+
 	bool m_graspOfTheDeadUIActive = false;
+	bool m_graspChainsActive = false;
 
 	float m_graspOfTheDeadUITimer = 0.0f;
 	float m_graspOfTheDeadUIDuration = 0.0f;
+
+	static constexpr float m_graspChainHeightOffset = 0.35f;
+	static constexpr float m_graspChainWidth = 0.35f;
 
 	// Soul Cataclysm - Arena
 	ComponentRef<Transform> m_soulCataclysmUICanvas;
