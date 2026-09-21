@@ -37,10 +37,10 @@ public:
 	void cancelRisenSpires();
 
 	// Spirit Cannon
-	void showSpiritCannonUI(Transform* originTransform, const Vector3& aimDirection, float beamLength, float beamWidth, float chargeDuration);
+	void showSpiritCannonWarning(Transform* originTransform, const Vector3& aimDirection, float beamLength, float warningWidth);
 	void setSpiritCannonAimDirection(const Vector3& aimDirection);
+	void fireSpiritCannonBeam(float fireWidth, float fireDuration);
 	void cancelSpiritCannon();
-	void setSpiritCannonBeamSize(float beamLength, float beamWidth);
 
 	// Grasp of the Dead
 	void showGraspOfTheDeadUI(const Vector3& center, float radius, float pullDuration);
@@ -101,7 +101,6 @@ private:
 
 	// Spirit Cannon
 	void updateSpiritCannonUI(float deltaTime);
-	void playSpiritCannonImpactUI();
 	void hideSpiritCannonUI();
 	void setSpiritCannonSize(float beamLength, float beamWidth);
 
@@ -225,29 +224,29 @@ private:
 	// Spirit Cannon
 	ComponentRef<Transform> m_spiritCannonUICanvas;
 	ComponentRef<Transform2D> m_spiritCannonUIContainer;
-	ComponentRef<Transform2D> m_spiritCannonUIBackground;
-	ComponentRef<Transform2D> m_spiritCannonUIBorder;
-	ComponentRef<Transform2D> m_spiritCannonUIGlow;
+	ComponentRef<Transform2D> m_spiritCannonUIWarning;
+	ComponentRef<Transform2D> m_spiritCannonUIBeam;
 
 	Transform* m_spiritCannonUICanvasTransform = nullptr;
 	Transform2D* m_spiritCannonUIContainerTransform2D = nullptr;
-	Transform2D* m_spiritCannonUIBackgroundTransform2D = nullptr;
-	Transform2D* m_spiritCannonUIBorderTransform2D = nullptr;
-	Transform2D* m_spiritCannonUIGlowTransform2D = nullptr;
+	Transform2D* m_spiritCannonUIWarningTransform2D = nullptr;
+	Transform2D* m_spiritCannonUIBeamTransform2D = nullptr;
 
 	Transform* m_spiritCannonOriginTransform = nullptr;
 	Vector3 m_spiritCannonAimDirection = Vector3::Zero;
 
 	bool m_spiritCannonUIActive = false;
-	bool m_spiritCannonUICharging = false;
-	bool m_spiritCannonImpactUIPlaying = false;
-	float m_spiritCannonUITimer = 0.0f;
-	float m_spiritCannonUIChargeDuration = 0.0f;
-	float m_spiritCannonBeamLength = 0.0f;
-	float m_spiritCannonBeamWidth = 0.0f;
-	float m_spiritCannonImpactUITimer = 0.0f;
+	bool m_spiritCannonUIFiring = false;
 
-	static constexpr float m_spiritCannonUIImpactFadeDuration = 0.15f;
+	float m_spiritCannonBeamLength = 0.0f;
+	float m_spiritCannonWarningWidth = 0.0f;
+	float m_spiritCannonFireBaseWidth = 0.0f;
+	float m_spiritCannonFireTimer = 0.0f;
+	float m_spiritCannonFireDuration = 0.0f;
+
+	static constexpr float m_spiritCannonHeightOffset = 0.35f;
+	static constexpr float m_spiritCannonPulseSpeed = 22.0f;
+	static constexpr float m_spiritCannonPulseAmount = 0.12f;
 
 	// Grasp of the Dead
 	ComponentRef<Transform> m_graspOfTheDeadUICanvas;

@@ -134,11 +134,6 @@ void AelorinSpiritCannonV2State::OnStateUpdate()
 			return;
 		}
 
-		if (m_aelorinUI)
-		{
-			m_aelorinUI->setSpiritCannonBeamSize(config->m_spiritCannonV2BeamLength, config->m_spiritCannonV2FireWidth);
-		}
-
 		fireShot();
 
 		m_shotActive = false;
@@ -208,6 +203,8 @@ void AelorinSpiritCannonV2State::OnStateExit()
 
 	m_lockedTargetPosition = Vector3::Zero;
 	m_lockedAimDirection = Vector3::Zero;
+
+	m_activeAbility = AelorinAbility::None;
 
 	m_shotTimer = 0.0f;
 	m_intervalTimer = 0.0f;
@@ -315,12 +312,11 @@ void AelorinSpiritCannonV2State::beginShot()
 
 	if (m_aelorinUI)
 	{
-		m_aelorinUI->showSpiritCannonUI(
+		m_aelorinUI->showSpiritCannonWarning(
 			m_aelorinTransform,
 			m_lockedAimDirection,
 			config->m_spiritCannonV2BeamLength,
-			config->m_spiritCannonV2TelegraphWidth,
-			config->m_spiritCannonV2LockDuration
+			config->m_spiritCannonV2TelegraphWidth
 		);
 	}
 
@@ -350,7 +346,7 @@ void AelorinSpiritCannonV2State::fireShot()
 
 	if (m_aelorinUI)
 	{
-		m_aelorinUI->setSpiritCannonBeamSize(config->m_spiritCannonV2BeamLength, config->m_spiritCannonV2FireWidth);
+		m_aelorinUI->fireSpiritCannonBeam(config->m_spiritCannonV2FireWidth, 0.20f);
 	}
 
 	m_attackExecutor->applyDamageInBeam(

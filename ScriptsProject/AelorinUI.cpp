@@ -44,11 +44,10 @@ IMPLEMENT_SCRIPT_FIELDS(AelorinUI,
 	),
 
 	FIELD_GROUP_COLLAPSE("Spirit Cannon",
-		SERIALIZED_COMPONENT_REF(m_spiritCannonUICanvas, "Spirit Cannon UI Canvas", ComponentType::TRANSFORM),
-		SERIALIZED_COMPONENT_REF(m_spiritCannonUIContainer, "Spirit Cannon UI Container", ComponentType::TRANSFORM2D),
-		SERIALIZED_COMPONENT_REF(m_spiritCannonUIBackground, "Spirit Cannon UI Background", ComponentType::TRANSFORM2D),
-		SERIALIZED_COMPONENT_REF(m_spiritCannonUIBorder, "Spirit Cannon UI Border", ComponentType::TRANSFORM2D),
-		SERIALIZED_COMPONENT_REF(m_spiritCannonUIGlow, "Spirit Cannon UI Glow", ComponentType::TRANSFORM2D)
+		SERIALIZED_COMPONENT_REF(m_spiritCannonUICanvas, "Spirit Cannon Canvas",ComponentType::TRANSFORM),
+		SERIALIZED_COMPONENT_REF(m_spiritCannonUIContainer, "Spirit Cannon Container", ComponentType::TRANSFORM2D),
+		SERIALIZED_COMPONENT_REF(m_spiritCannonUIWarning, "Spirit Cannon Warning", ComponentType::TRANSFORM2D),
+		SERIALIZED_COMPONENT_REF(m_spiritCannonUIBeam, "Spirit Cannon Beam", ComponentType::TRANSFORM2D)
 	),
 
 	FIELD_GROUP_COLLAPSE("Grasp of the Dead",
@@ -113,9 +112,8 @@ void AelorinUI::Start()
 	// Spirit Cannon
 	m_spiritCannonUICanvasTransform = m_spiritCannonUICanvas.getReferencedComponent();
 	m_spiritCannonUIContainerTransform2D = m_spiritCannonUIContainer.getReferencedComponent();
-	m_spiritCannonUIBackgroundTransform2D = m_spiritCannonUIBackground.getReferencedComponent();
-	m_spiritCannonUIBorderTransform2D = m_spiritCannonUIBorder.getReferencedComponent();
-	m_spiritCannonUIGlowTransform2D = m_spiritCannonUIGlow.getReferencedComponent();
+	m_spiritCannonUIWarningTransform2D = m_spiritCannonUIWarning.getReferencedComponent();
+	m_spiritCannonUIBeamTransform2D = m_spiritCannonUIBeam.getReferencedComponent();
 
 	hideSpiritCannonUI();
 
@@ -392,57 +390,103 @@ void AelorinUI::cancelRisenSpires()
 	hideAllRisenSpiresUI();
 }
 
-void AelorinUI::showSpiritCannonUI(Transform* originTransform, const Vector3& aimDirection, float beamLength, float beamWidth, float chargeDuration)
+void AelorinUI::showSpiritCannonWarning(Transform* originTransform, const Vector3& aimDirection, float beamLength, float warningWidth)
 {
+	if (!m_spiritCannonUICanvasTransform ||
+		!m_spiritCannonUIContainerTransform2D ||
+		!m_spiritCannonUIWarningTransform2D ||
+		!m_spiritCannonUIBeamTransform2D)
+	{
+		return;
+	}
+
 	GameObject* canvasObject = ComponentAPI::getOwner(m_spiritCannonUICanvasTransform);
 	if (!canvasObject)
 	{
 		return;
 	}
 
-	m_spiritCannonOriginTransform = originTransform;
+	m_spiritCannonOriginTransform =	originTransform;
 	m_spiritCannonAimDirection = aimDirection;
+	m_spiritCannonAimDirection.y = 0.0f;
+
+	if (m_spiritCannonAimDirection.LengthSquared() > 0.00001f)
+	{
+		m_spiritCannonAimDirection.Normalize();
+	}
+
 	m_spiritCannonBeamLength = beamLength;
-	m_spiritCannonBeamWidth = beamWidth;
-	m_spiritCannonUITimer = 0.0f;
-	m_spiritCannonUIChargeDuration = (std::max)(chargeDuration, 0.001f);
 	m_spiritCannonUIActive = true;
-	m_spiritCannonUICharging = true;
+	m_spiritCannonUIFiring = false;
+	m_spiritCannonFireTimer = 0.0f;
+	m_spiritCannonFireDuration = 0.0f;
 
 	GameObjectAPI::setActive(canvasObject, true);
 
-	setSpiritCannonSize(beamLength, beamWidth);
+	// Thin warning beam
+	setSpiritCannonSize(beamLength, warningWidth);
 
-	Transform2DAPI::setAlpha(m_spiritCannonUIContainerTransform2D, 1.0f);
-	Transform2DAPI::setAlpha(m_spiritCannonUIBorderTransform2D, 1.0f);
-	Transform2DAPI::setAlpha(m_spiritCannonUIBackgroundTransform2D, 0.0f);
-	Transform2DAPI::setAlpha(m_spiritCannonUIGlowTransform2D, 0.0f);
-	Transform2DAPI::setScale(m_spiritCannonUIBackgroundTransform2D,	Vector2(1.0f, 1.0f));
+	Transform2DAPI::setAlpha(m_spiritCannonUIWarningTransform2D, 1.0f);
+	Transform2DAPI::setAlpha(m_spiritCannonUIBeamTransform2D, 0.0f);
+	Transform2DAPI::setScale(m_spiritCannonUIWarningTransform2D, Vector2(1.0f, 1.0f));
+	Transform2DAPI::setScale(m_spiritCannonUIBeamTransform2D, Vector2(1.0f, 1.0f));
 }
 
 void AelorinUI::setSpiritCannonAimDirection(const Vector3& aimDirection)
 {
-	if (aimDirection.LengthSquared() <= 0.00001f)
+	Vector3 direction = aimDirection;
+
+	// Spirit Cannon works on the XZ plane
+	direction.y = 0.0f;
+
+	if (direction.LengthSquared() <= 0.00001f)
 	{
 		return;
 	}
 
-	m_spiritCannonAimDirection = aimDirection;
-	m_spiritCannonAimDirection.y = 0.0f;
-	m_spiritCannonAimDirection.Normalize();
+	direction.Normalize();
+
+	m_spiritCannonAimDirection = direction;
+}
+
+void AelorinUI::fireSpiritCannonBeam(float fireWidth, float fireDuration)
+{
+	if (!m_spiritCannonUIActive ||
+		!m_spiritCannonUICanvasTransform ||
+		!m_spiritCannonUIContainerTransform2D ||
+		!m_spiritCannonUIWarningTransform2D ||
+		!m_spiritCannonUIBeamTransform2D)
+	{
+		return;
+	}
+
+	GameObject* canvasObject = ComponentAPI::getOwner(m_spiritCannonUICanvasTransform);
+	if (!canvasObject)
+	{
+		return;
+	}
+
+	m_spiritCannonUIFiring = true;
+	m_spiritCannonFireBaseWidth = fireWidth;
+	m_spiritCannonFireTimer = 0.0f;
+	m_spiritCannonFireDuration = (std::max)(fireDuration, 0.001f);
+
+	GameObjectAPI::setActive(canvasObject, true);
+
+	// Switch from warning image to beam image
+	Transform2DAPI::setAlpha(m_spiritCannonUIWarningTransform2D, 0.0f);
+	Transform2DAPI::setAlpha(m_spiritCannonUIBeamTransform2D, 1.0f);
+
+	// Expand to firing width
+	setSpiritCannonSize(m_spiritCannonBeamLength, m_spiritCannonFireBaseWidth);
+
+	// Firing image - normal local scale
+	Transform2DAPI::setScale(m_spiritCannonUIBeamTransform2D, Vector2(1.0f, 1.0f));
 }
 
 void AelorinUI::cancelSpiritCannon()
 {
 	hideSpiritCannonUI();
-}
-
-void AelorinUI::setSpiritCannonBeamSize(float beamLength, float beamWidth)
-{
-	m_spiritCannonBeamLength = beamLength;
-	m_spiritCannonBeamWidth = beamWidth;
-
-	setSpiritCannonSize(beamLength,	beamWidth);
 }
 
 void AelorinUI::showGraspOfTheDeadUI(const Vector3& center, float radius, float pullDuration)
@@ -1122,16 +1166,17 @@ void AelorinUI::updateSpiritCannonUI(float deltaTime)
 
 	if (!m_spiritCannonOriginTransform ||
 		!m_spiritCannonUICanvasTransform ||
-		!m_spiritCannonUIBackgroundTransform2D ||
-		!m_spiritCannonUIGlowTransform2D)
+		!m_spiritCannonUIContainerTransform2D ||
+		!m_spiritCannonUIWarningTransform2D ||
+		!m_spiritCannonUIBeamTransform2D)
 	{
 		hideSpiritCannonUI();
 		return;
 	}
 
-	const Vector3 origin = TransformAPI::getGlobalPosition(m_spiritCannonOriginTransform);
-	Vector3 direction = m_spiritCannonAimDirection;
-	
+	Vector3 direction =	m_spiritCannonAimDirection;
+	direction.y = 0.0f;
+
 	if (direction.LengthSquared() <= 0.00001f)
 	{
 		return;
@@ -1139,74 +1184,39 @@ void AelorinUI::updateSpiritCannonUI(float deltaTime)
 
 	direction.Normalize();
 
-	Vector3 uiPosition = origin + direction * (m_spiritCannonBeamLength * 0.5f);
-	uiPosition.y += 0.05f;
+	const Vector3 origin = TransformAPI::getGlobalPosition(m_spiritCannonOriginTransform);
 
-	TransformAPI::setGlobalPosition(m_spiritCannonUICanvasTransform, uiPosition);
+	// Position the beam in the middle of its total length
+	Vector3 beamPosition = origin +	direction * (m_spiritCannonBeamLength * 0.5f);
+	beamPosition.y += m_spiritCannonHeightOffset;
 
+	TransformAPI::setGlobalPosition(m_spiritCannonUICanvasTransform, beamPosition);
+
+	// Rotate the beam along the current aim direction
 	constexpr float radiansToDegrees = 180.0f / 3.14159265f;
+
 	const float angleDegrees = std::atan2(direction.z, direction.x) * radiansToDegrees;
 
-	TransformAPI::setGlobalRotationEuler(m_spiritCannonUICanvasTransform, Vector3(90.0f, 0.0f, angleDegrees));
+	TransformAPI::setGlobalRotationEuler(m_spiritCannonUICanvasTransform,Vector3(90.0f, 0.0f, angleDegrees));
 
-	// charge
-	if (m_spiritCannonUICharging)
-	{
-		m_spiritCannonUITimer += deltaTime;
-
-		const float t = std::clamp(m_spiritCannonUITimer / m_spiritCannonUIChargeDuration, 0.0f, 1.0f);
-		const float easedT = MathAPI::evaluateEasing(MathAPI::EasingType::EaseInQuad, t);
-
-		Transform2DAPI::setAlpha(m_spiritCannonUIBackgroundTransform2D, easedT);
-
-		if (t >= 1.0f)
-		{
-			m_spiritCannonUICharging = false;
-			playSpiritCannonImpactUI();
-		}
-	}
-
-	// impact
-	if (m_spiritCannonImpactUIPlaying)
-	{
-		m_spiritCannonImpactUITimer += deltaTime;
-
-		const float impactT = std::clamp(m_spiritCannonImpactUITimer / m_spiritCannonUIImpactFadeDuration, 0.0f, 1.0f);
-		const float fadeAlpha =	1.0f - MathAPI::evaluateEasing(MathAPI::EasingType::EaseOutQuad, impactT);
-
-		Transform2DAPI::setAlpha(m_spiritCannonUIGlowTransform2D, fadeAlpha);
-
-		if (impactT >= 1.0f)
-		{
-			m_spiritCannonImpactUIPlaying = false;
-			m_spiritCannonImpactUITimer = 0.0f;
-
-			Transform2DAPI::setAlpha(m_spiritCannonUIGlowTransform2D, 0.0f);
-
-			if (!m_spiritCannonUICharging)
-			{
-				hideSpiritCannonUI();
-				return;
-			}
-		}
-	}
-}
-
-void AelorinUI::playSpiritCannonImpactUI()
-{
-	if (!m_spiritCannonUIBackgroundTransform2D || !m_spiritCannonUIGlowTransform2D)
+	if (!m_spiritCannonUIFiring)
 	{
 		return;
 	}
 
-	// shot fired -> reset charge
-	Transform2DAPI::setAlpha(m_spiritCannonUIBackgroundTransform2D, 0.0f);
+	// Firing Beam
 
-	// flash
-	m_spiritCannonImpactUIPlaying = true;
-	m_spiritCannonImpactUITimer = 0.0f;
+	m_spiritCannonFireTimer += deltaTime;
 
-	Transform2DAPI::setAlpha(m_spiritCannonUIGlowTransform2D, 1.0f);
+	const float pulse =	1.0f + std::sin(m_spiritCannonFireTimer * m_spiritCannonPulseSpeed) * m_spiritCannonPulseAmount;
+	const float currentWidth = m_spiritCannonFireBaseWidth * pulse;
+
+	setSpiritCannonSize(m_spiritCannonBeamLength, currentWidth);
+
+	if (m_spiritCannonFireTimer >= m_spiritCannonFireDuration)
+	{
+		hideSpiritCannonUI();
+	}
 }
 
 void AelorinUI::hideSpiritCannonUI()
@@ -1220,16 +1230,28 @@ void AelorinUI::hideSpiritCannonUI()
 		}
 	}
 
+	if (m_spiritCannonUIWarningTransform2D)
+	{
+		Transform2DAPI::setAlpha(m_spiritCannonUIWarningTransform2D, 0.0f);
+		Transform2DAPI::setScale(m_spiritCannonUIWarningTransform2D, Vector2(1.0f, 1.0f));
+	}
+
+	if (m_spiritCannonUIBeamTransform2D)
+	{
+		Transform2DAPI::setAlpha(m_spiritCannonUIBeamTransform2D, 0.0f);
+		Transform2DAPI::setScale(m_spiritCannonUIBeamTransform2D, Vector2(1.0f, 1.0f));
+	}
+
 	m_spiritCannonOriginTransform = nullptr;
 	m_spiritCannonAimDirection = Vector3::Zero;
+
 	m_spiritCannonUIActive = false;
-	m_spiritCannonUICharging = false;
-	m_spiritCannonImpactUIPlaying = false;
-	m_spiritCannonUITimer = 0.0f;
-	m_spiritCannonUIChargeDuration = 0.0f;
+	m_spiritCannonUIFiring = false;
+
 	m_spiritCannonBeamLength = 0.0f;
-	m_spiritCannonBeamWidth = 0.0f;
-	m_spiritCannonImpactUITimer = 0.0f;
+	m_spiritCannonFireBaseWidth = 0.0f;
+	m_spiritCannonFireTimer = 0.0f;
+	m_spiritCannonFireDuration = 0.0f;
 }
 
 void AelorinUI::setSpiritCannonSize(float beamLength, float beamWidth)

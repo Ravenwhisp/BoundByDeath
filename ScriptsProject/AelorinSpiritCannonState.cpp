@@ -93,12 +93,12 @@ void AelorinSpiritCannonState::OnStateEnter()
 		const AelorinAttackConfig* config = m_controller->getAelorinAttackConfig();
 		if (config)
 		{
-			m_aelorinUI->showSpiritCannonUI(
+			/*m_aelorinUI->showSpiritCannonUI(
 				m_aelorinTransform,
 				m_currentAimDirection,
 				config->m_spiritCannonBeamLength,
 				config->m_spiritCannonBeamWidth,
-				config->m_spiritCannonWindupDuration);
+				config->m_spiritCannonWindupDuration);*/
 		}
 	}
 
@@ -215,13 +215,13 @@ void AelorinSpiritCannonState::OnStateUpdate()
 			// Telegraph Shot 2
 			if (!m_isFuryCast && m_aelorinUI)
 			{
-				m_aelorinUI->showSpiritCannonUI(
+				/*m_aelorinUI->showSpiritCannonUI(
 					m_aelorinTransform,
 					m_currentAimDirection,
 					config->m_spiritCannonBeamLength,
 					config->m_spiritCannonBeamWidth,
 					config->m_spiritCannonPhase1ShotInterval
-				);
+				);*/
 			}
 
 			return;
@@ -263,13 +263,13 @@ void AelorinSpiritCannonState::OnStateUpdate()
 		// Telegraph Shot 2
 		if (!m_isFuryCast && m_aelorinUI)
 		{
-			m_aelorinUI->showSpiritCannonUI(
+			/*m_aelorinUI->showSpiritCannonUI(
 				m_aelorinTransform,
 				m_currentAimDirection,
 				config->m_spiritCannonBeamLength,
 				config->m_spiritCannonBeamWidth,
 				config->m_spiritCannonPhase2ShotInterval
-			);
+			);*/
 		}
 
 		return;
@@ -288,13 +288,13 @@ void AelorinSpiritCannonState::OnStateUpdate()
 		// Telegraph Shot 3
 		if (!m_isFuryCast && m_aelorinUI)
 		{
-			m_aelorinUI->showSpiritCannonUI(
+			/*m_aelorinUI->showSpiritCannonUI(
 				m_aelorinTransform,
 				m_currentAimDirection,
 				config->m_spiritCannonBeamLength,
 				config->m_spiritCannonBeamWidth,
 				config->m_spiritCannonPhase2ShotInterval
-			);
+			);*/
 		}
 
 		return;
@@ -313,13 +313,13 @@ void AelorinSpiritCannonState::OnStateUpdate()
 		// Telegraph Final Shot
 		if (!m_isFuryCast && m_aelorinUI)
 		{
-			m_aelorinUI->showSpiritCannonUI(
+			/*m_aelorinUI->showSpiritCannonUI(
 				m_aelorinTransform,
 				m_currentAimDirection,
 				config->m_spiritCannonBeamLength,
 				config->m_spiritCannonPhase2FinalBeamWidth,
 				config->m_spiritCannonPhase2FinalShotDelay
-			);
+			);*/
 		}
 
 		return;
