@@ -21,15 +21,13 @@ public:
 	void OnStateExit() override;
 
 private:
-	void selectLockedTarget();
+	void selectTarget();
 	bool isValidTarget(Transform* targetTransform) const;
-	void ensureValidLockedTarget();
 
-	void initializeAimDirection();
-	void updateAimDirection(float trackingSpeed);
+	bool lockCurrentTargetPosition();
 
-	void fireBeamShot(float width, float damage, const char* sourceName);
-	
+	void beginShot();
+	void fireShot();
 	void finishAbility();
 
 private:
@@ -37,16 +35,22 @@ private:
 	AelorinAttackExecutor* m_attackExecutor = nullptr;
 	AnimationComponent* m_animation = nullptr;
 	AelorinUI* m_aelorinUI = nullptr;
-
-	Transform* m_aelorinTransform = nullptr;
-	Transform* m_lockedTarget = nullptr;
-	Vector3 m_currentAimDirection = Vector3::Zero;
-
 	AelorinAbility m_activeAbility = AelorinAbility::None;
 
-	float m_stateTimer = 0.0f;
-	int m_shotCount = 0;
-	bool m_completed = false;
+	Transform* m_aelorinTransform = nullptr;
+	Transform* m_target = nullptr;
 
-	bool m_isFuryCast = false;
+	Vector3 m_lockedTargetPosition = Vector3::Zero;
+	Vector3 m_lockedAimDirection = Vector3::Zero;
+
+	float m_shotTimer = 0.0f;
+	float m_intervalTimer = 0.0f;
+	float m_recoveryTimer = 0.0f;
+
+	int m_shotCount = 0;
+
+	bool m_shotActive = false;
+	bool m_waitingForNextShot = false;
+	bool m_recovering = false;
+	bool m_completed = false;
 };

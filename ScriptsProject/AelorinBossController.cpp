@@ -270,11 +270,6 @@ bool AelorinBossController::trySendRequestedAbilityTrigger(AnimationComponent* a
 		triggerName = "ToSpiritCannon";
 		break;
 
-	// Version 2 Spirit Cannon
-	case AelorinAbility::SpiritCannonV2:
-		triggerName = "ToSpiritCannonV2";
-		break;
-
 	case AelorinAbility::GraspOfTheDead:
 		triggerName = "ToGraspOfTheDead";
 		break;
@@ -961,8 +956,7 @@ std::vector<AelorinAbility> AelorinBossController::buildAbilityPool() const
 	{
 		//AelorinAbility::SeekerSigils,
 		//AelorinAbility::RisenSpires,
-		//AelorinAbility::SpiritCannon
-		AelorinAbility::SpiritCannonV2
+		AelorinAbility::SpiritCannon
 	};
 
 	/*if (canUseNova())

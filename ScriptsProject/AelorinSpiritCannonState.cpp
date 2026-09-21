@@ -6,9 +6,6 @@
 #include "AelorinUI.h"
 
 #include <cstdlib>
-#include <algorithm>
-#include <cmath>
-#include "AelorinSpiritCannonV2State.h"
 
 AelorinSpiritCannonState::AelorinSpiritCannonState(GameObject* owner)
 	: StateMachineScript(owner)
@@ -32,13 +29,21 @@ void AelorinSpiritCannonState::OnStateEnter()
 	m_aelorinUI = GameObjectAPI::findScript<AelorinUI>(parentGameObject);
 
 	// reset members
-	m_lockedTarget = nullptr;
-	m_currentAimDirection = Vector3::Zero;
+	m_target = nullptr;
+	m_lockedTargetPosition = Vector3::Zero;
+	m_lockedAimDirection = Vector3::Zero;
 	m_activeAbility = AelorinAbility::None;
-	m_stateTimer = 0.0f;
+
+	m_shotTimer = 0.0f;
+	m_intervalTimer = 0.0f;
+	m_recoveryTimer = 0.0f;
+
 	m_shotCount = 0;
+
+	m_shotActive = false;
+	m_waitingForNextShot = false;
+	m_recovering = false;
 	m_completed = false;
-	m_isFuryCast = false;
 
 	if (!m_controller)
 	{
@@ -73,16 +78,9 @@ void AelorinSpiritCannonState::OnStateEnter()
 		return;
 	}
 
-	selectLockedTarget();
-	if (!m_lockedTarget)
-	{
-		Debug::warn("[AelorinSpiritCannonState] No valid target found.");
-		return;
-	}
+	beginShot();
 
-	initializeAimDirection();
-
-	m_isFuryCast = m_controller->isFuryActive();
+	/*m_isFuryCast = m_controller->isFuryActive();
 	if (m_isFuryCast)
 	{
 		m_controller->recordFuryCast();
@@ -93,14 +91,14 @@ void AelorinSpiritCannonState::OnStateEnter()
 		const AelorinAttackConfig* config = m_controller->getAelorinAttackConfig();
 		if (config)
 		{
-			/*m_aelorinUI->showSpiritCannonUI(
+			m_aelorinUI->showSpiritCannonUI(
 				m_aelorinTransform,
 				m_currentAimDirection,
 				config->m_spiritCannonBeamLength,
 				config->m_spiritCannonBeamWidth,
-				config->m_spiritCannonWindupDuration);*/
+				config->m_spiritCannonWindupDuration);
 		}
-	}
+	}*/
 
 	Debug::log("[AelorinSpiritCannonState] ENTER");
 }
@@ -117,229 +115,69 @@ void AelorinSpiritCannonState::OnStateUpdate()
 		return;
 	}
 
-	const AelorinAttackConfig* config = m_controller->getAelorinAttackConfig();
+	const AelorinAttackConfig* config =	m_controller->getAelorinAttackConfig();
 	if (!config)
 	{
 		return;
 	}
 
-	m_stateTimer += Time::getDeltaTime();
+	const float deltaTime =	Time::getDeltaTime();
 
-	const bool isPhase2 = m_controller->isPhase2();
+	// Locked Telegraph
 
-	// Timings
-	const float windupDuration = m_isFuryCast ? 0.0f : config->m_spiritCannonWindupDuration;
-	const float recoveryDuration = m_isFuryCast ? 0.0f : config->m_spiritCannonRecoveryDuration;
-
-	//			Phase 1
-	const float phase1Shot1Time = windupDuration;
-	const float phase1Shot2Time = phase1Shot1Time + config->m_spiritCannonPhase1ShotInterval;
-
-	//			Phase 2
-	const float phase2Shot1Time = windupDuration;
-	const float phase2Shot2Time = phase2Shot1Time + config->m_spiritCannonPhase2ShotInterval;
-	const float phase2Shot3Time = phase2Shot2Time + config->m_spiritCannonPhase2ShotInterval;
-	const float phase2FinalShotTime = phase2Shot3Time + config->m_spiritCannonPhase2FinalShotDelay;
-
-	// Find next shot
-	float nextShotTime = -1.0f;
-
-	if (!isPhase2)
+	if (m_shotActive)
 	{
-		if (m_shotCount == 0)
+		m_shotTimer += deltaTime;
+
+		if (m_shotTimer < config->m_spiritCannonLockDuration)
 		{
-			nextShotTime = phase1Shot1Time;
-		}
-		else if (m_shotCount == 1)
-		{
-			nextShotTime = phase1Shot2Time;
-		}
-	}
-	else
-	{
-		if (m_shotCount == 0)
-		{
-			nextShotTime = phase2Shot1Time;
-		}
-		else if (m_shotCount == 1)
-		{
-			nextShotTime = phase2Shot2Time;
-		}
-		else if (m_shotCount == 2)
-		{
-			nextShotTime = phase2Shot3Time;
-		}
-		else if (m_shotCount == 3)
-		{
-			nextShotTime = phase2FinalShotTime;
-		}
-	}
-
-	// Tracking + Aim Lock
-	ensureValidLockedTarget();
-	bool aimLocked = false;
-
-	if (nextShotTime >= 0.0f)
-	{
-		const float timeUntilShot = nextShotTime - m_stateTimer;
-		aimLocked = timeUntilShot <= 0.2f;
-	}
-
-	//			Track the player before the shot
-	if (!aimLocked)
-	{
-		const float trackingSpeed = isPhase2 ? config->m_spiritCannonPhase2TrackingSpeed : config->m_spiritCannonTrackingSpeed;
-		updateAimDirection(trackingSpeed);
-	}
-
-	//			UI
-	if (!m_isFuryCast && m_aelorinUI)
-	{
-		m_aelorinUI->setSpiritCannonAimDirection(m_currentAimDirection);
-	}
-
-	// Phase 1
-	// Windup -> Shot 1 -> Re-aim -> Shot 2 -> Recovery
-	if (!isPhase2)
-	{
-		if (m_shotCount == 0 && m_stateTimer >= phase1Shot1Time)
-		{
-			fireBeamShot(
-				config->m_spiritCannonBeamWidth,
-				config->m_spiritCannonDamage,
-				"Spirit Cannon Shot 1"
-			);
-
-			++m_shotCount;
-
-			// Telegraph Shot 2
-			if (!m_isFuryCast && m_aelorinUI)
-			{
-				/*m_aelorinUI->showSpiritCannonUI(
-					m_aelorinTransform,
-					m_currentAimDirection,
-					config->m_spiritCannonBeamLength,
-					config->m_spiritCannonBeamWidth,
-					config->m_spiritCannonPhase1ShotInterval
-				);*/
-			}
-
 			return;
 		}
 
-		if (m_shotCount == 1 && m_stateTimer >= phase1Shot2Time)
-		{
-			fireBeamShot(
-				config->m_spiritCannonBeamWidth,
-				config->m_spiritCannonDamage,
-				"Spirit Cannon Shot 2"
-			);
+		fireShot();
 
-			++m_shotCount;
+		m_shotActive = false;
+
+		++m_shotCount;
+
+		// Two Shots
+		if (m_shotCount >= 2)
+		{
+			m_recovering = true;
+			m_recoveryTimer = 0.0f;
 			return;
 		}
 
-		if (m_shotCount >= 2 && m_stateTimer >= phase1Shot2Time + recoveryDuration)
+		m_waitingForNextShot = true;
+		m_intervalTimer = 0.0f;
+
+		return;
+	}
+
+	// Between Shots
+
+	if (m_waitingForNextShot)
+	{
+		m_intervalTimer += deltaTime;
+
+		if (m_intervalTimer >= config->m_spiritCannonShotInterval)
+		{
+			beginShot();
+		}
+
+		return;
+	}
+
+	// Recovery
+
+	if (m_recovering)
+	{
+		m_recoveryTimer += deltaTime;
+
+		if (m_recoveryTimer >= config->m_spiritCannonRecoveryDuration)
 		{
 			finishAbility();
 		}
-
-		return;
-	}
-
-	// Phase 2
-	// Shot 1 -> Shot 2 -> Shot 3 -> Final Shot -> Recovery
-
-	if (m_shotCount == 0 && m_stateTimer >= phase2Shot1Time)
-	{
-		fireBeamShot(
-			config->m_spiritCannonBeamWidth,
-			config->m_spiritCannonDamage,
-			"Spirit Cannon Shot 1"
-		);
-
-		++m_shotCount;
-
-		// Telegraph Shot 2
-		if (!m_isFuryCast && m_aelorinUI)
-		{
-			/*m_aelorinUI->showSpiritCannonUI(
-				m_aelorinTransform,
-				m_currentAimDirection,
-				config->m_spiritCannonBeamLength,
-				config->m_spiritCannonBeamWidth,
-				config->m_spiritCannonPhase2ShotInterval
-			);*/
-		}
-
-		return;
-	}
-
-	if (m_shotCount == 1 && m_stateTimer >= phase2Shot2Time)
-	{
-		fireBeamShot(
-			config->m_spiritCannonBeamWidth,
-			config->m_spiritCannonDamage,
-			"Spirit Cannon Shot 2"
-		);
-
-		++m_shotCount;
-
-		// Telegraph Shot 3
-		if (!m_isFuryCast && m_aelorinUI)
-		{
-			/*m_aelorinUI->showSpiritCannonUI(
-				m_aelorinTransform,
-				m_currentAimDirection,
-				config->m_spiritCannonBeamLength,
-				config->m_spiritCannonBeamWidth,
-				config->m_spiritCannonPhase2ShotInterval
-			);*/
-		}
-
-		return;
-	}
-
-	if (m_shotCount == 2 && m_stateTimer >= phase2Shot3Time)
-	{
-		fireBeamShot(
-			config->m_spiritCannonBeamWidth,
-			config->m_spiritCannonDamage,
-			"Spirit Cannon Shot 3"
-		);
-
-		++m_shotCount;
-
-		// Telegraph Final Shot
-		if (!m_isFuryCast && m_aelorinUI)
-		{
-			/*m_aelorinUI->showSpiritCannonUI(
-				m_aelorinTransform,
-				m_currentAimDirection,
-				config->m_spiritCannonBeamLength,
-				config->m_spiritCannonPhase2FinalBeamWidth,
-				config->m_spiritCannonPhase2FinalShotDelay
-			);*/
-		}
-
-		return;
-	}
-
-	if (m_shotCount == 3 && m_stateTimer >= phase2FinalShotTime)
-	{
-		fireBeamShot(
-			config->m_spiritCannonPhase2FinalBeamWidth,
-			config->m_spiritCannonPhase2FinalDamage,
-			"Spirit Cannon Final Shot"
-		);
-
-		++m_shotCount;
-		return;
-	}
-
-	if (m_shotCount >= 4 && m_stateTimer >= phase2FinalShotTime + recoveryDuration)
-	{
-		finishAbility();
 	}
 }
 
@@ -355,25 +193,34 @@ void AelorinSpiritCannonState::OnStateExit()
 		m_controller->clearSpiritCannonDebugLine();
 	}
 
+	m_controller = nullptr;
+	m_attackExecutor = nullptr;
+	m_animation = nullptr;
 	m_aelorinUI = nullptr;
-	m_lockedTarget = nullptr;
-	m_currentAimDirection = Vector3::Zero;
+
 	m_aelorinTransform = nullptr;
+	m_target = nullptr;
 
-	m_stateTimer = 0.0f;
+	m_lockedTargetPosition = Vector3::Zero;
+	m_lockedAimDirection = Vector3::Zero;
+
+	m_activeAbility = AelorinAbility::None;
+
+	m_shotTimer = 0.0f;
+	m_intervalTimer = 0.0f;
+	m_recoveryTimer = 0.0f;
+
 	m_shotCount = 0;
-	m_completed = false;
-	m_isFuryCast = false;
 
-	if (m_controller)
-	{
-		m_controller->clearSpiritCannonDebugLine();
-	}
+	m_shotActive = false;
+	m_waitingForNextShot = false;
+	m_recovering = false;
+	m_completed = false;
 
 	Debug::log("[AelorinSpiritCannonState] EXIT");
 }
 
-void AelorinSpiritCannonState::selectLockedTarget()
+void AelorinSpiritCannonState::selectTarget()
 {
 	if (!m_controller)
 	{
@@ -388,24 +235,23 @@ void AelorinSpiritCannonState::selectLockedTarget()
 
 	if (lyrielValid && !deathValid)
 	{
-		m_lockedTarget = lyriel;
+		m_target = lyriel;
 		return;
 	}
 
 	if (!lyrielValid && deathValid)
 	{
-		m_lockedTarget = death;
+		m_target = death;
 		return;
 	}
 
 	if (!lyrielValid && !deathValid)
 	{
-		m_lockedTarget = nullptr;
+		m_target = nullptr;
 		return;
 	}
 
-	// select a player at random since design does not specify which one
-	m_lockedTarget = (std::rand() % 2 == 0) ? lyriel : death;
+	m_target = (std::rand() % 2 == 0) ? lyriel : death; // Choose a random target if both are valid
 }
 
 bool AelorinSpiritCannonState::isValidTarget(Transform* targetTransform) const
@@ -413,90 +259,35 @@ bool AelorinSpiritCannonState::isValidTarget(Transform* targetTransform) const
 	return m_attackExecutor && m_attackExecutor->isValidDamageTarget(targetTransform);
 }
 
-void AelorinSpiritCannonState::ensureValidLockedTarget()
+bool AelorinSpiritCannonState::lockCurrentTargetPosition()
 {
-	if (isValidTarget(m_lockedTarget))
-	{
-		return;
-	}
+	selectTarget();
 
-	selectLockedTarget();
-}
-
-void AelorinSpiritCannonState::initializeAimDirection()
-{
-	if (!m_lockedTarget || !m_aelorinTransform)
+	if (!m_target || !m_aelorinTransform)
 	{
-		return;
+		return false;
 	}
 
 	const Vector3 origin = TransformAPI::getGlobalPosition(m_aelorinTransform);
-	const Vector3 targetPosition = TransformAPI::getGlobalPosition(m_lockedTarget);
-	
-	m_currentAimDirection = targetPosition - origin;
-	m_currentAimDirection.y = 0.0f;
 
-	if (m_currentAimDirection.LengthSquared() <= 0.00001f)
+	m_lockedTargetPosition = TransformAPI::getGlobalPosition(m_target);
+	m_lockedAimDirection = m_lockedTargetPosition - origin;
+	m_lockedAimDirection.y = 0.0f;
+
+	if (m_lockedAimDirection.LengthSquared() <= 0.00001f)
 	{
-		m_currentAimDirection = Vector3::Zero;
-		return;
+		m_lockedAimDirection = Vector3::Zero;
+		return false;
 	}
 
-	m_currentAimDirection.Normalize();
+	m_lockedAimDirection.Normalize();
+
+	return true;
 }
 
-void AelorinSpiritCannonState::updateAimDirection(float trackingSpeed)
+void AelorinSpiritCannonState::beginShot()
 {
-	if (!m_lockedTarget || !m_aelorinTransform || m_currentAimDirection.LengthSquared() <= 0.00001f)
-	{
-		return;
-	}
-
-	const Vector3 origin = TransformAPI::getGlobalPosition(m_aelorinTransform);
-	const Vector3 targetPosition = TransformAPI::getGlobalPosition(m_lockedTarget);
-
-	Vector3 desiredDirection = targetPosition - origin;
-	desiredDirection.y = 0.0f;
-
-	if (desiredDirection.LengthSquared() < 0.00001f)
-	{
-		return;
-	}
-
-	desiredDirection.Normalize();
-
-	constexpr float radiansToDegrees = 180.0f / 3.14159265f;
-	constexpr float degreesToRadians = 3.14159265f / 180.0f;
-
-	const float currentYaw = std::atan2(m_currentAimDirection.x, m_currentAimDirection.z) * radiansToDegrees;
-	const float desiredYaw = std::atan2(desiredDirection.x, desiredDirection.z) * radiansToDegrees;
-
-	float deltaYaw = desiredYaw - currentYaw;
-
-	while (deltaYaw > 180.0f)
-	{
-		deltaYaw -= 360.0f;
-	}
-
-	while (deltaYaw < -180.0f)
-	{
-		deltaYaw += 360.0f;
-	}
-
-	const float maxStep = trackingSpeed * Time::getDeltaTime();
-
-	deltaYaw = std::clamp(deltaYaw, -maxStep, maxStep);
-	
-	const float newYaw = (currentYaw + deltaYaw) * degreesToRadians;
-	
-	m_currentAimDirection = Vector3(std::sin(newYaw), 0.0f, std::cos(newYaw));
-
-	m_currentAimDirection.Normalize();
-}
-
-void AelorinSpiritCannonState::fireBeamShot(float width, float damage, const char* sourceName)
-{
-	if (!m_aelorinTransform || !m_attackExecutor || !m_controller)
+	if (!m_controller)
 	{
 		return;
 	}
@@ -507,16 +298,65 @@ void AelorinSpiritCannonState::fireBeamShot(float width, float damage, const cha
 		return;
 	}
 
-	if (m_currentAimDirection.LengthSquared() <= 0.00001f)
+	if (!lockCurrentTargetPosition())
+	{
+		finishAbility();
+		return;
+	}
+
+	m_shotTimer = 0.0f;
+	m_shotActive = true;
+
+	m_waitingForNextShot = false;
+	m_intervalTimer = 0.0f;
+
+	if (m_aelorinUI)
+	{
+		m_aelorinUI->showSpiritCannonWarning(
+			m_aelorinTransform,
+			m_lockedAimDirection,
+			config->m_spiritCannonBeamLength,
+			config->m_spiritCannonTelegraphWidth
+		);
+	}
+
+	Debug::log("[AelorinSpiritCannonV2State] Shot %d locked.", m_shotCount + 1);
+}
+
+void AelorinSpiritCannonState::fireShot()
+{
+	if (!m_controller || !m_attackExecutor || !m_aelorinTransform)
+	{
+		return;
+	}
+
+	const AelorinAttackConfig* config = m_controller->getAelorinAttackConfig();
+	if (!config)
+	{
+		return;
+	}
+
+	if (m_lockedAimDirection.LengthSquared() <= 0.00001f)
 	{
 		return;
 	}
 
 	const Vector3 origin = TransformAPI::getGlobalPosition(m_aelorinTransform);
+	m_controller->setSpiritCannonDebugLine(origin, m_lockedAimDirection, config->m_spiritCannonFireWidth);
 
-	m_controller->setSpiritCannonDebugLine(origin, m_currentAimDirection, width);
+	if (m_aelorinUI)
+	{
+		m_aelorinUI->fireSpiritCannonBeam(config->m_spiritCannonFireWidth, 0.20f);
+	}
 
-	m_attackExecutor->applyDamageInBeam(origin, m_currentAimDirection, config->m_spiritCannonBeamLength, width, damage, sourceName);
+	m_attackExecutor->applyDamageInBeam(
+		origin,
+		m_lockedAimDirection,
+		config->m_spiritCannonBeamLength,
+		config->m_spiritCannonFireWidth,
+		config->m_spiritCannonDamage,
+		"Spirit Cannon"
+	);
 }
 
 void AelorinSpiritCannonState::finishAbility()
@@ -528,10 +368,9 @@ void AelorinSpiritCannonState::finishAbility()
 
 	m_completed = true;
 
-	const bool sent = AnimationAPI::sendTrigger(m_animation, "ToIdle");
-	if (!sent)
+	if (!AnimationAPI::sendTrigger(m_animation,	"ToIdle"))
 	{
-		Debug::warn("[AelorinSpiritCannonState] Failed to send ToIdle trigger.");
+		Debug::warn("[AelorinSpiritCannonV2State] Failed to send ToIdle.");
 	}
 }
 
