@@ -437,6 +437,14 @@ void AelorinUI::cancelSpiritCannon()
 	hideSpiritCannonUI();
 }
 
+void AelorinUI::setSpiritCannonBeamSize(float beamLength, float beamWidth)
+{
+	m_spiritCannonBeamLength = beamLength;
+	m_spiritCannonBeamWidth = beamWidth;
+
+	setSpiritCannonSize(beamLength,	beamWidth);
+}
+
 void AelorinUI::showGraspOfTheDeadUI(const Vector3& center, float radius, float pullDuration)
 {
 	if (!m_graspOfTheDeadUICanvasTransform ||

@@ -8,6 +8,7 @@
 #include <cstdlib>
 #include <algorithm>
 #include <cmath>
+#include "AelorinSpiritCannonV2State.h"
 
 AelorinSpiritCannonState::AelorinSpiritCannonState(GameObject* owner)
 	: StateMachineScript(owner)

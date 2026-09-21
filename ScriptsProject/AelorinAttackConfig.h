@@ -57,6 +57,7 @@ public:
 	float m_novaRecoveryDuration = 1.25f;
 
 	// Risen Spires
+	int m_risenSpiresNumber = 5;
 	float m_risenSpiresWindupDuration = 3.0f;
 	float m_risenSpiresRadius = 1.5f;
 	float m_risenSpiresDamage = 30.0f;
@@ -83,6 +84,18 @@ public:
 	float m_spiritCannonPhase2FinalDamage = 40.0f;
 
 	float m_spiritCannonRecoveryDuration = 1.0f;
+
+	// Version 2 Spirit Cannon
+	float m_spiritCannonV2LockDuration = 2.5f;
+	float m_spiritCannonV2BeamLength = 30.0f;
+
+	float m_spiritCannonV2TelegraphWidth = 0.4f;
+	float m_spiritCannonV2FireWidth = 2.0f;
+
+	float m_spiritCannonV2Damage = 20.0f;
+
+	float m_spiritCannonV2ShotInterval = 0.5f;
+	float m_spiritCannonV2RecoveryDuration = 0.5f;
 
 	// Grasp of the Dead
 	float m_graspPullDuration = 2.0f;
@@ -170,6 +183,7 @@ public:
 		),
 
 		FIELD_GROUP_COLLAPSE("Risen Spires",
+			SERIALIZED_INT(m_risenSpiresNumber, "Number of Spires", 0, 20, 1),
 			SERIALIZED_FLOAT(m_risenSpiresWindupDuration, "Spires Windup Duration", 0.0f, 10.0f, 0.1f),
 			SERIALIZED_FLOAT(m_risenSpiresRadius, "Spire Radius", 0.0f, 10.0f, 0.1f),
 			SERIALIZED_FLOAT(m_risenSpiresDamage, "Spire Damage", 0.0f,	9999.0f, 1.0f),
@@ -191,6 +205,17 @@ public:
 			SERIALIZED_FLOAT(m_spiritCannonPhase2FinalBeamWidth, "Cannon Phase 2 Final Beam Width", 0.0f, 20.0f, 0.1f),
 			SERIALIZED_FLOAT(m_spiritCannonPhase2FinalDamage, "Cannon Phase 2 Final Beam Damage", 0.0f, 200.0f, 1.0f),
 			SERIALIZED_FLOAT(m_spiritCannonRecoveryDuration, "Cannon Recovery Duration", 0.0f, 10.0f, 0.1f)
+		),
+
+		// Version 2 Spirit Cannon
+		FIELD_GROUP_COLLAPSE("Spirit Cannon V2",
+			SERIALIZED_FLOAT(m_spiritCannonV2LockDuration, "Cannon V2 Lock Duration", 0.0f, 10.0f, 0.1f),
+			SERIALIZED_FLOAT(m_spiritCannonV2BeamLength, "Cannon V2 Beam Length", 0.0f, 200.0f, 1.0f),
+			SERIALIZED_FLOAT(m_spiritCannonV2TelegraphWidth, "Cannon V2 Telegraph Width", 0.0f, 20.0f, 0.1f),
+			SERIALIZED_FLOAT(m_spiritCannonV2FireWidth,	"Cannon V2 Fire Width",	0.0f, 20.0f, 0.1f),
+			SERIALIZED_FLOAT(m_spiritCannonV2Damage, "Cannon V2 Damage", 0.0f, 200.0f, 1.0f),
+			SERIALIZED_FLOAT(m_spiritCannonV2ShotInterval, "Cannon V2 Shot Interval", 0.0f, 5.0f, 0.05f),
+			SERIALIZED_FLOAT(m_spiritCannonV2RecoveryDuration, "Cannon V2 Recovery Duration", 0.0f, 5.0f, 0.05f)
 		),
 
 		FIELD_GROUP_COLLAPSE("Grasp of the Dead",

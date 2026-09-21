@@ -23,6 +23,8 @@ enum class AelorinAbility
 	RisenSpires,
 	SpiritCannon,
 	GraspOfTheDead,
+	// Version 2 Spirit Cannon
+	SpiritCannonV2,
 
 	Summon,
 	Teleport

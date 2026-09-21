@@ -40,6 +40,7 @@ public:
 	void showSpiritCannonUI(Transform* originTransform, const Vector3& aimDirection, float beamLength, float beamWidth, float chargeDuration);
 	void setSpiritCannonAimDirection(const Vector3& aimDirection);
 	void cancelSpiritCannon();
+	void setSpiritCannonBeamSize(float beamLength, float beamWidth);
 
 	// Grasp of the Dead
 	void showGraspOfTheDeadUI(const Vector3& center, float radius, float pullDuration);
