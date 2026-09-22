@@ -1,0 +1,279 @@
+{
+  "Static": false,
+  "Children": [
+    {
+      "Name": "LowHeatWisps",
+      "Active": true,
+      "Static": false,
+      "Layer": "DEFAULT",
+      "Tag": "DEFAULT",
+      "Transform": {
+        "Position": [0.0, 0.04, 0.0],
+        "Rotation": [0.0, 0.0, 0.0, 1.0],
+        "Scale": [1.0, 1.0, 1.0]
+      },
+      "Components": [
+        {
+          "UID": 3911276285996805880,
+          "ComponentType": "PARTICLE_SYSTEM",
+          "Active": true,
+          "TextureAssetId": {
+            "uid": 9516829490310755625,
+            "libId": "841291ffc5ef3529e0930d5a137ac76d",
+            "type": "TEXTURE"
+          },
+          "ParticleEmitters": [
+            {
+              "Modules": [
+                {
+                  "ModuleType": 2,
+                  "Looping": true,
+                  "Duration": 20.0,
+                  "RateOverTime": 3.6,
+                  "RateOverDistance": 0.0
+                },
+                {
+                  "ModuleType": 4,
+                  "LifeTimeType": "RANDOM_BETWEEN_TWO",
+                  "StartLifeTime": 1.15,
+                  "StartLifeTime2": 2.0
+                },
+                {
+                  "ModuleType": 1,
+                  "ShapeType": "CONE",
+                  "Radius": 0.55,
+                  "RadiusThickness": 0.82,
+                  "RadiusScale": 1.35,
+                  "ConeAngle": 0.22
+                },
+                {
+                  "ModuleType": 3,
+                  "ColorOverTime": [
+                    {
+                      "IsAlphaMark": false,
+                      "Position": 0.0,
+                      "Color": [0.34, 0.12, 0.055]
+                    },
+                    {
+                      "IsAlphaMark": false,
+                      "Position": 1.0,
+                      "Color": [0.12, 0.05, 0.03]
+                    },
+                    {
+                      "IsAlphaMark": true,
+                      "Position": 0.0,
+                      "Alpha": 0.0
+                    },
+                    {
+                      "IsAlphaMark": true,
+                      "Position": 0.2,
+                      "Alpha": 0.22
+                    },
+                    {
+                      "IsAlphaMark": true,
+                      "Position": 0.68,
+                      "Alpha": 0.14
+                    },
+                    {
+                      "IsAlphaMark": true,
+                      "Position": 1.0,
+                      "Alpha": 0.0
+                    }
+                  ],
+                  "ColorCurve": [0.0, 0.0, 1.0, 1.0],
+                  "HDRColor": [0.0, 0.0, 0.0],
+                  "HDRIntensity": 0.0
+                },
+                {
+                  "ModuleType": 5,
+                  "VelocityType": "RANDOM_BETWEEN_TWO",
+                  "InitialVelocity": 0.16,
+                  "InitialVelocity2": 0.5,
+                  "Gravity": 0.0
+                },
+                {
+                  "ModuleType": 6,
+                  "StartScaleType": "RANDOM_BETWEEN_TWO",
+                  "StartScale": [0.2, 0.2, 0.0],
+                  "StartScale2": [0.42, 0.42, 0.0],
+                  "ChangeSizeOverTime": true,
+                  "EndScaleType": "RANDOM_BETWEEN_TWO",
+                  "EndScale": [0.32, 0.32, 0.0],
+                  "EndScale2": [0.58, 0.58, 0.0]
+                },
+                {
+                  "ModuleType": 7,
+                  "RotationType": "RANDOM_BETWEEN_TWO",
+                  "StartRotation": 0.0,
+                  "StartRotation2": 6.2832,
+                  "VelocityType": "RANDOM_BETWEEN_TWO",
+                  "AngularVelocity": -0.18,
+                  "AngularVelocity2": 0.18,
+                  "FlipRotation": 0.5
+                },
+                {
+                  "ModuleType": 8,
+                  "TileRows": 1,
+                  "TileColumns": 1,
+                  "FPS": 0.0,
+                  "StartFrameType": "CONSTANT",
+                  "StartFrame": 0.0
+                },
+                {
+                  "ModuleType": 9,
+                  "RenderMode": "BILLBOARD",
+                  "RenderLayer": 0,
+                  "BlendMode": "ALPHA"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Name": "MineralHeatWisps",
+      "Active": true,
+      "Static": false,
+      "Layer": "DEFAULT",
+      "Tag": "DEFAULT",
+      "Transform": {
+        "Position": [0.0, 0.025, 0.0],
+        "Rotation": [0.0, 0.0, 0.0, 1.0],
+        "Scale": [1.0, 1.0, 1.0]
+      },
+      "Components": [
+        {
+          "UID": 7004581473807969118,
+          "ComponentType": "PARTICLE_SYSTEM",
+          "Active": true,
+          "TextureAssetId": {
+            "uid": 17569321603017310940,
+            "libId": "315aea1b58121899c705d3fa4889ce07",
+            "type": "TEXTURE"
+          },
+          "ParticleEmitters": [
+            {
+              "Modules": [
+                {
+                  "ModuleType": 2,
+                  "Looping": true,
+                  "Duration": 20.0,
+                  "RateOverTime": 1.4,
+                  "RateOverDistance": 0.0
+                },
+                {
+                  "ModuleType": 4,
+                  "LifeTimeType": "RANDOM_BETWEEN_TWO",
+                  "StartLifeTime": 0.85,
+                  "StartLifeTime2": 1.35
+                },
+                {
+                  "ModuleType": 1,
+                  "ShapeType": "CONE",
+                  "Radius": 0.38,
+                  "RadiusThickness": 0.78,
+                  "RadiusScale": 1.2,
+                  "ConeAngle": 0.3
+                },
+                {
+                  "ModuleType": 3,
+                  "ColorOverTime": [
+                    {
+                      "IsAlphaMark": false,
+                      "Position": 0.0,
+                      "Color": [0.48, 0.16, 0.05]
+                    },
+                    {
+                      "IsAlphaMark": false,
+                      "Position": 1.0,
+                      "Color": [0.18, 0.055, 0.028]
+                    },
+                    {
+                      "IsAlphaMark": true,
+                      "Position": 0.0,
+                      "Alpha": 0.0
+                    },
+                    {
+                      "IsAlphaMark": true,
+                      "Position": 0.18,
+                      "Alpha": 0.16
+                    },
+                    {
+                      "IsAlphaMark": true,
+                      "Position": 0.62,
+                      "Alpha": 0.08
+                    },
+                    {
+                      "IsAlphaMark": true,
+                      "Position": 1.0,
+                      "Alpha": 0.0
+                    }
+                  ],
+                  "ColorCurve": [0.0, 0.0, 1.0, 1.0],
+                  "HDRColor": [0.0, 0.0, 0.0],
+                  "HDRIntensity": 0.0
+                },
+                {
+                  "ModuleType": 5,
+                  "VelocityType": "RANDOM_BETWEEN_TWO",
+                  "InitialVelocity": 0.22,
+                  "InitialVelocity2": 0.58,
+                  "Gravity": 0.0
+                },
+                {
+                  "ModuleType": 6,
+                  "StartScaleType": "RANDOM_BETWEEN_TWO",
+                  "StartScale": [0.12, 0.12, 0.0],
+                  "StartScale2": [0.24, 0.24, 0.0],
+                  "ChangeSizeOverTime": true,
+                  "EndScaleType": "RANDOM_BETWEEN_TWO",
+                  "EndScale": [0.2, 0.2, 0.0],
+                  "EndScale2": [0.34, 0.34, 0.0]
+                },
+                {
+                  "ModuleType": 7,
+                  "RotationType": "RANDOM_BETWEEN_TWO",
+                  "StartRotation": 0.0,
+                  "StartRotation2": 6.2832,
+                  "VelocityType": "RANDOM_BETWEEN_TWO",
+                  "AngularVelocity": -0.24,
+                  "AngularVelocity2": 0.24,
+                  "FlipRotation": 0.5
+                },
+                {
+                  "ModuleType": 8,
+                  "TileRows": 3,
+                  "TileColumns": 3,
+                  "FPS": 9.0,
+                  "StartFrameType": "CONSTANT",
+                  "StartFrame": 0.0
+                },
+                {
+                  "ModuleType": 9,
+                  "RenderMode": "BILLBOARD",
+                  "RenderLayer": 0,
+                  "BlendMode": "ALPHA"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "Children": []
+    }
+  ],
+  "Version": 2,
+  "Transform": {
+    "Position": [0.0, 0.0, 0.0],
+    "Scale": [1.0, 1.0, 1.0],
+    "Rotation": [0.0, 0.0, 0.0, 1.0]
+  },
+  "Components": [],
+  "Active": true,
+  "Tag": "DEFAULT",
+  "sourcePath": "Assets\\Prefabs\\Particles\\VFXRemake\\AmbientParticles\\Lava\\PS_Lava_HeatMist.prefab",
+  "Layer": "DEFAULT",
+  "Name": "PS_Lava_HeatMist"
+}

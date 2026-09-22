@@ -1,0 +1,289 @@
+{
+  "Static": false,
+  "Children": [
+    {
+      "Name": "RisingMotes",
+      "Active": true,
+      "Static": false,
+      "Layer": "DEFAULT",
+      "Tag": "DEFAULT",
+      "Transform": {
+        "Position": [0.0, 0.03, 0.0],
+        "Rotation": [0.0, 0.0, 0.0, 1.0],
+        "Scale": [1.0, 1.0, 1.0]
+      },
+      "Components": [
+        {
+          "UID": 7357017167708678037,
+          "ComponentType": "PARTICLE_SYSTEM",
+          "Active": true,
+          "TextureAssetId": {
+            "uid": 13764988489437730080,
+            "libId": "bf071019e246d5202f1d6d838f3eff77",
+            "type": "TEXTURE"
+          },
+          "ParticleEmitters": [
+            {
+              "Modules": [
+                {
+                  "ModuleType": 2,
+                  "Looping": true,
+                  "Duration": 20.0,
+                  "RateOverTime": 2.6,
+                  "RateOverDistance": 0.0
+                },
+                {
+                  "ModuleType": 4,
+                  "LifeTimeType": "RANDOM_BETWEEN_TWO",
+                  "StartLifeTime": 0.75,
+                  "StartLifeTime2": 1.45
+                },
+                {
+                  "ModuleType": 1,
+                  "ShapeType": "CONE",
+                  "Radius": 0.42,
+                  "RadiusThickness": 0.82,
+                  "RadiusScale": 1.1,
+                  "ConeAngle": 0.26
+                },
+                {
+                  "ModuleType": 3,
+                  "ColorOverTime": [
+                    {
+                      "IsAlphaMark": false,
+                      "Position": 0.0,
+                      "Color": [1.0, 0.42, 0.08]
+                    },
+                    {
+                      "IsAlphaMark": false,
+                      "Position": 0.55,
+                      "Color": [0.78, 0.19, 0.035]
+                    },
+                    {
+                      "IsAlphaMark": false,
+                      "Position": 1.0,
+                      "Color": [0.42, 0.055, 0.018]
+                    },
+                    {
+                      "IsAlphaMark": true,
+                      "Position": 0.0,
+                      "Alpha": 0.0
+                    },
+                    {
+                      "IsAlphaMark": true,
+                      "Position": 0.12,
+                      "Alpha": 0.78
+                    },
+                    {
+                      "IsAlphaMark": true,
+                      "Position": 0.58,
+                      "Alpha": 0.62
+                    },
+                    {
+                      "IsAlphaMark": true,
+                      "Position": 1.0,
+                      "Alpha": 0.0
+                    }
+                  ],
+                  "ColorCurve": [0.0, 0.0, 1.0, 1.0],
+                  "HDRColor": [0.0, 0.0, 0.0],
+                  "HDRIntensity": 0.0
+                },
+                {
+                  "ModuleType": 5,
+                  "VelocityType": "RANDOM_BETWEEN_TWO",
+                  "InitialVelocity": 0.45,
+                  "InitialVelocity2": 1.1,
+                  "Gravity": 0.0
+                },
+                {
+                  "ModuleType": 6,
+                  "StartScaleType": "RANDOM_BETWEEN_TWO",
+                  "StartScale": [0.025, 0.025, 0.0],
+                  "StartScale2": [0.065, 0.065, 0.0],
+                  "ChangeSizeOverTime": true,
+                  "EndScaleType": "RANDOM_BETWEEN_TWO",
+                  "EndScale": [0.012, 0.012, 0.0],
+                  "EndScale2": [0.032, 0.032, 0.0]
+                },
+                {
+                  "ModuleType": 7,
+                  "RotationType": "RANDOM_BETWEEN_TWO",
+                  "StartRotation": 0.0,
+                  "StartRotation2": 6.2832,
+                  "VelocityType": "RANDOM_BETWEEN_TWO",
+                  "AngularVelocity": -0.22,
+                  "AngularVelocity2": 0.22,
+                  "FlipRotation": 0.5
+                },
+                {
+                  "ModuleType": 8,
+                  "TileRows": 1,
+                  "TileColumns": 1,
+                  "FPS": 0.0,
+                  "StartFrameType": "CONSTANT",
+                  "StartFrame": 0.0
+                },
+                {
+                  "ModuleType": 9,
+                  "RenderMode": "BILLBOARD",
+                  "RenderLayer": 0,
+                  "BlendMode": "ALPHA"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Name": "ShortEmberWisps",
+      "Active": true,
+      "Static": false,
+      "Layer": "DEFAULT",
+      "Tag": "DEFAULT",
+      "Transform": {
+        "Position": [0.0, 0.035, 0.0],
+        "Rotation": [0.0, 0.0, 0.0, 1.0],
+        "Scale": [1.0, 1.0, 1.0]
+      },
+      "Components": [
+        {
+          "UID": 2729448182048255933,
+          "ComponentType": "PARTICLE_SYSTEM",
+          "Active": true,
+          "TextureAssetId": {
+            "uid": 9094212906620451185,
+            "libId": "7e35227492e2797185305f04ee89f642",
+            "type": "TEXTURE"
+          },
+          "ParticleEmitters": [
+            {
+              "Modules": [
+                {
+                  "ModuleType": 2,
+                  "Looping": true,
+                  "Duration": 20.0,
+                  "RateOverTime": 0.75,
+                  "RateOverDistance": 0.0
+                },
+                {
+                  "ModuleType": 4,
+                  "LifeTimeType": "RANDOM_BETWEEN_TWO",
+                  "StartLifeTime": 0.55,
+                  "StartLifeTime2": 1.0
+                },
+                {
+                  "ModuleType": 1,
+                  "ShapeType": "CONE",
+                  "Radius": 0.3,
+                  "RadiusThickness": 0.8,
+                  "RadiusScale": 1.0,
+                  "ConeAngle": 0.34
+                },
+                {
+                  "ModuleType": 3,
+                  "ColorOverTime": [
+                    {
+                      "IsAlphaMark": false,
+                      "Position": 0.0,
+                      "Color": [1.0, 0.68, 0.28]
+                    },
+                    {
+                      "IsAlphaMark": false,
+                      "Position": 0.48,
+                      "Color": [0.95, 0.34, 0.07]
+                    },
+                    {
+                      "IsAlphaMark": false,
+                      "Position": 1.0,
+                      "Color": [0.62, 0.11, 0.025]
+                    },
+                    {
+                      "IsAlphaMark": true,
+                      "Position": 0.0,
+                      "Alpha": 0.0
+                    },
+                    {
+                      "IsAlphaMark": true,
+                      "Position": 0.1,
+                      "Alpha": 0.65
+                    },
+                    {
+                      "IsAlphaMark": true,
+                      "Position": 0.52,
+                      "Alpha": 0.35
+                    },
+                    {
+                      "IsAlphaMark": true,
+                      "Position": 1.0,
+                      "Alpha": 0.0
+                    }
+                  ],
+                  "ColorCurve": [0.0, 0.0, 1.0, 1.0],
+                  "HDRColor": [0.0, 0.0, 0.0],
+                  "HDRIntensity": 0.0
+                },
+                {
+                  "ModuleType": 5,
+                  "VelocityType": "RANDOM_BETWEEN_TWO",
+                  "InitialVelocity": 0.5,
+                  "InitialVelocity2": 1.15,
+                  "Gravity": 0.0
+                },
+                {
+                  "ModuleType": 6,
+                  "StartScaleType": "RANDOM_BETWEEN_TWO",
+                  "StartScale": [0.035, 0.07, 0.0],
+                  "StartScale2": [0.055, 0.11, 0.0],
+                  "ChangeSizeOverTime": true,
+                  "EndScaleType": "RANDOM_BETWEEN_TWO",
+                  "EndScale": [0.018, 0.036, 0.0],
+                  "EndScale2": [0.03, 0.06, 0.0]
+                },
+                {
+                  "ModuleType": 7,
+                  "RotationType": "RANDOM_BETWEEN_TWO",
+                  "StartRotation": -0.35,
+                  "StartRotation2": 0.35,
+                  "VelocityType": "RANDOM_BETWEEN_TWO",
+                  "AngularVelocity": -0.15,
+                  "AngularVelocity2": 0.15,
+                  "FlipRotation": 0.5
+                },
+                {
+                  "ModuleType": 8,
+                  "TileRows": 1,
+                  "TileColumns": 1,
+                  "FPS": 0.0,
+                  "StartFrameType": "CONSTANT",
+                  "StartFrame": 0.0
+                },
+                {
+                  "ModuleType": 9,
+                  "RenderMode": "BILLBOARD",
+                  "RenderLayer": 0,
+                  "BlendMode": "ALPHA"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "Children": []
+    }
+  ],
+  "Version": 2,
+  "Transform": {
+    "Position": [0.0, 0.0, 0.0],
+    "Scale": [1.0, 1.0, 1.0],
+    "Rotation": [0.0, 0.0, 0.0, 1.0]
+  },
+  "Components": [],
+  "Active": true,
+  "Tag": "DEFAULT",
+  "sourcePath": "Assets\\Prefabs\\Particles\\VFXRemake\\AmbientParticles\\Lava\\PS_Lava_Embers.prefab",
+  "Layer": "DEFAULT",
+  "Name": "PS_Lava_Embers"
+}
