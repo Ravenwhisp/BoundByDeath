@@ -1,0 +1,277 @@
+{
+  "Static": false,
+  "Children": [
+    {
+      "Name": "SplashStreaks",
+      "Active": true,
+      "Static": false,
+      "Layer": "DEFAULT",
+      "Tag": "DEFAULT",
+      "Transform": {
+        "Position": [0.0, 0.04, 0.0],
+        "Rotation": [0.0, 0.0, 0.173648, 0.984808],
+        "Scale": [1.0, 1.0, 1.0]
+      },
+      "Components": [
+        {
+          "UID": 10572948634186209573,
+          "ComponentType": "PARTICLE_SYSTEM",
+          "Active": true,
+          "TextureAssetId": {
+            "uid": 10764966982965910805,
+            "libId": "79aa7d0194ab9b0020aa064e26131741",
+            "type": "TEXTURE"
+          },
+          "ParticleEmitters": [
+            {
+              "Modules": [
+                {
+                  "ModuleType": 2,
+                  "Looping": true,
+                  "Duration": 20.0,
+                  "RateOverTime": 12.5,
+                  "RateOverDistance": 0.0
+                },
+                {
+                  "ModuleType": 4,
+                  "LifeTimeType": "RANDOM_BETWEEN_TWO",
+                  "StartLifeTime": 0.24,
+                  "StartLifeTime2": 0.62
+                },
+                {
+                  "ModuleType": 1,
+                  "ShapeType": "HEMISPHERE",
+                  "Radius": 0.16,
+                  "RadiusThickness": 1.0,
+                  "RadiusScale": 1.0
+                },
+                {
+                  "ModuleType": 3,
+                  "ColorOverTime": [
+                    {
+                      "IsAlphaMark": false,
+                      "Position": 0.0,
+                      "Color": [0.96, 0.995, 1.0]
+                    },
+                    {
+                      "IsAlphaMark": false,
+                      "Position": 1.0,
+                      "Color": [0.50, 0.78, 0.94]
+                    },
+                    {
+                      "IsAlphaMark": true,
+                      "Position": 0.0,
+                      "Alpha": 0.0
+                    },
+                    {
+                      "IsAlphaMark": true,
+                      "Position": 0.04,
+                      "Alpha": 0.90
+                    },
+                    {
+                      "IsAlphaMark": true,
+                      "Position": 0.48,
+                      "Alpha": 0.48
+                    },
+                    {
+                      "IsAlphaMark": true,
+                      "Position": 1.0,
+                      "Alpha": 0.0
+                    }
+                  ],
+                  "ColorCurve": [0.0, 0.0, 1.0, 1.0],
+                  "HDRColor": [0.0, 0.0, 0.0],
+                  "HDRIntensity": 0.0
+                },
+                {
+                  "ModuleType": 5,
+                  "VelocityType": "RANDOM_BETWEEN_TWO",
+                  "InitialVelocity": 1.60,
+                  "InitialVelocity2": 3.70,
+                  "Gravity": 3.2
+                },
+                {
+                  "ModuleType": 6,
+                  "StartScaleType": "RANDOM_BETWEEN_TWO",
+                  "StartScale": [0.030, 0.055, 0.0],
+                  "StartScale2": [0.075, 0.16, 0.0],
+                  "ChangeSizeOverTime": true,
+                  "EndScaleType": "RANDOM_BETWEEN_TWO",
+                  "EndScale": [0.015, 0.022, 0.0],
+                  "EndScale2": [0.042, 0.065, 0.0]
+                },
+                {
+                  "ModuleType": 7,
+                  "RotationType": "RANDOM_BETWEEN_TWO",
+                  "StartRotation": -0.50,
+                  "StartRotation2": 0.50,
+                  "VelocityType": "RANDOM_BETWEEN_TWO",
+                  "AngularVelocity": -0.25,
+                  "AngularVelocity2": 0.25,
+                  "FlipRotation": 0.5
+                },
+                {
+                  "ModuleType": 8,
+                  "TileRows": 1,
+                  "TileColumns": 1,
+                  "FPS": 0.0,
+                  "StartFrameType": "CONSTANT",
+                  "StartFrame": 0.0
+                },
+                {
+                  "ModuleType": 9,
+                  "RenderMode": "BILLBOARD",
+                  "RenderLayer": 0,
+                  "BlendMode": "ALPHA"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Name": "SplashDroplets",
+      "Active": true,
+      "Static": false,
+      "Layer": "DEFAULT",
+      "Tag": "DEFAULT",
+      "Transform": {
+        "Position": [0.0, 0.025, 0.0],
+        "Rotation": [0.0, 0.0, -0.173648, 0.984808],
+        "Scale": [1.0, 1.0, 1.0]
+      },
+      "Components": [
+        {
+          "UID": 16940378521694830742,
+          "ComponentType": "PARTICLE_SYSTEM",
+          "Active": true,
+          "TextureAssetId": {
+            "uid": 10764966982965910805,
+            "libId": "79aa7d0194ab9b0020aa064e26131741",
+            "type": "TEXTURE"
+          },
+          "ParticleEmitters": [
+            {
+              "Modules": [
+                {
+                  "ModuleType": 2,
+                  "Looping": true,
+                  "Duration": 20.0,
+                  "RateOverTime": 8.5,
+                  "RateOverDistance": 0.0
+                },
+                {
+                  "ModuleType": 4,
+                  "LifeTimeType": "RANDOM_BETWEEN_TWO",
+                  "StartLifeTime": 0.18,
+                  "StartLifeTime2": 0.50
+                },
+                {
+                  "ModuleType": 1,
+                  "ShapeType": "HEMISPHERE",
+                  "Radius": 0.12,
+                  "RadiusThickness": 1.0,
+                  "RadiusScale": 0.90
+                },
+                {
+                  "ModuleType": 3,
+                  "ColorOverTime": [
+                    {
+                      "IsAlphaMark": false,
+                      "Position": 0.0,
+                      "Color": [0.93, 0.99, 1.0]
+                    },
+                    {
+                      "IsAlphaMark": false,
+                      "Position": 1.0,
+                      "Color": [0.58, 0.82, 0.95]
+                    },
+                    {
+                      "IsAlphaMark": true,
+                      "Position": 0.0,
+                      "Alpha": 0.0
+                    },
+                    {
+                      "IsAlphaMark": true,
+                      "Position": 0.04,
+                      "Alpha": 0.84
+                    },
+                    {
+                      "IsAlphaMark": true,
+                      "Position": 0.40,
+                      "Alpha": 0.40
+                    },
+                    {
+                      "IsAlphaMark": true,
+                      "Position": 1.0,
+                      "Alpha": 0.0
+                    }
+                  ],
+                  "ColorCurve": [0.0, 0.0, 1.0, 1.0],
+                  "HDRColor": [0.0, 0.0, 0.0],
+                  "HDRIntensity": 0.0
+                },
+                {
+                  "ModuleType": 5,
+                  "VelocityType": "RANDOM_BETWEEN_TWO",
+                  "InitialVelocity": 0.95,
+                  "InitialVelocity2": 2.80,
+                  "Gravity": 3.4
+                },
+                {
+                  "ModuleType": 6,
+                  "StartScaleType": "RANDOM_BETWEEN_TWO",
+                  "StartScale": [0.017, 0.022, 0.0],
+                  "StartScale2": [0.052, 0.070, 0.0],
+                  "ChangeSizeOverTime": true,
+                  "EndScaleType": "RANDOM_BETWEEN_TWO",
+                  "EndScale": [0.008, 0.010, 0.0],
+                  "EndScale2": [0.026, 0.034, 0.0]
+                },
+                {
+                  "ModuleType": 7,
+                  "RotationType": "RANDOM_BETWEEN_TWO",
+                  "StartRotation": -0.90,
+                  "StartRotation2": 0.90,
+                  "VelocityType": "RANDOM_BETWEEN_TWO",
+                  "AngularVelocity": -0.45,
+                  "AngularVelocity2": 0.45,
+                  "FlipRotation": 0.5
+                },
+                {
+                  "ModuleType": 8,
+                  "TileRows": 1,
+                  "TileColumns": 1,
+                  "FPS": 0.0,
+                  "StartFrameType": "CONSTANT",
+                  "StartFrame": 0.0
+                },
+                {
+                  "ModuleType": 9,
+                  "RenderMode": "BILLBOARD",
+                  "RenderLayer": 0,
+                  "BlendMode": "ALPHA"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "Children": []
+    }
+  ],
+  "Version": 2,
+  "Transform": {
+    "Position": [0.0, 0.0, 0.0],
+    "Scale": [1.0, 1.0, 1.0],
+    "Rotation": [0.0, 0.0, 0.0, 1.0]
+  },
+  "Components": [],
+  "Active": true,
+  "Tag": "DEFAULT",
+  "sourcePath": "Assets\\Prefabs\\Particles\\VFXRemake\\AmbientParticles\\Water\\PS_Waterfall_ImpactSplash.prefab",
+  "Layer": "DEFAULT",
+  "Name": "PS_Waterfall_ImpactSplash"
+}

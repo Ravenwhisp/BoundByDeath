@@ -1,0 +1,364 @@
+{
+  "Static": false,
+  "Children": [
+    {
+      "Name": "FineGrains",
+      "Active": true,
+      "Static": false,
+      "Layer": "DEFAULT",
+      "Tag": "DEFAULT",
+      "Transform": {
+        "Position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "Rotation": [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "Scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "Components": [
+        {
+          "UID": 4729746021339072977,
+          "ComponentType": "PARTICLE_SYSTEM",
+          "Active": true,
+          "TextureAssetId": {
+            "uid": 14975996452711739301,
+            "libId": "44168a6acebcaf9bd84233e2665444ae",
+            "type": "TEXTURE"
+          },
+          "ParticleEmitters": [
+            {
+              "Modules": [
+                {
+                  "ModuleType": 2,
+                  "Looping": true,
+                  "Duration": 20.0,
+                  "RateOverTime": 18.0,
+                  "RateOverDistance": 0.0
+                },
+                {
+                  "ModuleType": 4,
+                  "LifeTimeType": "RANDOM_BETWEEN_TWO",
+                  "StartLifeTime": 2.4,
+                  "StartLifeTime2": 4.1
+                },
+                {
+                  "ModuleType": 1,
+                  "ShapeType": "CONE",
+                  "Radius": 0.52,
+                  "RadiusThickness": 0.8,
+                  "RadiusScale": 1.0
+                },
+                {
+                  "ModuleType": 3,
+                  "ColorOverTime": [
+                    {
+                      "IsAlphaMark": false,
+                      "Position": 0.0,
+                      "Color": [
+                        0.82,
+                        0.69,
+                        0.56
+                      ]
+                    },
+                    {
+                      "IsAlphaMark": false,
+                      "Position": 1.0,
+                      "Color": [
+                        0.54,
+                        0.48,
+                        0.41
+                      ]
+                    },
+                    {
+                      "IsAlphaMark": true,
+                      "Position": 0.0,
+                      "Alpha": 0.0
+                    },
+                    {
+                      "IsAlphaMark": true,
+                      "Position": 0.16,
+                      "Alpha": 0.62
+                    },
+                    {
+                      "IsAlphaMark": true,
+                      "Position": 0.68,
+                      "Alpha": 0.58
+                    },
+                    {
+                      "IsAlphaMark": true,
+                      "Position": 1.0,
+                      "Alpha": 0.0
+                    }
+                  ],
+                  "ColorCurve": [
+                    0.0,
+                    0.0,
+                    1.0,
+                    1.0
+                  ]
+                },
+                {
+                  "ModuleType": 5,
+                  "VelocityType": "RANDOM_BETWEEN_TWO",
+                  "InitialVelocity": 0.16,
+                  "InitialVelocity2": 0.46,
+                  "Gravity": 0.28
+                },
+                {
+                  "ModuleType": 6,
+                  "StartScaleType": "RANDOM_BETWEEN_TWO",
+                  "StartScale": [
+                    0.025,
+                    0.025,
+                    0.0
+                  ],
+                  "StartScale2": [
+                    0.105,
+                    0.105,
+                    0.0
+                  ],
+                  "ChangeSizeOverTime": true,
+                  "EndScaleType": "RANDOM_BETWEEN_TWO",
+                  "EndScale": [
+                    0.01,
+                    0.01,
+                    0.0
+                  ],
+                  "EndScale2": [
+                    0.055,
+                    0.055,
+                    0.0
+                  ]
+                },
+                {
+                  "ModuleType": 7,
+                  "RotationType": "CONSTANT",
+                  "StartRotation": 0.0,
+                  "VelocityType": "CONSTANT",
+                  "AngularVelocity": 0.0,
+                  "FlipRotation": 0.0
+                },
+                {
+                  "ModuleType": 8,
+                  "TileRows": 1,
+                  "TileColumns": 1,
+                  "FPS": 0.0,
+                  "StartFrameType": "CONSTANT",
+                  "StartFrame": 0.0
+                },
+                {
+                  "ModuleType": 9,
+                  "RenderMode": "BILLBOARD",
+                  "RenderLayer": 0
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Name": "SoftDustCloud",
+      "Active": true,
+      "Static": false,
+      "Layer": "DEFAULT",
+      "Tag": "DEFAULT",
+      "Transform": {
+        "Position": [
+          0.0,
+          -1.0,
+          0.0
+        ],
+        "Rotation": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "Scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "Components": [
+        {
+          "UID": 5387198256588335488,
+          "ComponentType": "PARTICLE_SYSTEM",
+          "Active": true,
+          "TextureAssetId": {
+            "type": "TEXTURE",
+            "libId": "cb025151173f968fc8d138bf8d73d401",
+            "uid": 1933070375330391160
+          },
+          "ParticleEmitters": [
+            {
+              "Modules": [
+                {
+                  "ModuleType": 2,
+                  "Looping": true,
+                  "Duration": 20.0,
+                  "RateOverTime": 1.5,
+                  "RateOverDistance": 0.0
+                },
+                {
+                  "ModuleType": 4,
+                  "LifeTimeType": "RANDOM_BETWEEN_TWO",
+                  "StartLifeTime": 3.2,
+                  "StartLifeTime2": 4.8
+                },
+                {
+                  "ModuleType": 1,
+                  "ShapeType": "SPHERE",
+                  "Radius": 0.32,
+                  "RadiusThickness": 1.0,
+                  "RadiusScale": 1.0
+                },
+                {
+                  "ModuleType": 3,
+                  "ColorOverTime": [
+                    {
+                      "IsAlphaMark": false,
+                      "Position": 0.0,
+                      "Color": [
+                        0.55,
+                        0.5,
+                        0.43
+                      ]
+                    },
+                    {
+                      "IsAlphaMark": true,
+                      "Position": 0.0,
+                      "Alpha": 0.0
+                    },
+                    {
+                      "IsAlphaMark": true,
+                      "Position": 0.2,
+                      "Alpha": 0.16
+                    },
+                    {
+                      "IsAlphaMark": true,
+                      "Position": 0.68,
+                      "Alpha": 0.11
+                    },
+                    {
+                      "IsAlphaMark": true,
+                      "Position": 1.0,
+                      "Alpha": 0.0
+                    },
+                    {
+                      "IsAlphaMark": false,
+                      "Position": 1.0,
+                      "Color": [
+                        0.43,
+                        0.4,
+                        0.36
+                      ]
+                    }
+                  ],
+                  "ColorCurve": [
+                    0.0,
+                    0.0,
+                    1.0,
+                    1.0
+                  ]
+                },
+                {
+                  "ModuleType": 5,
+                  "VelocityType": "RANDOM_BETWEEN_TWO",
+                  "InitialVelocity": 0.025,
+                  "Gravity": 0.025,
+                  "InitialVelocity2": 0.075
+                },
+                {
+                  "ModuleType": 6,
+                  "StartScaleType": "RANDOM_BETWEEN_TWO",
+                  "StartScale": [
+                    0.55,
+                    0.8,
+                    0.0
+                  ],
+                  "ChangeSizeOverTime": true,
+                  "EndScaleType": "RANDOM_BETWEEN_TWO",
+                  "EndScale": [
+                    1.0,
+                    1.45,
+                    0.0
+                  ],
+                  "StartScale2": [
+                    0.85,
+                    1.15,
+                    0.0
+                  ],
+                  "EndScale2": [
+                    1.45,
+                    2.0,
+                    0.0
+                  ]
+                },
+                {
+                  "ModuleType": 7,
+                  "RotationType": "CONSTANT",
+                  "StartRotation": 0.0,
+                  "VelocityType": "CONSTANT",
+                  "AngularVelocity": 0.0,
+                  "FlipRotation": 0.0
+                },
+                {
+                  "ModuleType": 8,
+                  "TileRows": 5,
+                  "TileColumns": 8,
+                  "FPS": 12.0,
+                  "StartFrameType": "CONSTANT",
+                  "StartFrame": 0.0
+                },
+                {
+                  "ModuleType": 9,
+                  "RenderMode": "BILLBOARD",
+                  "RenderLayer": 0
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "Children": []
+    }
+  ],
+  "Version": 2,
+  "Transform": {
+    "Position": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "Scale": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "Rotation": [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ]
+  },
+  "Components": [],
+  "Active": true,
+  "Tag": "DEFAULT",
+  "sourcePath": "Assets\\Prefabs\\Particles\\VFXRemake\\AmbientParticles\\Dust\\PS_AmbientDust_ColumnLoop.prefab",
+  "Layer": "DEFAULT",
+  "Name": "PS_AmbientDust_ColumnLoop"
+}

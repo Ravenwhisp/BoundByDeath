@@ -1,0 +1,269 @@
+{
+  "Static": false,
+  "Children": [
+    {
+      "Name": "CoreDroplets",
+      "Active": true,
+      "Static": false,
+      "Layer": "DEFAULT",
+      "Tag": "DEFAULT",
+      "Transform": {
+        "Position": [0.0, 0.0, 0.0],
+        "Rotation": [1.0, 0.0, 0.0, 0.0],
+        "Scale": [1.0, 1.0, 1.0]
+      },
+      "Components": [
+        {
+          "UID": 13188420756934101752,
+          "ComponentType": "PARTICLE_SYSTEM",
+          "Active": true,
+          "TextureAssetId": {
+            "uid": 10764966982965910805,
+            "libId": "79aa7d0194ab9b0020aa064e26131741",
+            "type": "TEXTURE"
+          },
+          "ParticleEmitters": [
+            {
+              "Modules": [
+                {
+                  "ModuleType": 2,
+                  "Looping": true,
+                  "Duration": 20.0,
+                  "RateOverTime": 11.0,
+                  "RateOverDistance": 0.0
+                },
+                {
+                  "ModuleType": 4,
+                  "LifeTimeType": "RANDOM_BETWEEN_TWO",
+                  "StartLifeTime": 0.30,
+                  "StartLifeTime2": 0.88
+                },
+                {
+                  "ModuleType": 1,
+                  "ShapeType": "CONE",
+                  "Radius": 0.22,
+                  "RadiusThickness": 0.65,
+                  "RadiusScale": 0.85
+                },
+                {
+                  "ModuleType": 3,
+                  "ColorOverTime": [
+                    {
+                      "IsAlphaMark": false,
+                      "Position": 0.0,
+                      "Color": [0.82, 0.95, 1.0]
+                    },
+                    {
+                      "IsAlphaMark": false,
+                      "Position": 1.0,
+                      "Color": [0.38, 0.70, 0.90]
+                    },
+                    {
+                      "IsAlphaMark": true,
+                      "Position": 0.0,
+                      "Alpha": 0.0
+                    },
+                    {
+                      "IsAlphaMark": true,
+                      "Position": 0.12,
+                      "Alpha": 0.62
+                    },
+                    {
+                      "IsAlphaMark": true,
+                      "Position": 0.72,
+                      "Alpha": 0.38
+                    },
+                    {
+                      "IsAlphaMark": true,
+                      "Position": 1.0,
+                      "Alpha": 0.0
+                    }
+                  ],
+                  "ColorCurve": [0.0, 0.0, 1.0, 1.0]
+                },
+                {
+                  "ModuleType": 5,
+                  "VelocityType": "RANDOM_BETWEEN_TWO",
+                  "InitialVelocity": 1.15,
+                  "InitialVelocity2": 4.25,
+                  "Gravity": 1.35
+                },
+                {
+                  "ModuleType": 6,
+                  "StartScaleType": "RANDOM_BETWEEN_TWO",
+                  "StartScale": [0.018, 0.055, 0.0],
+                  "StartScale2": [0.048, 0.17, 0.0],
+                  "ChangeSizeOverTime": true,
+                  "EndScaleType": "RANDOM_BETWEEN_TWO",
+                  "EndScale": [0.010, 0.026, 0.0],
+                  "EndScale2": [0.030, 0.085, 0.0]
+                },
+                {
+                  "ModuleType": 7,
+                  "RotationType": "CONSTANT",
+                  "StartRotation": 0.0,
+                  "VelocityType": "CONSTANT",
+                  "AngularVelocity": 0.0,
+                  "FlipRotation": 0.0
+                },
+                {
+                  "ModuleType": 8,
+                  "TileRows": 1,
+                  "TileColumns": 1,
+                  "FPS": 0.0,
+                  "StartFrameType": "CONSTANT",
+                  "StartFrame": 0.0
+                },
+                {
+                  "ModuleType": 9,
+                  "RenderMode": "VERTICAL",
+                  "RenderLayer": 0
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Name": "OuterSpray",
+      "Active": true,
+      "Static": false,
+      "Layer": "DEFAULT",
+      "Tag": "DEFAULT",
+      "Transform": {
+        "Position": [0.0, 0.0, 0.0],
+        "Rotation": [1.0, 0.0, 0.0, 0.0],
+        "Scale": [1.0, 1.0, 1.0]
+      },
+      "Components": [
+        {
+          "UID": 11726093842651348091,
+          "ComponentType": "PARTICLE_SYSTEM",
+          "Active": true,
+          "TextureAssetId": {
+            "uid": 10764966982965910805,
+            "libId": "79aa7d0194ab9b0020aa064e26131741",
+            "type": "TEXTURE"
+          },
+          "ParticleEmitters": [
+            {
+              "Modules": [
+                {
+                  "ModuleType": 2,
+                  "Looping": true,
+                  "Duration": 20.0,
+                  "RateOverTime": 3.5,
+                  "RateOverDistance": 0.0
+                },
+                {
+                  "ModuleType": 4,
+                  "LifeTimeType": "RANDOM_BETWEEN_TWO",
+                  "StartLifeTime": 0.24,
+                  "StartLifeTime2": 0.68
+                },
+                {
+                  "ModuleType": 1,
+                  "ShapeType": "SPHERE",
+                  "Radius": 0.16,
+                  "RadiusThickness": 1.0,
+                  "RadiusScale": 0.75
+                },
+                {
+                  "ModuleType": 3,
+                  "ColorOverTime": [
+                    {
+                      "IsAlphaMark": false,
+                      "Position": 0.0,
+                      "Color": [0.75, 0.92, 1.0]
+                    },
+                    {
+                      "IsAlphaMark": false,
+                      "Position": 1.0,
+                      "Color": [0.33, 0.64, 0.86]
+                    },
+                    {
+                      "IsAlphaMark": true,
+                      "Position": 0.0,
+                      "Alpha": 0.0
+                    },
+                    {
+                      "IsAlphaMark": true,
+                      "Position": 0.10,
+                      "Alpha": 0.42
+                    },
+                    {
+                      "IsAlphaMark": true,
+                      "Position": 0.64,
+                      "Alpha": 0.24
+                    },
+                    {
+                      "IsAlphaMark": true,
+                      "Position": 1.0,
+                      "Alpha": 0.0
+                    }
+                  ],
+                  "ColorCurve": [0.0, 0.0, 1.0, 1.0]
+                },
+                {
+                  "ModuleType": 5,
+                  "VelocityType": "RANDOM_BETWEEN_TWO",
+                  "InitialVelocity": 0.20,
+                  "InitialVelocity2": 1.35,
+                  "Gravity": 1.75
+                },
+                {
+                  "ModuleType": 6,
+                  "StartScaleType": "RANDOM_BETWEEN_TWO",
+                  "StartScale": [0.012, 0.022, 0.0],
+                  "StartScale2": [0.038, 0.082, 0.0],
+                  "ChangeSizeOverTime": true,
+                  "EndScaleType": "RANDOM_BETWEEN_TWO",
+                  "EndScale": [0.006, 0.010, 0.0],
+                  "EndScale2": [0.020, 0.038, 0.0]
+                },
+                {
+                  "ModuleType": 7,
+                  "RotationType": "RANDOM_BETWEEN_TWO",
+                  "StartRotation": -0.32,
+                  "StartRotation2": 0.32,
+                  "VelocityType": "RANDOM_BETWEEN_TWO",
+                  "AngularVelocity": -0.22,
+                  "AngularVelocity2": 0.22,
+                  "FlipRotation": 0.5
+                },
+                {
+                  "ModuleType": 8,
+                  "TileRows": 1,
+                  "TileColumns": 1,
+                  "FPS": 0.0,
+                  "StartFrameType": "CONSTANT",
+                  "StartFrame": 0.0
+                },
+                {
+                  "ModuleType": 9,
+                  "RenderMode": "BILLBOARD",
+                  "RenderLayer": 0
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "Children": []
+    }
+  ],
+  "Version": 2,
+  "Transform": {
+    "Position": [0.0, 0.0, 0.0],
+    "Scale": [1.0, 1.0, 1.0],
+    "Rotation": [0.0, 0.0, 0.0, 1.0]
+  },
+  "Components": [],
+  "Active": true,
+  "Tag": "DEFAULT",
+  "sourcePath": "Assets\\Prefabs\\Particles\\VFXRemake\\AmbientParticles\\Water\\PS_Waterfall_DropletsSpray.prefab",
+  "Layer": "DEFAULT",
+  "Name": "PS_Waterfall_DropletsSpray"
+}
