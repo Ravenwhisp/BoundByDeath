@@ -70,6 +70,8 @@ private:
 	void setupDamageHighlight();
 	void updateDamageHighlight();
 	void playDamageHighlight();
+	void updateHitShake();
+	void playHitShake();
 
 	void resolveReaperGauge();
 	void updateShadowExecutionPreviewAvailability();
@@ -107,6 +109,15 @@ private:
 	bool m_damageHighlightActive = false;
 	float m_damageHighlightTimer = 0.0f;
 	float m_damageHighlightSpeed = 1.0f;
+
+	Transform* m_hitShakeTransform = nullptr;
+	Vector3 m_hitShakeBasePosition = Vector3::Zero;
+	float m_hitShakeTimer = 0.0f;
+	bool m_hitShakeActive = false;
+	bool m_hitShakeEnabled = true;
+	float m_hitShakeDuration = 0.12f;
+	float m_hitShakeStrength = 0.08f;
+	float m_hitShakeFrequency = 25.0f;
 
 	// Shadow Execution Health Bar effects
 	bool m_shadowExecutionPreviewActive = false;
