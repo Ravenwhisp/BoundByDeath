@@ -122,6 +122,13 @@ void EnemyDamageable::Update()
 	}
 }
 
+void EnemyDamageable::takeDamage(float amount)
+{
+	EnemyHitContext hit;
+	hit.damage = amount;
+	takeDamage(hit);
+}
+
 void EnemyDamageable::takeDamage(const HitContext& ctx)
 {
 	const EnemyHitContext& enemyCtx = static_cast<const EnemyHitContext&>(ctx);

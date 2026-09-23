@@ -31,7 +31,8 @@ public:
 
 	FieldList getExposedFields() const override;
 	
-    void takeDamage(const HitContext& ctx) override;
+	void takeDamage(float amount) override;
+	void takeDamage(const HitContext& ctx) override;
 	void kill() override;
 	bool lastHitExploitShadowMark() const { return m_lastHitExploitedShadowMark; }
 	float getShadowExecutionThresholdMultiplier() const;
