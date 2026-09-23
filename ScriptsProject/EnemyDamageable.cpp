@@ -245,6 +245,12 @@ void EnemyDamageable::onDeath()
 {
 	Damageable::onDeath();
 
+	// The health bar should not remain visible while the enemy death flow plays.
+	if (m_healthBarContainerTransform)
+	{
+		GameObjectAPI::setActive(m_healthBarContainerTransform->getOwner(), false);
+	}
+
 	if (auto* stunVisuals = GameObjectAPI::findScript<EnemyStunParticles>(getOwner()))
 	{
 		stunVisuals->stopStunParticle(true);
