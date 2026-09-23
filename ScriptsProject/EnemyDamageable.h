@@ -58,6 +58,7 @@ protected:
 	float m_dissolveDuration = 1.0f;
 	void loadDissolveComponent();
 	DissolveComponent* findDissolveInHierarchy(Transform* transform);
+	DamageHighlightComponent* findDamageHighlightInHierarchy(Transform* transform);
 	
 	Transform2D* getHealthBarContainerTransform() const { return m_healthBarContainerTransform; }
 	void bindHealthBarUI(Transform2D* container, UISlider* slider1, UISlider* slider2);
@@ -66,6 +67,9 @@ private:
 	void resolveHealthBarReferences();
 	void updateHealthBarFade();
 	void updateDissolveEffect();
+	void setupDamageHighlight();
+	void updateDamageHighlight();
+	void playDamageHighlight();
 
 	void resolveReaperGauge();
 	void updateShadowExecutionPreviewAvailability();
@@ -97,6 +101,12 @@ private:
 	float m_healthBarFadeTime = 0.25f;
 	float m_healthBarFadeTimer = 0.0f;
 	bool m_healthBarFadeActive = false;
+
+	ComponentRef<Transform> m_renderer;
+	DamageHighlightComponent* m_damageHighlight = nullptr;
+	bool m_damageHighlightActive = false;
+	float m_damageHighlightTimer = 0.0f;
+	float m_damageHighlightSpeed = 1.0f;
 
 	// Shadow Execution Health Bar effects
 	bool m_shadowExecutionPreviewActive = false;

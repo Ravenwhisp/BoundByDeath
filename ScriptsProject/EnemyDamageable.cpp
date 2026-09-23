@@ -21,6 +21,9 @@ IMPLEMENT_SCRIPT_FIELDS_INHERITED(EnemyDamageable, Damageable,
 	FIELD_GROUP_LABEL("Health Bar"),
 	SERIALIZED_COMPONENT_REF(m_healthBarContainer, "Health Bar Container", ComponentType::TRANSFORM2D),
 	SERIALIZED_FLOAT(m_healthBarFadeTime, "Health Bar Fade Time", 0.0f, 5.0f, 0.05f),
+	FIELD_GROUP_LABEL("Damage Highlight"),
+	SERIALIZED_COMPONENT_REF(m_renderer, "Mesh Renderer", ComponentType::TRANSFORM),
+	SERIALIZED_FLOAT(m_damageHighlightSpeed, "Damage Highlight Speed", 0.1f, 5.0f, 0.05f),
 	FIELD_GROUP_LABEL("Shadow Execution Preview"),
 	SERIALIZED_COMPONENT_REF(m_shadowExecutionPreview, "Shadow Execution Preview", ComponentType::UISLIDER),
 	SERIALIZED_COMPONENT_REF(m_shadowExecutionThresholdMarker, "Shadow Execution Threshold Marker", ComponentType::TRANSFORM2D),
@@ -107,11 +110,13 @@ void EnemyDamageable::Start()
 	}
 
 	loadDissolveComponent();
+	setupDamageHighlight();
 }
 
 void EnemyDamageable::Update()
 {
 	Damageable::Update();
+	updateDamageHighlight();
 	updateHealthBarFade();
 	updateShadowExecutionPreviewAvailability();
 	updateShadowExecutionPreviewAnimation(Time::getDeltaTime());
@@ -228,6 +233,8 @@ void EnemyDamageable::onDamaged(float amount)
 	{
 		m_enemySound->playHurt();
 	}
+
+	playDamageHighlight();
 
 	if (m_shadowExecutionPreviewActive && !m_shadowExecutionPreviewHitAnimating)
 	{
@@ -463,6 +470,53 @@ void EnemyDamageable::updateHealthBarFade()
 		setHealthBarAlpha(1.0f);
 		m_healthBarFadeActive = false;
 	}
+}
+
+void EnemyDamageable::setupDamageHighlight()
+{
+	Transform* rendererTransform = m_renderer.getReferencedComponent();
+	if (rendererTransform != nullptr)
+	{
+		m_damageHighlight = ShadersAPI::getDamageHighlightComponent(ComponentAPI::getOwner(rendererTransform));
+	}
+
+	if (m_damageHighlight == nullptr)
+	{
+		m_damageHighlight = findDamageHighlightInHierarchy(GameObjectAPI::getTransform(m_owner));
+	}
+
+	if (m_damageHighlight == nullptr)
+	{
+		Debug::warn("EnemyDamageable on '%s' has no DamageHighlight component in its hierarchy.", GameObjectAPI::getName(m_owner));
+	}
+}
+
+void EnemyDamageable::updateDamageHighlight()
+{
+	if (!m_damageHighlightActive)
+	{
+		return;
+	}
+
+	m_damageHighlightTimer -= Time::getDeltaTime() * m_damageHighlightSpeed;
+	if (m_damageHighlightTimer <= 0.0f)
+	{
+		m_damageHighlightTimer = 0.0f;
+		m_damageHighlightActive = false;
+	}
+
+	ShadersAPI::setDamageHighlightIntensity(m_damageHighlight, m_damageHighlightTimer);
+}
+
+void EnemyDamageable::playDamageHighlight()
+{
+	if (m_damageHighlight == nullptr)
+	{
+		return;
+	}
+
+	m_damageHighlightActive = true;
+	m_damageHighlightTimer = 1.0f;
 }
 
 void EnemyDamageable::updateDissolveEffect()
@@ -733,6 +787,31 @@ DissolveComponent* EnemyDamageable::findDissolveInHierarchy(Transform* transform
 		if (DissolveComponent* dissolve = findDissolveInHierarchy(child))
 		{
 			return dissolve;
+		}
+	}
+
+	return nullptr;
+}
+
+DamageHighlightComponent* EnemyDamageable::findDamageHighlightInHierarchy(Transform* transform)
+{
+	if (!transform)
+	{
+		return nullptr;
+	}
+
+	GameObject* object = ComponentAPI::getOwner(transform);
+	if (DamageHighlightComponent* highlight = ShadersAPI::getDamageHighlightComponent(object))
+	{
+		return highlight;
+	}
+
+	const int childCount = TransformAPI::getChildCount(transform);
+	for (int i = 0; i < childCount; ++i)
+	{
+		if (DamageHighlightComponent* highlight = findDamageHighlightInHierarchy(TransformAPI::getChild(transform, i)))
+		{
+			return highlight;
 		}
 	}
 
