@@ -26,6 +26,7 @@ IMPLEMENT_SCRIPT_FIELDS_INHERITED(EnemyDamageable, Damageable,
 	SERIALIZED_FLOAT(m_damageHighlightSpeed, "Damage Highlight Speed", 0.1f, 5.0f, 0.05f),
 	FIELD_GROUP_LABEL("Hit Shake"),
 	SERIALIZED_BOOL(m_hitShakeEnabled, "Enable Hit Shake"),
+	SERIALIZED_COMPONENT_REF(m_hitShakeTarget, "Hit Shake Visual", ComponentType::TRANSFORM),
 	SERIALIZED_FLOAT(m_hitShakeDuration, "Hit Shake Duration", 0.01f, 1.0f, 0.01f),
 	SERIALIZED_FLOAT(m_hitShakeStrength, "Hit Shake Strength", 0.0f, 1.0f, 0.01f),
 	SERIALIZED_FLOAT(m_hitShakeFrequency, "Hit Shake Frequency", 1.0f, 60.0f, 1.0f),
@@ -481,25 +482,31 @@ void EnemyDamageable::updateHealthBarFade()
 
 void EnemyDamageable::setupDamageHighlight()
 {
+	m_hitShakeTransform = m_hitShakeTarget.getReferencedComponent();
+
 	Transform* rendererTransform = m_renderer.getReferencedComponent();
 	if (rendererTransform != nullptr)
 	{
 		m_damageHighlight = ShadersAPI::getDamageHighlightComponent(ComponentAPI::getOwner(rendererTransform));
-		m_hitShakeTransform = rendererTransform;
-	}
-
-	if (m_damageHighlight == nullptr)
-	{
-		m_damageHighlight = findDamageHighlightInHierarchy(GameObjectAPI::getTransform(m_owner));
-		if (m_damageHighlight != nullptr && m_hitShakeTransform == nullptr)
+		if (m_hitShakeTransform == nullptr)
 		{
-			m_hitShakeTransform = GameObjectAPI::getTransform(ComponentAPI::getOwner(m_damageHighlight));
+			m_hitShakeTransform = rendererTransform;
 		}
 	}
 
 	if (m_damageHighlight == nullptr)
 	{
+		m_damageHighlight = findDamageHighlightInHierarchy(GameObjectAPI::getTransform(m_owner));
+	}
+
+	if (m_damageHighlight == nullptr)
+	{
 		Debug::warn("EnemyDamageable on '%s' has no DamageHighlight component in its hierarchy.", GameObjectAPI::getName(m_owner));
+	}
+
+	if (m_hitShakeEnabled && m_hitShakeTransform == nullptr)
+	{
+		Debug::warn("EnemyDamageable on '%s' has no hit-shake visual transform.", GameObjectAPI::getName(m_owner));
 	}
 }
 
@@ -863,6 +870,11 @@ DamageHighlightComponent* EnemyDamageable::findDamageHighlightInHierarchy(Transf
 	GameObject* object = ComponentAPI::getOwner(transform);
 	if (DamageHighlightComponent* highlight = ShadersAPI::getDamageHighlightComponent(object))
 	{
+		if (m_hitShakeTransform == nullptr)
+		{
+			m_hitShakeTransform = transform;
+		}
+
 		return highlight;
 	}
 

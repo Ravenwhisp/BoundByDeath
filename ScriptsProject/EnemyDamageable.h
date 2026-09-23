@@ -111,13 +111,14 @@ private:
 	float m_damageHighlightSpeed = 1.0f;
 
 	Transform* m_hitShakeTransform = nullptr;
+	ComponentRef<Transform> m_hitShakeTarget;
 	Vector3 m_hitShakeBasePosition = Vector3::Zero;
 	float m_hitShakeTimer = 0.0f;
 	bool m_hitShakeActive = false;
 	bool m_hitShakeEnabled = true;
-	float m_hitShakeDuration = 0.12f;
-	float m_hitShakeStrength = 0.08f;
-	float m_hitShakeFrequency = 25.0f;
+	float m_hitShakeDuration = 0.16f;
+	float m_hitShakeStrength = 0.15f;
+	float m_hitShakeFrequency = 18.0f;
 
 	// Shadow Execution Health Bar effects
 	bool m_shadowExecutionPreviewActive = false;
