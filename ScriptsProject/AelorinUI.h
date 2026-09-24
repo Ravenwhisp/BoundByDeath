@@ -257,8 +257,8 @@ private:
 	ComponentRef<Transform> m_graspOfTheDeadUICanvas;
 	ComponentRef<Transform2D> m_graspOfTheDeadUIContainer;
 	ComponentRef<Transform2D> m_graspOfTheDeadUIBackground;
-	ComponentRef<Transform2D> m_graspOfTheDeadUIBorder;
-	ComponentRef<Transform2D> m_graspOfTheDeadUIGlow;
+	//ComponentRef<Transform2D> m_graspOfTheDeadUIBorder;
+	//ComponentRef<Transform2D> m_graspOfTheDeadUIGlow;
 
 	ComponentRef<Transform> m_graspLyrielChainCanvas;
 	ComponentRef<Transform2D> m_graspLyrielChainImage;
@@ -268,8 +268,8 @@ private:
 	Transform* m_graspOfTheDeadUICanvasTransform = nullptr;
 	Transform2D* m_graspOfTheDeadUIContainerTransform2D = nullptr;
 	Transform2D* m_graspOfTheDeadUIBackgroundTransform2D = nullptr;
-	Transform2D* m_graspOfTheDeadUIBorderTransform2D = nullptr;
-	Transform2D* m_graspOfTheDeadUIGlowTransform2D = nullptr;
+	//Transform2D* m_graspOfTheDeadUIBorderTransform2D = nullptr;
+	//Transform2D* m_graspOfTheDeadUIGlowTransform2D = nullptr;
 
 	Transform* m_graspLyrielChainCanvasTransform = nullptr;
 	Transform2D* m_graspLyrielChainImageTransform2D = nullptr;
@@ -285,9 +285,14 @@ private:
 
 	float m_graspOfTheDeadUITimer = 0.0f;
 	float m_graspOfTheDeadUIDuration = 0.0f;
+	float m_graspPortalRotation = 0.0f;
 
 	static constexpr float m_graspChainHeightOffset = 0.35f;
 	static constexpr float m_graspChainWidth = 0.35f;
+
+	static constexpr float m_graspPortalRotationSpeed = 75.0f;
+	static constexpr float m_graspPortalPulseSpeed = 4.0f;
+	static constexpr float m_graspPortalPulseAmount = 0.04f;
 
 	// Soul Cataclysm - Arena
 	ComponentRef<Transform> m_soulCataclysmUICanvas;
