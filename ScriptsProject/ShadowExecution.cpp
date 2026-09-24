@@ -84,7 +84,7 @@ void ShadowExecution::Update()
 {
     const float dt = Time::getDeltaTime();
 
-    // Actualizar y eliminar los prefabs de partículas cuando pase 1 segundo
+    // Update and remove spawned VFX after their configured cleanup time.
     for (auto it = m_temporaryPrefabs.begin(); it != m_temporaryPrefabs.end(); )
     {
         it->lifetimeRemaining -= dt;
@@ -235,7 +235,7 @@ void ShadowExecution::beginExecution()
     {
         // m_temporaryPrefabs is the sole lifetime owner of this instance.
         ParticleLifecycle::disableSelfDestruct(fxCenter);
-        m_temporaryPrefabs.push_back({ fxCenter, 1.0f });
+        m_temporaryPrefabs.push_back({ fxCenter, m_shadowExecutionConfig->m_vfxLifetime });
     }
 
     lockPlayers(true);

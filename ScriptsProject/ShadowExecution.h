@@ -73,7 +73,7 @@ private:
 
     std::vector<GameObject*> m_hitEnemies;
 
-    // Lista para trackear las partículas que deben morir tras 1 segundo
+    // Tracks spawned VFX until their configured cleanup time.
     std::vector<SpawnedPrefab> m_temporaryPrefabs;
 
 public:
