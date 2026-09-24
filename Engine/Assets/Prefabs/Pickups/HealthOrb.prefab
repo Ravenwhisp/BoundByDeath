@@ -1,6 +1,6 @@
 {
     "Version": 2,
-    "sourcePath": "Assets\\Prefabs\\HealthPlaceholder.prefab",
+    "sourcePath": "Assets\\Prefabs\\Pickups\\HealthOrb.prefab",
     "Name": "HealthPlaceholder",
     "Active": true,
     "Static": false,
@@ -26,12 +26,17 @@
     },
     "Components": [
         {
-            "UID": 16241159104157496932,
+            "UID": 5853086738573004755,
             "ComponentType": "SCRIPT",
             "Active": true,
             "ScriptName": "HealthPickup",
             "ScriptFields": {
                 "Heal Amount": 10.0,
+                "Collect Particle Prefab": {
+                    "uid": 13243464306730921611,
+                    "libId": "324f83d53e6944e5b0b9dab2e9257ecf",
+                    "type": "PREFAB"
+                },
                 "Collect Particle Prefab Path": "Assets/Prefabs/Health_1.prefab",
                 "Spawn Height": 2.5,
                 "Fall Gravity": 8.0,
@@ -41,7 +46,7 @@
             }
         },
         {
-            "UID": 12237354659222447917,
+            "UID": 16081238677403064081,
             "ComponentType": "TRIGGER",
             "Active": true,
             "Shape": "Box",
@@ -84,7 +89,7 @@
             },
             "Components": [
                 {
-                    "UID": 13646216225456870235,
+                    "UID": 7480767579193140811,
                     "ComponentType": "MODEL",
                     "Active": true,
                     "MeshAssetId": {
@@ -100,11 +105,41 @@
                     "Materials": [
                         {
                             "uid": 17481603862598985862,
-                            "libId": "87b61409795e68557c58b1fc817d9ba7",
+                            "libId": "00b77f408680da6fc9ee5fed9aa1bc76",
                             "type": "MATERIAL"
                         }
                     ],
-                    "Render Mode": 0
+                    "Render Mode": 0,
+                    "BoundingBox": {
+                        "Custom": false,
+                        "Min": [
+                            -1.0598700046539307,
+                            -1.1196014881134033,
+                            -1.1371116638183594
+                        ],
+                        "Max": [
+                            1.103001594543457,
+                            1.0906286239624023,
+                            1.0905377864837646
+                        ]
+                    }
+                },
+                {
+                    "UID": 13467126532513114711,
+                    "ComponentType": "DISSOLVE",
+                    "Active": true,
+                    "DissolveAmount": 0.0,
+                    "DissolveColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "DissolveTickness": 1.0,
+                    "TextureAssetId": {
+                        "uid": 4209550263506267985,
+                        "libId": "4217249d2f0755347f0a3bbba7af5291",
+                        "type": "TEXTURE"
+                    }
                 }
             ],
             "Children": []
@@ -135,7 +170,7 @@
             },
             "Components": [
                 {
-                    "UID": 10530837442436200642,
+                    "UID": 15944422311018444524,
                     "ComponentType": "MODEL",
                     "Active": true,
                     "MeshAssetId": {
@@ -151,11 +186,41 @@
                     "Materials": [
                         {
                             "uid": 17333716385840839233,
-                            "libId": "9c5c3f9914c91a3fc5224ebe2ea2fcc1",
+                            "libId": "e2e38496ffa2db7fe4781bd1cf537d1a",
                             "type": "MATERIAL"
                         }
                     ],
-                    "Render Mode": 0
+                    "Render Mode": 0,
+                    "BoundingBox": {
+                        "Custom": false,
+                        "Min": [
+                            -0.7819416522979736,
+                            -0.7819425463676453,
+                            -0.78194260597229
+                        ],
+                        "Max": [
+                            0.7819421291351318,
+                            0.7819425463676453,
+                            0.7819421291351318
+                        ]
+                    }
+                },
+                {
+                    "UID": 9823329649164148196,
+                    "ComponentType": "DISSOLVE",
+                    "Active": true,
+                    "DissolveAmount": 0.0,
+                    "DissolveColor": [
+                        0.15026609599590302,
+                        0.4054054021835327,
+                        0.39653947949409485
+                    ],
+                    "DissolveTickness": 3.0,
+                    "TextureAssetId": {
+                        "uid": 4209550263506267985,
+                        "libId": "4217249d2f0755347f0a3bbba7af5291",
+                        "type": "TEXTURE"
+                    }
                 }
             ],
             "Children": []
@@ -186,7 +251,7 @@
             },
             "Components": [
                 {
-                    "UID": 2150182201551206072,
+                    "UID": 4998840180990677158,
                     "ComponentType": "MODEL",
                     "Active": true,
                     "MeshAssetId": {
@@ -202,11 +267,41 @@
                     "Materials": [
                         {
                             "uid": 4774687755739455797,
-                            "libId": "70a5b23d09fb9c6ed583642969fd2066",
+                            "libId": "3defebdc39f88463258b4554177fa5d1",
                             "type": "MATERIAL"
                         }
                     ],
-                    "Render Mode": 0
+                    "Render Mode": 0,
+                    "BoundingBox": {
+                        "Custom": false,
+                        "Min": [
+                            -0.42752116918563843,
+                            -0.42752164602279663,
+                            -0.4275217354297638
+                        ],
+                        "Max": [
+                            0.42752164602279663,
+                            0.4275217056274414,
+                            0.4275214374065399
+                        ]
+                    }
+                },
+                {
+                    "UID": 13296525454026011027,
+                    "ComponentType": "DISSOLVE",
+                    "Active": true,
+                    "DissolveAmount": 0.0,
+                    "DissolveColor": [
+                        0.6525096893310547,
+                        0.20910540223121643,
+                        0.20910540223121643
+                    ],
+                    "DissolveTickness": 1.0,
+                    "TextureAssetId": {
+                        "uid": 4209550263506267985,
+                        "libId": "4217249d2f0755347f0a3bbba7af5291",
+                        "type": "TEXTURE"
+                    }
                 }
             ],
             "Children": []
