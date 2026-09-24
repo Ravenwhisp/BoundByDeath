@@ -175,6 +175,12 @@
     <Filter Include="Enemies\Aelorin\UI">
       <UniqueIdentifier>{c7d23cbd-96c5-4175-a8b4-628cdd048398}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Enemies\Rocky">
+      <UniqueIdentifier>{24826460-b695-4e65-9408-80a9ebc60150}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Enemies\Rocky\States">
+      <UniqueIdentifier>{869fb45e-ae8e-4ae1-94cc-9ca816c57d08}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -753,6 +759,12 @@
     <ClInclude Include="AelorinSpiritCannonState.h">
       <Filter>Enemies\Aelorin\States\Combat</Filter>
     </ClInclude>
+    <ClInclude Include="RockyEnemyController.h">
+      <Filter>Enemies\Rocky</Filter>
+    </ClInclude>
+    <ClInclude Include="RockyChaseState.h">
+      <Filter>Enemies\Rocky\States</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
@@ -1313,6 +1325,12 @@
     <ClCompile Include="VideoManager.cpp" />
     <ClCompile Include="AelorinSpiritCannonState.cpp">
       <Filter>Enemies\Aelorin\States\Combat</Filter>
+    </ClCompile>
+    <ClCompile Include="RockyEnemyController.cpp">
+      <Filter>Enemies\Rocky</Filter>
+    </ClCompile>
+    <ClCompile Include="RockyChaseState.cpp">
+      <Filter>Enemies\Rocky\States</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
