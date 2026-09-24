@@ -2,7 +2,7 @@
     "Version": 2,
     "sourcePath": "Assets\\Prefabs\\Particles\\VFXRemake\\Enemies\\BossFight\\PS_BossAura.prefab",
     "Name": "PS_BossAura",
-    "Active": false,
+    "Active": true,
     "Static": false,
     "Layer": "DEFAULT",
     "Tag": "DEFAULT",
@@ -52,7 +52,7 @@
             },
             "Components": [
                 {
-                    "UID": 3804653906896797656,
+                    "UID": 686112290630219816,
                     "ComponentType": "PARTICLE_SYSTEM",
                     "Active": true,
                     "TextureAssetId": {
@@ -67,7 +67,7 @@
                                     "ModuleType": 2,
                                     "Looping": true,
                                     "Duration": 1.0,
-                                    "RateOverTime": 10.0,
+                                    "RateOverTime": 20.0,
                                     "RateOverDistance": 0.0
                                 },
                                 {
@@ -78,8 +78,8 @@
                                 },
                                 {
                                     "ModuleType": 1,
-                                    "ShapeType": "CIRCLE",
-                                    "Radius": 0.20000000298023224,
+                                    "ShapeType": "HEMISPHERE",
+                                    "Radius": 2.0,
                                     "RadiusThickness": 1.0,
                                     "RadiusScale": 3.0
                                 },
@@ -129,13 +129,20 @@
                                         0.0390625,
                                         1.0,
                                         1.0
-                                    ]
+                                    ],
+                                    "HDRColor": [
+                                        0.0,
+                                        0.0,
+                                        0.0
+                                    ],
+                                    "HDRIntensity": 0.0
                                 },
                                 {
                                     "ModuleType": 5,
                                     "VelocityType": "RANDOM_BETWEEN_TWO",
                                     "InitialVelocity": 0.5,
-                                    "InitialVelocity2": 0.10000000149011612
+                                    "InitialVelocity2": 0.10000000149011612,
+                                    "Gravity": 0.0
                                 },
                                 {
                                     "ModuleType": 6,
@@ -183,14 +190,15 @@
                                 {
                                     "ModuleType": 9,
                                     "RenderMode": "BILLBOARD",
-                                    "RenderLayer": 0
+                                    "RenderLayer": 0,
+                                    "BlendMode": "ALPHA"
                                 }
                             ]
                         }
                     ]
                 },
                 {
-                    "UID": 16764362344055448077,
+                    "UID": 5507535929704308227,
                     "ComponentType": "PREFAB_INSTANCE",
                     "Active": true,
                     "sourcePath": "Assets\\Prefabs\\Particles\\VFXRemake\\Enemies\\BossFight\\PS_BossAuraSmoke1.prefab",
@@ -225,7 +233,7 @@
             },
             "Components": [
                 {
-                    "UID": 12438783006093924136,
+                    "UID": 3213571705286511609,
                     "ComponentType": "PARTICLE_SYSTEM",
                     "Active": true,
                     "TextureAssetId": {
@@ -240,7 +248,7 @@
                                     "ModuleType": 2,
                                     "Looping": true,
                                     "Duration": 1.0,
-                                    "RateOverTime": 2.0,
+                                    "RateOverTime": 5.0,
                                     "RateOverDistance": 0.0
                                 },
                                 {
@@ -252,7 +260,7 @@
                                 {
                                     "ModuleType": 1,
                                     "ShapeType": "CIRCLE",
-                                    "Radius": 0.20000000298023224,
+                                    "Radius": 2.0,
                                     "RadiusThickness": 1.0,
                                     "RadiusScale": 3.0
                                 },
@@ -312,13 +320,20 @@
                                         0.390625,
                                         1.0,
                                         1.0
-                                    ]
+                                    ],
+                                    "HDRColor": [
+                                        0.0,
+                                        0.0,
+                                        0.0
+                                    ],
+                                    "HDRIntensity": 0.0
                                 },
                                 {
                                     "ModuleType": 5,
                                     "VelocityType": "RANDOM_BETWEEN_TWO",
                                     "InitialVelocity": 0.5,
-                                    "InitialVelocity2": 0.10000000149011612
+                                    "InitialVelocity2": 0.10000000149011612,
+                                    "Gravity": 0.0
                                 },
                                 {
                                     "ModuleType": 6,
@@ -366,21 +381,22 @@
                                 {
                                     "ModuleType": 9,
                                     "RenderMode": "BILLBOARD",
-                                    "RenderLayer": 0
+                                    "RenderLayer": 0,
+                                    "BlendMode": "ALPHA"
                                 }
                             ]
                         }
                     ]
                 },
                 {
-                    "UID": 1981204017819393742,
+                    "UID": 12899179360017091667,
                     "ComponentType": "PREFAB_INSTANCE",
                     "Active": true,
                     "sourcePath": "Assets\\Prefabs\\Particles\\VFXRemake\\Enemies\\BossFight\\PS_BossAuraSmoke1.prefab",
                     "assetUID": 13184436941379216935
                 },
                 {
-                    "UID": 1065468421194782469,
+                    "UID": 2016504371437078457,
                     "ComponentType": "PREFAB_INSTANCE",
                     "Active": true,
                     "sourcePath": "Assets\\Prefabs\\Particles\\VFXRemake\\Enemies\\BossFight\\PS_BossAuraSmoke2.prefab",
@@ -415,7 +431,7 @@
             },
             "Components": [
                 {
-                    "UID": 7792390845592667663,
+                    "UID": 12137402334060573916,
                     "ComponentType": "PARTICLE_SYSTEM",
                     "Active": true,
                     "TextureAssetId": {
@@ -442,7 +458,7 @@
                                 {
                                     "ModuleType": 1,
                                     "ShapeType": "CONE",
-                                    "Radius": 0.5,
+                                    "Radius": 1.0,
                                     "RadiusThickness": 1.0,
                                     "RadiusScale": 1.0
                                 },
@@ -503,13 +519,20 @@
                                         0.0,
                                         1.0,
                                         1.0
-                                    ]
+                                    ],
+                                    "HDRColor": [
+                                        0.0,
+                                        0.0,
+                                        0.0
+                                    ],
+                                    "HDRIntensity": 0.0
                                 },
                                 {
                                     "ModuleType": 5,
                                     "VelocityType": "RANDOM_BETWEEN_TWO",
                                     "InitialVelocity": 1.0,
-                                    "InitialVelocity2": 0.5
+                                    "InitialVelocity2": 0.5,
+                                    "Gravity": 0.0
                                 },
                                 {
                                     "ModuleType": 6,
@@ -545,14 +568,15 @@
                                 {
                                     "ModuleType": 9,
                                     "RenderMode": "VERTICAL",
-                                    "RenderLayer": 0
+                                    "RenderLayer": 0,
+                                    "BlendMode": "ALPHA"
                                 }
                             ]
                         }
                     ]
                 },
                 {
-                    "UID": 5796699670968435419,
+                    "UID": 1429593889874902025,
                     "ComponentType": "PREFAB_INSTANCE",
                     "Active": true,
                     "sourcePath": "Assets\\Prefabs\\Particles\\VFXRemake\\Enemies\\BossFight\\PS_BossAuraSouls.prefab",
@@ -587,7 +611,7 @@
             },
             "Components": [
                 {
-                    "UID": 12321880725339299236,
+                    "UID": 13348143891503009342,
                     "ComponentType": "PARTICLE_SYSTEM",
                     "Active": true,
                     "TextureAssetId": {
@@ -608,13 +632,13 @@
                                 {
                                     "ModuleType": 4,
                                     "LifeTimeType": "RANDOM_BETWEEN_TWO",
-                                    "StartLifeTime": 0.5,
-                                    "StartLifeTime2": 0.10000000149011612
+                                    "StartLifeTime": 1.0,
+                                    "StartLifeTime2": 0.5
                                 },
                                 {
                                     "ModuleType": 1,
                                     "ShapeType": "CONE",
-                                    "Radius": 0.5,
+                                    "Radius": 2.0,
                                     "RadiusThickness": 1.0,
                                     "RadiusScale": 1.0
                                 },
@@ -645,13 +669,20 @@
                                         0.0,
                                         1.0,
                                         1.0
-                                    ]
+                                    ],
+                                    "HDRColor": [
+                                        0.0,
+                                        0.0,
+                                        0.0
+                                    ],
+                                    "HDRIntensity": 0.0
                                 },
                                 {
                                     "ModuleType": 5,
                                     "VelocityType": "RANDOM_BETWEEN_TWO",
                                     "InitialVelocity": 5.0,
-                                    "InitialVelocity2": 3.0
+                                    "InitialVelocity2": 8.0,
+                                    "Gravity": 0.0
                                 },
                                 {
                                     "ModuleType": 6,
@@ -687,14 +718,15 @@
                                 {
                                     "ModuleType": 9,
                                     "RenderMode": "BILLBOARD",
-                                    "RenderLayer": 0
+                                    "RenderLayer": 0,
+                                    "BlendMode": "ALPHA"
                                 }
                             ]
                         }
                     ]
                 },
                 {
-                    "UID": 3776798410845504004,
+                    "UID": 1151511853506114581,
                     "ComponentType": "PREFAB_INSTANCE",
                     "Active": true,
                     "sourcePath": "Assets\\Prefabs\\Particles\\VFXRemake\\Enemies\\BossFight\\PS_BossAuraSparks.prefab",
