@@ -1,7 +1,7 @@
 {
     "Version": 2,
-    "sourcePath": "Assets\\Prefabs\\Particles\\VFXRemake\\Enemies\\BossFight\\PS_BossPhase2.prefab",
-    "Name": "PS_BossPhase2",
+    "sourcePath": "Assets\\Prefabs\\Particles\\VFXRemake\\ShadowExecution.prefab",
+    "Name": "ShadowExecution",
     "Active": true,
     "Static": false,
     "Layer": "DEFAULT",
@@ -27,7 +27,7 @@
     "Components": [],
     "Children": [
         {
-            "Name": "PS_BossTurningShockwave2",
+            "Name": "PS_ShadowExecutionBigShockwave",
             "Active": true,
             "Static": false,
             "Layer": "DEFAULT",
@@ -52,12 +52,12 @@
             },
             "Components": [
                 {
-                    "UID": 11881489181148186477,
+                    "UID": 2408898811262315350,
                     "ComponentType": "PARTICLE_SYSTEM",
                     "Active": true,
                     "TextureAssetId": {
-                        "uid": 6442499650219591269,
-                        "libId": "59685b4c4ceac665e81227d41d26d026",
+                        "uid": 14707346553113627986,
+                        "libId": "57039a82ff42883ffd992b7a09066024",
                         "type": "TEXTURE"
                     },
                     "ParticleEmitters": [
@@ -67,162 +67,6 @@
                                     "ModuleType": 2,
                                     "Looping": false,
                                     "Duration": 1.0,
-                                    "RateOverTime": 1.0,
-                                    "RateOverDistance": 0.0
-                                },
-                                {
-                                    "ModuleType": 4,
-                                    "LifeTimeType": "CONSTANT",
-                                    "StartLifeTime": 0.20000000298023224
-                                },
-                                {
-                                    "ModuleType": 1,
-                                    "ShapeType": "CIRCLE",
-                                    "Radius": 0.0,
-                                    "RadiusThickness": 1.0,
-                                    "RadiusScale": 3.0
-                                },
-                                {
-                                    "ModuleType": 3,
-                                    "ColorOverTime": [
-                                        {
-                                            "IsAlphaMark": false,
-                                            "Position": 0.026402553543448448,
-                                            "Color": [
-                                                1.0,
-                                                0.8666666746139526,
-                                                0.3333333432674408
-                                            ]
-                                        },
-                                        {
-                                            "IsAlphaMark": false,
-                                            "Position": 1.0,
-                                            "Color": [
-                                                0.6745098233222961,
-                                                0.0,
-                                                0.0
-                                            ]
-                                        }
-                                    ],
-                                    "ColorCurve": [
-                                        0.6171875,
-                                        0.1328125,
-                                        0.5859375,
-                                        0.90625
-                                    ],
-                                    "HDRColor": [
-                                        0.0,
-                                        0.0,
-                                        0.0
-                                    ],
-                                    "HDRIntensity": 0.0
-                                },
-                                {
-                                    "ModuleType": 5,
-                                    "VelocityType": "CONSTANT",
-                                    "InitialVelocity": 0.0,
-                                    "Gravity": 0.0
-                                },
-                                {
-                                    "ModuleType": 6,
-                                    "StartScaleType": "CONSTANT",
-                                    "StartScale": [
-                                        0.0,
-                                        0.0,
-                                        0.0
-                                    ],
-                                    "ChangeSizeOverTime": true,
-                                    "EndScaleType": "CONSTANT",
-                                    "EndScale": [
-                                        15.0,
-                                        15.0,
-                                        0.0
-                                    ]
-                                },
-                                {
-                                    "ModuleType": 7,
-                                    "RotationType": "CONSTANT",
-                                    "StartRotation": 0.0,
-                                    "VelocityType": "CONSTANT",
-                                    "AngularVelocity": 0.0,
-                                    "FlipRotation": 0.0
-                                },
-                                {
-                                    "ModuleType": 8,
-                                    "TileRows": 1,
-                                    "TileColumns": 1,
-                                    "FPS": 0.0,
-                                    "StartFrameType": "CONSTANT",
-                                    "StartFrame": 0.0
-                                },
-                                {
-                                    "ModuleType": 9,
-                                    "RenderMode": "HORIZONTAL",
-                                    "RenderLayer": 0,
-                                    "BlendMode": "ALPHA"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "UID": 9315071710949586384,
-                    "ComponentType": "PREFAB_INSTANCE",
-                    "Active": true,
-                    "sourcePath": "Assets\\Prefabs\\Particles\\VFXRemake\\Enemies\\BossFight\\PhaseTransformation\\PS_BossTurningShockwave1.prefab",
-                    "assetUID": 1640265826662399891
-                },
-                {
-                    "UID": 2216928105451869933,
-                    "ComponentType": "PREFAB_INSTANCE",
-                    "Active": true,
-                    "sourcePath": "Assets\\Prefabs\\Particles\\VFXRemake\\Enemies\\BossFight\\PhaseTransformation\\PS_BossTurningShockwave2.prefab",
-                    "assetUID": 12632386359934502247
-                }
-            ],
-            "Children": []
-        },
-        {
-            "Name": "PS_BossTurningShockwave1",
-            "Active": true,
-            "Static": false,
-            "Layer": "DEFAULT",
-            "Tag": "DEFAULT",
-            "Transform": {
-                "Position": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    -0.0,
-                    0.0,
-                    -0.0,
-                    1.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Components": [
-                {
-                    "UID": 13276141875837804932,
-                    "ComponentType": "PARTICLE_SYSTEM",
-                    "Active": true,
-                    "TextureAssetId": {
-                        "uid": 16276558567823421533,
-                        "libId": "e1e1f3c7d0f4b05d9c7c6b485fa6a81e",
-                        "type": "TEXTURE"
-                    },
-                    "ParticleEmitters": [
-                        {
-                            "Modules": [
-                                {
-                                    "ModuleType": 2,
-                                    "Looping": false,
-                                    "Duration": 4.0,
                                     "RateOverTime": 1.0,
                                     "RateOverDistance": 0.0
                                 },
@@ -243,54 +87,45 @@
                                     "ColorOverTime": [
                                         {
                                             "IsAlphaMark": false,
-                                            "Position": 0.0,
+                                            "Position": 0.250980406999588,
                                             "Color": [
-                                                0.4000000059604645,
-                                                0.20000000298023224,
-                                                0.6000000238418579
+                                                0.0,
+                                                0.46666666865348816,
+                                                0.7137255072593689
                                             ]
                                         },
                                         {
                                             "IsAlphaMark": false,
-                                            "Position": 0.5049505233764648,
+                                            "Position": 0.7647058963775635,
                                             "Color": [
-                                                1.0,
-                                                0.8666666746139526,
-                                                0.3333333432674408
+                                                0.16078431904315948,
+                                                0.0235294122248888,
+                                                0.1568627506494522
                                             ]
                                         },
                                         {
                                             "IsAlphaMark": true,
-                                            "Position": 0.7920792102813721,
+                                            "Position": 0.8786880970001221,
                                             "Alpha": 1.0
                                         },
                                         {
-                                            "IsAlphaMark": false,
-                                            "Position": 0.815181314945221,
-                                            "Color": [
-                                                0.6745098233222961,
-                                                0.0,
-                                                0.0
-                                            ]
-                                        },
-                                        {
                                             "IsAlphaMark": true,
-                                            "Position": 0.9834983348846436,
-                                            "Alpha": 0.17399999499320984
+                                            "Position": 0.9801980257034302,
+                                            "Alpha": 0.0
                                         }
                                     ],
                                     "ColorCurve": [
-                                        0.6171875,
-                                        0.1328125,
-                                        0.5859375,
-                                        0.90625
+                                        0.4449999928474426,
+                                        0.05000000074505806,
+                                        0.550000011920929,
+                                        0.949999988079071
                                     ],
                                     "HDRColor": [
-                                        0.0,
-                                        0.0,
-                                        0.0
+                                        0.9532203078269958,
+                                        0.7526720762252808,
+                                        0.9845559597015381
                                     ],
-                                    "HDRIntensity": 0.0
+                                    "HDRIntensity": 0.1770000010728836
                                 },
                                 {
                                     "ModuleType": 5,
@@ -309,8 +144,341 @@
                                     "ChangeSizeOverTime": true,
                                     "EndScaleType": "CONSTANT",
                                     "EndScale": [
-                                        10.0,
-                                        10.0,
+                                        6.0,
+                                        6.0,
+                                        0.0
+                                    ]
+                                },
+                                {
+                                    "ModuleType": 7,
+                                    "RotationType": "CONSTANT",
+                                    "StartRotation": 0.0,
+                                    "VelocityType": "CONSTANT",
+                                    "AngularVelocity": 0.0,
+                                    "FlipRotation": 0.0
+                                },
+                                {
+                                    "ModuleType": 8,
+                                    "TileRows": 4,
+                                    "TileColumns": 4,
+                                    "FPS": 8.0,
+                                    "StartFrameType": "CONSTANT",
+                                    "StartFrame": 0.0
+                                },
+                                {
+                                    "ModuleType": 9,
+                                    "RenderMode": "HORIZONTAL",
+                                    "RenderLayer": 0,
+                                    "BlendMode": "ALPHA"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "UID": 5037912418702336205,
+                    "ComponentType": "PREFAB_INSTANCE",
+                    "Active": true,
+                    "sourcePath": "Assets\\Prefabs\\Particles\\VFXRemake\\PS_ShadowExecutionShockwave1.prefab",
+                    "assetUID": 9693858028330884857
+                },
+                {
+                    "UID": 426106199033291280,
+                    "ComponentType": "PREFAB_INSTANCE",
+                    "Active": true,
+                    "sourcePath": "Assets\\Prefabs\\Particles\\VFXRemake\\PS_ShadowExecutionBigShockwave.prefab",
+                    "assetUID": 12286731609928702681
+                }
+            ],
+            "Children": []
+        },
+        {
+            "Name": "PS_ShadowExecutionSmallShockwave",
+            "Active": true,
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0,
+                    1.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [
+                {
+                    "UID": 17999941482215289521,
+                    "ComponentType": "PARTICLE_SYSTEM",
+                    "Active": true,
+                    "TextureAssetId": {
+                        "uid": 15424877413098881326,
+                        "libId": "f2517a3fa6816f1fe310935119d4a5b1",
+                        "type": "TEXTURE"
+                    },
+                    "ParticleEmitters": [
+                        {
+                            "Modules": [
+                                {
+                                    "ModuleType": 2,
+                                    "Looping": false,
+                                    "Duration": 1.0,
+                                    "RateOverTime": 1.0,
+                                    "RateOverDistance": 0.0
+                                },
+                                {
+                                    "ModuleType": 4,
+                                    "LifeTimeType": "CONSTANT",
+                                    "StartLifeTime": 0.5
+                                },
+                                {
+                                    "ModuleType": 1,
+                                    "ShapeType": "CIRCLE",
+                                    "Radius": 0.0,
+                                    "RadiusThickness": 1.0,
+                                    "RadiusScale": 3.0
+                                },
+                                {
+                                    "ModuleType": 3,
+                                    "ColorOverTime": [
+                                        {
+                                            "IsAlphaMark": false,
+                                            "Position": 0.46534663438796997,
+                                            "Color": [
+                                                0.7921568751335144,
+                                                0.9411764740943909,
+                                                0.9725490212440491
+                                            ]
+                                        },
+                                        {
+                                            "IsAlphaMark": true,
+                                            "Position": 0.7755775451660156,
+                                            "Alpha": 1.0
+                                        },
+                                        {
+                                            "IsAlphaMark": false,
+                                            "Position": 0.7953798174858093,
+                                            "Color": [
+                                                0.9176470637321472,
+                                                0.47843137383461,
+                                                0.95686274766922
+                                            ]
+                                        },
+                                        {
+                                            "IsAlphaMark": true,
+                                            "Position": 0.9900990128517151,
+                                            "Alpha": 0.0
+                                        }
+                                    ],
+                                    "ColorCurve": [
+                                        0.38999998569488525,
+                                        0.574999988079071,
+                                        0.5649999976158142,
+                                        1.0
+                                    ],
+                                    "HDRColor": [
+                                        0.752672016620636,
+                                        0.9335235357284546,
+                                        0.9845559597015381
+                                    ],
+                                    "HDRIntensity": 0.1770000010728836
+                                },
+                                {
+                                    "ModuleType": 5,
+                                    "VelocityType": "CONSTANT",
+                                    "InitialVelocity": 0.0,
+                                    "Gravity": 0.0
+                                },
+                                {
+                                    "ModuleType": 6,
+                                    "StartScaleType": "CONSTANT",
+                                    "StartScale": [
+                                        3.0,
+                                        3.0,
+                                        0.0
+                                    ],
+                                    "ChangeSizeOverTime": false
+                                },
+                                {
+                                    "ModuleType": 7,
+                                    "RotationType": "CONSTANT",
+                                    "StartRotation": 0.0,
+                                    "VelocityType": "CONSTANT",
+                                    "AngularVelocity": 0.0,
+                                    "FlipRotation": 0.0
+                                },
+                                {
+                                    "ModuleType": 8,
+                                    "TileRows": 4,
+                                    "TileColumns": 4,
+                                    "FPS": 36.0,
+                                    "StartFrameType": "CONSTANT",
+                                    "StartFrame": 1.0
+                                },
+                                {
+                                    "ModuleType": 9,
+                                    "RenderMode": "HORIZONTAL",
+                                    "RenderLayer": 0,
+                                    "BlendMode": "ALPHA"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "UID": 9798368355745203408,
+                    "ComponentType": "PREFAB_INSTANCE",
+                    "Active": true,
+                    "sourcePath": "Assets\\Prefabs\\Particles\\VFXRemake\\PS_ShadowExecutionShockwave1.prefab",
+                    "assetUID": 9693858028330884857
+                },
+                {
+                    "UID": 10740834172695633689,
+                    "ComponentType": "PREFAB_INSTANCE",
+                    "Active": true,
+                    "sourcePath": "Assets\\Prefabs\\Particles\\VFXRemake\\PS_ShadowExecutionSmallShockwave.prefab",
+                    "assetUID": 2567496808245929186
+                }
+            ],
+            "Children": []
+        },
+        {
+            "Name": "PS_ShadowExecutionParticles",
+            "Active": true,
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0,
+                    1.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [
+                {
+                    "UID": 8980655456000341627,
+                    "ComponentType": "PARTICLE_SYSTEM",
+                    "Active": true,
+                    "TextureAssetId": {
+                        "uid": 14975996452711739301,
+                        "libId": "44168a6acebcaf9bd84233e2665444ae",
+                        "type": "TEXTURE"
+                    },
+                    "ParticleEmitters": [
+                        {
+                            "Modules": [
+                                {
+                                    "ModuleType": 2,
+                                    "Looping": false,
+                                    "Duration": 1.0,
+                                    "RateOverTime": 35.0,
+                                    "RateOverDistance": 0.0
+                                },
+                                {
+                                    "ModuleType": 4,
+                                    "LifeTimeType": "RANDOM_BETWEEN_TWO",
+                                    "StartLifeTime": 0.4000000059604645,
+                                    "StartLifeTime2": 1.0
+                                },
+                                {
+                                    "ModuleType": 1,
+                                    "ShapeType": "CIRCLE",
+                                    "Radius": 1.0,
+                                    "RadiusThickness": 1.0,
+                                    "RadiusScale": 3.0
+                                },
+                                {
+                                    "ModuleType": 3,
+                                    "ColorOverTime": [
+                                        {
+                                            "IsAlphaMark": false,
+                                            "Position": 0.026402639225125313,
+                                            "Color": [
+                                                0.5647059082984924,
+                                                0.8784313797950745,
+                                                0.9372549057006836
+                                            ]
+                                        },
+                                        {
+                                            "IsAlphaMark": false,
+                                            "Position": 0.6633666753768921,
+                                            "Color": [
+                                                0.3843137323856354,
+                                                0.0,
+                                                0.7019608020782471
+                                            ]
+                                        },
+                                        {
+                                            "IsAlphaMark": true,
+                                            "Position": 0.7508201003074646,
+                                            "Alpha": 1.0
+                                        },
+                                        {
+                                            "IsAlphaMark": true,
+                                            "Position": 0.9603960514068604,
+                                            "Alpha": 0.22499999403953552
+                                        }
+                                    ],
+                                    "ColorCurve": [
+                                        0.16374999284744263,
+                                        0.675000011920929,
+                                        0.550000011920929,
+                                        0.949999988079071
+                                    ],
+                                    "HDRColor": [
+                                        0.7762258052825928,
+                                        0.9641164541244507,
+                                        0.9806950092315674
+                                    ],
+                                    "HDRIntensity": 0.0
+                                },
+                                {
+                                    "ModuleType": 5,
+                                    "VelocityType": "RANDOM_BETWEEN_TWO",
+                                    "InitialVelocity": 8.0,
+                                    "InitialVelocity2": 5.0,
+                                    "Gravity": 0.5
+                                },
+                                {
+                                    "ModuleType": 6,
+                                    "StartScaleType": "RANDOM_BETWEEN_TWO",
+                                    "StartScale": [
+                                        0.20000000298023224,
+                                        0.20000000298023224,
+                                        0.0
+                                    ],
+                                    "StartScale2": [
+                                        0.10000000149011612,
+                                        0.3499999940395355,
+                                        0.0
+                                    ],
+                                    "ChangeSizeOverTime": true,
+                                    "EndScaleType": "CONSTANT",
+                                    "EndScale": [
+                                        0.0,
+                                        0.0,
                                         0.0
                                     ]
                                 },
@@ -341,346 +509,11 @@
                     ]
                 },
                 {
-                    "UID": 11595233338102646719,
+                    "UID": 8917948914403582636,
                     "ComponentType": "PREFAB_INSTANCE",
                     "Active": true,
-                    "sourcePath": "Assets\\Prefabs\\Particles\\VFXRemake\\Enemies\\BossFight\\PhaseTransformation\\PS_BossTurningShockwave1.prefab",
-                    "assetUID": 1640265826662399891
-                },
-                {
-                    "UID": 4907461853583125908,
-                    "ComponentType": "PREFAB_INSTANCE",
-                    "Active": true,
-                    "sourcePath": "Assets\\Prefabs\\Particles\\VFXRemake\\Enemies\\BossFight\\PhaseTransformation\\PS_BossTurningShockwave1.prefab",
-                    "assetUID": 8556038104870301261
-                }
-            ],
-            "Children": []
-        },
-        {
-            "Name": "PS_BossTurningEmbers1",
-            "Active": true,
-            "Static": false,
-            "Layer": "DEFAULT",
-            "Tag": "DEFAULT",
-            "Transform": {
-                "Position": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    -0.0,
-                    0.0,
-                    -0.0,
-                    1.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Components": [
-                {
-                    "UID": 4566142299320967343,
-                    "ComponentType": "PARTICLE_SYSTEM",
-                    "Active": true,
-                    "TextureAssetId": {
-                        "uid": 14944502442081492448,
-                        "libId": "b5ba4a8b80e041a6d6c3fa6d490c4859",
-                        "type": "TEXTURE"
-                    },
-                    "ParticleEmitters": [
-                        {
-                            "Modules": [
-                                {
-                                    "ModuleType": 2,
-                                    "Looping": true,
-                                    "Duration": 20.0,
-                                    "RateOverTime": 15.0,
-                                    "RateOverDistance": 0.0
-                                },
-                                {
-                                    "ModuleType": 4,
-                                    "LifeTimeType": "RANDOM_BETWEEN_TWO",
-                                    "StartLifeTime": 0.5,
-                                    "StartLifeTime2": 1.0
-                                },
-                                {
-                                    "ModuleType": 1,
-                                    "ShapeType": "CONE",
-                                    "Radius": 1.0,
-                                    "RadiusThickness": 1.0,
-                                    "RadiusScale": 2.0
-                                },
-                                {
-                                    "ModuleType": 3,
-                                    "ColorOverTime": [
-                                        {
-                                            "IsAlphaMark": false,
-                                            "Position": 0.0,
-                                            "Color": [
-                                                1.0,
-                                                0.8666666746139526,
-                                                0.3333333432674408
-                                            ]
-                                        },
-                                        {
-                                            "IsAlphaMark": false,
-                                            "Position": 0.6798686385154724,
-                                            "Color": [
-                                                1.0,
-                                                0.3333333432674408,
-                                                0.12941177189350128
-                                            ]
-                                        }
-                                    ],
-                                    "ColorCurve": [
-                                        0.125,
-                                        0.8203125,
-                                        1.0,
-                                        1.0
-                                    ],
-                                    "HDRColor": [
-                                        0.0,
-                                        0.0,
-                                        0.0
-                                    ],
-                                    "HDRIntensity": 0.0
-                                },
-                                {
-                                    "ModuleType": 5,
-                                    "VelocityType": "RANDOM_BETWEEN_TWO",
-                                    "InitialVelocity": 1.0,
-                                    "InitialVelocity2": 3.0,
-                                    "Gravity": 0.0
-                                },
-                                {
-                                    "ModuleType": 6,
-                                    "StartScaleType": "RANDOM_BETWEEN_TWO",
-                                    "StartScale": [
-                                        0.5,
-                                        0.5,
-                                        0.0
-                                    ],
-                                    "StartScale2": [
-                                        0.25,
-                                        0.5,
-                                        0.0
-                                    ],
-                                    "ChangeSizeOverTime": true,
-                                    "EndScaleType": "CONSTANT",
-                                    "EndScale": [
-                                        0.10000000149011612,
-                                        0.10000000149011612,
-                                        0.0
-                                    ]
-                                },
-                                {
-                                    "ModuleType": 7,
-                                    "RotationType": "CONSTANT",
-                                    "StartRotation": 0.0,
-                                    "VelocityType": "CONSTANT",
-                                    "AngularVelocity": 0.0,
-                                    "FlipRotation": 0.0
-                                },
-                                {
-                                    "ModuleType": 8,
-                                    "TileRows": 1,
-                                    "TileColumns": 1,
-                                    "FPS": 0.0,
-                                    "StartFrameType": "CONSTANT",
-                                    "StartFrame": 0.0
-                                },
-                                {
-                                    "ModuleType": 9,
-                                    "RenderMode": "BILLBOARD",
-                                    "RenderLayer": 0,
-                                    "BlendMode": "ALPHA"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "UID": 3920289308321074125,
-                    "ComponentType": "PREFAB_INSTANCE",
-                    "Active": true,
-                    "sourcePath": "Assets\\Prefabs\\Particles\\VFXRemake\\Enemies\\BossFight\\PhaseTransformation\\PS_BossTurningEmbers1.prefab",
-                    "assetUID": 10533029938083934102
-                }
-            ],
-            "Children": []
-        },
-        {
-            "Name": "PS_BossTurningEmbers2",
-            "Active": true,
-            "Static": false,
-            "Layer": "DEFAULT",
-            "Tag": "DEFAULT",
-            "Transform": {
-                "Position": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    -0.0,
-                    0.0,
-                    -0.0,
-                    1.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Components": [
-                {
-                    "UID": 15442728207104101119,
-                    "ComponentType": "PARTICLE_SYSTEM",
-                    "Active": true,
-                    "TextureAssetId": {
-                        "uid": 1085569026013027509,
-                        "libId": "1d6219ec764ab9a6046ac8a0f59a9b82",
-                        "type": "TEXTURE"
-                    },
-                    "ParticleEmitters": [
-                        {
-                            "Modules": [
-                                {
-                                    "ModuleType": 2,
-                                    "Looping": true,
-                                    "Duration": 4.0,
-                                    "RateOverTime": 20.0,
-                                    "RateOverDistance": 0.0
-                                },
-                                {
-                                    "ModuleType": 4,
-                                    "LifeTimeType": "RANDOM_BETWEEN_TWO",
-                                    "StartLifeTime": 0.10000000149011612,
-                                    "StartLifeTime2": 0.800000011920929
-                                },
-                                {
-                                    "ModuleType": 1,
-                                    "ShapeType": "CONE",
-                                    "Radius": 1.0,
-                                    "RadiusThickness": 1.0,
-                                    "RadiusScale": 1.0
-                                },
-                                {
-                                    "ModuleType": 3,
-                                    "ColorOverTime": [
-                                        {
-                                            "IsAlphaMark": false,
-                                            "Position": 0.029702886939048767,
-                                            "Color": [
-                                                0.4000000059604645,
-                                                0.20000000298023224,
-                                                0.6000000238418579
-                                            ]
-                                        },
-                                        {
-                                            "IsAlphaMark": false,
-                                            "Position": 0.8547852635383606,
-                                            "Color": [
-                                                0.6745098233222961,
-                                                0.0,
-                                                0.0
-                                            ]
-                                        },
-                                        {
-                                            "IsAlphaMark": false,
-                                            "Position": 1.0,
-                                            "Color": [
-                                                1.0,
-                                                0.3333333432674408,
-                                                0.12941177189350128
-                                            ]
-                                        }
-                                    ],
-                                    "ColorCurve": [
-                                        0.0390625,
-                                        0.859375,
-                                        1.0,
-                                        1.0
-                                    ],
-                                    "HDRColor": [
-                                        0.0,
-                                        0.0,
-                                        0.0
-                                    ],
-                                    "HDRIntensity": 0.0
-                                },
-                                {
-                                    "ModuleType": 5,
-                                    "VelocityType": "RANDOM_BETWEEN_TWO",
-                                    "InitialVelocity": 1.0,
-                                    "InitialVelocity2": 3.0,
-                                    "Gravity": 0.0
-                                },
-                                {
-                                    "ModuleType": 6,
-                                    "StartScaleType": "RANDOM_BETWEEN_TWO",
-                                    "StartScale": [
-                                        0.10000000149011612,
-                                        0.10000000149011612,
-                                        0.0
-                                    ],
-                                    "StartScale2": [
-                                        0.25,
-                                        0.5,
-                                        0.0
-                                    ],
-                                    "ChangeSizeOverTime": true,
-                                    "EndScaleType": "CONSTANT",
-                                    "EndScale": [
-                                        0.0,
-                                        0.0,
-                                        0.0
-                                    ]
-                                },
-                                {
-                                    "ModuleType": 7,
-                                    "RotationType": "CONSTANT",
-                                    "StartRotation": 0.0,
-                                    "VelocityType": "CONSTANT",
-                                    "AngularVelocity": 0.0,
-                                    "FlipRotation": 0.0
-                                },
-                                {
-                                    "ModuleType": 8,
-                                    "TileRows": 1,
-                                    "TileColumns": 1,
-                                    "FPS": 0.0,
-                                    "StartFrameType": "CONSTANT",
-                                    "StartFrame": 0.0
-                                },
-                                {
-                                    "ModuleType": 9,
-                                    "RenderMode": "BILLBOARD",
-                                    "RenderLayer": 0,
-                                    "BlendMode": "ALPHA"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "UID": 6279336238263969387,
-                    "ComponentType": "PREFAB_INSTANCE",
-                    "Active": true,
-                    "sourcePath": "Assets\\Prefabs\\Particles\\VFXRemake\\Enemies\\BossFight\\PhaseTransformation\\PS_BossTurningEmbers1.prefab",
-                    "assetUID": 10533029938083934102
-                },
-                {
-                    "UID": 12695498975842831815,
-                    "ComponentType": "PREFAB_INSTANCE",
-                    "Active": true,
-                    "sourcePath": "Assets\\Prefabs\\Particles\\VFXRemake\\Enemies\\BossFight\\PhaseTransformation\\PS_BossTurningEmbers2.prefab",
-                    "assetUID": 15936734999998535019
+                    "sourcePath": "Assets\\Prefabs\\Particles\\VFXRemake\\PS_ShadowExecutionParticles.prefab",
+                    "assetUID": 8546581080491285232
                 }
             ],
             "Children": []
