@@ -2,6 +2,7 @@
 #include "HealthPickup.h"
 #include "PlayerDamageable.h"
 #include "CooperativeSound.h"
+#include "ParticleLifecycle.h"
 
 #include <cmath>
 
@@ -128,7 +129,7 @@ void HealthPickup::OnTriggerEnter(GameObject* player)
     {
         Transform* t = GameObjectAPI::getTransform(getOwner());
         Vector3 spawnPosition = t != nullptr ? TransformAPI::getGlobalPosition(t) : Vector3::Zero;
-        GameObjectAPI::instantiatePrefab(m_collectParticlePrefab.m_id, spawnPosition, Vector3::Zero, nullptr);
+        GameObjectAPI::instantiatePrefab(m_collectParticlePrefab.m_id, spawnPosition, Vector3::Zero, ParticleLifecycle::getRuntimeVfxContainer());
     }
 }
 

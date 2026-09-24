@@ -3,6 +3,7 @@
 
 #include "EnemyDetectionAggro.h"
 #include "EnemySound.h"
+#include "EnemyStunParticles.h"
 #include "EnemyBaseController.h"
 #include "EnemyBaseDataConfig.h"
 #include "EnemyShadowMark.h"
@@ -244,6 +245,11 @@ void EnemyDamageable::onDeath()
 {
 	Damageable::onDeath();
 
+	if (auto* stunVisuals = GameObjectAPI::findScript<EnemyStunParticles>(getOwner()))
+	{
+		stunVisuals->stopStunParticle(true);
+	}
+
 	setShadowExecutionThresholdMarkerVisible(false);
 
 	if (m_shadowMark)
@@ -289,14 +295,14 @@ void EnemyDamageable::applyDamageWithoutShadowMark(const EnemyHitContext& hit)
 			case PlayerAttackType::LyrielCharged:
 				if (LyrielParticles* lyrielParticles = GameObjectAPI::findScript<LyrielParticles>(attacker))
 				{
-					lyrielParticles->playHitFlash(hitPosition);
+					lyrielParticles->playHitFlash(hitPosition, getOwner());
 				}
 				break;
 
 			case PlayerAttackType::DeathCharged:
 				if (DeathParticles* deathParticles = GameObjectAPI::findScript<DeathParticles>(attacker))
 				{
-					deathParticles->playChargedHitFlash(hitPosition);
+					deathParticles->playChargedHitFlash(hitPosition, getOwner());
 				}
 				break;
 
@@ -305,7 +311,7 @@ void EnemyDamageable::applyDamageWithoutShadowMark(const EnemyHitContext& hit)
 			case PlayerAttackType::DeathTaunt:
 				if (DeathParticles* deathParticles = GameObjectAPI::findScript<DeathParticles>(attacker))
 				{
-					deathParticles->playHitFlash(hitPosition);
+					deathParticles->playHitFlash(hitPosition, getOwner());
 				}
 				break;
 
