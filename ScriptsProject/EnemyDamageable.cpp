@@ -295,14 +295,14 @@ void EnemyDamageable::applyDamageWithoutShadowMark(const EnemyHitContext& hit)
 			case PlayerAttackType::LyrielCharged:
 				if (LyrielParticles* lyrielParticles = GameObjectAPI::findScript<LyrielParticles>(attacker))
 				{
-					lyrielParticles->playHitFlash(hitPosition);
+					lyrielParticles->playHitFlash(hitPosition, getOwner());
 				}
 				break;
 
 			case PlayerAttackType::DeathCharged:
 				if (DeathParticles* deathParticles = GameObjectAPI::findScript<DeathParticles>(attacker))
 				{
-					deathParticles->playChargedHitFlash(hitPosition);
+					deathParticles->playChargedHitFlash(hitPosition, getOwner());
 				}
 				break;
 
@@ -311,7 +311,7 @@ void EnemyDamageable::applyDamageWithoutShadowMark(const EnemyHitContext& hit)
 			case PlayerAttackType::DeathTaunt:
 				if (DeathParticles* deathParticles = GameObjectAPI::findScript<DeathParticles>(attacker))
 				{
-					deathParticles->playHitFlash(hitPosition);
+					deathParticles->playHitFlash(hitPosition, getOwner());
 				}
 				break;
 

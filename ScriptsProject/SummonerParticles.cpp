@@ -18,6 +18,11 @@ SummonerParticles::SummonerParticles(GameObject* owner)
 
 void SummonerParticles::OnGameStop()
 {
+    releaseRuntimeParticles();
+}
+
+void SummonerParticles::releaseRuntimeParticles()
+{
     m_timedParticles.clear();
 }
 
