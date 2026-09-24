@@ -5,6 +5,7 @@
 #include "PlayerAttackType.h"
 
 class ReaperGauge;
+class SoulConsumeVFX;
 
 enum class ShadowMarkState
 {
@@ -27,9 +28,9 @@ public:
 
     FieldList getExposedFields() const override;
 
-    virtual bool processAttack(PlayerAttackType attackType);
+    virtual bool processAttack(PlayerAttackType attackType, Transform* attackerTransform = nullptr);
     bool isExploitable() const { return m_state == ShadowMarkState::Ready; }
-    virtual void exploit();
+    virtual void exploit(Transform* attackerTransform = nullptr);
     ShadowMarkState getState() const { return m_state; }
 	void updateUI();
     void clearMark() { resetMark(); }
@@ -56,6 +57,7 @@ private:
 
     void startEntryPop();
     void updateEntryPop();
+    void spawnSoulConsumeVFX(Transform* attackerTransform);
 
 public:
     bool m_useMarkDuration = true;
@@ -81,6 +83,9 @@ public:
     float m_entryPopStartScaleMultiplier = 0.8f;
     float m_entryPopPeakScaleMultiplier = 1.1f;
     float m_readyPopPeakScaleMultiplier = 1.2f;
+
+    PrefabRef m_soulConsumePrefab;
+    float m_soulSpawnHeight = 1.8f;
 
 private:
     ShadowMarkState m_state = ShadowMarkState::None;

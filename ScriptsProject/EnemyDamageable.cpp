@@ -133,7 +133,7 @@ void EnemyDamageable::takeDamage(const HitContext& ctx)
 		return;
 	}
 
-	processShadowMarkHit(enemyCtx.attackType);
+	processShadowMarkHit(enemyCtx.attackType, enemyCtx.attacker);
 
 	auto* barrier = GameObjectAPI::findScript<BarrierComponent>(m_owner);
 	if (barrier && barrier->hasActiveBarriers())
@@ -260,14 +260,14 @@ void EnemyDamageable::onDeath()
 	PersistingCheckpointState::Get().m_deadEnemies.push_back(m_owner->GetID());
 }
 
-bool EnemyDamageable::processShadowMarkHit(PlayerAttackType attackType)
+bool EnemyDamageable::processShadowMarkHit(PlayerAttackType attackType, Transform* attackerTransform)
 {
 	if (!m_shadowMark)
 	{
 		return false;
 	}
 
-	m_lastHitExploitedShadowMark = m_shadowMark->processAttack(attackType);
+	m_lastHitExploitedShadowMark = m_shadowMark->processAttack(attackType, attackerTransform);
 	return m_lastHitExploitedShadowMark;
 }
 

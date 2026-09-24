@@ -1,0 +1,248 @@
+{
+    "Version": 2,
+    "sourcePath": "Assets\\Prefabs\\SoulTrail.prefab",
+    "Name": "SoulTrail",
+    "Active": true,
+    "Static": false,
+    "Layer": "NAVMESH",
+    "Tag": "DEFAULT",
+    "Transform": {
+        "Position": [
+            0.002662569284439087,
+            0.0,
+            0.0
+        ],
+        "Rotation": [
+            -0.0,
+            0.0,
+            -0.0,
+            1.0
+        ],
+        "Scale": [
+            0.37244001030921936,
+            0.37244001030921936,
+            0.37244001030921936
+        ]
+    },
+    "Components": [
+        {
+            "UID": 6568879132509485606,
+            "ComponentType": "TRAIL",
+            "Active": true,
+            "StartWidth": 1.5,
+            "EndWidth": 1.5,
+            "SpawnDistance": 0.0,
+            "PointLifetime": 0.5,
+            "Bloom": true,
+            "TextureAssetId": {
+                "uid": 10764966982965910805,
+                "libId": "79aa7d0194ab9b0020aa064e26131741",
+                "type": "TEXTURE"
+            },
+            "ColorOverTime": [
+                {
+                    "IsAlphaMark": false,
+                    "Position": 0.0,
+                    "Color": [
+                        0.0,
+                        0.7799227237701416,
+                        1.0
+                    ]
+                },
+                {
+                    "IsAlphaMark": true,
+                    "Position": 0.0,
+                    "Alpha": 1.0
+                },
+                {
+                    "IsAlphaMark": false,
+                    "Position": 1.0,
+                    "Color": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                },
+                {
+                    "IsAlphaMark": true,
+                    "Position": 1.0,
+                    "Alpha": 1.0
+                }
+            ],
+            "ColorCurve": [
+                0.4449999928474426,
+                0.05000000074505806,
+                0.550000011920929,
+                0.949999988079071
+            ]
+        },
+        {
+            "UID": 448407626726152894,
+            "ComponentType": "SCRIPT",
+            "Active": true,
+            "ScriptName": "SoulConsumeVFX",
+            "ScriptFields": {
+                "Flight Duration": 1.0,
+                "Initial Vertical Lift": 1.0,
+                "Vertical Lift Randomness": 0.3499999940395355,
+                "Lateral Curve Range": 2.0,
+                "Terminal Curve Influence": 0.15000000596046448,
+                "Target Offset": [
+                    0.0,
+                    1.0,
+                    0.0
+                ],
+                "Trail Fade Delay": 0.25,
+                "Draw Debug Curve": false
+            }
+        }
+    ],
+    "Children": [
+        {
+            "Name": "Particle System",
+            "Active": true,
+            "Static": false,
+            "Layer": "NAVMESH",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0,
+                    1.0
+                ],
+                "Scale": [
+                    0.6100013852119446,
+                    0.6100013852119446,
+                    0.6100013852119446
+                ]
+            },
+            "Components": [
+                {
+                    "UID": 14100775902128809370,
+                    "ComponentType": "PARTICLE_SYSTEM",
+                    "Active": true,
+                    "TextureAssetId": {
+                        "uid": 14705584805046184271,
+                        "libId": "cc14bb777728e94fe84c4da86f0907cf",
+                        "type": "TEXTURE"
+                    },
+                    "ParticleEmitters": [
+                        {
+                            "Modules": [
+                                {
+                                    "ModuleType": 2,
+                                    "Looping": true,
+                                    "Duration": 20.0,
+                                    "RateOverTime": 4.0,
+                                    "RateOverDistance": 0.0
+                                },
+                                {
+                                    "ModuleType": 4,
+                                    "LifeTimeType": "CONSTANT",
+                                    "StartLifeTime": 1.0
+                                },
+                                {
+                                    "ModuleType": 1,
+                                    "ShapeType": "CONE",
+                                    "Radius": 0.10000000149011612,
+                                    "RadiusThickness": 1.0,
+                                    "RadiusScale": 4.199999809265137
+                                },
+                                {
+                                    "ModuleType": 3,
+                                    "ColorOverTime": [
+                                        {
+                                            "IsAlphaMark": false,
+                                            "Position": 0.0,
+                                            "Color": [
+                                                0.2135627120733261,
+                                                0.953667938709259,
+                                                0.8079328536987305
+                                            ]
+                                        },
+                                        {
+                                            "IsAlphaMark": true,
+                                            "Position": 0.0,
+                                            "Alpha": 1.0
+                                        },
+                                        {
+                                            "IsAlphaMark": true,
+                                            "Position": 0.9834983348846436,
+                                            "Alpha": 0.0
+                                        },
+                                        {
+                                            "IsAlphaMark": false,
+                                            "Position": 1.0,
+                                            "Color": [
+                                                1.0,
+                                                1.0,
+                                                1.0
+                                            ]
+                                        }
+                                    ],
+                                    "ColorCurve": [
+                                        0.0,
+                                        0.0,
+                                        1.0,
+                                        1.0
+                                    ],
+                                    "HDRColor": [
+                                        0.0,
+                                        0.0,
+                                        0.0
+                                    ],
+                                    "HDRIntensity": 0.0
+                                },
+                                {
+                                    "ModuleType": 5,
+                                    "VelocityType": "CONSTANT",
+                                    "InitialVelocity": 0.10000000149011612,
+                                    "Gravity": 0.0
+                                },
+                                {
+                                    "ModuleType": 6,
+                                    "StartScaleType": "CONSTANT",
+                                    "StartScale": [
+                                        1.0,
+                                        1.0,
+                                        0.0
+                                    ],
+                                    "ChangeSizeOverTime": false
+                                },
+                                {
+                                    "ModuleType": 7,
+                                    "RotationType": "CONSTANT",
+                                    "StartRotation": 1.5707963705062866,
+                                    "VelocityType": "CONSTANT",
+                                    "AngularVelocity": 0.0,
+                                    "FlipRotation": 0.0
+                                },
+                                {
+                                    "ModuleType": 8,
+                                    "TileRows": 1,
+                                    "TileColumns": 1,
+                                    "FPS": 0.0,
+                                    "StartFrameType": "CONSTANT",
+                                    "StartFrame": 0.0
+                                },
+                                {
+                                    "ModuleType": 9,
+                                    "RenderMode": "BILLBOARD",
+                                    "RenderLayer": 0,
+                                    "BlendMode": "ALPHA"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "Children": []
+        }
+    ]
+}

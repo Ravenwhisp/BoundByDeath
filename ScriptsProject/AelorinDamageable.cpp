@@ -80,7 +80,7 @@ void AelorinDamageable::takeDamage(const HitContext& ctx)
 
     resetLastShadowMarkResult();
 
-    const bool shadowMarkExploited = processShadowMarkHit(enemyCtx.attackType);
+    const bool shadowMarkExploited = processShadowMarkHit(enemyCtx.attackType, enemyCtx.attacker);
 
     // Boss is already sitting on a threshold
     if (m_thresholdLocked)

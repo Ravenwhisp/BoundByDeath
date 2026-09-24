@@ -2,6 +2,7 @@
 #include "EnemyShadowMark.h"
 #include "ReaperGauge.h"
 #include "PersistingPowerupState.h"
+#include "SoulConsumeVFX.h"
 #include <cmath>
 
 IMPLEMENT_SCRIPT_FIELDS(EnemyShadowMark, 
@@ -25,7 +26,10 @@ IMPLEMENT_SCRIPT_FIELDS(EnemyShadowMark,
         FIELD_GROUP_LABEL("Inactive Fragment Pulse"),
         SERIALIZED_FLOAT(m_inactivePulseMinAlpha, "Min Alpha", 0.0f, 1.0f, 0.05f),
         SERIALIZED_FLOAT(m_inactivePulseMaxAlpha, "Max Alpha", 0.0f, 1.0f, 0.05f),
-        SERIALIZED_FLOAT(m_inactivePulseFrequency, "Frequency", 0.1f, 5.0f, 0.1f)
+        SERIALIZED_FLOAT(m_inactivePulseFrequency, "Frequency", 0.1f, 5.0f, 0.1f),
+        FIELD_GROUP_LABEL("Soul Consume VFX"),
+        SERIALIZED_ASSET_REF(m_soulConsumePrefab, "Soul Consume Prefab", AssetType::PREFAB),
+        SERIALIZED_FLOAT(m_soulSpawnHeight, "Soul Spawn Height", 0.0f, 10.0f, 0.1f)
     )
 )
 
@@ -146,7 +150,7 @@ void EnemyShadowMark::Update()
     updateUI();
 }
 
-bool EnemyShadowMark::processAttack(PlayerAttackType attackType)
+bool EnemyShadowMark::processAttack(PlayerAttackType attackType, Transform* attackerTransform)
 {
     if (m_isExploding)
     {
@@ -155,7 +159,7 @@ bool EnemyShadowMark::processAttack(PlayerAttackType attackType)
 
     if (m_state == ShadowMarkState::Ready && canExploitWith(attackType))
     {
-        exploit();
+        exploit(attackerTransform);
         return true;
     }
 
@@ -178,9 +182,11 @@ bool EnemyShadowMark::processAttack(PlayerAttackType attackType)
     return false;
 }
 
-void EnemyShadowMark::exploit()
+void EnemyShadowMark::exploit(Transform* attackerTransform)
 {
     Debug::log("[ShadowMark] Mark exploited");
+
+    spawnSoulConsumeVFX(attackerTransform);
 
     if (m_reaperGauge == nullptr)
         m_reaperGauge = findReaperGauge();
@@ -191,6 +197,47 @@ void EnemyShadowMark::exploit()
         Debug::warn("[ShadowMark] ReaperGauge not found on any GameObject. Make sure GameController has a ReaperGauge script.");
 
     startExplosion();
+}
+
+void EnemyShadowMark::spawnSoulConsumeVFX(Transform* attackerTransform)
+{
+    if (!m_soulConsumePrefab.m_id.isValid())
+    {
+        return;
+    }
+
+    if (attackerTransform == nullptr)
+    {
+        Debug::warn("[ShadowMark] Soul consume VFX skipped because the exploiting attacker is missing.");
+        return;
+    }
+
+    Transform* enemyTransform = GameObjectAPI::getTransform(getOwner());
+    if (enemyTransform == nullptr)
+    {
+        Debug::warn("[ShadowMark] Soul consume VFX skipped because '%s' has no transform.", GameObjectAPI::getName(getOwner()));
+        return;
+    }
+
+    Vector3 spawnPosition = TransformAPI::getGlobalPosition(enemyTransform);
+    spawnPosition.y += m_soulSpawnHeight;
+
+    GameObject* soulObject = GameObjectAPI::instantiatePrefab(m_soulConsumePrefab.m_id, spawnPosition, Vector3::Zero);
+    if (soulObject == nullptr)
+    {
+        Debug::warn("[ShadowMark] Failed to instantiate Soul Consume Prefab.");
+        return;
+    }
+
+    SoulConsumeVFX* soulVFX = GameObjectAPI::findScript<SoulConsumeVFX>(soulObject);
+    if (soulVFX == nullptr)
+    {
+        Debug::warn("[ShadowMark] Soul Consume Prefab must have SoulConsumeVFX on its root.");
+        GameObjectAPI::removeGameObject(soulObject);
+        return;
+    }
+
+    soulVFX->beginFlight(attackerTransform);
 }
 
 ReaperGauge* EnemyShadowMark::findReaperGauge()

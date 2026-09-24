@@ -18,7 +18,7 @@ public:
 
     FieldList getExposedFields() const override;
 
-    bool processAttack(PlayerAttackType attackType) override;
+    bool processAttack(PlayerAttackType attackType, Transform* attackerTransform = nullptr) override;
     bool isActivated() const { return m_activated; }
 
     bool isPuzzleCompleted() const { return m_puzzleCompleted; }

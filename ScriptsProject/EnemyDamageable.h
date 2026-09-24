@@ -46,7 +46,7 @@ protected:
 	void onDeath() override;
 
 	void resetLastShadowMarkResult() { m_lastHitExploitedShadowMark = false; }
-	bool processShadowMarkHit(PlayerAttackType attackType);
+	bool processShadowMarkHit(PlayerAttackType attackType, Transform* attackerTransform);
 	void applyDamageWithoutShadowMark(const EnemyHitContext& hit);
 
 	virtual void setHealthBarAlpha(float alpha);

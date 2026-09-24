@@ -102,14 +102,14 @@ void CrystalShadowMark::Update()
     }
 }
 
-bool CrystalShadowMark::processAttack(PlayerAttackType attackType)
+bool CrystalShadowMark::processAttack(PlayerAttackType attackType, Transform* attackerTransform)
 {
     if (m_activated || m_puzzleCompleted)
     {
         return false;
     }
 
-    const bool markExploited = EnemyShadowMark::processAttack(attackType);
+    const bool markExploited = EnemyShadowMark::processAttack(attackType, attackerTransform);
 
     if (markExploited)
     {
