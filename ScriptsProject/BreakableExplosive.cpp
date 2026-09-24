@@ -269,7 +269,7 @@ void BreakableExplosive::onBreak()
         damageableScript->takeDamage(m_explosionDamage);
     }
 
-    ParticleLifecycle::spawnOneShotTimed(m_timedBreakEffects, ObjectVfxIds::barrelExplosion(), getBreakEffectPosition());
+    ParticleLifecycle::spawnOneShotTimed(m_timedBreakEffects, ObjectVfxIds::barrelExplosion(), getBreakEffectPosition(), Vector3::Zero, ParticleLifecycle::kDefaultOneShotLifetime, getOwner());
 
     EnvironmentSound::play(getOwner(), "Play_Environment_Explosive_Barrel");
 

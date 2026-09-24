@@ -30,6 +30,14 @@ void SkeletonParticles::Start()
 
 void SkeletonParticles::OnGameStop()
 {
+    releaseRuntimeParticles();
+}
+
+void SkeletonParticles::releaseRuntimeParticles()
+{
+    // The revive particle may be scheduled in the tracker via activateTimed;
+    // cancel it first so clear() and destroy() do not destroy it twice.
+    m_timedParticles.cancel(m_reviveParticle);
     m_timedParticles.clear();
     ParticleLifecycle::destroy(m_reviveParticle);
     m_reviveParticleTransform = nullptr;
