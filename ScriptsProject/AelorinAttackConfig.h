@@ -14,6 +14,10 @@ public:
 	{
 	}
 
+	// Health
+	float m_phase1MaxHp = 100.0f;
+	float m_phase2MaxHp = 100.0f;
+
 	// Decision Timing
 	float m_phase1DecisionTime = 2.0f;
 	float m_phase2DecisionTime = 1.0f;
@@ -62,6 +66,10 @@ public:
 
 	// Spirit Cannon
 	float m_spiritCannonWindupDuration = 3.0f;
+
+	float m_spiritCannonTrackingSpeed = 30.0f;
+	float m_spiritCannonPhase2TrackingSpeed = 40.0f;
+	float m_spiritCannonAimLockDuration = 0.2f;
 
 	float m_spiritCannonBeamLength = 20.0f;
 	float m_spiritCannonBeamWidth = 1.5f;
@@ -121,6 +129,11 @@ public:
 	IMPLEMENT_DATACONTAINER_FIELDS(
 		AelorinAttackConfig,
 
+		FIELD_GROUP_COLLAPSE("Health",
+			SERIALIZED_FLOAT(m_phase1MaxHp, "Phase 1 Max HP", 0.0f, 99999.9f, 1.0f),
+			SERIALIZED_FLOAT(m_phase2MaxHp, "Phase 2 Max HP", 0.0f, 99999.9f, 1.0f)
+		),
+
 		FIELD_GROUP_COLLAPSE("Decision Timing",
 			SERIALIZED_FLOAT(m_phase1DecisionTime, "Phase 1 Decision Time", 0.0f, 10.0f, 0.05f),
 			SERIALIZED_FLOAT(m_phase2DecisionTime, "Phase 2 Decision Time", 0.0f, 10.0f, 0.05f)
@@ -166,6 +179,9 @@ public:
 
 		FIELD_GROUP_COLLAPSE("Spirit Cannon",
 			SERIALIZED_FLOAT(m_spiritCannonWindupDuration, "Cannon Windup Duration", 0.0f, 10.0f, 0.1f),
+			SERIALIZED_FLOAT(m_spiritCannonTrackingSpeed, "Spirit Cannon Tracking Speed", 0.0f, 360.0f, 1.0f),
+			SERIALIZED_FLOAT(m_spiritCannonPhase2TrackingSpeed, "Spirit Cannon Phase 2 Tracking Speed", 0.0f, 360.0f, 1.0f),
+			SERIALIZED_FLOAT(m_spiritCannonAimLockDuration, "Spirit Cannon Aim Lock Duration", 0.0f, 2.0f, 0.05f),
 			SERIALIZED_FLOAT(m_spiritCannonBeamLength, "Cannon Beam Length", 0.0f, 200.0f, 1.0f),
 			SERIALIZED_FLOAT(m_spiritCannonBeamWidth, "Cannon Beam Width", 0.0f, 20.0f, 0.1f),
 			SERIALIZED_FLOAT(m_spiritCannonDamage, "Cannon Beam Damage", 0.0f, 100.0f, 1.0f),

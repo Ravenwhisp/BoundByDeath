@@ -5,6 +5,8 @@
 #include <vector>
 
 class AelorinBossController;
+class Transform2D;
+class UISlider;
 
 enum class AelorinThresholdType
 {
@@ -27,6 +29,8 @@ class AelorinDamageable : public EnemyDamageable
 public:
 	explicit AelorinDamageable(GameObject* owner);
 
+	FieldList getExposedFields() const override;
+
 	void Start() override;
 
 	void takeDamage(float amount) override;
@@ -37,6 +41,8 @@ public:
 
 	void beginPhase2();
 
+	bool hasActiveThresholdAt(float percent) const;
+
 protected:
 	void onHpDepleted() override;
 
@@ -45,18 +51,21 @@ private:
 
 	const AelorinThreshold* getCurrentThreshold() const;
 	bool hasCurrentThreshold() const;
-	bool isShadowExecution(const EnemyHitContext& ctx) const;
 
 	float getCurrentThresholdPercent() const;
 	float getCurrentThresholdHp() const;
 
 	void processNormalDamage(const EnemyHitContext& ctx);
-	void processShadowExecution(const EnemyHitContext& ctx);
+	void processThresholdBreak(const EnemyHitContext& ctx);
 
 	void lockCurrentThreshold();
 	void advanceThreshold();
 	void requestPhaseTransition();
 	void handleFinalDeath(const EnemyHitContext& ctx);
+
+	// Health
+	void setupPhase2HealthBar();
+	void setHealthBarContainerActive(Transform2D* container, bool active);
 
 private:
 	AelorinBossController* m_controller = nullptr;
@@ -81,4 +90,9 @@ private:
 	bool m_thresholdLocked = false;
 	bool m_phaseTransitionPending = false;
 	bool m_allowFinalDeath = false;
+
+public:
+	ComponentRef<Transform2D> m_phase2HealthBarContainer;
+	ComponentRef<UISlider> m_phase2HealthSlider;
+	ComponentRef<UISlider> m_phase2HealthSlider2;
 };

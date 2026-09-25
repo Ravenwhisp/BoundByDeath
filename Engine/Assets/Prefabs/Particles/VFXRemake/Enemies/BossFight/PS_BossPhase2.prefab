@@ -52,7 +52,7 @@
             },
             "Components": [
                 {
-                    "UID": 7537576723884831180,
+                    "UID": 11881489181148186477,
                     "ComponentType": "PARTICLE_SYSTEM",
                     "Active": true,
                     "TextureAssetId": {
@@ -109,12 +109,19 @@
                                         0.1328125,
                                         0.5859375,
                                         0.90625
-                                    ]
+                                    ],
+                                    "HDRColor": [
+                                        0.0,
+                                        0.0,
+                                        0.0
+                                    ],
+                                    "HDRIntensity": 0.0
                                 },
                                 {
                                     "ModuleType": 5,
                                     "VelocityType": "CONSTANT",
-                                    "InitialVelocity": 0.0
+                                    "InitialVelocity": 0.0,
+                                    "Gravity": 0.0
                                 },
                                 {
                                     "ModuleType": 6,
@@ -127,8 +134,8 @@
                                     "ChangeSizeOverTime": true,
                                     "EndScaleType": "CONSTANT",
                                     "EndScale": [
-                                        5.0,
-                                        5.0,
+                                        15.0,
+                                        15.0,
                                         0.0
                                     ]
                                 },
@@ -151,21 +158,22 @@
                                 {
                                     "ModuleType": 9,
                                     "RenderMode": "HORIZONTAL",
-                                    "RenderLayer": 0
+                                    "RenderLayer": 0,
+                                    "BlendMode": "ALPHA"
                                 }
                             ]
                         }
                     ]
                 },
                 {
-                    "UID": 10120614015483677836,
+                    "UID": 9315071710949586384,
                     "ComponentType": "PREFAB_INSTANCE",
                     "Active": true,
                     "sourcePath": "Assets\\Prefabs\\Particles\\VFXRemake\\Enemies\\BossFight\\PhaseTransformation\\PS_BossTurningShockwave1.prefab",
                     "assetUID": 1640265826662399891
                 },
                 {
-                    "UID": 5060458943350129128,
+                    "UID": 2216928105451869933,
                     "ComponentType": "PREFAB_INSTANCE",
                     "Active": true,
                     "sourcePath": "Assets\\Prefabs\\Particles\\VFXRemake\\Enemies\\BossFight\\PhaseTransformation\\PS_BossTurningShockwave2.prefab",
@@ -200,7 +208,7 @@
             },
             "Components": [
                 {
-                    "UID": 4856106058435657218,
+                    "UID": 13276141875837804932,
                     "ComponentType": "PARTICLE_SYSTEM",
                     "Active": true,
                     "TextureAssetId": {
@@ -276,12 +284,19 @@
                                         0.1328125,
                                         0.5859375,
                                         0.90625
-                                    ]
+                                    ],
+                                    "HDRColor": [
+                                        0.0,
+                                        0.0,
+                                        0.0
+                                    ],
+                                    "HDRIntensity": 0.0
                                 },
                                 {
                                     "ModuleType": 5,
                                     "VelocityType": "CONSTANT",
-                                    "InitialVelocity": 0.0
+                                    "InitialVelocity": 0.0,
+                                    "Gravity": 0.0
                                 },
                                 {
                                     "ModuleType": 6,
@@ -294,8 +309,8 @@
                                     "ChangeSizeOverTime": true,
                                     "EndScaleType": "CONSTANT",
                                     "EndScale": [
-                                        5.0,
-                                        5.0,
+                                        10.0,
+                                        10.0,
                                         0.0
                                     ]
                                 },
@@ -318,21 +333,22 @@
                                 {
                                     "ModuleType": 9,
                                     "RenderMode": "HORIZONTAL",
-                                    "RenderLayer": 0
+                                    "RenderLayer": 0,
+                                    "BlendMode": "ALPHA"
                                 }
                             ]
                         }
                     ]
                 },
                 {
-                    "UID": 16562507446338090458,
+                    "UID": 11595233338102646719,
                     "ComponentType": "PREFAB_INSTANCE",
                     "Active": true,
                     "sourcePath": "Assets\\Prefabs\\Particles\\VFXRemake\\Enemies\\BossFight\\PhaseTransformation\\PS_BossTurningShockwave1.prefab",
                     "assetUID": 1640265826662399891
                 },
                 {
-                    "UID": 3008764533304622998,
+                    "UID": 4907461853583125908,
                     "ComponentType": "PREFAB_INSTANCE",
                     "Active": true,
                     "sourcePath": "Assets\\Prefabs\\Particles\\VFXRemake\\Enemies\\BossFight\\PhaseTransformation\\PS_BossTurningShockwave1.prefab",
@@ -367,7 +383,7 @@
             },
             "Components": [
                 {
-                    "UID": 3947651612220217649,
+                    "UID": 4566142299320967343,
                     "ComponentType": "PARTICLE_SYSTEM",
                     "Active": true,
                     "TextureAssetId": {
@@ -394,7 +410,7 @@
                                 {
                                     "ModuleType": 1,
                                     "ShapeType": "CONE",
-                                    "Radius": 0.5,
+                                    "Radius": 1.0,
                                     "RadiusThickness": 1.0,
                                     "RadiusScale": 2.0
                                 },
@@ -425,13 +441,20 @@
                                         0.8203125,
                                         1.0,
                                         1.0
-                                    ]
+                                    ],
+                                    "HDRColor": [
+                                        0.0,
+                                        0.0,
+                                        0.0
+                                    ],
+                                    "HDRIntensity": 0.0
                                 },
                                 {
                                     "ModuleType": 5,
                                     "VelocityType": "RANDOM_BETWEEN_TWO",
                                     "InitialVelocity": 1.0,
-                                    "InitialVelocity2": 3.0
+                                    "InitialVelocity2": 3.0,
+                                    "Gravity": 0.0
                                 },
                                 {
                                     "ModuleType": 6,
@@ -473,14 +496,15 @@
                                 {
                                     "ModuleType": 9,
                                     "RenderMode": "BILLBOARD",
-                                    "RenderLayer": 0
+                                    "RenderLayer": 0,
+                                    "BlendMode": "ALPHA"
                                 }
                             ]
                         }
                     ]
                 },
                 {
-                    "UID": 18142693250550153502,
+                    "UID": 3920289308321074125,
                     "ComponentType": "PREFAB_INSTANCE",
                     "Active": true,
                     "sourcePath": "Assets\\Prefabs\\Particles\\VFXRemake\\Enemies\\BossFight\\PhaseTransformation\\PS_BossTurningEmbers1.prefab",
@@ -515,7 +539,7 @@
             },
             "Components": [
                 {
-                    "UID": 1825763484015578894,
+                    "UID": 15442728207104101119,
                     "ComponentType": "PARTICLE_SYSTEM",
                     "Active": true,
                     "TextureAssetId": {
@@ -542,7 +566,7 @@
                                 {
                                     "ModuleType": 1,
                                     "ShapeType": "CONE",
-                                    "Radius": 0.5,
+                                    "Radius": 1.0,
                                     "RadiusThickness": 1.0,
                                     "RadiusScale": 1.0
                                 },
@@ -582,13 +606,20 @@
                                         0.859375,
                                         1.0,
                                         1.0
-                                    ]
+                                    ],
+                                    "HDRColor": [
+                                        0.0,
+                                        0.0,
+                                        0.0
+                                    ],
+                                    "HDRIntensity": 0.0
                                 },
                                 {
                                     "ModuleType": 5,
                                     "VelocityType": "RANDOM_BETWEEN_TWO",
                                     "InitialVelocity": 1.0,
-                                    "InitialVelocity2": 3.0
+                                    "InitialVelocity2": 3.0,
+                                    "Gravity": 0.0
                                 },
                                 {
                                     "ModuleType": 6,
@@ -630,21 +661,22 @@
                                 {
                                     "ModuleType": 9,
                                     "RenderMode": "BILLBOARD",
-                                    "RenderLayer": 0
+                                    "RenderLayer": 0,
+                                    "BlendMode": "ALPHA"
                                 }
                             ]
                         }
                     ]
                 },
                 {
-                    "UID": 739427801259585858,
+                    "UID": 6279336238263969387,
                     "ComponentType": "PREFAB_INSTANCE",
                     "Active": true,
                     "sourcePath": "Assets\\Prefabs\\Particles\\VFXRemake\\Enemies\\BossFight\\PhaseTransformation\\PS_BossTurningEmbers1.prefab",
                     "assetUID": 10533029938083934102
                 },
                 {
-                    "UID": 8523536740387415920,
+                    "UID": 12695498975842831815,
                     "ComponentType": "PREFAB_INSTANCE",
                     "Active": true,
                     "sourcePath": "Assets\\Prefabs\\Particles\\VFXRemake\\Enemies\\BossFight\\PhaseTransformation\\PS_BossTurningEmbers2.prefab",

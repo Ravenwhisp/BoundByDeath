@@ -5,6 +5,8 @@
 #include <vector>
 
 class Transform2D;
+class AelorinDamageable;
+class AelorinBossController;
 
 class AelorinUI : public Script
 {
@@ -18,25 +20,38 @@ public:
 
 	FieldList getExposedFields() const override;
 
+	// Health
+	void setupHealthUI();
+	void updateHealthMarkers();
+
 	// Seeker Sigils
 	void showSeekerSigilsUI(const Vector3& impactPosition, float radius, float telegraphDuration);
+	void cancelSeekerSigils();
 
 	// Nova
 	void showNovaUI(const Vector3& center, float firstRadius, float firstChargeDuration, bool hasSecondWave, float secondRadius = 0.0f, float secondChargeDuration = 0.0f);
+	void cancelNova();
 
 	// Risen Spires
 	void showRisenSpiresUI(Transform* patternRoot, float radius, float chargeDuration);
+	void cancelRisenSpires();
 
 	// Spirit Cannon
-	void showSpiritCannonUI(Transform* originTransform, Transform* targetTransform, float beamLength, float beamWidth, float chargeDuration);
+	void showSpiritCannonUI(Transform* originTransform, const Vector3& aimDirection, float beamLength, float beamWidth, float chargeDuration);
+	void setSpiritCannonAimDirection(const Vector3& aimDirection);
+	void cancelSpiritCannon();
 
 	// Grasp of the Dead
 	void showGraspOfTheDeadUI(const Vector3& center, float radius, float pullDuration);
+	void cancelGraspOfTheDead();
 
 	// Soul Cataclysm
 	void showSoulCataclysmUI(const Vector3& center, float radius, Transform* safeZonesRoot, float safeZoneRadius, float channelDuration);
 
 private:
+
+	// Health
+	void setHealthMarkerVisible(Transform2D* marker, bool visible);
 
 	// Seeker Sigils
 	struct SeekerSigilsUISlot
@@ -116,6 +131,29 @@ private:
 	SoulCataclysmSafeZoneUISlot* acquireSoulCataclysmSafeZoneUISlot();
 
 private:
+
+	// Health
+	ComponentRef<Transform2D> m_healthPhase1Marker50;
+	ComponentRef<Transform2D> m_healthPhase1Marker0;
+
+	ComponentRef<Transform2D> m_healthPhase2Marker70;
+	ComponentRef<Transform2D> m_healthPhase2Marker45;
+	ComponentRef<Transform2D> m_healthPhase2Marker25;
+	ComponentRef<Transform2D> m_healthPhase2Marker10;
+	ComponentRef<Transform2D> m_healthPhase2Marker0;
+
+
+	Transform2D* m_healthPhase1Marker50Transform2D = nullptr;
+	Transform2D* m_healthPhase1Marker0Transform2D = nullptr;
+
+	Transform2D* m_healthPhase2Marker70Transform2D = nullptr;
+	Transform2D* m_healthPhase2Marker45Transform2D = nullptr;
+	Transform2D* m_healthPhase2Marker25Transform2D = nullptr;
+	Transform2D* m_healthPhase2Marker10Transform2D = nullptr;
+	Transform2D* m_healthPhase2Marker0Transform2D = nullptr;
+
+	AelorinDamageable* m_aelorinDamageable = nullptr;
+	AelorinBossController* m_aelorinController = nullptr;
 
 	// Seeker Sigils
 	ComponentRef<Transform> m_seekerSigilsUICanvas;
@@ -197,7 +235,7 @@ private:
 	Transform2D* m_spiritCannonUIGlowTransform2D = nullptr;
 
 	Transform* m_spiritCannonOriginTransform = nullptr;
-	Transform* m_spiritCannonTargetTransform = nullptr;
+	Vector3 m_spiritCannonAimDirection = Vector3::Zero;
 
 	bool m_spiritCannonUIActive = false;
 	bool m_spiritCannonUICharging = false;

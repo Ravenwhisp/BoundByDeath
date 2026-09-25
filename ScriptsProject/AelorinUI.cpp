@@ -2,11 +2,23 @@
 #include "AelorinUI.h"
 
 #include "Transform2D.h"
+#include "AelorinDamageable.h"
+#include "AelorinBossController.h"
 
 #include <algorithm>
 #include <cmath>
 
 IMPLEMENT_SCRIPT_FIELDS(AelorinUI,
+	FIELD_GROUP_COLLAPSE("Health Threshold Markers",
+		SERIALIZED_COMPONENT_REF(m_healthPhase1Marker50, "Phase 1 - 50% Marker", ComponentType::TRANSFORM2D),
+		SERIALIZED_COMPONENT_REF(m_healthPhase1Marker0, "Phase 1 - 0% Marker", ComponentType::TRANSFORM2D),
+		SERIALIZED_COMPONENT_REF(m_healthPhase2Marker70, "Phase 2 - 70% Marker", ComponentType::TRANSFORM2D),
+		SERIALIZED_COMPONENT_REF(m_healthPhase2Marker45, "Phase 2 - 45% Marker FURY", ComponentType::TRANSFORM2D),
+		SERIALIZED_COMPONENT_REF(m_healthPhase2Marker25, "Phase 2 - 25% Marker", ComponentType::TRANSFORM2D),
+		SERIALIZED_COMPONENT_REF(m_healthPhase2Marker10, "Phase 2 - 10% Marker FURY", ComponentType::TRANSFORM2D),
+		SERIALIZED_COMPONENT_REF(m_healthPhase2Marker0, "Phase 2 - 0% Marker", ComponentType::TRANSFORM2D)
+	),
+
 	FIELD_GROUP_COLLAPSE("Seeker Sigils",
 		SERIALIZED_COMPONENT_REF(m_seekerSigilsUICanvas, "Seeker Sigils UI Canvas", ComponentType::TRANSFORM),
 		SERIALIZED_COMPONENT_REF(m_seekerSigilsUIContainer, "Seeker Sigils UI Container", ComponentType::TRANSFORM2D),
@@ -132,6 +144,9 @@ void AelorinUI::Start()
 
 	setupSoulCataclysmSafeZonesUI();
 	hideSoulCataclysmUI();
+
+	// Health
+	setupHealthUI();
 }
 
 void AelorinUI::Update()
@@ -144,6 +159,43 @@ void AelorinUI::Update()
 	updateSpiritCannonUI(deltaTime);
 	updateGraspOfTheDeadUI(deltaTime);
 	updateSoulCataclysmUI(deltaTime);
+	updateHealthMarkers();
+}
+
+void AelorinUI::setupHealthUI()
+{
+	m_aelorinDamageable = GameObjectAPI::findScript<AelorinDamageable>(getOwner());
+	m_aelorinController = GameObjectAPI::findScript<AelorinBossController>(getOwner());
+	
+	m_healthPhase1Marker50Transform2D = m_healthPhase1Marker50.getReferencedComponent();
+	m_healthPhase1Marker0Transform2D = m_healthPhase1Marker0.getReferencedComponent();
+
+	m_healthPhase2Marker70Transform2D = m_healthPhase2Marker70.getReferencedComponent();
+	m_healthPhase2Marker45Transform2D = m_healthPhase2Marker45.getReferencedComponent();
+	m_healthPhase2Marker25Transform2D = m_healthPhase2Marker25.getReferencedComponent();
+	m_healthPhase2Marker10Transform2D = m_healthPhase2Marker10.getReferencedComponent();
+	m_healthPhase2Marker0Transform2D = m_healthPhase2Marker0.getReferencedComponent();
+
+	updateHealthMarkers();
+}
+
+void AelorinUI::updateHealthMarkers()
+{
+	if (!m_aelorinDamageable || !m_aelorinController)
+	{
+		return;
+	}
+
+	const bool phase2 = m_aelorinController->isPhase2();
+
+	setHealthMarkerVisible(m_healthPhase1Marker50Transform2D, !phase2 && m_aelorinDamageable->hasActiveThresholdAt(0.50f));
+	setHealthMarkerVisible(m_healthPhase1Marker0Transform2D, !phase2 && m_aelorinDamageable->hasActiveThresholdAt(0.0f));
+
+	setHealthMarkerVisible(m_healthPhase2Marker70Transform2D, phase2 && m_aelorinDamageable->hasActiveThresholdAt(0.70f));
+	setHealthMarkerVisible(m_healthPhase2Marker45Transform2D, phase2 && m_aelorinDamageable->hasActiveThresholdAt(0.45f));
+	setHealthMarkerVisible(m_healthPhase2Marker25Transform2D, phase2 && m_aelorinDamageable->hasActiveThresholdAt(0.25f));
+	setHealthMarkerVisible(m_healthPhase2Marker10Transform2D, phase2 && m_aelorinDamageable->hasActiveThresholdAt(0.10f));
+	setHealthMarkerVisible(m_healthPhase2Marker0Transform2D, phase2 && m_aelorinDamageable->hasActiveThresholdAt(0.0f));
 }
 
 void AelorinUI::showSeekerSigilsUI(const Vector3& impactPosition, float radius, float telegraphDuration)
@@ -185,6 +237,11 @@ void AelorinUI::showSeekerSigilsUI(const Vector3& impactPosition, float radius, 
 	Transform2DAPI::setAlpha(slot->glow, 0.0f);
 
 	Transform2DAPI::setScale(slot->background, Vector2(0.1f, 0.1f));
+}
+
+void AelorinUI::cancelSeekerSigils()
+{
+	hideAllSeekerSigilsUI();
 }
 
 void AelorinUI::setNovaContainerRadius(float radius)
@@ -257,6 +314,11 @@ void AelorinUI::showNovaUI(const Vector3& center, float firstRadius, float first
 	Transform2DAPI::setScale(m_novaUIGlowTransform2D, Vector2(1.0f, 1.0f));
 }
 
+void AelorinUI::cancelNova()
+{
+	hideNovaUI();
+}
+
 void AelorinUI::showRisenSpiresUI(Transform* patternRoot, float radius, float chargeDuration)
 {
 	if (!patternRoot)
@@ -325,7 +387,12 @@ void AelorinUI::showRisenSpiresUI(Transform* patternRoot, float radius, float ch
 	}
 }
 
-void AelorinUI::showSpiritCannonUI(Transform* originTransform, Transform* targetTransform, float beamLength, float beamWidth, float chargeDuration)
+void AelorinUI::cancelRisenSpires()
+{
+	hideAllRisenSpiresUI();
+}
+
+void AelorinUI::showSpiritCannonUI(Transform* originTransform, const Vector3& aimDirection, float beamLength, float beamWidth, float chargeDuration)
 {
 	GameObject* canvasObject = ComponentAPI::getOwner(m_spiritCannonUICanvasTransform);
 	if (!canvasObject)
@@ -334,7 +401,7 @@ void AelorinUI::showSpiritCannonUI(Transform* originTransform, Transform* target
 	}
 
 	m_spiritCannonOriginTransform = originTransform;
-	m_spiritCannonTargetTransform =	targetTransform;
+	m_spiritCannonAimDirection = aimDirection;
 	m_spiritCannonBeamLength = beamLength;
 	m_spiritCannonBeamWidth = beamWidth;
 	m_spiritCannonUITimer = 0.0f;
@@ -351,6 +418,23 @@ void AelorinUI::showSpiritCannonUI(Transform* originTransform, Transform* target
 	Transform2DAPI::setAlpha(m_spiritCannonUIBackgroundTransform2D, 0.0f);
 	Transform2DAPI::setAlpha(m_spiritCannonUIGlowTransform2D, 0.0f);
 	Transform2DAPI::setScale(m_spiritCannonUIBackgroundTransform2D,	Vector2(1.0f, 1.0f));
+}
+
+void AelorinUI::setSpiritCannonAimDirection(const Vector3& aimDirection)
+{
+	if (aimDirection.LengthSquared() <= 0.00001f)
+	{
+		return;
+	}
+
+	m_spiritCannonAimDirection = aimDirection;
+	m_spiritCannonAimDirection.y = 0.0f;
+	m_spiritCannonAimDirection.Normalize();
+}
+
+void AelorinUI::cancelSpiritCannon()
+{
+	hideSpiritCannonUI();
 }
 
 void AelorinUI::showGraspOfTheDeadUI(const Vector3& center, float radius, float pullDuration)
@@ -395,6 +479,11 @@ void AelorinUI::showGraspOfTheDeadUI(const Vector3& center, float radius, float 
 	Transform2DAPI::setScale(m_graspOfTheDeadUIBorderTransform2D, Vector2(1.0f, 1.0f));
 	Transform2DAPI::setScale(m_graspOfTheDeadUIGlowTransform2D, Vector2(1.0f, 1.0f));
 
+}
+
+void AelorinUI::cancelGraspOfTheDead()
+{
+	hideGraspOfTheDeadUI();
 }
 
 void AelorinUI::showSoulCataclysmUI(const Vector3& center, float radius, Transform* safeZonesRoot, float safeZoneRadius, float channelDuration)
@@ -480,6 +569,16 @@ void AelorinUI::showSoulCataclysmUI(const Vector3& center, float radius, Transfo
 
 		slot->active = true;
 	}
+}
+
+void AelorinUI::setHealthMarkerVisible(Transform2D* marker, bool visible)
+{
+	if (!marker)
+	{
+		return;
+	}
+
+	Transform2DAPI::setAlpha(marker, visible ? 1.0f : 0.0f);
 }
 
 void AelorinUI::setupSeekerSigilsUI()
@@ -1014,7 +1113,6 @@ void AelorinUI::updateSpiritCannonUI(float deltaTime)
 	}
 
 	if (!m_spiritCannonOriginTransform ||
-		!m_spiritCannonTargetTransform ||
 		!m_spiritCannonUICanvasTransform ||
 		!m_spiritCannonUIBackgroundTransform2D ||
 		!m_spiritCannonUIGlowTransform2D)
@@ -1024,11 +1122,8 @@ void AelorinUI::updateSpiritCannonUI(float deltaTime)
 	}
 
 	const Vector3 origin = TransformAPI::getGlobalPosition(m_spiritCannonOriginTransform);
-	const Vector3 targetPosition = TransformAPI::getGlobalPosition(m_spiritCannonTargetTransform);
-
-	Vector3 direction =	targetPosition - origin;
-	direction.y = 0.0f;
-
+	Vector3 direction = m_spiritCannonAimDirection;
+	
 	if (direction.LengthSquared() <= 0.00001f)
 	{
 		return;
@@ -1118,7 +1213,7 @@ void AelorinUI::hideSpiritCannonUI()
 	}
 
 	m_spiritCannonOriginTransform = nullptr;
-	m_spiritCannonTargetTransform = nullptr;
+	m_spiritCannonAimDirection = Vector3::Zero;
 	m_spiritCannonUIActive = false;
 	m_spiritCannonUICharging = false;
 	m_spiritCannonImpactUIPlaying = false;
