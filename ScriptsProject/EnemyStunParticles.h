@@ -25,6 +25,9 @@ public:
     void updateStunParticle();
     void stopStunParticle(bool immediate = false);
 
+    // Destroys every runtime particle owned by this script. Safe to call more than once.
+    void releaseRuntimeParticles();
+
 private:
     void ensureStunParticle();
     Vector3 getStunParticlePosition() const;
