@@ -116,7 +116,7 @@ void AelorinGraspOfTheDeadState::OnStateEnter()
 	}
 
 	// UI
-	if (!m_isFuryCast && m_aelorinUI)
+	if (m_aelorinUI)
 	{
 		const AelorinAttackConfig* config = m_controller->getAelorinAttackConfig();
 		Transform* graspCenter = m_controller->getGraspCenter();

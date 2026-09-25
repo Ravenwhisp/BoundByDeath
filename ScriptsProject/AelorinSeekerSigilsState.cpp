@@ -224,7 +224,7 @@ void AelorinSeekerSigilsState::launchProjectileAt(ProjectilePool* projectilePool
 	spawnPosition.y += config->m_seekerSigilsSpawnHeight;
 
 	// UI
-	if (!m_isFuryCast && m_aelorinUI && config->m_seekerSigilsFallSpeed > 0.0f)
+	if (m_aelorinUI && config->m_seekerSigilsFallSpeed > 0.0f)
 	{
 		const float telegraphDuration = config->m_seekerSigilsSpawnHeight / config->m_seekerSigilsFallSpeed;
 		m_aelorinUI->showSeekerSigilsUI(impactPosition, impactRadius, telegraphDuration);

@@ -44,6 +44,7 @@ void AelorinSpiritCannonState::OnStateEnter()
 	m_waitingForNextShot = false;
 	m_recovering = false;
 	m_completed = false;
+	m_isFuryCast = false;
 
 	if (!m_controller)
 	{
@@ -80,25 +81,11 @@ void AelorinSpiritCannonState::OnStateEnter()
 
 	beginShot();
 
-	/*m_isFuryCast = m_controller->isFuryActive();
+	m_isFuryCast = m_controller->isFuryActive();
 	if (m_isFuryCast)
 	{
 		m_controller->recordFuryCast();
 	}
-
-	if (!m_isFuryCast && m_aelorinUI)
-	{
-		const AelorinAttackConfig* config = m_controller->getAelorinAttackConfig();
-		if (config)
-		{
-			m_aelorinUI->showSpiritCannonUI(
-				m_aelorinTransform,
-				m_currentAimDirection,
-				config->m_spiritCannonBeamLength,
-				config->m_spiritCannonBeamWidth,
-				config->m_spiritCannonWindupDuration);
-		}
-	}*/
 
 	Debug::log("[AelorinSpiritCannonState] ENTER");
 }
@@ -216,6 +203,7 @@ void AelorinSpiritCannonState::OnStateExit()
 	m_waitingForNextShot = false;
 	m_recovering = false;
 	m_completed = false;
+	m_isFuryCast = false;
 
 	Debug::log("[AelorinSpiritCannonState] EXIT");
 }

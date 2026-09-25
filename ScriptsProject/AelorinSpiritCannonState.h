@@ -53,4 +53,5 @@ private:
 	bool m_waitingForNextShot = false;
 	bool m_recovering = false;
 	bool m_completed = false;
+	bool m_isFuryCast = false;
 };

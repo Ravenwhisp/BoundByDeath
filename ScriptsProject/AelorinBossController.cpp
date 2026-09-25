@@ -959,15 +959,15 @@ std::vector<AelorinAbility> AelorinBossController::buildAbilityPool() const
 		AelorinAbility::SpiritCannon
 	};
 
-	/*if (canUseNova())
-	{
-		pool.push_back(AelorinAbility::Nova);
-	}
+	//if (canUseNova())
+	//{
+	//	pool.push_back(AelorinAbility::Nova);
+	//}
 
-	if (canSummon())
-	{
-		pool.push_back(AelorinAbility::Summon);
-	}*/
+	//if (canSummon())
+	//{
+	//	pool.push_back(AelorinAbility::Summon);
+	//}
 
 	if (isPhase2())
 	{

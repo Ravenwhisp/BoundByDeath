@@ -70,7 +70,7 @@ void AelorinNovaState::OnStateEnter()
 		m_novaCenter = TransformAPI::getGlobalPosition(parentTransform);
 	}
 
-	if (!m_isFuryCast && m_aelorinUI)
+	if (m_aelorinUI)
 	{
 		const AelorinAttackConfig* config = m_controller->getAelorinAttackConfig();
 		if (config)

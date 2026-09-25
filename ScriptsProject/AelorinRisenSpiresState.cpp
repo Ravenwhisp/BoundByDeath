@@ -80,7 +80,7 @@ void AelorinRisenSpiresState::OnStateEnter()
 		m_controller->recordFuryCast();
 	}
 
-	if (!m_isFuryCast && m_aelorinUI)
+	if (m_aelorinUI)
 	{
 		const AelorinAttackConfig* config = m_controller->getAelorinAttackConfig();
 		if (config)
@@ -123,7 +123,7 @@ void AelorinRisenSpiresState::OnStateUpdate()
 		m_firstPassExecuted = true;
 
 		// UI Phase 2 reveal pattern B
-		if (!m_isFuryCast && m_controller->isPhase2() && m_aelorinUI)
+		if (m_controller->isPhase2() && m_aelorinUI)
 		{
 			m_aelorinUI->showRisenSpiresUI(m_controller->getRisenSpiresPatternBRoot(), config->m_risenSpiresRadius, config->m_risenSpiresPhase2SecondPassDelay);
 		}
