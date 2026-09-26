@@ -5,6 +5,8 @@
 #include "AelorinBossController.h"
 #include "AelorinSummonSlot.h"
 
+#include <cmath>
+
 IMPLEMENT_SCRIPT_FIELDS(AelorinDebugDraw,
 	FIELD_GROUP_COLLAPSE("Seeker Sigils",
 		SERIALIZED_BOOL(m_drawSeekerSigilsNormal, "Draw Normal Impact Areas"),
@@ -21,7 +23,8 @@ IMPLEMENT_SCRIPT_FIELDS(AelorinDebugDraw,
 	),
 
 	FIELD_GROUP_COLLAPSE("Spirit Cannon",
-		SERIALIZED_BOOL(m_drawSpiritCannon, "Draw Spirit Cannon")
+		SERIALIZED_BOOL(m_drawSpiritCannon, "Draw Spirit Cannon"),
+		SERIALIZED_BOOL(m_drawSpiritCannonPhase2, "Draw Spirit Cannon Phase 2")
 	),
 
 	FIELD_GROUP_COLLAPSE("Grasp of the Dead",
@@ -161,13 +164,53 @@ void AelorinDebugDraw::drawGizmo()
 
 	if (m_drawSpiritCannon && m_controller->hasSpiritCannonDebugLine())
 	{
+		const Vector3 origin = m_controller->getSpiritCannonDebugOrigin();
+		const Vector3 mainDirection = m_controller->getSpiritCannonDebugDirection();
+
 		drawBeam(
-			m_controller->getSpiritCannonDebugOrigin(),
-			m_controller->getSpiritCannonDebugDirection(),
+			origin,
+			mainDirection,
 			config->m_spiritCannonBeamLength,
 			m_controller->getSpiritCannonDebugWidth(),
 			yellow
 		);
+
+		if (m_drawSpiritCannonPhase2)
+		{
+			constexpr float degreesToRadians = 3.14159265f / 180.0f;
+
+			const float angleRadians = config->m_spiritCannonPhase2SideAngle * degreesToRadians;
+			const float cosAngle = std::cos(angleRadians);
+			const float sinAngle = std::sin(angleRadians);
+
+			const Vector3 leftDirection(
+				mainDirection.x * cosAngle -mainDirection.z * sinAngle,
+				0.0f,
+				mainDirection.x * sinAngle + mainDirection.z * cosAngle
+			);
+
+			const Vector3 rightDirection(
+				mainDirection.x * cosAngle + mainDirection.z * sinAngle,
+				0.0f,
+				-mainDirection.x * sinAngle + mainDirection.z * cosAngle
+			);
+
+			drawBeam(
+				origin,
+				leftDirection,
+				config->m_spiritCannonBeamLength,
+				config->m_spiritCannonPhase2SideWidth,
+				yellow
+			);
+
+			drawBeam(
+				origin,
+				rightDirection,
+				config->m_spiritCannonBeamLength,
+				config->m_spiritCannonPhase2SideWidth,
+				yellow
+			);
+		}
 	}
 
 	if (m_drawGraspCenter)

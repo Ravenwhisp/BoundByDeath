@@ -74,13 +74,16 @@ public:
 
 	float m_spiritCannonDamage = 20.0f;
 
-	float m_spiritCannonShotInterval = 0.5f;
+	float m_spiritCannonShotInterval = 0.8f;
 	float m_spiritCannonRecoveryDuration = 0.5f;
 
+	float m_spiritCannonPhase2SideAngle = 15.0f;
+	float m_spiritCannonPhase2SideWidth = 0.2f;
+
 	// Grasp of the Dead
-	float m_graspPullDuration = 2.0f;
+	float m_graspPullDuration = 5.0f;
 	float m_graspPullStrength = 3.0f;
-	float m_graspVisualRadius = 5.0f;
+	float m_graspVisualRadius = 2.0f;
 
 	// Teleport
 	float m_teleportCastDuration = 3.0f;
@@ -166,7 +169,7 @@ public:
 			SERIALIZED_INT(m_risenSpiresNumber, "Number of Spires", 0, 20, 1),
 			SERIALIZED_FLOAT(m_risenSpiresWindupDuration, "Spires Windup Duration", 0.0f, 10.0f, 0.1f),
 			SERIALIZED_FLOAT(m_risenSpiresRadius, "Spire Radius", 0.0f, 10.0f, 0.1f),
-			SERIALIZED_FLOAT(m_risenSpiresDamage, "Spire Damage", 0.0f,	9999.0f, 1.0f),
+			SERIALIZED_FLOAT(m_risenSpiresDamage, "Spire Damage", 0.0f, 9999.0f, 1.0f),
 			SERIALIZED_FLOAT(m_risenSpiresPhase2SecondPassDelay, "Spires Phase 2 Second Pass Delay", 0.0f, 10.0f, 0.1f),
 			SERIALIZED_FLOAT(m_risenSpiresRecoveryDuration, "Spires Recovery Duration", 0.0f, 10.0f, 0.1f)
 		),
@@ -175,10 +178,12 @@ public:
 			SERIALIZED_FLOAT(m_spiritCannonLockDuration, "Cannon Lock Duration", 0.0f, 10.0f, 0.1f),
 			SERIALIZED_FLOAT(m_spiritCannonBeamLength, "Cannon Beam Length", 0.0f, 200.0f, 1.0f),
 			SERIALIZED_FLOAT(m_spiritCannonTelegraphWidth, "Cannon Telegraph Width", 0.0f, 20.0f, 0.1f),
-			SERIALIZED_FLOAT(m_spiritCannonFireWidth,	"Cannon Fire Width",	0.0f, 20.0f, 0.1f),
+			SERIALIZED_FLOAT(m_spiritCannonFireWidth, "Cannon Fire Width", 0.0f, 5.0f, 0.1f),
 			SERIALIZED_FLOAT(m_spiritCannonDamage, "Cannon Damage", 0.0f, 200.0f, 1.0f),
 			SERIALIZED_FLOAT(m_spiritCannonShotInterval, "Cannon Shot Interval", 0.0f, 5.0f, 0.05f),
-			SERIALIZED_FLOAT(m_spiritCannonRecoveryDuration, "Cannon Recovery Duration", 0.0f, 5.0f, 0.05f)
+			SERIALIZED_FLOAT(m_spiritCannonRecoveryDuration, "Cannon Recovery Duration", 0.0f, 5.0f, 0.05f),
+			SERIALIZED_FLOAT(m_spiritCannonPhase2SideAngle, "Phase 2 Side Angle", 0.0f, 90.0f, 0.1f),
+			SERIALIZED_FLOAT(m_spiritCannonPhase2SideWidth, "Phase 2 Side Width", 0.0f, 5.0f, 0.01f)
 		),
 
 		FIELD_GROUP_COLLAPSE("Grasp of the Dead",

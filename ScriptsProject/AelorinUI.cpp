@@ -47,15 +47,19 @@ IMPLEMENT_SCRIPT_FIELDS(AelorinUI,
 		SERIALIZED_COMPONENT_REF(m_spiritCannonUICanvas, "Spirit Cannon Canvas",ComponentType::TRANSFORM),
 		SERIALIZED_COMPONENT_REF(m_spiritCannonUIContainer, "Spirit Cannon Container", ComponentType::TRANSFORM2D),
 		SERIALIZED_COMPONENT_REF(m_spiritCannonUIWarning, "Spirit Cannon Warning", ComponentType::TRANSFORM2D),
-		SERIALIZED_COMPONENT_REF(m_spiritCannonUIBeam, "Spirit Cannon Beam", ComponentType::TRANSFORM2D)
+		SERIALIZED_COMPONENT_REF(m_spiritCannonUIBeam, "Spirit Cannon Beam", ComponentType::TRANSFORM2D),
+		SERIALIZED_COMPONENT_REF(m_spiritCannonLeftContainer, "Spirit Cannon Left Container", ComponentType::TRANSFORM2D),
+		SERIALIZED_COMPONENT_REF(m_spiritCannonLeftWarning,	"Spirit Cannon Left Warning", ComponentType::TRANSFORM2D),
+		SERIALIZED_COMPONENT_REF(m_spiritCannonLeftBeam, "Spirit Cannon Left Beam", ComponentType::TRANSFORM2D),
+		SERIALIZED_COMPONENT_REF(m_spiritCannonRightContainer, "Spirit Cannon Right Container",	ComponentType::TRANSFORM2D),
+		SERIALIZED_COMPONENT_REF(m_spiritCannonRightWarning, "Spirit Cannon Right Warning",	ComponentType::TRANSFORM2D),
+		SERIALIZED_COMPONENT_REF(m_spiritCannonRightBeam, "Spirit Cannon Right Beam", ComponentType::TRANSFORM2D)
 	),
 
 	FIELD_GROUP_COLLAPSE("Grasp of the Dead",
 		SERIALIZED_COMPONENT_REF(m_graspOfTheDeadUICanvas, "Grasp of the Dead UI Canvas", ComponentType::TRANSFORM),
 		SERIALIZED_COMPONENT_REF(m_graspOfTheDeadUIContainer, "Grasp of the Dead UI Container", ComponentType::TRANSFORM2D),
 		SERIALIZED_COMPONENT_REF(m_graspOfTheDeadUIBackground, "Grasp of the Dead UI Background", ComponentType::TRANSFORM2D),
-		//SERIALIZED_COMPONENT_REF(m_graspOfTheDeadUIBorder, "Grasp of the Dead UI Border", ComponentType::TRANSFORM2D),
-		//SERIALIZED_COMPONENT_REF(m_graspOfTheDeadUIGlow, "Grasp of the Dead UI Glow", ComponentType::TRANSFORM2D),
 		SERIALIZED_COMPONENT_REF(m_graspLyrielChainCanvas, "Lyriel Chain Canvas", ComponentType::TRANSFORM),
 		SERIALIZED_COMPONENT_REF(m_graspLyrielChainImage, "Lyriel Chain Image",	ComponentType::TRANSFORM2D),
 		SERIALIZED_COMPONENT_REF(m_graspDeathChainCanvas, "Death Chain Canvas",	ComponentType::TRANSFORM),
@@ -118,6 +122,33 @@ void AelorinUI::Start()
 	m_spiritCannonUIContainerTransform2D = m_spiritCannonUIContainer.getReferencedComponent();
 	m_spiritCannonUIWarningTransform2D = m_spiritCannonUIWarning.getReferencedComponent();
 	m_spiritCannonUIBeamTransform2D = m_spiritCannonUIBeam.getReferencedComponent();
+	// Phase 2
+	m_spiritCannonLeftContainerTransform2D = m_spiritCannonLeftContainer.getReferencedComponent();
+	m_spiritCannonLeftWarningTransform2D = m_spiritCannonLeftWarning.getReferencedComponent();
+	m_spiritCannonLeftBeamTransform2D =	m_spiritCannonLeftBeam.getReferencedComponent();
+	m_spiritCannonRightContainerTransform2D = m_spiritCannonRightContainer.getReferencedComponent();
+	m_spiritCannonRightWarningTransform2D = m_spiritCannonRightWarning.getReferencedComponent();
+	m_spiritCannonRightBeamTransform2D = m_spiritCannonRightBeam.getReferencedComponent();
+
+	if (m_spiritCannonLeftContainerTransform2D)
+	{
+		Transform2DAPI::setAlpha(m_spiritCannonLeftContainerTransform2D, 0.0f);
+		GameObject* leftContainerObject = ComponentAPI::getOwner(m_spiritCannonLeftContainerTransform2D);
+		if (leftContainerObject)
+		{
+			m_spiritCannonLeftContainerTransform = leftContainerObject->GetTransform();
+		}
+	}
+
+	if (m_spiritCannonRightContainerTransform2D)
+	{
+		Transform2DAPI::setAlpha(m_spiritCannonRightContainerTransform2D, 0.0f);
+		GameObject* rightContainerObject = ComponentAPI::getOwner(m_spiritCannonRightContainerTransform2D);
+		if (rightContainerObject)
+		{
+			m_spiritCannonRightContainerTransform = rightContainerObject->GetTransform();
+		}
+	}
 
 	hideSpiritCannonUI();
 
@@ -399,7 +430,7 @@ void AelorinUI::cancelRisenSpires()
 	hideAllRisenSpiresUI();
 }
 
-void AelorinUI::showSpiritCannonWarning(Transform* originTransform, const Vector3& aimDirection, float beamLength, float warningWidth)
+void AelorinUI::showSpiritCannonWarning(Transform* originTransform, const Vector3& aimDirection, float beamLength, float warningWidth, bool phase2, float sideAngle, float sideWidth)
 {
 	if (!m_spiritCannonUICanvasTransform ||
 		!m_spiritCannonUIContainerTransform2D ||
@@ -429,6 +460,9 @@ void AelorinUI::showSpiritCannonWarning(Transform* originTransform, const Vector
 	m_spiritCannonUIFiring = false;
 	m_spiritCannonFireTimer = 0.0f;
 	m_spiritCannonFireDuration = 0.0f;
+	m_spiritCannonPhase2 = phase2;
+	m_spiritCannonSideAngle = sideAngle;
+	m_spiritCannonSideWidth = sideWidth;
 
 	GameObjectAPI::setActive(canvasObject, true);
 
@@ -439,6 +473,70 @@ void AelorinUI::showSpiritCannonWarning(Transform* originTransform, const Vector
 	Transform2DAPI::setAlpha(m_spiritCannonUIBeamTransform2D, 0.0f);
 	Transform2DAPI::setScale(m_spiritCannonUIWarningTransform2D, Vector2(1.0f, 1.0f));
 	Transform2DAPI::setScale(m_spiritCannonUIBeamTransform2D, Vector2(1.0f, 1.0f));
+
+	// Phase 2
+	if (m_spiritCannonPhase2)
+	{
+		if (m_spiritCannonLeftContainerTransform2D)
+		{
+			Transform2DAPI::setAlpha(m_spiritCannonLeftContainerTransform2D, 1.0f);
+			Transform2DAPI::setScale(m_spiritCannonLeftContainerTransform2D, Vector2(m_spiritCannonBeamLength, m_spiritCannonSideWidth));
+		}
+
+		if (m_spiritCannonRightContainerTransform2D)
+		{
+			Transform2DAPI::setAlpha(m_spiritCannonRightContainerTransform2D, 1.0f);
+			Transform2DAPI::setScale(m_spiritCannonRightContainerTransform2D, Vector2(m_spiritCannonBeamLength, m_spiritCannonSideWidth));
+		}
+
+		if (m_spiritCannonLeftWarningTransform2D)
+		{
+			Transform2DAPI::setAlpha(m_spiritCannonLeftWarningTransform2D, 1.0f);
+		}
+
+		if (m_spiritCannonLeftBeamTransform2D)
+		{
+			Transform2DAPI::setAlpha(m_spiritCannonLeftBeamTransform2D, 0.0f);
+		}
+
+		if (m_spiritCannonRightWarningTransform2D)
+		{
+			Transform2DAPI::setAlpha(m_spiritCannonRightWarningTransform2D, 1.0f);
+		}
+
+		if (m_spiritCannonRightBeamTransform2D)
+		{
+			Transform2DAPI::setAlpha(m_spiritCannonRightBeamTransform2D, 0.0f);
+		}
+
+		if (m_spiritCannonLeftContainerTransform)
+		{
+			Vector3 position = TransformAPI::getPosition(m_spiritCannonLeftContainerTransform);
+			position.x = -m_spiritCannonBeamLength * 0.5f;
+			TransformAPI::setPosition(m_spiritCannonLeftContainerTransform, position);
+			TransformAPI::setRotationEuler(m_spiritCannonLeftContainerTransform, Vector3(0.0f, 0.0f, -m_spiritCannonSideAngle));
+		}
+
+		if (m_spiritCannonRightContainerTransform)
+		{
+			Vector3 position = TransformAPI::getPosition(m_spiritCannonRightContainerTransform);
+			position.x = -m_spiritCannonBeamLength * 0.5f;
+			TransformAPI::setPosition(m_spiritCannonRightContainerTransform, position);
+			TransformAPI::setRotationEuler(m_spiritCannonRightContainerTransform, Vector3(0.0f, 0.0f, m_spiritCannonSideAngle));
+		}
+	}
+	else
+	{
+		if (m_spiritCannonLeftContainerTransform2D)
+		{
+			Transform2DAPI::setAlpha(m_spiritCannonLeftContainerTransform2D, 0.0f);
+		}
+
+		if (m_spiritCannonRightContainerTransform2D)
+		{
+			Transform2DAPI::setAlpha(m_spiritCannonRightContainerTransform2D, 0.0f);
+		}
+	}
 }
 
 void AelorinUI::setSpiritCannonAimDirection(const Vector3& aimDirection)
@@ -485,6 +583,26 @@ void AelorinUI::fireSpiritCannonBeam(float fireWidth, float fireDuration)
 	// Switch from warning image to beam image
 	Transform2DAPI::setAlpha(m_spiritCannonUIWarningTransform2D, 0.0f);
 	Transform2DAPI::setAlpha(m_spiritCannonUIBeamTransform2D, 1.0f);
+
+	if (m_spiritCannonPhase2)
+	{
+		if (m_spiritCannonLeftWarningTransform2D)
+		{
+			Transform2DAPI::setAlpha(m_spiritCannonLeftWarningTransform2D, 0.0f);
+		}
+
+		if (m_spiritCannonLeftBeamTransform2D)
+		{
+			Transform2DAPI::setAlpha(m_spiritCannonLeftBeamTransform2D, 1.0f);
+			Transform2DAPI::setScale(m_spiritCannonLeftBeamTransform2D, Vector2(1.0f, 1.0f));
+		}
+
+		if (m_spiritCannonRightBeamTransform2D)
+		{
+			Transform2DAPI::setAlpha(m_spiritCannonRightBeamTransform2D, 1.0f);
+			Transform2DAPI::setScale(m_spiritCannonRightBeamTransform2D, Vector2(1.0f, 1.0f));
+		}
+	}
 
 	// Expand to firing width
 	setSpiritCannonSize(m_spiritCannonBeamLength, m_spiritCannonFireBaseWidth);
@@ -1263,6 +1381,21 @@ void AelorinUI::updateSpiritCannonUI(float deltaTime)
 
 	setSpiritCannonSize(m_spiritCannonBeamLength, currentWidth);
 
+	if (m_spiritCannonPhase2)
+	{
+		const float sideWidth = m_spiritCannonSideWidth * pulse;
+
+		if (m_spiritCannonLeftContainerTransform2D)
+		{
+			Transform2DAPI::setScale(m_spiritCannonLeftContainerTransform2D, Vector2(m_spiritCannonBeamLength, sideWidth));
+		}
+
+		if (m_spiritCannonRightContainerTransform2D)
+		{
+			Transform2DAPI::setScale(m_spiritCannonRightContainerTransform2D, Vector2(m_spiritCannonBeamLength, sideWidth));
+		}
+	}
+
 	if (m_spiritCannonFireTimer >= m_spiritCannonFireDuration)
 	{
 		hideSpiritCannonUI();
@@ -1292,16 +1425,53 @@ void AelorinUI::hideSpiritCannonUI()
 		Transform2DAPI::setScale(m_spiritCannonUIBeamTransform2D, Vector2(1.0f, 1.0f));
 	}
 
+	if (m_spiritCannonLeftContainerTransform2D)
+	{
+		Transform2DAPI::setAlpha(m_spiritCannonLeftContainerTransform2D, 0.0f);
+	}
+
+	if (m_spiritCannonRightContainerTransform2D)
+	{
+		Transform2DAPI::setAlpha(m_spiritCannonRightContainerTransform2D, 0.0f);
+	}
+
+	if (m_spiritCannonLeftWarningTransform2D)
+	{
+		Transform2DAPI::setAlpha(m_spiritCannonLeftWarningTransform2D, 0.0f);
+		Transform2DAPI::setScale(m_spiritCannonLeftWarningTransform2D, Vector2(1.0f, 1.0f));
+	}
+
+	if (m_spiritCannonLeftBeamTransform2D)
+	{
+		Transform2DAPI::setAlpha(m_spiritCannonLeftBeamTransform2D, 0.0f);
+		Transform2DAPI::setScale(m_spiritCannonLeftBeamTransform2D, Vector2(1.0f, 1.0f));
+	}
+
+	if (m_spiritCannonRightWarningTransform2D)
+	{
+		Transform2DAPI::setAlpha(m_spiritCannonRightWarningTransform2D, 0.0f);
+		Transform2DAPI::setScale(m_spiritCannonRightWarningTransform2D, Vector2(1.0f, 1.0f));
+	}
+
+	if (m_spiritCannonRightBeamTransform2D)
+	{
+		Transform2DAPI::setAlpha(m_spiritCannonRightBeamTransform2D, 0.0f);
+		Transform2DAPI::setScale(m_spiritCannonRightBeamTransform2D, Vector2(1.0f, 1.0f));
+	}
+
 	m_spiritCannonOriginTransform = nullptr;
 	m_spiritCannonAimDirection = Vector3::Zero;
 
 	m_spiritCannonUIActive = false;
 	m_spiritCannonUIFiring = false;
+	m_spiritCannonPhase2 = false;
 
 	m_spiritCannonBeamLength = 0.0f;
 	m_spiritCannonFireBaseWidth = 0.0f;
 	m_spiritCannonFireTimer = 0.0f;
 	m_spiritCannonFireDuration = 0.0f;
+	m_spiritCannonSideAngle = 0.0f;
+	m_spiritCannonSideWidth = 0.0f;
 }
 
 void AelorinUI::setSpiritCannonSize(float beamLength, float beamWidth)

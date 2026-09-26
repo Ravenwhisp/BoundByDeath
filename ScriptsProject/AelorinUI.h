@@ -37,7 +37,7 @@ public:
 	void cancelRisenSpires();
 
 	// Spirit Cannon
-	void showSpiritCannonWarning(Transform* originTransform, const Vector3& aimDirection, float beamLength, float warningWidth);
+	void showSpiritCannonWarning(Transform* originTransform, const Vector3& aimDirection, float beamLength, float warningWidth, bool phase2, float sideAngle, float sideWidth);
 	void setSpiritCannonAimDirection(const Vector3& aimDirection);
 	void fireSpiritCannonBeam(float fireWidth, float fireDuration);
 	void cancelSpiritCannon();
@@ -232,22 +232,43 @@ private:
 	ComponentRef<Transform2D> m_spiritCannonUIWarning;
 	ComponentRef<Transform2D> m_spiritCannonUIBeam;
 
+	// Phase 2 Side Beams
+	ComponentRef<Transform2D> m_spiritCannonLeftContainer;
+	ComponentRef<Transform2D> m_spiritCannonLeftWarning;
+	ComponentRef<Transform2D> m_spiritCannonLeftBeam;
+	ComponentRef<Transform2D> m_spiritCannonRightContainer;
+	ComponentRef<Transform2D> m_spiritCannonRightWarning;
+	ComponentRef<Transform2D> m_spiritCannonRightBeam;
+
 	Transform* m_spiritCannonUICanvasTransform = nullptr;
 	Transform2D* m_spiritCannonUIContainerTransform2D = nullptr;
 	Transform2D* m_spiritCannonUIWarningTransform2D = nullptr;
 	Transform2D* m_spiritCannonUIBeamTransform2D = nullptr;
 
+	// Phase 2 Side Beams
+	Transform2D* m_spiritCannonLeftContainerTransform2D = nullptr;
+	Transform2D* m_spiritCannonLeftWarningTransform2D = nullptr;
+	Transform2D* m_spiritCannonLeftBeamTransform2D = nullptr;
+	Transform2D* m_spiritCannonRightContainerTransform2D = nullptr;
+	Transform2D* m_spiritCannonRightWarningTransform2D = nullptr;
+	Transform2D* m_spiritCannonRightBeamTransform2D = nullptr;
+
 	Transform* m_spiritCannonOriginTransform = nullptr;
+	Transform* m_spiritCannonLeftContainerTransform = nullptr;
+	Transform* m_spiritCannonRightContainerTransform = nullptr;
 	Vector3 m_spiritCannonAimDirection = Vector3::Zero;
 
 	bool m_spiritCannonUIActive = false;
 	bool m_spiritCannonUIFiring = false;
+	bool m_spiritCannonPhase2 = false;
 
 	float m_spiritCannonBeamLength = 0.0f;
 	float m_spiritCannonWarningWidth = 0.0f;
 	float m_spiritCannonFireBaseWidth = 0.0f;
 	float m_spiritCannonFireTimer = 0.0f;
 	float m_spiritCannonFireDuration = 0.0f;
+	float m_spiritCannonSideAngle = 0.0f;
+	float m_spiritCannonSideWidth = 0.0f;
 
 	static constexpr float m_spiritCannonHeightOffset = 0.35f;
 	static constexpr float m_spiritCannonPulseSpeed = 22.0f;
@@ -257,8 +278,6 @@ private:
 	ComponentRef<Transform> m_graspOfTheDeadUICanvas;
 	ComponentRef<Transform2D> m_graspOfTheDeadUIContainer;
 	ComponentRef<Transform2D> m_graspOfTheDeadUIBackground;
-	//ComponentRef<Transform2D> m_graspOfTheDeadUIBorder;
-	//ComponentRef<Transform2D> m_graspOfTheDeadUIGlow;
 
 	ComponentRef<Transform> m_graspLyrielChainCanvas;
 	ComponentRef<Transform2D> m_graspLyrielChainImage;
@@ -268,8 +287,6 @@ private:
 	Transform* m_graspOfTheDeadUICanvasTransform = nullptr;
 	Transform2D* m_graspOfTheDeadUIContainerTransform2D = nullptr;
 	Transform2D* m_graspOfTheDeadUIBackgroundTransform2D = nullptr;
-	//Transform2D* m_graspOfTheDeadUIBorderTransform2D = nullptr;
-	//Transform2D* m_graspOfTheDeadUIGlowTransform2D = nullptr;
 
 	Transform* m_graspLyrielChainCanvasTransform = nullptr;
 	Transform2D* m_graspLyrielChainImageTransform2D = nullptr;

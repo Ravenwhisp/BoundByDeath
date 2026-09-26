@@ -5,6 +5,7 @@
 #include "AelorinAttackExecutor.h"
 #include "AelorinUI.h"
 
+#include <cmath>
 #include <cstdlib>
 
 AelorinSpiritCannonState::AelorinSpiritCannonState(GameObject* owner)
@@ -292,6 +293,9 @@ void AelorinSpiritCannonState::beginShot()
 		return;
 	}
 
+	const Vector3 origin = TransformAPI::getGlobalPosition(m_aelorinTransform);
+	m_controller->setSpiritCannonDebugLine(origin, m_lockedAimDirection, config->m_spiritCannonFireWidth);
+
 	m_shotTimer = 0.0f;
 	m_shotActive = true;
 
@@ -304,7 +308,10 @@ void AelorinSpiritCannonState::beginShot()
 			m_aelorinTransform,
 			m_lockedAimDirection,
 			config->m_spiritCannonBeamLength,
-			config->m_spiritCannonTelegraphWidth
+			config->m_spiritCannonTelegraphWidth,
+			m_controller->isPhase2(),
+			config->m_spiritCannonPhase2SideAngle,
+			config->m_spiritCannonPhase2SideWidth
 		);
 	}
 
@@ -330,7 +337,6 @@ void AelorinSpiritCannonState::fireShot()
 	}
 
 	const Vector3 origin = TransformAPI::getGlobalPosition(m_aelorinTransform);
-	m_controller->setSpiritCannonDebugLine(origin, m_lockedAimDirection, config->m_spiritCannonFireWidth);
 
 	if (m_aelorinUI)
 	{
@@ -345,6 +351,46 @@ void AelorinSpiritCannonState::fireShot()
 		config->m_spiritCannonDamage,
 		"Spirit Cannon"
 	);
+
+	// Phase 2
+	if (m_controller->isPhase2())
+	{
+		constexpr float degreesToRadians = 3.14159265f / 180.0f;
+
+		const float angleRadians = config->m_spiritCannonPhase2SideAngle * degreesToRadians;
+		const float cosAngle = std::cos(angleRadians);
+		const float sinAngle = std::sin(angleRadians);
+
+		const Vector3 leftDirection(
+			m_lockedAimDirection.x * cosAngle - m_lockedAimDirection.z * sinAngle,
+			0.0f,
+			m_lockedAimDirection.x * sinAngle + m_lockedAimDirection.z * cosAngle
+		);
+
+		const Vector3 rightDirection(
+			m_lockedAimDirection.x * cosAngle + m_lockedAimDirection.z * sinAngle,
+			0.0f,
+			m_lockedAimDirection.x * sinAngle + m_lockedAimDirection.z * cosAngle
+		);
+
+		m_attackExecutor->applyDamageInBeam(
+			origin,
+			leftDirection,
+			config->m_spiritCannonBeamLength,
+			config->m_spiritCannonPhase2SideWidth,
+			config->m_spiritCannonDamage,
+			"Spiri Cannon"
+		);
+
+		m_attackExecutor->applyDamageInBeam(
+			origin,
+			rightDirection,
+			config->m_spiritCannonBeamLength,
+			config->m_spiritCannonPhase2SideWidth,
+			config->m_spiritCannonDamage,
+			"Spiri Cannon"
+		);
+	}
 }
 
 void AelorinSpiritCannonState::finishAbility()
