@@ -12,10 +12,29 @@ IMPLEMENT_SCRIPT_FIELDS(ReaperGauge,
     SERIALIZED_FLOAT(m_gracePeriod, "Grace Period", 0.0f, 60.0f, 0.5f),
     SERIALIZED_FLOAT(m_decayPerSecond, "Decay Per Second", 0.0f, 50.0f, 0.5f),
 	SERIALIZED_COMPONENT_REF(m_reaperGaugeUI, "Reaper Gauge UI", ComponentType::UISLIDER),
-    SERIALIZED_COMPONENT_REF(m_glowUI, "Glow UI", ComponentType::TRANSFORM2D),
+	SERIALIZED_COMPONENT_REF(m_glowUI, "Glow UI", ComponentType::TRANSFORM2D),
     SERIALIZED_COMPONENT_REF(m_blinkAlphaUI, "Blink Alpha UI", ComponentType::TRANSFORM2D),
     SERIALIZED_FLOAT(m_blinkSpeed, "Blink Speed", 0.1f, 20.0f, 0.1f),
-	SERIALIZED_FLOAT(m_blinkAlpha, "Blink Alpha", 0.0f, 1.0f, 0.05f)
+	SERIALIZED_FLOAT(m_blinkAlpha, "Blink Alpha", 0.0f, 1.0f, 0.05f),
+    FIELD_GROUP_LABEL("Full Gauge VFX"),
+    SERIALIZED_BOOL(m_enableFullVfx, "Enable Full VFX"),
+    SERIALIZED_COMPONENT_REF(m_fullGaugeContainer, "Full Gauge Container", ComponentType::TRANSFORM2D),
+    SERIALIZED_COMPONENT_REF(m_fullBurstUI, "Full Burst UI", ComponentType::TRANSFORM2D),
+    SERIALIZED_COMPONENT_REF(m_fullBurstSheetUI, "Full Burst Sheet", ComponentType::UISHEET),
+    SERIALIZED_COMPONENT_REF(m_fullWispsUI, "Full Wisps UI", ComponentType::TRANSFORM2D),
+    SERIALIZED_COMPONENT_REF(m_fullWispsSheetUI, "Full Wisps Sheet", ComponentType::UISHEET),
+    SERIALIZED_COMPONENT_REF(m_fullShineUI, "Full Shine UI", ComponentType::TRANSFORM2D),
+    SERIALIZED_ASSET_REF(m_fullLut, "Full LUT", AssetType::LUT),
+    SERIALIZED_FLOAT(m_fullLutFadeInDuration, "Full LUT Fade In Duration", 0.05f, 3.0f, 0.05f),
+    SERIALIZED_FLOAT(m_fullLutMinStrength, "Full LUT Minimum Strength", 0.0f, 1.0f, 0.05f),
+    SERIALIZED_FLOAT(m_fullLutMaxStrength, "Full LUT Maximum Strength", 0.0f, 1.0f, 0.05f),
+    SERIALIZED_FLOAT(m_fullLutBreathingSpeed, "Full LUT Breathing Speed", 0.1f, 5.0f, 0.1f),
+    SERIALIZED_FLOAT(m_fullEnterDuration, "Full Enter Duration", 0.05f, 2.0f, 0.05f),
+    SERIALIZED_FLOAT(m_fullPopScale, "Full Pop Scale", 1.0f, 1.25f, 0.01f),
+    SERIALIZED_FLOAT(m_fullBreathingSpeed, "Full Breathing Speed", 0.1f, 10.0f, 0.1f),
+    SERIALIZED_FLOAT(m_fullBreathingIntensity, "Full Breathing Intensity", 0.0f, 0.5f, 0.01f),
+    SERIALIZED_FLOAT(m_fullShineInterval, "Full Shine Interval", 0.25f, 10.0f, 0.25f),
+    SERIALIZED_FLOAT(m_fullShineDuration, "Full Shine Duration", 0.1f, 2.0f, 0.05f)
 )
 
 ReaperGauge::ReaperGauge(GameObject* owner)
@@ -28,12 +47,19 @@ void ReaperGauge::Start()
 	m_reaperGaugeSlider = m_reaperGaugeUI.getReferencedComponent();
 	m_glowTransform = m_glowUI.getReferencedComponent();
 	m_blinkAlphaTransform = m_blinkAlphaUI.getReferencedComponent();
+	m_fullGaugeTransform = m_fullGaugeContainer.getReferencedComponent();
+    m_fullBurstTransform = m_fullBurstUI.getReferencedComponent();
+    m_fullBurstSheet = m_fullBurstSheetUI.getReferencedComponent();
+    m_fullWispsTransform = m_fullWispsUI.getReferencedComponent();
+    m_fullWispsSheet = m_fullWispsSheetUI.getReferencedComponent();
+    m_fullShineTransform = m_fullShineUI.getReferencedComponent();
+
+    if (m_fullGaugeTransform)
+    {
+        m_fullGaugeBaseScale = Transform2DAPI::getScale(m_fullGaugeTransform);
+    }
 
     m_sound = GameObjectAPI::findScript<CooperativeSound>(getOwner());
-
-    SliderAPI::setFillAmount(m_reaperGaugeSlider, getGaugePercent());
-    Transform2DAPI::setAlpha(m_glowTransform, 0.0f);
-    Transform2DAPI::setAlpha(m_blinkAlphaTransform, 0.0f);
 
     PersistingCheckpointState* PersistingCheckpointState = &PersistingCheckpointState::Get();
     if (PersistingCheckpointState && PersistingCheckpointState->m_lastCheckpointId > CheckpointId::NONE)
@@ -43,45 +69,59 @@ void ReaperGauge::Start()
         m_decayTimer = 0.0f;
         m_decaying = false;
     }
+
+    resetFullVisualComponents();
+    m_wasFull = isFull();
+    if (m_enableFullVfx && m_wasFull)
+    {
+        beginFullVisuals(false);
+    }
+    updateUI();
 }
 
 void ReaperGauge::Update()
 {
-    if (!m_everExploited)
-        return;
+    const float dt = Time::getDeltaTime();
 
-    if (m_gauge <= 0.0f)
+    if (m_everExploited && m_gauge <= 0.0f)
     {
         m_gauge = 0.0f;
-        updateUI();
-        return;
     }
-
-    m_decayTimer += Time::getDeltaTime();
-
-    if (m_decayTimer > m_gracePeriod)
+    else if (m_everExploited)
     {
-        const bool wasAboveZero = m_gauge > 0.0f;
+        m_decayTimer += dt;
 
-        if (!m_decaying)
+        if (m_decayTimer > m_gracePeriod)
         {
-            m_decaying = true;
-            Debug::log("[ReaperGauge] Grace period ended. Gauge decaying: %.1f/%.1f", m_gauge, m_maxGauge);
+            const bool wasAboveZero = m_gauge > 0.0f;
+
+            if (!m_decaying)
+            {
+                m_decaying = true;
+                Debug::log("[ReaperGauge] Grace period ended. Gauge decaying: %.1f/%.1f", m_gauge, m_maxGauge);
+            }
+
+            m_gauge -= m_decayPerSecond * dt;
+
+            if (m_gauge <= 0.0f)
+            {
+                m_gauge = 0.0f;
+                m_decaying = false;
+            }
+
+            if (wasAboveZero && m_gauge <= 0.0f)
+                Debug::log("[ReaperGauge] Gauge empty. Shadow Execution NOT available.");
         }
-
-        m_gauge -= m_decayPerSecond * Time::getDeltaTime();
-
-        if (m_gauge <= 0.0f)
-        {
-            m_gauge = 0.0f;
-            m_decaying = false;
-        }
-
-        if (wasAboveZero && m_gauge <= 0.0f)
-            Debug::log("[ReaperGauge] Gauge empty. Shadow Execution NOT available.");
     }
 
     updateUI();
+    updateFullVisuals(dt);
+}
+
+void ReaperGauge::OnGameStop()
+{
+    restorePreviousLut();
+    resetFullVisualComponents();
 }
 
 void ReaperGauge::onMarkExploited()
@@ -110,7 +150,14 @@ void ReaperGauge::onMarkExploited()
         {
             m_sound->playReaperGaugeFull();
         }
+
+        if (m_enableFullVfx)
+        {
+            beginFullVisuals(true);
+        }
     }
+
+    m_wasFull = isFull();
 }
 
 void ReaperGauge::consume()
@@ -118,6 +165,12 @@ void ReaperGauge::consume()
     m_gauge      = 0.0f;
     m_decayTimer = 0.0f;
     m_decaying   = false;
+
+    if (m_enableFullVfx)
+    {
+        endFullVisuals();
+    }
+    m_wasFull = false;
 
     updateUI();
 
@@ -165,7 +218,7 @@ void ReaperGauge::updateUI()
         SliderAPI::setFillAmount(m_reaperGaugeSlider, getGaugePercent());
     }
 
-    if (m_glowTransform)
+    if (m_glowTransform && (!m_enableFullVfx || !isFull()))
     {
         float alpha = 0.0f;
 
@@ -187,6 +240,234 @@ void ReaperGauge::updateUI()
         {
             Transform2DAPI::setAlpha(m_blinkAlphaTransform, 0.0f);
         }
+    }
+}
+
+void ReaperGauge::beginFullVisuals(bool playAnnouncement)
+{
+    m_visualState = playAnnouncement ? ReaperGaugeVisualState::FullEnter : ReaperGaugeVisualState::FullIdle;
+    m_fullStateTimer = 0.0f;
+    m_shineTimer = 0.0f;
+    m_shineAnimTimer = 0.0f;
+    m_shineAnimating = false;
+
+    if (m_fullGaugeTransform)
+    {
+        Transform2DAPI::setScale(m_fullGaugeTransform, m_fullGaugeBaseScale);
+    }
+
+    if (m_fullWispsTransform)
+    {
+        Transform2DAPI::setAlpha(m_fullWispsTransform, 0.58f);
+    }
+    if (m_fullWispsSheet)
+    {
+        UISheetAPI::setLoop(m_fullWispsSheet, true);
+        UISheetAPI::play(m_fullWispsSheet);
+    }
+
+    beginFullLut();
+
+    if (playAnnouncement)
+    {
+        if (m_fullBurstTransform)
+        {
+            Transform2DAPI::setAlpha(m_fullBurstTransform, 1.0f);
+        }
+        if (m_fullBurstSheet)
+        {
+            UISheetAPI::setLoop(m_fullBurstSheet, false);
+            UISheetAPI::play(m_fullBurstSheet);
+        }
+    }
+}
+
+void ReaperGauge::endFullVisuals()
+{
+    restorePreviousLut();
+    resetFullVisualComponents();
+    m_visualState = ReaperGaugeVisualState::Normal;
+    m_fullStateTimer = 0.0f;
+    m_shineTimer = 0.0f;
+    m_shineAnimTimer = 0.0f;
+    m_shineAnimating = false;
+}
+
+void ReaperGauge::updateFullVisuals(float dt)
+{
+    if (!m_enableFullVfx)
+    {
+        return;
+    }
+
+    const bool full = isFull();
+    if (full != m_wasFull)
+    {
+        if (full)
+        {
+            beginFullVisuals(true);
+        }
+        else
+        {
+            endFullVisuals();
+        }
+        m_wasFull = full;
+    }
+
+    if (!full || m_visualState == ReaperGaugeVisualState::Normal)
+    {
+        return;
+    }
+
+    m_fullStateTimer += dt;
+    updateFullLut(dt);
+
+    if (m_visualState == ReaperGaugeVisualState::FullEnter)
+    {
+        const float duration = m_fullEnterDuration > 0.0f ? m_fullEnterDuration : 0.01f;
+        const float t = std::clamp(m_fullStateTimer / duration, 0.0f, 1.0f);
+        const float pop = 1.0f + sinf(t * 3.14159265f) * (m_fullPopScale - 1.0f);
+
+        if (m_fullGaugeTransform)
+        {
+            Transform2DAPI::setScale(m_fullGaugeTransform, Vector2(m_fullGaugeBaseScale.x * pop, m_fullGaugeBaseScale.y * pop));
+        }
+
+        if (t >= 1.0f)
+        {
+            if (m_fullGaugeTransform)
+            {
+                Transform2DAPI::setScale(m_fullGaugeTransform, m_fullGaugeBaseScale);
+            }
+            if (m_fullBurstTransform)
+            {
+                Transform2DAPI::setAlpha(m_fullBurstTransform, 0.0f);
+            }
+            m_visualState = ReaperGaugeVisualState::FullIdle;
+            m_fullStateTimer = 0.0f;
+        }
+    }
+
+    const float breathing = (sinf(m_fullStateTimer * m_fullBreathingSpeed) + 1.0f) * 0.5f;
+    if (m_glowTransform)
+    {
+        const float glowAlpha = std::clamp(0.62f + (breathing * 2.0f - 1.0f) * m_fullBreathingIntensity, 0.0f, 1.0f);
+        Transform2DAPI::setAlpha(m_glowTransform, glowAlpha);
+    }
+
+    if (!m_shineAnimating)
+    {
+        m_shineTimer += dt;
+        if (m_shineTimer >= m_fullShineInterval)
+        {
+            m_shineTimer = 0.0f;
+            m_shineAnimTimer = 0.0f;
+            m_shineAnimating = true;
+        }
+    }
+
+    if (m_shineAnimating && m_fullShineTransform)
+    {
+        m_shineAnimTimer += dt;
+        const float duration = m_fullShineDuration > 0.0f ? m_fullShineDuration : 0.01f;
+        const float t = std::clamp(m_shineAnimTimer / duration, 0.0f, 1.0f);
+        Transform2DAPI::setPosition(m_fullShineTransform, Vector2(-330.0f + 660.0f * t, 0.0f));
+        Transform2DAPI::setAlpha(m_fullShineTransform, sinf(t * 3.14159265f) * 0.8f);
+
+        if (t >= 1.0f)
+        {
+            Transform2DAPI::setAlpha(m_fullShineTransform, 0.0f);
+            m_shineAnimating = false;
+        }
+    }
+}
+
+void ReaperGauge::beginFullLut()
+{
+    if (!m_fullLut.m_id.isValid() || m_fullLut.m_id.m_type != AssetType::LUT || m_lutActive)
+    {
+        return;
+    }
+
+    m_previousLutEnabled = PostProcessAPI::isLutEnabled();
+    m_previousLutAsset = PostProcessAPI::getLutAsset();
+    m_previousLutStrength = PostProcessAPI::getLutStrength();
+    m_lutCaptured = true;
+    m_lutActive = true;
+    m_fullLutTimer = 0.0f;
+
+    PostProcessAPI::setLutAsset(m_fullLut.m_id);
+    PostProcessAPI::setLutStrength(0.0f);
+    PostProcessAPI::setLutEnabled(true);
+}
+
+void ReaperGauge::updateFullLut(float dt)
+{
+    if (!m_lutActive || !PostProcessAPI::isLutEnabled() || PostProcessAPI::getLutAsset() != m_fullLut.m_id)
+    {
+        return;
+    }
+
+    m_fullLutTimer += dt;
+    const float fadeDuration = m_fullLutFadeInDuration > 0.01f ? m_fullLutFadeInDuration : 0.01f;
+    const float fade = std::clamp(m_fullLutTimer / fadeDuration, 0.0f, 1.0f);
+    const float lowerStrength = m_fullLutMinStrength < m_fullLutMaxStrength ? m_fullLutMinStrength : m_fullLutMaxStrength;
+    const float upperStrength = m_fullLutMinStrength > m_fullLutMaxStrength ? m_fullLutMinStrength : m_fullLutMaxStrength;
+    const float minimumStrength = std::clamp(lowerStrength, 0.0f, 1.0f);
+    const float maximumStrength = std::clamp(upperStrength, 0.0f, 1.0f);
+    const float breathing = (sinf(m_fullLutTimer * m_fullLutBreathingSpeed - 1.57079633f) + 1.0f) * 0.5f;
+    PostProcessAPI::setLutStrength(fade * (minimumStrength + (maximumStrength - minimumStrength) * breathing));
+}
+
+void ReaperGauge::restorePreviousLut()
+{
+    if (!m_lutActive)
+    {
+        return;
+    }
+
+    const AssetId currentLut = PostProcessAPI::getLutAsset();
+    if (PostProcessAPI::isLutEnabled() && currentLut == m_fullLut.m_id && m_lutCaptured)
+    {
+        PostProcessAPI::setLutAsset(m_previousLutAsset);
+        PostProcessAPI::setLutStrength(m_previousLutStrength);
+        PostProcessAPI::setLutEnabled(m_previousLutEnabled);
+    }
+
+    m_lutCaptured = false;
+    m_lutActive = false;
+    m_fullLutTimer = 0.0f;
+    m_previousLutAsset = AssetId();
+}
+
+void ReaperGauge::resetFullVisualComponents()
+{
+    if (m_fullGaugeTransform)
+    {
+        Transform2DAPI::setScale(m_fullGaugeTransform, m_fullGaugeBaseScale);
+    }
+    if (m_fullBurstTransform)
+    {
+        Transform2DAPI::setAlpha(m_fullBurstTransform, 0.0f);
+    }
+    if (m_fullBurstSheet)
+    {
+        UISheetAPI::stop(m_fullBurstSheet);
+        UISheetAPI::reset(m_fullBurstSheet);
+    }
+    if (m_fullWispsTransform)
+    {
+        Transform2DAPI::setAlpha(m_fullWispsTransform, 0.0f);
+    }
+    if (m_fullWispsSheet)
+    {
+        UISheetAPI::stop(m_fullWispsSheet);
+        UISheetAPI::reset(m_fullWispsSheet);
+    }
+    if (m_fullShineTransform)
+    {
+        Transform2DAPI::setPosition(m_fullShineTransform, Vector2(-330.0f, 0.0f));
+        Transform2DAPI::setAlpha(m_fullShineTransform, 0.0f);
     }
 }
 
