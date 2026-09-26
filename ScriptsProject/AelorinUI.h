@@ -39,7 +39,7 @@ public:
 	// Spirit Cannon
 	void showSpiritCannonWarning(Transform* originTransform, const Vector3& aimDirection, float beamLength, float warningWidth, bool phase2, float sideAngle, float sideWidth);
 	void setSpiritCannonAimDirection(const Vector3& aimDirection);
-	void fireSpiritCannonBeam(float fireWidth, float fireDuration);
+	void fireSpiritCannonBeam(float fireWidth, float sideFireWidth, float fireDuration);
 	void cancelSpiritCannon();
 
 	// Grasp of the Dead
@@ -265,6 +265,7 @@ private:
 	float m_spiritCannonBeamLength = 0.0f;
 	float m_spiritCannonWarningWidth = 0.0f;
 	float m_spiritCannonFireBaseWidth = 0.0f;
+	float m_spiritCannonSideFireBaseWidth = 0.0f;
 	float m_spiritCannonFireTimer = 0.0f;
 	float m_spiritCannonFireDuration = 0.0f;
 	float m_spiritCannonSideAngle = 0.0f;

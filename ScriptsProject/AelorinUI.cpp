@@ -556,7 +556,7 @@ void AelorinUI::setSpiritCannonAimDirection(const Vector3& aimDirection)
 	m_spiritCannonAimDirection = direction;
 }
 
-void AelorinUI::fireSpiritCannonBeam(float fireWidth, float fireDuration)
+void AelorinUI::fireSpiritCannonBeam(float fireWidth, float sideFireWidth, float fireDuration)
 {
 	if (!m_spiritCannonUIActive ||
 		!m_spiritCannonUICanvasTransform ||
@@ -575,6 +575,7 @@ void AelorinUI::fireSpiritCannonBeam(float fireWidth, float fireDuration)
 
 	m_spiritCannonUIFiring = true;
 	m_spiritCannonFireBaseWidth = fireWidth;
+	m_spiritCannonSideFireBaseWidth = sideFireWidth;
 	m_spiritCannonFireTimer = 0.0f;
 	m_spiritCannonFireDuration = (std::max)(fireDuration, 0.001f);
 
@@ -1383,7 +1384,7 @@ void AelorinUI::updateSpiritCannonUI(float deltaTime)
 
 	if (m_spiritCannonPhase2)
 	{
-		const float sideWidth = m_spiritCannonSideWidth * pulse;
+		const float sideWidth = m_spiritCannonSideFireBaseWidth * pulse;
 
 		if (m_spiritCannonLeftContainerTransform2D)
 		{
@@ -1468,6 +1469,7 @@ void AelorinUI::hideSpiritCannonUI()
 
 	m_spiritCannonBeamLength = 0.0f;
 	m_spiritCannonFireBaseWidth = 0.0f;
+	m_spiritCannonSideFireBaseWidth = 0.0f;
 	m_spiritCannonFireTimer = 0.0f;
 	m_spiritCannonFireDuration = 0.0f;
 	m_spiritCannonSideAngle = 0.0f;

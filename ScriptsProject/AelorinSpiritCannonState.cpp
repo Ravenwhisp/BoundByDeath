@@ -337,23 +337,26 @@ void AelorinSpiritCannonState::fireShot()
 	}
 
 	const Vector3 origin = TransformAPI::getGlobalPosition(m_aelorinTransform);
+	const bool phase2 = m_controller->isPhase2();
+	const float mainFireWidth = phase2 ? config->m_spiritCannonFireWidth * 1.20f : config->m_spiritCannonFireWidth;
+	const float sideFireWidth = config->m_spiritCannonFireWidth * 0.70f;
 
 	if (m_aelorinUI)
 	{
-		m_aelorinUI->fireSpiritCannonBeam(config->m_spiritCannonFireWidth, 0.20f);
+		m_aelorinUI->fireSpiritCannonBeam(mainFireWidth, sideFireWidth, 0.20f);
 	}
 
 	m_attackExecutor->applyDamageInBeam(
 		origin,
 		m_lockedAimDirection,
 		config->m_spiritCannonBeamLength,
-		config->m_spiritCannonFireWidth,
+		mainFireWidth,
 		config->m_spiritCannonDamage,
 		"Spirit Cannon"
 	);
 
 	// Phase 2
-	if (m_controller->isPhase2())
+	if (phase2)
 	{
 		constexpr float degreesToRadians = 3.14159265f / 180.0f;
 
@@ -377,7 +380,7 @@ void AelorinSpiritCannonState::fireShot()
 			origin,
 			leftDirection,
 			config->m_spiritCannonBeamLength,
-			config->m_spiritCannonPhase2SideWidth,
+			sideFireWidth,
 			config->m_spiritCannonDamage,
 			"Spiri Cannon"
 		);
@@ -386,7 +389,7 @@ void AelorinSpiritCannonState::fireShot()
 			origin,
 			rightDirection,
 			config->m_spiritCannonBeamLength,
-			config->m_spiritCannonPhase2SideWidth,
+			sideFireWidth,
 			config->m_spiritCannonDamage,
 			"Spiri Cannon"
 		);
