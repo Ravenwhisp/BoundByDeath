@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "BarkManager.h"
 
+#include <algorithm>
+
 BarkManager::BarkManager(GameObject* owner)
 	: Script(owner)
 {
@@ -8,7 +10,8 @@ BarkManager::BarkManager(GameObject* owner)
 
 void BarkManager::Start()
 {
-	m_barkText = UITextAPI::getTextComponent(getOwner());
+	m_barkText =
+		UITextAPI::getTextComponent(getOwner());
 
 	if (m_barkText == nullptr)
 	{
@@ -19,7 +22,7 @@ void BarkManager::Start()
 		return;
 	}
 
-	UITextAPI::setText(m_barkText, "");
+	clearBarkText();
 }
 
 void BarkManager::Update()
@@ -42,8 +45,55 @@ void BarkManager::Update()
 	}
 }
 
-void BarkManager::playBarks(const std::vector<BarkLine>& barks)
+bool BarkManager::playBarks(
+	const std::vector<BarkLine>& barks
+)
 {
+	if (barks.empty())
+	{
+		return false;
+	}
+
+	const BarkPriority incomingPriority =
+		barks.front().priority;
+
+	if (m_hasCurrentBark)
+	{
+		const BarkPriority currentPriority =
+			m_currentBark.priority;
+
+		// Higher priority interrupts the current bark.
+		if (isHigherPriority(
+			incomingPriority,
+			currentPriority
+		))
+		{
+			interruptCurrentBark();
+
+			// Remove pending lower-priority reactions.
+			removeQueuedBarksBelow(
+				incomingPriority
+			);
+
+			// The high-priority bark must play next.
+			pushBarksToFront(barks);
+
+			startNextBark();
+
+			return true;
+		}
+
+		// Do not play a lower-priority bark while
+		// a higher-priority one is active.
+		if (isHigherPriority(
+			currentPriority,
+			incomingPriority
+		))
+		{
+			return false;
+		}
+	}
+
 	for (const BarkLine& bark : barks)
 	{
 		if (bark.text.empty())
@@ -51,13 +101,15 @@ void BarkManager::playBarks(const std::vector<BarkLine>& barks)
 			continue;
 		}
 
-		m_barkQueue.push(bark);
+		m_barkQueue.push_back(bark);
 	}
 
 	if (!m_hasCurrentBark)
 	{
 		startNextBark();
 	}
+
+	return true;
 }
 
 void BarkManager::startNextBark()
@@ -68,21 +120,26 @@ void BarkManager::startNextBark()
 		m_timer = 0.0f;
 
 		clearBarkText();
-
 		return;
 	}
 
-	m_currentBark = m_barkQueue.front();
-	m_barkQueue.pop();
+	m_currentBark =
+		m_barkQueue.front();
 
-	m_timer = m_currentBark.duration;
+	m_barkQueue.pop_front();
+
+	m_timer =
+		m_currentBark.duration;
+
 	m_hasCurrentBark = true;
 
 	showCurrentBark();
 
 	Debug::log(
 		"Bark started - %s: %s",
-		getSpeakerName(m_currentBark.speaker),
+		getSpeakerName(
+			m_currentBark.speaker
+		),
 		m_currentBark.text.c_str()
 	);
 }
@@ -103,7 +160,11 @@ void BarkManager::showCurrentBark()
 	}
 
 	const std::string displayText =
-		std::string(getSpeakerName(m_currentBark.speaker))
+		std::string(
+			getSpeakerName(
+				m_currentBark.speaker
+			)
+		)
 		+ ": "
 		+ m_currentBark.text;
 
@@ -126,7 +187,71 @@ void BarkManager::clearBarkText()
 	);
 }
 
-const char* BarkManager::getSpeakerName(BarkSpeaker speaker) const
+void BarkManager::interruptCurrentBark()
+{
+	m_hasCurrentBark = false;
+	m_timer = 0.0f;
+
+	clearBarkText();
+}
+
+void BarkManager::removeQueuedBarksBelow(
+	BarkPriority priority
+)
+{
+	m_barkQueue.erase(
+		std::remove_if(
+			m_barkQueue.begin(),
+			m_barkQueue.end(),
+			[priority](const BarkLine& bark)
+			{
+				return
+					static_cast<int>(
+						bark.priority
+						)
+					<
+					static_cast<int>(
+						priority
+						);
+			}
+		),
+		m_barkQueue.end()
+	);
+}
+
+void BarkManager::pushBarksToFront(
+	const std::vector<BarkLine>& barks
+)
+{
+	for (
+		auto it = barks.rbegin();
+		it != barks.rend();
+		++it
+		)
+	{
+		if (it->text.empty())
+		{
+			continue;
+		}
+
+		m_barkQueue.push_front(*it);
+	}
+}
+
+bool BarkManager::isHigherPriority(
+	BarkPriority first,
+	BarkPriority second
+) const
+{
+	return
+		static_cast<int>(first)
+					>
+		static_cast<int>(second);
+}
+
+const char* BarkManager::getSpeakerName(
+	BarkSpeaker speaker
+) const
 {
 	switch (speaker)
 	{

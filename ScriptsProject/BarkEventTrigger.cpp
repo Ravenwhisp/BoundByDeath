@@ -1,19 +1,31 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "BarkEventTrigger.h"
 
 #include "BarkEvent.h"
+#include "Damageable.h"
+#include "Bound.h"
 
 #include <cstring>
 
-static const char* barkTriggerActivationNames[] =
+namespace
 {
-	"Both Players Enter",
-	"Both Players Stay"
-};
+	const char* barkTriggerActivationNames[] =
+	{
+		"Both Players Enter",
+		"Both Players Stay",
+		"Death Enter",
+		"Lyriel Enter",
+		"Player Takes Damage",
+		"First Bound Separation",
+		"Repeated Bound Separation"
+	};
 
-constexpr int barkTriggerActivationCount = 2;
+	constexpr int barkTriggerActivationCount = 7;
+}
 
-IMPLEMENT_SCRIPT_FIELDS(BarkEventTrigger,
+IMPLEMENT_SCRIPT_FIELDS(
+	BarkEventTrigger,
+
 	SERIALIZED_ENUM_INT(
 		m_activationType,
 		"Activation Type",
@@ -40,6 +52,18 @@ IMPLEMENT_SCRIPT_FIELDS(BarkEventTrigger,
 		0.0f,
 		60.0f,
 		0.1f
+	),
+
+	SERIALIZED_COMPONENT_REF(
+		m_damageTarget,
+		"Damage Target",
+		ComponentType::TRANSFORM
+	),
+
+	SERIALIZED_COMPONENT_REF(
+		m_boundObject,
+		"Bound Object",
+		ComponentType::TRANSFORM
 	)
 )
 
@@ -50,9 +74,10 @@ BarkEventTrigger::BarkEventTrigger(GameObject* owner)
 
 void BarkEventTrigger::Start()
 {
-	findPlayers();
-
-	m_barkEvent = GameObjectAPI::findScript<BarkEvent>(getOwner());
+	m_barkEvent =
+		GameObjectAPI::findScript<BarkEvent>(
+			getOwner()
+		);
 
 	if (m_barkEvent == nullptr)
 	{
@@ -60,6 +85,35 @@ void BarkEventTrigger::Start()
 			"BarkEventTrigger on '%s' could not find a BarkEvent in the same GameObject.",
 			GameObjectAPI::getName(getOwner())
 		);
+
+		return;
+	}
+
+	const BarkTriggerActivationType activationType =
+		static_cast<BarkTriggerActivationType>(
+			m_activationType
+			);
+
+	switch (activationType)
+	{
+	case BarkTriggerActivationType::BothPlayersEnter:
+	case BarkTriggerActivationType::BothPlayersStay:
+	case BarkTriggerActivationType::DeathEnter:
+	case BarkTriggerActivationType::LyrielEnter:
+		setupZoneTrigger();
+		break;
+
+	case BarkTriggerActivationType::PlayerTakesDamage:
+		setupDamageTrigger();
+		break;
+
+	case BarkTriggerActivationType::FirstBoundSeparation:
+	case BarkTriggerActivationType::RepeatedBoundSeparation:
+		setupBoundTrigger();
+		break;
+
+	default:
+		break;
 	}
 }
 
@@ -70,14 +124,242 @@ void BarkEventTrigger::Update()
 		return;
 	}
 
-	if (m_triggerOnlyOnce && m_hasTriggered)
+	if (
+		m_triggerOnlyOnce &&
+		m_hasTriggered
+		)
 	{
 		return;
 	}
 
+	const BarkTriggerActivationType activationType =
+		static_cast<BarkTriggerActivationType>(
+			m_activationType
+			);
+
+	switch (activationType)
+	{
+	case BarkTriggerActivationType::BothPlayersEnter:
+		updateZoneEnter();
+		break;
+
+	case BarkTriggerActivationType::BothPlayersStay:
+		updateZoneStay();
+		break;
+
+	case BarkTriggerActivationType::DeathEnter:
+	case BarkTriggerActivationType::LyrielEnter:
+		updatePlayerEnter();
+		break;
+
+	case BarkTriggerActivationType::PlayerTakesDamage:
+		updateDamage();
+		break;
+
+	case BarkTriggerActivationType::FirstBoundSeparation:
+	case BarkTriggerActivationType::RepeatedBoundSeparation:
+		updateBound();
+		break;
+
+	default:
+		break;
+	}
+}
+
+void BarkEventTrigger::OnTriggerEnter(
+	GameObject* gameObject
+)
+{
+	const BarkTriggerActivationType activationType =
+		static_cast<BarkTriggerActivationType>(
+			m_activationType
+			);
+
+	if (
+		activationType !=
+		BarkTriggerActivationType::BothPlayersEnter
+		&&
+		activationType !=
+		BarkTriggerActivationType::BothPlayersStay
+		&&
+		activationType !=
+		BarkTriggerActivationType::DeathEnter
+		&&
+		activationType !=
+		BarkTriggerActivationType::LyrielEnter
+		)
+	{
+		return;
+	}
+
+	setPlayerInside(
+		gameObject,
+		true
+	);
+}
+
+void BarkEventTrigger::OnTriggerExit(
+	GameObject* gameObject
+)
+{
+	const BarkTriggerActivationType activationType =
+		static_cast<BarkTriggerActivationType>(
+			m_activationType
+			);
+
+	if (
+		activationType !=
+		BarkTriggerActivationType::BothPlayersEnter
+		&&
+		activationType !=
+		BarkTriggerActivationType::BothPlayersStay
+		&&
+		activationType !=
+		BarkTriggerActivationType::DeathEnter
+		&&
+		activationType !=
+		BarkTriggerActivationType::LyrielEnter
+		)
+	{
+		return;
+	}
+
+	setPlayerInside(
+		gameObject,
+		false
+	);
+
+	switch (activationType)
+	{
+	case BarkTriggerActivationType::BothPlayersEnter:
+	case BarkTriggerActivationType::BothPlayersStay:
+		if (!areBothPlayersInside())
+		{
+			resetCurrentZoneActivation();
+		}
+		break;
+
+	case BarkTriggerActivationType::DeathEnter:
+	case BarkTriggerActivationType::LyrielEnter:
+		if (!isSelectedPlayerInside())
+		{
+			resetCurrentZoneActivation();
+		}
+		break;
+
+	default:
+		break;
+	}
+}
+
+void BarkEventTrigger::setupZoneTrigger()
+{
+	findPlayers();
+}
+
+void BarkEventTrigger::setupDamageTrigger()
+{
+	Transform* targetTransform =
+		m_damageTarget.getReferencedComponent();
+
+	if (targetTransform == nullptr)
+	{
+		Debug::warn(
+			"BarkEventTrigger on '%s' has no Damage Target assigned.",
+			GameObjectAPI::getName(getOwner())
+		);
+
+		return;
+	}
+
+	GameObject* targetObject =
+		ComponentAPI::getOwner(
+			targetTransform
+		);
+
+	if (targetObject == nullptr)
+	{
+		return;
+	}
+
+	m_observedDamageable =
+		GameObjectAPI::findScript<Damageable>(
+			targetObject
+		);
+
+	if (m_observedDamageable == nullptr)
+	{
+		Debug::warn(
+			"BarkEventTrigger on '%s' could not find Damageable on Damage Target '%s'.",
+			GameObjectAPI::getName(getOwner()),
+			GameObjectAPI::getName(targetObject)
+		);
+
+		return;
+	}
+
+	m_previousHp =
+		m_observedDamageable->getCurrentHp();
+}
+
+void BarkEventTrigger::setupBoundTrigger()
+{
+	Transform* boundTransform =
+		m_boundObject.getReferencedComponent();
+
+	if (boundTransform == nullptr)
+	{
+		Debug::warn(
+			"BarkEventTrigger on '%s' has no Bound Object assigned.",
+			GameObjectAPI::getName(getOwner())
+		);
+
+		return;
+	}
+
+	GameObject* boundObject =
+		ComponentAPI::getOwner(
+			boundTransform
+		);
+
+	if (boundObject == nullptr)
+	{
+		return;
+	}
+
+	m_bound =
+		GameObjectAPI::findScript<Bound>(
+			boundObject
+		);
+
+	if (m_bound == nullptr)
+	{
+		Debug::warn(
+			"BarkEventTrigger on '%s' could not find Bound on '%s'.",
+			GameObjectAPI::getName(getOwner()),
+			GameObjectAPI::getName(boundObject)
+		);
+
+		return;
+	}
+
+	/*
+	 * Do not initialize the Bound state here.
+	 *
+	 * Bound loads its configuration in Start(),
+	 * including m_minDistance.
+	 *
+	 * Since Start() order is not guaranteed,
+	 * we initialize the state on the first Update().
+	 */
+	m_boundStateInitialized = false;
+}
+
+void BarkEventTrigger::updateZoneEnter()
+{
 	if (!areBothPlayersInside())
 	{
-		resetCurrentActivation();
+		resetCurrentZoneActivation();
 		return;
 	}
 
@@ -86,60 +368,194 @@ void BarkEventTrigger::Update()
 		return;
 	}
 
-	switch (static_cast<BarkTriggerActivationType>(m_activationType))
+	if (!m_isWaitingForDelay)
 	{
-	case BarkTriggerActivationType::BothPlayersEnter:
-	{
-		if (!m_isWaitingForDelay)
-		{
-			m_isWaitingForDelay = true;
-			m_timer = m_delay;
-
-			if (m_timer <= 0.0f)
-			{
-				triggerBark();
-				return;
-			}
-		}
-
-		m_timer -= Time::getDeltaTime();
-
-		if (m_timer <= 0.0f)
-		{
-			triggerBark();
-		}
-		break;
+		m_isWaitingForDelay = true;
+		m_timer = m_delay;
 	}
 
-	case BarkTriggerActivationType::BothPlayersStay:
+	if (m_timer > 0.0f)
 	{
-		m_timer += Time::getDeltaTime();
+		m_timer -=
+			Time::getDeltaTime();
 
-		if (m_timer >= m_requiredStayTime)
+		if (m_timer > 0.0f)
 		{
-			triggerBark();
+			return;
 		}
-		break;
 	}
 
-	default:
-		break;
+	if (triggerBark())
+	{
+		m_hasTriggeredCurrentOccupancy = true;
+		m_isWaitingForDelay = false;
+		m_timer = 0.0f;
 	}
 }
 
-void BarkEventTrigger::OnTriggerEnter(GameObject* gameObject)
+void BarkEventTrigger::updateZoneStay()
 {
-	setPlayerInside(gameObject, true);
-}
-
-void BarkEventTrigger::OnTriggerExit(GameObject* gameObject)
-{
-	setPlayerInside(gameObject, false);
-
 	if (!areBothPlayersInside())
 	{
-		resetCurrentActivation();
+		resetCurrentZoneActivation();
+		return;
 	}
+
+	if (m_hasTriggeredCurrentOccupancy)
+	{
+		return;
+	}
+
+	m_timer +=
+		Time::getDeltaTime();
+
+	if (
+		m_timer <
+		m_requiredStayTime
+		)
+	{
+		return;
+	}
+
+	if (triggerBark())
+	{
+		m_hasTriggeredCurrentOccupancy = true;
+		m_timer = 0.0f;
+	}
+}
+
+void BarkEventTrigger::updatePlayerEnter()
+{
+	if (!isSelectedPlayerInside())
+	{
+		resetCurrentZoneActivation();
+		return;
+	}
+
+	if (m_hasTriggeredCurrentOccupancy)
+	{
+		return;
+	}
+
+	if (!m_isWaitingForDelay)
+	{
+		m_isWaitingForDelay = true;
+		m_timer = m_delay;
+	}
+
+	if (m_timer > 0.0f)
+	{
+		m_timer -=
+			Time::getDeltaTime();
+
+		if (m_timer > 0.0f)
+		{
+			return;
+		}
+	}
+
+	if (triggerBark())
+	{
+		m_hasTriggeredCurrentOccupancy = true;
+		m_isWaitingForDelay = false;
+		m_timer = 0.0f;
+	}
+}
+
+void BarkEventTrigger::updateDamage()
+{
+	if (m_observedDamageable == nullptr)
+	{
+		return;
+	}
+
+	const float currentHp =
+		m_observedDamageable->getCurrentHp();
+
+	const bool tookDamage =
+		currentHp < m_previousHp;
+
+	if (
+		tookDamage &&
+		!m_observedDamageable->isLastDamageContinuous()
+		)
+	{
+		triggerBark();
+	}
+
+	m_previousHp = currentHp;
+}
+
+void BarkEventTrigger::updateBound()
+{
+	if (m_bound == nullptr)
+	{
+		return;
+	}
+
+	/*
+	 * Initialize here rather than in Start().
+	 * At this point Bound should already have loaded
+	 * its BoundConfig and m_minDistance.
+	 */
+	if (!m_boundStateInitialized)
+	{
+		m_wasSeparated =
+			isBoundSeparated();
+
+		m_boundStateInitialized = true;
+
+		return;
+	}
+
+	const bool isSeparated =
+		isBoundSeparated();
+
+	/*
+	 * Only react to:
+	 *
+	 * inside Bound range
+	 *        ->
+	 * outside Bound range
+	 */
+	if (
+		isSeparated &&
+		!m_wasSeparated
+		)
+	{
+		const BarkTriggerActivationType activationType =
+			static_cast<BarkTriggerActivationType>(
+				m_activationType
+				);
+
+		if (!m_hasSeenFirstSeparation)
+		{
+			m_hasSeenFirstSeparation = true;
+
+			if (
+				activationType ==
+				BarkTriggerActivationType::
+				FirstBoundSeparation
+				)
+			{
+				triggerBark();
+			}
+		}
+		else
+		{
+			if (
+				activationType ==
+				BarkTriggerActivationType::
+				RepeatedBoundSeparation
+				)
+			{
+				triggerBark();
+			}
+		}
+	}
+
+	m_wasSeparated =
+		isSeparated;
 }
 
 void BarkEventTrigger::findPlayers()
@@ -151,7 +567,10 @@ void BarkEventTrigger::findPlayers()
 	m_lyrielInside = false;
 
 	const std::vector<GameObject*> players =
-		SceneAPI::findAllGameObjectsByTag(Tag::PLAYER, true);
+		SceneAPI::findAllGameObjectsByTag(
+			Tag::PLAYER,
+			true
+		);
 
 	for (GameObject* player : players)
 	{
@@ -160,18 +579,31 @@ void BarkEventTrigger::findPlayers()
 			continue;
 		}
 
-		const char* playerName = GameObjectAPI::getName(player);
+		const char* playerName =
+			GameObjectAPI::getName(
+				player
+			);
 
 		if (playerName == nullptr)
 		{
 			continue;
 		}
 
-		if (std::strcmp(playerName, "Death") == 0)
+		if (
+			std::strcmp(
+				playerName,
+				"Death"
+			) == 0
+			)
 		{
 			m_death = player;
 		}
-		else if (std::strcmp(playerName, "Lyriel") == 0)
+		else if (
+			std::strcmp(
+				playerName,
+				"Lyriel"
+			) == 0
+			)
 		{
 			m_lyriel = player;
 		}
@@ -194,7 +626,10 @@ void BarkEventTrigger::findPlayers()
 	}
 }
 
-void BarkEventTrigger::setPlayerInside(GameObject* gameObject, bool inside)
+void BarkEventTrigger::setPlayerInside(
+	GameObject* gameObject,
+	bool inside
+)
 {
 	if (gameObject == m_death)
 	{
@@ -205,20 +640,98 @@ void BarkEventTrigger::setPlayerInside(GameObject* gameObject, bool inside)
 	if (gameObject == m_lyriel)
 	{
 		m_lyrielInside = inside;
-		return;
 	}
 }
 
-bool BarkEventTrigger::areBothPlayersInside() const
+bool BarkEventTrigger::
+areBothPlayersInside() const
 {
-	return m_deathInside && m_lyrielInside;
+	return
+		m_deathInside &&
+		m_lyrielInside;
 }
 
-void BarkEventTrigger::triggerBark()
+bool BarkEventTrigger::
+isSelectedPlayerInside() const
+{
+	const BarkTriggerActivationType activationType =
+		static_cast<BarkTriggerActivationType>(
+			m_activationType
+			);
+
+	switch (activationType)
+	{
+	case BarkTriggerActivationType::DeathEnter:
+		return m_deathInside;
+
+	case BarkTriggerActivationType::LyrielEnter:
+		return m_lyrielInside;
+
+	default:
+		return false;
+	}
+}
+
+bool BarkEventTrigger::
+isBoundSeparated() const
+{
+	if (m_bound == nullptr)
+	{
+		return false;
+	}
+
+	Transform* firstTarget =
+		m_bound->
+		m_firstTarget.
+		getReferencedComponent();
+
+	Transform* secondTarget =
+		m_bound->
+		m_secondTarget.
+		getReferencedComponent();
+
+	if (
+		firstTarget == nullptr ||
+		secondTarget == nullptr
+		)
+	{
+		return false;
+	}
+
+	const Vector3 firstPosition =
+		TransformAPI::getGlobalPosition(
+			firstTarget
+		);
+
+	const Vector3 secondPosition =
+		TransformAPI::getGlobalPosition(
+			secondTarget
+		);
+
+	const float distance =
+		Vector3::Distance(
+			firstPosition,
+			secondPosition
+		);
+
+	return
+		distance >
+		m_bound->m_minDistance;
+}
+
+bool BarkEventTrigger::triggerBark()
 {
 	if (m_barkEvent == nullptr)
 	{
-		return;
+		return false;
+	}
+
+	const bool played =
+		m_barkEvent->play();
+
+	if (!played)
+	{
+		return false;
 	}
 
 	Debug::log(
@@ -226,15 +739,16 @@ void BarkEventTrigger::triggerBark()
 		GameObjectAPI::getName(getOwner())
 	);
 
-	m_barkEvent->executeEvent(nullptr);
+	if (m_triggerOnlyOnce)
+	{
+		m_hasTriggered = true;
+	}
 
-	m_hasTriggered = true;
-	m_hasTriggeredCurrentOccupancy = true;
-	m_isWaitingForDelay = false;
-	m_timer = 0.0f;
+	return true;
 }
 
-void BarkEventTrigger::resetCurrentActivation()
+void BarkEventTrigger::
+resetCurrentZoneActivation()
 {
 	m_timer = 0.0f;
 	m_isWaitingForDelay = false;

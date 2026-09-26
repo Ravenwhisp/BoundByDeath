@@ -2,7 +2,7 @@
 
 #include "ScriptAPI.h"
 
-#include <queue>
+#include <deque>
 #include <string>
 #include <vector>
 
@@ -14,11 +14,18 @@ enum class BarkSpeaker
 	Lyriel
 };
 
+enum class BarkPriority
+{
+	Normal = 0,
+	High
+};
+
 struct BarkLine
 {
 	BarkSpeaker speaker = BarkSpeaker::Death;
 	std::string text;
 	float duration = 3.0f;
+	BarkPriority priority = BarkPriority::Normal;
 };
 
 class BarkManager : public Script
@@ -31,9 +38,12 @@ public:
 	void Start() override;
 	void Update() override;
 
-	void playBarks(const std::vector<BarkLine>& barks);
+	bool playBarks(const std::vector<BarkLine>& barks);
 
-	bool isPlaying() const { return m_hasCurrentBark; }
+	bool isPlaying() const
+	{
+		return m_hasCurrentBark;
+	}
 
 private:
 	void startNextBark();
@@ -42,10 +52,27 @@ private:
 	void showCurrentBark();
 	void clearBarkText();
 
-	const char* getSpeakerName(BarkSpeaker speaker) const;
+	void interruptCurrentBark();
+
+	void removeQueuedBarksBelow(
+		BarkPriority priority
+	);
+
+	void pushBarksToFront(
+		const std::vector<BarkLine>& barks
+	);
+
+	bool isHigherPriority(
+		BarkPriority first,
+		BarkPriority second
+	) const;
+
+	const char* getSpeakerName(
+		BarkSpeaker speaker
+	) const;
 
 private:
-	std::queue<BarkLine> m_barkQueue;
+	std::deque<BarkLine> m_barkQueue;
 
 	BarkLine m_currentBark;
 
