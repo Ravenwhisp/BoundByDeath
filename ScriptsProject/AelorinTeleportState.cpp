@@ -64,7 +64,7 @@ void AelorinTeleportState::OnStateEnter()
 		Debug::warn("[AelorinTeleportState] No crowding player found.");
 	}
 
-	changePhase(Phase::TeleportIn);
+	changePhase(TeleportPhase::TeleportIn);
 
 	Debug::log("[AelorinTeleportState] ENTER");
 }
@@ -87,7 +87,7 @@ void AelorinTeleportState::OnStateUpdate()
 		return;
 	}
 
-	if (m_phase == Phase::TeleportIn)
+	if (m_phase == TeleportPhase::TeleportIn)
 	{
 		m_phaseTimer += Time::getDeltaTime();
 
@@ -98,12 +98,12 @@ void AelorinTeleportState::OnStateUpdate()
 
 		executeTeleport();
 
-		changePhase(Phase::TeleportOut);
+		changePhase(TeleportPhase::TeleportOut);
 
 		return;
 	}
 
-	if (m_phase == Phase::TeleportOut)
+	if (m_phase == TeleportPhase::TeleportOut)
 	{
 		m_phaseTimer += Time::getDeltaTime();
 
@@ -126,14 +126,14 @@ void AelorinTeleportState::OnStateExit()
 
 	m_crowdingPlayer = nullptr;
 	m_aelorinTransform = nullptr;
-	m_phase = Phase::TeleportIn;
+	m_phase = TeleportPhase::TeleportIn;
 	m_phaseTimer = 0.0f;
 	m_completed = false;
 
 	Debug::log("[AelorinTeleportState] EXIT");
 }
 
-void AelorinTeleportState::changePhase(Phase phase)
+void AelorinTeleportState::changePhase(TeleportPhase phase)
 {
 	m_phase = phase;
 	m_phaseTimer = 0.0f;
@@ -143,7 +143,7 @@ void AelorinTeleportState::changePhase(Phase phase)
 		return;
 	}
 
-	if (phase == Phase::TeleportIn)
+	if (phase == TeleportPhase::TeleportIn)
 	{
 		AnimationAPI::setSpeedMultiplier(m_animation, 0.65f);
 		AnimationAPI::playOverrideClip(m_animation, "boss_teleportin", 0.0f, false);
@@ -151,7 +151,7 @@ void AelorinTeleportState::changePhase(Phase phase)
 		return;
 	}
 
-	if (phase == Phase::TeleportOut)
+	if (phase == TeleportPhase::TeleportOut)
 	{
 		AnimationAPI::setSpeedMultiplier(m_animation, 0.75f);
 		AnimationAPI::playOverrideClip(m_animation, "boss_teleportout", 0.0f, false);

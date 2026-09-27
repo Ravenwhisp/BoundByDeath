@@ -11,6 +11,8 @@
 IMPLEMENT_SCRIPT_FIELDS_INHERITED(AelorinDamageable, EnemyDamageable,
     FIELD_GROUP_LABEL("Phase 2 Health Bar"),
     SERIALIZED_COMPONENT_REF(m_phase2HealthBarContainer, "Health Bar Container Phase 2", ComponentType::TRANSFORM2D),
+    SERIALIZED_COMPONENT_REF(m_phase2HealthNormalBackground, "Health Bar Background Phase 2", ComponentType::TRANSFORM2D),
+    SERIALIZED_COMPONENT_REF(m_phase2HealthFuryBackground, "Health Bar FURY Background Phase 2", ComponentType::TRANSFORM2D),
     SERIALIZED_COMPONENT_REF(m_phase2HealthSlider, "Health Slider Phase 2", ComponentType::UISLIDER),
     SERIALIZED_COMPONENT_REF(m_phase2HealthSlider2, "Health Slider 2 Phase 2", ComponentType::UISLIDER)
 )
@@ -397,6 +399,7 @@ void AelorinDamageable::setupPhase2HealthBar()
 
     setHealthBarContainerActive(phase1Container, false);
     setHealthBarContainerActive(phase2Container, true);
+    setFuryHealthBarVisual(false);
 
     bindHealthBarUI(phase2Container, m_phase2HealthSlider.getReferencedComponent(), m_phase2HealthSlider2.getReferencedComponent());
 }
@@ -415,6 +418,15 @@ void AelorinDamageable::setHealthBarContainerActive(Transform2D* container, bool
     }
 
     GameObjectAPI::setActive(object, active);
+}
+
+void AelorinDamageable::setFuryHealthBarVisual(bool furyActive)
+{
+    Transform2D* normalBackground = m_phase2HealthNormalBackground.getReferencedComponent();
+    Transform2D* furyBackground = m_phase2HealthFuryBackground.getReferencedComponent();
+
+    setHealthBarContainerActive(normalBackground, !furyActive);
+    setHealthBarContainerActive(furyBackground, furyActive);
 }
 
 void AelorinDamageable::onHpDepleted()

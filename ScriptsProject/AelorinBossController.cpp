@@ -223,7 +223,14 @@ void AelorinBossController::facePositionInstant(const Vector3& worldPosition)
 
 	Vector3 currentEuler = TransformAPI::getGlobalEulerDegrees(ownerTransform);
 	const float modelYawOffset = isPhase2() ? -90.0f : 90.0f;
-	currentEuler.y = desiredYawDegrees - modelYawOffset;
+	float correctedYaw = desiredYawDegrees - modelYawOffset;
+
+	if (isPhase2())
+	{
+		correctedYaw += 180.0f;
+	}
+
+	currentEuler.y = correctedYaw;
 
 	TransformAPI::setGlobalRotationEuler(ownerTransform, currentEuler);
 }
@@ -626,6 +633,12 @@ void AelorinBossController::beginFury()
 
 	m_furyRequested = false;
 	m_furyActive = true;
+
+	if (m_damageable)
+	{
+		m_damageable->setFuryHealthBarVisual(true);
+	}
+
 	m_furyCastsCompleted = 0;
 	m_soulCataclysmTriggered = false;
 
@@ -651,6 +664,12 @@ void AelorinBossController::finishFury()
 
 	m_furyRequested = false;
 	m_furyActive = false;
+
+	if (m_damageable)
+	{
+		m_damageable->setFuryHealthBarVisual(false);
+	}
+
 	m_furyCastsCompleted = 0;
 	m_soulCataclysmTriggered = false;
 
