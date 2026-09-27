@@ -175,6 +175,9 @@
     <Filter Include="Enemies\Aelorin\UI">
       <UniqueIdentifier>{c7d23cbd-96c5-4175-a8b4-628cdd048398}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Systems\Checkpoints\Events\Level2">
+      <UniqueIdentifier>{b5bbb920-cc1f-4c15-a672-acbed685a284}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -748,6 +751,31 @@
     </ClInclude>
     <ClInclude Include="ElevatorManager.h" />
     <ClInclude Include="AelorinLavaController.h" />
+    <ClInclude Include="PersistingManager.h" />
+    <ClInclude Include="PersistingCheckpointState.h" />
+    <ClInclude Include="PlayerGamepadBinding.h" />
+    <ClInclude Include="ShadowExecutionConfig.h" />
+    <ClInclude Include="Checkpoint2_Level1_Event.h">
+      <Filter>Systems\Checkpoints\Events\Level1</Filter>
+    </ClInclude>
+    <ClInclude Include="Checkpoint3_Level1_Event.h">
+      <Filter>Systems\Checkpoints\Events\Level1</Filter>
+    </ClInclude>
+    <ClInclude Include="Checkpoint4_Level1_Event.h">
+      <Filter>Systems\Checkpoints\Events\Level1</Filter>
+    </ClInclude>
+    <ClInclude Include="Checkpoint5_Level1_Event.h">
+      <Filter>Systems\Checkpoints\Events\Level1</Filter>
+    </ClInclude>
+    <ClInclude Include="Checkpoint6_Level1_Event.h">
+      <Filter>Systems\Checkpoints\Events\Level1</Filter>
+    </ClInclude>
+    <ClInclude Include="Checkpoint7_Level1_Event.h">
+      <Filter>Systems\Checkpoints\Events\Level1</Filter>
+    </ClInclude>
+    <ClInclude Include="Checkpoint8_Level1_Event.h">
+      <Filter>Systems\Checkpoints\Events\Level1</Filter>
+    </ClInclude>
     <ClInclude Include="ObjectVfxIds.h" />
     <ClInclude Include="SkeletonUI.h" />
     <ClInclude Include="SpectralPathEntranceVFX.h" />
@@ -756,6 +784,24 @@
     <ClInclude Include="SkeletonParticles.h" />
     <ClInclude Include="SummonerParticles.h" />
     <ClInclude Include="VideoManager.h" />
+    <ClInclude Include="Checkpoint1_Level2_Event.h">
+      <Filter>Systems\Checkpoints\Events\Level2</Filter>
+    </ClInclude>
+    <ClInclude Include="Checkpoint2_Level2_Event.h">
+      <Filter>Systems\Checkpoints\Events\Level2</Filter>
+    </ClInclude>
+    <ClInclude Include="Checkpoint3_Level2_Event.h">
+      <Filter>Systems\Checkpoints\Events\Level2</Filter>
+    </ClInclude>
+    <ClInclude Include="Checkpoint4_Level2_Event.h">
+      <Filter>Systems\Checkpoints\Events\Level2</Filter>
+    </ClInclude>
+    <ClInclude Include="Checkpoint5_Level2_Event.h">
+      <Filter>Systems\Checkpoints\Events\Level2</Filter>
+    </ClInclude>
+    <ClInclude Include="Checkpoint6_Level2_Event.h">
+      <Filter>Systems\Checkpoints\Events\Level2</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
@@ -1310,6 +1356,32 @@
     </ClCompile>
     <ClCompile Include="ElevatorManager.cpp" />
     <ClCompile Include="AelorinLavaController.cpp" />
+    <ClCompile Include="GameplayEventAction.cpp" />
+    <ClCompile Include="PersistingManager.cpp" />
+    <ClCompile Include="PersistingCheckpointState.cpp" />
+    <ClCompile Include="PlayerGamepadBinding.cpp" />
+    <ClCompile Include="ShadowExecutionConfig.cpp" />
+    <ClCompile Include="Checkpoint2_Level1_Event.cpp">
+      <Filter>Systems\Checkpoints\Events\Level1</Filter>
+    </ClCompile>
+    <ClCompile Include="Checkpoint3_Level1_Event.cpp">
+      <Filter>Systems\Checkpoints\Events\Level1</Filter>
+    </ClCompile>
+    <ClCompile Include="Checkpoint4_Level1_Event.cpp">
+      <Filter>Systems\Checkpoints\Events\Level1</Filter>
+    </ClCompile>
+    <ClCompile Include="Checkpoint5_Level1_Event.cpp">
+      <Filter>Systems\Checkpoints\Events\Level1</Filter>
+    </ClCompile>
+    <ClCompile Include="Checkpoint6_Level1_Event.cpp">
+      <Filter>Systems\Checkpoints\Events\Level1</Filter>
+    </ClCompile>
+    <ClCompile Include="Checkpoint7_Level1_Event.cpp">
+      <Filter>Systems\Checkpoints\Events\Level1</Filter>
+    </ClCompile>
+    <ClCompile Include="Checkpoint8_Level1_Event.cpp">
+      <Filter>Systems\Checkpoints\Events\Level1</Filter>
+    </ClCompile>
     <ClCompile Include="SkeletonUI.cpp" />
     <ClCompile Include="SpectralPathEntranceVFX.cpp" />
     <ClCompile Include="SharedEnemyParticles.cpp" />
@@ -1317,5 +1389,23 @@
     <ClCompile Include="SkeletonParticles.cpp" />
     <ClCompile Include="SummonerParticles.cpp" />
     <ClCompile Include="VideoManager.cpp" />
+    <ClCompile Include="Checkpoint1_Level2_Event.cpp">
+      <Filter>Systems\Checkpoints\Events\Level2</Filter>
+    </ClCompile>
+    <ClCompile Include="Checkpoint2_Level2_Event.cpp">
+      <Filter>Systems\Checkpoints\Events\Level2</Filter>
+    </ClCompile>
+    <ClCompile Include="Checkpoint3_Level2_Event.cpp">
+      <Filter>Systems\Checkpoints\Events\Level2</Filter>
+    </ClCompile>
+    <ClCompile Include="Checkpoint4_Level2_Event.cpp">
+      <Filter>Systems\Checkpoints\Events\Level2</Filter>
+    </ClCompile>
+    <ClCompile Include="Checkpoint5_Level2_Event.cpp">
+      <Filter>Systems\Checkpoints\Events\Level2</Filter>
+    </ClCompile>
+    <ClCompile Include="Checkpoint6_Level2_Event.cpp">
+      <Filter>Systems\Checkpoints\Events\Level2</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
