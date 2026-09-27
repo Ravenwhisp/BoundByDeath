@@ -1008,7 +1008,7 @@ std::vector<AelorinAbility> AelorinBossController::buildAbilityPool() const
 	{
 		//AelorinAbility::SeekerSigils,
 		//AelorinAbility::RisenSpires,
-		AelorinAbility::SpiritCannon
+		//AelorinAbility::SpiritCannon
 	};
 
 	//if (canUseNova())
