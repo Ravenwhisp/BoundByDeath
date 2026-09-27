@@ -20,6 +20,13 @@ public:
 	void OnStateExit() override;
 
 private:
+	enum class Phase
+	{
+		TeleportIn,
+		TeleportOut
+	};
+
+	void changePhase(Phase phase);
 	void executeTeleport();
 	void finishAbility();
 
@@ -33,9 +40,8 @@ private:
 
 	AelorinAbility m_activeAbility = AelorinAbility::None;
 
-	float m_stateTimer = 0.0f;
-	float m_recoveryTimer = 0.0f;
+	Phase m_phase = Phase::TeleportIn;
 
-	bool m_teleportExecuted = false;
+	float m_phaseTimer = 0.0f;
 	bool m_completed = false;
 };

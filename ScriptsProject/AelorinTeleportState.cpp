@@ -27,9 +27,6 @@ void AelorinTeleportState::OnStateEnter()
 	// reset members
 	m_crowdingPlayer = nullptr;
 	m_activeAbility = AelorinAbility::None;
-	m_stateTimer = 0.0f;
-	m_recoveryTimer = 0.0f;
-	m_teleportExecuted = false;
 	m_completed = false;
 
 	if (!m_controller)
@@ -65,7 +62,9 @@ void AelorinTeleportState::OnStateEnter()
 	if (!m_crowdingPlayer)
 	{
 		Debug::warn("[AelorinTeleportState] No crowding player found.");
-	}	
+	}
+
+	changePhase(Phase::TeleportIn);
 
 	Debug::log("[AelorinTeleportState] ENTER");
 }
@@ -88,40 +87,77 @@ void AelorinTeleportState::OnStateUpdate()
 		return;
 	}
 
-	if (!m_teleportExecuted)
+	if (m_phase == Phase::TeleportIn)
 	{
-		m_stateTimer += Time::getDeltaTime();
+		m_phaseTimer += Time::getDeltaTime();
 
-		if (m_stateTimer < config->m_teleportCastDuration)
+		if (m_phaseTimer < config->m_teleportCastDuration)
 		{
 			return;
 		}
 
 		executeTeleport();
-		m_teleportExecuted = true;
+
+		changePhase(Phase::TeleportOut);
+
 		return;
 	}
 
-	m_recoveryTimer += Time::getDeltaTime();
-	
-	if (m_recoveryTimer < config->m_teleportRecoveryDuration)
+	if (m_phase == Phase::TeleportOut)
 	{
+		m_phaseTimer += Time::getDeltaTime();
+
+		if (m_phaseTimer < config->m_teleportRecoveryDuration)
+		{
+			return;
+		}
+
+		finishAbility();
 		return;
 	}
-
-	finishAbility();
 }
 
 void AelorinTeleportState::OnStateExit()
 {
+	if (m_animation)
+	{
+		AnimationAPI::clearOverrideClip(m_animation, 0.0f);
+	}
+
 	m_crowdingPlayer = nullptr;
 	m_aelorinTransform = nullptr;
-	m_stateTimer = 0.0f;
-	m_recoveryTimer = 0.0f;
-	m_teleportExecuted = false;
+	m_phase = Phase::TeleportIn;
+	m_phaseTimer = 0.0f;
 	m_completed = false;
 
 	Debug::log("[AelorinTeleportState] EXIT");
+}
+
+void AelorinTeleportState::changePhase(Phase phase)
+{
+	m_phase = phase;
+	m_phaseTimer = 0.0f;
+
+	if (!m_animation)
+	{
+		return;
+	}
+
+	if (phase == Phase::TeleportIn)
+	{
+		AnimationAPI::setSpeedMultiplier(m_animation, 0.65f);
+		AnimationAPI::playOverrideClip(m_animation, "boss_teleportin", 0.0f, false);
+		AnimationAPI::setPlaybackTime(m_animation, 0.0f);
+		return;
+	}
+
+	if (phase == Phase::TeleportOut)
+	{
+		AnimationAPI::setSpeedMultiplier(m_animation, 0.75f);
+		AnimationAPI::playOverrideClip(m_animation, "boss_teleportout", 0.0f, false);
+		AnimationAPI::setPlaybackTime(m_animation, 0.0f);
+		return;
+	}
 }
 
 void AelorinTeleportState::executeTeleport()
@@ -174,6 +210,8 @@ void AelorinTeleportState::finishAbility()
 	}
 
 	m_completed = true;
+
+	AnimationAPI::clearOverrideClip(m_animation, 0.0f);
 
 	const bool sent = AnimationAPI::sendTrigger(m_animation, "ToIdle");
 	if (!sent)

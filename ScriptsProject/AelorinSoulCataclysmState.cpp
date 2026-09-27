@@ -101,7 +101,7 @@ void AelorinSoulCataclysmState::OnStateEnter()
 
 	if (m_lavaController)
 	{
-		m_lavaController->StartLavaRise(10.736f, 10.0f);
+		m_lavaController->StartLavaRise(10.806f, config->m_soulCataclysmChannelDuration);
 	}
 
 	Debug::log("[AelorinSoulCataclysmState] ENTER");
@@ -243,7 +243,7 @@ void AelorinSoulCataclysmState::finishCataclysm()
 
 	if(m_lavaController)
 	{
-		m_lavaController->StartLavaFall(7.0f, 10.0f);
+		m_lavaController->StartLavaFall(7.0f, 5.0f);
 	}
 
 	const bool sent = AnimationAPI::sendTrigger(m_animation, "ToExhaustion");

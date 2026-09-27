@@ -195,6 +195,39 @@ float AelorinBossController::getClosestPlayerDistance() const
 	return minDistance;
 }
 
+void AelorinBossController::facePositionInstant(const Vector3& worldPosition)
+{
+	Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
+
+	if (!ownerTransform)
+	{
+		return;
+	}
+
+	const Vector3 ownerPosition = TransformAPI::getGlobalPosition(ownerTransform);
+
+	Vector3 direction = worldPosition - ownerPosition;
+	direction.y = 0.0f;
+
+	if (direction.LengthSquared() <= 0.00001f)
+	{
+		return;
+	}
+
+	direction.Normalize();
+
+	constexpr float radiansToDegrees = 180.0f / 3.14159265f;
+
+	const float desiredYawRadians = std::atan2(direction.x, direction.z);
+	const float desiredYawDegrees = desiredYawRadians * radiansToDegrees;
+
+	Vector3 currentEuler = TransformAPI::getGlobalEulerDegrees(ownerTransform);
+	const float modelYawOffset = isPhase2() ? -90.0f : 90.0f;
+	currentEuler.y = desiredYawDegrees - modelYawOffset;
+
+	TransformAPI::setGlobalRotationEuler(ownerTransform, currentEuler);
+}
+
 AelorinAbility AelorinBossController::chooseNextAbility()
 {
 	if (canTeleport())

@@ -50,6 +50,8 @@ public:
 	Vector3 getDeathPosition() const;
 	float getClosestPlayerDistance() const;
 
+	void facePositionInstant(const Vector3& worldPosition);
+
 	// Projectile Pool References
 	ComponentRef<Transform> m_seekerSigilsProjectilePool;
 	ComponentRef<Transform> m_seekerSigilsLargeProjectilePool;

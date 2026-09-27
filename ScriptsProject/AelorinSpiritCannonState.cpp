@@ -270,6 +270,10 @@ bool AelorinSpiritCannonState::lockCurrentTargetPosition()
 	}
 
 	m_lockedAimDirection.Normalize();
+	if (m_controller)
+	{
+		m_controller->facePositionInstant(m_lockedTargetPosition);
+	}
 
 	return true;
 }
@@ -298,6 +302,11 @@ void AelorinSpiritCannonState::beginShot()
 
 	m_shotTimer = 0.0f;
 	m_shotActive = true;
+
+	if (!m_controller->isPhase2() && m_shotCount > 0)
+	{
+		AnimationAPI::setPlaybackTime(m_animation, 0.0f);
+	}
 
 	m_waitingForNextShot = false;
 	m_intervalTimer = 0.0f;

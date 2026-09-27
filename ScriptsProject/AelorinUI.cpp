@@ -464,6 +464,7 @@ void AelorinUI::showSpiritCannonWarning(Transform* originTransform, const Vector
 	m_spiritCannonSideAngle = sideAngle;
 	m_spiritCannonSideWidth = sideWidth;
 
+	updateSpiritCannonUI(0.0f);
 	GameObjectAPI::setActive(canvasObject, true);
 
 	// Thin warning beam
