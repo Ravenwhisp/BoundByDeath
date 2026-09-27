@@ -1006,7 +1006,7 @@ std::vector<AelorinAbility> AelorinBossController::buildAbilityPool() const
 {
 	std::vector<AelorinAbility> pool
 	{
-		//AelorinAbility::SeekerSigils,
+		AelorinAbility::SeekerSigils,
 		//AelorinAbility::RisenSpires,
 		//AelorinAbility::SpiritCannon
 	};
