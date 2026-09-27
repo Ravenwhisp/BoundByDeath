@@ -67,12 +67,8 @@ IMPLEMENT_SCRIPT_FIELDS(AelorinUI,
 	),
 
 	FIELD_GROUP_COLLAPSE("Soul Cataclysm",
-		SERIALIZED_COMPONENT_REF(m_soulCataclysmUICanvas, "Soul Cataclysm UI Canvas",	ComponentType::TRANSFORM),
-		SERIALIZED_COMPONENT_REF(m_soulCataclysmUIContainer, "Soul Cataclysm UI Container", ComponentType::TRANSFORM2D),
-		SERIALIZED_COMPONENT_REF(m_soulCataclysmUIBackground, "Soul Cataclysm UI Background", ComponentType::TRANSFORM2D),
-		SERIALIZED_COMPONENT_REF(m_soulCataclysmUIBorder, "Soul Cataclysm UI Border",	ComponentType::TRANSFORM2D),
-		SERIALIZED_COMPONENT_REF(m_soulCataclysmUIGlow, "Soul Cataclysm UI Glow", ComponentType::TRANSFORM2D),
-
+		SERIALIZED_COMPONENT_REF(m_soulCataclysmWarningTextCanvas, "Soul Cataclysm Warning Text", ComponentType::TRANSFORM),
+		SERIALIZED_COMPONENT_REF(m_soulCataclysmTextContent, "Soul Cataclysm Text Content", ComponentType::TRANSFORM2D),
 		SERIALIZED_COMPONENT_REF(m_soulCataclysmSafeZoneUICanvas, "Soul Cataclysm Safe Zone UI Canvas", ComponentType::TRANSFORM),
 		SERIALIZED_COMPONENT_REF(m_soulCataclysmSafeZoneUIContainer, "Soul Cataclysm Safe Zone UI Container", ComponentType::TRANSFORM2D),
 		SERIALIZED_COMPONENT_REF(m_soulCataclysmSafeZoneUIBackground, "Soul Cataclysm Safe Zone UI Background", ComponentType::TRANSFORM2D),
@@ -165,12 +161,9 @@ void AelorinUI::Start()
 	hideGraspOfTheDeadUI();
 	hideGraspChains();
 
-	// Soul Cataclysm - Arena
-	m_soulCataclysmUICanvasTransform = m_soulCataclysmUICanvas.getReferencedComponent();
-	m_soulCataclysmUIContainerTransform2D =	m_soulCataclysmUIContainer.getReferencedComponent();
-	m_soulCataclysmUIBackgroundTransform2D = m_soulCataclysmUIBackground.getReferencedComponent();
-	m_soulCataclysmUIBorderTransform2D = m_soulCataclysmUIBorder.getReferencedComponent();
-	m_soulCataclysmUIGlowTransform2D = m_soulCataclysmUIGlow.getReferencedComponent();
+	// Soul Cataclysm - TEXT
+	m_soulCataclysmWarningTextCanvasTransform = m_soulCataclysmWarningTextCanvas.getReferencedComponent();
+	m_soulCataclysmTextContentTransform2D = m_soulCataclysmTextContent.getReferencedComponent();
 
 	// Soul Cataclysm - Safe Zone
 	m_soulCataclysmSafeZoneUICanvasTransform = m_soulCataclysmSafeZoneUICanvas.getReferencedComponent();
@@ -708,20 +701,9 @@ void AelorinUI::cancelGraspChains()
 	hideGraspChains();
 }
 
-void AelorinUI::showSoulCataclysmUI(const Vector3& center, float radius, Transform* safeZonesRoot, float safeZoneRadius, float channelDuration)
+void AelorinUI::showSoulCataclysmUI(Transform* safeZonesRoot, float safeZoneRadius, float channelDuration)
 {
-	if (!m_soulCataclysmUICanvasTransform ||
-		!m_soulCataclysmUIContainerTransform2D ||
-		!m_soulCataclysmUIBackgroundTransform2D ||
-		!m_soulCataclysmUIBorderTransform2D ||
-		!m_soulCataclysmUIGlowTransform2D ||
-		!safeZonesRoot)
-	{
-		return;
-	}
-
-	GameObject* arenaObject = ComponentAPI::getOwner(m_soulCataclysmUICanvasTransform);
-	if (!arenaObject)
+	if (!safeZonesRoot)
 	{
 		return;
 	}
@@ -733,21 +715,15 @@ void AelorinUI::showSoulCataclysmUI(const Vector3& center, float radius, Transfo
 	m_soulCataclysmUITimer = 0.0f;
 	m_soulCataclysmUIChannelDuration = (std::max)(channelDuration, 0.001f);
 
-	// arena
-	GameObjectAPI::setActive(arenaObject, true);
-
-	Vector3 arenaPosition = center;
-	arenaPosition.y += 0.05f;
-
-	TransformAPI::setGlobalPosition(m_soulCataclysmUICanvasTransform, arenaPosition);
-	TransformAPI::setGlobalRotationEuler(m_soulCataclysmUICanvasTransform, Vector3(90.0f, 0.0f, 0.0f));
-
-	setSoulCataclysmArenaRadius(radius);
-
-	Transform2DAPI::setAlpha(m_soulCataclysmUIContainerTransform2D, 1.0f);
-	Transform2DAPI::setAlpha(m_soulCataclysmUIBackgroundTransform2D, 0.25f);
-	Transform2DAPI::setAlpha(m_soulCataclysmUIBorderTransform2D, 1.0f);
-	Transform2DAPI::setAlpha(m_soulCataclysmUIGlowTransform2D, 0.0f);
+	// warning text
+	if (m_soulCataclysmWarningTextCanvasTransform)
+	{
+		GameObject* canvasObject = ComponentAPI::getOwner(m_soulCataclysmWarningTextCanvasTransform);
+		if (canvasObject)
+		{
+			GameObjectAPI::setActive(canvasObject, true);
+		}
+	}
 
 	// safe zones
 	const int safeZoneCount = TransformAPI::getChildCount(safeZonesRoot);
@@ -1789,24 +1765,19 @@ void AelorinUI::setupSoulCataclysmSafeZonesUI()
 
 void AelorinUI::hideSoulCataclysmUI()
 {
-	if (m_soulCataclysmUICanvasTransform)
-	{
-		GameObject* arenaObject = ComponentAPI::getOwner(m_soulCataclysmUICanvasTransform);
-		if (arenaObject)
-		{
-			GameObjectAPI::setActive(arenaObject, false);
-		}
-	}
-
 	hideAllSoulCataclysmSafeZonesUI();
 
 	m_soulCataclysmUIActive = false;
 	m_soulCataclysmUITimer = 0.0f;
 	m_soulCataclysmUIChannelDuration = 0.0f;
 
-	if (m_soulCataclysmUIGlowTransform2D)
+	if (m_soulCataclysmWarningTextCanvasTransform)
 	{
-		Transform2DAPI::setAlpha(m_soulCataclysmUIGlowTransform2D, 0.0f);
+		GameObject* canvasObject = ComponentAPI::getOwner(m_soulCataclysmWarningTextCanvasTransform);
+		if (canvasObject)
+		{
+			GameObjectAPI::setActive(canvasObject, false);
+		}
 	}
 }
 
@@ -1816,25 +1787,6 @@ void AelorinUI::hideAllSoulCataclysmSafeZonesUI()
 	{
 		hideSoulCataclysmSafeZoneUISlot(slot);
 	}
-}
-
-void AelorinUI::setSoulCataclysmArenaRadius(float radius)
-{
-	if (!m_soulCataclysmUIContainerTransform2D)
-	{
-		return;
-	}
-
-	const float baseDiameterUI = Transform2DAPI::getBaseSize(m_soulCataclysmUIContainerTransform2D).x;
-	if (baseDiameterUI <= 0.001f)
-	{
-		return;
-	}
-
-	const float desiredDiameterUI = radius * 2.0f * 100.0f;
-	const float scale = desiredDiameterUI / baseDiameterUI;
-
-	Transform2DAPI::setScale(m_soulCataclysmUIContainerTransform2D, Vector2(scale, scale));
 }
 
 void AelorinUI::setSoulCataclysmSafeZoneRadius(SoulCataclysmSafeZoneUISlot& slot, float radius)
@@ -1863,24 +1815,20 @@ void AelorinUI::updateSoulCataclysmUI(float deltaTime)
 		return;
 	}
 
-	if (!m_soulCataclysmUIBackgroundTransform2D || !m_soulCataclysmUIGlowTransform2D)
-	{
-		hideSoulCataclysmUI();
-		return;
-	}
-
 	m_soulCataclysmUITimer += deltaTime;
 
+	if (m_soulCataclysmTextContentTransform2D)
+	{
+		const float blinkAlpha = 0.5f + 0.5f * cosf(
+				m_soulCataclysmUITimer *
+				m_soulCataclysmWarningBlinkSpeed *
+				MathAPI::TWO_PI
+			);
+
+		Transform2DAPI::setAlpha(m_soulCataclysmTextContentTransform2D,	blinkAlpha);
+	}
+
 	const float t = std::clamp(m_soulCataclysmUITimer / m_soulCataclysmUIChannelDuration, 0.0f, 1.0f);
-	const float easedT = MathAPI::evaluateEasing(MathAPI::EasingType::EaseInQuad, t);
-
-	// stronger danger area as cataclysm nears execution
-	const float backgroundAlpha = 0.25f + 0.55f * easedT;
-
-	Transform2DAPI::setAlpha(m_soulCataclysmUIBackgroundTransform2D, backgroundAlpha);
-
-	// impact
-	Transform2DAPI::setAlpha(m_soulCataclysmUIGlowTransform2D, easedT);
 
 	if (t >= 1.0f)
 	{

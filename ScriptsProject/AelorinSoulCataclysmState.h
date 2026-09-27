@@ -8,6 +8,7 @@ class AelorinAttackExecutor;
 class AnimationComponent;
 class AelorinUI;
 class AelorinLavaController;
+class CameraShake;
 
 class AelorinSoulCataclysmState : public StateMachineScript
 {
@@ -32,6 +33,7 @@ private:
 	AnimationComponent* m_animation = nullptr;
 	AelorinUI* m_aelorinUI = nullptr;
 	AelorinLavaController* m_lavaController = nullptr;
+	CameraShake* m_cameraShake = nullptr;
 
 	float m_stateTimer = 0.0f;
 

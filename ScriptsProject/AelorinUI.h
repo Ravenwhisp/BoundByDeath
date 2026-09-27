@@ -49,7 +49,7 @@ public:
 	void cancelGraspChains();
 
 	// Soul Cataclysm
-	void showSoulCataclysmUI(const Vector3& center, float radius, Transform* safeZonesRoot, float safeZoneRadius, float channelDuration);
+	void showSoulCataclysmUI(Transform* safeZonesRoot, float safeZoneRadius, float channelDuration);
 
 private:
 
@@ -129,7 +129,6 @@ private:
 	void setupSoulCataclysmSafeZonesUI();
 	void hideSoulCataclysmUI();
 	void hideAllSoulCataclysmSafeZonesUI();
-	void setSoulCataclysmArenaRadius(float radius);
 	void setSoulCataclysmSafeZoneRadius(SoulCataclysmSafeZoneUISlot& slot, float radius);
 	void updateSoulCataclysmUI(float deltaTime);
 	void hideSoulCataclysmSafeZoneUISlot(SoulCataclysmSafeZoneUISlot& slot);
@@ -312,18 +311,12 @@ private:
 	static constexpr float m_graspPortalPulseSpeed = 4.0f;
 	static constexpr float m_graspPortalPulseAmount = 0.04f;
 
-	// Soul Cataclysm - Arena
-	ComponentRef<Transform> m_soulCataclysmUICanvas;
-	ComponentRef<Transform2D> m_soulCataclysmUIContainer;
-	ComponentRef<Transform2D> m_soulCataclysmUIBackground;
-	ComponentRef<Transform2D> m_soulCataclysmUIBorder;
-	ComponentRef<Transform2D> m_soulCataclysmUIGlow;
+	// Soul Cataclysm - TEXT
+	ComponentRef<Transform> m_soulCataclysmWarningTextCanvas;
+	ComponentRef<Transform2D> m_soulCataclysmTextContent;
 
-	Transform* m_soulCataclysmUICanvasTransform = nullptr;
-	Transform2D* m_soulCataclysmUIContainerTransform2D = nullptr;
-	Transform2D* m_soulCataclysmUIBackgroundTransform2D = nullptr;
-	Transform2D* m_soulCataclysmUIBorderTransform2D = nullptr;
-	Transform2D* m_soulCataclysmUIGlowTransform2D = nullptr;
+	Transform* m_soulCataclysmWarningTextCanvasTransform = nullptr;
+	Transform2D* m_soulCataclysmTextContentTransform2D = nullptr;
 
 	// Soul Cataclysm - Safe Zone
 	ComponentRef<Transform> m_soulCataclysmSafeZoneUICanvas;
@@ -343,4 +336,6 @@ private:
 	bool m_soulCataclysmUIActive = false;
 	float m_soulCataclysmUITimer = 0.0f;
 	float m_soulCataclysmUIChannelDuration = 0.0f;
+
+	static constexpr float m_soulCataclysmWarningBlinkSpeed = 2.0f;
 };
