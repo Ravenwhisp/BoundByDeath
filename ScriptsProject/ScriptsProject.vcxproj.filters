@@ -175,6 +175,9 @@
     <Filter Include="Enemies\Aelorin\UI">
       <UniqueIdentifier>{c7d23cbd-96c5-4175-a8b4-628cdd048398}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Enemies\Aelorin\VFX">
+      <UniqueIdentifier>{57dd97f3-25eb-4ed7-9602-54fd3db8855c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -753,6 +756,9 @@
     <ClInclude Include="AelorinSpiritCannonState.h">
       <Filter>Enemies\Aelorin\States\Combat</Filter>
     </ClInclude>
+    <ClInclude Include="AelorinVFX.h">
+      <Filter>Enemies\Aelorin\VFX</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
@@ -1313,6 +1319,9 @@
     <ClCompile Include="VideoManager.cpp" />
     <ClCompile Include="AelorinSpiritCannonState.cpp">
       <Filter>Enemies\Aelorin\States\Combat</Filter>
+    </ClCompile>
+    <ClCompile Include="AelorinVFX.cpp">
+      <Filter>Enemies\Aelorin\VFX</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

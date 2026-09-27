@@ -7,6 +7,7 @@ class AelorinDamageable;
 class AelorinAttackConfig;
 class ProjectilePool;
 class AelorinAttackExecutor;
+class AelorinVFX;
 
 enum class Phase
 {
@@ -178,6 +179,7 @@ private:
 	AelorinDetectionAggro* m_aelorinDetectionAggro = nullptr;
 	AelorinDamageable* m_damageable = nullptr;
 	AelorinAttackExecutor* m_attackExecutor = nullptr;
+	AelorinVFX* m_vfx = nullptr;
 
 	ProjectilePool* m_seekerSigilsProjectilePoolScript = nullptr;
 	ProjectilePool* m_seekerSigilsLargeProjectilePoolScript = nullptr;

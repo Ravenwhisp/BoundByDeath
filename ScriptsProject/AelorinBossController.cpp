@@ -12,6 +12,7 @@
 
 #include "AelorinSummonSlot.h"
 #include "Transform2D.h"
+#include "AelorinVFX.h"
 
 #include <vector>
 #include <algorithm>
@@ -54,6 +55,7 @@ void AelorinBossController::Start()
 	m_aelorinDetectionAggro = GameObjectAPI::findScript<AelorinDetectionAggro>(getOwner());
 	m_damageable = GameObjectAPI::findScript<AelorinDamageable>(getOwner());
 	m_attackExecutor = GameObjectAPI::findScript<AelorinAttackExecutor>(getOwner());
+	m_vfx = GameObjectAPI::findScript<AelorinVFX>(getOwner());
 
 	Transform* phase1Model = TransformAPI::findChildByName(getOwner()->GetTransform(), "Phase1");
 	if (!phase1Model)
@@ -85,6 +87,11 @@ void AelorinBossController::Start()
 	if (!m_attackExecutor)
 	{
 		Debug::error("[AelorinBossController] AelorinAttackExecutor script not found!");
+	}
+
+	if (!m_attackExecutor)
+	{
+		Debug::error("[AelorinBossController] AelorinVFX script not found!");
 	}
 
 	if (!m_phase1GameObject)
@@ -407,6 +414,11 @@ void AelorinBossController::beginPhase2()
 	GameObjectAPI::setActive(m_phase2GameObject, true);
 
 	setPhase(Phase::Phase2);
+
+	if (m_vfx)
+	{
+		m_vfx->startPhase2Aura();
+	}
 
 	applyShadowMarkPlacement();
 
