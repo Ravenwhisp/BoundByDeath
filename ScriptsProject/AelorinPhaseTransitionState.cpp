@@ -2,6 +2,7 @@
 #include "AelorinPhaseTransitionState.h"
 
 #include "AelorinBossController.h"
+#include "AelorinVFX.h"
 
 AelorinPhaseTransitionState::AelorinPhaseTransitionState(GameObject* owner)
 	: StateMachineScript(owner)
@@ -21,6 +22,7 @@ void AelorinPhaseTransitionState::OnStateEnter()
 
 	m_controller = GameObjectAPI::findScript<AelorinBossController>(parentGameObject);
 	m_animation = AnimationAPI::getAnimationComponent(getOwner());
+	m_vfx = GameObjectAPI::findScript<AelorinVFX>(parentGameObject);
 
 	m_phase2Started = false;
 
@@ -32,6 +34,11 @@ void AelorinPhaseTransitionState::OnStateEnter()
 	if (!m_animation)
 	{
 		Debug::error("[AelorinPhaseTransitionState] AnimationComponent not found.");
+	}
+
+	if (m_vfx)
+	{
+		m_vfx->playPhase2Transition();
 	}
 
 	Debug::log("[AelorinPhaseTransitionState] ENTER");
