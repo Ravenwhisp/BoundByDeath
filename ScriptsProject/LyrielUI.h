@@ -32,7 +32,6 @@ public:
 	void hideArrowVolleyUI();
 
 	// Dash Charges
-	void setupDashCharges(int maxCharges);
 	void updateDashChargesUI(int currentCharges, int maxCharges, float dt);
 
 private:

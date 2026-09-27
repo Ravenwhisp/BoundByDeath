@@ -29,15 +29,6 @@ void LyrielDash::Start()
 
     m_lyrielUI = GameObjectAPI::findScript<LyrielUI>(getOwner());
 
-    if (!m_lyrielUI)
-    {
-        Debug::warn("[LyrielDash] LyrielUI not found.");
-    }
-    else
-    {
-        m_lyrielUI->setupDashCharges(m_lyrielCharacter->getConfig()->m_dashMaxCharges);
-    }
-
     m_sound = GameObjectAPI::findScript<LyrielSound>(getOwner());
 
     m_particles = GameObjectAPI::findScript<LyrielParticles>(getOwner());
