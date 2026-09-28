@@ -7,6 +7,7 @@
 #include <vector>
 
 class UIText;
+class Transform2D;
 
 enum class BarkSpeaker
 {
@@ -52,6 +53,9 @@ private:
 	void showCurrentBark();
 	void clearBarkText();
 
+	void centerBarkText(const std::string& text);
+	float estimateTextWidth(const std::string& text) const;
+
 	void interruptCurrentBark();
 
 	void removeQueuedBarksBelow(
@@ -80,4 +84,7 @@ private:
 	bool m_hasCurrentBark = false;
 
 	UIText* m_barkText = nullptr;
+	Transform2D* m_barkTransform = nullptr;
+
+	Vector2 m_barkBasePosition = { 0.0f, 0.0f };
 };

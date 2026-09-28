@@ -19,7 +19,34 @@ void BarkManager::Start()
 			"BarkManager on '%s' could not find a UIText component.",
 			GameObjectAPI::getName(getOwner())
 		);
+
 		return;
+	}
+
+	Component* transformComponent =
+		GameObjectAPI::getComponent(
+			getOwner(),
+			ComponentType::TRANSFORM2D
+		);
+
+	if (transformComponent != nullptr)
+	{
+		m_barkTransform =
+			reinterpret_cast<Transform2D*>(
+				transformComponent
+				);
+
+		m_barkBasePosition =
+			Transform2DAPI::getPosition(
+				m_barkTransform
+			);
+	}
+	else
+	{
+		Debug::warn(
+			"BarkManager on '%s' could not find a Transform2D component.",
+			GameObjectAPI::getName(getOwner())
+		);
 	}
 
 	clearBarkText();
@@ -172,19 +199,114 @@ void BarkManager::showCurrentBark()
 		m_barkText,
 		displayText.c_str()
 	);
+
+	centerBarkText(displayText);
 }
 
 void BarkManager::clearBarkText()
 {
-	if (m_barkText == nullptr)
+	if (m_barkText != nullptr)
+	{
+		UITextAPI::setText(
+			m_barkText,
+			""
+		);
+	}
+
+	if (m_barkTransform != nullptr)
+	{
+		Transform2DAPI::setPosition(
+			m_barkTransform,
+			m_barkBasePosition
+		);
+	}
+}
+
+void BarkManager::centerBarkText(
+	const std::string& text
+)
+{
+	if (m_barkTransform == nullptr)
 	{
 		return;
 	}
 
-	UITextAPI::setText(
-		m_barkText,
-		""
+	const float textWidth =
+		estimateTextWidth(text);
+
+	Vector2 position =
+		m_barkBasePosition;
+
+	position.x -=
+		textWidth * 0.5f;
+
+	Transform2DAPI::setPosition(
+		m_barkTransform,
+		position
 	);
+}
+
+float BarkManager::estimateTextWidth(
+	const std::string& text
+) const
+{
+	if (m_barkText == nullptr)
+	{
+		return 0.0f;
+	}
+
+	float width = 0.0f;
+
+	for (const char character : text)
+	{
+		switch (character)
+		{
+			// Spaces
+		case ' ':
+			width += 4.5f;
+			break;
+
+			// Narrow characters
+		case 'i':
+		case 'l':
+		case 'I':
+		case 'j':
+		case '.':
+		case ',':
+		case '\'':
+		case '!':
+		case ':':
+		case ';':
+			width += 5.5f;
+			break;
+
+			// Slightly narrow characters
+		case 'f':
+		case 't':
+		case 'r':
+			width += 7.5f;
+			break;
+
+			// Wide characters
+		case 'W':
+		case 'M':
+		case 'w':
+		case 'm':
+			width += 14.0f;
+			break;
+				
+			// Normal characters
+		default:
+			width += 11.0f;
+			break;
+		}
+	}
+
+	return
+		width *
+		UITextAPI::getScale(
+			m_barkText
+		);
 }
 
 void BarkManager::interruptCurrentBark()
