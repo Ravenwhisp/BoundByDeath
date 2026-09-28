@@ -3,6 +3,7 @@
 
 #include "BarkEvent.h"
 #include "Damageable.h"
+#include "PlayerState.h"
 #include "Bound.h"
 
 #include <cstring>
@@ -16,11 +17,13 @@ namespace
 		"Death Enter",
 		"Lyriel Enter",
 		"Player Takes Damage",
+		"Death Knocked Out",
+		"Lyriel Knocked Out",
 		"First Bound Separation",
 		"Repeated Bound Separation"
 	};
 
-	constexpr int barkTriggerActivationCount = 7;
+	constexpr int barkTriggerActivationCount = 9;
 }
 
 IMPLEMENT_SCRIPT_FIELDS(
@@ -107,6 +110,11 @@ void BarkEventTrigger::Start()
 		setupDamageTrigger();
 		break;
 
+	case BarkTriggerActivationType::DeathKnockedOut:
+	case BarkTriggerActivationType::LyrielKnockedOut:
+		setupKnockedOutTrigger();
+		break;
+
 	case BarkTriggerActivationType::FirstBoundSeparation:
 	case BarkTriggerActivationType::RepeatedBoundSeparation:
 		setupBoundTrigger();
@@ -154,6 +162,11 @@ void BarkEventTrigger::Update()
 
 	case BarkTriggerActivationType::PlayerTakesDamage:
 		updateDamage();
+		break;
+
+	case BarkTriggerActivationType::DeathKnockedOut:
+	case BarkTriggerActivationType::LyrielKnockedOut:
+		updateKnockedOut();
 		break;
 
 	case BarkTriggerActivationType::FirstBoundSeparation:
@@ -300,6 +313,66 @@ void BarkEventTrigger::setupDamageTrigger()
 
 	m_previousHp =
 		m_observedDamageable->getCurrentHp();
+}
+
+void BarkEventTrigger::setupKnockedOutTrigger()
+{
+	findPlayers();
+
+	const BarkTriggerActivationType activationType =
+		static_cast<BarkTriggerActivationType>(
+			m_activationType
+			);
+
+	GameObject* targetPlayer = nullptr;
+
+	switch (activationType)
+	{
+	case BarkTriggerActivationType::DeathKnockedOut:
+		targetPlayer = m_death;
+		break;
+
+	case BarkTriggerActivationType::LyrielKnockedOut:
+		targetPlayer = m_lyriel;
+		break;
+
+	default:
+		return;
+	}
+
+	if (targetPlayer == nullptr)
+	{
+		Debug::warn(
+			"BarkEventTrigger on '%s' could not find the player required by the Knocked Out trigger.",
+			GameObjectAPI::getName(getOwner())
+		);
+
+		return;
+	}
+
+	m_observedPlayerState =
+		GameObjectAPI::findScript<PlayerState>(
+			targetPlayer
+		);
+
+	if (m_observedPlayerState == nullptr)
+	{
+		Debug::warn(
+			"BarkEventTrigger on '%s' could not find PlayerState on '%s'.",
+			GameObjectAPI::getName(getOwner()),
+			GameObjectAPI::getName(targetPlayer)
+		);
+
+		return;
+	}
+
+	/*
+	 * Initialize the state on the first Update().
+	 *
+	 * This prevents a bark from firing immediately
+	 * if the player already starts in a downed state.
+	 */
+	m_knockedOutStateInitialized = false;
 }
 
 void BarkEventTrigger::setupBoundTrigger()
@@ -484,6 +557,60 @@ void BarkEventTrigger::updateDamage()
 	}
 
 	m_previousHp = currentHp;
+}
+
+void BarkEventTrigger::updateKnockedOut()
+{
+	if (m_observedPlayerState == nullptr)
+	{
+		return;
+	}
+
+	const bool isKnockedOut =
+		m_observedPlayerState->isDowned();
+
+	/*
+	 * The first update only records the initial state.
+	 * We only want to react to the transition:
+	 *
+	 * active -> knocked out
+	 */
+	if (!m_knockedOutStateInitialized)
+	{
+		m_wasKnockedOut =
+			isKnockedOut;
+
+		m_knockedOutStateInitialized = true;
+
+		return;
+	}
+
+	if (
+		isKnockedOut &&
+		!m_wasKnockedOut
+		)
+	{
+		/*
+		 * Only consume the transition if the BarkEvent
+		 * was actually accepted by BarkManager.
+		 *
+		 * If a higher-priority bark temporarily blocks it,
+		 * this will retry while the player remains downed.
+		 */
+		if (triggerBark())
+		{
+			m_wasKnockedOut = true;
+		}
+
+		return;
+	}
+
+	/*
+	 * When the player is revived this becomes false again,
+	 * allowing another KO to trigger a new bark later.
+	 */
+	m_wasKnockedOut =
+		isKnockedOut;
 }
 
 void BarkEventTrigger::updateBound()

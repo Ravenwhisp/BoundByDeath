@@ -6,6 +6,7 @@ class BarkEvent;
 class Damageable;
 class Bound;
 class Transform;
+class PlayerState;
 
 enum class BarkTriggerActivationType
 {
@@ -14,6 +15,8 @@ enum class BarkTriggerActivationType
 	DeathEnter,
 	LyrielEnter,
 	PlayerTakesDamage,
+	DeathKnockedOut,
+	LyrielKnockedOut,
 	FirstBoundSeparation,
 	RepeatedBoundSeparation
 };
@@ -36,12 +39,14 @@ public:
 private:
 	void setupZoneTrigger();
 	void setupDamageTrigger();
+	void setupKnockedOutTrigger();
 	void setupBoundTrigger();
 
 	void updateZoneEnter();
 	void updateZoneStay();
 	void updatePlayerEnter();
 	void updateDamage();
+	void updateKnockedOut();
 	void updateBound();
 
 	void findPlayers();
@@ -98,6 +103,11 @@ private:
 	// Damage condition.
 	Damageable* m_observedDamageable = nullptr;
 	float m_previousHp = 0.0f;
+
+	// Knocked out condition.
+	PlayerState* m_observedPlayerState = nullptr;
+	bool m_knockedOutStateInitialized = false;
+	bool m_wasKnockedOut = false;
 
 	// Bound condition.
 	Bound* m_bound = nullptr;
