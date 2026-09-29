@@ -47,7 +47,7 @@ void UIPause::Start()
 
 void UIPause::Update()
 {
-    if (Input::isPauseJustPressed(0))
+    if (Input::isPauseJustPressed(0) || Input::isPauseJustPressed(1))
     {
         if (m_isPause)
         {
