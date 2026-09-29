@@ -61,6 +61,13 @@ void AelorinSummonState::OnStateEnter()
 		return;
 	}
 
+	const Vector3 lyrielPosition = m_controller->getLyrielPosition();
+	const Vector3 deathPosition = m_controller->getDeathPosition();
+
+	const Vector3 middlePosition = (lyrielPosition + deathPosition) * 0.5f;
+
+	m_controller->facePositionInstant(middlePosition);
+
 	prepareSummons();
 
 	Debug::log("[AelorinSummonState] ENTER");

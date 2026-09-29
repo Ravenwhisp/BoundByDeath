@@ -80,6 +80,13 @@ void AelorinTeleportState::OnStateEnter()
 		}
 	}
 
+	const Vector3 lyrielPosition = m_controller->getLyrielPosition();
+	const Vector3 deathPosition = m_controller->getDeathPosition();
+
+	const Vector3 middlePosition = (lyrielPosition + deathPosition) * 0.5f;
+
+	m_controller->facePositionInstant(middlePosition);
+
 	Debug::log("[AelorinTeleportState] ENTER");
 }
 
@@ -208,6 +215,7 @@ void AelorinTeleportState::executeTeleport()
 	}
 
 	const Vector3 departurePosition = TransformAPI::getGlobalPosition(m_aelorinTransform);
+	m_controller->facePositionInstant(departurePosition);
 
 	// Phase 2 damage burst
 	if (m_controller->isPhase2() && m_attackExecutor)
