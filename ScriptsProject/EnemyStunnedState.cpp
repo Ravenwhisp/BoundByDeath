@@ -4,6 +4,7 @@
 #include "EnemyBaseController.h"
 #include "EnemySound.h"
 #include "EnemyStunParticles.h"
+#include "SkeletonEnemyController.h"
 
 EnemyStunnedState::EnemyStunnedState(GameObject* owner)
 	: StateMachineScript(owner)
@@ -13,6 +14,7 @@ EnemyStunnedState::EnemyStunnedState(GameObject* owner)
 void EnemyStunnedState::OnStateEnter()
 {
 	m_controller    = GameObjectAPI::findScript<EnemyBaseController>(getOwner());
+	m_skeletonController = GameObjectAPI::findScript<SkeletonEnemyController>(getOwner());
 	m_animation     = AnimationAPI::getAnimationComponent(getOwner());
 	m_stunParticles = GameObjectAPI::findScript<EnemyStunParticles>(getOwner());
 
@@ -30,7 +32,6 @@ void EnemyStunnedState::OnStateEnter()
 
 	m_controller->clearPath();
 	m_controller->resetRepathTimer();
-	m_stateTimer = 0.0f;
 
 	if (m_stunParticles) m_stunParticles->startStunParticle();
 	
@@ -55,9 +56,20 @@ void EnemyStunnedState::OnStateUpdate()
 		return;
 	}
 
-	m_stateTimer += Time::getDeltaTime();
+	if (m_skeletonController && m_skeletonController->trySendReviveTrigger(m_animation))
+	{
+		return;
+	}
+
 	if (m_stunParticles) m_stunParticles->updateStunParticle();
 	m_controller->updateCurrentTarget();
+
+	// The controller counts down the duration supplied by the attacking player.
+	// Losing a target must not cancel an active stun.
+	if (m_controller->isStunned())
+	{
+		return;
+	}
 
 	if (!m_controller->hasValidTarget())
 	{
@@ -65,16 +77,15 @@ void EnemyStunnedState::OnStateUpdate()
 		return;
 	}
 
-	if (m_stateTimer >= m_controller->getStunnedDuration())
+	if (!AnimationAPI::sendTrigger(m_animation, "ToChase"))
 	{
-		AnimationAPI::sendTrigger(m_animation, "ToChase");
-		return;
+		AnimationAPI::sendTrigger(m_animation, "ToRecover");
 	}
 }
 
 void EnemyStunnedState::OnStateExit()
 {
-	m_stateTimer = 0.0f;
+	if (m_controller) m_controller->clearStun();
 	if (m_stunParticles) m_stunParticles->stopStunParticle();
 	Debug::log("[EnemyStunnedState] EXIT");
 }

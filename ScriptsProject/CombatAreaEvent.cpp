@@ -3,7 +3,7 @@
 
 #include "GameplayEventTrigger.h"
 #include "Damageable.h"
-#include "ObjectVfxIds.h"
+#include "ParticleLifecycle.h"
 
 IMPLEMENT_SCRIPT_FIELDS(CombatAreaEvent,
     SERIALIZED_COMPONENT_REF_VECTOR(m_enemies, "Enemies", ComponentType::TRANSFORM),
@@ -21,8 +21,6 @@ CombatAreaEvent::CombatAreaEvent(GameObject* owner)
 
 void CombatAreaEvent::Update()
 {
-    m_timedParticles.update(Time::getDeltaTime());
-
     if (!m_isActive || m_hasCompleted)
     {
         return;
@@ -39,15 +37,6 @@ void CombatAreaEvent::Update()
 
     m_isActive = false;
     m_hasCompleted = true;
-}
-
-void CombatAreaEvent::OnGameStop()
-{
-    ParticleLifecycle::destroy(m_entranceBarricadeVfx.mistInstance);
-    ParticleLifecycle::destroy(m_entranceBarricadeVfx.burstInstance);
-    ParticleLifecycle::destroy(m_exitBarricadeVfx.mistInstance);
-    ParticleLifecycle::destroy(m_exitBarricadeVfx.burstInstance);
-    m_timedParticles.clear();
 }
 
 void CombatAreaEvent::executeEvent(GameplayEventTrigger* trigger)
@@ -68,16 +57,16 @@ void CombatAreaEvent::closeArea()
 {
     setBlockerState(m_entranceBlocker, true);
     setBlockerState(m_exitBlocker, true);
-    activateBarricadeVisuals(m_entranceVisuals, m_entranceBarricadeVfx);
-    activateBarricadeVisuals(m_exitVisuals, m_exitBarricadeVfx);
+    setVisualsState(m_entranceVisuals, true);
+    setVisualsState(m_exitVisuals, true);
 }
 
 void CombatAreaEvent::openArea()
 {
     setBlockerState(m_entranceBlocker, false);
     setBlockerState(m_exitBlocker, false);
-    deactivateBarricadeVisuals(m_entranceBarricadeVfx);
-    deactivateBarricadeVisuals(m_exitBarricadeVfx);
+    setVisualsState(m_entranceVisuals, false);
+    setVisualsState(m_exitVisuals, false);
 }
 
 void CombatAreaEvent::setBlockerState(const ComponentRef<Transform>& blockerTransformRef, bool blocked)
@@ -108,7 +97,7 @@ void CombatAreaEvent::setBlockerState(const ComponentRef<Transform>& blockerTran
     NavigationAPI::setBlocked(runtimeBlocker, blocked);
 }
 
-void CombatAreaEvent::activateBarricadeVisuals(const ComponentRef<Transform>& visualsTransformRef, BarricadeVisualSlot& slot)
+void CombatAreaEvent::setVisualsState(const ComponentRef<Transform>& visualsTransformRef, bool active)
 {
     Transform* visualsTransform = visualsTransformRef.getReferencedComponent();
     if (visualsTransform == nullptr)
@@ -118,68 +107,18 @@ void CombatAreaEvent::activateBarricadeVisuals(const ComponentRef<Transform>& vi
     }
 
     GameObject* visualsObject = ComponentAPI::getOwner(visualsTransform);
-    if (visualsObject != nullptr)
+    if (visualsObject == nullptr)
     {
-        GameObjectAPI::setActive(visualsObject, false);
+        return;
     }
 
-    const Vector3 position = TransformAPI::getGlobalPosition(visualsTransform);
-    const Vector3 rotation = TransformAPI::getGlobalEulerDegrees(visualsTransform);
-
-    ParticleLifecycle::ensurePersistent(
-        slot.mistInstance,
-        ObjectVfxIds::barricadeMist(),
-        position,
-        rotation,
-        nullptr
-    );
-
-    if (slot.mistInstance != nullptr)
+    if (active)
     {
-        Transform* mistTransform = GameObjectAPI::getTransform(slot.mistInstance);
-        if (mistTransform != nullptr)
-        {
-            TransformAPI::setGlobalPosition(mistTransform, position);
-            TransformAPI::setGlobalRotationEuler(mistTransform, rotation);
-        }
-
-        ParticleLifecycle::activate(slot.mistInstance);
+        ParticleLifecycle::activate(visualsObject);
+        return;
     }
 
-    if (slot.burstInstance == nullptr)
-    {
-        ParticleLifecycle::ensurePersistent(
-            slot.burstInstance,
-            ObjectVfxIds::barricadeBurst(),
-            position,
-            rotation,
-            nullptr
-        );
-    }
-    else
-    {
-        Transform* burstTransform = GameObjectAPI::getTransform(slot.burstInstance);
-        if (burstTransform != nullptr)
-        {
-            TransformAPI::setGlobalPosition(burstTransform, position);
-            TransformAPI::setGlobalRotationEuler(burstTransform, rotation);
-        }
-    }
-
-    if (slot.burstInstance != nullptr)
-    {
-        ParticleLifecycle::activateTimed(m_timedParticles, slot.burstInstance, kBarricadeBurstDuration);
-    }
-}
-
-void CombatAreaEvent::deactivateBarricadeVisuals(BarricadeVisualSlot& slot)
-{
-    ParticleLifecycle::deactivate(slot.mistInstance);
-
-    if (slot.burstInstance != nullptr)
-    {
-        ParticleLifecycle::deactivate(slot.burstInstance);
-    }
+    ParticleLifecycle::deactivate(visualsObject);
 }
 
 void CombatAreaEvent::removeDeadEnemies()

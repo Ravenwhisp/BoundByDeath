@@ -7,6 +7,8 @@
 #include "EnemySound.h"
 #include "SharedEnemyParticles.h"
 
+#include <algorithm>
+
 static const char* navAgentProfileNames[] =
 {
     "PlayerNormal",
@@ -18,6 +20,7 @@ constexpr int navAgentProfileCount = 3;
 
 IMPLEMENT_SCRIPT_FIELDS(EnemyBaseController,
     SERIALIZED_ENUM_INT(m_enemyType, "Enemy Type", navAgentProfileNames, navAgentProfileCount),
+    SERIALIZED_INT(m_targetPriority, "Target Priority"),
     SERIALIZED_FLOAT(m_turnSpeedDegrees, "Turn Speed Degrees", 0.0f, 1080.0f, 1.0f),
     SERIALIZED_FLOAT(m_repathInterval, "Repath Interval", 0.0f, 50.0f, 0.1f),
     SERIALIZED_FLOAT(m_pathPointReachDistance, "Path Point Reach Distance", 0.01f, 5.0f, 0.01f),
@@ -34,6 +37,8 @@ EnemyBaseController::EnemyBaseController(GameObject* owner)
 
 void EnemyBaseController::Start()
 {
+	m_targetPriority = std::clamp(m_targetPriority, -100, 100);
+
     const EnemyBaseDataConfig* cfg = getBaseDataConfig();
     if (!cfg)
     {
@@ -42,7 +47,6 @@ void EnemyBaseController::Start()
 
     m_moveSpeed = cfg->m_moveSpeed;
     m_recoveryDuration = cfg->m_recoveryDuration;
-    m_stunnedDuration = cfg->m_stunnedDuration;
 }
 
 void EnemyBaseController::updateCurrentTarget()
@@ -76,6 +80,11 @@ bool EnemyBaseController::hasValidTarget() const
 const EnemyBaseDataConfig* EnemyBaseController::getBaseDataConfig() const
 {
     return getAttackConfig();
+}
+
+int EnemyBaseController::getTargetPriority() const
+{
+    return std::clamp(m_targetPriority, -100, 100);
 }
 
 float EnemyBaseController::getDistanceToCurrentTarget() const
@@ -314,11 +323,6 @@ void EnemyBaseController::setRecoveryDuration(float recoveryDuration)
     m_recoveryDuration = recoveryDuration;
 }
 
-void EnemyBaseController::setStunnedDuration(float stunnedDuration)
-{
-    m_stunnedDuration = stunnedDuration;
-}
-
 void EnemyBaseController::useStun(float duration)
 {
     if (duration <= 0.0f)
@@ -372,6 +376,7 @@ bool EnemyBaseController::trySendStunTrigger(AnimationComponent* animation)
 
 void EnemyBaseController::clearStun()
 {
+    m_stunnedTimer = 0.0f;
     m_isStunned = false;
     m_stunnedTriggerSent = false;
 }

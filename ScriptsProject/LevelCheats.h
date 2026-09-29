@@ -25,6 +25,7 @@ public:
 	void killEnemies();
 	void toLevel2();
 	void toBossLevel();
+    void FillReaperGauge();
 
 private:
 

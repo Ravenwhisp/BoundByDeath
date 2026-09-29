@@ -63,7 +63,10 @@ void BreakableHealingDrop::onBreak()
     ParticleLifecycle::spawnOneShotTimed(
         m_timedBreakEffects,
         ObjectVfxIds::barrelHeal(),
-        getBreakEffectPosition()
+        getBreakEffectPosition(),
+        Vector3::Zero,
+        ParticleLifecycle::kDefaultOneShotLifetime,
+        getOwner()
     );
 
     EnvironmentSound::play(getOwner(), "Play_Environment_Barrel_Break");
