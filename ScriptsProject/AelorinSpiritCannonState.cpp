@@ -4,6 +4,7 @@
 #include "AelorinAttackConfig.h"
 #include "AelorinAttackExecutor.h"
 #include "AelorinUI.h"
+#include "AelorinVFX.h"
 
 #include <cmath>
 #include <cstdlib>
@@ -28,6 +29,7 @@ void AelorinSpiritCannonState::OnStateEnter()
 	m_controller = GameObjectAPI::findScript<AelorinBossController>(parentGameObject);
 	m_animation = AnimationAPI::getAnimationComponent(getOwner());
 	m_aelorinUI = GameObjectAPI::findScript<AelorinUI>(parentGameObject);
+	m_vfx = GameObjectAPI::findScript<AelorinVFX>(parentGameObject);
 
 	// reset members
 	m_target = nullptr;
@@ -73,6 +75,11 @@ void AelorinSpiritCannonState::OnStateEnter()
 	{
 		Debug::warn("[AelorinSpiritCannonState] Unexpected requested ability!");
 		return;
+	}
+
+	if (m_vfx && !m_controller->isPhase2())
+	{
+		m_vfx->startPhase1Spell();
 	}
 
 	beginShot();
@@ -137,6 +144,10 @@ void AelorinSpiritCannonState::OnStateUpdate()
 	// Recovery complete
 	if (m_shotCount >= 2 &&	m_stateTimer >= finishTime)
 	{
+		if (m_vfx && !m_controller->isPhase2())
+		{
+			m_vfx->stopPhase1Spell();
+		}
 		finishAbility();
 	}
 }
@@ -153,10 +164,16 @@ void AelorinSpiritCannonState::OnStateExit()
 		m_controller->clearSpiritCannonDebugLine();
 	}
 
+	if (m_vfx)
+	{
+		m_vfx->stopPhase1Spell();
+	}
+
 	m_controller = nullptr;
 	m_attackExecutor = nullptr;
 	m_animation = nullptr;
 	m_aelorinUI = nullptr;
+	m_vfx = nullptr;
 
 	m_aelorinTransform = nullptr;
 	m_target = nullptr;

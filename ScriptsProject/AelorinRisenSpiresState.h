@@ -8,6 +8,7 @@
 class AnimationComponent;
 class AelorinAttackExecutor;
 class AelorinUI;
+class AelorinVFX;
 
 class AelorinRisenSpiresState : public StateMachineScript
 {
@@ -29,6 +30,7 @@ private:
 	AelorinAttackExecutor* m_attackExecutor = nullptr;
 	AnimationComponent* m_animation = nullptr;
 	AelorinUI* m_aelorinUI = nullptr;
+	AelorinVFX* m_vfx = nullptr;
 
 	AelorinAbility m_activeAbility = AelorinAbility::None;
 

@@ -4,6 +4,7 @@
 #include "ProjectilePool.h"
 #include "SeekerSigilProjectile.h"
 #include "AelorinUI.h"
+#include "AelorinVFX.h"
 
 AelorinSeekerSigilsState::AelorinSeekerSigilsState(GameObject* owner)
 	: StateMachineScript(owner)
@@ -27,6 +28,7 @@ void AelorinSeekerSigilsState::OnStateEnter()
 	m_normalProjectilePool = m_controller->getSeekerSigilsProjectilePool();
 	m_largeProjectilePool = m_controller->getSeekerSigilsLargeProjectilePool();
 	m_aelorinUI = GameObjectAPI::findScript<AelorinUI>(parentGameObject);
+	m_vfx = GameObjectAPI::findScript<AelorinVFX>(parentGameObject);
 
 	// reset members
 	m_activeAbility = AelorinAbility::None;
@@ -71,6 +73,11 @@ void AelorinSeekerSigilsState::OnStateEnter()
 	{
 		Debug::warn("[AelorinSeekerSigilsState] Unexpected requested ability!");
 		return;
+	}
+
+	if (m_vfx && !m_controller->isPhase2())
+	{
+		m_vfx->startPhase1Spell();
 	}
 
 	m_isFuryCast = m_controller->isFuryActive();
@@ -125,6 +132,14 @@ void AelorinSeekerSigilsState::OnStateUpdate()
 		++m_currentWave;
 		m_waveTimer = 0.0f;
 
+		if (!m_controller->isPhase2() && m_currentWave >= config->m_seekerSigilsWaveCount)
+		{
+			if (m_vfx)
+			{
+				m_vfx->stopPhase1Spell();
+			}
+		}
+
 		return;
 	}
 
@@ -161,7 +176,13 @@ void AelorinSeekerSigilsState::OnStateExit()
 		m_aelorinUI->cancelSeekerSigils();
 	}
 
+	if (m_vfx)
+	{
+		m_vfx->stopPhase1Spell();
+	}
+
 	m_aelorinUI = nullptr;
+	m_vfx = nullptr;
 	m_waveTimer = 0.0f;
 	m_currentWave = 0;
 	m_finalProjectileLaunched = false;

@@ -4,6 +4,7 @@
 #include "AelorinAttackConfig.h"
 #include "AelorinAttackExecutor.h"
 #include "AelorinUI.h"
+#include "AelorinVFX.h"
 
 #include <cstdlib> // for random
 
@@ -32,6 +33,7 @@ void AelorinRisenSpiresState::OnStateEnter()
 	m_controller = GameObjectAPI::findScript<AelorinBossController>(parentGameObject);
 	m_animation = AnimationAPI::getAnimationComponent(getOwner());
 	m_aelorinUI = GameObjectAPI::findScript<AelorinUI>(parentGameObject);
+	m_vfx = GameObjectAPI::findScript<AelorinVFX>(parentGameObject);
 
 	// reset members
 	m_activeAbility = AelorinAbility::None;
@@ -72,6 +74,11 @@ void AelorinRisenSpiresState::OnStateEnter()
 	{
 		Debug::warn("[AelorinRisenSpiresState] Unexpected requested ability!");
 		return;
+	}
+
+	if (m_vfx && !m_controller->isPhase2())
+	{
+		m_vfx->startPhase1Spell();
 	}
 
 	m_isFuryCast = m_controller->isFuryActive();
@@ -150,6 +157,11 @@ void AelorinRisenSpiresState::OnStateUpdate()
 		return;
 	}
 
+	if (m_vfx && !m_controller->isPhase2())
+	{
+		m_vfx->stopPhase1Spell();
+	}
+
 	finishAbility();
 }
 
@@ -160,7 +172,13 @@ void AelorinRisenSpiresState::OnStateExit()
 		m_aelorinUI->cancelRisenSpires();
 	}
 
+	if (m_vfx)
+	{
+		m_vfx->stopPhase1Spell();
+	}
+
 	m_aelorinUI = nullptr;
+	m_vfx = nullptr;
 	m_stateTimer = 0.0f;
 	m_firstPassExecuted = false;
 	m_secondPassExecuted = false;

@@ -61,6 +61,11 @@ void AelorinSummonState::OnStateEnter()
 		return;
 	}
 
+	if (m_vfx && !m_controller->isPhase2())
+	{
+		m_vfx->startPhase1Spell();
+	}
+
 	const Vector3 lyrielPosition = m_controller->getLyrielPosition();
 	const Vector3 deathPosition = m_controller->getDeathPosition();
 
@@ -113,11 +118,21 @@ void AelorinSummonState::OnStateUpdate()
 		return;
 	}
 
+	if (m_vfx && !m_controller->isPhase2())
+	{
+		m_vfx->stopPhase1Spell();
+	}
+
 	finishAbility();
 }
 
 void AelorinSummonState::OnStateExit()
 {
+	if (m_vfx)
+	{
+		m_vfx->stopPhase1Spell();
+	}
+
 	m_pendingSummonSlots.clear();
 	m_vfx = nullptr;
 	m_stateTimer = 0.0f;

@@ -8,6 +8,7 @@
 class AnimationComponent;
 class AelorinAttackExecutor;
 class AelorinUI;
+class AelorinVFX;
 
 class AelorinSpiritCannonState : public StateMachineScript
 {
@@ -35,6 +36,7 @@ private:
 	AelorinAttackExecutor* m_attackExecutor = nullptr;
 	AnimationComponent* m_animation = nullptr;
 	AelorinUI* m_aelorinUI = nullptr;
+	AelorinVFX* m_vfx = nullptr;
 	AelorinAbility m_activeAbility = AelorinAbility::None;
 
 	Transform* m_aelorinTransform = nullptr;

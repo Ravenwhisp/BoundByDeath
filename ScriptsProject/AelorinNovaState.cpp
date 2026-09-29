@@ -2,6 +2,7 @@
 #include "AelorinNovaState.h"
 #include "AelorinAttackExecutor.h"
 #include "AelorinUI.h"
+#include "AelorinVFX.h"
 
 #include "AelorinAttackConfig.h"
 
@@ -25,6 +26,7 @@ void AelorinNovaState::OnStateEnter()
 	m_controller = GameObjectAPI::findScript<AelorinBossController>(parentGameObject);
 	m_animation = AnimationAPI::getAnimationComponent(getOwner());
 	m_aelorinUI = GameObjectAPI::findScript<AelorinUI>(parentGameObject);
+	m_vfx = GameObjectAPI::findScript<AelorinVFX>(parentGameObject);
 
 	// reset members
 	m_activeAbility = AelorinAbility::None;
@@ -57,6 +59,11 @@ void AelorinNovaState::OnStateEnter()
 	{
 		Debug::warn("[AelorinNovaState] Unexpected requested ability!");
 		return;
+	}
+
+	if (m_vfx && !m_controller->isPhase2())
+	{
+		m_vfx->startPhase1Spell();
 	}
 
 	m_isFuryCast = m_controller->isFuryActive();
@@ -142,6 +149,11 @@ void AelorinNovaState::OnStateUpdate()
 		return;
 	}
 
+	if (m_vfx && !m_controller->isPhase2())
+	{
+		m_vfx->stopPhase1Spell();
+	}
+
 	finishAbility();
 }
 
@@ -152,7 +164,13 @@ void AelorinNovaState::OnStateExit()
 		m_aelorinUI->cancelNova();
 	}
 
+	if (m_vfx)
+	{
+		m_vfx->stopPhase1Spell();
+	}
+
 	m_aelorinUI = nullptr;
+	m_vfx = nullptr;
 	m_stateTimer = 0.0f;
 	m_novaCenter = Vector3::Zero;
 	m_firstWaveApplied = false;

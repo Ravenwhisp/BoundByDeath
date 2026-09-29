@@ -7,6 +7,7 @@
 
 class AnimationComponent;
 class AelorinUI;
+class AelorinVFX;
 
 class AelorinNovaState : public StateMachineScript
 {
@@ -29,6 +30,7 @@ private:
 	AelorinBossController* m_controller = nullptr;
 	AnimationComponent* m_animation = nullptr;
 	AelorinUI* m_aelorinUI = nullptr;
+	AelorinVFX* m_vfx = nullptr;
 
 	AelorinAbility m_activeAbility = AelorinAbility::None;
 
