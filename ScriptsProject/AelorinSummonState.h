@@ -5,7 +5,11 @@
 
 #include "AelorinBossController.h"
 
+#include <vector>
+
 class AnimationComponent;
+class AelorinSummonSlot;
+class AelorinVFX;
 
 class AelorinSummonState : public StateMachineScript
 {
@@ -20,16 +24,17 @@ public:
 
 private:
 	void executeSummon();
-
-	int fillFormation(Transform* formationRoot, int maxToSpawn);
-
-	void finishAbility();
+	void prepareSummons();
+	void finishAbility();	
 
 private:
 	AelorinBossController* m_controller = nullptr;
 	AnimationComponent* m_animation = nullptr;
+	AelorinVFX* m_vfx = nullptr;
 
 	AelorinAbility m_activeAbility = AelorinAbility::None;
+
+	std::vector<AelorinSummonSlot*> m_pendingSummonSlots;
 
 	float m_stateTimer = 0.0f;
 	float m_recoveryTimer = 0.0f;

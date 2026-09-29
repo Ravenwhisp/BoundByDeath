@@ -3,6 +3,7 @@
 
 #include "AelorinAttackConfig.h"
 #include "AelorinAttackExecutor.h"
+#include "AelorinVFX.h"
 
 AelorinTeleportState::AelorinTeleportState(GameObject* owner)
 	: StateMachineScript(owner)
@@ -23,6 +24,7 @@ void AelorinTeleportState::OnStateEnter()
 	// get scripts
 	m_controller = GameObjectAPI::findScript<AelorinBossController>(parentGameObject);
 	m_animation = AnimationAPI::getAnimationComponent(getOwner());
+	m_vfx = GameObjectAPI::findScript<AelorinVFX>(parentGameObject);
 
 	// reset members
 	m_crowdingPlayer = nullptr;
@@ -65,6 +67,18 @@ void AelorinTeleportState::OnStateEnter()
 	}
 
 	changePhase(TeleportPhase::TeleportIn);
+
+	if (m_vfx)
+	{
+		if (m_controller->isPhase2())
+		{
+			m_vfx->startPhase2Teleport();
+		}
+		else
+		{
+			m_vfx->startPhase1Teleport();
+		}
+	}
 
 	Debug::log("[AelorinTeleportState] ENTER");
 }
@@ -122,6 +136,12 @@ void AelorinTeleportState::OnStateExit()
 	if (m_animation)
 	{
 		AnimationAPI::clearOverrideClip(m_animation, 0.0f);
+	}
+
+	if (m_vfx && m_controller)
+	{
+		m_vfx->stopPhase1Teleport();
+		m_vfx->stopPhase2Teleport();
 	}
 
 	m_crowdingPlayer = nullptr;
@@ -193,6 +213,18 @@ void AelorinTeleportState::executeTeleport()
 	if (m_controller->isPhase2() && m_attackExecutor)
 	{
 		m_attackExecutor->applyDamageInRadius(departurePosition, config->m_teleportPhase2BurstRadius, config->m_teleportPhase2BurstDamage, "Aelorin Teleport - Departure Burst");
+	}
+
+	if (m_vfx)
+	{
+		if (m_controller->isPhase2())
+		{
+			m_vfx->stopPhase2Teleport();
+		}
+		else
+		{
+			m_vfx->stopPhase1Teleport();
+		}
 	}
 
 	const Vector3 destinationPosition = TransformAPI::getGlobalPosition(destinationAnchor);
