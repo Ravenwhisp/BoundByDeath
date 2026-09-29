@@ -43,15 +43,11 @@ private:
 	Vector3 m_lockedTargetPosition = Vector3::Zero;
 	Vector3 m_lockedAimDirection = Vector3::Zero;
 
-	float m_shotTimer = 0.0f;
-	float m_intervalTimer = 0.0f;
-	float m_recoveryTimer = 0.0f;
+	float m_stateTimer = 0.0f;
 
 	int m_shotCount = 0;
 
-	bool m_shotActive = false;
-	bool m_waitingForNextShot = false;
-	bool m_recovering = false;
+	bool m_secondShotPrepared = false;
 	bool m_completed = false;
 	bool m_isFuryCast = false;
 };
