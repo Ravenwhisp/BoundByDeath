@@ -4,6 +4,7 @@
 #include "ParticleLifecycle.h"
 
 #include <string>
+#include <vector>
 
 class DeathParticles : public Script
 {
@@ -33,6 +34,12 @@ public:
 	void playHitFlash(const Vector3& position);
 	void playChargedHitFlash(const Vector3& position);
 
+	// Taunt chain
+	// One chain per target, nearest first. Each chain flies out over travelTime, grabs the enemy, rides it in while it is pulled, then reels back into Death.
+	void launchTauntChains(const std::vector<GameObject*>& targets, float travelTime);
+	void cancelTauntChains();
+	float getTauntChainTravelTime() const { return m_tauntChainTravelTime; }
+
 	ComponentRef<Transform> m_dashTrail;
 	ComponentRef<Transform> m_scytheTrail;
 
@@ -49,6 +56,23 @@ public:
 	std::string m_chargedHitFlashPath = "Assets/Prefabs/Particles/Death/DeathChargedHitFlash.prefab";
 	std::string m_scytheAnchorName = "ScytheAnchor";
 
+	PrefabRef m_tauntChainLinkPrefab; 
+	std::string m_tauntChainHandBone = "hand_L";
+	bool m_tauntChainOnFloor = true;
+	float m_tauntChainFloorHeight = 0.12f;  // height of the link centres; links are 0.2 wide, so this keeps upright ones off the ground
+	float m_tauntChainStartOffset = 0.4f;
+	float m_tauntChainTipHeight = 1.0f;
+	float m_tauntChainLinkSpacing = 0.22f;  
+	float m_tauntChainLinkScale = 1.0f;
+	float m_tauntChainMaxLength = 7.0f;
+	int m_tauntChainMaxChains = 3;
+	float m_tauntChainTravelTime = 0.15f;
+	float m_tauntChainMinLatchTime = 0.2f;
+	float m_tauntChainMaxLatchTime = 1.5f;
+	float m_tauntChainRetractTime = 0.12f;
+	float m_tauntChainWhip = 0.35f;         // sideways wave while flying out
+	float m_tauntChainTension = 0.05f;      // shake while pulling
+
 private:
 	Transform* getTransform(ComponentRef<Transform> controller);
 	Transform* findScytheTransform() const;
@@ -62,6 +86,46 @@ private:
 	bool m_tauntParticleActive = false;
 	bool m_dashParticleActive = false;
 	bool m_chargeGlowActive = false;
+
+	enum class TauntChainState
+	{
+		Idle,
+		Shooting,
+		Latched,
+		Retracting
+	};
+
+	struct TauntChain
+	{
+		std::vector<GameObject*> links;
+		std::vector<bool> linkVisible;
+
+		GameObject* target = nullptr;
+		TauntChainState state = TauntChainState::Idle;
+		float timer = 0.0f;
+		float travelTime = 0.15f;
+		float phase = 0.0f;
+		bool sawPull = false;
+		Vector3 tip = Vector3::Zero;
+		Vector3 retractFrom = Vector3::Zero;
+	};
+
+	void ensureTauntChainPool();
+	void updateTauntChains(float deltaTime);
+	void layoutTauntChain(TauntChain& chain, const Vector3& start, const Vector3& tip, float whip);
+	void hideTauntChain(TauntChain& chain);
+	void startTauntChainRetract(TauntChain& chain);
+	Vector3 getTauntChainStart() const;
+	Vector3 getTauntChainTargetPoint(GameObject* target) const;
+	bool isTauntChainTargetValid(GameObject* target) const;
+	bool isTauntChainTargetPulled(GameObject* target) const;
+	void destroyTauntChainPool();
+
+	std::vector<TauntChain> m_tauntChains;
+	GameObject* m_tauntChainRoot = nullptr;
+	Transform* m_tauntChainHandBoneTransform = nullptr;
+	bool m_tauntChainPoolBuilt = false;
+	float m_tauntChainClock = 0.0f;
 
 	Transform* m_dashTrailController = nullptr;
 	Transform* m_scytheTrailController = nullptr;

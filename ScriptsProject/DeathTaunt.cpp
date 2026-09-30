@@ -64,6 +64,11 @@ void DeathTaunt::Update()
             m_deathUI->hideTauntUI();
         }
 
+        if (m_deathParticles)
+        {
+            m_deathParticles->cancelTauntChains();
+        }
+
         return;
     }
 
@@ -242,6 +247,7 @@ void DeathTaunt::releaseAimAndCast()
     m_castDirection = finalDirection;
     m_impactDelayTimer = m_deathCharacter->getConfig()->m_tauntImpactDelay;
     m_tauntState = TauntState::WaitingForImpact;
+    m_tauntChainsLaunched = false;
 
     DeathSound* sound = m_deathCharacter != nullptr ? m_deathCharacter->getSound() : nullptr;
     if (sound != nullptr)
@@ -271,6 +277,8 @@ void DeathTaunt::updateImpactDelay()
 {
     m_impactDelayTimer -= Time::getDeltaTime();
 
+    updateTauntChains();
+
     if (m_impactDelayTimer > 0.0f)
     {
         return;
@@ -279,6 +287,27 @@ void DeathTaunt::updateImpactDelay()
     m_impactDelayTimer = 0.0f;
 
     resolveImpact();
+}
+
+void DeathTaunt::updateTauntChains()
+{
+    // Fire the chains early enough that they bite exactly when the pull starts.
+    // Visual only: resolveImpact still decides who gets taunted and pulled.
+    if (m_tauntChainsLaunched || !m_deathParticles)
+    {
+        return;
+    }
+
+    const float travelTime = m_deathParticles->getTauntChainTravelTime();
+    if (m_impactDelayTimer > travelTime)
+    {
+        return;
+    }
+
+    m_tauntChainsLaunched = true;
+
+    const float remaining = m_impactDelayTimer > 0.0f ? m_impactDelayTimer : 0.0f;
+    m_deathParticles->launchTauntChains(collectEnemiesInCone(m_castOrigin, m_castDirection), remaining > 0.02f ? remaining : 0.02f);
 }
 
 void DeathTaunt::resolveImpact()
