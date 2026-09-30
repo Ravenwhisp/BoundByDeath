@@ -22,7 +22,7 @@ public:
 
 private:
 	void executeFirstNovaWave();
-	void executeSecondNovaWave();
+	//void executeSecondNovaWave();
 	void executeNovaWave(float radius, float damage);
 	void finishAbility();
 
@@ -38,7 +38,7 @@ private:
 
 	Vector3 m_novaCenter = Vector3::Zero;
 	bool m_firstWaveApplied = false;
-	bool m_secondWaveApplied = false;
+	//bool m_secondWaveApplied = false;
 	bool m_completed = false;
 
 	bool m_isFuryCast = false;

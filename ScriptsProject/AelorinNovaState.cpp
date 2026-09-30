@@ -32,7 +32,7 @@ void AelorinNovaState::OnStateEnter()
 	m_activeAbility = AelorinAbility::None;
 	m_stateTimer = 0.0f;
 	m_firstWaveApplied = false;
-	m_secondWaveApplied = false;
+	//m_secondWaveApplied = false;
 	m_completed = false;
 	m_isFuryCast = false;
 
@@ -86,9 +86,9 @@ void AelorinNovaState::OnStateEnter()
 				m_novaCenter,
 				config->m_novaRadius,
 				config->m_novaChargeTime,
-				m_controller->isPhase2(),
-				config->m_novaPhase2SecondRadius,
-				config->m_novaPhase2SecondWaveDelay
+				false,
+				config->m_novaRadius,
+				0.0f
 			);
 		}
 	}
@@ -123,7 +123,7 @@ void AelorinNovaState::OnStateUpdate()
 
 	m_stateTimer += Time::getDeltaTime();
 
-	// Fury strips the nova windup + recovery
+	// Fury strips the nova windup + recovery REMOVED FURY
 	const float chargeTime = config->m_novaChargeTime;
 	const float recoveryDuration = config->m_novaRecoveryDuration;
 
@@ -133,18 +133,23 @@ void AelorinNovaState::OnStateUpdate()
 		m_firstWaveApplied = true;
 	}
 
-	if (m_controller->isPhase2() &&
-		m_firstWaveApplied &&
-		!m_secondWaveApplied &&
-		m_stateTimer >= chargeTime + config->m_novaPhase2SecondWaveDelay)
-	{
-		executeSecondNovaWave();
-		m_secondWaveApplied = true;
-	}
+	//if (m_controller->isPhase2() &&
+	//	m_firstWaveApplied &&
+	//	!m_secondWaveApplied &&
+	//	m_stateTimer >= chargeTime + config->m_novaPhase2SecondWaveDelay)
+	//{
+	//	executeSecondNovaWave();
+	//	m_secondWaveApplied = true;
+	//}
 
-	const float lastWaveTime = m_controller->isPhase2() ? chargeTime + config->m_novaPhase2SecondWaveDelay : chargeTime;
+	//const float lastWaveTime = m_controller->isPhase2() ? chargeTime + config->m_novaPhase2SecondWaveDelay : chargeTime;
 
-	if (m_stateTimer < lastWaveTime + recoveryDuration)
+	//if (m_stateTimer < lastWaveTime + recoveryDuration)
+	//{
+	//	return;
+	//}
+
+	if (m_stateTimer < chargeTime + recoveryDuration)
 	{
 		return;
 	}
@@ -174,7 +179,7 @@ void AelorinNovaState::OnStateExit()
 	m_stateTimer = 0.0f;
 	m_novaCenter = Vector3::Zero;
 	m_firstWaveApplied = false;
-	m_secondWaveApplied = false;
+	//m_secondWaveApplied = false;
 	m_completed = false;
 	m_isFuryCast = false;
 
@@ -199,23 +204,23 @@ void AelorinNovaState::executeFirstNovaWave()
 	Debug::log("[AelorinNovaState] First Nova wave.");
 }
 
-void AelorinNovaState::executeSecondNovaWave()
-{
-	if (!m_controller)
-	{
-		return;
-	}
-
-	const AelorinAttackConfig* config = m_controller->getAelorinAttackConfig();
-	if (!config)
-	{
-		return;
-	}
-
-	executeNovaWave(config->m_novaPhase2SecondRadius, config->m_novaPhase2SecondDamage);
-
-	Debug::log("[AelorinNovaState] Second Nova wave.");
-}
+//void AelorinNovaState::executeSecondNovaWave()
+//{
+//	if (!m_controller)
+//	{
+//		return;
+//	}
+//
+//	const AelorinAttackConfig* config = m_controller->getAelorinAttackConfig();
+//	if (!config)
+//	{
+//		return;
+//	}
+//
+//	executeNovaWave(config->m_novaPhase2SecondRadius, config->m_novaPhase2SecondDamage);
+//
+//	Debug::log("[AelorinNovaState] Second Nova wave.");
+//}
 
 void AelorinNovaState::executeNovaWave(float radius, float damage)
 {

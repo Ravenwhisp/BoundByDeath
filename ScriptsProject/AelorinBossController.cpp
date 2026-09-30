@@ -1033,10 +1033,10 @@ std::vector<AelorinAbility> AelorinBossController::buildAbilityPool() const
 	//	pool.push_back(AelorinAbility::Summon);
 	//}
 
-	//if (isPhase2())
-	//{
-	//	pool.push_back(AelorinAbility::GraspOfTheDead);
-	//}
+	if (isPhase2())
+	{
+		pool.push_back(AelorinAbility::GraspOfTheDead);
+	}
 
 	return pool;
 }
