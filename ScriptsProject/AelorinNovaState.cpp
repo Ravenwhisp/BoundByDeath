@@ -124,8 +124,8 @@ void AelorinNovaState::OnStateUpdate()
 	m_stateTimer += Time::getDeltaTime();
 
 	// Fury strips the nova windup + recovery
-	const float chargeTime = m_isFuryCast ? 0.0f : config->m_novaChargeTime;
-	const float recoveryDuration = m_isFuryCast ? 0.0f : config->m_novaRecoveryDuration;
+	const float chargeTime = config->m_novaChargeTime;
+	const float recoveryDuration = config->m_novaRecoveryDuration;
 
 	if (!m_firstWaveApplied && m_stateTimer >= chargeTime)
 	{
