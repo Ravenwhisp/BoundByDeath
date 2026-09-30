@@ -173,7 +173,15 @@ void AelorinTeleportState::changePhase(TeleportPhase phase)
 	if (phase == TeleportPhase::TeleportIn)
 	{
 		AnimationAPI::setSpeedMultiplier(m_animation, 0.65f);
-		AnimationAPI::playOverrideClip(m_animation, "boss_teleportin", 0.0f, false);
+
+		if (m_controller && m_controller->isPhase2())
+		{
+			AnimationAPI::playOverrideClip(m_animation, "teleportin_phase2", 0.0f, false);
+		}
+		else
+		{
+			AnimationAPI::playOverrideClip(m_animation, "boss_teleportin", 0.0f, false);
+		}
 		AnimationAPI::setPlaybackTime(m_animation, 0.0f);
 		return;
 	}
@@ -181,7 +189,14 @@ void AelorinTeleportState::changePhase(TeleportPhase phase)
 	if (phase == TeleportPhase::TeleportOut)
 	{
 		AnimationAPI::setSpeedMultiplier(m_animation, 0.75f);
-		AnimationAPI::playOverrideClip(m_animation, "boss_teleportout", 0.0f, false);
+		if (m_controller && m_controller->isPhase2())
+		{
+			AnimationAPI::playOverrideClip(m_animation, "teleportout_phase2", 0.0f, false);
+		}
+		else
+		{
+			AnimationAPI::playOverrideClip(m_animation, "boss_teleportout", 0.0f, false);
+		}
 		AnimationAPI::setPlaybackTime(m_animation, 0.0f);
 		return;
 	}
