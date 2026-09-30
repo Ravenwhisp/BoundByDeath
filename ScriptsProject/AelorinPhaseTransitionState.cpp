@@ -29,11 +29,13 @@ void AelorinPhaseTransitionState::OnStateEnter()
 	if (!m_controller)
 	{
 		Debug::error("[AelorinPhaseTransitionState] AelorinBossController not found.");
+		return;
 	}
 
 	if (!m_animation)
 	{
 		Debug::error("[AelorinPhaseTransitionState] AnimationComponent not found.");
+		return;
 	}
 
 	if (m_vfx)
