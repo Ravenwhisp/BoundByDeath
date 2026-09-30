@@ -22,7 +22,8 @@ IMPLEMENT_SCRIPT_FIELDS(DeathParticles,
     SERIALIZED_STRING(m_chargedHitFlashPath, "Charged Hit Flash Pzrefab Path"),
     SERIALIZED_ASSET_REF(m_chargedHitFlashPrefab, "Charged Hit Flash Prefab", AssetType::PREFAB),
     SERIALIZED_STRING(m_scytheAnchorName, "Scythe Anchor Name"),
-    SERIALIZED_ASSET_REF(m_tauntChainLinkPrefab, "Taunt Chain Link Prefab (optional)", AssetType::PREFAB),
+    SERIALIZED_ASSET_REF(m_tauntChainLinkPrefab, "Taunt Chain Link Prefab", AssetType::PREFAB),
+    SERIALIZED_ASSET_REF(m_tauntChainGrabBurstPrefab, "Taunt Chain Grab Burst Prefab", AssetType::PREFAB),
     SERIALIZED_STRING(m_tauntChainHandBone, "Taunt Chain Hand Bone"),
     SERIALIZED_BOOL(m_tauntChainOnFloor, "Taunt Chain On Floor"),
     SERIALIZED_FLOAT(m_tauntChainFloorHeight, "Taunt Chain Floor Height", 0.0f, 0.5f, 0.01f),
@@ -30,6 +31,7 @@ IMPLEMENT_SCRIPT_FIELDS(DeathParticles,
     SERIALIZED_FLOAT(m_tauntChainTipHeight, "Taunt Chain Tip Height", 0.0f, 3.0f, 0.05f),
     SERIALIZED_FLOAT(m_tauntChainLinkSpacing, "Taunt Chain Link Spacing", 0.05f, 1.0f, 0.01f),
     SERIALIZED_FLOAT(m_tauntChainLinkScale, "Taunt Chain Link Scale", 0.1f, 5.0f, 0.05f),
+    SERIALIZED_FLOAT(m_tauntChainTipLinkScale, "Taunt Chain Tip Link Scale", 0.5f, 3.0f, 0.05f),
     SERIALIZED_FLOAT(m_tauntChainMaxLength, "Taunt Chain Max Length", 1.0f, 20.0f, 0.5f),
     SERIALIZED_INT(m_tauntChainMaxChains, "Taunt Chain Max Chains"),
     SERIALIZED_FLOAT(m_tauntChainTravelTime, "Taunt Chain Travel Time", 0.02f, 1.0f, 0.01f),
@@ -320,7 +322,7 @@ namespace
 
 namespace
 {
-    constexpr UID kDefaultChainLinkPrefabUid = 5894923481231074528ull;
+    constexpr float kChainGrabBurstLifetime = 1.5f;
     constexpr float kRadToDeg = 180.0f / 3.14159265f;
 }
 
@@ -333,10 +335,16 @@ void DeathParticles::ensureTauntChainPool()
 
     m_tauntChainPoolBuilt = true;
 
+    if (!m_tauntChainLinkPrefab.m_id.isValid())
+    {
+        Debug::warn("[DeathParticles] Taunt Chain Link Prefab is not assigned. Taunt will play without chains.");
+        return;
+    }
+
     Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
     m_tauntChainHandBoneTransform = ParticleLifecycle::findChildRecursive(ownerTransform, m_tauntChainHandBone.c_str());
 
-    const AssetId linkPrefab = m_tauntChainLinkPrefab.m_id.hasUID() ? m_tauntChainLinkPrefab.m_id : AssetId(kDefaultChainLinkPrefabUid);
+    const AssetId& linkPrefab = m_tauntChainLinkPrefab.m_id;
 
     const int chainCount = m_tauntChainMaxChains > 0 ? m_tauntChainMaxChains : 1;
     const float spacing = m_tauntChainLinkSpacing > 0.01f ? m_tauntChainLinkSpacing : 0.01f;
@@ -361,7 +369,9 @@ void DeathParticles::ensureTauntChainPool()
                 return;
             }
 
-            TransformAPI::setScale(GameObjectAPI::getTransform(link), Vector3(m_tauntChainLinkScale, m_tauntChainLinkScale, m_tauntChainLinkScale));
+            // The first link is the one that bites, so it's bigger.
+            const float scale = m_tauntChainLinkScale * (i == 0 ? m_tauntChainTipLinkScale : 1.0f);
+            TransformAPI::setScale(GameObjectAPI::getTransform(link), Vector3(scale, scale, scale));
             GameObjectAPI::setActive(link, false);
 
             chain.links.push_back(link);
@@ -370,6 +380,23 @@ void DeathParticles::ensureTauntChainPool()
 
         m_tauntChains.push_back(chain);
     }
+}
+
+void DeathParticles::playTauntChainGrabBurst(const Vector3& position)
+{
+    if (!m_tauntChainGrabBurstPrefab.m_id.isValid())
+    {
+        return;
+    }
+
+    GameObject* burst = GameObjectAPI::instantiatePrefab(m_tauntChainGrabBurstPrefab.m_id, position, Vector3::Zero, nullptr);
+    if (!burst)
+    {
+        return;
+    }
+
+    ParticleLifecycle::restart(burst);
+    m_timedOneShots.scheduleDestroy(burst, kChainGrabBurstLifetime);
 }
 
 void DeathParticles::destroyTauntChainPool()
@@ -486,6 +513,7 @@ void DeathParticles::updateTauntChains(float deltaTime)
                 chain.state = TauntChainState::Latched;
                 chain.timer = 0.0f;
                 playHitFlash(target);
+                playTauntChainGrabBurst(target);
             }
             break;
         }

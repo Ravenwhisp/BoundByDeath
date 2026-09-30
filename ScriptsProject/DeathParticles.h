@@ -57,19 +57,21 @@ public:
 	std::string m_scytheAnchorName = "ScytheAnchor";
 
 	PrefabRef m_tauntChainLinkPrefab; 
+	PrefabRef m_tauntChainGrabBurstPrefab;
 	std::string m_tauntChainHandBone = "hand_L";
 	bool m_tauntChainOnFloor = true;
-	float m_tauntChainFloorHeight = 0.12f;  // height of the link centres; links are 0.2 wide, so this keeps upright ones off the ground
+	float m_tauntChainFloorHeight = 0.13f;  // height of the link centres; links are 0.2 wide, so this keeps upright ones off the ground
 	float m_tauntChainStartOffset = 0.4f;
 	float m_tauntChainTipHeight = 1.0f;
 	float m_tauntChainLinkSpacing = 0.22f;  
 	float m_tauntChainLinkScale = 1.0f;
+	float m_tauntChainTipLinkScale = 1.25f;
 	float m_tauntChainMaxLength = 7.0f;
 	int m_tauntChainMaxChains = 3;
-	float m_tauntChainTravelTime = 0.15f;
-	float m_tauntChainMinLatchTime = 0.2f;
+	float m_tauntChainTravelTime = 0.18f;
+	float m_tauntChainMinLatchTime = 0.35f;
 	float m_tauntChainMaxLatchTime = 1.5f;
-	float m_tauntChainRetractTime = 0.12f;
+	float m_tauntChainRetractTime = 0.2f;
 	float m_tauntChainWhip = 0.35f;         // sideways wave while flying out
 	float m_tauntChainTension = 0.05f;      // shake while pulling
 
@@ -120,6 +122,7 @@ private:
 	bool isTauntChainTargetValid(GameObject* target) const;
 	bool isTauntChainTargetPulled(GameObject* target) const;
 	void destroyTauntChainPool();
+	void playTauntChainGrabBurst(const Vector3& position);
 
 	std::vector<TauntChain> m_tauntChains;
 	GameObject* m_tauntChainRoot = nullptr;
