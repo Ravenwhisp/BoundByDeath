@@ -59,6 +59,7 @@ void LyrielArrowProjectile::launch(const Vector3& startPosition, const Vector3& 
     if (transform != nullptr)
     {
         TransformAPI::setGlobalPosition(transform, startPosition);
+        TransformAPI::lookAt(transform, startPosition + m_direction);
     }
 
     // Orient projectile to face the travel direction. Use lookAt then rotate 180 degrees
