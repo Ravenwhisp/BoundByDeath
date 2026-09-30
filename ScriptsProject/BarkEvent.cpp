@@ -607,31 +607,21 @@ BarkLine BarkEvent::buildBarkLine(
 		return bark;
 	}
 
-	if (speakerText == "Death")
-	{
-		bark.speaker =
-			BarkSpeaker::Death;
-	}
-	else if (
-		speakerText == "Lyriel"
-		)
-	{
-		bark.speaker =
-			BarkSpeaker::Lyriel;
-	}
-	else
+	if (speakerText.empty())
 	{
 		Debug::warn(
-			"BarkEvent on '%s' has invalid speaker '%s' at index %d.",
+			"BarkEvent on '%s' has an empty speaker at index %d.",
 			GameObjectAPI::getName(
 				getOwner()
 			),
-			speakerText.c_str(),
 			sourceIndex
 		);
 
 		return bark;
 	}
+
+	bark.speaker =
+		speakerText;
 
 	float duration =
 		m_defaultDuration;

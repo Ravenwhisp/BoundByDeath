@@ -9,12 +9,6 @@
 class UIText;
 class Transform2D;
 
-enum class BarkSpeaker
-{
-	Death = 0,
-	Lyriel
-};
-
 enum class BarkPriority
 {
 	Normal = 0,
@@ -23,7 +17,7 @@ enum class BarkPriority
 
 struct BarkLine
 {
-	BarkSpeaker speaker = BarkSpeaker::Death;
+	std::string speaker;
 	std::string text;
 	float duration = 3.0f;
 	BarkPriority priority = BarkPriority::Normal;
@@ -69,10 +63,6 @@ private:
 	bool isHigherPriority(
 		BarkPriority first,
 		BarkPriority second
-	) const;
-
-	const char* getSpeakerName(
-		BarkSpeaker speaker
 	) const;
 
 private:

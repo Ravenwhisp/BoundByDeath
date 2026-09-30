@@ -164,9 +164,7 @@ void BarkManager::startNextBark()
 
 	Debug::log(
 		"Bark started - %s: %s",
-		getSpeakerName(
-			m_currentBark.speaker
-		),
+		m_currentBark.speaker.c_str(),
 		m_currentBark.text.c_str()
 	);
 }
@@ -187,11 +185,7 @@ void BarkManager::showCurrentBark()
 	}
 
 	const std::string displayText =
-		std::string(
-			getSpeakerName(
-				m_currentBark.speaker
-			)
-		)
+		m_currentBark.speaker
 		+ ": "
 		+ m_currentBark.text;
 
@@ -294,7 +288,7 @@ float BarkManager::estimateTextWidth(
 		case 'm':
 			width += 14.0f;
 			break;
-				
+
 			// Normal characters
 		default:
 			width += 11.0f;
@@ -369,23 +363,6 @@ bool BarkManager::isHigherPriority(
 		static_cast<int>(first)
 					>
 		static_cast<int>(second);
-}
-
-const char* BarkManager::getSpeakerName(
-	BarkSpeaker speaker
-) const
-{
-	switch (speaker)
-	{
-	case BarkSpeaker::Death:
-		return "Death";
-
-	case BarkSpeaker::Lyriel:
-		return "Lyriel";
-
-	default:
-		return "Unknown";
-	}
 }
 
 IMPLEMENT_SCRIPT(BarkManager)

@@ -7,6 +7,7 @@ class Damageable;
 class Bound;
 class Transform;
 class PlayerState;
+class CombatAreaEvent;
 
 enum class BarkTriggerActivationType
 {
@@ -20,7 +21,9 @@ enum class BarkTriggerActivationType
 	FirstBoundSeparation,
 	RepeatedBoundSeparation,
 	DeathRevived,
-	LyrielRevived
+	LyrielRevived,
+	CombatStarted,
+	CombatEnded
 };
 
 class BarkEventTrigger : public Script
@@ -43,6 +46,7 @@ private:
 	void setupDamageTrigger();
 	void setupPlayerStateTrigger();
 	void setupBoundTrigger();
+	void setupCombatTrigger();
 
 	void updateZoneEnter();
 	void updateZoneStay();
@@ -50,6 +54,7 @@ private:
 	void updateDamage();
 	void updatePlayerState();
 	void updateBound();
+	void updateCombat();
 
 	void findPlayers();
 
@@ -86,9 +91,13 @@ private:
 	// Only used by Bound separation triggers.
 	ComponentRef<Transform> m_boundObject;
 
+	// GameObject containing the CombatAreaEvent script.
+	// Only used by CombatStarted and CombatEnded.
+	ComponentRef<Transform> m_combatAreaObject;
+
 	BarkEvent* m_barkEvent = nullptr;
 
-	// Zone conditi ons.
+	// Zone conditions.
 	GameObject* m_death = nullptr;
 	GameObject* m_lyriel = nullptr;
 
@@ -117,4 +126,8 @@ private:
 	bool m_boundStateInitialized = false;
 	bool m_wasSeparated = false;
 	bool m_hasSeenFirstSeparation = false;
+
+	// Combat condition.
+	CombatAreaEvent* m_combatArea = nullptr;
+	bool m_wasCombatActive = false;
 };

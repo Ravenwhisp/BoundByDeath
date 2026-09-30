@@ -5,6 +5,7 @@
 #include "Damageable.h"
 #include "PlayerState.h"
 #include "Bound.h"
+#include "CombatAreaEvent.h"
 
 #include <cstring>
 
@@ -22,10 +23,12 @@ namespace
 		"First Bound Separation",
 		"Repeated Bound Separation",
 		"Death Revived",
-		"Lyriel Revived"
+		"Lyriel Revived",
+		"Combat Started",
+		"Combat Ended"
 	};
 
-	constexpr int barkTriggerActivationCount = 11;
+	constexpr int barkTriggerActivationCount = 13;
 }
 
 IMPLEMENT_SCRIPT_FIELDS(
@@ -68,6 +71,12 @@ IMPLEMENT_SCRIPT_FIELDS(
 	SERIALIZED_COMPONENT_REF(
 		m_boundObject,
 		"Bound Object",
+		ComponentType::TRANSFORM
+	),
+
+	SERIALIZED_COMPONENT_REF(
+		m_combatAreaObject,
+		"Combat Area",
 		ComponentType::TRANSFORM
 	)
 )
@@ -124,6 +133,11 @@ void BarkEventTrigger::Start()
 		setupBoundTrigger();
 		break;
 
+	case BarkTriggerActivationType::CombatStarted:
+	case BarkTriggerActivationType::CombatEnded:
+		setupCombatTrigger();
+		break;
+
 	default:
 		break;
 	}
@@ -178,6 +192,11 @@ void BarkEventTrigger::Update()
 	case BarkTriggerActivationType::FirstBoundSeparation:
 	case BarkTriggerActivationType::RepeatedBoundSeparation:
 		updateBound();
+		break;
+
+	case BarkTriggerActivationType::CombatStarted:
+	case BarkTriggerActivationType::CombatEnded:
+		updateCombat();
 		break;
 
 	default:
@@ -434,6 +453,51 @@ void BarkEventTrigger::setupBoundTrigger()
 	 * we initialize the state on the first Update().
 	 */
 	m_boundStateInitialized = false;
+}
+
+void BarkEventTrigger::setupCombatTrigger()
+{
+	Transform* combatAreaTransform =
+		m_combatAreaObject.getReferencedComponent();
+
+	if (combatAreaTransform == nullptr)
+	{
+		Debug::warn(
+			"BarkEventTrigger on '%s' has no Combat Area assigned.",
+			GameObjectAPI::getName(getOwner())
+		);
+
+		return;
+	}
+
+	GameObject* combatAreaObject =
+		ComponentAPI::getOwner(
+			combatAreaTransform
+		);
+
+	if (combatAreaObject == nullptr)
+	{
+		return;
+	}
+
+	m_combatArea =
+		GameObjectAPI::findScript<CombatAreaEvent>(
+			combatAreaObject
+		);
+
+	if (m_combatArea == nullptr)
+	{
+		Debug::warn(
+			"BarkEventTrigger on '%s' could not find CombatAreaEvent on '%s'.",
+			GameObjectAPI::getName(getOwner()),
+			GameObjectAPI::getName(combatAreaObject)
+		);
+
+		return;
+	}
+
+	m_wasCombatActive =
+		m_combatArea->isActive();
 }
 
 void BarkEventTrigger::updateZoneEnter()
@@ -716,6 +780,129 @@ void BarkEventTrigger::updateBound()
 
 	m_wasSeparated =
 		isSeparated;
+}
+
+void BarkEventTrigger::updateCombat()
+{
+	if (m_combatArea == nullptr)
+	{
+		return;
+	}
+
+	const bool isCombatActive =
+		m_combatArea->isActive();
+
+	const BarkTriggerActivationType activationType =
+		static_cast<BarkTriggerActivationType>(
+			m_activationType
+			);
+
+	switch (activationType)
+	{
+	case BarkTriggerActivationType::CombatStarted:
+	{
+		/*
+		 * Wait for:
+		 *
+		 * inactive -> active
+		 *
+		 * Once the CombatAreaEvent becomes active,
+		 * wait for the configured Delay before
+		 * requesting the bark.
+		 */
+		if (!isCombatActive)
+		{
+			m_wasCombatActive = false;
+			m_isWaitingForDelay = false;
+			m_timer = 0.0f;
+
+			return;
+		}
+
+		/*
+		 * The combat-start transition has already
+		 * been consumed successfully.
+		 */
+		if (m_wasCombatActive)
+		{
+			return;
+		}
+
+		/*
+		 * Start the delay when combat first becomes
+		 * active.
+		 */
+		if (!m_isWaitingForDelay)
+		{
+			m_isWaitingForDelay = true;
+			m_timer = m_delay;
+		}
+
+		if (m_timer > 0.0f)
+		{
+			m_timer -=
+				Time::getDeltaTime();
+
+			if (m_timer > 0.0f)
+			{
+				return;
+			}
+		}
+
+		/*
+		 * Only consume the combat-start transition
+		 * when the BarkEvent is actually accepted.
+		 *
+		 * If BarkManager rejects it temporarily,
+		 * it will retry without restarting the delay.
+		 */
+		if (triggerBark())
+		{
+			m_wasCombatActive = true;
+			m_isWaitingForDelay = false;
+			m_timer = 0.0f;
+		}
+
+		return;
+	}
+
+	case BarkTriggerActivationType::CombatEnded:
+	{
+		/*
+		 * React only to:
+		 *
+		 * active -> inactive
+		 *
+		 * when CombatAreaEvent reports that the
+		 * encounter has actually completed.
+		 */
+		if (
+			!isCombatActive &&
+			m_wasCombatActive &&
+			m_combatArea->hasCompleted()
+			)
+		{
+			/*
+			 * Only consume the transition if the
+			 * BarkEvent was actually accepted.
+			 */
+			if (triggerBark())
+			{
+				m_wasCombatActive = false;
+			}
+
+			return;
+		}
+
+		m_wasCombatActive =
+			isCombatActive;
+
+		return;
+	}
+
+	default:
+		return;
+	}
 }
 
 void BarkEventTrigger::findPlayers()
