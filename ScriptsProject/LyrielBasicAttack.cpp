@@ -152,7 +152,7 @@ bool LyrielBasicAttack::spawnArrowToTarget(GameObject* target)
     }
 
     const float arrowLifetime = distance / m_lyrielCharacter->getConfig()->m_basicArrowSpeed;
-    arrow->launch(startPosition, direction, m_lyrielCharacter->getConfig()->m_basicArrowSpeed, arrowLifetime, target, m_lyrielCharacter->getConfig()->m_basicAttackDamage);
+    arrow->launch(startPosition, direction, m_lyrielCharacter->getConfig()->m_basicArrowSpeed, arrowLifetime, target, m_lyrielCharacter->getConfig()->m_basicAttackDamage, LyrielArrowProjectile::VisualModel::Basic);
 
     return true;
 }
@@ -200,14 +200,14 @@ bool LyrielBasicAttack::spawnArrowToDirection(const Vector3& direction)
             if (distance > 0.0001f)
             {
                 breakableDirection.Normalize();
-                arrow->launch(startPosition, breakableDirection, arrowSpeed, distance / arrowSpeed, breakable, m_lyrielCharacter->getConfig()->m_basicAttackDamage);
+                arrow->launch(startPosition, breakableDirection, arrowSpeed, distance / arrowSpeed, breakable, m_lyrielCharacter->getConfig()->m_basicAttackDamage, LyrielArrowProjectile::VisualModel::Basic);
                 return true;
             }
         }
     }
 
     const float arrowLifetime = range / arrowSpeed;
-    arrow->launch(startPosition, direction, arrowSpeed, arrowLifetime, nullptr, m_lyrielCharacter->getConfig()->m_basicAttackDamage);
+    arrow->launch(startPosition, direction, arrowSpeed, arrowLifetime, nullptr, m_lyrielCharacter->getConfig()->m_basicAttackDamage, LyrielArrowProjectile::VisualModel::Basic);
 
     return true;
 }
