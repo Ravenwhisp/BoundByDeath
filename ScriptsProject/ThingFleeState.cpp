@@ -58,7 +58,11 @@ void ThingFleeState::OnStateUpdate()
 
 void ThingFleeState::OnStateExit()
 {
-	GameObjectAPI::removeGameObject(getOwner()); // Will need to be extended to add particles and sound effects for the death of the thing.
+	GameObject* owner = getOwner();
+	Transform* ownerTransform = GameObjectAPI::getTransform(owner);
+
+    GameObjectAPI::instantiatePrefab(m_controller->getDisappearParticlesId(), TransformAPI::getGlobalPosition(ownerTransform), Vector3(0.f, 0.f, 0.f));
+	GameObjectAPI::removeGameObject(owner); // Will need to be extended to add particles and sound effects for the death of the thing.
 
     Debug::log("[ThingFleeState] EXIT");
 }
@@ -81,7 +85,7 @@ bool ThingFleeState::tryMoveFleeDirection()
 
 		TransformAPI::setGlobalPosition(ownerTransform, nextPosition); // Move the object to the new position
 
-        if (movementDelta.LengthSquared() < lengthMovement * lengthMovement)
+        if (movementDelta.LengthSquared() < (lengthMovement * lengthMovement))
         {
             return false;
         }

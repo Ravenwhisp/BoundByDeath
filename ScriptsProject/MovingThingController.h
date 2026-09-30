@@ -23,6 +23,8 @@ public:
 	float getDetectionRadius() const { return m_detectionRadius; }
 	float getFleeSpeed() const { return m_fleeSpeed; }
 
+	const AssetId& getDisappearParticlesId() const { return m_disappearParticlesPrefab.m_id; }
+
 	Transform* getLyrielTransform() const { return m_lyrielTransform.getReferencedComponent(); }
 	Transform* getDeathTransform() const { return m_deathTransform.getReferencedComponent(); }
 
@@ -30,6 +32,8 @@ private:
 
 	float m_detectionRadius = 5.0f;
 	float m_fleeSpeed = 3.0f;
+
+	PrefabRef m_disappearParticlesPrefab;
 
 	ComponentRef<Transform> m_lyrielTransform;
 	ComponentRef<Transform> m_deathTransform;

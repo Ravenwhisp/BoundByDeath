@@ -45,6 +45,7 @@ void MovingThingController::drawGizmo()
 IMPLEMENT_SCRIPT_FIELDS(MovingThingController,
     SERIALIZED_FLOAT(m_detectionRadius, "Detection Radius", 0.01f, 100.0f, 0.01f),
     SERIALIZED_FLOAT(m_fleeSpeed, "Flee Speed", 0.0f, 100.0f, 0.01f),
+	SERIALIZED_ASSET_REF(m_disappearParticlesPrefab, "Disappear Particles Prefab", AssetType::PREFAB),
     SERIALIZED_COMPONENT_REF(m_lyrielTransform, "Lyriel Transform", ComponentType::TRANSFORM),
     SERIALIZED_COMPONENT_REF(m_deathTransform, "Death Transform", ComponentType::TRANSFORM)
 )
