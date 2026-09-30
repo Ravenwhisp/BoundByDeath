@@ -61,9 +61,16 @@ void AelorinNovaState::OnStateEnter()
 		return;
 	}
 
-	if (m_vfx && !m_controller->isPhase2())
+	if (m_vfx)
 	{
-		m_vfx->startPhase1Spell();
+		if (m_controller->isPhase2())
+		{
+			m_vfx->startPhase2Spell();
+		}
+		else
+		{
+			m_vfx->startPhase1Spell();
+		}
 	}
 
 	m_isFuryCast = m_controller->isFuryActive();
@@ -154,9 +161,16 @@ void AelorinNovaState::OnStateUpdate()
 		return;
 	}
 
-	if (m_vfx && !m_controller->isPhase2())
+	if (m_vfx)
 	{
-		m_vfx->stopPhase1Spell();
+		if (m_controller->isPhase2())
+		{
+			m_vfx->stopPhase2Spell();
+		}
+		else
+		{
+			m_vfx->stopPhase1Spell();
+		}
 	}
 
 	finishAbility();
@@ -169,9 +183,10 @@ void AelorinNovaState::OnStateExit()
 		m_aelorinUI->cancelNova();
 	}
 
-	if (m_vfx)
+	if (m_vfx && m_controller)
 	{
 		m_vfx->stopPhase1Spell();
+		m_vfx->stopPhase2Spell();
 	}
 
 	m_aelorinUI = nullptr;

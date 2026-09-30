@@ -10,7 +10,9 @@ IMPLEMENT_SCRIPT_FIELDS(AelorinVFX,
 	SERIALIZED_ASSET_REF(m_phase1SpellPrefab, "Phase 1 Spell Prefab", AssetType::PREFAB),
 	SERIALIZED_ASSET_REF(m_phase2SpellPrefab, "Phase 2 Spell Prefab", AssetType::PREFAB),
 	SERIALIZED_COMPONENT_REF(m_phase1RightHand, "Phase 1 Right Hand", ComponentType::TRANSFORM),
-	SERIALIZED_COMPONENT_REF(m_phase1LeftHand, "Phase 1 Left Hand", ComponentType::TRANSFORM)
+	SERIALIZED_COMPONENT_REF(m_phase1LeftHand, "Phase 1 Left Hand", ComponentType::TRANSFORM),
+	SERIALIZED_COMPONENT_REF(m_phase2RightHand, "Phase 2 Right Hand", ComponentType::TRANSFORM),
+	SERIALIZED_COMPONENT_REF(m_phase2LeftHand, "Phase 2 Left Hand", ComponentType::TRANSFORM)
 )
 
 AelorinVFX::AelorinVFX(GameObject* owner) : Script(owner)
@@ -33,6 +35,14 @@ void AelorinVFX::OnGameStop()
 	ParticleLifecycle::destroy(m_phase1LeftSpellEffect);
 	ParticleLifecycle::destroy(m_phase2RightSpellEffect);
 	ParticleLifecycle::destroy(m_phase2LeftSpellEffect);
+
+	m_phase2AuraActive = false;
+
+	m_phase1TeleportActive = false;
+	m_phase2TeleportActive = false;
+
+	m_phase1SpellActive = false;
+	m_phase2SpellActive = false;
 }
 
 void AelorinVFX::startPhase2Aura()
@@ -276,7 +286,8 @@ void AelorinVFX::startPhase1Spell()
 		ParticleLifecycle::activate(m_phase1LeftSpellEffect);
 	}
 
-	m_phase1SpellActive = true;
+	if (leftHand && rightHand)
+		m_phase1SpellActive = true;
 }
 
 void AelorinVFX::stopPhase1Spell()
@@ -285,6 +296,70 @@ void AelorinVFX::stopPhase1Spell()
 
 	ParticleLifecycle::deactivate(m_phase1RightSpellEffect);
 	ParticleLifecycle::deactivate(m_phase1LeftSpellEffect);
+}
+
+void AelorinVFX::startPhase2Spell()
+{
+	if (m_phase2SpellActive)
+	{
+		return;
+	}
+
+	if (!m_phase2SpellPrefab.m_id.isValid())
+	{
+		Debug::warn("[AelorinVFX] Phase 2 Spell prefab is not assigned.");
+		return;
+	}
+
+	Transform* rightHand = m_phase2RightHand.getReferencedComponent();
+	Transform* leftHand = m_phase2LeftHand.getReferencedComponent();
+
+	if (rightHand)
+	{
+		const Vector3 position = TransformAPI::getGlobalPosition(rightHand);
+		const Vector3 rotation = TransformAPI::getGlobalEulerDegrees(rightHand);
+
+		GameObject* rightHandObject = ComponentAPI::getOwner(rightHand);
+
+		ParticleLifecycle::ensurePersistent(
+			m_phase2RightSpellEffect,
+			m_phase2SpellPrefab.m_id,
+			position,
+			rotation,
+			rightHandObject
+		);
+
+		ParticleLifecycle::activate(m_phase2RightSpellEffect);
+	}
+
+	if (leftHand)
+	{
+		const Vector3 position = TransformAPI::getGlobalPosition(leftHand);
+		const Vector3 rotation = TransformAPI::getGlobalEulerDegrees(leftHand);
+
+		GameObject* leftHandObject = ComponentAPI::getOwner(leftHand);
+
+		ParticleLifecycle::ensurePersistent(
+			m_phase2LeftSpellEffect,
+			m_phase2SpellPrefab.m_id,
+			position,
+			rotation,
+			leftHandObject
+		);
+
+		ParticleLifecycle::activate(m_phase2LeftSpellEffect);
+	}
+
+	if (leftHand && rightHand)
+		m_phase2SpellActive = true;
+}
+
+void AelorinVFX::stopPhase2Spell()
+{
+	m_phase2SpellActive = false;
+
+	ParticleLifecycle::deactivate(m_phase2RightSpellEffect);
+	ParticleLifecycle::deactivate(m_phase2LeftSpellEffect);
 }
 
 IMPLEMENT_SCRIPT(AelorinVFX)

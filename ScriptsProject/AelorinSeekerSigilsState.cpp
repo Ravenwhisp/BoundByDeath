@@ -75,9 +75,16 @@ void AelorinSeekerSigilsState::OnStateEnter()
 		return;
 	}
 
-	if (m_vfx && !m_controller->isPhase2())
+	if (m_vfx)
 	{
-		m_vfx->startPhase1Spell();
+		if (m_controller->isPhase2())
+		{
+			m_vfx->startPhase2Spell();
+		}
+		else
+		{
+			m_vfx->startPhase1Spell();
+		}
 	}
 
 	m_isFuryCast = m_controller->isFuryActive();
@@ -134,9 +141,10 @@ void AelorinSeekerSigilsState::OnStateUpdate()
 
 		if (!m_controller->isPhase2() && m_currentWave >= config->m_seekerSigilsWaveCount)
 		{
-			if (m_vfx)
+			if (m_vfx && m_controller)
 			{
 				m_vfx->stopPhase1Spell();
+				m_vfx->stopPhase2Spell();
 			}
 		}
 
@@ -176,9 +184,10 @@ void AelorinSeekerSigilsState::OnStateExit()
 		m_aelorinUI->cancelSeekerSigils();
 	}
 
-	if (m_vfx)
+	if (m_vfx && m_controller)
 	{
 		m_vfx->stopPhase1Spell();
+		m_vfx->stopPhase2Spell();
 	}
 
 	m_aelorinUI = nullptr;

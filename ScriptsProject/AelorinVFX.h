@@ -38,8 +38,8 @@ public:
 	void stopPhase1Spell();
 
 	// Phase 2 Spellcasting
-	//void startPhase2Spell();
-	//void stopPhase2Spell();
+	void startPhase2Spell();
+	void stopPhase2Spell();
 
 public:
 	// Phase 2 Aura
@@ -66,6 +66,8 @@ public:
 	// Component References
 	ComponentRef<Transform> m_phase1RightHand;
 	ComponentRef<Transform> m_phase1LeftHand;
+	ComponentRef<Transform> m_phase2RightHand;
+	ComponentRef<Transform> m_phase2LeftHand;
 
 private:
 	// Phase 2 Aura

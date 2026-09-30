@@ -4,6 +4,7 @@
 #include "AelorinAttackConfig.h"
 #include "AelorinAttackExecutor.h"
 #include "AelorinUI.h"
+#include "AelorinVFX.h"
 
 #include "PlayerMovement.h"
 
@@ -29,6 +30,7 @@ void AelorinGraspOfTheDeadState::OnStateEnter()
 	m_controller = GameObjectAPI::findScript<AelorinBossController>(parentGameObject);
 	m_animation = AnimationAPI::getAnimationComponent(getOwner());
 	m_aelorinUI = GameObjectAPI::findScript<AelorinUI>(parentGameObject);
+	m_vfx = GameObjectAPI::findScript<AelorinVFX>(parentGameObject);
 
 	// reset members
 	m_lyrielMovement = nullptr;
@@ -54,6 +56,11 @@ void AelorinGraspOfTheDeadState::OnStateEnter()
 	{
 		Debug::error("[AelorinGraspOfTheDeadState] AelorinUI not found.");
 		return;
+	}
+
+	if (!m_vfx)
+	{
+		Debug::error("[AelorinGraspOfTheDeadState] AelorinVFX not found.");
 	}
 
 	m_attackExecutor = m_controller->getAttackExecutor();
@@ -107,6 +114,18 @@ void AelorinGraspOfTheDeadState::OnStateEnter()
 	if (!m_deathMovement)
 	{
 		Debug::warn("[AelorinGraspOfTheDeadState] Death PlayerMovement not found.");
+	}
+
+	if (m_vfx)
+	{
+		if (m_controller->isPhase2())
+		{
+			m_vfx->startPhase2Spell();
+		}
+		else
+		{
+			m_vfx->startPhase1Spell();
+		}
 	}
 
 	m_isFuryCast = m_controller->isFuryActive();
@@ -168,6 +187,18 @@ void AelorinGraspOfTheDeadState::OnStateUpdate()
 		return;
 	}
 
+	if (m_vfx)
+	{
+		if (m_controller->isPhase2())
+		{
+			m_vfx->stopPhase2Spell();
+		}
+		else
+		{
+			m_vfx->stopPhase1Spell();
+		}
+	}
+
 	// transition into Nova
 	chainIntoNova();
 }
@@ -180,7 +211,15 @@ void AelorinGraspOfTheDeadState::OnStateExit()
 		m_aelorinUI->cancelGraspChains();
 	}
 
+
+	if (m_vfx && m_controller)
+	{
+		m_vfx->stopPhase1Spell();
+		m_vfx->stopPhase2Spell();
+	}
+
 	m_aelorinUI = nullptr;
+	m_vfx = nullptr;
 	m_lyrielMovement = nullptr;
 	m_deathMovement = nullptr;
 	m_stateTimer = 0.0f;
