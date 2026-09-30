@@ -360,6 +360,11 @@ void AelorinBossController::updateEncounter()
 		if (m_aelorinDetectionAggro->startEncounter())
 		{
 			m_hasStartedEncounter = true;
+
+			if (m_damageable)
+			{
+				m_damageable->showHealthBar();
+			}
 		}
 	}
 }

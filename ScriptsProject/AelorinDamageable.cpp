@@ -41,7 +41,7 @@ void AelorinDamageable::Start()
             m_currentHp = m_maxHp;
 
             // Refresh current HP bar after changing max HP
-            setHealthBarContainerActive(getHealthBarContainerTransform(), true);
+            setHealthBarContainerActive(getHealthBarContainerTransform(), false);
             setHealthBarContainerActive(m_phase2HealthBarContainer.getReferencedComponent(), false);
             setupUI();
         }
@@ -427,6 +427,13 @@ void AelorinDamageable::setFuryHealthBarVisual(bool furyActive)
 
     setHealthBarContainerActive(normalBackground, !furyActive);
     setHealthBarContainerActive(furyBackground, furyActive);
+}
+
+void AelorinDamageable::showHealthBar()
+{
+    Transform2D* phase1Container = getHealthBarContainerTransform();
+    setHealthBarContainerActive(phase1Container, true);
+    showHealthBarImmediately();
 }
 
 void AelorinDamageable::onHpDepleted()

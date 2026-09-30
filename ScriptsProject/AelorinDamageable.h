@@ -44,6 +44,8 @@ public:
 	bool hasActiveThresholdAt(float percent) const;
 	void setFuryHealthBarVisual(bool furyActive);
 
+	void showHealthBar();
+
 protected:
 	void onHpDepleted() override;
 
