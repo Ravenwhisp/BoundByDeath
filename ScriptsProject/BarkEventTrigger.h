@@ -18,7 +18,9 @@ enum class BarkTriggerActivationType
 	DeathKnockedOut,
 	LyrielKnockedOut,
 	FirstBoundSeparation,
-	RepeatedBoundSeparation
+	RepeatedBoundSeparation,
+	DeathRevived,
+	LyrielRevived
 };
 
 class BarkEventTrigger : public Script
@@ -39,14 +41,14 @@ public:
 private:
 	void setupZoneTrigger();
 	void setupDamageTrigger();
-	void setupKnockedOutTrigger();
+	void setupPlayerStateTrigger();
 	void setupBoundTrigger();
 
 	void updateZoneEnter();
 	void updateZoneStay();
 	void updatePlayerEnter();
 	void updateDamage();
-	void updateKnockedOut();
+	void updatePlayerState();
 	void updateBound();
 
 	void findPlayers();
@@ -86,7 +88,7 @@ private:
 
 	BarkEvent* m_barkEvent = nullptr;
 
-	// Zone conditions.
+	// Zone conditi ons.
 	GameObject* m_death = nullptr;
 	GameObject* m_lyriel = nullptr;
 
@@ -104,10 +106,10 @@ private:
 	Damageable* m_observedDamageable = nullptr;
 	float m_previousHp = 0.0f;
 
-	// Knocked out condition.
+	// Player state conditions.
 	PlayerState* m_observedPlayerState = nullptr;
-	bool m_knockedOutStateInitialized = false;
-	bool m_wasKnockedOut = false;
+	bool m_playerStateInitialized = false;
+	bool m_wasDowned = false;
 
 	// Bound condition.
 	Bound* m_bound = nullptr;

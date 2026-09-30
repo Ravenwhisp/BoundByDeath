@@ -20,10 +20,12 @@ namespace
 		"Death Knocked Out",
 		"Lyriel Knocked Out",
 		"First Bound Separation",
-		"Repeated Bound Separation"
+		"Repeated Bound Separation",
+		"Death Revived",
+		"Lyriel Revived"
 	};
 
-	constexpr int barkTriggerActivationCount = 9;
+	constexpr int barkTriggerActivationCount = 11;
 }
 
 IMPLEMENT_SCRIPT_FIELDS(
@@ -112,7 +114,9 @@ void BarkEventTrigger::Start()
 
 	case BarkTriggerActivationType::DeathKnockedOut:
 	case BarkTriggerActivationType::LyrielKnockedOut:
-		setupKnockedOutTrigger();
+	case BarkTriggerActivationType::DeathRevived:
+	case BarkTriggerActivationType::LyrielRevived:
+		setupPlayerStateTrigger();
 		break;
 
 	case BarkTriggerActivationType::FirstBoundSeparation:
@@ -166,7 +170,9 @@ void BarkEventTrigger::Update()
 
 	case BarkTriggerActivationType::DeathKnockedOut:
 	case BarkTriggerActivationType::LyrielKnockedOut:
-		updateKnockedOut();
+	case BarkTriggerActivationType::DeathRevived:
+	case BarkTriggerActivationType::LyrielRevived:
+		updatePlayerState();
 		break;
 
 	case BarkTriggerActivationType::FirstBoundSeparation:
@@ -315,7 +321,7 @@ void BarkEventTrigger::setupDamageTrigger()
 		m_observedDamageable->getCurrentHp();
 }
 
-void BarkEventTrigger::setupKnockedOutTrigger()
+void BarkEventTrigger::setupPlayerStateTrigger()
 {
 	findPlayers();
 
@@ -329,10 +335,12 @@ void BarkEventTrigger::setupKnockedOutTrigger()
 	switch (activationType)
 	{
 	case BarkTriggerActivationType::DeathKnockedOut:
+	case BarkTriggerActivationType::DeathRevived:
 		targetPlayer = m_death;
 		break;
 
 	case BarkTriggerActivationType::LyrielKnockedOut:
+	case BarkTriggerActivationType::LyrielRevived:
 		targetPlayer = m_lyriel;
 		break;
 
@@ -343,7 +351,7 @@ void BarkEventTrigger::setupKnockedOutTrigger()
 	if (targetPlayer == nullptr)
 	{
 		Debug::warn(
-			"BarkEventTrigger on '%s' could not find the player required by the Knocked Out trigger.",
+			"BarkEventTrigger on '%s' could not find the player required by the Player State trigger.",
 			GameObjectAPI::getName(getOwner())
 		);
 
@@ -370,9 +378,9 @@ void BarkEventTrigger::setupKnockedOutTrigger()
 	 * Initialize the state on the first Update().
 	 *
 	 * This prevents a bark from firing immediately
-	 * if the player already starts in a downed state.
+	 * based only on the player's initial state.
 	 */
-	m_knockedOutStateInitialized = false;
+	m_playerStateInitialized = false;
 }
 
 void BarkEventTrigger::setupBoundTrigger()
@@ -559,58 +567,83 @@ void BarkEventTrigger::updateDamage()
 	m_previousHp = currentHp;
 }
 
-void BarkEventTrigger::updateKnockedOut()
+void BarkEventTrigger::updatePlayerState()
 {
 	if (m_observedPlayerState == nullptr)
 	{
 		return;
 	}
 
-	const bool isKnockedOut =
+	const bool isDowned =
 		m_observedPlayerState->isDowned();
 
 	/*
 	 * The first update only records the initial state.
-	 * We only want to react to the transition:
 	 *
-	 * active -> knocked out
+	 * KO:
+	 * active -> downed
+	 *
+	 * Revive:
+	 * downed -> active
 	 */
-	if (!m_knockedOutStateInitialized)
+	if (!m_playerStateInitialized)
 	{
-		m_wasKnockedOut =
-			isKnockedOut;
+		m_wasDowned =
+			isDowned;
 
-		m_knockedOutStateInitialized = true;
+		m_playerStateInitialized = true;
 
 		return;
 	}
 
-	if (
-		isKnockedOut &&
-		!m_wasKnockedOut
-		)
+	const BarkTriggerActivationType activationType =
+		static_cast<BarkTriggerActivationType>(
+			m_activationType
+			);
+
+	bool shouldTrigger = false;
+
+	switch (activationType)
+	{
+	case BarkTriggerActivationType::DeathKnockedOut:
+	case BarkTriggerActivationType::LyrielKnockedOut:
+		shouldTrigger =
+			isDowned &&
+			!m_wasDowned;
+		break;
+
+	case BarkTriggerActivationType::DeathRevived:
+	case BarkTriggerActivationType::LyrielRevived:
+		shouldTrigger =
+			!isDowned &&
+			m_wasDowned;
+		break;
+
+	default:
+		break;
+	}
+
+	if (shouldTrigger)
 	{
 		/*
-		 * Only consume the transition if the BarkEvent
-		 * was actually accepted by BarkManager.
+		 * Only consume the state transition if the
+		 * BarkEvent was actually accepted.
 		 *
-		 * If a higher-priority bark temporarily blocks it,
-		 * this will retry while the player remains downed.
+		 * If BarkManager temporarily rejects it because
+		 * of priority, the trigger retries while the
+		 * resulting player state remains unchanged.
 		 */
 		if (triggerBark())
 		{
-			m_wasKnockedOut = true;
+			m_wasDowned =
+				isDowned;
 		}
 
 		return;
 	}
 
-	/*
-	 * When the player is revived this becomes false again,
-	 * allowing another KO to trigger a new bark later.
-	 */
-	m_wasKnockedOut =
-		isKnockedOut;
+	m_wasDowned =
+		isDowned;
 }
 
 void BarkEventTrigger::updateBound()
