@@ -24,11 +24,14 @@ IMPLEMENT_SCRIPT_FIELDS(DeathParticles,
     SERIALIZED_STRING(m_scytheAnchorName, "Scythe Anchor Name"),
     SERIALIZED_ASSET_REF(m_tauntChainLinkPrefab, "Taunt Chain Link Prefab", AssetType::PREFAB),
     SERIALIZED_ASSET_REF(m_tauntChainGrabBurstPrefab, "Taunt Chain Grab Burst Prefab", AssetType::PREFAB),
+    SERIALIZED_ASSET_REF(m_tauntChainContactPuffPrefab, "Taunt Chain Contact Puff Prefab", AssetType::PREFAB),
     SERIALIZED_STRING(m_tauntChainHandBone, "Taunt Chain Hand Bone"),
     SERIALIZED_BOOL(m_tauntChainOnFloor, "Taunt Chain On Floor"),
     SERIALIZED_FLOAT(m_tauntChainFloorHeight, "Taunt Chain Floor Height", 0.0f, 0.5f, 0.01f),
     SERIALIZED_FLOAT(m_tauntChainStartOffset, "Taunt Chain Start Offset", 0.0f, 2.0f, 0.05f),
     SERIALIZED_FLOAT(m_tauntChainTipHeight, "Taunt Chain Tip Height", 0.0f, 3.0f, 0.05f),
+    SERIALIZED_FLOAT(m_tauntChainContactOffset, "Taunt Chain Contact Offset", 0.0f, 2.0f, 0.05f),
+    SERIALIZED_FLOAT(m_tauntChainGrabBurstDelay, "Taunt Chain Grab Burst Delay", 0.0f, 0.5f, 0.01f),
     SERIALIZED_FLOAT(m_tauntChainLinkSpacing, "Taunt Chain Link Spacing", 0.05f, 1.0f, 0.01f),
     SERIALIZED_FLOAT(m_tauntChainLinkScale, "Taunt Chain Link Scale", 0.1f, 5.0f, 0.05f),
     SERIALIZED_FLOAT(m_tauntChainTipLinkScale, "Taunt Chain Tip Link Scale", 0.5f, 3.0f, 0.05f),
@@ -399,6 +402,23 @@ void DeathParticles::playTauntChainGrabBurst(const Vector3& position)
     m_timedOneShots.scheduleDestroy(burst, kChainGrabBurstLifetime);
 }
 
+void DeathParticles::playTauntChainContactPuff(const Vector3& position)
+{
+    if (!m_tauntChainContactPuffPrefab.m_id.isValid())
+    {
+        return;
+    }
+
+    GameObject* puff = GameObjectAPI::instantiatePrefab(m_tauntChainContactPuffPrefab.m_id, position, Vector3::Zero, nullptr);
+    if (!puff)
+    {
+        return;
+    }
+
+    ParticleLifecycle::restart(puff);
+    m_timedOneShots.scheduleDestroy(puff, kChainGrabBurstLifetime);
+}
+
 void DeathParticles::destroyTauntChainPool()
 {
     m_tauntChains.clear();
@@ -512,8 +532,9 @@ void DeathParticles::updateTauntChains(float deltaTime)
             {
                 chain.state = TauntChainState::Latched;
                 chain.timer = 0.0f;
-                playHitFlash(target);
-                playTauntChainGrabBurst(target);
+                chain.grabBurstPlayed = false;
+                playHitFlash(getTauntChainEnemyCenter(chain.target));
+                playTauntChainContactPuff(target);
             }
             break;
         }
@@ -524,6 +545,13 @@ void DeathParticles::updateTauntChains(float deltaTime)
             {
                 startTauntChainRetract(chain);
                 break;
+            }
+
+            // Contact first, then Death's grab takes hold a moment later.
+            if (!chain.grabBurstPlayed && chain.timer >= m_tauntChainGrabBurstDelay)
+            {
+                chain.grabBurstPlayed = true;
+                playTauntChainGrabBurst(getTauntChainEnemyCenter(chain.target));
             }
 
             const bool pulled = isTauntChainTargetPulled(chain.target);
@@ -691,7 +719,25 @@ Vector3 DeathParticles::getTauntChainStart() const
     return TransformAPI::getGlobalPosition(ownerTransform) + forward * m_tauntChainStartOffset + Vector3(0.0f, height, 0.0f);
 }
 
+// The chain stops at the side of the enemy facing Death, so it hits their front instead of sinking into them.
 Vector3 DeathParticles::getTauntChainTargetPoint(GameObject* target) const
+{
+    const Vector3 center = getTauntChainEnemyCenter(target);
+
+    Vector3 toDeath = getTauntChainStart() - center;
+    toDeath.y = 0.0f;
+    const float distance = toDeath.Length();
+    if (distance < 0.0001f)
+    {
+        return center;
+    }
+
+    const float maxOffset = distance * 0.8f;
+    const float offset = m_tauntChainContactOffset < maxOffset ? m_tauntChainContactOffset : maxOffset;
+    return center + toDeath * (offset / distance);
+}
+
+Vector3 DeathParticles::getTauntChainEnemyCenter(GameObject* target) const
 {
     Transform* targetTransform = GameObjectAPI::getTransform(target);
     const float height = m_tauntChainOnFloor ? m_tauntChainFloorHeight : m_tauntChainTipHeight;

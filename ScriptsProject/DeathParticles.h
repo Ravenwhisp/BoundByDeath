@@ -58,11 +58,14 @@ public:
 
 	PrefabRef m_tauntChainLinkPrefab; 
 	PrefabRef m_tauntChainGrabBurstPrefab;
+	PrefabRef m_tauntChainContactPuffPrefab;
 	std::string m_tauntChainHandBone = "hand_L";
 	bool m_tauntChainOnFloor = true;
 	float m_tauntChainFloorHeight = 0.13f;  // height of the link centres; links are 0.2 wide, so this keeps upright ones off the ground
 	float m_tauntChainStartOffset = 0.4f;
 	float m_tauntChainTipHeight = 1.0f;
+	float m_tauntChainContactOffset = 0.45f;
+	float m_tauntChainGrabBurstDelay = 0.1f;
 	float m_tauntChainLinkSpacing = 0.22f;  
 	float m_tauntChainLinkScale = 1.0f;
 	float m_tauntChainTipLinkScale = 1.25f;
@@ -108,6 +111,7 @@ private:
 		float travelTime = 0.15f;
 		float phase = 0.0f;
 		bool sawPull = false;
+		bool grabBurstPlayed = false;
 		Vector3 tip = Vector3::Zero;
 		Vector3 retractFrom = Vector3::Zero;
 	};
@@ -119,10 +123,12 @@ private:
 	void startTauntChainRetract(TauntChain& chain);
 	Vector3 getTauntChainStart() const;
 	Vector3 getTauntChainTargetPoint(GameObject* target) const;
+	Vector3 getTauntChainEnemyCenter(GameObject* target) const;
 	bool isTauntChainTargetValid(GameObject* target) const;
 	bool isTauntChainTargetPulled(GameObject* target) const;
 	void destroyTauntChainPool();
 	void playTauntChainGrabBurst(const Vector3& position);
+	void playTauntChainContactPuff(const Vector3& position);
 
 	std::vector<TauntChain> m_tauntChains;
 	GameObject* m_tauntChainRoot = nullptr;
