@@ -27,6 +27,11 @@ void SharedEnemyParticles::Start()
 
 void SharedEnemyParticles::OnGameStop()
 {
+    releaseRuntimeParticles();
+}
+
+void SharedEnemyParticles::releaseRuntimeParticles()
+{
     ParticleLifecycle::destroy(m_movementParticle);
     m_movementParticleTransform = nullptr;
     m_movementParticleActive = false;

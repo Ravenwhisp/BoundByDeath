@@ -24,6 +24,7 @@ protected:
 
 	bool canStartSpecificAbility() const override;
     void onAttackWindowFinished() override;
+    void cancelAbility() override;
 
     float getCooldown() const override;
 

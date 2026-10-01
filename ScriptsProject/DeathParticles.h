@@ -31,8 +31,8 @@ public:
 	void SetTauntActive(const Vector3& direction);
 	void SetTauntInactive();
 
-	void playHitFlash(const Vector3& position);
-	void playChargedHitFlash(const Vector3& position);
+	void playHitFlash(const Vector3& position, GameObject* target);
+	void playChargedHitFlash(const Vector3& position, GameObject* target);
 
 	// Taunt chain
 	// One chain per target, nearest first. Each chain flies out over travelTime, grabs the enemy, rides it in while it is pulled, then reels back into Death.

@@ -273,6 +273,24 @@ void DeathTaunt::releaseAimAndCast()
     setAbilityLocked(false);
 }
 
+void DeathTaunt::cancelAbility()
+{
+    // Only the aiming phase is abortable. Once cast, the impact resolves on its own
+    // timer and the cooldown is already paid.
+    if (m_tauntState == TauntState::Aiming)
+    {
+        m_tauntState = TauntState::Idle;
+        m_currentAimDirection = Vector3::Zero;
+
+        if (m_deathUI)
+        {
+            m_deathUI->hideTauntUI();
+        }
+    }
+
+    AbilityBase::cancelAbility();
+}
+
 void DeathTaunt::updateImpactDelay()
 {
     m_impactDelayTimer -= Time::getDeltaTime();

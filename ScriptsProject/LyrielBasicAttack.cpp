@@ -13,6 +13,8 @@
 #include "LyrielConfig.h"
 #include "PlayerRotation.h"
 
+#include <vector>
+
 LyrielBasicAttack::LyrielBasicAttack(GameObject* owner)
     : LyrielAbilityBase(owner)
 {
@@ -55,6 +57,53 @@ void LyrielBasicAttack::onAttackWindowUpdate()
     }
 }
 
+void LyrielBasicAttack::cancelAbility()
+{
+    if (m_isAiming)
+    {
+        m_isAiming = false;
+
+        if (m_lyrielUI)
+        {
+            m_lyrielUI->hideBasicAttackUI();
+        }
+    }
+
+    AbilityBase::cancelAbility();
+}
+
+void LyrielBasicAttack::onHitFrame()
+{
+    bool spawned = false;
+
+    if (m_pendingIsAimed)
+    {
+        spawned = spawnArrowToDirection(m_pendingDirection);
+    }
+    else
+    {
+        // Re-query the lock instead of keeping a pointer across the windup: the enemy
+        // may have died while the bow was being drawn.
+        PlayerTargetController* targetController = m_character != nullptr ? m_character->getTargetController() : nullptr;
+        GameObject* target = targetController != nullptr ? targetController->getCurrentTarget() : nullptr;
+
+        spawned = (target != nullptr)
+            ? spawnArrowToTarget(target)
+            : spawnArrowToDirection(getFallbackFacingDirection());
+    }
+
+    if (spawned)
+    {
+        LyrielSound* sound = m_lyrielCharacter != nullptr ? m_lyrielCharacter->getSound() : nullptr;
+        if (sound != nullptr)
+        {
+            sound->playBowRelease();
+        }
+    }
+
+    m_pendingIsAimed = false;
+}
+
 void LyrielBasicAttack::onAttackWindowFinished()
 {
     m_attackFacingTarget = nullptr;
@@ -77,20 +126,10 @@ void LyrielBasicAttack::startAbility()
         faceTarget(target);
         m_attackFacingTarget = target;
 
-        if (!spawnArrowToTarget(target))
-        {
-            setAbilityLocked(false);
-            m_attackFacingTarget = nullptr;
-            return;
-        }
+        // The arrow leaves on the animation's release frame, not on button press.
+        m_pendingIsAimed = false;
 
         notifyAbilitySuccessfullyStarted();
-
-        LyrielSound* sound = m_lyrielCharacter != nullptr ? m_lyrielCharacter->getSound() : nullptr;
-        if (sound != nullptr)
-        {
-            sound->playBowRelease();
-        }
 
         beginAttackPresentation();
 
@@ -185,10 +224,84 @@ bool LyrielBasicAttack::spawnArrowToDirection(const Vector3& direction)
     const Vector3 startPosition = TransformAPI::getGlobalPosition(spawnTransform);
 
     const float range = m_lyrielCharacter->getConfig()->m_basicAimArrowRange;
-    const float arrowLifetime = range / m_lyrielCharacter->getConfig()->m_basicArrowSpeed;
-    arrow->launch(startPosition, direction, m_lyrielCharacter->getConfig()->m_basicArrowSpeed, arrowLifetime, nullptr, m_lyrielCharacter->getConfig()->m_basicAttackDamage);
+    const float arrowSpeed = m_lyrielCharacter->getConfig()->m_basicArrowSpeed;
+
+    if (GameObject* breakable = findBreakableInAimLine(startPosition, direction))
+    {
+        Transform* breakableTransform = GameObjectAPI::getTransform(breakable);
+        if (breakableTransform != nullptr)
+        {
+            Vector3 breakableDirection = TransformAPI::getGlobalPosition(breakableTransform) - startPosition;
+            const float distance = breakableDirection.Length();
+
+            if (distance > 0.0001f)
+            {
+                breakableDirection.Normalize();
+                arrow->launch(startPosition, breakableDirection, arrowSpeed, distance / arrowSpeed, breakable, m_lyrielCharacter->getConfig()->m_basicAttackDamage);
+                return true;
+            }
+        }
+    }
+
+    const float arrowLifetime = range / arrowSpeed;
+    arrow->launch(startPosition, direction, arrowSpeed, arrowLifetime, nullptr, m_lyrielCharacter->getConfig()->m_basicAttackDamage);
 
     return true;
+}
+
+GameObject* LyrielBasicAttack::findBreakableInAimLine(const Vector3& origin, const Vector3& direction) const
+{
+    if (m_lyrielCharacter == nullptr)
+    {
+        return nullptr;
+    }
+
+    Vector3 flatDirection = direction;
+    flatDirection.y = 0.0f;
+
+    if (flatDirection.LengthSquared() <= 0.0001f)
+    {
+        return nullptr;
+    }
+
+    flatDirection.Normalize();
+
+    const LyrielConfig* config = m_lyrielCharacter->getConfig();
+    const float range = config->m_basicAimArrowRange;
+    const float lineHalfWidthSq = config->m_chargedLineHalfWidth * config->m_chargedLineHalfWidth;
+
+    GameObject* closestBreakable = nullptr;
+    float closestDistance = range;
+
+    const std::vector<GameObject*> breakables = SceneAPI::findAllGameObjectsByTag(Tag::BREAKABLE, true);
+    for (GameObject* breakable : breakables)
+    {
+        Transform* breakableTransform = breakable != nullptr ? GameObjectAPI::getTransform(breakable) : nullptr;
+        if (breakableTransform == nullptr)
+        {
+            continue;
+        }
+
+        Vector3 toBreakable = TransformAPI::getGlobalPosition(breakableTransform) - origin;
+        toBreakable.y = 0.0f;
+
+        const float forwardDistance = toBreakable.Dot(flatDirection);
+        if (forwardDistance < 0.0f || forwardDistance > closestDistance)
+        {
+            continue;
+        }
+
+        Vector3 lateralOffset = toBreakable - flatDirection * forwardDistance;
+        if (lateralOffset.LengthSquared() > lineHalfWidthSq)
+        {
+            continue;
+        }
+
+        closestBreakable = breakable;
+        closestDistance = forwardDistance;
+    }
+
+    return closestBreakable;
 }
 
 void LyrielBasicAttack::faceTarget(GameObject* target)
@@ -321,19 +434,10 @@ void LyrielBasicAttack::releaseAimAndCast()
 
     faceDirection(forward);
 
-    if (!spawnArrowToDirection(forward))
-    {
-        setAbilityLocked(false);
-        return;
-    }
+    m_pendingDirection = forward;
+    m_pendingIsAimed = true;
 
     notifyAbilitySuccessfullyStarted();
-
-    LyrielSound* sound = m_lyrielCharacter != nullptr ? m_lyrielCharacter->getSound() : nullptr;
-    if (sound != nullptr)
-    {
-        sound->playBowRelease();
-    }
 
     beginAttackPresentation();
 

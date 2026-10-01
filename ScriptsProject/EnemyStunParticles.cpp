@@ -34,6 +34,11 @@ void EnemyStunParticles::Update()
 
 void EnemyStunParticles::OnGameStop()
 {
+    releaseRuntimeParticles();
+}
+
+void EnemyStunParticles::releaseRuntimeParticles()
+{
     stopStunParticle(true);
     ParticleLifecycle::destroy(m_stunParticle);
 }
