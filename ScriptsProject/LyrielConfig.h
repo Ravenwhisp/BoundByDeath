@@ -23,7 +23,7 @@ public:
 	// Charged Attack
 	float m_chargedMinDamage = 5.0f;
 	float m_chargedMaxDamage = 30.0f;
-	float m_chargedMaxChargeTime = 2.0f;
+	float m_chargedMaxChargeTime = 1.3f;
 	float m_chargedMinAttackRange = 4.0f;
 	float m_chargedMaxAttackRange = 10.0f;
 	float m_chargedLineHalfWidth = 0.75f;
