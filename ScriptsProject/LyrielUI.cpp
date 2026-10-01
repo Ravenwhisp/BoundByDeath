@@ -11,9 +11,11 @@ IMPLEMENT_SCRIPT_FIELDS_INHERITED(LyrielUI, CharacterUI,
 
 	FIELD_GROUP_LABEL("Charged Attack"),
 	SERIALIZED_COMPONENT_REF(m_chargedAttackUI, "Charged Attack UI", ComponentType::TRANSFORM),
+	SERIALIZED_COMPONENT_REF(m_chargedHUDControl, "Charged Attack HUD Control", ComponentType::TRANSFORM2D),
 
 	FIELD_GROUP_LABEL("Arrow Volley"),
 	SERIALIZED_COMPONENT_REF(m_arrowVolleyUI, "Arrow Volley UI", ComponentType::TRANSFORM),
+	SERIALIZED_COMPONENT_REF(m_arrowVolleyHUDControl, "Arrow Volley HUD Control", ComponentType::TRANSFORM2D),
 
 	FIELD_GROUP_LABEL("Dash"),
 	SERIALIZED_COMPONENT_REF(m_charge1UI, "Charge 1 UI", ComponentType::TRANSFORM2D),
@@ -36,6 +38,9 @@ void LyrielUI::Start()
 	m_basicAttackUITransform = m_basicAttackUI.getReferencedComponent();
 	m_chargedAttackUITransform = m_chargedAttackUI.getReferencedComponent();
 	m_arrowVolleyUITransform = m_arrowVolleyUI.getReferencedComponent();
+
+	m_chargedHUDControlTransform2D = m_chargedHUDControl.getReferencedComponent();
+	m_arrowVolleyHUDControlTransform2D = m_arrowVolleyHUDControl.getReferencedComponent();
 
 	m_charge1Transform2D = m_charge1UI.getReferencedComponent();
 	m_charge2Transform2D = m_charge2UI.getReferencedComponent();

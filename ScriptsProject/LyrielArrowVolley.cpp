@@ -48,6 +48,19 @@ void LyrielArrowVolley::Update()
 	}
 }
 
+void LyrielArrowVolley::updateUI()
+{
+    AbilityBase::updateUI();
+
+    if (m_lyrielUI && m_lyrielUI->m_arrowVolleyHUDControlTransform2D)
+    {
+        const float dt = Time::getDeltaTime();
+        const bool isPressed = Input::isLeftTriggerPressed(getPlayerIndex());
+
+        updateHUDControlScale(m_lyrielUI->m_arrowVolleyHUDControlTransform2D, isPressed, dt);
+    }
+}
+
 void LyrielArrowVolley::startAbility()
 {
     beginAim();

@@ -53,10 +53,12 @@ private:
 	// Charged Attack
 	ComponentRef<Transform> m_chargedAttackUI;
 	Transform* m_chargedAttackUITransform = nullptr;
+	ComponentRef<Transform2D> m_chargedHUDControl;
 
 	// Arrow Volley
 	ComponentRef<Transform> m_arrowVolleyUI;
 	Transform* m_arrowVolleyUITransform = nullptr;
+	ComponentRef<Transform2D> m_arrowVolleyHUDControl;
 
 	// Dash Charges
 	ComponentRef<Transform2D> m_charge1UI;
@@ -70,4 +72,8 @@ private:
 	float m_charge1Scale = 1.0f;
 	float m_charge2Scale = 1.0f;
 	float m_charge3Scale = 1.0f;
+
+public:
+	Transform2D* m_chargedHUDControlTransform2D = nullptr;
+	Transform2D* m_arrowVolleyHUDControlTransform2D = nullptr;
 };
