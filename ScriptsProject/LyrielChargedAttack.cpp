@@ -141,6 +141,40 @@ bool LyrielChargedAttack::canShoot() const
     return m_character != nullptr && !m_character->isDowned();
 }
 
+void LyrielChargedAttack::cancelAbility()
+{
+    if (m_isCharging)
+    {
+        m_isCharging = false;
+        m_chargeTimer = 0.0f;
+        m_maxHoldTimer = 0.0f;
+
+        resetChargingMovementSlowdown();
+
+        if (m_lyrielUI)
+        {
+            m_lyrielUI->hideChargedAttackUI();
+        }
+
+        LyrielSound* sound = m_lyrielCharacter != nullptr ? m_lyrielCharacter->getSound() : nullptr;
+        if (sound != nullptr)
+        {
+            sound->stopChargedTenseLoop();
+        }
+    }
+
+    if (m_character != nullptr)
+    {
+        PlayerAnimationController* anim = m_character->getAnimationController();
+        if (anim != nullptr)
+        {
+            anim->abortChargeHold();
+        }
+    }
+
+    AbilityBase::cancelAbility();
+}
+
 void LyrielChargedAttack::beginCharge()
 {
     m_isCharging = true;
@@ -511,7 +545,7 @@ void LyrielChargedAttack::spawnChargedArrow(const Vector3& origin, const Vector3
 
     const float lifetime = range / m_lyrielCharacter->getConfig()->m_chargedArrowSpeed;
 
-    arrow->launch(origin, flatForward, m_lyrielCharacter->getConfig()->m_chargedArrowSpeed, lifetime, nullptr, 0.0f);
+    arrow->launch(origin, flatForward, m_lyrielCharacter->getConfig()->m_chargedArrowSpeed, lifetime, nullptr, 0.0f, LyrielArrowProjectile::VisualModel::Charged);
 }
 
 void LyrielChargedAttack::drawChargePreview(const Vector3& origin, const Vector3& forward) const
