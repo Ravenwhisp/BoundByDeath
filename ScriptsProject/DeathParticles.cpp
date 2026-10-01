@@ -1,12 +1,8 @@
 ﻿#include "pch.h"
 #include "DeathParticles.h"
 #include "ParticleLifecycle.h"
-#include "EnemyDamageable.h"
-#include "EnemyForcedMovement.h"
 
-#include <algorithm>
 #include <cmath>
-#include <cstring>
 
 IMPLEMENT_SCRIPT_FIELDS(DeathParticles,
     SERIALIZED_COMPONENT_REF(m_dashTrail, "Dash", ComponentType::TRANSFORM),
@@ -67,7 +63,7 @@ void DeathParticles::OnGameStop()
     m_chargeGlowActive = false;
     m_tauntParticleLifetime = 0.0f;
 
-    destroyTauntChainPool();
+    m_tauntChains.shutdown();
 }
 
 void DeathParticles::Update()
@@ -75,11 +71,7 @@ void DeathParticles::Update()
     m_timedOneShots.update(Time::getDeltaTime());
     syncActiveParticles();
 
-    if (!m_tauntChainPoolBuilt)
-    {
-        ensureTauntChainPool(); // spawn the link pool up front so the first taunt doesn't hitch
-    }
-    updateTauntChains(Time::getDeltaTime());
+    m_tauntChains.update(Time::getDeltaTime());
 
     if (!m_tauntParticleActive)
     {
@@ -321,450 +313,24 @@ void DeathParticles::playChargedHitFlash(const Vector3& position, GameObject* ta
     );
 }
 
-namespace
-{
-    float clamp01(float value)
-    {
-        return value < 0.0f ? 0.0f : (value > 1.0f ? 1.0f : value);
-    }
-}
-
-namespace
-{
-    constexpr float kChainGrabBurstLifetime = 1.5f;
-    constexpr float kRadToDeg = 180.0f / 3.14159265f;
-}
-
-void DeathParticles::ensureTauntChainPool()
-{
-    if (m_tauntChainPoolBuilt)
-    {
-        return;
-    }
-
-    m_tauntChainPoolBuilt = true;
-
-    if (!m_tauntChainLinkPrefab.m_id.isValid())
-    {
-        Debug::warn("[DeathParticles] Taunt Chain Link Prefab is not assigned. Taunt will play without chains.");
-        return;
-    }
-
-    Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
-    m_tauntChainHandBoneTransform = ParticleLifecycle::findChildRecursive(ownerTransform, m_tauntChainHandBone.c_str());
-
-    const AssetId& linkPrefab = m_tauntChainLinkPrefab.m_id;
-
-    const int chainCount = m_tauntChainMaxChains > 0 ? m_tauntChainMaxChains : 1;
-    const float spacing = m_tauntChainLinkSpacing > 0.01f ? m_tauntChainLinkSpacing : 0.01f;
-    const int linksPerChain = static_cast<int>(m_tauntChainMaxLength / spacing) + 2;
-
-    // Everything hangs off one holder so the hierarchy stays tidy.
-    m_tauntChainRoot = GameObjectAPI::createGameObject("TauntChains");
-
-    for (int c = 0; c < chainCount; ++c)
-    {
-        TauntChain chain;
-        chain.phase = static_cast<float>(c) * 2.1f;
-
-        for (int i = 0; i < linksPerChain; ++i)
-        {
-            GameObject* link = GameObjectAPI::instantiatePrefab(linkPrefab, Vector3::Zero, Vector3::Zero, m_tauntChainRoot);
-            if (!link)
-            {
-                Debug::warn("[DeathParticles] Could not spawn the taunt chain link model. Taunt will play without chains.");
-                destroyTauntChainPool();
-                m_tauntChainPoolBuilt = true; // don't retry every taunt
-                return;
-            }
-
-            // The first link is the one that bites, so it's bigger.
-            const float scale = m_tauntChainLinkScale * (i == 0 ? m_tauntChainTipLinkScale : 1.0f);
-            TransformAPI::setScale(GameObjectAPI::getTransform(link), Vector3(scale, scale, scale));
-            GameObjectAPI::setActive(link, false);
-
-            chain.links.push_back(link);
-            chain.linkVisible.push_back(false);
-        }
-
-        m_tauntChains.push_back(chain);
-    }
-}
-
-void DeathParticles::playTauntChainGrabBurst(const Vector3& position)
-{
-    if (!m_tauntChainGrabBurstPrefab.m_id.isValid())
-    {
-        return;
-    }
-
-    GameObject* burst = GameObjectAPI::instantiatePrefab(m_tauntChainGrabBurstPrefab.m_id, position, Vector3::Zero, nullptr);
-    if (!burst)
-    {
-        return;
-    }
-
-    ParticleLifecycle::restart(burst);
-    m_timedOneShots.scheduleDestroy(burst, kChainGrabBurstLifetime);
-}
-
-void DeathParticles::playTauntChainContactPuff(const Vector3& position)
-{
-    if (!m_tauntChainContactPuffPrefab.m_id.isValid())
-    {
-        return;
-    }
-
-    GameObject* puff = GameObjectAPI::instantiatePrefab(m_tauntChainContactPuffPrefab.m_id, position, Vector3::Zero, nullptr);
-    if (!puff)
-    {
-        return;
-    }
-
-    ParticleLifecycle::restart(puff);
-    m_timedOneShots.scheduleDestroy(puff, kChainGrabBurstLifetime);
-}
-
-void DeathParticles::destroyTauntChainPool()
-{
-    m_tauntChains.clear();
-
-    if (m_tauntChainRoot && SceneAPI::containsGameObject(m_tauntChainRoot))
-    {
-        GameObjectAPI::removeGameObject(m_tauntChainRoot);
-    }
-
-    m_tauntChainRoot = nullptr;
-    m_tauntChainHandBoneTransform = nullptr;
-    m_tauntChainPoolBuilt = false;
-}
-
 void DeathParticles::launchTauntChains(const std::vector<GameObject*>& targets, float travelTime)
 {
-    ensureTauntChainPool();
-
-    if (m_tauntChains.empty() || targets.empty())
-    {
-        return;
-    }
-
-    // Nearest enemies get the chains first.
-    const Vector3 origin = getTauntChainStart();
-    std::vector<GameObject*> sorted = targets;
-    std::sort(sorted.begin(), sorted.end(), [&](GameObject* a, GameObject* b)
-    {
-        const Vector3 da = TransformAPI::getGlobalPosition(GameObjectAPI::getTransform(a)) - origin;
-        const Vector3 db = TransformAPI::getGlobalPosition(GameObjectAPI::getTransform(b)) - origin;
-        return da.LengthSquared() < db.LengthSquared();
-    });
-
-    size_t chainIndex = 0;
-    for (GameObject* target : sorted)
-    {
-        if (!isTauntChainTargetValid(target))
-        {
-            continue;
-        }
-
-        while (chainIndex < m_tauntChains.size() && m_tauntChains[chainIndex].state != TauntChainState::Idle)
-        {
-            ++chainIndex;
-        }
-
-        if (chainIndex >= m_tauntChains.size())
-        {
-            break;
-        }
-
-        TauntChain& chain = m_tauntChains[chainIndex];
-        chain.target = target;
-        chain.state = TauntChainState::Shooting;
-        chain.timer = 0.0f;
-        chain.travelTime = travelTime > 0.01f ? travelTime : 0.01f;
-        chain.sawPull = false;
-        chain.tip = origin;
-    }
+    m_tauntChains.launch(targets, travelTime);
 }
 
 void DeathParticles::cancelTauntChains()
 {
-    for (TauntChain& chain : m_tauntChains)
-    {
-        if (chain.state == TauntChainState::Shooting || chain.state == TauntChainState::Latched)
-        {
-            startTauntChainRetract(chain);
-        }
-    }
+    m_tauntChains.cancel();
 }
 
-void DeathParticles::updateTauntChains(float deltaTime)
+void DeathParticles::notifyTauntChainPullStarted(GameObject* enemy)
 {
-    if (m_tauntChains.empty())
-    {
-        return;
-    }
-
-    m_tauntChainClock += deltaTime;
-    const Vector3 start = getTauntChainStart();
-
-    for (TauntChain& chain : m_tauntChains)
-    {
-        if (chain.state == TauntChainState::Idle)
-        {
-            continue;
-        }
-
-        chain.timer += deltaTime;
-        float whip = 0.0f;
-
-        switch (chain.state)
-        {
-        case TauntChainState::Shooting:
-        {
-            if (!isTauntChainTargetValid(chain.target))
-            {
-                startTauntChainRetract(chain);
-                break;
-            }
-
-            // Fast out; the whip settles as it arrives.
-            const float t = clamp01(chain.timer / chain.travelTime);
-            const float eased = MathAPI::evaluateEasing(MathAPI::EasingType::EaseOutQuad, t);
-            const Vector3 target = getTauntChainTargetPoint(chain.target);
-            chain.tip = start + (target - start) * eased;
-            whip = m_tauntChainWhip * (1.0f - eased);
-
-            if (t >= 1.0f)
-            {
-                chain.state = TauntChainState::Latched;
-                chain.timer = 0.0f;
-                chain.grabBurstPlayed = false;
-                playHitFlash(getTauntChainEnemyCenter(chain.target));
-                playTauntChainContactPuff(target);
-            }
-            break;
-        }
-
-        case TauntChainState::Latched:
-        {
-            if (!isTauntChainTargetValid(chain.target))
-            {
-                startTauntChainRetract(chain);
-                break;
-            }
-
-            // Contact first, then Death's grab takes hold a moment later.
-            if (!chain.grabBurstPlayed && chain.timer >= m_tauntChainGrabBurstDelay)
-            {
-                chain.grabBurstPlayed = true;
-                playTauntChainGrabBurst(getTauntChainEnemyCenter(chain.target));
-            }
-
-            const bool pulled = isTauntChainTargetPulled(chain.target);
-            if (pulled)
-            {
-                chain.sawPull = true;
-            }
-
-            // Small sideways shake at the enemy end reads as tension.
-            Vector3 tip = getTauntChainTargetPoint(chain.target);
-            Vector3 side(start.z - tip.z, 0.0f, tip.x - start.x);
-            if (side.LengthSquared() > 0.0001f)
-            {
-                side.Normalize();
-                tip = tip + side * (std::sin(m_tauntChainClock * 55.0f + chain.phase) * m_tauntChainTension);
-            }
-            chain.tip = tip;
-
-            const bool pullFinished = chain.sawPull && !pulled;
-            const bool neverPulled = !chain.sawPull && chain.timer >= m_tauntChainMinLatchTime;
-
-            if (pullFinished || neverPulled || chain.timer >= m_tauntChainMaxLatchTime)
-            {
-                startTauntChainRetract(chain);
-            }
-            break;
-        }
-
-        case TauntChainState::Retracting:
-        {
-            // Accelerates back into Death, like it's being reeled in
-            const float t = clamp01(chain.timer / m_tauntChainRetractTime);
-            const float eased = MathAPI::evaluateEasing(MathAPI::EasingType::EaseInCubic, t);
-            chain.tip = chain.retractFrom + (start - chain.retractFrom) * eased;
-            whip = m_tauntChainWhip * 0.3f * (1.0f - t);
-
-            if (t >= 1.0f)
-            {
-                chain.state = TauntChainState::Idle;
-                chain.target = nullptr;
-                hideTauntChain(chain);
-                continue;
-            }
-            break;
-        }
-
-        default:
-            break;
-        }
-
-        if (chain.state != TauntChainState::Idle)
-        {
-            layoutTauntChain(chain, start, chain.tip, whip);
-        }
-    }
+    m_tauntChains.onPullStarted(enemy);
 }
 
-void DeathParticles::layoutTauntChain(TauntChain& chain, const Vector3& start, const Vector3& tip, float whip)
+void DeathParticles::notifyTauntChainPullFinished(GameObject* enemy)
 {
-    Vector3 axis = start - tip;           
-    const float length = axis.Length();
-    if (length > 0.0001f)
-    {
-        axis = axis * (1.0f / length);
-    }
-    else
-    {
-        axis = Vector3(0.0f, 0.0f, 1.0f);
-    }
-
-    Vector3 side(-axis.z, 0.0f, axis.x);
-    if (side.LengthSquared() > 0.0001f)
-    {
-        side.Normalize();
-    }
-
-    const float spacing = m_tauntChainLinkSpacing * m_tauntChainLinkScale;
-    const float kPi = 3.14159265f;
-
-    auto linkPosition = [&](float distanceFromTip) -> Vector3
-    {
-        const float s = length > 0.0001f ? distanceFromTip / length : 0.0f;      
-        const float envelope = std::sin(s * kPi);                           
-        const float wave = std::sin(s * kPi * 3.0f - m_tauntChainClock * 22.0f + chain.phase);
-        return tip + axis * distanceFromTip + side * (whip * envelope * wave);
-    };
-
-    for (size_t i = 0; i < chain.links.size(); ++i)
-    {
-        GameObject* link = chain.links[i];
-        const float distance = (static_cast<float>(i) + 0.5f) * spacing;
-        const bool visible = distance <= length;
-
-        if (visible != chain.linkVisible[i])
-        {
-            GameObjectAPI::setActive(link, visible);
-            chain.linkVisible[i] = visible;
-        }
-
-        if (!visible)
-        {
-            continue;
-        }
-
-        const Vector3 position = linkPosition(distance);
-
-        Vector3 direction = linkPosition(distance + spacing * 0.5f) - linkPosition(distance - spacing * 0.5f);
-        if (direction.LengthSquared() < 0.000001f)
-        {
-            direction = axis;
-        }
-        direction.Normalize();
-
-        const float yaw = std::atan2(direction.x, direction.z) * kRadToDeg;
-        const float pitch = -std::asin(direction.y < -1.0f ? -1.0f : (direction.y > 1.0f ? 1.0f : direction.y)) * kRadToDeg;
-        const float roll = (i % 2 == 0) ? 0.0f : 90.0f;
-
-        Transform* linkTransform = GameObjectAPI::getTransform(link);
-        TransformAPI::setGlobalPosition(linkTransform, position);
-        TransformAPI::setGlobalRotationEuler(linkTransform, Vector3(pitch, yaw, roll));
-    }
-}
-
-void DeathParticles::hideTauntChain(TauntChain& chain)
-{
-    for (size_t i = 0; i < chain.links.size(); ++i)
-    {
-        if (chain.linkVisible[i])
-        {
-            GameObjectAPI::setActive(chain.links[i], false);
-            chain.linkVisible[i] = false;
-        }
-    }
-}
-
-void DeathParticles::startTauntChainRetract(TauntChain& chain)
-{
-    chain.state = TauntChainState::Retracting;
-    chain.timer = 0.0f;
-    chain.retractFrom = chain.tip;
-    chain.target = nullptr;
-}
-
-Vector3 DeathParticles::getTauntChainStart() const
-{
-    Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
-    if (!ownerTransform)
-    {
-        return Vector3::Zero;
-    }
-
-    if (!m_tauntChainOnFloor && m_tauntChainHandBoneTransform)
-    {
-        return TransformAPI::getGlobalPosition(m_tauntChainHandBoneTransform);
-    }
-
-    Vector3 forward = TransformAPI::getForward(ownerTransform);
-    forward.y = 0.0f;
-    if (forward.LengthSquared() > 0.0001f)
-    {
-        forward.Normalize();
-    }
-
-    const float height = m_tauntChainOnFloor ? m_tauntChainFloorHeight : 1.3f;
-    return TransformAPI::getGlobalPosition(ownerTransform) + forward * m_tauntChainStartOffset + Vector3(0.0f, height, 0.0f);
-}
-
-// The chain stops at the side of the enemy facing Death, so it hits their front instead of sinking into them.
-Vector3 DeathParticles::getTauntChainTargetPoint(GameObject* target) const
-{
-    const Vector3 center = getTauntChainEnemyCenter(target);
-
-    Vector3 toDeath = getTauntChainStart() - center;
-    toDeath.y = 0.0f;
-    const float distance = toDeath.Length();
-    if (distance < 0.0001f)
-    {
-        return center;
-    }
-
-    const float maxOffset = distance * 0.8f;
-    const float offset = m_tauntChainContactOffset < maxOffset ? m_tauntChainContactOffset : maxOffset;
-    return center + toDeath * (offset / distance);
-}
-
-Vector3 DeathParticles::getTauntChainEnemyCenter(GameObject* target) const
-{
-    Transform* targetTransform = GameObjectAPI::getTransform(target);
-    const float height = m_tauntChainOnFloor ? m_tauntChainFloorHeight : m_tauntChainTipHeight;
-    return TransformAPI::getGlobalPosition(targetTransform) + Vector3(0.0f, height, 0.0f);
-}
-
-bool DeathParticles::isTauntChainTargetValid(GameObject* target) const
-{
-    if (!target || !SceneAPI::containsGameObject(target))
-    {
-        return false;
-    }
-
-    EnemyDamageable* damageable = GameObjectAPI::findScript<EnemyDamageable>(target);
-    return !(damageable && damageable->isDead());
-}
-
-bool DeathParticles::isTauntChainTargetPulled(GameObject* target) const
-{
-    EnemyForcedMovement* forcedMovement = GameObjectAPI::findScript<EnemyForcedMovement>(target);
-    return forcedMovement && forcedMovement->isBeingPulled();
+    m_tauntChains.onPullFinished(enemy);
 }
 
 IMPLEMENT_SCRIPT(DeathParticles)

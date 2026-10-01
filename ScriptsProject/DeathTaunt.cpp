@@ -383,6 +383,18 @@ void DeathTaunt::resolveImpact()
         if (pullStarted)
         {
             ++pulled;
+
+            // Tell the chain VFX when this enemy's pull starts and ends, so the chain follows it in and then lets go.
+            if (m_deathParticles)
+            {
+                m_deathParticles->notifyTauntChainPullStarted(enemy);
+
+                DeathParticles* particles = m_deathParticles;
+                forcedMovement->setPullFinishedCallback([particles](GameObject* pulledEnemy)
+                {
+                    particles->notifyTauntChainPullFinished(pulledEnemy);
+                });
+            }
         }
     }
 

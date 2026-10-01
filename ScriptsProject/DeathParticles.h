@@ -2,6 +2,7 @@
 #include <Script.h>
 #include "ScriptAPI.h"
 #include "ParticleLifecycle.h"
+#include "DeathTauntChains.h"
 
 #include <string>
 #include <vector>
@@ -34,10 +35,11 @@ public:
 	void playHitFlash(const Vector3& position, GameObject* target);
 	void playChargedHitFlash(const Vector3& position, GameObject* target);
 
-	// Taunt chain
-	// One chain per target, nearest first. Each chain flies out over travelTime, grabs the enemy, rides it in while it is pulled, then reels back into Death.
+	// Taunt chain (visuals live in DeathTauntChains; prefabs and settings are the fields below)
 	void launchTauntChains(const std::vector<GameObject*>& targets, float travelTime);
 	void cancelTauntChains();
+	void notifyTauntChainPullStarted(GameObject* enemy);
+	void notifyTauntChainPullFinished(GameObject* enemy);
 	float getTauntChainTravelTime() const { return m_tauntChainTravelTime; }
 
 	ComponentRef<Transform> m_dashTrail;
@@ -92,49 +94,7 @@ private:
 	bool m_dashParticleActive = false;
 	bool m_chargeGlowActive = false;
 
-	enum class TauntChainState
-	{
-		Idle,
-		Shooting,
-		Latched,
-		Retracting
-	};
-
-	struct TauntChain
-	{
-		std::vector<GameObject*> links;
-		std::vector<bool> linkVisible;
-
-		GameObject* target = nullptr;
-		TauntChainState state = TauntChainState::Idle;
-		float timer = 0.0f;
-		float travelTime = 0.15f;
-		float phase = 0.0f;
-		bool sawPull = false;
-		bool grabBurstPlayed = false;
-		Vector3 tip = Vector3::Zero;
-		Vector3 retractFrom = Vector3::Zero;
-	};
-
-	void ensureTauntChainPool();
-	void updateTauntChains(float deltaTime);
-	void layoutTauntChain(TauntChain& chain, const Vector3& start, const Vector3& tip, float whip);
-	void hideTauntChain(TauntChain& chain);
-	void startTauntChainRetract(TauntChain& chain);
-	Vector3 getTauntChainStart() const;
-	Vector3 getTauntChainTargetPoint(GameObject* target) const;
-	Vector3 getTauntChainEnemyCenter(GameObject* target) const;
-	bool isTauntChainTargetValid(GameObject* target) const;
-	bool isTauntChainTargetPulled(GameObject* target) const;
-	void destroyTauntChainPool();
-	void playTauntChainGrabBurst(const Vector3& position);
-	void playTauntChainContactPuff(const Vector3& position);
-
-	std::vector<TauntChain> m_tauntChains;
-	GameObject* m_tauntChainRoot = nullptr;
-	Transform* m_tauntChainHandBoneTransform = nullptr;
-	bool m_tauntChainPoolBuilt = false;
-	float m_tauntChainClock = 0.0f;
+	DeathTauntChains m_tauntChains{ *this };
 
 	Transform* m_dashTrailController = nullptr;
 	Transform* m_scytheTrailController = nullptr;
