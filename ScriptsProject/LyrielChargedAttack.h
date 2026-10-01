@@ -28,6 +28,7 @@ protected:
     float getCooldown() const override;
 
 private:
+    void cancelAbility() override;
     void beginCharge();
     void updateCharge();
     void releaseChargeAndShoot();
