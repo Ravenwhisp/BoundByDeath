@@ -24,19 +24,34 @@
             1.0
         ]
     },
-    "Components": [],
+    "Components": [
+        {
+            "UID": 7392428224758217622,
+            "ComponentType": "CANVAS",
+            "Active": true,
+            "RenderMode": "SCREEN_SPACE",
+            "ZTest": false
+        },
+        {
+            "UID": 16630993475787597438,
+            "ComponentType": "SCRIPT",
+            "Active": true,
+            "ScriptName": "PopUpController",
+            "ScriptFields": {}
+        }
+    ],
     "Children": [
         {
-            "Name": "Checkpoint_1",
+            "Name": "Checkpoint PopUp Container",
             "Active": true,
             "Static": false,
             "Layer": "DEFAULT",
             "Tag": "DEFAULT",
             "Transform": {
                 "Position": [
-                    21.74542808532715,
-                    1.706963300704956,
-                    24.909374237060547
+                    0.0,
+                    0.0,
+                    0.0
                 ],
                 "Rotation": [
                     -0.0,
@@ -52,60 +67,57 @@
             },
             "Components": [
                 {
-                    "UID": 1062870500123045684,
-                    "ComponentType": "SCRIPT",
+                    "UID": 7883724902839230236,
+                    "ComponentType": "TRANSFORM2D",
                     "Active": true,
-                    "ScriptName": "Checkpoint1_Level2_Event",
-                    "ScriptFields": {
-                        "Lyriel respawn transform": 14996843306791968179,
-                        "Death respawn transform": 5032523798999947655
-                    }
-                },
-                {
-                    "UID": 3044989815528648161,
-                    "ComponentType": "SCRIPT",
-                    "Active": true,
-                    "ScriptName": "GameplayEventTrigger",
-                    "ScriptFields": {
-                        "Trigger Only Once": true
-                    }
-                },
-                {
-                    "UID": 6333230061475173439,
-                    "ComponentType": "TRIGGER",
-                    "Active": true,
-                    "Shape": "Box",
-                    "Center": [
+                    "Position": [
                         0.0,
+                        200.0,
+                        0.0
+                    ],
+                    "Scale": [
+                        0.4300000071525574,
+                        0.4300000071525574,
+                        0.0
+                    ],
+                    "Pivot": [
+                        0.5,
                         0.0,
                         0.0
                     ],
-                    "Size": [
-                        6.400000095367432,
-                        1.4500000476837158,
-                        16.0
-                    ]
-                },
-                {
-                    "UID": 13903043817861192850,
-                    "ComponentType": "PREFAB_INSTANCE",
-                    "Active": true,
-                    "sourcePath": "Assets/Prefabs/Checkpoint.prefab",
-                    "assetUID": 3641107037727990637
+                    "AnchorMin": [
+                        0.5,
+                        0.0,
+                        0.0
+                    ],
+                    "AnchorMax": [
+                        0.5,
+                        0.0,
+                        0.0
+                    ],
+                    "BaseSize": [
+                        100.0,
+                        100.0,
+                        0.0
+                    ],
+                    "StretchMode": "NONE",
+                    "SizingMode": "KEEP_ASPECT_RATIO",
+                    "AspectRatio": 1.0,
+                    "Alpha": 1.0
                 }
             ],
             "Children": [
                 {
-                    "Name": "LyrielRespawn",
+                    "Name": "Checkpoint Reached",
                     "Active": true,
                     "Static": false,
                     "Layer": "DEFAULT",
                     "Tag": "DEFAULT",
                     "Transform": {
                         "Position": [
-                            1.7459545135498047,
-                            -0.6147209405899048,
-                            1.7482566833496094
+                            0.0,
+                            0.0,
+                            0.0
                         ],
                         "Rotation": [
                             -0.0,
@@ -119,49 +131,86 @@
                             1.0
                         ]
                     },
-                    "Components": [],
-                    "Children": []
-                },
-                {
-                    "Name": "DeathRespawn",
-                    "Active": true,
-                    "Static": false,
-                    "Layer": "DEFAULT",
-                    "Tag": "DEFAULT",
-                    "Transform": {
-                        "Position": [
-                            0.15140342712402344,
-                            -0.6150000095367432,
-                            1.826681137084961
-                        ],
-                        "Rotation": [
-                            -0.0,
-                            0.0,
-                            -0.0,
-                            1.0
-                        ],
-                        "Scale": [
-                            1.0,
-                            1.0,
-                            1.0
-                        ]
-                    },
-                    "Components": [],
+                    "Components": [
+                        {
+                            "UID": 15232374622531695373,
+                            "ComponentType": "TRANSFORM2D",
+                            "Active": true,
+                            "Position": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "Scale": [
+                                0.8100000023841858,
+                                0.8100000023841858,
+                                0.0
+                            ],
+                            "Pivot": [
+                                0.5,
+                                0.5,
+                                0.0
+                            ],
+                            "AnchorMin": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "AnchorMax": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "BaseSize": [
+                                2170.0,
+                                725.0,
+                                0.0
+                            ],
+                            "StretchMode": "NONE",
+                            "SizingMode": "KEEP_ASPECT_RATIO",
+                            "AspectRatio": 1.0,
+                            "Alpha": 0.0
+                        },
+                        {
+                            "UID": 8932131352634159392,
+                            "ComponentType": "UIIMAGE",
+                            "Active": true,
+                            "TextureAssetId": {
+                                "uid": 5086148395198064375,
+                                "libId": "aceb3b586fbd8bb5b1ca37485a1e5902",
+                                "type": "TEXTURE"
+                            },
+                            "FillAmount": [
+                                0.0,
+                                1.0
+                            ],
+                            "FillMethod": "Horizontal",
+                            "FillOrigin": 0,
+                            "SheetColumns": 1,
+                            "SheetRows": 1,
+                            "SheetOffset": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "StretchDrawMode": "Stretch"
+                        }
+                    ],
                     "Children": []
                 }
             ]
         },
         {
-            "Name": "Checkpoint_2",
+            "Name": "Checkpoint Events",
             "Active": true,
             "Static": false,
             "Layer": "DEFAULT",
             "Tag": "DEFAULT",
             "Transform": {
                 "Position": [
-                    33.37946701049805,
-                    2.4181137084960938,
-                    27.7562255859375
+                    0.0,
+                    0.0,
+                    0.0
                 ],
                 "Rotation": [
                     -0.0,
@@ -175,62 +224,165 @@
                     1.0
                 ]
             },
-            "Components": [
+            "Components": [],
+            "Children": [
                 {
-                    "UID": 4509764067213577665,
-                    "ComponentType": "SCRIPT",
+                    "Name": "Checkpoint_1",
                     "Active": true,
-                    "ScriptName": "Checkpoint2_Level2_Event",
-                    "ScriptFields": {
-                        "Lyriel respawn transform": 3162456575111298062,
-                        "Death respawn transform": 3749051654924715402
-                    }
-                },
-                {
-                    "UID": 8691728134978727718,
-                    "ComponentType": "SCRIPT",
-                    "Active": true,
-                    "ScriptName": "GameplayEventTrigger",
-                    "ScriptFields": {
-                        "Trigger Only Once": true
-                    }
-                },
-                {
-                    "UID": 14076286096248328049,
-                    "ComponentType": "TRIGGER",
-                    "Active": true,
-                    "Shape": "Box",
-                    "Center": [
-                        0.0,
-                        0.0,
-                        0.0
+                    "Static": false,
+                    "Layer": "DEFAULT",
+                    "Tag": "DEFAULT",
+                    "Transform": {
+                        "Position": [
+                            21.74542808532715,
+                            1.706963300704956,
+                            24.909374237060547
+                        ],
+                        "Rotation": [
+                            -0.0,
+                            0.0,
+                            -0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "Components": [
+                        {
+                            "UID": 7954225616136634863,
+                            "ComponentType": "SCRIPT",
+                            "Active": true,
+                            "ScriptName": "Checkpoint1_Level2_Event",
+                            "ScriptFields": {
+                                "Lyriel respawn transform": 1290417877592222477,
+                                "Death respawn transform": 7828751670721328671
+                            }
+                        },
+                        {
+                            "UID": 3887944634339864639,
+                            "ComponentType": "SCRIPT",
+                            "Active": true,
+                            "ScriptName": "GameplayEventTrigger",
+                            "ScriptFields": {
+                                "Trigger Only Once": true
+                            }
+                        },
+                        {
+                            "UID": 6715328645691792652,
+                            "ComponentType": "TRIGGER",
+                            "Active": true,
+                            "Shape": "Box",
+                            "Center": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "Size": [
+                                6.400000095367432,
+                                1.4500000476837158,
+                                16.0
+                            ]
+                        },
+                        {
+                            "UID": 14943263518902072924,
+                            "ComponentType": "PREFAB_INSTANCE",
+                            "Active": true,
+                            "sourcePath": "Assets/Prefabs/Checkpoint.prefab",
+                            "assetUID": 3641107037727990637
+                        },
+                        {
+                            "UID": 13042203372506879672,
+                            "ComponentType": "SCRIPT",
+                            "Active": true,
+                            "ScriptName": "PopUpEvent",
+                            "ScriptFields": {
+                                "PopUp Images": [
+                                    15232374622531695373
+                                ],
+                                "Player 1 Not Confirmed Indicator": 0,
+                                "Player 1 Confirmed Indicator": 0,
+                                "Player 2 Not Confirmed Indicator": 0,
+                                "Player 2 Confirmed Indicator": 0,
+                                "Transition Type": 0,
+                                "Close Mode": 2,
+                                "Lock Gameplay": false,
+                                "Fade HUD": false,
+                                "Show Duration": 2.5,
+                                "Hide Duration": 0.5
+                            }
+                        }
                     ],
-                    "Size": [
-                        12.300000190734863,
-                        1.0,
-                        13.75
+                    "Children": [
+                        {
+                            "Name": "LyrielRespawn",
+                            "Active": true,
+                            "Static": false,
+                            "Layer": "DEFAULT",
+                            "Tag": "DEFAULT",
+                            "Transform": {
+                                "Position": [
+                                    1.7459545135498047,
+                                    -0.6147209405899048,
+                                    1.7482566833496094
+                                ],
+                                "Rotation": [
+                                    -0.0,
+                                    0.0,
+                                    -0.0,
+                                    1.0
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ]
+                            },
+                            "Components": [],
+                            "Children": []
+                        },
+                        {
+                            "Name": "DeathRespawn",
+                            "Active": true,
+                            "Static": false,
+                            "Layer": "DEFAULT",
+                            "Tag": "DEFAULT",
+                            "Transform": {
+                                "Position": [
+                                    0.15140342712402344,
+                                    -0.6150000095367432,
+                                    1.826681137084961
+                                ],
+                                "Rotation": [
+                                    -0.0,
+                                    0.0,
+                                    -0.0,
+                                    1.0
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ]
+                            },
+                            "Components": [],
+                            "Children": []
+                        }
                     ]
                 },
                 {
-                    "UID": 17723450641411411840,
-                    "ComponentType": "PREFAB_INSTANCE",
-                    "Active": true,
-                    "sourcePath": "Assets/Prefabs/Checkpoint.prefab",
-                    "assetUID": 3641107037727990637
-                }
-            ],
-            "Children": [
-                {
-                    "Name": "LyrielRespawn",
+                    "Name": "Checkpoint_2",
                     "Active": true,
                     "Static": false,
                     "Layer": "DEFAULT",
                     "Tag": "DEFAULT",
                     "Transform": {
                         "Position": [
-                            -3.5153350830078125,
-                            -1.2692766189575195,
-                            3.700387954711914
+                            33.37946701049805,
+                            2.4181137084960938,
+                            27.7562255859375
                         ],
                         "Rotation": [
                             -0.0,
@@ -244,118 +396,139 @@
                             1.0
                         ]
                     },
-                    "Components": [],
-                    "Children": []
-                },
-                {
-                    "Name": "DeathRespawn",
-                    "Active": true,
-                    "Static": false,
-                    "Layer": "DEFAULT",
-                    "Tag": "DEFAULT",
-                    "Transform": {
-                        "Position": [
-                            -3.5149993896484375,
-                            -1.2690000534057617,
-                            5.997230529785156
-                        ],
-                        "Rotation": [
-                            -0.0,
-                            0.0,
-                            -0.0,
-                            1.0
-                        ],
-                        "Scale": [
-                            1.0,
-                            1.0,
-                            1.0
-                        ]
-                    },
-                    "Components": [],
-                    "Children": []
-                }
-            ]
-        },
-        {
-            "Name": "Checkpoint_3",
-            "Active": true,
-            "Static": false,
-            "Layer": "DEFAULT",
-            "Tag": "DEFAULT",
-            "Transform": {
-                "Position": [
-                    46.885555267333984,
-                    1.706963300704956,
-                    52.803611755371094
-                ],
-                "Rotation": [
-                    -0.0,
-                    0.0,
-                    -0.0,
-                    1.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Components": [
-                {
-                    "UID": 13033096382983813946,
-                    "ComponentType": "SCRIPT",
-                    "Active": true,
-                    "ScriptName": "Checkpoint3_Level2_Event",
-                    "ScriptFields": {
-                        "Lyriel respawn transform": 8944852295518997020,
-                        "Death respawn transform": 5987875306505740377
-                    }
-                },
-                {
-                    "UID": 9141451749358141546,
-                    "ComponentType": "SCRIPT",
-                    "Active": true,
-                    "ScriptName": "GameplayEventTrigger",
-                    "ScriptFields": {
-                        "Trigger Only Once": true
-                    }
-                },
-                {
-                    "UID": 2989865064363733176,
-                    "ComponentType": "TRIGGER",
-                    "Active": true,
-                    "Shape": "Box",
-                    "Center": [
-                        0.0,
-                        0.0,
-                        0.0
+                    "Components": [
+                        {
+                            "UID": 11282600667759551676,
+                            "ComponentType": "SCRIPT",
+                            "Active": true,
+                            "ScriptName": "Checkpoint2_Level2_Event",
+                            "ScriptFields": {
+                                "Lyriel respawn transform": 14494203996606153424,
+                                "Death respawn transform": 3609866574826622875
+                            }
+                        },
+                        {
+                            "UID": 10571543043149004889,
+                            "ComponentType": "SCRIPT",
+                            "Active": true,
+                            "ScriptName": "GameplayEventTrigger",
+                            "ScriptFields": {
+                                "Trigger Only Once": true
+                            }
+                        },
+                        {
+                            "UID": 14399543562673863365,
+                            "ComponentType": "TRIGGER",
+                            "Active": true,
+                            "Shape": "Box",
+                            "Center": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "Size": [
+                                12.300000190734863,
+                                1.0,
+                                13.75
+                            ]
+                        },
+                        {
+                            "UID": 16100034430628161859,
+                            "ComponentType": "PREFAB_INSTANCE",
+                            "Active": true,
+                            "sourcePath": "Assets/Prefabs/Checkpoint.prefab",
+                            "assetUID": 3641107037727990637
+                        },
+                        {
+                            "UID": 7967324337596911976,
+                            "ComponentType": "SCRIPT",
+                            "Active": true,
+                            "ScriptName": "PopUpEvent",
+                            "ScriptFields": {
+                                "PopUp Images": [
+                                    15232374622531695373
+                                ],
+                                "Player 1 Not Confirmed Indicator": 0,
+                                "Player 1 Confirmed Indicator": 0,
+                                "Player 2 Not Confirmed Indicator": 0,
+                                "Player 2 Confirmed Indicator": 0,
+                                "Transition Type": 0,
+                                "Close Mode": 2,
+                                "Lock Gameplay": false,
+                                "Fade HUD": false,
+                                "Show Duration": 2.5,
+                                "Hide Duration": 0.5
+                            }
+                        }
                     ],
-                    "Size": [
-                        14.0,
-                        1.0,
-                        15.949999809265137
+                    "Children": [
+                        {
+                            "Name": "LyrielRespawn",
+                            "Active": true,
+                            "Static": false,
+                            "Layer": "DEFAULT",
+                            "Tag": "DEFAULT",
+                            "Transform": {
+                                "Position": [
+                                    -3.5153350830078125,
+                                    -1.2692766189575195,
+                                    3.700387954711914
+                                ],
+                                "Rotation": [
+                                    -0.0,
+                                    0.0,
+                                    -0.0,
+                                    1.0
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ]
+                            },
+                            "Components": [],
+                            "Children": []
+                        },
+                        {
+                            "Name": "DeathRespawn",
+                            "Active": true,
+                            "Static": false,
+                            "Layer": "DEFAULT",
+                            "Tag": "DEFAULT",
+                            "Transform": {
+                                "Position": [
+                                    -3.5149993896484375,
+                                    -1.2690000534057617,
+                                    5.997230529785156
+                                ],
+                                "Rotation": [
+                                    -0.0,
+                                    0.0,
+                                    -0.0,
+                                    1.0
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ]
+                            },
+                            "Components": [],
+                            "Children": []
+                        }
                     ]
                 },
                 {
-                    "UID": 9658487170631138567,
-                    "ComponentType": "PREFAB_INSTANCE",
-                    "Active": true,
-                    "sourcePath": "Assets/Prefabs/Checkpoint.prefab",
-                    "assetUID": 3641107037727990637
-                }
-            ],
-            "Children": [
-                {
-                    "Name": "LyrielRespawn",
+                    "Name": "Checkpoint_3",
                     "Active": true,
                     "Static": false,
                     "Layer": "DEFAULT",
                     "Tag": "DEFAULT",
                     "Transform": {
                         "Position": [
-                            2.725170135498047,
-                            -0.8595972061157227,
-                            0.8320541381835938
+                            46.885555267333984,
+                            1.706963300704956,
+                            52.803611755371094
                         ],
                         "Rotation": [
                             -0.0,
@@ -369,118 +542,139 @@
                             1.0
                         ]
                     },
-                    "Components": [],
-                    "Children": []
-                },
-                {
-                    "Name": "DeathRespawn",
-                    "Active": true,
-                    "Static": false,
-                    "Layer": "DEFAULT",
-                    "Tag": "DEFAULT",
-                    "Transform": {
-                        "Position": [
-                            4.44952392578125,
-                            -0.8600000143051147,
-                            0.7659759521484375
-                        ],
-                        "Rotation": [
-                            -0.0,
-                            0.0,
-                            -0.0,
-                            1.0
-                        ],
-                        "Scale": [
-                            1.0,
-                            1.0,
-                            1.0
-                        ]
-                    },
-                    "Components": [],
-                    "Children": []
-                }
-            ]
-        },
-        {
-            "Name": "Checkpoint_4",
-            "Active": true,
-            "Static": false,
-            "Layer": "DEFAULT",
-            "Tag": "DEFAULT",
-            "Transform": {
-                "Position": [
-                    62.1728630065918,
-                    -21.370756149291992,
-                    41.73909378051758
-                ],
-                "Rotation": [
-                    -0.0,
-                    0.0,
-                    -0.0,
-                    1.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Components": [
-                {
-                    "UID": 16520220670270107304,
-                    "ComponentType": "SCRIPT",
-                    "Active": true,
-                    "ScriptName": "Checkpoint4_Level2_Event",
-                    "ScriptFields": {
-                        "Lyriel respawn transform": 9589932173282780521,
-                        "Death respawn transform": 6448101678655799585
-                    }
-                },
-                {
-                    "UID": 1609179086963321645,
-                    "ComponentType": "SCRIPT",
-                    "Active": true,
-                    "ScriptName": "GameplayEventTrigger",
-                    "ScriptFields": {
-                        "Trigger Only Once": true
-                    }
-                },
-                {
-                    "UID": 2641642748749742479,
-                    "ComponentType": "TRIGGER",
-                    "Active": true,
-                    "Shape": "Box",
-                    "Center": [
-                        0.0,
-                        0.0,
-                        0.0
+                    "Components": [
+                        {
+                            "UID": 15959829199195482201,
+                            "ComponentType": "SCRIPT",
+                            "Active": true,
+                            "ScriptName": "Checkpoint3_Level2_Event",
+                            "ScriptFields": {
+                                "Lyriel respawn transform": 9974629506919597400,
+                                "Death respawn transform": 7008654099531425165
+                            }
+                        },
+                        {
+                            "UID": 16978930213069535108,
+                            "ComponentType": "SCRIPT",
+                            "Active": true,
+                            "ScriptName": "GameplayEventTrigger",
+                            "ScriptFields": {
+                                "Trigger Only Once": true
+                            }
+                        },
+                        {
+                            "UID": 3582503662886498431,
+                            "ComponentType": "TRIGGER",
+                            "Active": true,
+                            "Shape": "Box",
+                            "Center": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "Size": [
+                                14.0,
+                                1.0,
+                                15.949999809265137
+                            ]
+                        },
+                        {
+                            "UID": 17390147225399585245,
+                            "ComponentType": "PREFAB_INSTANCE",
+                            "Active": true,
+                            "sourcePath": "Assets/Prefabs/Checkpoint.prefab",
+                            "assetUID": 3641107037727990637
+                        },
+                        {
+                            "UID": 4849169875190920823,
+                            "ComponentType": "SCRIPT",
+                            "Active": true,
+                            "ScriptName": "PopUpEvent",
+                            "ScriptFields": {
+                                "PopUp Images": [
+                                    15232374622531695373
+                                ],
+                                "Player 1 Not Confirmed Indicator": 0,
+                                "Player 1 Confirmed Indicator": 0,
+                                "Player 2 Not Confirmed Indicator": 0,
+                                "Player 2 Confirmed Indicator": 0,
+                                "Transition Type": 0,
+                                "Close Mode": 2,
+                                "Lock Gameplay": false,
+                                "Fade HUD": false,
+                                "Show Duration": 2.5,
+                                "Hide Duration": 0.5
+                            }
+                        }
                     ],
-                    "Size": [
-                        10.949999809265137,
-                        6.449999809265137,
-                        13.350000381469727
+                    "Children": [
+                        {
+                            "Name": "LyrielRespawn",
+                            "Active": true,
+                            "Static": false,
+                            "Layer": "DEFAULT",
+                            "Tag": "DEFAULT",
+                            "Transform": {
+                                "Position": [
+                                    2.725170135498047,
+                                    -0.8595972061157227,
+                                    0.8320541381835938
+                                ],
+                                "Rotation": [
+                                    -0.0,
+                                    0.0,
+                                    -0.0,
+                                    1.0
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ]
+                            },
+                            "Components": [],
+                            "Children": []
+                        },
+                        {
+                            "Name": "DeathRespawn",
+                            "Active": true,
+                            "Static": false,
+                            "Layer": "DEFAULT",
+                            "Tag": "DEFAULT",
+                            "Transform": {
+                                "Position": [
+                                    4.44952392578125,
+                                    -0.8600000143051147,
+                                    0.7659759521484375
+                                ],
+                                "Rotation": [
+                                    -0.0,
+                                    0.0,
+                                    -0.0,
+                                    1.0
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ]
+                            },
+                            "Components": [],
+                            "Children": []
+                        }
                     ]
                 },
                 {
-                    "UID": 18059075487842416867,
-                    "ComponentType": "PREFAB_INSTANCE",
-                    "Active": true,
-                    "sourcePath": "Assets/Prefabs/Checkpoint.prefab",
-                    "assetUID": 3641107037727990637
-                }
-            ],
-            "Children": [
-                {
-                    "Name": "LyrielRespawn",
+                    "Name": "Checkpoint_4",
                     "Active": true,
                     "Static": false,
                     "Layer": "DEFAULT",
                     "Tag": "DEFAULT",
                     "Transform": {
                         "Position": [
-                            2.084522247314453,
-                            -3.7616958618164063,
-                            4.289283752441406
+                            62.1728630065918,
+                            -21.370756149291992,
+                            41.73909378051758
                         ],
                         "Rotation": [
                             -0.0,
@@ -494,118 +688,139 @@
                             1.0
                         ]
                     },
-                    "Components": [],
-                    "Children": []
-                },
-                {
-                    "Name": "DeathRespawn",
-                    "Active": true,
-                    "Static": false,
-                    "Layer": "DEFAULT",
-                    "Tag": "DEFAULT",
-                    "Transform": {
-                        "Position": [
-                            2.112621307373047,
-                            -3.7619991302490234,
-                            5.456352233886719
-                        ],
-                        "Rotation": [
-                            -0.0,
-                            0.0,
-                            -0.0,
-                            1.0
-                        ],
-                        "Scale": [
-                            1.0,
-                            1.0,
-                            1.0
-                        ]
-                    },
-                    "Components": [],
-                    "Children": []
-                }
-            ]
-        },
-        {
-            "Name": "Checkpoint_5",
-            "Active": true,
-            "Static": false,
-            "Layer": "DEFAULT",
-            "Tag": "DEFAULT",
-            "Transform": {
-                "Position": [
-                    33.223915100097656,
-                    -24.085895538330078,
-                    40.63505935668945
-                ],
-                "Rotation": [
-                    -0.0,
-                    0.0,
-                    -0.0,
-                    1.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Components": [
-                {
-                    "UID": 9250956114167723916,
-                    "ComponentType": "SCRIPT",
-                    "Active": true,
-                    "ScriptName": "Checkpoint5_Level2_Event",
-                    "ScriptFields": {
-                        "Lyriel respawn transform": 10015236941923885191,
-                        "Death respawn transform": 11889716709591869488
-                    }
-                },
-                {
-                    "UID": 1570102137714179028,
-                    "ComponentType": "SCRIPT",
-                    "Active": true,
-                    "ScriptName": "GameplayEventTrigger",
-                    "ScriptFields": {
-                        "Trigger Only Once": true
-                    }
-                },
-                {
-                    "UID": 7170686728964533184,
-                    "ComponentType": "TRIGGER",
-                    "Active": true,
-                    "Shape": "Box",
-                    "Center": [
-                        0.0,
-                        0.0,
-                        0.0
+                    "Components": [
+                        {
+                            "UID": 6358489684863929580,
+                            "ComponentType": "SCRIPT",
+                            "Active": true,
+                            "ScriptName": "Checkpoint4_Level2_Event",
+                            "ScriptFields": {
+                                "Lyriel respawn transform": 7591708171379978744,
+                                "Death respawn transform": 2126939017793227394
+                            }
+                        },
+                        {
+                            "UID": 4080137934556880210,
+                            "ComponentType": "SCRIPT",
+                            "Active": true,
+                            "ScriptName": "GameplayEventTrigger",
+                            "ScriptFields": {
+                                "Trigger Only Once": true
+                            }
+                        },
+                        {
+                            "UID": 6200543653491325028,
+                            "ComponentType": "TRIGGER",
+                            "Active": true,
+                            "Shape": "Box",
+                            "Center": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "Size": [
+                                10.949999809265137,
+                                6.449999809265137,
+                                13.350000381469727
+                            ]
+                        },
+                        {
+                            "UID": 14745045890943192027,
+                            "ComponentType": "PREFAB_INSTANCE",
+                            "Active": true,
+                            "sourcePath": "Assets/Prefabs/Checkpoint.prefab",
+                            "assetUID": 3641107037727990637
+                        },
+                        {
+                            "UID": 15308390307025776866,
+                            "ComponentType": "SCRIPT",
+                            "Active": true,
+                            "ScriptName": "PopUpEvent",
+                            "ScriptFields": {
+                                "PopUp Images": [
+                                    15232374622531695373
+                                ],
+                                "Player 1 Not Confirmed Indicator": 0,
+                                "Player 1 Confirmed Indicator": 0,
+                                "Player 2 Not Confirmed Indicator": 0,
+                                "Player 2 Confirmed Indicator": 0,
+                                "Transition Type": 0,
+                                "Close Mode": 2,
+                                "Lock Gameplay": false,
+                                "Fade HUD": false,
+                                "Show Duration": 2.5,
+                                "Hide Duration": 0.5
+                            }
+                        }
                     ],
-                    "Size": [
-                        15.550000190734863,
-                        1.0,
-                        7.449999809265137
+                    "Children": [
+                        {
+                            "Name": "LyrielRespawn",
+                            "Active": true,
+                            "Static": false,
+                            "Layer": "DEFAULT",
+                            "Tag": "DEFAULT",
+                            "Transform": {
+                                "Position": [
+                                    2.084522247314453,
+                                    -3.7616958618164063,
+                                    4.289283752441406
+                                ],
+                                "Rotation": [
+                                    -0.0,
+                                    0.0,
+                                    -0.0,
+                                    1.0
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ]
+                            },
+                            "Components": [],
+                            "Children": []
+                        },
+                        {
+                            "Name": "DeathRespawn",
+                            "Active": true,
+                            "Static": false,
+                            "Layer": "DEFAULT",
+                            "Tag": "DEFAULT",
+                            "Transform": {
+                                "Position": [
+                                    2.112621307373047,
+                                    -3.7619991302490234,
+                                    5.456352233886719
+                                ],
+                                "Rotation": [
+                                    -0.0,
+                                    0.0,
+                                    -0.0,
+                                    1.0
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ]
+                            },
+                            "Components": [],
+                            "Children": []
+                        }
                     ]
                 },
                 {
-                    "UID": 906645499503866186,
-                    "ComponentType": "PREFAB_INSTANCE",
-                    "Active": true,
-                    "sourcePath": "Assets/Prefabs/Checkpoint.prefab",
-                    "assetUID": 3641107037727990637
-                }
-            ],
-            "Children": [
-                {
-                    "Name": "LyrielRespawn",
+                    "Name": "Checkpoint_5",
                     "Active": true,
                     "Static": false,
                     "Layer": "DEFAULT",
                     "Tag": "DEFAULT",
                     "Transform": {
                         "Position": [
-                            -32.80000305175781,
-                            -1.3111076354980469,
-                            2.3531036376953125
+                            33.223915100097656,
+                            -24.085895538330078,
+                            40.63505935668945
                         ],
                         "Rotation": [
                             -0.0,
@@ -619,118 +834,139 @@
                             1.0
                         ]
                     },
-                    "Components": [],
-                    "Children": []
-                },
-                {
-                    "Name": "DeathRespawn",
-                    "Active": true,
-                    "Static": false,
-                    "Layer": "DEFAULT",
-                    "Tag": "DEFAULT",
-                    "Transform": {
-                        "Position": [
-                            -32.58189392089844,
-                            -1.3110008239746094,
-                            -1.1058769226074219
-                        ],
-                        "Rotation": [
-                            -0.0,
-                            0.0,
-                            -0.0,
-                            1.0
-                        ],
-                        "Scale": [
-                            1.0,
-                            1.0,
-                            1.0
-                        ]
-                    },
-                    "Components": [],
-                    "Children": []
-                }
-            ]
-        },
-        {
-            "Name": "Checkpoint_6",
-            "Active": false,
-            "Static": false,
-            "Layer": "DEFAULT",
-            "Tag": "DEFAULT",
-            "Transform": {
-                "Position": [
-                    0.6906437873840332,
-                    -24.73976707458496,
-                    40.440616607666016
-                ],
-                "Rotation": [
-                    -0.0,
-                    0.0,
-                    -0.0,
-                    1.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Components": [
-                {
-                    "UID": 4841765016061896107,
-                    "ComponentType": "SCRIPT",
-                    "Active": true,
-                    "ScriptName": "Checkpoint6_Level2_Event",
-                    "ScriptFields": {
-                        "Lyriel respawn transform": 4237224166527604233,
-                        "Death respawn transform": 8340672426506901668
-                    }
-                },
-                {
-                    "UID": 12588757194418462263,
-                    "ComponentType": "SCRIPT",
-                    "Active": true,
-                    "ScriptName": "GameplayEventTrigger",
-                    "ScriptFields": {
-                        "Trigger Only Once": true
-                    }
-                },
-                {
-                    "UID": 10230777194248410222,
-                    "ComponentType": "TRIGGER",
-                    "Active": true,
-                    "Shape": "Box",
-                    "Center": [
-                        0.0,
-                        0.0,
-                        0.0
+                    "Components": [
+                        {
+                            "UID": 10026876793978687746,
+                            "ComponentType": "SCRIPT",
+                            "Active": true,
+                            "ScriptName": "Checkpoint5_Level2_Event",
+                            "ScriptFields": {
+                                "Lyriel respawn transform": 9017779740584265832,
+                                "Death respawn transform": 5696780303482557330
+                            }
+                        },
+                        {
+                            "UID": 9610500359898015960,
+                            "ComponentType": "SCRIPT",
+                            "Active": true,
+                            "ScriptName": "GameplayEventTrigger",
+                            "ScriptFields": {
+                                "Trigger Only Once": true
+                            }
+                        },
+                        {
+                            "UID": 335122945719488822,
+                            "ComponentType": "TRIGGER",
+                            "Active": true,
+                            "Shape": "Box",
+                            "Center": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "Size": [
+                                15.550000190734863,
+                                1.0,
+                                7.449999809265137
+                            ]
+                        },
+                        {
+                            "UID": 6919107238122695042,
+                            "ComponentType": "PREFAB_INSTANCE",
+                            "Active": true,
+                            "sourcePath": "Assets/Prefabs/Checkpoint.prefab",
+                            "assetUID": 3641107037727990637
+                        },
+                        {
+                            "UID": 9694320024699108129,
+                            "ComponentType": "SCRIPT",
+                            "Active": true,
+                            "ScriptName": "PopUpEvent",
+                            "ScriptFields": {
+                                "PopUp Images": [
+                                    15232374622531695373
+                                ],
+                                "Player 1 Not Confirmed Indicator": 0,
+                                "Player 1 Confirmed Indicator": 0,
+                                "Player 2 Not Confirmed Indicator": 0,
+                                "Player 2 Confirmed Indicator": 0,
+                                "Transition Type": 0,
+                                "Close Mode": 2,
+                                "Lock Gameplay": false,
+                                "Fade HUD": false,
+                                "Show Duration": 2.5,
+                                "Hide Duration": 0.5
+                            }
+                        }
                     ],
-                    "Size": [
-                        12.0,
-                        1.0,
-                        11.899999618530273
+                    "Children": [
+                        {
+                            "Name": "LyrielRespawn",
+                            "Active": true,
+                            "Static": false,
+                            "Layer": "DEFAULT",
+                            "Tag": "DEFAULT",
+                            "Transform": {
+                                "Position": [
+                                    -32.80000305175781,
+                                    -1.3111076354980469,
+                                    2.3531036376953125
+                                ],
+                                "Rotation": [
+                                    -0.0,
+                                    0.0,
+                                    -0.0,
+                                    1.0
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ]
+                            },
+                            "Components": [],
+                            "Children": []
+                        },
+                        {
+                            "Name": "DeathRespawn",
+                            "Active": true,
+                            "Static": false,
+                            "Layer": "DEFAULT",
+                            "Tag": "DEFAULT",
+                            "Transform": {
+                                "Position": [
+                                    -32.58189392089844,
+                                    -1.3110008239746094,
+                                    -1.1058769226074219
+                                ],
+                                "Rotation": [
+                                    -0.0,
+                                    0.0,
+                                    -0.0,
+                                    1.0
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ]
+                            },
+                            "Components": [],
+                            "Children": []
+                        }
                     ]
                 },
                 {
-                    "UID": 15563942692627736283,
-                    "ComponentType": "PREFAB_INSTANCE",
-                    "Active": true,
-                    "sourcePath": "Assets\\Prefabs\\Checkpoint.prefab",
-                    "assetUID": 3641107037727990637
-                }
-            ],
-            "Children": [
-                {
-                    "Name": "LyrielRespawn",
-                    "Active": true,
+                    "Name": "Checkpoint_6",
+                    "Active": false,
                     "Static": false,
                     "Layer": "DEFAULT",
                     "Tag": "DEFAULT",
                     "Transform": {
                         "Position": [
-                            0.0,
-                            -0.20943832397460938,
-                            -2.8502769470214844
+                            0.6906437873840332,
+                            -24.73976707458496,
+                            40.440616607666016
                         ],
                         "Rotation": [
                             -0.0,
@@ -744,35 +980,127 @@
                             1.0
                         ]
                     },
-                    "Components": [],
-                    "Children": []
-                },
-                {
-                    "Name": "DeathRespawn",
-                    "Active": true,
-                    "Static": false,
-                    "Layer": "DEFAULT",
-                    "Tag": "DEFAULT",
-                    "Transform": {
-                        "Position": [
-                            0.0,
-                            -0.1252613067626953,
-                            2.162006378173828
-                        ],
-                        "Rotation": [
-                            -0.0,
-                            0.0,
-                            -0.0,
-                            1.0
-                        ],
-                        "Scale": [
-                            1.0,
-                            1.0,
-                            1.0
-                        ]
-                    },
-                    "Components": [],
-                    "Children": []
+                    "Components": [
+                        {
+                            "UID": 754177995489423170,
+                            "ComponentType": "SCRIPT",
+                            "Active": true,
+                            "ScriptName": "Checkpoint6_Level2_Event",
+                            "ScriptFields": {
+                                "Lyriel respawn transform": 17199660069260468510,
+                                "Death respawn transform": 10914889798822594708
+                            }
+                        },
+                        {
+                            "UID": 14674764085154275670,
+                            "ComponentType": "SCRIPT",
+                            "Active": true,
+                            "ScriptName": "GameplayEventTrigger",
+                            "ScriptFields": {
+                                "Trigger Only Once": true
+                            }
+                        },
+                        {
+                            "UID": 3127276652679411562,
+                            "ComponentType": "TRIGGER",
+                            "Active": true,
+                            "Shape": "Box",
+                            "Center": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "Size": [
+                                12.0,
+                                1.0,
+                                11.899999618530273
+                            ]
+                        },
+                        {
+                            "UID": 16744253607799571482,
+                            "ComponentType": "PREFAB_INSTANCE",
+                            "Active": true,
+                            "sourcePath": "Assets\\Prefabs\\Checkpoint.prefab",
+                            "assetUID": 3641107037727990637
+                        },
+                        {
+                            "UID": 7334530562433381407,
+                            "ComponentType": "SCRIPT",
+                            "Active": true,
+                            "ScriptName": "PopUpEvent",
+                            "ScriptFields": {
+                                "PopUp Images": [
+                                    15232374622531695373
+                                ],
+                                "Player 1 Not Confirmed Indicator": 0,
+                                "Player 1 Confirmed Indicator": 0,
+                                "Player 2 Not Confirmed Indicator": 0,
+                                "Player 2 Confirmed Indicator": 0,
+                                "Transition Type": 0,
+                                "Close Mode": 2,
+                                "Lock Gameplay": false,
+                                "Fade HUD": false,
+                                "Show Duration": 2.5,
+                                "Hide Duration": 0.5
+                            }
+                        }
+                    ],
+                    "Children": [
+                        {
+                            "Name": "LyrielRespawn",
+                            "Active": true,
+                            "Static": false,
+                            "Layer": "DEFAULT",
+                            "Tag": "DEFAULT",
+                            "Transform": {
+                                "Position": [
+                                    0.0,
+                                    -0.20943832397460938,
+                                    -2.8502769470214844
+                                ],
+                                "Rotation": [
+                                    -0.0,
+                                    0.0,
+                                    -0.0,
+                                    1.0
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ]
+                            },
+                            "Components": [],
+                            "Children": []
+                        },
+                        {
+                            "Name": "DeathRespawn",
+                            "Active": true,
+                            "Static": false,
+                            "Layer": "DEFAULT",
+                            "Tag": "DEFAULT",
+                            "Transform": {
+                                "Position": [
+                                    0.0,
+                                    -0.1252613067626953,
+                                    2.162006378173828
+                                ],
+                                "Rotation": [
+                                    -0.0,
+                                    0.0,
+                                    -0.0,
+                                    1.0
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ]
+                            },
+                            "Components": [],
+                            "Children": []
+                        }
+                    ]
                 }
             ]
         }
