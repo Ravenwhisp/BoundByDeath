@@ -25,10 +25,13 @@ namespace
 		"Death Revived",
 		"Lyriel Revived",
 		"Combat Started",
-		"Combat Ended"
+		"Combat Ended",
+		"Player Low Health"
 	};
 
-	constexpr int barkTriggerActivationCount = 13;
+	constexpr int barkTriggerActivationCount = 14;
+
+	constexpr float lowHealthThreshold = 0.25f;
 }
 
 IMPLEMENT_SCRIPT_FIELDS(
@@ -118,6 +121,7 @@ void BarkEventTrigger::Start()
 		break;
 
 	case BarkTriggerActivationType::PlayerTakesDamage:
+	case BarkTriggerActivationType::PlayerLowHealth:
 		setupDamageTrigger();
 		break;
 
@@ -180,6 +184,10 @@ void BarkEventTrigger::Update()
 
 	case BarkTriggerActivationType::PlayerTakesDamage:
 		updateDamage();
+		break;
+
+	case BarkTriggerActivationType::PlayerLowHealth:
+		updateLowHealth();
 		break;
 
 	case BarkTriggerActivationType::DeathKnockedOut:
@@ -338,6 +346,12 @@ void BarkEventTrigger::setupDamageTrigger()
 
 	m_previousHp =
 		m_observedDamageable->getCurrentHp();
+
+	m_wasLowHealth =
+		!m_observedDamageable->isDead() &&
+		m_previousHp > 0.0f &&
+		m_observedDamageable->getHpPercent()
+		<= lowHealthThreshold;
 }
 
 void BarkEventTrigger::setupPlayerStateTrigger()
@@ -626,6 +640,80 @@ void BarkEventTrigger::updateDamage()
 		)
 	{
 		triggerBark();
+	}
+
+	m_previousHp = currentHp;
+}
+
+void BarkEventTrigger::updateLowHealth()
+{
+	if (m_observedDamageable == nullptr)
+	{
+		return;
+	}
+
+	const float currentHp =
+		m_observedDamageable->getCurrentHp();
+
+	const bool isLowHealth =
+		!m_observedDamageable->isDead() &&
+		currentHp > 0.0f &&
+		m_observedDamageable->getHpPercent()
+		<= lowHealthThreshold;
+
+	/*
+	 * Leaving the low-health range rearms the trigger.
+	 *
+	 * Example:
+	 *
+	 * 20% -> heal to 50%
+	 *
+	 * The next time HP falls to 25% or below,
+	 * another bark can be triggered.
+	 */
+	if (!isLowHealth)
+	{
+		m_wasLowHealth = false;
+		m_previousHp = currentHp;
+
+		return;
+	}
+
+	/*
+	 * Only trigger when HP enters the low-health
+	 * range because health decreased.
+	 *
+	 * This prevents the bark from triggering simply
+	 * because the player starts or revives with low HP.
+	 */
+	if (!m_wasLowHealth)
+	{
+		if (currentHp < m_previousHp)
+		{
+			/*
+			 * Only consume the transition if BarkManager
+			 * accepts the bark.
+			 *
+			 * If it is temporarily rejected, previous HP
+			 * is kept so the trigger can retry.
+			 */
+			if (triggerBark())
+			{
+				m_wasLowHealth = true;
+				m_previousHp = currentHp;
+			}
+
+			return;
+		}
+
+		/*
+		 * The player entered the low-health state
+		 * without taking damage, for example after
+		 * being revived with low HP.
+		 *
+		 * Mark the state as low without triggering.
+		 */
+		m_wasLowHealth = true;
 	}
 
 	m_previousHp = currentHp;

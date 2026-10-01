@@ -11,7 +11,8 @@ class Transform2D;
 
 enum class BarkPriority
 {
-	Normal = 0,
+	Low = 0,
+	Normal,
 	High
 };
 

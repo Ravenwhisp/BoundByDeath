@@ -23,7 +23,8 @@ enum class BarkTriggerActivationType
 	DeathRevived,
 	LyrielRevived,
 	CombatStarted,
-	CombatEnded
+	CombatEnded,
+	PlayerLowHealth
 };
 
 class BarkEventTrigger : public Script
@@ -52,6 +53,7 @@ private:
 	void updateZoneStay();
 	void updatePlayerEnter();
 	void updateDamage();
+	void updateLowHealth();
 	void updatePlayerState();
 	void updateBound();
 	void updateCombat();
@@ -84,7 +86,7 @@ private:
 	float m_requiredStayTime = 5.0f;
 
 	// Player whose HP will be observed.
-	// Only used by PlayerTakesDamage.
+	// Used by PlayerTakesDamage and PlayerLowHealth.
 	ComponentRef<Transform> m_damageTarget;
 
 	// GameObject containing the Bound script.
@@ -111,9 +113,10 @@ private:
 
 	float m_timer = 0.0f;
 
-	// Damage condition.
+	// Damage and low-health conditions.
 	Damageable* m_observedDamageable = nullptr;
 	float m_previousHp = 0.0f;
+	bool m_wasLowHealth = false;
 
 	// Player state conditions.
 	PlayerState* m_observedPlayerState = nullptr;

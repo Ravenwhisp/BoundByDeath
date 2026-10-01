@@ -18,11 +18,12 @@ namespace
 
 	const char* barkPriorityNames[] =
 	{
+		"Low",
 		"Normal",
 		"High"
 	};
 
-	constexpr int barkPriorityCount = 2;
+	constexpr int barkPriorityCount = 3;
 
 	std::mt19937& getBarkRandomGenerator()
 	{
