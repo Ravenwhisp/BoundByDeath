@@ -57,6 +57,53 @@ void LyrielBasicAttack::onAttackWindowUpdate()
     }
 }
 
+void LyrielBasicAttack::cancelAbility()
+{
+    if (m_isAiming)
+    {
+        m_isAiming = false;
+
+        if (m_lyrielUI)
+        {
+            m_lyrielUI->hideBasicAttackUI();
+        }
+    }
+
+    AbilityBase::cancelAbility();
+}
+
+void LyrielBasicAttack::onHitFrame()
+{
+    bool spawned = false;
+
+    if (m_pendingIsAimed)
+    {
+        spawned = spawnArrowToDirection(m_pendingDirection);
+    }
+    else
+    {
+        // Re-query the lock instead of keeping a pointer across the windup: the enemy
+        // may have died while the bow was being drawn.
+        PlayerTargetController* targetController = m_character != nullptr ? m_character->getTargetController() : nullptr;
+        GameObject* target = targetController != nullptr ? targetController->getCurrentTarget() : nullptr;
+
+        spawned = (target != nullptr)
+            ? spawnArrowToTarget(target)
+            : spawnArrowToDirection(getFallbackFacingDirection());
+    }
+
+    if (spawned)
+    {
+        LyrielSound* sound = m_lyrielCharacter != nullptr ? m_lyrielCharacter->getSound() : nullptr;
+        if (sound != nullptr)
+        {
+            sound->playBowRelease();
+        }
+    }
+
+    m_pendingIsAimed = false;
+}
+
 void LyrielBasicAttack::onAttackWindowFinished()
 {
     m_attackFacingTarget = nullptr;
@@ -79,20 +126,10 @@ void LyrielBasicAttack::startAbility()
         faceTarget(target);
         m_attackFacingTarget = target;
 
-        if (!spawnArrowToTarget(target))
-        {
-            setAbilityLocked(false);
-            m_attackFacingTarget = nullptr;
-            return;
-        }
+        // The arrow leaves on the animation's release frame, not on button press.
+        m_pendingIsAimed = false;
 
         notifyAbilitySuccessfullyStarted();
-
-        LyrielSound* sound = m_lyrielCharacter != nullptr ? m_lyrielCharacter->getSound() : nullptr;
-        if (sound != nullptr)
-        {
-            sound->playBowRelease();
-        }
 
         beginAttackPresentation();
 
@@ -397,19 +434,10 @@ void LyrielBasicAttack::releaseAimAndCast()
 
     faceDirection(forward);
 
-    if (!spawnArrowToDirection(forward))
-    {
-        setAbilityLocked(false);
-        return;
-    }
+    m_pendingDirection = forward;
+    m_pendingIsAimed = true;
 
     notifyAbilitySuccessfullyStarted();
-
-    LyrielSound* sound = m_lyrielCharacter != nullptr ? m_lyrielCharacter->getSound() : nullptr;
-    if (sound != nullptr)
-    {
-        sound->playBowRelease();
-    }
 
     beginAttackPresentation();
 

@@ -101,6 +101,40 @@ bool DeathChargedAttack::canStartSpecificAbility() const
     return m_deathCharacter != nullptr;
 }
 
+void DeathChargedAttack::cancelAbility()
+{
+    if (m_isCharging)
+    {
+        m_isCharging = false;
+        m_chargeTime = 0.0f;
+        m_maxHoldTimer = 0.0f;
+
+        resetChargingMovementSlowdown();
+
+        if (m_deathUI)
+        {
+            m_deathUI->hideChargedAttackUI();
+        }
+
+        DeathSound* sound = m_deathCharacter != nullptr ? m_deathCharacter->getSound() : nullptr;
+        if (sound != nullptr)
+        {
+            sound->stopChargeLoop();
+        }
+    }
+
+    if (m_character != nullptr)
+    {
+        PlayerAnimationController* anim = m_character->getAnimationController();
+        if (anim != nullptr)
+        {
+            anim->abortChargeHold();
+        }
+    }
+
+    AbilityBase::cancelAbility();
+}
+
 void DeathChargedAttack::startCharging()
 {
     m_chargeTime   = 0.0f;
