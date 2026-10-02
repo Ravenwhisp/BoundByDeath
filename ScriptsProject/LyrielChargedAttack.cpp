@@ -545,7 +545,7 @@ void LyrielChargedAttack::spawnChargedArrow(const Vector3& origin, const Vector3
 
     const float lifetime = range / m_lyrielCharacter->getConfig()->m_chargedArrowSpeed;
 
-    arrow->launch(origin, flatForward, m_lyrielCharacter->getConfig()->m_chargedArrowSpeed, lifetime, nullptr, 0.0f);
+    arrow->launch(origin, flatForward, m_lyrielCharacter->getConfig()->m_chargedArrowSpeed, lifetime, nullptr, 0.0f, LyrielArrowProjectile::VisualModel::Charged);
 }
 
 void LyrielChargedAttack::drawChargePreview(const Vector3& origin, const Vector3& forward) const

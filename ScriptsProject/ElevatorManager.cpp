@@ -44,6 +44,14 @@ void ElevatorManager::Start()
         snapPlatformToTarget();
     }
 
+    for (int i = 0; i < m_wavesCompleted && i < static_cast<int>(m_combatAreas.size()); ++i)
+    {
+        if (m_combatAreas[i] != nullptr)
+        {
+            m_combatAreas[i]->setEntranceBlocked(true);
+        }
+    }
+
     const int areaCount = static_cast<int>(m_combatAreas.size());
     for (int i = 0; i < areaCount; i++)
         disableArea(i);
@@ -186,6 +194,11 @@ void ElevatorManager::resolveCombatAreas()
         }
 
         CombatAreaEvent* area = GameObjectAPI::findScript<CombatAreaEvent>(rootObject);
+        if (area != nullptr)
+        {
+            area->setKeepEntranceBlockedOnCompletion(true);
+        }
+
         m_combatAreas.push_back(area);
     }
 }
