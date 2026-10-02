@@ -426,7 +426,7 @@ void LyrielArrowVolley::spawnVolleyArrows(const Vector3& origin, const Vector3& 
             dir.Normalize();
         }
 
-        arrow->launch(origin, dir, m_lyrielCharacter->getConfig()->m_volleyArrowSpeed, lifetime, nullptr, 0.0f);
+        arrow->launch(origin, dir, m_lyrielCharacter->getConfig()->m_volleyArrowSpeed, lifetime, nullptr, 0.0f, LyrielArrowProjectile::VisualModel::Volley);
     }
 }
 

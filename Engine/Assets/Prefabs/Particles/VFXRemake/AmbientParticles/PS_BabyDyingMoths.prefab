@@ -1,0 +1,184 @@
+{
+    "Version": 2,
+    "sourcePath": "Assets\\Prefabs\\Particles\\VFXRemake\\AmbientParticles\\PS_BabyDyingMoths.prefab",
+    "Name": "PS_BabyDyingMoths",
+    "Active": true,
+    "Static": false,
+    "Layer": "DEFAULT",
+    "Tag": "DEFAULT",
+    "Transform": {
+        "Position": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "Rotation": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ],
+        "Scale": [
+            1.0,
+            1.0,
+            1.0
+        ]
+    },
+    "Components": [
+        {
+            "UID": 3327064312820576060,
+            "ComponentType": "PARTICLE_SYSTEM",
+            "Active": true,
+            "TextureAssetId": {
+                "uid": 6331887971196480327,
+                "libId": "57df628fe0bc2b47a23fe4061f3d9659",
+                "type": "TEXTURE"
+            },
+            "ParticleEmitters": [
+                {
+                    "Modules": [
+                        {
+                            "ModuleType": 2,
+                            "Looping": true,
+                            "Duration": 20.0,
+                            "RateOverTime": 3.0,
+                            "RateOverDistance": 0.0
+                        },
+                        {
+                            "ModuleType": 4,
+                            "LifeTimeType": "CONSTANT",
+                            "StartLifeTime": 5.0
+                        },
+                        {
+                            "ModuleType": 1,
+                            "ShapeType": "SPHERE",
+                            "Radius": 0.5,
+                            "RadiusThickness": 1.0,
+                            "RadiusScale": 3.0
+                        },
+                        {
+                            "ModuleType": 3,
+                            "ColorOverTime": [
+                                {
+                                    "IsAlphaMark": true,
+                                    "Position": 0.02295081876218319,
+                                    "Alpha": 0.0
+                                },
+                                {
+                                    "IsAlphaMark": false,
+                                    "Position": 0.02640259638428688,
+                                    "Color": [
+                                        0.8996139168739319,
+                                        0.6404087543487549,
+                                        0.4550171196460724
+                                    ]
+                                },
+                                {
+                                    "IsAlphaMark": true,
+                                    "Position": 0.18151815235614777,
+                                    "Alpha": 1.0
+                                },
+                                {
+                                    "IsAlphaMark": false,
+                                    "Position": 0.4686471223831177,
+                                    "Color": [
+                                        0.3243243098258972,
+                                        0.23247727751731873,
+                                        0.12772616744041443
+                                    ]
+                                },
+                                {
+                                    "IsAlphaMark": false,
+                                    "Position": 0.7375103235244751,
+                                    "Color": [
+                                        0.8030887842178345,
+                                        0.33487868309020996,
+                                        0.0
+                                    ]
+                                },
+                                {
+                                    "IsAlphaMark": true,
+                                    "Position": 0.8688519597053528,
+                                    "Alpha": 1.0
+                                },
+                                {
+                                    "IsAlphaMark": false,
+                                    "Position": 0.8754098415374756,
+                                    "Color": [
+                                        0.21235519647598267,
+                                        0.02951654978096485,
+                                        0.0
+                                    ]
+                                },
+                                {
+                                    "IsAlphaMark": true,
+                                    "Position": 0.9933993220329285,
+                                    "Alpha": 0.0
+                                }
+                            ],
+                            "ColorCurve": [
+                                0.4449999928474426,
+                                0.05000000074505806,
+                                0.550000011920929,
+                                0.949999988079071
+                            ],
+                            "HDRColor": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "HDRIntensity": 0.0
+                        },
+                        {
+                            "ModuleType": 5,
+                            "VelocityType": "RANDOM_BETWEEN_TWO",
+                            "InitialVelocity": 0.05000000074505806,
+                            "InitialVelocity2": -0.05000000074505806,
+                            "Gravity": 0.0
+                        },
+                        {
+                            "ModuleType": 6,
+                            "StartScaleType": "RANDOM_BETWEEN_TWO",
+                            "StartScale": [
+                                0.10000000149011612,
+                                0.10000000149011612,
+                                0.0
+                            ],
+                            "StartScale2": [
+                                0.05000000074505806,
+                                0.05000000074505806,
+                                0.0
+                            ],
+                            "ChangeSizeOverTime": false
+                        },
+                        {
+                            "ModuleType": 7,
+                            "RotationType": "RANDOM_BETWEEN_TWO",
+                            "StartRotation": 0.0,
+                            "StartRotation2": 6.2831854820251465,
+                            "VelocityType": "RANDOM_BETWEEN_TWO",
+                            "AngularVelocity": 0.2617993950843811,
+                            "AngularVelocity2": -0.2617993950843811,
+                            "FlipRotation": 0.0
+                        },
+                        {
+                            "ModuleType": 8,
+                            "TileRows": 1,
+                            "TileColumns": 1,
+                            "FPS": 0.0,
+                            "StartFrameType": "CONSTANT",
+                            "StartFrame": 0.0
+                        },
+                        {
+                            "ModuleType": 9,
+                            "RenderMode": "BILLBOARD",
+                            "RenderLayer": 0,
+                            "BlendMode": "ALPHA"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "Children": []
+}
