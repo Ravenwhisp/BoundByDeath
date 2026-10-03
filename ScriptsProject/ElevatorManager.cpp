@@ -151,7 +151,8 @@ void ElevatorManager::Update()
 
                 if (m_wavesDoneInCycle <= m_wavesPerCycle && m_wavesCompleted < areaCount)
                 {
-                    beginWave(m_wavesCompleted);
+                    m_waveDelayTimer = 0.0f;
+                    m_state = State::WaitingBetweenWaves;
                 }
 
                 if (m_wavesDoneInCycle > m_wavesPerCycle)
@@ -164,6 +165,18 @@ void ElevatorManager::Update()
                     m_state = State::PlatformMoving;
                 }
             }
+        }
+        break;
+    }
+
+    case State::WaitingBetweenWaves:
+    {
+        updateWallScroll();
+        m_waveDelayTimer += Time::getDeltaTime();
+        if (m_waveDelayTimer >= 3.0f)
+        {
+            beginWave(m_wavesCompleted);
+            m_state = State::CycleActive;
         }
         break;
     }
