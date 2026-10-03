@@ -12,6 +12,13 @@
 #include "BreakableObject.h"
 #include "CrystalShadowMark.h"
 
+namespace
+{
+    constexpr float kEnemyCacheRefreshInterval = 0.1f;
+    constexpr float kNearbyCachePadding = 2.5f;
+    constexpr float kCacheMovementThreshold = 1.0f;
+}
+
 IMPLEMENT_SCRIPT_FIELDS(PlayerTargetController,
     SERIALIZED_FLOAT(m_targetRange, "Target Range", 0.0f, 20.0f, 0.05f),
     SERIALIZED_FLOAT(m_targetConeAngle, "Target Cone Angle", 1.0f, 180.0f, 1.0f),
@@ -133,9 +140,6 @@ void PlayerTargetController::updateTargetsInRange()
     m_targetsInRange.clear();
     m_defaultEnemyTarget = nullptr;
 
-    const std::vector<GameObject*> enemies = SceneAPI::findAllGameObjectsByTag(Tag::ENEMY, true);
-    const std::vector<GameObject*> breakables = SceneAPI::findAllGameObjectsByTag(Tag::BREAKABLE, true);
-
     Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
     if (ownerTransform == nullptr)
     {
@@ -145,75 +149,160 @@ void PlayerTargetController::updateTargetsInRange()
     const Vector3 ownerPosition = TransformAPI::getGlobalPosition(ownerTransform);
     const float targetRangeSq = m_targetRange * m_targetRange;
 
+    m_enemyCacheTimer += Time::getDeltaTime();
+
+    Vector3 cacheMovement = ownerPosition - m_enemyCacheCenter;
+    cacheMovement.y = 0.0f;
+    const bool movedBeyondCacheThreshold =
+        cacheMovement.LengthSquared() >= kCacheMovementThreshold * kCacheMovementThreshold;
+
+    {
+        SCRIPT_PROFILE_SCOPE("Refresh spatial caches");
+
+        if (!m_nearbyCacheValid || m_enemyCacheTimer >= kEnemyCacheRefreshInterval || movedBeyondCacheThreshold)
+        {
+            refreshNearbyCache(ownerPosition);
+        }
+    }
+
     bool hasEnemyInRange = false;
     int bestEnemyPriority = -101;
     float bestEnemyDistanceSq = FLT_MAX;
 
-    for (GameObject* enemy : enemies)
     {
-        if (enemy == nullptr)
-        {
-            continue;
-        }
+        SCRIPT_PROFILE_SCOPE("Filter cached targets");
 
-        Transform* enemyTransform = GameObjectAPI::getTransform(enemy);
-        if (enemyTransform == nullptr)
+        for (const CachedTarget& enemy : m_cachedEnemies)
         {
-            continue;
-        }
+            if (!isCachedTargetValid(enemy))
+            {
+                continue;
+            }
 
-        Vector3 difference = TransformAPI::getGlobalPosition(enemyTransform) - ownerPosition;
-        const float rangeDistanceSq = difference.LengthSquared();
-        difference.y = 0.0f;
-        const float distanceSq = difference.LengthSquared();
+            Vector3 difference = TransformAPI::getGlobalPosition(enemy.transform) - ownerPosition;
+            const float rangeDistanceSq = difference.LengthSquared();
+            difference.y = 0.0f;
+            const float distanceSq = difference.LengthSquared();
 
-        if (rangeDistanceSq <= targetRangeSq && isTargetAlive(enemy) && isTargetable(enemy))
-        {
-            EnemyBaseController* controller = GameObjectAPI::findScript<EnemyBaseController>(enemy);
-            m_targetsInRange.push_back({ enemy, controller, distanceSq });
+            if (rangeDistanceSq > targetRangeSq)
+            {
+                continue;
+            }
+
+            m_targetsInRange.push_back({ enemy.gameObject, enemy.enemyController, distanceSq });
             hasEnemyInRange = true;
 
-            const int priority = controller != nullptr ? controller->getTargetPriority() : 0;
+            const int priority = enemy.enemyController != nullptr ? enemy.enemyController->getTargetPriority() : 0;
             if (m_defaultEnemyTarget == nullptr || priority > bestEnemyPriority ||
                 (priority == bestEnemyPriority && distanceSq < bestEnemyDistanceSq))
             {
-                m_defaultEnemyTarget = enemy;
+                m_defaultEnemyTarget = enemy.gameObject;
                 bestEnemyPriority = priority;
                 bestEnemyDistanceSq = distanceSq;
             }
         }
-    }
 
-    for (GameObject* breakable : breakables)
+        for (const CachedTarget& breakable : m_cachedBreakables)
+        {
+            if (!isCachedTargetValid(breakable))
+            {
+                continue;
+            }
+
+            Vector3 difference = TransformAPI::getGlobalPosition(breakable.transform) - ownerPosition;
+            const float rangeDistanceSq = difference.LengthSquared();
+            difference.y = 0.0f;
+            const float distanceSq = difference.LengthSquared();
+
+            if (rangeDistanceSq > targetRangeSq)
+            {
+                continue;
+            }
+
+            if (hasEnemyInRange &&
+                (breakable.breakableObject == nullptr || !breakable.breakableObject->canBeTargetedDuringCombat()))
+            {
+                continue;
+            }
+
+            m_targetsInRange.push_back({ breakable.gameObject, nullptr, distanceSq });
+        }
+    }
+}
+
+void PlayerTargetController::refreshNearbyCache(const Vector3& ownerPosition)
+{
+    m_cachedEnemies.clear();
+    m_cachedBreakables.clear();
+
+    const float queryRadius = m_targetRange + kNearbyCachePadding;
+    std::vector<GameObject*> nearbyObjects = SceneAPI::getObjectsInCircularArea(
+        Vector2(ownerPosition.x, ownerPosition.z), queryRadius, true, QuadtreeTarget::Both);
+
+    std::sort(nearbyObjects.begin(), nearbyObjects.end());
+    nearbyObjects.erase(std::unique(nearbyObjects.begin(), nearbyObjects.end()), nearbyObjects.end());
+    m_cachedEnemies.reserve(nearbyObjects.size());
+    m_cachedBreakables.reserve(nearbyObjects.size());
+
+    for (GameObject* object : nearbyObjects)
     {
-        if (breakable == nullptr)
+        if (object == nullptr)
         {
             continue;
         }
 
-        Transform* breakableTransform = GameObjectAPI::getTransform(breakable);
-        if (breakableTransform == nullptr)
+        const Tag tag = GameObjectAPI::getTag(object);
+        if (tag != Tag::ENEMY && tag != Tag::BREAKABLE)
         {
             continue;
         }
 
-        Vector3 difference = TransformAPI::getGlobalPosition(breakableTransform) - ownerPosition;
-        const float rangeDistanceSq = difference.LengthSquared();
-        difference.y = 0.0f;
-        const float distanceSq = difference.LengthSquared();
+        CachedTarget target;
+        target.gameObject = object;
+        target.transform = GameObjectAPI::getTransform(object);
+        target.damageable = GameObjectAPI::findScript<Damageable>(object);
+        target.crystalShadowMark = GameObjectAPI::findScript<CrystalShadowMark>(object);
 
-        if (rangeDistanceSq > targetRangeSq || !isTargetAlive(breakable) || !isTargetable(breakable))
+        if (target.transform == nullptr || target.damageable == nullptr)
         {
             continue;
         }
 
-        if (hasEnemyInRange && !canTargetBreakableDuringCombat(breakable))
+        if (tag == Tag::ENEMY)
         {
-            continue;
+            target.enemyController = GameObjectAPI::findScript<EnemyBaseController>(object);
+            m_cachedEnemies.push_back(target);
         }
-
-        m_targetsInRange.push_back({ breakable, nullptr, distanceSq });
+        else
+        {
+            target.breakableObject = GameObjectAPI::findScript<BreakableObject>(object);
+            m_cachedBreakables.push_back(target);
+        }
     }
+
+    m_enemyCacheCenter = ownerPosition;
+    m_enemyCacheTimer = 0.0f;
+    m_nearbyCacheValid = true;
+}
+
+bool PlayerTargetController::isCachedTargetValid(const CachedTarget& target) const
+{
+    if (target.gameObject == nullptr || !SceneAPI::containsGameObject(target.gameObject))
+    {
+        return false;
+    }
+
+    if (!GameObjectAPI::isActiveInHierarchy(target.gameObject) || target.transform == nullptr || target.damageable == nullptr)
+    {
+        return false;
+    }
+
+    if (target.damageable->isDead() || target.damageable->getCurrentHp() <= 0.0f)
+    {
+        return false;
+    }
+
+    return target.crystalShadowMark == nullptr || !target.crystalShadowMark->isPuzzleCompleted();
 }
 
 void PlayerTargetController::updateCurrentTarget()
