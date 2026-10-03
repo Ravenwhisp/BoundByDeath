@@ -49,6 +49,7 @@ private:
 
     void updateTargetsInRange();
     void refreshNearbyCache(const Vector3& ownerPosition);
+    void refreshCrystalCache();
     bool isCachedTargetValid(const CachedTarget& target) const;
     void clearInvalidCurrentTarget();
     void setDefaultEnemyTargetIfNeeded();
@@ -91,10 +92,12 @@ private:
     std::vector<TargetCandidate> m_targetsInRange;
     std::vector<CachedTarget> m_cachedEnemies;
     std::vector<CachedTarget> m_cachedBreakables;
+    std::vector<CachedTarget> m_cachedCrystals;
 
     Vector3 m_enemyCacheCenter = Vector3::Zero;
     float m_enemyCacheTimer = 0.0f;
     bool m_nearbyCacheValid = false;
+    bool m_crystalCacheValid = false;
 
     DeathSound*  m_deathSound  = nullptr;
     LyrielSound* m_lyrielSound = nullptr;

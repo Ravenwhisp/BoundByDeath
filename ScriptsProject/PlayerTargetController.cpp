@@ -159,6 +159,11 @@ void PlayerTargetController::updateTargetsInRange()
     {
         SCRIPT_PROFILE_SCOPE("Refresh spatial caches");
 
+        if (!m_crystalCacheValid)
+        {
+            refreshCrystalCache();
+        }
+
         if (!m_nearbyCacheValid || m_enemyCacheTimer >= kEnemyCacheRefreshInterval || movedBeyondCacheThreshold)
         {
             refreshNearbyCache(ownerPosition);
@@ -241,7 +246,7 @@ void PlayerTargetController::refreshNearbyCache(const Vector3& ownerPosition)
 
     std::sort(nearbyObjects.begin(), nearbyObjects.end());
     nearbyObjects.erase(std::unique(nearbyObjects.begin(), nearbyObjects.end()), nearbyObjects.end());
-    m_cachedEnemies.reserve(nearbyObjects.size());
+    m_cachedEnemies.reserve(nearbyObjects.size() + m_cachedCrystals.size());
     m_cachedBreakables.reserve(nearbyObjects.size());
 
     for (GameObject* object : nearbyObjects)
@@ -270,6 +275,11 @@ void PlayerTargetController::refreshNearbyCache(const Vector3& ownerPosition)
 
         if (tag == Tag::ENEMY)
         {
+            if (target.crystalShadowMark != nullptr)
+            {
+                continue;
+            }
+
             target.enemyController = GameObjectAPI::findScript<EnemyBaseController>(object);
             m_cachedEnemies.push_back(target);
         }
@@ -280,9 +290,41 @@ void PlayerTargetController::refreshNearbyCache(const Vector3& ownerPosition)
         }
     }
 
+    m_cachedEnemies.insert(m_cachedEnemies.end(), m_cachedCrystals.begin(), m_cachedCrystals.end());
+
     m_enemyCacheCenter = ownerPosition;
     m_enemyCacheTimer = 0.0f;
     m_nearbyCacheValid = true;
+}
+
+void PlayerTargetController::refreshCrystalCache()
+{
+    m_cachedCrystals.clear();
+
+    const std::vector<GameObject*> crystalObjects = SceneAPI::findAllGameObjectsWithScript<CrystalShadowMark>();
+    m_cachedCrystals.reserve(crystalObjects.size());
+
+    for (GameObject* object : crystalObjects)
+    {
+        if (object == nullptr)
+        {
+            continue;
+        }
+
+        CachedTarget target;
+        target.gameObject = object;
+        target.transform = GameObjectAPI::getTransform(object);
+        target.damageable = GameObjectAPI::findScript<Damageable>(object);
+        target.enemyController = GameObjectAPI::findScript<EnemyBaseController>(object);
+        target.crystalShadowMark = GameObjectAPI::findScript<CrystalShadowMark>(object);
+
+        if (target.transform != nullptr && target.damageable != nullptr && target.crystalShadowMark != nullptr)
+        {
+            m_cachedCrystals.push_back(target);
+        }
+    }
+
+    m_crystalCacheValid = true;
 }
 
 bool PlayerTargetController::isCachedTargetValid(const CachedTarget& target) const
