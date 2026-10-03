@@ -463,29 +463,33 @@ void ShadowExecution::updateUI()
 
     if (m_controlsTransformPlayer0)
     {
-		Transform2DAPI::setAlpha(m_controlsTransformPlayer0, reaperFull ? 1.0f : 0.0f);
-        const float scaleTarget = p0Pressed ? 0.8f : 1.0f;
+        const float alphaTarget = (reaperFull) ? 1.0f : 0.0f;
+        const float alpha = MathAPI::moveTowards(Transform2DAPI::getAlpha(m_controlsTransformPlayer0), alphaTarget, timeWindow * 5.0f);
+		Transform2DAPI::setAlpha(m_controlsTransformPlayer0, alpha);
+        const float scaleTarget = (p0Pressed || m_isActive) ? 0.8f : 1.0f;
         const float scale = MathAPI::moveTowards(Transform2DAPI::getScale(m_controlsTransformPlayer0).x, scaleTarget, timeWindow);
         Transform2DAPI::setScale(m_controlsTransformPlayer0, Vector2(scale, scale));
+    }
+    if (m_controlsTransformPlayer1)
+    {
+		const float alphaTarget = (reaperFull) ? 1.0f : 0.0f;
+		const float alpha = MathAPI::moveTowards(Transform2DAPI::getAlpha(m_controlsTransformPlayer1), alphaTarget, timeWindow * 5.0f);
+        Transform2DAPI::setAlpha(m_controlsTransformPlayer1, alpha);
+        const float scaleTarget = (p1Pressed || m_isActive)  ? 0.8f : 1.0f;
+        const float scale = MathAPI::moveTowards(Transform2DAPI::getScale(m_controlsTransformPlayer1).x, scaleTarget, timeWindow);
+        Transform2DAPI::setScale(m_controlsTransformPlayer1, Vector2(scale, scale));
     }
     if (m_glowTransformPlayer0)
     {
 		const float alphaTarget = p0Pressed ? 1.0f : 0.0f;
-		const float alpha = MathAPI::moveTowards(Transform2DAPI::getAlpha(m_glowTransformPlayer0), alphaTarget, timeWindow);
+		const float alpha = MathAPI::moveTowards(Transform2DAPI::getAlpha(m_glowTransformPlayer0), alphaTarget, timeWindow * 5.0f);
 		Transform2DAPI::setAlpha(m_glowTransformPlayer0, alpha);
     }
     if (m_glowTransformPlayer1)
     {
-        Transform2DAPI::setAlpha(m_controlsTransformPlayer1, reaperFull ? 1.0f : 0.0f);
 		const float alphaTarget = p1Pressed ? 1.0f : 0.0f;
-		const float alpha = MathAPI::moveTowards(Transform2DAPI::getAlpha(m_glowTransformPlayer1), alphaTarget, timeWindow);
+		const float alpha = MathAPI::moveTowards(Transform2DAPI::getAlpha(m_glowTransformPlayer1), alphaTarget, timeWindow * 5.0f);
 		Transform2DAPI::setAlpha(m_glowTransformPlayer1, alpha);
-    }
-    if (m_controlsTransformPlayer1)
-    {
-        const float scaleTarget = p1Pressed ? 0.8f : 1.0f;
-        const float scale = MathAPI::moveTowards(Transform2DAPI::getScale(m_controlsTransformPlayer1).x, scaleTarget, timeWindow);
-        Transform2DAPI::setScale(m_controlsTransformPlayer1, Vector2(scale, scale));
     }
 
     if (isActive())
