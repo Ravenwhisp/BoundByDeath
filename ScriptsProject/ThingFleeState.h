@@ -24,6 +24,6 @@ private:
     MovingThingController* m_controller = nullptr;
     AnimationComponent* m_animation = nullptr;
 
-	bool m_wallDetected = false;
+	//bool m_wallDetected = false;
 };
 

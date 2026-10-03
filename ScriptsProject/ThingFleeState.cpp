@@ -41,7 +41,7 @@ void ThingFleeState::OnStateUpdate()
         return;
     }
 
-    if (m_wallDetected)
+    if (!tryMoveFleeDirection())
     {
         AnimationAPI::sendTrigger(m_animation, "ToEnd");
 
@@ -49,11 +49,14 @@ void ThingFleeState::OnStateUpdate()
         return;
     }
 
+    /*
+    // m_wallDetected here would enable the upper if, instead of using tryMoveFleeDirection() directly
     if (!tryMoveFleeDirection())
     {
         m_wallDetected = true;
         Debug::log("[ThingFleeState] Wall detected, stopping movement");
 	}
+    */
 }
 
 void ThingFleeState::OnStateExit()
