@@ -16,6 +16,7 @@ public:
 
     void Start()  override;
     void Update() override;
+	void updateUI() override;
 
     void drawGizmo() override;
 
@@ -27,6 +28,7 @@ protected:
     void cancelAbility() override;
 
     float getCooldown() const override;
+
 
 private:
     void beginAim();
