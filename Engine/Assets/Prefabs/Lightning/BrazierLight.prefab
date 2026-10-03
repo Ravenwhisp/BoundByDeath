@@ -1,44 +1,61 @@
 {
-  "sourcePath": "Assets\\Prefabs\\BrazierLight.prefab",
-  "Name": "BrazierLight",
-  "Active": true,
-  "Static": false,
-  "Layer": "DEFAULT",
-  "Tag": "DEFAULT",
-  "Transform": {
-    "Position": [
-      -42.0,
-      -13.0,
-      95.0
+    "Version": 2,
+    "sourcePath": "Assets\\Prefabs\\Lightning\\BrazierLight.prefab",
+    "Name": "BrazierLight",
+    "Active": true,
+    "Static": false,
+    "Layer": "DEFAULT",
+    "Tag": "DEFAULT",
+    "Transform": {
+        "Position": [
+            -42.0,
+            -13.0,
+            95.0
+        ],
+        "Rotation": [
+            -0.0,
+            0.0,
+            -0.0,
+            1.0
+        ],
+        "Scale": [
+            1.0,
+            1.0,
+            1.0
+        ]
+    },
+    "Components": [
+        {
+            "UID": 13851997213343523653,
+            "ComponentType": "LIGHT",
+            "Active": true,
+            "LightType": 1,
+            "Color": [
+                0.9529411792755127,
+                0.4431372582912445,
+                0.10980392247438431
+            ],
+            "Intensity": 7.599999904632568,
+            "CastShadows": false,
+            "ShadowMapSize": 2048,
+            "ShadowPcfEnabled": true,
+            "ShadowPcfRadius": 1,
+            "ShadowBias": 0.0005000000237487257,
+            "ShadowStrength": 1.0,
+            "ShadowDistance": 100.0,
+            "ShadowCascadeBlend": 0.10000000149011612,
+            "ShadowNormalBiasTexels": 0.5,
+            "ShadowSlopeBiasTexels": 1.0,
+            "ShadowCascadeCount": 4,
+            "ShadowCascadeSplit0": 0.10000000149011612,
+            "ShadowCascadeSplit1": 0.30000001192092896,
+            "ShadowCascadeSplit2": 0.6000000238418579,
+            "ShadowCascadeFitMode": 1,
+            "ShadowCascadeDebugEnabled": false,
+            "Radius": 4.800000190734863,
+            "InnerAngleDegrees": 0.0,
+            "OuterAngleDegrees": 0.0
+        }
     ],
-    "Rotation": [
-      -0.0,
-      0.0,
-      -0.0,
-      1.0
-    ],
-    "Scale": [
-      1.0,
-      1.0,
-      1.0
-    ]
-  },
-  "Components": [
-    {
-      "UID": 14194738174864126471,
-      "ComponentType": "LIGHT",
-      "Active": true,
-      "LightType": 1,
-      "Color": [
-        0.9529411792755128,
-        0.4431372582912445,
-        0.10980392247438432
-      ],
-      "Intensity": 21.0,
-      "Radius": 11.0
-    }
-  ],
-  "Children": [],
-  "Version": 2,
-  "VariantOf": "Assets\\Prefabs\\CandlePointLight.prefab"
+    "Children": []
 }
