@@ -60,7 +60,6 @@ public:
     float m_hitTrailStartHeightOffset = 0.15f;
     float m_hitTrailEndHeightOffset = 2.0f;
     float m_hitTrailDuration = 0.6f;
-    float m_hitTrailRotationDegrees = 90.0f;
 
 private:
     void cachePlayers();

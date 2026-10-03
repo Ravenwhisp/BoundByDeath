@@ -27,7 +27,6 @@ IMPLEMENT_SCRIPT_FIELDS(ShadowExecution,
     SERIALIZED_FLOAT(m_hitTrailStartHeightOffset, "Hit Trail Start Height Offset", -5.0f, 10.0f, 0.05f),
     SERIALIZED_FLOAT(m_hitTrailEndHeightOffset, "Hit Trail End Height Offset", -5.0f, 10.0f, 0.05f),
     SERIALIZED_FLOAT(m_hitTrailDuration, "Hit Trail Duration", 0.01f, 10.0f, 0.05f),
-    SERIALIZED_FLOAT(m_hitTrailRotationDegrees, "Hit Trail Rotation Degrees", -360.0f, 360.0f, 1.0f),
     SERIALIZED_COMPONENT_REF(m_reaperGaugeBar, "Reaper Gauge UI", ComponentType::UISLIDER),
     SERIALIZED_COMPONENT_REF(m_executionCanvas, "Execution Canvas", ComponentType::TRANSFORM),
     SERIALIZED_COMPONENT_REF(m_executionSprite, "Execution Sprite", ComponentType::TRANSFORM2D),
@@ -387,13 +386,6 @@ void ShadowExecution::spawnHitTrailVfx(const Vector3& center)
 
         ParticleLifecycle::disableSelfDestruct(trail);
 
-        TrailComponent* trailComponent = TrailAPI::getTrailComponent(trail);
-        if (trailComponent != nullptr)
-        {
-            TrailAPI::clearTrail(trailComponent);
-            TrailAPI::generateTrail(trailComponent, true);
-        }
-
         effect.trails.push_back(trail);
     }
 
@@ -412,7 +404,6 @@ void ShadowExecution::updateHitTrailVfx(float dt)
         const float convergence = MathAPI::evaluateEasing(MathAPI::EasingType::EaseInCubic, progress);
         const float height = MathAPI::lerp(m_hitTrailStartHeightOffset, m_hitTrailEndHeightOffset, progress);
         const float radius = MathAPI::lerp(m_hitTrailStartRadius, 0.0f, convergence);
-        const float rotation = m_hitTrailRotationDegrees * progress * (MathAPI::PI / 180.0f);
 
         for (size_t i = 0; i < effectIt->trails.size(); ++i)
         {
@@ -428,7 +419,7 @@ void ShadowExecution::updateHitTrailVfx(float dt)
                 continue;
             }
 
-            const float angle = 2.0f * MathAPI::PI * static_cast<float>(i) / static_cast<float>(kHitTrailCount) + rotation;
+            const float angle = 2.0f * MathAPI::PI * static_cast<float>(i) / static_cast<float>(kHitTrailCount);
             const Vector3 position(
                 effectIt->center.x + std::cos(angle) * radius,
                 effectIt->center.y + height,
