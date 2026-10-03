@@ -19,6 +19,9 @@ protected:
 	void startAbility() override;
 	bool canStartSpecificAbility() const override;
 
+    // The dash substitutes whatever action is playing.
+    bool canCancelOthers() const override { return true; }
+
     virtual bool canDash() const;
     virtual void onDashStarted();
     virtual void onDashUpdate(float dt) {}
