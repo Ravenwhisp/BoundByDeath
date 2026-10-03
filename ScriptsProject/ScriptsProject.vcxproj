@@ -219,13 +219,16 @@
     <ClInclude Include="Checkpoint8_Level1_Event.h" />
     <ClInclude Include="CheckpointEvent.h" />
     <ClInclude Include="CrystalVisuals.h" />
+    <ClInclude Include="MovingThingController.h" />
     <ClInclude Include="PersistingManager.h" />
     <ClInclude Include="PersistingCheckpointState.h" />
     <ClInclude Include="ObjectVfxIds.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="SkeletonUI.h" />
     <ClInclude Include="SpectralPathEntranceVFX.h" />
     <ClInclude Include="CombatAreaEvent.h" />
     <ClInclude Include="DeathParticles.h" />
+    <ClInclude Include="DeathTauntChains.h" />
     <ClInclude Include="ElevatorManager.h" />
     <ClInclude Include="EnemyAttackState.h" />
     <ClInclude Include="PaladinUI.h" />
@@ -379,7 +382,10 @@
     <ClInclude Include="SummonerTeleportState.h" />
     <ClInclude Include="TargetIndicatorUI.h" />
     <ClInclude Include="TestingButton.h" />
+    <ClInclude Include="ThingFleeState.h" />
+    <ClInclude Include="ThingIdleState.h" />
     <ClInclude Include="TriggerArea.h" />
+    <ClInclude Include="TriggerFire.h" />
     <ClInclude Include="UIController.h" />
     <ClInclude Include="MenuSound.h" />
     <ClInclude Include="UIPause.h" />
@@ -446,12 +452,14 @@
     <ClCompile Include="CrystalVisuals.cpp" />
     <ClCompile Include="DustParticleEvent.cpp" />
     <ClCompile Include="GameplayEventAction.cpp" />
+    <ClCompile Include="MovingThingController.cpp" />
     <ClCompile Include="PersistingManager.cpp" />
     <ClCompile Include="PersistingCheckpointState.cpp" />
     <ClCompile Include="SkeletonUI.cpp" />
     <ClCompile Include="SpectralPathEntranceVFX.cpp" />
     <ClCompile Include="CombatAreaEvent.cpp" />
     <ClCompile Include="DeathParticles.cpp" />
+    <ClCompile Include="DeathTauntChains.cpp" />
     <ClCompile Include="ElevatorManager.cpp" />
     <ClCompile Include="EnemyAttackState.cpp" />
     <ClCompile Include="EnemyBaseAttackConfig.cpp" />
@@ -608,12 +616,18 @@
     <ClCompile Include="SummonerTeleportState.cpp" />
     <ClCompile Include="TargetIndicatorUI.cpp" />
     <ClCompile Include="TestingButton.cpp" />
+    <ClCompile Include="ThingFleeState.cpp" />
+    <ClCompile Include="ThingIdleState.cpp" />
     <ClCompile Include="TriggerArea.cpp" />
+    <ClCompile Include="TriggerFire.cpp" />
     <ClCompile Include="UIController.cpp" />
     <ClCompile Include="MenuSound.cpp" />
     <ClCompile Include="UIPause.cpp" />
     <ClCompile Include="UISplashScreen.cpp" />
     <ClCompile Include="VideoManager.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="ScriptsProject.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
