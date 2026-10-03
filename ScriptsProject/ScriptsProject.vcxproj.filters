@@ -175,6 +175,15 @@
     <Filter Include="Enemies\Aelorin\UI">
       <UniqueIdentifier>{c7d23cbd-96c5-4175-a8b4-628cdd048398}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Interaction/Gameplay\World">
+      <UniqueIdentifier>{fee68a6f-9e3e-4280-bd57-ec24de117cdf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Interaction/Gameplay\World\Moving life">
+      <UniqueIdentifier>{e0592246-569d-4ca8-ab84-98ef99262883}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Interaction/Gameplay\World\Moving life\States">
+      <UniqueIdentifier>{72a278d3-d32b-4d5c-b87e-c379054ba64c}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Systems\Checkpoints\Events\Level2">
       <UniqueIdentifier>{b5bbb920-cc1f-4c15-a672-acbed685a284}</UniqueIdentifier>
     </Filter>
@@ -805,6 +814,17 @@
     <ClInclude Include="Checkpoint6_Level2_Event.h">
       <Filter>Systems\Checkpoints\Events\Level2</Filter>
     </ClInclude>
+    <ClInclude Include="TriggerFire.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="ThingIdleState.h">
+      <Filter>Interaction/Gameplay\World\Moving life\States</Filter>
+    </ClInclude>
+    <ClInclude Include="MovingThingController.h">
+      <Filter>Interaction/Gameplay\World\Moving life</Filter>
+    </ClInclude>
+    <ClInclude Include="ThingFleeState.h">
+      <Filter>Interaction/Gameplay\World\Moving life\States</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
@@ -1413,5 +1433,18 @@
     <ClCompile Include="Checkpoint6_Level2_Event.cpp">
       <Filter>Systems\Checkpoints\Events\Level2</Filter>
     </ClCompile>
+    <ClCompile Include="TriggerFire.cpp" />
+    <ClCompile Include="ThingIdleState.cpp">
+      <Filter>Interaction/Gameplay\World\Moving life\States</Filter>
+    </ClCompile>
+    <ClCompile Include="MovingThingController.cpp">
+      <Filter>Interaction/Gameplay\World\Moving life</Filter>
+    </ClCompile>
+    <ClCompile Include="ThingFleeState.cpp">
+      <Filter>Interaction/Gameplay\World\Moving life\States</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="ScriptsProject.rc" />
   </ItemGroup>
 </Project>
