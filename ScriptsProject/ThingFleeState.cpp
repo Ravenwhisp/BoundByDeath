@@ -85,7 +85,7 @@ bool ThingFleeState::tryMoveFleeDirection()
 
 		TransformAPI::setGlobalPosition(ownerTransform, nextPosition); // Move the object to the new position
 
-        if (movementDelta.LengthSquared() < (lengthMovement * lengthMovement))
+        if (movementDelta.LengthSquared() < (lengthMovement * (lengthMovement / 2.f)) )
         {
             return false;
         }
