@@ -55,12 +55,14 @@ public:
 
     PrefabRef m_particlePrefab;
     PrefabRef m_hitTrailPrefab;
+    PrefabRef m_hitTrailConvergencePrefab;
 
     float m_hitTrailStartRadius = 1.25f;
     float m_hitTrailStartHeightOffset = 0.15f;
     float m_hitTrailEndHeightOffset = 2.0f;
     float m_hitTrailDuration = 0.6f;
     float m_hitTrailRotationDegrees = 45.0f;
+    float m_hitTrailConvergenceLifetime = 2.0f;
 
 private:
     void cachePlayers();

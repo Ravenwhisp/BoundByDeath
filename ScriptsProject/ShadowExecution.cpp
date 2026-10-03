@@ -23,11 +23,13 @@ IMPLEMENT_SCRIPT_FIELDS(ShadowExecution,
     SERIALIZED_ASSET_REF(m_config, "Shadow Execution Config", AssetType::DATA_CONTAINER),
     SERIALIZED_ASSET_REF(m_particlePrefab, "Particle Prefab", AssetType::PREFAB),
     SERIALIZED_ASSET_REF(m_hitTrailPrefab, "Shadow Execution Hit Trail Prefab", AssetType::PREFAB),
+    SERIALIZED_ASSET_REF(m_hitTrailConvergencePrefab, "Shadow Execution Hit Convergence Prefab", AssetType::PREFAB),
     SERIALIZED_FLOAT(m_hitTrailStartRadius, "Hit Trail Start Radius", 0.0f, 10.0f, 0.05f),
     SERIALIZED_FLOAT(m_hitTrailStartHeightOffset, "Hit Trail Start Height Offset", -5.0f, 10.0f, 0.05f),
     SERIALIZED_FLOAT(m_hitTrailEndHeightOffset, "Hit Trail End Height Offset", -5.0f, 10.0f, 0.05f),
     SERIALIZED_FLOAT(m_hitTrailDuration, "Hit Trail Duration", 0.01f, 10.0f, 0.05f),
     SERIALIZED_FLOAT(m_hitTrailRotationDegrees, "Hit Trail Rotation Degrees", -180.0f, 180.0f, 5.0f),
+    SERIALIZED_FLOAT(m_hitTrailConvergenceLifetime, "Hit Convergence Lifetime", 0.0f, 5.0f, 0.1f),
     SERIALIZED_COMPONENT_REF(m_reaperGaugeBar, "Reaper Gauge UI", ComponentType::UISLIDER),
     SERIALIZED_COMPONENT_REF(m_executionCanvas, "Execution Canvas", ComponentType::TRANSFORM),
     SERIALIZED_COMPONENT_REF(m_executionSprite, "Execution Sprite", ComponentType::TRANSFORM2D),
@@ -102,7 +104,7 @@ void ShadowExecution::Update()
         it->lifetimeRemaining -= dt;
         if (it->lifetimeRemaining <= 0.0f)
         {
-            if (it->gameObject != nullptr)
+            if (it->gameObject != nullptr && SceneAPI::containsGameObject(it->gameObject))
             {
                 GameObjectAPI::removeGameObject(it->gameObject);
             }
@@ -432,6 +434,22 @@ void ShadowExecution::updateHitTrailVfx(float dt)
 
         if (progress >= 1.0f)
         {
+            if (m_hitTrailConvergencePrefab.m_id.isValid())
+            {
+                const Vector3 position(effectIt->center.x, effectIt->center.y + height, effectIt->center.z);
+                GameObject* convergence = GameObjectAPI::instantiatePrefab(
+                    m_hitTrailConvergencePrefab.m_id,
+                    position,
+                    Vector3::Zero,
+                    ParticleLifecycle::getRuntimeVfxContainer()
+                );
+                if (convergence != nullptr)
+                {
+                    ParticleLifecycle::disableSelfDestruct(convergence);
+                    m_temporaryPrefabs.push_back({ convergence, m_hitTrailConvergenceLifetime });
+                }
+            }
+
             for (GameObject* trail : effectIt->trails)
             {
                 if (trail != nullptr && SceneAPI::containsGameObject(trail))
