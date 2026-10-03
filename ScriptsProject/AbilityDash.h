@@ -48,4 +48,5 @@ protected:
 
     Vector3 m_dashTargetPosition = Vector3::Zero;
     Vector3 m_dashStartPosition = Vector3::Zero;
+    bool m_hasDashTarget = false;
 };

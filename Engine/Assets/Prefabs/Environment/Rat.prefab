@@ -1,0 +1,1078 @@
+{
+    "Version": 2,
+    "sourcePath": "Assets\\Prefabs\\Environment\\Rat.prefab",
+    "Name": "Rat",
+    "Active": true,
+    "Static": false,
+    "Layer": "DEFAULT",
+    "Tag": "DEFAULT",
+    "Transform": {
+        "Position": [
+            8.657571792602539,
+            1.0701987743377686,
+            8.283289909362793
+        ],
+        "Rotation": [
+            -0.0,
+            0.0,
+            -0.0,
+            1.0
+        ],
+        "Scale": [
+            1.0,
+            1.0,
+            1.0
+        ]
+    },
+    "Components": [
+        {
+            "UID": 16582335154813068084,
+            "ComponentType": "ANIMATION",
+            "Active": true,
+            "StateMachineUID": {
+                "uid": 8824961474740214980,
+                "libId": "d1ec36c6ce989b92bd72be00f7bdb275",
+                "type": "ANIMATION_STATE_MACHINE"
+            },
+            "AnimationSourceUID": {
+                "uid": 0,
+                "libId": "",
+                "type": "UNKNOWN"
+            },
+            "PlayOnStart": true,
+            "ApplyScale": false,
+            "ForceWorldAfterApply": true
+        },
+        {
+            "UID": 13387886882163151396,
+            "ComponentType": "SCRIPT",
+            "Active": true,
+            "ScriptName": "MovingThingController",
+            "ScriptFields": {
+                "Detection Radius": 1.5499999523162842,
+                "Flee Speed": 3.0,
+                "Lyriel Transform": 743245849143440901,
+                "Death Transform": 16858939129400802547
+            }
+        }
+    ],
+    "Children": [
+        {
+            "Name": "Rat_New1",
+            "Active": true,
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    -6.123233601181349e-17,
+                    -3.749399025711001e-33,
+                    -6.123233601181349e-17,
+                    1.0
+                ],
+                "Scale": [
+                    10.0,
+                    10.0,
+                    10.0
+                ]
+            },
+            "Components": [],
+            "Children": [
+                {
+                    "Name": "rat_test",
+                    "Active": true,
+                    "Static": false,
+                    "Layer": "DEFAULT",
+                    "Tag": "DEFAULT",
+                    "Transform": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "Rotation": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            25.0,
+                            25.0,
+                            25.0
+                        ]
+                    },
+                    "Components": [],
+                    "Children": [
+                        {
+                            "Name": "rat",
+                            "Active": true,
+                            "Static": false,
+                            "Layer": "DEFAULT",
+                            "Tag": "DEFAULT",
+                            "Transform": {
+                                "Position": [
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "Rotation": [
+                                    -0.7071068286895752,
+                                    -0.0,
+                                    -0.0,
+                                    0.7071068286895752
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ]
+                            },
+                            "Components": [
+                                {
+                                    "UID": 11055603890153832313,
+                                    "ComponentType": "MODEL",
+                                    "Active": true,
+                                    "MeshAssetId": {
+                                        "uid": 1674978718064002254,
+                                        "libId": "c4ac0646c336f559f482ada514c2e59f",
+                                        "type": "MESH"
+                                    },
+                                    "SkinAssetId": {
+                                        "uid": 12701647487250513327,
+                                        "libId": "037af848019770462cc0cce510868da3",
+                                        "type": "SKIN"
+                                    },
+                                    "Materials": [
+                                        {
+                                            "uid": 3334083456359271293,
+                                            "libId": "00b77f408680da6fc9ee5fed9aa1bc76",
+                                            "type": "MATERIAL"
+                                        }
+                                    ],
+                                    "Render Mode": 0,
+                                    "BoundingBox": {
+                                        "Custom": false,
+                                        "Min": [
+                                            -0.00033068700577132404,
+                                            -0.0009717904031276703,
+                                            -0.000008533126674592495
+                                        ],
+                                        "Max": [
+                                            0.00033175238058902323,
+                                            0.0023020042572170496,
+                                            0.0006635067984461784
+                                        ]
+                                    }
+                                }
+                            ],
+                            "Children": []
+                        },
+                        {
+                            "Name": "ratPelvis",
+                            "Active": true,
+                            "Static": false,
+                            "Layer": "DEFAULT",
+                            "Tag": "DEFAULT",
+                            "Transform": {
+                                "Position": [
+                                    -8.251240662948689e-11,
+                                    0.0003525378415361047,
+                                    -0.0004811148683074862
+                                ],
+                                "Rotation": [
+                                    0.6608409881591797,
+                                    0.22178788483142853,
+                                    0.6842659115791321,
+                                    0.21419525146484375
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    0.9999999403953552
+                                ]
+                            },
+                            "Components": [],
+                            "Children": [
+                                {
+                                    "Name": "ratLLeg1",
+                                    "Active": true,
+                                    "Static": false,
+                                    "Layer": "DEFAULT",
+                                    "Tag": "DEFAULT",
+                                    "Transform": {
+                                        "Position": [
+                                            -0.00001047518162522465,
+                                            0.00000768980953580467,
+                                            0.0001623953430680558
+                                        ],
+                                        "Rotation": [
+                                            0.8843754529953003,
+                                            0.4632221460342407,
+                                            0.055895671248435974,
+                                            0.013458197005093098
+                                        ],
+                                        "Scale": [
+                                            1.0000001192092896,
+                                            1.0000001192092896,
+                                            1.0000001192092896
+                                        ]
+                                    },
+                                    "Components": [],
+                                    "Children": [
+                                        {
+                                            "Name": "ratLLeg2",
+                                            "Active": true,
+                                            "Static": false,
+                                            "Layer": "DEFAULT",
+                                            "Tag": "DEFAULT",
+                                            "Transform": {
+                                                "Position": [
+                                                    0.00025472737615928054,
+                                                    1.1920930388653606e-11,
+                                                    0.0
+                                                ],
+                                                "Rotation": [
+                                                    -0.07220304012298584,
+                                                    0.09465333819389343,
+                                                    -0.8477644920349121,
+                                                    0.5168392658233643
+                                                ],
+                                                "Scale": [
+                                                    0.9999998807907104,
+                                                    1.0,
+                                                    0.9999997615814209
+                                                ]
+                                            },
+                                            "Components": [],
+                                            "Children": [
+                                                {
+                                                    "Name": "ratLLeg3",
+                                                    "Active": true,
+                                                    "Static": false,
+                                                    "Layer": "DEFAULT",
+                                                    "Tag": "DEFAULT",
+                                                    "Transform": {
+                                                        "Position": [
+                                                            0.00025270594051107764,
+                                                            -4.7683707676826614e-11,
+                                                            0.0
+                                                        ],
+                                                        "Rotation": [
+                                                            -0.065196692943573,
+                                                            0.014186611399054527,
+                                                            0.8618308901786804,
+                                                            0.5027878880500793
+                                                        ],
+                                                        "Scale": [
+                                                            0.9999999403953552,
+                                                            1.0,
+                                                            1.0
+                                                        ]
+                                                    },
+                                                    "Components": [],
+                                                    "Children": [
+                                                        {
+                                                            "Name": "ratLLegPalm",
+                                                            "Active": true,
+                                                            "Static": false,
+                                                            "Layer": "DEFAULT",
+                                                            "Tag": "DEFAULT",
+                                                            "Transform": {
+                                                                "Position": [
+                                                                    0.00020983844297006726,
+                                                                    -2.2204459996194763e-18,
+                                                                    2.384186077730721e-11
+                                                                ],
+                                                                "Rotation": [
+                                                                    -0.08539679646492004,
+                                                                    -0.012544740922749043,
+                                                                    0.11119533330202103,
+                                                                    0.9900432825088501
+                                                                ],
+                                                                "Scale": [
+                                                                    0.9999998211860657,
+                                                                    0.9999999403953552,
+                                                                    1.0
+                                                                ]
+                                                            },
+                                                            "Components": [],
+                                                            "Children": []
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "Name": "ratRLeg1",
+                                    "Active": true,
+                                    "Static": false,
+                                    "Layer": "DEFAULT",
+                                    "Tag": "DEFAULT",
+                                    "Transform": {
+                                        "Position": [
+                                            -0.000010475206181581598,
+                                            0.000007689856829529162,
+                                            -0.0001623953430680558
+                                        ],
+                                        "Rotation": [
+                                            0.8930687308311462,
+                                            0.4471253752708435,
+                                            -0.046928733587265015,
+                                            -0.017460504546761513
+                                        ],
+                                        "Scale": [
+                                            0.9999999403953552,
+                                            1.0000001192092896,
+                                            1.0
+                                        ]
+                                    },
+                                    "Components": [],
+                                    "Children": [
+                                        {
+                                            "Name": "ratRLeg2",
+                                            "Active": true,
+                                            "Static": false,
+                                            "Layer": "DEFAULT",
+                                            "Tag": "DEFAULT",
+                                            "Transform": {
+                                                "Position": [
+                                                    0.00025472749257460237,
+                                                    0.0,
+                                                    1.1920944266441413e-11
+                                                ],
+                                                "Rotation": [
+                                                    0.07104404270648956,
+                                                    -0.09427864104509354,
+                                                    -0.8446915149688721,
+                                                    0.5220732688903809
+                                                ],
+                                                "Scale": [
+                                                    1.0000001192092896,
+                                                    1.0000004768371582,
+                                                    0.9999998807907104
+                                                ]
+                                            },
+                                            "Components": [],
+                                            "Children": [
+                                                {
+                                                    "Name": "ratRLeg3",
+                                                    "Active": true,
+                                                    "Static": false,
+                                                    "Layer": "DEFAULT",
+                                                    "Tag": "DEFAULT",
+                                                    "Transform": {
+                                                        "Position": [
+                                                            0.00025270599871873856,
+                                                            0.0,
+                                                            2.384186945092459e-11
+                                                        ],
+                                                        "Rotation": [
+                                                            0.06529739499092102,
+                                                            -0.0151303019374609,
+                                                            0.8593131899833679,
+                                                            0.5070386528968811
+                                                        ],
+                                                        "Scale": [
+                                                            0.9999994039535522,
+                                                            0.9999999403953552,
+                                                            1.0
+                                                        ]
+                                                    },
+                                                    "Components": [],
+                                                    "Children": [
+                                                        {
+                                                            "Name": "ratRLegPalm",
+                                                            "Active": true,
+                                                            "Static": false,
+                                                            "Layer": "DEFAULT",
+                                                            "Tag": "DEFAULT",
+                                                            "Transform": {
+                                                                "Position": [
+                                                                    0.00020983848662581295,
+                                                                    1.490116016689136e-11,
+                                                                    -2.384185210368983e-11
+                                                                ],
+                                                                "Rotation": [
+                                                                    0.0853961631655693,
+                                                                    0.012550510466098785,
+                                                                    0.11106004565954208,
+                                                                    0.990058422088623
+                                                                ],
+                                                                "Scale": [
+                                                                    1.0000001192092896,
+                                                                    1.0000001192092896,
+                                                                    1.0000001192092896
+                                                                ]
+                                                            },
+                                                            "Components": [],
+                                                            "Children": []
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "Name": "ratSpine1",
+                                    "Active": true,
+                                    "Static": false,
+                                    "Layer": "DEFAULT",
+                                    "Tag": "DEFAULT",
+                                    "Transform": {
+                                        "Position": [
+                                            0.0,
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Rotation": [
+                                            -5.182202666986768e-9,
+                                            1.867965160329277e-8,
+                                            -0.1494816392660141,
+                                            0.9887645244598389
+                                        ],
+                                        "Scale": [
+                                            0.9999998807907104,
+                                            0.9999999403953552,
+                                            0.9999998211860657
+                                        ]
+                                    },
+                                    "Components": [],
+                                    "Children": [
+                                        {
+                                            "Name": "ratSpine2",
+                                            "Active": true,
+                                            "Static": false,
+                                            "Layer": "DEFAULT",
+                                            "Tag": "DEFAULT",
+                                            "Transform": {
+                                                "Position": [
+                                                    0.0003769083705265075,
+                                                    -4.768371461572052e-11,
+                                                    -7.450751170548497e-13
+                                                ],
+                                                "Rotation": [
+                                                    1.600692378644908e-8,
+                                                    -1.2231462065415144e-8,
+                                                    0.375399112701416,
+                                                    0.9268632531166077
+                                                ],
+                                                "Scale": [
+                                                    1.0000004768371582,
+                                                    1.0000001192092896,
+                                                    1.0000001192092896
+                                                ]
+                                            },
+                                            "Components": [],
+                                            "Children": [
+                                                {
+                                                    "Name": "ratRibcage",
+                                                    "Active": true,
+                                                    "Static": false,
+                                                    "Layer": "DEFAULT",
+                                                    "Tag": "DEFAULT",
+                                                    "Transform": {
+                                                        "Position": [
+                                                            0.0003769083123188466,
+                                                            0.0,
+                                                            0.0
+                                                        ],
+                                                        "Rotation": [
+                                                            2.702096324469494e-8,
+                                                            2.1885393053366897e-8,
+                                                            0.31943899393081665,
+                                                            0.9476068615913391
+                                                        ],
+                                                        "Scale": [
+                                                            1.0,
+                                                            0.9999998807907104,
+                                                            1.0000001192092896
+                                                        ]
+                                                    },
+                                                    "Components": [],
+                                                    "Children": [
+                                                        {
+                                                            "Name": "ratLLegCollarbone",
+                                                            "Active": true,
+                                                            "Static": false,
+                                                            "Layer": "DEFAULT",
+                                                            "Tag": "DEFAULT",
+                                                            "Transform": {
+                                                                "Position": [
+                                                                    -0.0001216494565596804,
+                                                                    0.00027659948682412505,
+                                                                    0.000027316849809722044
+                                                                ],
+                                                                "Rotation": [
+                                                                    -0.06781560182571411,
+                                                                    -0.24711672961711884,
+                                                                    0.1501910239458084,
+                                                                    0.9548701643943787
+                                                                ],
+                                                                "Scale": [
+                                                                    0.9999998807907104,
+                                                                    0.9999999403953552,
+                                                                    0.9999998211860657
+                                                                ]
+                                                            },
+                                                            "Components": [],
+                                                            "Children": [
+                                                                {
+                                                                    "Name": "ratLLeg1 1",
+                                                                    "Active": true,
+                                                                    "Static": false,
+                                                                    "Layer": "DEFAULT",
+                                                                    "Tag": "DEFAULT",
+                                                                    "Transform": {
+                                                                        "Position": [
+                                                                            0.00012031351798214018,
+                                                                            4.440891999238953e-18,
+                                                                            2.384185210368983e-11
+                                                                        ],
+                                                                        "Rotation": [
+                                                                            0.930168628692627,
+                                                                            0.03565610572695732,
+                                                                            -0.23673343658447266,
+                                                                            -0.27833834290504456
+                                                                        ],
+                                                                        "Scale": [
+                                                                            1.0,
+                                                                            1.0,
+                                                                            1.0
+                                                                        ]
+                                                                    },
+                                                                    "Components": [],
+                                                                    "Children": [
+                                                                        {
+                                                                            "Name": "ratLLeg2 1",
+                                                                            "Active": true,
+                                                                            "Static": false,
+                                                                            "Layer": "DEFAULT",
+                                                                            "Tag": "DEFAULT",
+                                                                            "Transform": {
+                                                                                "Position": [
+                                                                                    0.00016955922183115035,
+                                                                                    1.1920926745734306e-10,
+                                                                                    -1.1920928133513087e-10
+                                                                                ],
+                                                                                "Rotation": [
+                                                                                    -0.11646899580955505,
+                                                                                    0.16835980117321014,
+                                                                                    0.35887080430984497,
+                                                                                    0.9106600880622864
+                                                                                ],
+                                                                                "Scale": [
+                                                                                    1.0000001192092896,
+                                                                                    1.0,
+                                                                                    1.0000001192092896
+                                                                                ]
+                                                                            },
+                                                                            "Components": [],
+                                                                            "Children": [
+                                                                                {
+                                                                                    "Name": "ratLLegPalm 1",
+                                                                                    "Active": true,
+                                                                                    "Static": false,
+                                                                                    "Layer": "DEFAULT",
+                                                                                    "Tag": "DEFAULT",
+                                                                                    "Transform": {
+                                                                                        "Position": [
+                                                                                            0.00017108824977185577,
+                                                                                            0.0,
+                                                                                            8.881783998477905e-18
+                                                                                        ],
+                                                                                        "Rotation": [
+                                                                                            -0.3121623992919922,
+                                                                                            -0.27959784865379333,
+                                                                                            -0.17884743213653564,
+                                                                                            0.8901647329330444
+                                                                                        ],
+                                                                                        "Scale": [
+                                                                                            1.0,
+                                                                                            0.9999999403953552,
+                                                                                            0.9999997019767761
+                                                                                        ]
+                                                                                    },
+                                                                                    "Components": [],
+                                                                                    "Children": []
+                                                                                }
+                                                                            ]
+                                                                        }
+                                                                    ]
+                                                                }
+                                                            ]
+                                                        },
+                                                        {
+                                                            "Name": "ratRLegCollarbone",
+                                                            "Active": true,
+                                                            "Static": false,
+                                                            "Layer": "DEFAULT",
+                                                            "Tag": "DEFAULT",
+                                                            "Transform": {
+                                                                "Position": [
+                                                                    -0.0001216494565596804,
+                                                                    0.00027659948682412505,
+                                                                    -0.000027316849809722044
+                                                                ],
+                                                                "Rotation": [
+                                                                    -0.13297449052333832,
+                                                                    0.3456030786037445,
+                                                                    0.1132582500576973,
+                                                                    0.9219809770584106
+                                                                ],
+                                                                "Scale": [
+                                                                    1.0,
+                                                                    0.9999998211860657,
+                                                                    0.9999997019767761
+                                                                ]
+                                                            },
+                                                            "Components": [],
+                                                            "Children": [
+                                                                {
+                                                                    "Name": "ratRLeg1 1",
+                                                                    "Active": true,
+                                                                    "Static": false,
+                                                                    "Layer": "DEFAULT",
+                                                                    "Tag": "DEFAULT",
+                                                                    "Transform": {
+                                                                        "Position": [
+                                                                            0.00012031351798214018,
+                                                                            -2.384185210368983e-11,
+                                                                            -2.384185730786026e-11
+                                                                        ],
+                                                                        "Rotation": [
+                                                                            0.887834370136261,
+                                                                            0.09742274880409241,
+                                                                            0.4352319836616516,
+                                                                            0.11327880620956421
+                                                                        ],
+                                                                        "Scale": [
+                                                                            1.0000003576278687,
+                                                                            1.0000003576278687,
+                                                                            0.9999998807907104
+                                                                        ]
+                                                                    },
+                                                                    "Components": [],
+                                                                    "Children": [
+                                                                        {
+                                                                            "Name": "ratRLeg2 1",
+                                                                            "Active": true,
+                                                                            "Static": false,
+                                                                            "Layer": "DEFAULT",
+                                                                            "Tag": "DEFAULT",
+                                                                            "Transform": {
+                                                                                "Position": [
+                                                                                    0.00016955928003881127,
+                                                                                    1.07288351813839e-10,
+                                                                                    1.3113020391752883e-10
+                                                                                ],
+                                                                                "Rotation": [
+                                                                                    0.11752276122570038,
+                                                                                    -0.16019544005393982,
+                                                                                    0.3412829041481018,
+                                                                                    0.918722927570343
+                                                                                ],
+                                                                                "Scale": [
+                                                                                    1.0000001192092896,
+                                                                                    1.0000001192092896,
+                                                                                    0.9999998211860657
+                                                                                ]
+                                                                            },
+                                                                            "Components": [],
+                                                                            "Children": [
+                                                                                {
+                                                                                    "Name": "ratRLegPalm 1",
+                                                                                    "Active": true,
+                                                                                    "Static": false,
+                                                                                    "Layer": "DEFAULT",
+                                                                                    "Tag": "DEFAULT",
+                                                                                    "Transform": {
+                                                                                        "Position": [
+                                                                                            0.00017108823521994054,
+                                                                                            0.0,
+                                                                                            -1.1920944266441413e-11
+                                                                                        ],
+                                                                                        "Rotation": [
+                                                                                            0.555047333240509,
+                                                                                            0.20839336514472961,
+                                                                                            -0.034118302166461945,
+                                                                                            0.8045685887336731
+                                                                                        ],
+                                                                                        "Scale": [
+                                                                                            1.0,
+                                                                                            1.0000003576278687,
+                                                                                            0.9999992847442627
+                                                                                        ]
+                                                                                    },
+                                                                                    "Components": [],
+                                                                                    "Children": []
+                                                                                }
+                                                                            ]
+                                                                        }
+                                                                    ]
+                                                                }
+                                                            ]
+                                                        },
+                                                        {
+                                                            "Name": "ratSpine",
+                                                            "Active": true,
+                                                            "Static": false,
+                                                            "Layer": "DEFAULT",
+                                                            "Tag": "DEFAULT",
+                                                            "Transform": {
+                                                                "Position": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0
+                                                                ],
+                                                                "Rotation": [
+                                                                    -3.7094554983241323e-8,
+                                                                    7.976181848334818e-8,
+                                                                    0.07832012325525284,
+                                                                    0.9969282746315002
+                                                                ],
+                                                                "Scale": [
+                                                                    1.0000001192092896,
+                                                                    0.9999998807907104,
+                                                                    1.0000001192092896
+                                                                ]
+                                                            },
+                                                            "Components": [],
+                                                            "Children": [
+                                                                {
+                                                                    "Name": "ratHead",
+                                                                    "Active": true,
+                                                                    "Static": false,
+                                                                    "Layer": "DEFAULT",
+                                                                    "Tag": "DEFAULT",
+                                                                    "Transform": {
+                                                                        "Position": [
+                                                                            0.0002756425237748772,
+                                                                            0.0,
+                                                                            1.490114672278442e-12
+                                                                        ],
+                                                                        "Rotation": [
+                                                                            2.729679415836017e-8,
+                                                                            2.783087182933741e-8,
+                                                                            0.3680040240287781,
+                                                                            0.92982417345047
+                                                                        ],
+                                                                        "Scale": [
+                                                                            1.0,
+                                                                            0.9999997019767761,
+                                                                            0.9999999403953552
+                                                                        ]
+                                                                    },
+                                                                    "Components": [],
+                                                                    "Children": []
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "Name": "ratTail1",
+                                    "Active": true,
+                                    "Static": false,
+                                    "Layer": "DEFAULT",
+                                    "Tag": "DEFAULT",
+                                    "Transform": {
+                                        "Position": [
+                                            -0.00014357904728967696,
+                                            -0.000017308520909864455,
+                                            1.788138560832042e-11
+                                        ],
+                                        "Rotation": [
+                                            3.916017732308319e-8,
+                                            -2.4790240971128696e-8,
+                                            0.9871301651000977,
+                                            -0.1599188596010208
+                                        ],
+                                        "Scale": [
+                                            1.0,
+                                            1.0000001192092896,
+                                            1.0
+                                        ]
+                                    },
+                                    "Components": [],
+                                    "Children": [
+                                        {
+                                            "Name": "ratTail2",
+                                            "Active": true,
+                                            "Static": false,
+                                            "Layer": "DEFAULT",
+                                            "Tag": "DEFAULT",
+                                            "Transform": {
+                                                "Position": [
+                                                    0.0005378301138989627,
+                                                    4.768371461572052e-11,
+                                                    1.4901235627362563e-12
+                                                ],
+                                                "Rotation": [
+                                                    0.0003462758322712034,
+                                                    -0.004116601310670376,
+                                                    0.08380243182182312,
+                                                    0.9964738488197327
+                                                ],
+                                                "Scale": [
+                                                    0.9999998211860657,
+                                                    0.9999997615814209,
+                                                    0.9999998211860657
+                                                ]
+                                            },
+                                            "Components": [],
+                                            "Children": [
+                                                {
+                                                    "Name": "ratTail3",
+                                                    "Active": true,
+                                                    "Static": false,
+                                                    "Layer": "DEFAULT",
+                                                    "Tag": "DEFAULT",
+                                                    "Transform": {
+                                                        "Position": [
+                                                            0.00035580291296355426,
+                                                            -2.384185730786026e-11,
+                                                            4.470343799994891e-12
+                                                        ],
+                                                        "Rotation": [
+                                                            0.00017592876974958926,
+                                                            -0.00832405872642994,
+                                                            0.02113601379096508,
+                                                            0.9997419714927673
+                                                        ],
+                                                        "Scale": [
+                                                            0.9999999403953552,
+                                                            1.0,
+                                                            1.0
+                                                        ]
+                                                    },
+                                                    "Components": [],
+                                                    "Children": [
+                                                        {
+                                                            "Name": "ratTail4",
+                                                            "Active": true,
+                                                            "Static": false,
+                                                            "Layer": "DEFAULT",
+                                                            "Tag": "DEFAULT",
+                                                            "Transform": {
+                                                                "Position": [
+                                                                    0.00029553467174991965,
+                                                                    0.0,
+                                                                    -2.9802382350146983e-12
+                                                                ],
+                                                                "Rotation": [
+                                                                    0.0008812087471596897,
+                                                                    -0.018690286204218864,
+                                                                    0.04708729311823845,
+                                                                    0.9987155199050903
+                                                                ],
+                                                                "Scale": [
+                                                                    1.0000001192092896,
+                                                                    1.0000001192092896,
+                                                                    1.0000001192092896
+                                                                ]
+                                                            },
+                                                            "Components": [],
+                                                            "Children": [
+                                                                {
+                                                                    "Name": "ratTail5",
+                                                                    "Active": true,
+                                                                    "Static": false,
+                                                                    "Layer": "DEFAULT",
+                                                                    "Tag": "DEFAULT",
+                                                                    "Transform": {
+                                                                        "Position": [
+                                                                            0.00029553467174991965,
+                                                                            -2.7755574995243454e-19,
+                                                                            0.0
+                                                                        ],
+                                                                        "Rotation": [
+                                                                            0.0018849150510504842,
+                                                                            -0.03235303983092308,
+                                                                            0.058130960911512375,
+                                                                            0.997782826423645
+                                                                        ],
+                                                                        "Scale": [
+                                                                            1.0,
+                                                                            1.0000001192092896,
+                                                                            1.0000001192092896
+                                                                        ]
+                                                                    },
+                                                                    "Components": [],
+                                                                    "Children": []
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "Name": "Dust",
+            "Active": true,
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0,
+                    1.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [
+                {
+                    "UID": 4851631808249777936,
+                    "ComponentType": "PARTICLE_SYSTEM",
+                    "Active": true,
+                    "TextureAssetId": {
+                        "uid": 8611505141713682000,
+                        "libId": "0dd58b075da06283f5204cd90fbc3451",
+                        "type": "TEXTURE"
+                    },
+                    "ParticleEmitters": [
+                        {
+                            "Modules": [
+                                {
+                                    "ModuleType": 2,
+                                    "Looping": false,
+                                    "Duration": 0.009999999776482582,
+                                    "RateOverTime": 500.0,
+                                    "RateOverDistance": 0.0
+                                },
+                                {
+                                    "ModuleType": 4,
+                                    "LifeTimeType": "CONSTANT",
+                                    "StartLifeTime": 0.5
+                                },
+                                {
+                                    "ModuleType": 1,
+                                    "ShapeType": "CONE",
+                                    "Radius": 0.20000000298023224,
+                                    "RadiusThickness": 1.0,
+                                    "RadiusScale": 1.0
+                                },
+                                {
+                                    "ModuleType": 3,
+                                    "ColorOverTime": [
+                                        {
+                                            "IsAlphaMark": false,
+                                            "Position": 0.0,
+                                            "Color": [
+                                                0.6023166179656982,
+                                                0.44474512338638306,
+                                                0.2279035896062851
+                                            ]
+                                        },
+                                        {
+                                            "IsAlphaMark": true,
+                                            "Position": 0.012800916098058224,
+                                            "Alpha": 1.0
+                                        },
+                                        {
+                                            "IsAlphaMark": true,
+                                            "Position": 0.9901639223098755,
+                                            "Alpha": 0.0
+                                        },
+                                        {
+                                            "IsAlphaMark": false,
+                                            "Position": 1.0,
+                                            "Color": [
+                                                0.6039215922355652,
+                                                0.4431372582912445,
+                                                0.22745098173618317
+                                            ]
+                                        }
+                                    ],
+                                    "ColorCurve": [
+                                        0.0,
+                                        0.0,
+                                        1.0,
+                                        1.0
+                                    ],
+                                    "HDRColor": [
+                                        0.0,
+                                        0.0,
+                                        0.0
+                                    ],
+                                    "HDRIntensity": 0.0
+                                },
+                                {
+                                    "ModuleType": 5,
+                                    "VelocityType": "CONSTANT",
+                                    "InitialVelocity": 0.5,
+                                    "Gravity": 0.0
+                                },
+                                {
+                                    "ModuleType": 6,
+                                    "StartScaleType": "CONSTANT",
+                                    "StartScale": [
+                                        0.25,
+                                        0.25,
+                                        0.0
+                                    ],
+                                    "ChangeSizeOverTime": false
+                                },
+                                {
+                                    "ModuleType": 7,
+                                    "RotationType": "RANDOM_BETWEEN_TWO",
+                                    "StartRotation": 0.0,
+                                    "StartRotation2": 6.2831854820251465,
+                                    "VelocityType": "CONSTANT",
+                                    "AngularVelocity": 0.0,
+                                    "FlipRotation": 0.0
+                                },
+                                {
+                                    "ModuleType": 8,
+                                    "TileRows": 1,
+                                    "TileColumns": 1,
+                                    "FPS": 0.0,
+                                    "StartFrameType": "CONSTANT",
+                                    "StartFrame": 0.0
+                                },
+                                {
+                                    "ModuleType": 9,
+                                    "RenderMode": "BILLBOARD",
+                                    "RenderLayer": 0,
+                                    "BlendMode": "ALPHA"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "Children": []
+        }
+    ]
+}
