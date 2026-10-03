@@ -17,7 +17,28 @@ IMPLEMENT_SCRIPT_FIELDS(DeathParticles,
     SERIALIZED_ASSET_REF(m_hitFlashPrefab, "Hit Flash Prefab", AssetType::PREFAB),
     SERIALIZED_STRING(m_chargedHitFlashPath, "Charged Hit Flash Pzrefab Path"),
     SERIALIZED_ASSET_REF(m_chargedHitFlashPrefab, "Charged Hit Flash Prefab", AssetType::PREFAB),
-    SERIALIZED_STRING(m_scytheAnchorName, "Scythe Anchor Name")
+    SERIALIZED_STRING(m_scytheAnchorName, "Scythe Anchor Name"),
+    SERIALIZED_ASSET_REF(m_tauntChainLinkPrefab, "Taunt Chain Link Prefab", AssetType::PREFAB),
+    SERIALIZED_ASSET_REF(m_tauntChainGrabBurstPrefab, "Taunt Chain Grab Burst Prefab", AssetType::PREFAB),
+    SERIALIZED_ASSET_REF(m_tauntChainContactPuffPrefab, "Taunt Chain Contact Puff Prefab", AssetType::PREFAB),
+    SERIALIZED_STRING(m_tauntChainHandBone, "Taunt Chain Hand Bone"),
+    SERIALIZED_BOOL(m_tauntChainOnFloor, "Taunt Chain On Floor"),
+    SERIALIZED_FLOAT(m_tauntChainFloorHeight, "Taunt Chain Floor Height", 0.0f, 0.5f, 0.01f),
+    SERIALIZED_FLOAT(m_tauntChainStartOffset, "Taunt Chain Start Offset", 0.0f, 2.0f, 0.05f),
+    SERIALIZED_FLOAT(m_tauntChainTipHeight, "Taunt Chain Tip Height", 0.0f, 3.0f, 0.05f),
+    SERIALIZED_FLOAT(m_tauntChainContactOffset, "Taunt Chain Contact Offset", 0.0f, 2.0f, 0.05f),
+    SERIALIZED_FLOAT(m_tauntChainGrabBurstDelay, "Taunt Chain Grab Burst Delay", 0.0f, 0.5f, 0.01f),
+    SERIALIZED_FLOAT(m_tauntChainLinkSpacing, "Taunt Chain Link Spacing", 0.05f, 1.0f, 0.01f),
+    SERIALIZED_FLOAT(m_tauntChainLinkScale, "Taunt Chain Link Scale", 0.1f, 5.0f, 0.05f),
+    SERIALIZED_FLOAT(m_tauntChainTipLinkScale, "Taunt Chain Tip Link Scale", 0.5f, 3.0f, 0.05f),
+    SERIALIZED_FLOAT(m_tauntChainMaxLength, "Taunt Chain Max Length", 1.0f, 20.0f, 0.5f),
+    SERIALIZED_INT(m_tauntChainMaxChains, "Taunt Chain Max Chains"),
+    SERIALIZED_FLOAT(m_tauntChainTravelTime, "Taunt Chain Travel Time", 0.02f, 1.0f, 0.01f),
+    SERIALIZED_FLOAT(m_tauntChainMinLatchTime, "Taunt Chain Min Latch Time", 0.0f, 1.0f, 0.01f),
+    SERIALIZED_FLOAT(m_tauntChainMaxLatchTime, "Taunt Chain Max Latch Time", 0.1f, 3.0f, 0.05f),
+    SERIALIZED_FLOAT(m_tauntChainRetractTime, "Taunt Chain Retract Time", 0.02f, 1.0f, 0.01f),
+    SERIALIZED_FLOAT(m_tauntChainWhip, "Taunt Chain Whip", 0.0f, 2.0f, 0.01f),
+    SERIALIZED_FLOAT(m_tauntChainTension, "Taunt Chain Tension Shake", 0.0f, 0.3f, 0.005f)
 )
 
 DeathParticles::DeathParticles(GameObject* owner)
@@ -41,12 +62,16 @@ void DeathParticles::OnGameStop()
     m_dashParticleActive = false;
     m_chargeGlowActive = false;
     m_tauntParticleLifetime = 0.0f;
+
+    m_tauntChains.shutdown();
 }
 
 void DeathParticles::Update()
 {
     m_timedOneShots.update(Time::getDeltaTime());
     syncActiveParticles();
+
+    m_tauntChains.update(Time::getDeltaTime());
 
     if (!m_tauntParticleActive)
     {
@@ -107,7 +132,7 @@ void DeathParticles::syncActiveParticles()
 
 void DeathParticles::ensureTauntParticle(const Vector3& position, const Vector3& rotation)
 {
-    ParticleLifecycle::ensurePersistent(m_activeTauntParticle, m_tauntParticle.m_id, position, rotation, nullptr);
+    ParticleLifecycle::ensurePersistent(m_activeTauntParticle, m_tauntParticle.m_id, position, rotation, getOwner());
 }
 
 void DeathParticles::SetDashActive()
@@ -132,7 +157,7 @@ void DeathParticles::SetDashActive()
     const Vector3 position = ownerTransform != nullptr ? TransformAPI::getGlobalPosition(ownerTransform) : Vector3::Zero;
     const Vector3 rotation = ownerTransform != nullptr ? TransformAPI::getGlobalEulerDegrees(ownerTransform) : Vector3::Zero;
 
-    ParticleLifecycle::ensurePersistent(m_dashParticleInstance, m_dashParticlePrefab.m_id, position, rotation, nullptr);
+    ParticleLifecycle::ensurePersistent(m_dashParticleInstance, m_dashParticlePrefab.m_id, position, rotation, getOwner());
     ParticleLifecycle::syncToTransform(m_dashParticleInstance, ownerTransform);
     ParticleLifecycle::activate(m_dashParticleInstance);
     m_dashParticleActive = m_dashParticleInstance != nullptr;
@@ -198,7 +223,7 @@ void DeathParticles::SetChargeActive()
     const Vector3 position = scytheTransform != nullptr ? TransformAPI::getGlobalPosition(scytheTransform) : Vector3::Zero;
     const Vector3 rotation = scytheTransform != nullptr ? TransformAPI::getGlobalEulerDegrees(scytheTransform) : Vector3::Zero;
 
-    ParticleLifecycle::ensurePersistent(m_chargeGlowInstance, m_chargeGlowPrefab.m_id, position, rotation, nullptr);
+    ParticleLifecycle::ensurePersistent(m_chargeGlowInstance, m_chargeGlowPrefab.m_id, position, rotation, getOwner());
     ParticleLifecycle::syncToTransform(m_chargeGlowInstance, scytheTransform);
     ParticleLifecycle::activate(m_chargeGlowInstance);
     m_chargeGlowActive = m_chargeGlowInstance != nullptr;
@@ -264,22 +289,48 @@ void DeathParticles::SetTauntInactive()
     m_tauntParticleLifetime = 0.0f;
 }
 
-void DeathParticles::playHitFlash(const Vector3& position)
+void DeathParticles::playHitFlash(const Vector3& position, GameObject* target)
 {
     ParticleLifecycle::spawnOneShotTimed(
         m_timedOneShots,
         m_hitFlashPrefab.m_id,
-        position
+        position,
+        Vector3::Zero,
+        ParticleLifecycle::kDefaultOneShotLifetime,
+        target
     );
 }
 
-void DeathParticles::playChargedHitFlash(const Vector3& position)
+void DeathParticles::playChargedHitFlash(const Vector3& position, GameObject* target)
 {
     ParticleLifecycle::spawnOneShotTimed(
         m_timedOneShots,
         m_chargedHitFlashPrefab.m_id,
-        position
+        position,
+        Vector3::Zero,
+        ParticleLifecycle::kDefaultOneShotLifetime,
+        target
     );
+}
+
+void DeathParticles::launchTauntChains(const std::vector<GameObject*>& targets, float travelTime)
+{
+    m_tauntChains.launch(targets, travelTime);
+}
+
+void DeathParticles::cancelTauntChains()
+{
+    m_tauntChains.cancel();
+}
+
+void DeathParticles::notifyTauntChainPullStarted(GameObject* enemy)
+{
+    m_tauntChains.onPullStarted(enemy);
+}
+
+void DeathParticles::notifyTauntChainPullFinished(GameObject* enemy)
+{
+    m_tauntChains.onPullFinished(enemy);
 }
 
 IMPLEMENT_SCRIPT(DeathParticles)

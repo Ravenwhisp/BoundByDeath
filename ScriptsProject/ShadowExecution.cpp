@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "ShadowExecution.h"
 
+#include "ParticleLifecycle.h"
 #include "ReaperGauge.h"
 #include "DeathCharacter.h"
 #include "LyrielCharacter.h"
@@ -66,11 +67,24 @@ void ShadowExecution::Start()
     cachePlayers();
 }
 
+void ShadowExecution::OnGameStop()
+{
+    for (SpawnedPrefab& prefab : m_temporaryPrefabs)
+    {
+        if (prefab.gameObject != nullptr && SceneAPI::containsGameObject(prefab.gameObject))
+        {
+            GameObjectAPI::removeGameObject(prefab.gameObject);
+        }
+    }
+
+    m_temporaryPrefabs.clear();
+}
+
 void ShadowExecution::Update()
 {
     const float dt = Time::getDeltaTime();
 
-    // Actualizar y eliminar los prefabs de partículas cuando pase 1 segundo
+    // Update and remove spawned VFX after their configured cleanup time.
     for (auto it = m_temporaryPrefabs.begin(); it != m_temporaryPrefabs.end(); )
     {
         it->lifetimeRemaining -= dt;
@@ -211,15 +225,24 @@ void ShadowExecution::beginExecution()
     m_isActive = true;
     m_reaperGauge->consume();
 
+    const int deathPlayerIndex = m_deathCharacter->getPlayerIndex();
+    const int lyrielPlayerIndex = m_lyrielCharacter->getPlayerIndex();
+    GameplayHapticRumble::playImpact(deathPlayerIndex, 0.85f, 0.20f);
+    GameplayHapticRumble::playImpact(lyrielPlayerIndex, 0.85f, 0.20f);
+    m_deathExecutionHaptic.update(deathPlayerIndex, 0.24f, 0.18f);
+    m_lyrielExecutionHaptic.update(lyrielPlayerIndex, 0.24f, 0.18f);
+
     if (m_sound != nullptr)
     {
         m_sound->playShadowExecution();
     }
 
-    GameObject* fxCenter = GameObjectAPI::instantiatePrefab(m_particlePrefab.m_id, m_center, Vector3::Zero);
+    GameObject* fxCenter = GameObjectAPI::instantiatePrefab(m_particlePrefab.m_id, m_center, Vector3::Zero, ParticleLifecycle::getRuntimeVfxContainer());
     if (fxCenter)
     {
-        m_temporaryPrefabs.push_back({ fxCenter, 1.0f });
+        // m_temporaryPrefabs is the sole lifetime owner of this instance.
+        ParticleLifecycle::disableSelfDestruct(fxCenter);
+        m_temporaryPrefabs.push_back({ fxCenter, m_shadowExecutionConfig->m_vfxLifetime });
     }
 
     lockPlayers(true);
@@ -241,6 +264,10 @@ void ShadowExecution::updateExecution(float dt)
     if (progress > 1.0f) progress = 1.0f;
 
     m_currentRadius = progress * m_maxRadius;
+
+    const float hapticIntensity = 0.18f + 0.16f * progress;
+    m_deathExecutionHaptic.update(m_deathCharacter->getPlayerIndex(), hapticIntensity, hapticIntensity * 0.75f);
+    m_lyrielExecutionHaptic.update(m_lyrielCharacter->getPlayerIndex(), hapticIntensity, hapticIntensity * 0.75f);
 
     applyAoEDamage();
 
@@ -312,6 +339,8 @@ void ShadowExecution::endExecution()
     m_executionTimer = 0.0f;
     m_currentRadius = 0.0f;
     m_hitEnemies.clear();
+    m_deathExecutionHaptic.stop();
+    m_lyrielExecutionHaptic.stop();
 
     Transform2DAPI::setAlpha(m_executionTransform2D, 0);
     Transform2DAPI::setScale(m_executionTransform2D, Vector2(0.0f, 0.0f));

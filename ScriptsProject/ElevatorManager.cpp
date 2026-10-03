@@ -3,6 +3,7 @@
 #include "CombatAreaEvent.h"
 #include "CrystalShadowMark.h"
 #include "Damageable.h"
+#include "PersistingCheckpointState.h"
 
 IMPLEMENT_SCRIPT_FIELDS(ElevatorManager,
     SERIALIZED_COMPONENT_REF_VECTOR(m_crystals, "Crystals", ComponentType::TRANSFORM),
@@ -20,7 +21,8 @@ IMPLEMENT_SCRIPT_FIELDS(ElevatorManager,
         SERIALIZED_FLOAT(m_platformMoveDuration, "Move Duration", 0.0f, 30.0f, 0.05f),
         SERIALIZED_FLOAT(m_platformLerpPower, "Lerp Power", 0.1f, 10.0f, 0.1f)
     ),
-    SERIALIZED_INT(m_wavesPerCycle, "Waves Per Cycle")
+    SERIALIZED_INT(m_wavesPerCycle, "Waves Per Cycle"),
+    SERIALIZED_COMPONENT_REF(m_checkpointRef, "Elevator checkpoint", ComponentType::TRANSFORM)
 )
 
 ElevatorManager::ElevatorManager(GameObject* owner)
@@ -32,6 +34,23 @@ void ElevatorManager::Start()
 {
     resolveCombatAreas();
     resolveCrystals();
+
+    m_checkpoint = ComponentAPI::getOwner(m_checkpointRef.getReferencedComponent());
+
+    if (PersistingCheckpointState::Get().m_lastCheckpointId == CheckpointId::CHECKPOINT_6_LEVEL_2)
+    {
+        m_wavesCompleted = 2;
+        m_currentCycle = 1;
+        snapPlatformToTarget();
+    }
+
+    for (int i = 0; i < m_wavesCompleted && i < static_cast<int>(m_combatAreas.size()); ++i)
+    {
+        if (m_combatAreas[i] != nullptr)
+        {
+            m_combatAreas[i]->setEntranceBlocked(true);
+        }
+    }
 
     const int areaCount = static_cast<int>(m_combatAreas.size());
     for (int i = 0; i < areaCount; i++)
@@ -98,6 +117,8 @@ void ElevatorManager::Update()
             }
             else
             {
+                // The return/platform transition has reached its target, so the walls can stop now.
+                m_wallsActive = false;
                 m_currentCycle++;
 
                 if (m_currentCycle * 2 >= targetCount || m_wavesCompleted >= areaCount)
@@ -106,6 +127,10 @@ void ElevatorManager::Update()
                 {
                     m_waitingForReset = true;
                     m_state = State::Idle;
+                    if (m_currentCycle == 1)
+                    {
+                        GameObjectAPI::setActive(m_checkpoint, true);
+                    }
                 }
             }
         }
@@ -131,8 +156,7 @@ void ElevatorManager::Update()
 
                 if (m_wavesDoneInCycle > m_wavesPerCycle)
                 {
-                    m_wallsActive = false;
-
+                    // Keep the walls scrolling while the platform moves to its destination.
                     if (m_currentCycle * 2 + 1 < targetCount)
                         startPlatformMove(m_currentCycle * 2 + 1);
 
@@ -170,6 +194,11 @@ void ElevatorManager::resolveCombatAreas()
         }
 
         CombatAreaEvent* area = GameObjectAPI::findScript<CombatAreaEvent>(rootObject);
+        if (area != nullptr)
+        {
+            area->setKeepEntranceBlockedOnCompletion(true);
+        }
+
         m_combatAreas.push_back(area);
     }
 }
@@ -353,6 +382,23 @@ void ElevatorManager::updatePlatformMove()
 
     if (m_platformTimer >= m_platformMoveDuration)
         m_platformMoving = false;
+}
+
+void ElevatorManager::snapPlatformToTarget()
+{
+    startPlatformMove(1);
+
+    Transform* platformTransform = m_platform.getReferencedComponent();
+    if (!platformTransform) return;
+
+    Vector3 currentPos = TransformAPI::getPosition(platformTransform);
+    //currentPos.y = m_platformStartY + (m_platformTargetY - m_platformStartY);
+    currentPos.y = m_platformTargetY;
+    TransformAPI::setPosition(platformTransform, currentPos);
+
+    // Aseguramos que el estado interno queda reseteado y parado
+    m_platformTimer = m_platformMoveDuration;
+    m_platformMoving = false;
 }
 
 int ElevatorManager::getTotalWaves() const

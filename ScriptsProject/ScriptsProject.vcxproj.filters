@@ -184,6 +184,9 @@
     <Filter Include="Interaction/Gameplay\World\Moving life\States">
       <UniqueIdentifier>{72a278d3-d32b-4d5c-b87e-c379054ba64c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Systems\Checkpoints\Events\Level2">
+      <UniqueIdentifier>{b5bbb920-cc1f-4c15-a672-acbed685a284}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -425,6 +428,9 @@
     <ClInclude Include="HeartbeatHaptic.h">
       <Filter>Systems</Filter>
     </ClInclude>
+    <ClInclude Include="GameplayHaptics.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
     <ClInclude Include="EnemyBaseController.h">
       <Filter>Enemies</Filter>
     </ClInclude>
@@ -623,6 +629,9 @@
     <ClInclude Include="DeathParticles.h">
       <Filter>Character\Death</Filter>
     </ClInclude>
+    <ClInclude Include="DeathTauntChains.h">
+      <Filter>Character\Death</Filter>
+    </ClInclude>
     <ClInclude Include="LyrielParticles.h">
       <Filter>Character\Lyriel</Filter>
     </ClInclude>
@@ -754,6 +763,31 @@
     </ClInclude>
     <ClInclude Include="ElevatorManager.h" />
     <ClInclude Include="AelorinLavaController.h" />
+    <ClInclude Include="PersistingManager.h" />
+    <ClInclude Include="PersistingCheckpointState.h" />
+    <ClInclude Include="PlayerGamepadBinding.h" />
+    <ClInclude Include="ShadowExecutionConfig.h" />
+    <ClInclude Include="Checkpoint2_Level1_Event.h">
+      <Filter>Systems\Checkpoints\Events\Level1</Filter>
+    </ClInclude>
+    <ClInclude Include="Checkpoint3_Level1_Event.h">
+      <Filter>Systems\Checkpoints\Events\Level1</Filter>
+    </ClInclude>
+    <ClInclude Include="Checkpoint4_Level1_Event.h">
+      <Filter>Systems\Checkpoints\Events\Level1</Filter>
+    </ClInclude>
+    <ClInclude Include="Checkpoint5_Level1_Event.h">
+      <Filter>Systems\Checkpoints\Events\Level1</Filter>
+    </ClInclude>
+    <ClInclude Include="Checkpoint6_Level1_Event.h">
+      <Filter>Systems\Checkpoints\Events\Level1</Filter>
+    </ClInclude>
+    <ClInclude Include="Checkpoint7_Level1_Event.h">
+      <Filter>Systems\Checkpoints\Events\Level1</Filter>
+    </ClInclude>
+    <ClInclude Include="Checkpoint8_Level1_Event.h">
+      <Filter>Systems\Checkpoints\Events\Level1</Filter>
+    </ClInclude>
     <ClInclude Include="ObjectVfxIds.h" />
     <ClInclude Include="SkeletonUI.h" />
     <ClInclude Include="SpectralPathEntranceVFX.h" />
@@ -762,6 +796,25 @@
     <ClInclude Include="SkeletonParticles.h" />
     <ClInclude Include="SummonerParticles.h" />
     <ClInclude Include="VideoManager.h" />
+    <ClInclude Include="Checkpoint1_Level2_Event.h">
+      <Filter>Systems\Checkpoints\Events\Level2</Filter>
+    </ClInclude>
+    <ClInclude Include="Checkpoint2_Level2_Event.h">
+      <Filter>Systems\Checkpoints\Events\Level2</Filter>
+    </ClInclude>
+    <ClInclude Include="Checkpoint3_Level2_Event.h">
+      <Filter>Systems\Checkpoints\Events\Level2</Filter>
+    </ClInclude>
+    <ClInclude Include="Checkpoint4_Level2_Event.h">
+      <Filter>Systems\Checkpoints\Events\Level2</Filter>
+    </ClInclude>
+    <ClInclude Include="Checkpoint5_Level2_Event.h">
+      <Filter>Systems\Checkpoints\Events\Level2</Filter>
+    </ClInclude>
+    <ClInclude Include="Checkpoint6_Level2_Event.h">
+      <Filter>Systems\Checkpoints\Events\Level2</Filter>
+    </ClInclude>
+    <ClInclude Include="TriggerFire.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="ThingIdleState.h">
       <Filter>Interaction/Gameplay\World\Moving life\States</Filter>
@@ -1200,6 +1253,9 @@
     <ClCompile Include="DeathParticles.cpp">
       <Filter>Character\Death</Filter>
     </ClCompile>
+    <ClCompile Include="DeathTauntChains.cpp">
+      <Filter>Character\Death</Filter>
+    </ClCompile>
     <ClCompile Include="LyrielParticles.cpp">
       <Filter>Character\Lyriel</Filter>
     </ClCompile>
@@ -1326,6 +1382,32 @@
     </ClCompile>
     <ClCompile Include="ElevatorManager.cpp" />
     <ClCompile Include="AelorinLavaController.cpp" />
+    <ClCompile Include="GameplayEventAction.cpp" />
+    <ClCompile Include="PersistingManager.cpp" />
+    <ClCompile Include="PersistingCheckpointState.cpp" />
+    <ClCompile Include="PlayerGamepadBinding.cpp" />
+    <ClCompile Include="ShadowExecutionConfig.cpp" />
+    <ClCompile Include="Checkpoint2_Level1_Event.cpp">
+      <Filter>Systems\Checkpoints\Events\Level1</Filter>
+    </ClCompile>
+    <ClCompile Include="Checkpoint3_Level1_Event.cpp">
+      <Filter>Systems\Checkpoints\Events\Level1</Filter>
+    </ClCompile>
+    <ClCompile Include="Checkpoint4_Level1_Event.cpp">
+      <Filter>Systems\Checkpoints\Events\Level1</Filter>
+    </ClCompile>
+    <ClCompile Include="Checkpoint5_Level1_Event.cpp">
+      <Filter>Systems\Checkpoints\Events\Level1</Filter>
+    </ClCompile>
+    <ClCompile Include="Checkpoint6_Level1_Event.cpp">
+      <Filter>Systems\Checkpoints\Events\Level1</Filter>
+    </ClCompile>
+    <ClCompile Include="Checkpoint7_Level1_Event.cpp">
+      <Filter>Systems\Checkpoints\Events\Level1</Filter>
+    </ClCompile>
+    <ClCompile Include="Checkpoint8_Level1_Event.cpp">
+      <Filter>Systems\Checkpoints\Events\Level1</Filter>
+    </ClCompile>
     <ClCompile Include="SkeletonUI.cpp" />
     <ClCompile Include="SpectralPathEntranceVFX.cpp" />
     <ClCompile Include="SharedEnemyParticles.cpp" />
@@ -1333,6 +1415,25 @@
     <ClCompile Include="SkeletonParticles.cpp" />
     <ClCompile Include="SummonerParticles.cpp" />
     <ClCompile Include="VideoManager.cpp" />
+    <ClCompile Include="Checkpoint1_Level2_Event.cpp">
+      <Filter>Systems\Checkpoints\Events\Level2</Filter>
+    </ClCompile>
+    <ClCompile Include="Checkpoint2_Level2_Event.cpp">
+      <Filter>Systems\Checkpoints\Events\Level2</Filter>
+    </ClCompile>
+    <ClCompile Include="Checkpoint3_Level2_Event.cpp">
+      <Filter>Systems\Checkpoints\Events\Level2</Filter>
+    </ClCompile>
+    <ClCompile Include="Checkpoint4_Level2_Event.cpp">
+      <Filter>Systems\Checkpoints\Events\Level2</Filter>
+    </ClCompile>
+    <ClCompile Include="Checkpoint5_Level2_Event.cpp">
+      <Filter>Systems\Checkpoints\Events\Level2</Filter>
+    </ClCompile>
+    <ClCompile Include="Checkpoint6_Level2_Event.cpp">
+      <Filter>Systems\Checkpoints\Events\Level2</Filter>
+    </ClCompile>
+    <ClCompile Include="TriggerFire.cpp" />
     <ClCompile Include="ThingIdleState.cpp">
       <Filter>Interaction/Gameplay\World\Moving life\States</Filter>
     </ClCompile>
