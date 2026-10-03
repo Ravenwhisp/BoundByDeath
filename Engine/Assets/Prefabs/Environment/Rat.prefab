@@ -8,9 +8,9 @@
     "Tag": "DEFAULT",
     "Transform": {
         "Position": [
-            8.657571792602539,
-            1.0701987743377686,
-            8.283289909362793
+            0.0,
+            0.0,
+            0.0
         ],
         "Rotation": [
             -0.0,
@@ -26,7 +26,7 @@
     },
     "Components": [
         {
-            "UID": 16582335154813068084,
+            "UID": 2849474427063567828,
             "ComponentType": "ANIMATION",
             "Active": true,
             "StateMachineUID": {
@@ -37,20 +37,25 @@
             "AnimationSourceUID": {
                 "uid": 0,
                 "libId": "",
-                "type": "UNKNOWN"
+                "type": "LUT"
             },
             "PlayOnStart": true,
             "ApplyScale": false,
             "ForceWorldAfterApply": true
         },
         {
-            "UID": 13387886882163151396,
+            "UID": 7524946869751982417,
             "ComponentType": "SCRIPT",
             "Active": true,
             "ScriptName": "MovingThingController",
             "ScriptFields": {
                 "Detection Radius": 1.5499999523162842,
                 "Flee Speed": 3.0,
+                "Disappear Particles Prefab": {
+                    "uid": 0,
+                    "libId": "",
+                    "type": "LUT"
+                },
                 "Lyriel Transform": 743245849143440901,
                 "Death Transform": 16858939129400802547
             }
@@ -76,9 +81,9 @@
                     1.0
                 ],
                 "Scale": [
-                    10.0,
-                    10.0,
-                    10.0
+                    7.0,
+                    7.0,
+                    7.0
                 ]
             },
             "Components": [],
@@ -135,7 +140,7 @@
                             },
                             "Components": [
                                 {
-                                    "UID": 11055603890153832313,
+                                    "UID": 2713792113183499837,
                                     "ComponentType": "MODEL",
                                     "Active": true,
                                     "MeshAssetId": {
@@ -953,7 +958,7 @@
             },
             "Components": [
                 {
-                    "UID": 4851631808249777936,
+                    "UID": 8851699125680842087,
                     "ComponentType": "PARTICLE_SYSTEM",
                     "Active": true,
                     "TextureAssetId": {
