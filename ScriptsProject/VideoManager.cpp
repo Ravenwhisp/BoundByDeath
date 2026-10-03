@@ -59,7 +59,7 @@ void VideoManager::Update()
         return;
     }
 
-    if (Input::isFaceButtonLeftPressed(0))
+    if (Input::isFaceButtonBottomPressed(0))
     {
         m_gamepadSkipHoldTime += Time::getDeltaTime();
     }

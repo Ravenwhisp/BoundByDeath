@@ -1,0 +1,278 @@
+{
+  "name": "Paladin_StateMachine",
+  "defaultState": "IDLE",
+  "clips": [
+    {
+      "name": "Paladin_Attack",
+      "uid": 981769195860039220,
+      "libId": "7de2643f89fca4ff5b14074bb99271f7",
+      "type": "ANIMATION",
+      "loop": true
+    },
+    {
+      "name": "Charge",
+      "uid": 7411937764920657712,
+      "libId": "ff55fac5242c2e83d424661ca36502cd",
+      "type": "ANIMATION",
+      "loop": true
+    },
+    {
+      "name": "Paladin_Damage",
+      "uid": 14413631501127330082,
+      "libId": "fc83f461f1fc23d90ae645ceb77138ed",
+      "type": "ANIMATION",
+      "loop": true
+    },
+    {
+      "name": "Paladin_Death",
+      "uid": 11968955304543306455,
+      "libId": "0e4059f478e7d266d6396384ab5af6de",
+      "type": "ANIMATION",
+      "loop": true
+    },
+    {
+      "name": "Paladin_Idle",
+      "uid": 6233781257123252493,
+      "libId": "35547ee2e610c121f07e3148f2fa81a3",
+      "type": "ANIMATION",
+      "loop": true
+    },
+    {
+      "name": "Paladin_Idle_long",
+      "uid": 10244891218589768532,
+      "libId": "8dbab467b656362b5f38f78100ccbc29",
+      "type": "ANIMATION",
+      "loop": true
+    },
+    {
+      "name": "Paladin_Stun_Full",
+      "uid": 9020091781045926110,
+      "libId": "da7b014ae350b17d8a0e27ec74a2d077",
+      "type": "ANIMATION",
+      "loop": true
+    },
+    {
+      "name": "Paladin_Stun_Loop",
+      "uid": 11237577807101116384,
+      "libId": "2acb862e352fcb475987317d9dd956c0",
+      "type": "ANIMATION",
+      "loop": true
+    },
+    {
+      "name": "Paladin_Tpose",
+      "uid": 17784348832795064661,
+      "libId": "d06223ad45660ae2722d3fc4d49c83bd",
+      "type": "ANIMATION",
+      "loop": true
+    },
+    {
+      "name": "Paladin_Walk",
+      "uid": 6213430520162372864,
+      "libId": "13c1ce074abd7cef3e5404f108f59f4e",
+      "type": "ANIMATION",
+      "loop": true
+    }
+  ],
+  "states": [
+    {
+      "name": "Paladin_Tpose",
+      "clipName": "Paladin_Tpose",
+      "speed": 1.0,
+      "behaviourScriptName": "",
+      "behaviourFieldsJson": "",
+      "overrideLoop": false,
+      "loop": true
+    },
+    {
+      "name": "IDLE",
+      "clipName": "Paladin_Idle",
+      "speed": 1.0,
+      "behaviourScriptName": "EnemyIdleState",
+      "behaviourFieldsJson": "{\"Debug Enabled\":true}",
+      "overrideLoop": false,
+      "loop": true
+    },
+    {
+      "name": "RECOVER",
+      "clipName": "Paladin_Idle_long",
+      "speed": 1.0,
+      "behaviourScriptName": "EnemyRecoverState",
+      "behaviourFieldsJson": "{\"Recover Duration\":0.6000000238418579,\"Go To Stun After Recover\":false,\"Debug Enabled\":true}",
+      "overrideLoop": false,
+      "loop": true
+    },
+    {
+      "name": "ATTACK",
+      "clipName": "Paladin_Attack",
+      "speed": 1.0,
+      "behaviourScriptName": "EnemyAttackState",
+      "behaviourFieldsJson": "{\"Attack Damage\":10.0,\"Attack Cooldown\":1.7000000476837158,\"Attack Total Duration\":1.649999976158142,\"Damage Trigger Time\":0.25,\"Attack Commit Duration\":0.3499999940395355,\"Debug Enabled\":true}",
+      "overrideLoop": true,
+      "loop": false
+    },
+    {
+      "name": "STUN",
+      "clipName": "Paladin_Stun_Full",
+      "speed": 1.0,
+      "behaviourScriptName": "EnemyStunnedState",
+      "behaviourFieldsJson": "{}",
+      "overrideLoop": true,
+      "loop": false
+    },
+    {
+      "name": "DEATH",
+      "clipName": "Paladin_Death",
+      "speed": 1.0,
+      "behaviourScriptName": "EnemyDeathState",
+      "behaviourFieldsJson": "{\"Dissolve Delay\":2.0,\"Should Drop Health\":true,\"Health Prefab\":{\"uid\":12985855758632585254,\"libId\":\"f9eb70b06029aa0f018a4211e781de0e\",\"type\":\"PREFAB\"},\"Health Drop Quantity\":2,\"Drop Heal Amount\":10.0,\"Drop Radius\":2.0,\"Drop Height\":1.0}",
+      "overrideLoop": true,
+      "loop": false
+    },
+    {
+      "name": "CHARGE",
+      "clipName": "Charge",
+      "speed": 1.0,
+      "behaviourScriptName": "PaladinChargeState",
+      "behaviourFieldsJson": "{}",
+      "overrideLoop": false,
+      "loop": true
+    },
+    {
+      "name": "CHASE",
+      "clipName": "Paladin_Walk",
+      "speed": 1.0,
+      "behaviourScriptName": "PaladinChaseState",
+      "behaviourFieldsJson": "{}",
+      "overrideLoop": false,
+      "loop": true
+    }
+  ],
+  "transitions": [
+    {
+      "sourceStateName": "IDLE",
+      "targetStateName": "DEATH",
+      "triggerName": "ToDeath",
+      "blendTimeSeconds": 0.25
+    },
+    {
+      "sourceStateName": "RECOVER",
+      "targetStateName": "DEATH",
+      "triggerName": "ToDeath",
+      "blendTimeSeconds": 0.25
+    },
+    {
+      "sourceStateName": "STUN",
+      "targetStateName": "DEATH",
+      "triggerName": "ToDeath",
+      "blendTimeSeconds": 0.25
+    },
+    {
+      "sourceStateName": "CHASE",
+      "targetStateName": "DEATH",
+      "triggerName": "ToDeath",
+      "blendTimeSeconds": 0.25
+    },
+    {
+      "sourceStateName": "CHARGE",
+      "targetStateName": "DEATH",
+      "triggerName": "ToDeath",
+      "blendTimeSeconds": 0.25
+    },
+    {
+      "sourceStateName": "ATTACK",
+      "targetStateName": "DEATH",
+      "triggerName": "ToDeath",
+      "blendTimeSeconds": 0.25
+    },
+    {
+      "sourceStateName": "IDLE",
+      "targetStateName": "CHASE",
+      "triggerName": "ToChase",
+      "blendTimeSeconds": 0.25
+    },
+    {
+      "sourceStateName": "CHASE",
+      "targetStateName": "IDLE",
+      "triggerName": "ToIdle",
+      "blendTimeSeconds": 0.25
+    },
+    {
+      "sourceStateName": "CHASE",
+      "targetStateName": "CHARGE",
+      "triggerName": "ToCharge",
+      "blendTimeSeconds": 0.25
+    },
+    {
+      "sourceStateName": "CHASE",
+      "targetStateName": "ATTACK",
+      "triggerName": "ToAttack",
+      "blendTimeSeconds": 0.25
+    },
+    {
+      "sourceStateName": "CHARGE",
+      "targetStateName": "CHASE",
+      "triggerName": "ToChase",
+      "blendTimeSeconds": 0.25
+    },
+    {
+      "sourceStateName": "RECOVER",
+      "targetStateName": "IDLE",
+      "triggerName": "ToIdle",
+      "blendTimeSeconds": 0.25
+    },
+    {
+      "sourceStateName": "RECOVER",
+      "targetStateName": "CHASE",
+      "triggerName": "ToChase",
+      "blendTimeSeconds": 0.25
+    },
+    {
+      "sourceStateName": "ATTACK",
+      "targetStateName": "IDLE",
+      "triggerName": "ToIdle",
+      "blendTimeSeconds": 0.25
+    },
+    {
+      "sourceStateName": "ATTACK",
+      "targetStateName": "CHASE",
+      "triggerName": "ToChase",
+      "blendTimeSeconds": 0.25
+    },
+    {
+      "sourceStateName": "IDLE",
+      "targetStateName": "STUN",
+      "triggerName": "ToStun",
+      "blendTimeSeconds": 0.25
+    },
+    {
+      "sourceStateName": "STUN",
+      "targetStateName": "IDLE",
+      "triggerName": "ToIdle",
+      "blendTimeSeconds": 0.25
+    },
+    {
+      "sourceStateName": "STUN",
+      "targetStateName": "CHASE",
+      "triggerName": "ToChase",
+      "blendTimeSeconds": 0.25
+    },
+    {
+      "sourceStateName": "CHASE",
+      "targetStateName": "STUN",
+      "triggerName": "ToStun",
+      "blendTimeSeconds": 0.25
+    },
+    {
+      "sourceStateName": "CHARGE",
+      "targetStateName": "STUN",
+      "triggerName": "ToStun",
+      "blendTimeSeconds": 0.25
+    },
+    {
+      "sourceStateName": "ATTACK",
+      "targetStateName": "STUN",
+      "triggerName": "ToStun",
+      "blendTimeSeconds": 0.25
+    }
+  ]
+}
