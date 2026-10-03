@@ -1,0 +1,209 @@
+{
+  "name": "Spider_StateMachine",
+  "defaultState": "IDLE",
+  "clips": [
+    {
+      "name": "Spider_Attack_1",
+      "uid": 11873765772139312168,
+      "libId": "63eca25a1cb5e5b98aa93ed8f326d972",
+      "type": "ANIMATION",
+      "loop": true
+    },
+    {
+      "name": "Spider_Attack_2",
+      "uid": 10765376359074782596,
+      "libId": "26e3d32801251b512edf8c2d222a92d6",
+      "type": "ANIMATION",
+      "loop": true
+    },
+    {
+      "name": "Spider_Damage",
+      "uid": 6419660760928298389,
+      "libId": "2527ee0e988da8aaab72c265e39fc9ea",
+      "type": "ANIMATION",
+      "loop": true
+    },
+    {
+      "name": "Spider_Death",
+      "uid": 2837870720776871075,
+      "libId": "59248708c97fcf9ed1fec3b415bd2705",
+      "type": "ANIMATION",
+      "loop": true
+    },
+    {
+      "name": "Spider_Idle",
+      "uid": 14915623193402055061,
+      "libId": "2db4c1ac676a2719cca17953177fd300",
+      "type": "ANIMATION",
+      "loop": true
+    },
+    {
+      "name": "Spider_Idle_long",
+      "uid": 17446012614858045034,
+      "libId": "b0cde2744ec60711555977353112b726",
+      "type": "ANIMATION",
+      "loop": true
+    },
+    {
+      "name": "Spider_Stun_Full",
+      "uid": 15919877479576129270,
+      "libId": "3da07c34db2b8529130d7d416de2d35d",
+      "type": "ANIMATION",
+      "loop": true
+    },
+    {
+      "name": "Spider_Stun_Loop",
+      "uid": 3104104589219957149,
+      "libId": "0894d99b1275388c6626a3345397dac7",
+      "type": "ANIMATION",
+      "loop": true
+    },
+    {
+      "name": "Spider_Tpose",
+      "uid": 12847310686516734667,
+      "libId": "f57fbaf57987135f6d10ecbd392e3efe",
+      "type": "ANIMATION",
+      "loop": true
+    },
+    {
+      "name": "Spider_Walk",
+      "uid": 17592097153240121895,
+      "libId": "2195ca18cb1ebe22c133cb6d990cd3a0",
+      "type": "ANIMATION",
+      "loop": true
+    }
+  ],
+  "states": [
+    {
+      "name": "CHASE",
+      "clipName": "Spider_Walk",
+      "speed": 1.0,
+      "behaviourScriptName": "SpiderChaseState",
+      "behaviourFieldsJson": "",
+      "overrideLoop": false,
+      "loop": true
+    },
+    {
+      "name": "IDLE",
+      "clipName": "Spider_Idle",
+      "speed": 1.0,
+      "behaviourScriptName": "EnemyIdleState",
+      "behaviourFieldsJson": "",
+      "overrideLoop": false,
+      "loop": true
+    },
+    {
+      "name": "ATTACK",
+      "clipName": "Spider_Attack_1",
+      "speed": 1.0,
+      "behaviourScriptName": "EnemyAttackState",
+      "behaviourFieldsJson": "",
+      "overrideLoop": false,
+      "loop": true
+    },
+    {
+      "name": "DEATH",
+      "clipName": "Spider_Death",
+      "speed": 1.0,
+      "behaviourScriptName": "EnemyDeathState",
+      "behaviourFieldsJson": "{\"Dissolve Delay\":2.0,\"Should Drop Health\":true,\"Health Prefab\":{\"uid\":12985855758632585254,\"libId\":\"f9eb70b06029aa0f018a4211e781de0e\",\"type\":\"PREFAB\"},\"Health Drop Quantity\":1,\"Drop Heal Amount\":10.0,\"Drop Radius\":2.0,\"Drop Height\":1.0}",
+      "overrideLoop": false,
+      "loop": true
+    },
+    {
+      "name": "STUN",
+      "clipName": "Spider_Stun_Full",
+      "speed": 1.0,
+      "behaviourScriptName": "EnemyStunnedState",
+      "behaviourFieldsJson": "",
+      "overrideLoop": true,
+      "loop": false
+    }
+  ],
+  "transitions": [
+    {
+      "sourceStateName": "IDLE",
+      "targetStateName": "CHASE",
+      "triggerName": "ToChase",
+      "blendTimeSeconds": 0.25
+    },
+    {
+      "sourceStateName": "CHASE",
+      "targetStateName": "IDLE",
+      "triggerName": "ToIdle",
+      "blendTimeSeconds": 0.25
+    },
+    {
+      "sourceStateName": "CHASE",
+      "targetStateName": "ATTACK",
+      "triggerName": "ToAttack",
+      "blendTimeSeconds": 0.25
+    },
+    {
+      "sourceStateName": "ATTACK",
+      "targetStateName": "CHASE",
+      "triggerName": "ToChase",
+      "blendTimeSeconds": 0.25
+    },
+    {
+      "sourceStateName": "ATTACK",
+      "targetStateName": "IDLE",
+      "triggerName": "ToIdle",
+      "blendTimeSeconds": 0.25
+    },
+    {
+      "sourceStateName": "IDLE",
+      "targetStateName": "DEATH",
+      "triggerName": "ToDeath",
+      "blendTimeSeconds": 0.25
+    },
+    {
+      "sourceStateName": "CHASE",
+      "targetStateName": "DEATH",
+      "triggerName": "ToDeath",
+      "blendTimeSeconds": 0.25
+    },
+    {
+      "sourceStateName": "ATTACK",
+      "targetStateName": "DEATH",
+      "triggerName": "ToDeath",
+      "blendTimeSeconds": 0.25
+    },
+    {
+      "sourceStateName": "ATTACK",
+      "targetStateName": "STUN",
+      "triggerName": "ToStun",
+      "blendTimeSeconds": 0.25
+    },
+    {
+      "sourceStateName": "IDLE",
+      "targetStateName": "STUN",
+      "triggerName": "ToStun",
+      "blendTimeSeconds": 0.25
+    },
+    {
+      "sourceStateName": "CHASE",
+      "targetStateName": "STUN",
+      "triggerName": "ToStun",
+      "blendTimeSeconds": 0.25
+    },
+    {
+      "sourceStateName": "STUN",
+      "targetStateName": "CHASE",
+      "triggerName": "ToChase",
+      "blendTimeSeconds": 0.25
+    },
+    {
+      "sourceStateName": "STUN",
+      "targetStateName": "IDLE",
+      "triggerName": "ToIdle",
+      "blendTimeSeconds": 0.25
+    },
+    {
+      "sourceStateName": "STUN",
+      "targetStateName": "DEATH",
+      "triggerName": "ToDeath",
+      "blendTimeSeconds": 0.25
+    }
+  ]
+}
