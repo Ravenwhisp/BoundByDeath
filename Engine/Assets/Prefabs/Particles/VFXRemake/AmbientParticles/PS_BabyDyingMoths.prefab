@@ -26,7 +26,7 @@
     },
     "Components": [
         {
-            "UID": 3327064312820576060,
+            "UID": 6751138454729962562,
             "ComponentType": "PARTICLE_SYSTEM",
             "Active": true,
             "TextureAssetId": {
@@ -41,19 +41,20 @@
                             "ModuleType": 2,
                             "Looping": true,
                             "Duration": 20.0,
-                            "RateOverTime": 3.0,
+                            "RateOverTime": 4.0,
                             "RateOverDistance": 0.0
                         },
                         {
                             "ModuleType": 4,
-                            "LifeTimeType": "CONSTANT",
-                            "StartLifeTime": 5.0
+                            "LifeTimeType": "RANDOM_BETWEEN_TWO",
+                            "StartLifeTime": 4.0,
+                            "StartLifeTime2": 8.0
                         },
                         {
                             "ModuleType": 1,
                             "ShapeType": "SPHERE",
                             "Radius": 0.5,
-                            "RadiusThickness": 1.0,
+                            "RadiusThickness": 0.75,
                             "RadiusScale": 3.0
                         },
                         {
@@ -145,8 +146,8 @@
                                 0.0
                             ],
                             "StartScale2": [
-                                0.05000000074505806,
-                                0.05000000074505806,
+                                0.02500000037252903,
+                                0.02500000037252903,
                                 0.0
                             ],
                             "ChangeSizeOverTime": false
