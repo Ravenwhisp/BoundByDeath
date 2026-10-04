@@ -1,5 +1,7 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "SkeletonScimitarState.h"
+
+#include "EnemySound.h"
 
 #include "SkeletonEnemyController.h"
 #include "SkeletonAttackConfig.h"
@@ -172,6 +174,11 @@ void SkeletonScimitarState::changePhase(Phase phase)
 
 	if (phase == Phase::Attack1 || phase == Phase::Attack2 || phase == Phase::Attack3)
 	{
+		if (EnemySound* sound = GameObjectAPI::findScript<EnemySound>(getOwner()))
+		{
+			sound->playBasicTelegraph();
+		}
+
 		AnimationAPI::playOverrideClip(m_animation, "Skeleton_Attak", 0.05, false);
 		setupAttackTelegraph();
 	}
@@ -204,6 +211,10 @@ void SkeletonScimitarState::updateAttack()
 	{
 		const bool shouldStun = m_phase == Phase::Attack3;
 		applyHit(shouldStun);
+		if (EnemySound* sound = GameObjectAPI::findScript<EnemySound>(getOwner()))
+		{
+			sound->playBasicImpact();
+		}
 		m_hasAppliedHit = true;
 	}
 
