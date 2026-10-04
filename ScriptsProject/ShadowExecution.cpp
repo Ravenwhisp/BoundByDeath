@@ -16,9 +16,22 @@
 #include "BoundConfig.h"
 #include "ShadowExecutionConfig.h"
 
+namespace
+{
+    constexpr int kHitTrailCount = 6;
+}
+
 IMPLEMENT_SCRIPT_FIELDS(ShadowExecution,
     SERIALIZED_ASSET_REF(m_config, "Shadow Execution Config", AssetType::DATA_CONTAINER),
     SERIALIZED_ASSET_REF(m_particlePrefab, "Particle Prefab", AssetType::PREFAB),
+    SERIALIZED_ASSET_REF(m_hitTrailPrefab, "Shadow Execution Hit Trail Prefab", AssetType::PREFAB),
+    SERIALIZED_ASSET_REF(m_hitTrailConvergencePrefab, "Shadow Execution Hit Convergence Prefab", AssetType::PREFAB),
+    SERIALIZED_FLOAT(m_hitTrailStartRadius, "Hit Trail Start Radius", 0.0f, 10.0f, 0.05f),
+    SERIALIZED_FLOAT(m_hitTrailStartHeightOffset, "Hit Trail Start Height Offset", -5.0f, 10.0f, 0.05f),
+    SERIALIZED_FLOAT(m_hitTrailEndHeightOffset, "Hit Trail End Height Offset", -5.0f, 10.0f, 0.05f),
+    SERIALIZED_FLOAT(m_hitTrailDuration, "Hit Trail Duration", 0.01f, 10.0f, 0.05f),
+    SERIALIZED_FLOAT(m_hitTrailRotationDegrees, "Hit Trail Rotation Degrees", -180.0f, 180.0f, 5.0f),
+    SERIALIZED_FLOAT(m_hitTrailConvergenceLifetime, "Hit Convergence Lifetime", 0.0f, 5.0f, 0.1f),
     SERIALIZED_COMPONENT_REF(m_reaperGaugeBar, "Reaper Gauge UI", ComponentType::UISLIDER),
     SERIALIZED_COMPONENT_REF(m_executionGlowUI, "Execution Glow UI", ComponentType::TRANSFORM2D),
     SERIALIZED_COMPONENT_REF(m_glowUIplayer0, "Glow UI Player 0", ComponentType::TRANSFORM2D),
@@ -85,6 +98,7 @@ void ShadowExecution::OnGameStop()
     }
 
     m_temporaryPrefabs.clear();
+    clearHitTrailVfx();
 }
 
 void ShadowExecution::Update()
@@ -97,7 +111,7 @@ void ShadowExecution::Update()
         it->lifetimeRemaining -= dt;
         if (it->lifetimeRemaining <= 0.0f)
         {
-            if (it->gameObject != nullptr)
+            if (it->gameObject != nullptr && SceneAPI::containsGameObject(it->gameObject))
             {
                 GameObjectAPI::removeGameObject(it->gameObject);
             }
@@ -109,6 +123,7 @@ void ShadowExecution::Update()
         }
     }
 
+    updateHitTrailVfx(dt);
     updateUI();
 
     if (m_isActive)
@@ -374,6 +389,7 @@ void ShadowExecution::applyAoEDamage()
         }
 
         const ShadowExecutionPreview preview = calculatePreview(damageable);
+        spawnHitTrailVfx(enemyPos);
 
         EnemyHitContext ctx;
         ctx.damage = preview.damage;
@@ -385,6 +401,140 @@ void ShadowExecution::applyAoEDamage()
 
         m_hitEnemies.push_back(enemy);
     }
+}
+
+void ShadowExecution::spawnHitTrailVfx(const Vector3& center)
+{
+    if (!m_hitTrailPrefab.m_id.isValid())
+    {
+        return;
+    }
+
+    ShadowExecutionHitVfx effect;
+    effect.center = center;
+    effect.trails.reserve(kHitTrailCount);
+
+    for (int i = 0; i < kHitTrailCount; ++i)
+    {
+        const float angle = 2.0f * MathAPI::PI * static_cast<float>(i) / static_cast<float>(kHitTrailCount);
+        const Vector3 position(
+            center.x + std::cos(angle) * m_hitTrailStartRadius,
+            center.y + m_hitTrailStartHeightOffset,
+            center.z + std::sin(angle) * m_hitTrailStartRadius
+        );
+
+        GameObject* trail = GameObjectAPI::instantiatePrefab(
+            m_hitTrailPrefab.m_id,
+            position,
+            Vector3::Zero,
+            ParticleLifecycle::getRuntimeVfxContainer()
+        );
+
+        if (!trail)
+        {
+            for (GameObject* spawnedTrail : effect.trails)
+            {
+                if (spawnedTrail != nullptr)
+                {
+                    GameObjectAPI::removeGameObject(spawnedTrail);
+                }
+            }
+            return;
+        }
+
+        ParticleLifecycle::disableSelfDestruct(trail);
+
+        effect.trails.push_back(trail);
+    }
+
+    m_hitTrailEffects.push_back(effect);
+}
+
+void ShadowExecution::updateHitTrailVfx(float dt)
+{
+    for (auto effectIt = m_hitTrailEffects.begin(); effectIt != m_hitTrailEffects.end(); )
+    {
+        effectIt->elapsedTime += dt;
+
+        const float progress = m_hitTrailDuration > 0.0f
+            ? std::clamp(effectIt->elapsedTime / m_hitTrailDuration, 0.0f, 1.0f)
+            : 1.0f;
+        const float convergence = MathAPI::evaluateEasing(MathAPI::EasingType::EaseInCubic, progress);
+        const float height = MathAPI::lerp(m_hitTrailStartHeightOffset, m_hitTrailEndHeightOffset, progress);
+        const float radius = MathAPI::lerp(m_hitTrailStartRadius, 0.0f, convergence);
+        const float rotationRadians = m_hitTrailRotationDegrees * (MathAPI::PI / 180.0f) * convergence;
+
+        for (size_t i = 0; i < effectIt->trails.size(); ++i)
+        {
+            GameObject* trail = effectIt->trails[i];
+            if (trail == nullptr || !SceneAPI::containsGameObject(trail))
+            {
+                continue;
+            }
+
+            Transform* trailTransform = GameObjectAPI::getTransform(trail);
+            if (trailTransform == nullptr)
+            {
+                continue;
+            }
+
+            const float angle = 2.0f * MathAPI::PI * static_cast<float>(i) / static_cast<float>(kHitTrailCount) + rotationRadians;
+            const Vector3 position(
+                effectIt->center.x + std::cos(angle) * radius,
+                effectIt->center.y + height,
+                effectIt->center.z + std::sin(angle) * radius
+            );
+            TransformAPI::setGlobalPosition(trailTransform, position);
+        }
+
+        if (progress >= 1.0f)
+        {
+            if (m_hitTrailConvergencePrefab.m_id.isValid())
+            {
+                const Vector3 position(effectIt->center.x, effectIt->center.y + height, effectIt->center.z);
+                GameObject* convergence = GameObjectAPI::instantiatePrefab(
+                    m_hitTrailConvergencePrefab.m_id,
+                    position,
+                    Vector3::Zero,
+                    ParticleLifecycle::getRuntimeVfxContainer()
+                );
+                if (convergence != nullptr)
+                {
+                    ParticleLifecycle::disableSelfDestruct(convergence);
+                    m_temporaryPrefabs.push_back({ convergence, m_hitTrailConvergenceLifetime });
+                }
+            }
+
+            for (GameObject* trail : effectIt->trails)
+            {
+                if (trail != nullptr && SceneAPI::containsGameObject(trail))
+                {
+                    GameObjectAPI::removeGameObject(trail);
+                }
+            }
+            effectIt = m_hitTrailEffects.erase(effectIt);
+        }
+        else
+        {
+            ++effectIt;
+        }
+    }
+}
+
+void ShadowExecution::clearHitTrailVfx()
+{
+    for (ShadowExecutionHitVfx& effect : m_hitTrailEffects)
+    {
+        for (GameObject* trail : effect.trails)
+        {
+            if (trail != nullptr && SceneAPI::containsGameObject(trail))
+            {
+                GameObjectAPI::removeGameObject(trail);
+            }
+        }
+    }
+
+    m_hitTrailEffects.clear();
 }
 
 void ShadowExecution::endExecution()
