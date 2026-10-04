@@ -19,8 +19,6 @@
 
 #include <cmath>
 
-static const float PI = 3.1415926535897931f;
-
 // When fully charged, keep the charge held (aiming) for this long before auto-releasing.
 static constexpr float k_maxChargeHoldGrace = 2.0f;
 
@@ -83,6 +81,19 @@ void LyrielChargedAttack::Update()
             }
         }
 	}
+}
+
+void LyrielChargedAttack::updateUI()
+{
+    AbilityBase::updateUI();
+
+    if (m_lyrielUI && m_lyrielUI->m_chargedHUDControlTransform2D)
+    {
+        const float dt = Time::getDeltaTime();
+        const bool isPressed = Input::isRightTriggerPressed(getPlayerIndex());
+
+        updateHUDControlScale(m_lyrielUI->m_chargedHUDControlTransform2D, isPressed, dt);
+    }
 }
 
 void LyrielChargedAttack::drawGizmo()
