@@ -19,8 +19,6 @@
 
 #include <cmath>
 
-static const float PI = 3.1415926535897931f;
-
 // When fully charged, keep the charge held (aiming) for this long before auto-releasing.
 static constexpr float k_maxChargeHoldGrace = 2.0f;
 
@@ -85,6 +83,19 @@ void LyrielChargedAttack::Update()
 	}
 }
 
+void LyrielChargedAttack::updateUI()
+{
+    AbilityBase::updateUI();
+
+    if (m_lyrielUI && m_lyrielUI->m_chargedHUDControlTransform2D)
+    {
+        const float dt = Time::getDeltaTime();
+        const bool isPressed = Input::isRightTriggerPressed(getPlayerIndex());
+
+        updateHUDControlScale(m_lyrielUI->m_chargedHUDControlTransform2D, isPressed, dt);
+    }
+}
+
 void LyrielChargedAttack::drawGizmo()
 {
     if (!m_isCharging)
@@ -141,12 +152,47 @@ bool LyrielChargedAttack::canShoot() const
     return m_character != nullptr && !m_character->isDowned();
 }
 
+void LyrielChargedAttack::cancelAbility()
+{
+    if (m_isCharging)
+    {
+        m_isCharging = false;
+        m_chargeTimer = 0.0f;
+        m_maxHoldTimer = 0.0f;
+
+        resetChargingMovementSlowdown();
+
+        if (m_lyrielUI)
+        {
+            m_lyrielUI->hideChargedAttackUI();
+        }
+
+        LyrielSound* sound = m_lyrielCharacter != nullptr ? m_lyrielCharacter->getSound() : nullptr;
+        if (sound != nullptr)
+        {
+            sound->stopChargedTenseLoop();
+        }
+    }
+
+    if (m_character != nullptr)
+    {
+        PlayerAnimationController* anim = m_character->getAnimationController();
+        if (anim != nullptr)
+        {
+            anim->abortChargeHold();
+        }
+    }
+
+    AbilityBase::cancelAbility();
+}
+
 void LyrielChargedAttack::beginCharge()
 {
     m_isCharging = true;
     setAbilityLocked(true);
 
     applyChargingMovementSlowdown(m_config->m_chargedMovementSlowdownPercentage);
+    startChargingHaptics();
 
     m_chargeTimer = 0.0f;
     m_maxHoldTimer = 0.0f;
@@ -202,6 +248,7 @@ void LyrielChargedAttack::updateCharge()
 
     const float maxTime = m_lyrielCharacter->getConfig()->m_chargedMaxChargeTime;
     const float chargeRatio = maxTime > 0.0f ? (m_chargeTimer / maxTime) : 1.0f;
+    updateChargingHaptics(chargeRatio);
     if (m_character != nullptr)
     {
         PlayerAnimationController* anim = m_character->getAnimationController();
@@ -234,6 +281,7 @@ void LyrielChargedAttack::updateCharge()
 void LyrielChargedAttack::releaseChargeAndShoot()
 {
     m_isCharging = false;
+    stopChargingHaptics();
 
     if (m_particles != nullptr)
     {
@@ -508,7 +556,7 @@ void LyrielChargedAttack::spawnChargedArrow(const Vector3& origin, const Vector3
 
     const float lifetime = range / m_lyrielCharacter->getConfig()->m_chargedArrowSpeed;
 
-    arrow->launch(origin, flatForward, m_lyrielCharacter->getConfig()->m_chargedArrowSpeed, lifetime, nullptr, 0.0f);
+    arrow->launch(origin, flatForward, m_lyrielCharacter->getConfig()->m_chargedArrowSpeed, lifetime, nullptr, 0.0f, LyrielArrowProjectile::VisualModel::Charged);
 }
 
 void LyrielChargedAttack::drawChargePreview(const Vector3& origin, const Vector3& forward) const

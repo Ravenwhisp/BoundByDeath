@@ -7,12 +7,17 @@ static constexpr float kChargedAttackUIReferenceRadius = 3.0f;
 static constexpr float kChargedAttackUIReferenceSize = 1000.0f;
 
 IMPLEMENT_SCRIPT_FIELDS_INHERITED(DeathUI, CharacterUI,
+	FIELD_GROUP_LABEL("World-space Attack UI"),
+	SERIALIZED_FLOAT(m_attackUIHeightOffset, "Height Offset", 0.0f, 1.0f, 0.01f),
+
 	FIELD_GROUP_LABEL("Taunt"),
 	SERIALIZED_COMPONENT_REF(m_tauntUI, "Taunt UI", ComponentType::TRANSFORM),
+	SERIALIZED_COMPONENT_REF(m_tauntHUDControl, "Taunt HUD Control", ComponentType::TRANSFORM2D),
 
 	FIELD_GROUP_LABEL("Charged Attack"),
 	SERIALIZED_COMPONENT_REF(m_chargedAttackUI, "Charged Attack UI", ComponentType::TRANSFORM),
 	SERIALIZED_COMPONENT_REF(m_chargedAttackChargeSlider, "Charge Ring Slider", ComponentType::UISLIDER),
+	SERIALIZED_COMPONENT_REF(m_chargedHUDControl, "Charged Attack HUD Control", ComponentType::TRANSFORM2D),
 
 	FIELD_GROUP_LABEL("Slash Combo"),
 	SERIALIZED_COMPONENT_REF(m_basicSlashUI, "Basic Slash UI", ComponentType::TRANSFORM),
@@ -34,6 +39,9 @@ void DeathUI::Start()
 	m_tauntUITransform = m_tauntUI.getReferencedComponent();
 	m_chargedAttackUITransform = m_chargedAttackUI.getReferencedComponent();
 	m_chargedAttackChargeUISlider = m_chargedAttackChargeSlider.getReferencedComponent();
+
+	m_tauntHUDControlTransform2D = m_tauntHUDControl.getReferencedComponent();
+	m_chargedHUDControlTransform2D = m_chargedHUDControl.getReferencedComponent();
 
 	m_basicSlashUITransform = m_basicSlashUI.getReferencedComponent();
 	m_basicSlashUISlider = m_basicSlashSlider.getReferencedComponent();
@@ -85,7 +93,10 @@ void DeathUI::updateTauntUI(const Vector3& origin, const Vector3& aimDirection)
 	const float yawRad = std::atan2(flatDirection.x, flatDirection.z);
 	const float targetYawDeg = yawRad * (180.0f / 3.14159265f);
 
-	TransformAPI::setGlobalPosition(m_tauntUITransform, origin);
+	Vector3 uiPosition = origin;
+	uiPosition.y += m_attackUIHeightOffset;
+
+	TransformAPI::setGlobalPosition(m_tauntUITransform, uiPosition);
 	TransformAPI::setGlobalRotationEuler(m_tauntUITransform, Vector3(0.0f, targetYawDeg, 0.0f));
 }
 
@@ -130,7 +141,10 @@ void DeathUI::updateChargedAttackUI(const Vector3& origin, float chargeRatio, fl
 		return;
 	}
 
-	TransformAPI::setGlobalPosition(m_chargedAttackUITransform, origin);
+	Vector3 uiPosition = origin;
+	uiPosition.y += m_attackUIHeightOffset;
+
+	TransformAPI::setGlobalPosition(m_chargedAttackUITransform, uiPosition);
 
 	constexpr float referenceRadius = 3.0f;
 

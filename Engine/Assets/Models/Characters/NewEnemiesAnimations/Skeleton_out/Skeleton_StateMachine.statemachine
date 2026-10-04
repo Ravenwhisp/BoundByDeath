@@ -1,0 +1,313 @@
+{
+  "name": "Skeleton_StateMachine",
+  "defaultState": "IDLE",
+  "clips": [
+    {
+      "name": "Skeleton_Attak",
+      "uid": 17444665261447916521,
+      "libId": "54210578c69df07bfe0e90713542593f",
+      "type": "ANIMATION",
+      "loop": true
+    },
+    {
+      "name": "Skeleton_Damage",
+      "uid": 8478718165831940329,
+      "libId": "f27ec671c3ddb6502969b1fa8bca3d0e",
+      "type": "ANIMATION",
+      "loop": true
+    },
+    {
+      "name": "Skeleton_Death",
+      "uid": 15957604981725658233,
+      "libId": "96b9a9ea87e865ac50a950968b67680c",
+      "type": "ANIMATION",
+      "loop": true
+    },
+    {
+      "name": "Skeleton_Idle",
+      "uid": 3281370768485204853,
+      "libId": "705d8b450b705aa62e2d99504911f7f3",
+      "type": "ANIMATION",
+      "loop": true
+    },
+    {
+      "name": "Skeleton_Idle_long",
+      "uid": 12340001190564710365,
+      "libId": "211a5e9a919520814a8028fd8fa4ea2a",
+      "type": "ANIMATION",
+      "loop": true
+    },
+    {
+      "name": "Skeleton_Revive_End",
+      "uid": 6743409239443761171,
+      "libId": "ae98c563c85c6feacffb82d4722a9bc6",
+      "type": "ANIMATION",
+      "loop": true
+    },
+    {
+      "name": "Skeleton_Revive_Idle",
+      "uid": 7375017233350195088,
+      "libId": "52111815abc702ae765ef368d498b8ad",
+      "type": "ANIMATION",
+      "loop": true
+    },
+    {
+      "name": "Skeleton_Revive_Start",
+      "uid": 9870728354509364364,
+      "libId": "2208b88bb5a4ff2c367b2f43427f3d29",
+      "type": "ANIMATION",
+      "loop": true
+    },
+    {
+      "name": "Skeleton_Run",
+      "uid": 3208641339889259484,
+      "libId": "0f53be98b077c2f1fcc6235d2b4f7b12",
+      "type": "ANIMATION",
+      "loop": true
+    },
+    {
+      "name": "Skeleton_Stun_Full",
+      "uid": 7885711576165677614,
+      "libId": "20de9c0b2f25a1e72c9bff027b0ed8ea",
+      "type": "ANIMATION",
+      "loop": true
+    },
+    {
+      "name": "Skeleton_Stun_Loop",
+      "uid": 817625882989646900,
+      "libId": "1567c0ced4b43a69039b5fe2ded35992",
+      "type": "ANIMATION",
+      "loop": true
+    },
+    {
+      "name": "Skeleton_Tpose",
+      "uid": 11695105917296286689,
+      "libId": "9717b4a43701650d2f86375fe477feea",
+      "type": "ANIMATION",
+      "loop": true
+    }
+  ],
+  "states": [
+    {
+      "name": "CHASE",
+      "clipName": "Skeleton_Run",
+      "speed": 1.0,
+      "behaviourScriptName": "SkeletonChaseState",
+      "behaviourFieldsJson": "",
+      "overrideLoop": false,
+      "loop": true
+    },
+    {
+      "name": "GUARD",
+      "clipName": "Skeleton_Idle",
+      "speed": 1.0,
+      "behaviourScriptName": "SkeletonGuardState",
+      "behaviourFieldsJson": "",
+      "overrideLoop": false,
+      "loop": true
+    },
+    {
+      "name": "IDLE",
+      "clipName": "Skeleton_Idle",
+      "speed": 1.0,
+      "behaviourScriptName": "EnemyIdleState",
+      "behaviourFieldsJson": "",
+      "overrideLoop": false,
+      "loop": true
+    },
+    {
+      "name": "ATTACK",
+      "clipName": "Skeleton_Attak",
+      "speed": 1.0,
+      "behaviourScriptName": "SkeletonScimitarState",
+      "behaviourFieldsJson": "",
+      "overrideLoop": false,
+      "loop": true
+    },
+    {
+      "name": "DEATH",
+      "clipName": "Skeleton_Death",
+      "speed": 1.0,
+      "behaviourScriptName": "EnemyDeathState",
+      "behaviourFieldsJson": "{\"Dissolve Delay\":2.0,\"Should Drop Health\":true,\"Health Prefab\":{\"uid\":12985855758632585254,\"libId\":\"f9eb70b06029aa0f018a4211e781de0e\",\"type\":\"PREFAB\"},\"Health Drop Quantity\":2,\"Drop Heal Amount\":10.0,\"Drop Radius\":2.0,\"Drop Height\":1.0}",
+      "overrideLoop": true,
+      "loop": false
+    },
+    {
+      "name": "REVIVESTART",
+      "clipName": "Skeleton_Revive_Start",
+      "speed": 1.0,
+      "behaviourScriptName": "SkeletonReviveState",
+      "behaviourFieldsJson": "{}",
+      "overrideLoop": false,
+      "loop": true
+    },
+    {
+      "name": "REVIVEIDLE",
+      "clipName": "Skeleton_Revive_Idle",
+      "speed": 1.0,
+      "behaviourScriptName": "",
+      "behaviourFieldsJson": "",
+      "overrideLoop": false,
+      "loop": true
+    },
+    {
+      "name": "REVIVEEND",
+      "clipName": "Skeleton_Revive_End",
+      "speed": 1.0,
+      "behaviourScriptName": "",
+      "behaviourFieldsJson": "",
+      "overrideLoop": false,
+      "loop": true
+    },
+    {
+      "name": "STUN",
+      "clipName": "Skeleton_Stun_Full",
+      "speed": 1.0,
+      "behaviourScriptName": "EnemyStunnedState",
+      "behaviourFieldsJson": "{}",
+      "overrideLoop": true,
+      "loop": false
+    }
+  ],
+  "transitions": [
+    {
+      "sourceStateName": "IDLE",
+      "targetStateName": "CHASE",
+      "triggerName": "ToChase",
+      "blendTimeSeconds": 0.25
+    },
+    {
+      "sourceStateName": "CHASE",
+      "targetStateName": "IDLE",
+      "triggerName": "ToIdle",
+      "blendTimeSeconds": 0.25
+    },
+    {
+      "sourceStateName": "CHASE",
+      "targetStateName": "GUARD",
+      "triggerName": "ToGuard",
+      "blendTimeSeconds": 0.25
+    },
+    {
+      "sourceStateName": "GUARD",
+      "targetStateName": "CHASE",
+      "triggerName": "ToChase",
+      "blendTimeSeconds": 0.25
+    },
+    {
+      "sourceStateName": "CHASE",
+      "targetStateName": "ATTACK",
+      "triggerName": "ToScimitar",
+      "blendTimeSeconds": 0.25
+    },
+    {
+      "sourceStateName": "ATTACK",
+      "targetStateName": "CHASE",
+      "triggerName": "ToChase",
+      "blendTimeSeconds": 0.25
+    },
+    {
+      "sourceStateName": "ATTACK",
+      "targetStateName": "REVIVESTART",
+      "triggerName": "ToRevive",
+      "blendTimeSeconds": 0.25
+    },
+    {
+      "sourceStateName": "REVIVESTART",
+      "targetStateName": "CHASE",
+      "triggerName": "ToChase",
+      "blendTimeSeconds": 0.25
+    },
+    {
+      "sourceStateName": "GUARD",
+      "targetStateName": "REVIVESTART",
+      "triggerName": "ToRevive",
+      "blendTimeSeconds": 0.25
+    },
+    {
+      "sourceStateName": "IDLE",
+      "targetStateName": "REVIVESTART",
+      "triggerName": "ToRevive",
+      "blendTimeSeconds": 0.25
+    },
+    {
+      "sourceStateName": "REVIVESTART",
+      "targetStateName": "DEATH",
+      "triggerName": "ToDeath",
+      "blendTimeSeconds": 0.25
+    },
+    {
+      "sourceStateName": "GUARD",
+      "targetStateName": "STUN",
+      "triggerName": "ToStun",
+      "blendTimeSeconds": 0.25
+    },
+    {
+      "sourceStateName": "IDLE",
+      "targetStateName": "STUN",
+      "triggerName": "ToStun",
+      "blendTimeSeconds": 0.25
+    },
+    {
+      "sourceStateName": "CHASE",
+      "targetStateName": "STUN",
+      "triggerName": "ToStun",
+      "blendTimeSeconds": 0.25
+    },
+    {
+      "sourceStateName": "ATTACK",
+      "targetStateName": "STUN",
+      "triggerName": "ToStun",
+      "blendTimeSeconds": 0.25
+    },
+    {
+      "sourceStateName": "STUN",
+      "targetStateName": "IDLE",
+      "triggerName": "ToIdle",
+      "blendTimeSeconds": 0.25
+    },
+    {
+      "sourceStateName": "STUN",
+      "targetStateName": "CHASE",
+      "triggerName": "ToChase",
+      "blendTimeSeconds": 0.25
+    },
+    {
+      "sourceStateName": "STUN",
+      "targetStateName": "REVIVESTART",
+      "triggerName": "ToRevive",
+      "blendTimeSeconds": 0.25
+    },
+    {
+      "sourceStateName": "STUN",
+      "targetStateName": "DEATH",
+      "triggerName": "ToDeath",
+      "blendTimeSeconds": 0.25
+    },
+    {
+      "sourceStateName": "IDLE",
+      "targetStateName": "DEATH",
+      "triggerName": "ToDeath",
+      "blendTimeSeconds": 0.25
+    },
+    {
+      "sourceStateName": "CHASE",
+      "targetStateName": "DEATH",
+      "triggerName": "ToDeath",
+      "blendTimeSeconds": 0.25
+    },
+    {
+      "sourceStateName": "GUARD",
+      "targetStateName": "DEATH",
+      "triggerName": "ToDeath",
+      "blendTimeSeconds": 0.25
+    },
+    {
+      "sourceStateName": "ATTACK",
+      "targetStateName": "DEATH",
+      "triggerName": "ToDeath",
+      "blendTimeSeconds": 0.25
+    }
+  ]
+}

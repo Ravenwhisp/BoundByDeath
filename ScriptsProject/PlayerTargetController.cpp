@@ -7,6 +7,7 @@
 #include "DeathSound.h"
 #include "LyrielSound.h"
 #include "EnemyDamageable.h"
+#include "EnemyBaseController.h"
 #include "BreakableDamageable.h"
 #include "BreakableObject.h"
 #include "CrystalShadowMark.h"
@@ -58,11 +59,21 @@ void PlayerTargetController::Update()
         m_switchCooldownTimer -= dt;
     }
 
-    updateTargetsInRange();
-    clearInvalidCurrentTarget();
-    setDefaultEnemyTargetIfNeeded();
+    {
+        SCRIPT_PROFILE_SCOPE("Refresh candidates");
+        updateTargetsInRange();
+    }
 
-    updateCurrentTarget();
+    {
+        SCRIPT_PROFILE_SCOPE("Validate/default target");
+        clearInvalidCurrentTarget();
+        setDefaultEnemyTargetIfNeeded();
+    }
+
+    {
+        SCRIPT_PROFILE_SCOPE("Aim target selection");
+        updateCurrentTarget();
+    }
 }
 
 void PlayerTargetController::drawGizmo()
@@ -120,11 +131,23 @@ void PlayerTargetController::drawGizmo()
 void PlayerTargetController::updateTargetsInRange()
 {
     m_targetsInRange.clear();
+    m_defaultEnemyTarget = nullptr;
 
     const std::vector<GameObject*> enemies = SceneAPI::findAllGameObjectsByTag(Tag::ENEMY, true);
     const std::vector<GameObject*> breakables = SceneAPI::findAllGameObjectsByTag(Tag::BREAKABLE, true);
 
+    Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
+    if (ownerTransform == nullptr)
+    {
+        return;
+    }
+
+    const Vector3 ownerPosition = TransformAPI::getGlobalPosition(ownerTransform);
+    const float targetRangeSq = m_targetRange * m_targetRange;
+
     bool hasEnemyInRange = false;
+    int bestEnemyPriority = -101;
+    float bestEnemyDistanceSq = FLT_MAX;
 
     for (GameObject* enemy : enemies)
     {
@@ -133,10 +156,31 @@ void PlayerTargetController::updateTargetsInRange()
             continue;
         }
 
-        if (isTargetInRange(enemy) && isTargetAlive(enemy) && isTargetable(enemy))
+        Transform* enemyTransform = GameObjectAPI::getTransform(enemy);
+        if (enemyTransform == nullptr)
         {
-            m_targetsInRange.push_back(enemy);
+            continue;
+        }
+
+        Vector3 difference = TransformAPI::getGlobalPosition(enemyTransform) - ownerPosition;
+        const float rangeDistanceSq = difference.LengthSquared();
+        difference.y = 0.0f;
+        const float distanceSq = difference.LengthSquared();
+
+        if (rangeDistanceSq <= targetRangeSq && isTargetAlive(enemy) && isTargetable(enemy))
+        {
+            EnemyBaseController* controller = GameObjectAPI::findScript<EnemyBaseController>(enemy);
+            m_targetsInRange.push_back({ enemy, controller, distanceSq });
             hasEnemyInRange = true;
+
+            const int priority = controller != nullptr ? controller->getTargetPriority() : 0;
+            if (m_defaultEnemyTarget == nullptr || priority > bestEnemyPriority ||
+                (priority == bestEnemyPriority && distanceSq < bestEnemyDistanceSq))
+            {
+                m_defaultEnemyTarget = enemy;
+                bestEnemyPriority = priority;
+                bestEnemyDistanceSq = distanceSq;
+            }
         }
     }
 
@@ -147,7 +191,18 @@ void PlayerTargetController::updateTargetsInRange()
             continue;
         }
 
-        if (!isTargetInRange(breakable) || !isTargetAlive(breakable) || !isTargetable(breakable))
+        Transform* breakableTransform = GameObjectAPI::getTransform(breakable);
+        if (breakableTransform == nullptr)
+        {
+            continue;
+        }
+
+        Vector3 difference = TransformAPI::getGlobalPosition(breakableTransform) - ownerPosition;
+        const float rangeDistanceSq = difference.LengthSquared();
+        difference.y = 0.0f;
+        const float distanceSq = difference.LengthSquared();
+
+        if (rangeDistanceSq > targetRangeSq || !isTargetAlive(breakable) || !isTargetable(breakable))
         {
             continue;
         }
@@ -157,7 +212,7 @@ void PlayerTargetController::updateTargetsInRange()
             continue;
         }
 
-        m_targetsInRange.push_back(breakable);
+        m_targetsInRange.push_back({ breakable, nullptr, distanceSq });
     }
 }
 
@@ -269,22 +324,7 @@ void PlayerTargetController::setDefaultEnemyTargetIfNeeded()
 
 GameObject* PlayerTargetController::findDefaultEnemyTarget() const
 {
-    const std::vector<GameObject*> enemies = SceneAPI::findAllGameObjectsByTag(Tag::ENEMY, true);
-
-    for (GameObject* enemy : enemies)
-    {
-        if (enemy == nullptr)
-        {
-            continue;
-        }
-
-        if (isTargetInRange(enemy) && isTargetAlive(enemy) && isTargetable(enemy))
-        {
-            return enemy;
-        }
-    }
-
-    return nullptr;
+    return m_defaultEnemyTarget;
 }
 
 bool PlayerTargetController::canUpdateTarget() const
@@ -420,12 +460,18 @@ bool PlayerTargetController::tryComputeTargetScore(GameObject* target, const Vec
 
 GameObject* PlayerTargetController::findBestTarget(const Vector3& aimDirection, float& outBestScore) const
 {
-    GameObject* bestTarget = nullptr;
-    outBestScore = FLT_MAX;
+    GameObject* bestEnemy = nullptr;
+    int bestEnemyPriority = -101;
+    float bestEnemyScore = FLT_MAX;
 
-    // Check all currently valid targets and keep the one with the lowest score as the real target
-    for (GameObject* target : m_targetsInRange)
+    GameObject* bestNonEnemy = nullptr;
+    float bestNonEnemyScore = FLT_MAX;
+
+    // Priority orders enemies first; existing aim and distance scoring breaks ties.
+    // Non-enemies such as breakables keep the existing geometric scoring.
+    for (const TargetCandidate& candidate : m_targetsInRange)
     {
+        GameObject* target = candidate.gameObject;
         float score = FLT_MAX;
 
         if (!tryComputeTargetScore(target, aimDirection, score))
@@ -433,14 +479,33 @@ GameObject* PlayerTargetController::findBestTarget(const Vector3& aimDirection, 
             continue;
         }
 
-        if (score < outBestScore)
+        if (GameObjectAPI::getTag(target) == Tag::ENEMY)
         {
-            outBestScore = score;
-            bestTarget = target;
+            EnemyBaseController* controller = candidate.enemyController;
+            const int priority = controller != nullptr ? controller->getTargetPriority() : 0;
+
+            if (bestEnemy == nullptr || priority > bestEnemyPriority || (priority == bestEnemyPriority && score < bestEnemyScore))
+            {
+                bestEnemy = target;
+                bestEnemyPriority = priority;
+                bestEnemyScore = score;
+            }
+        }
+        else if (score < bestNonEnemyScore)
+        {
+            bestNonEnemy = target;
+            bestNonEnemyScore = score;
         }
     }
 
-    return bestTarget;
+    if (bestEnemy == nullptr || (bestNonEnemy != nullptr && bestNonEnemyScore < bestEnemyScore))
+    {
+        outBestScore = bestNonEnemyScore;
+        return bestNonEnemy;
+    }
+
+    outBestScore = bestEnemyScore;
+    return bestEnemy;
 }
 
 bool PlayerTargetController::shouldSwitchTarget(GameObject* candidate, const Vector3& aimDirection, float candidateScore) const
@@ -473,6 +538,19 @@ bool PlayerTargetController::shouldSwitchTarget(GameObject* candidate, const Vec
         return true;
     }
 
+    if (GameObjectAPI::getTag(candidate) == Tag::ENEMY && GameObjectAPI::getTag(m_currentTarget) == Tag::ENEMY)
+    {
+        EnemyBaseController* candidateController = GameObjectAPI::findScript<EnemyBaseController>(candidate);
+        EnemyBaseController* currentController = GameObjectAPI::findScript<EnemyBaseController>(m_currentTarget);
+        const int candidatePriority = candidateController != nullptr ? candidateController->getTargetPriority() : 0;
+        const int currentPriority = currentController != nullptr ? currentController->getTargetPriority() : 0;
+
+        if (candidatePriority > currentPriority)
+        {
+            return true;
+        }
+    }
+
     // Only switch if the new target is clearly better than the current one.
     return candidateScore + m_switchMargin < currentScore;
 }
@@ -484,34 +562,18 @@ GameObject* PlayerTargetController::findNearbyTargetInRange(float range) const
         return nullptr;
     }
 
-    Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
-    if (ownerTransform == nullptr)
-    {
-        return nullptr;
-    }
-
-    const Vector3 ownerPosition = TransformAPI::getGlobalPosition(ownerTransform);
-
     GameObject* bestTarget = nullptr;
     float bestDistSq = range * range;
 
-    for (GameObject* candidate : m_targetsInRange)
+    for (const TargetCandidate& targetCandidate : m_targetsInRange)
     {
+        GameObject* candidate = targetCandidate.gameObject;
         if (candidate == nullptr)
         {
             continue;
         }
 
-        Transform* candidateTransform = GameObjectAPI::getTransform(candidate);
-        if (candidateTransform == nullptr)
-        {
-            continue;
-        }
-
-        Vector3 toCandidate = TransformAPI::getGlobalPosition(candidateTransform) - ownerPosition;
-        toCandidate.y = 0.0f;
-
-        const float distSq = toCandidate.LengthSquared();
+        const float distSq = targetCandidate.distanceSq;
         if (distSq > bestDistSq)
         {
             continue;
@@ -545,9 +607,8 @@ bool PlayerTargetController::isTargetInRange(GameObject* target) const
     const Vector3 targetPosition = TransformAPI::getGlobalPosition(targetTransform);
 
     const Vector3 distanceFromTarget = targetPosition - ownerPosition;
-    const float distance = distanceFromTarget.Length();
 
-    return distance <= m_targetRange;
+    return distanceFromTarget.LengthSquared() <= m_targetRange * m_targetRange;
 }
 
 bool PlayerTargetController::isTargetAlive(GameObject* target) const

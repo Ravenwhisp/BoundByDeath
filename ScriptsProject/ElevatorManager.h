@@ -32,12 +32,13 @@ private:
 
     void startPlatformMove(int targetIndex);
     void updatePlatformMove();
+    void snapPlatformToTarget();
 
     int getTotalWaves() const;
 
     void killWaveEnemies(int waveIndex);
 
-    enum class State { Idle, CycleActive, PlatformMoving, Done };
+    enum class State { Idle, CycleActive, WaitingBetweenWaves, PlatformMoving, Done };
 
 public:
     std::vector<ComponentRef<Transform>> m_crystals;
@@ -56,6 +57,8 @@ public:
 
     int m_wavesPerCycle = 2;
 
+    ComponentRef<Transform> m_checkpointRef;
+
 private:
     std::vector<CrystalShadowMark*> m_crystalScripts;
     std::vector<CombatAreaEvent*> m_combatAreas;
@@ -64,6 +67,7 @@ private:
     int m_currentCycle = 0;
     int m_wavesCompleted = 0;
     int m_wavesDoneInCycle = 0;
+    float m_waveDelayTimer = 0.0f;
 
     bool m_wallsActive = false;
 
@@ -76,4 +80,6 @@ private:
 
     int m_cheatWaveIndex = 0;
     bool m_cheatWasPressed = false;
+
+    GameObject* m_checkpoint;
 };
