@@ -6,18 +6,10 @@
 #include "Damageable.h"
 #include "DeathSound.h"
 #include "LyrielSound.h"
-#include "EnemyDamageable.h"
 #include "EnemyBaseController.h"
-#include "BreakableDamageable.h"
 #include "BreakableObject.h"
 #include "CrystalShadowMark.h"
-
-namespace
-{
-    constexpr float kEnemyCacheRefreshInterval = 0.1f;
-    constexpr float kNearbyCachePadding = 2.5f;
-    constexpr float kCacheMovementThreshold = 1.0f;
-}
+#include "GameplayTargetRegistry.h"
 
 IMPLEMENT_SCRIPT_FIELDS(PlayerTargetController,
     SERIALIZED_FLOAT(m_targetRange, "Target Range", 0.0f, 20.0f, 0.05f),
@@ -101,7 +93,7 @@ void PlayerTargetController::drawGizmo()
 
     drawCircle(ownerPosition, Vector3(0.0f, 1.0f, 0.0f), green, m_targetRange, 32.0f, 0, true);
 
-    if (m_currentTarget != nullptr)
+    if (m_currentTarget != nullptr && SceneAPI::containsGameObject(m_currentTarget))
     {
         Transform* targetTransform = GameObjectAPI::getTransform(m_currentTarget);
         if (targetTransform != nullptr)
@@ -149,37 +141,23 @@ void PlayerTargetController::updateTargetsInRange()
     const Vector3 ownerPosition = TransformAPI::getGlobalPosition(ownerTransform);
     const float targetRangeSq = m_targetRange * m_targetRange;
 
-    m_enemyCacheTimer += Time::getDeltaTime();
-
-    Vector3 cacheMovement = ownerPosition - m_enemyCacheCenter;
-    cacheMovement.y = 0.0f;
-    const bool movedBeyondCacheThreshold =
-        cacheMovement.LengthSquared() >= kCacheMovementThreshold * kCacheMovementThreshold;
-
-    {
-        SCRIPT_PROFILE_SCOPE("Refresh spatial caches");
-
-        if (!m_crystalCacheValid)
-        {
-            refreshCrystalCache();
-        }
-
-        if (!m_nearbyCacheValid || m_enemyCacheTimer >= kEnemyCacheRefreshInterval || movedBeyondCacheThreshold)
-        {
-            refreshNearbyCache(ownerPosition);
-        }
-    }
-
     bool hasEnemyInRange = false;
     int bestEnemyPriority = -101;
     float bestEnemyDistanceSq = FLT_MAX;
+    bool hasRemovedTarget = false;
+    const auto& registeredTargets = GameplayTargetRegistry::getTargets();
 
     {
-        SCRIPT_PROFILE_SCOPE("Filter cached targets");
+        SCRIPT_PROFILE_SCOPE("Filter registered targets");
 
-        for (const CachedTarget& enemy : m_cachedEnemies)
+        for (const GameplayTargetRegistry::Target& enemy : registeredTargets)
         {
-            if (!isCachedTargetValid(enemy))
+            if (enemy.tag != Tag::ENEMY)
+            {
+                continue;
+            }
+
+            if (!GameplayTargetRegistry::isValid(enemy, hasRemovedTarget))
             {
                 continue;
             }
@@ -207,9 +185,14 @@ void PlayerTargetController::updateTargetsInRange()
             }
         }
 
-        for (const CachedTarget& breakable : m_cachedBreakables)
+        for (const GameplayTargetRegistry::Target& breakable : registeredTargets)
         {
-            if (!isCachedTargetValid(breakable))
+            if (breakable.tag != Tag::BREAKABLE)
+            {
+                continue;
+            }
+
+            if (!GameplayTargetRegistry::isValid(breakable, hasRemovedTarget))
             {
                 continue;
             }
@@ -233,118 +216,11 @@ void PlayerTargetController::updateTargetsInRange()
             m_targetsInRange.push_back({ breakable.gameObject, nullptr, distanceSq });
         }
     }
-}
 
-void PlayerTargetController::refreshNearbyCache(const Vector3& ownerPosition)
-{
-    m_cachedEnemies.clear();
-    m_cachedBreakables.clear();
-
-    const float queryRadius = m_targetRange + kNearbyCachePadding;
-    std::vector<GameObject*> nearbyObjects = SceneAPI::getObjectsInCircularArea(
-        Vector2(ownerPosition.x, ownerPosition.z), queryRadius, true, QuadtreeTarget::Both);
-
-    std::sort(nearbyObjects.begin(), nearbyObjects.end());
-    nearbyObjects.erase(std::unique(nearbyObjects.begin(), nearbyObjects.end()), nearbyObjects.end());
-    m_cachedEnemies.reserve(nearbyObjects.size() + m_cachedCrystals.size());
-    m_cachedBreakables.reserve(nearbyObjects.size());
-
-    for (GameObject* object : nearbyObjects)
+    if (hasRemovedTarget)
     {
-        if (object == nullptr)
-        {
-            continue;
-        }
-
-        const Tag tag = GameObjectAPI::getTag(object);
-        if (tag != Tag::ENEMY && tag != Tag::BREAKABLE)
-        {
-            continue;
-        }
-
-        CachedTarget target;
-        target.gameObject = object;
-        target.transform = GameObjectAPI::getTransform(object);
-        target.damageable = GameObjectAPI::findScript<Damageable>(object);
-        target.crystalShadowMark = GameObjectAPI::findScript<CrystalShadowMark>(object);
-
-        if (target.transform == nullptr || target.damageable == nullptr)
-        {
-            continue;
-        }
-
-        if (tag == Tag::ENEMY)
-        {
-            if (target.crystalShadowMark != nullptr)
-            {
-                continue;
-            }
-
-            target.enemyController = GameObjectAPI::findScript<EnemyBaseController>(object);
-            m_cachedEnemies.push_back(target);
-        }
-        else
-        {
-            target.breakableObject = GameObjectAPI::findScript<BreakableObject>(object);
-            m_cachedBreakables.push_back(target);
-        }
+        GameplayTargetRegistry::pruneRemovedTargets();
     }
-
-    m_cachedEnemies.insert(m_cachedEnemies.end(), m_cachedCrystals.begin(), m_cachedCrystals.end());
-
-    m_enemyCacheCenter = ownerPosition;
-    m_enemyCacheTimer = 0.0f;
-    m_nearbyCacheValid = true;
-}
-
-void PlayerTargetController::refreshCrystalCache()
-{
-    m_cachedCrystals.clear();
-
-    const std::vector<GameObject*> crystalObjects = SceneAPI::findAllGameObjectsWithScript<CrystalShadowMark>();
-    m_cachedCrystals.reserve(crystalObjects.size());
-
-    for (GameObject* object : crystalObjects)
-    {
-        if (object == nullptr)
-        {
-            continue;
-        }
-
-        CachedTarget target;
-        target.gameObject = object;
-        target.transform = GameObjectAPI::getTransform(object);
-        target.damageable = GameObjectAPI::findScript<Damageable>(object);
-        target.enemyController = GameObjectAPI::findScript<EnemyBaseController>(object);
-        target.crystalShadowMark = GameObjectAPI::findScript<CrystalShadowMark>(object);
-
-        if (target.transform != nullptr && target.damageable != nullptr && target.crystalShadowMark != nullptr)
-        {
-            m_cachedCrystals.push_back(target);
-        }
-    }
-
-    m_crystalCacheValid = true;
-}
-
-bool PlayerTargetController::isCachedTargetValid(const CachedTarget& target) const
-{
-    if (target.gameObject == nullptr || !SceneAPI::containsGameObject(target.gameObject))
-    {
-        return false;
-    }
-
-    if (!GameObjectAPI::isActiveInHierarchy(target.gameObject) || target.transform == nullptr || target.damageable == nullptr)
-    {
-        return false;
-    }
-
-    if (target.damageable->isDead() || target.damageable->getCurrentHp() <= 0.0f)
-    {
-        return false;
-    }
-
-    return target.crystalShadowMark == nullptr || !target.crystalShadowMark->isPuzzleCompleted();
 }
 
 void PlayerTargetController::updateCurrentTarget()
@@ -433,7 +309,9 @@ void PlayerTargetController::clearInvalidCurrentTarget()
         return;
     }
 
-    if (!isTargetInRange(m_currentTarget) || !isTargetAlive(m_currentTarget) || !isTargetable(m_currentTarget))
+    if (!SceneAPI::containsGameObject(m_currentTarget) ||
+        !GameObjectAPI::isActiveInHierarchy(m_currentTarget) ||
+        !isTargetInRange(m_currentTarget) || !isTargetAlive(m_currentTarget) || !isTargetable(m_currentTarget))
     {
         setCurrentTarget(nullptr);
     }

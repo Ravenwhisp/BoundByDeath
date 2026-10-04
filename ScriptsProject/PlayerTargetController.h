@@ -8,9 +8,6 @@ class CharacterBase;
 class DeathSound;
 class LyrielSound;
 class EnemyBaseController;
-class Damageable;
-class CrystalShadowMark;
-class BreakableObject;
 
 class PlayerTargetController : public Script
 {
@@ -37,20 +34,7 @@ private:
         float distanceSq = 0.0f;
     };
 
-    struct CachedTarget
-    {
-        GameObject* gameObject = nullptr;
-        Transform* transform = nullptr;
-        Damageable* damageable = nullptr;
-        EnemyBaseController* enemyController = nullptr;
-        CrystalShadowMark* crystalShadowMark = nullptr;
-        BreakableObject* breakableObject = nullptr;
-    };
-
     void updateTargetsInRange();
-    void refreshNearbyCache(const Vector3& ownerPosition);
-    void refreshCrystalCache();
-    bool isCachedTargetValid(const CachedTarget& target) const;
     void clearInvalidCurrentTarget();
     void setDefaultEnemyTargetIfNeeded();
 
@@ -90,15 +74,6 @@ private:
     GameObject* m_currentTarget = nullptr;
     GameObject* m_defaultEnemyTarget = nullptr;
     std::vector<TargetCandidate> m_targetsInRange;
-    std::vector<CachedTarget> m_cachedEnemies;
-    std::vector<CachedTarget> m_cachedBreakables;
-    std::vector<CachedTarget> m_cachedCrystals;
-
-    Vector3 m_enemyCacheCenter = Vector3::Zero;
-    float m_enemyCacheTimer = 0.0f;
-    bool m_nearbyCacheValid = false;
-    bool m_crystalCacheValid = false;
-
     DeathSound*  m_deathSound  = nullptr;
     LyrielSound* m_lyrielSound = nullptr;
 
