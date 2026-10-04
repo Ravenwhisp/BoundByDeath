@@ -13,6 +13,7 @@ namespace
 
     constexpr const char* k_defeated         = "Play_Cooperative_Defeated";
     constexpr const char* k_healthOrb        = "Play_Cooperative_Health_Orb";
+    constexpr const char* k_healthOrbDrop     = "Play_Cooperative_Drop_Health_Orb";
 
     constexpr const char* k_boundDamageStart = "Play_Cooperative_Bound_Damage";
     constexpr const char* k_boundDamageStop  = "Stop_Cooperative_Bound_Damage";
@@ -51,6 +52,7 @@ void CooperativeSound::playReaperGaugeFull() { postEvent(k_reaperGaugeFull); }
 
 void CooperativeSound::playDefeated()  { postEvent(k_defeated); }
 void CooperativeSound::playHealthOrb() { postEvent(k_healthOrb); }
+void CooperativeSound::playHealthOrbDrop() { postEvent(k_healthOrbDrop); }
 
 void CooperativeSound::startBoundDamageLoop()
 {

@@ -8,6 +8,7 @@ namespace
     constexpr const char* k_bowRelease       = "Play_Lyriel_Bow_Release";
     constexpr const char* k_arrowImpact      = "Play_Lyriel_Arrow_Impact";
     constexpr const char* k_chargedTense     = "Play_Lyriel_Charged_Tense";
+    constexpr const char* k_chargedTenseStop  = "Stop_Lyriel_Charged_Tense";
     constexpr const char* k_chargedRelease   = "Play_Lyriel_Charged_Release";
     constexpr const char* k_chargedImpact    = "Play_Lyriel_Charged_Impact";
     constexpr const char* k_dashWhoosh       = "Play_Lyriel_Dash_Whoosh";
@@ -131,8 +132,9 @@ void LyrielSound::stopChargedTenseLoop()
     {
         return;
     }
-    AudioAPI::stopEvent(m_source, m_chargedTenseLoopID);
+    // Posting the Stop instead of killing the playingID lets the fade on the event apply.
     m_chargedTenseLoopID = 0;
+    postEvent(k_chargedTenseStop);
 }
 
 void LyrielSound::setFootstepsActive(bool active)

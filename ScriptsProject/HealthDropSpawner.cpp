@@ -1,5 +1,7 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "HealthDropSpawner.h"
+
+#include "CooperativeSound.h"
 
 #include "HealthPickup.h"
 
@@ -44,6 +46,15 @@ GameObject* HealthDropSpawner::drop(const AssetId& prefabRef, const Vector3& ori
 
     HealthPickup* healthPickup = static_cast<HealthPickup*>(script);
     healthPickup->setupDrop(healAmount, landingPosition);
+
+    for (GameObject* holder : SceneAPI::findAllGameObjectsWithScript<CooperativeSound>())
+    {
+        if (CooperativeSound* sound = GameObjectAPI::findScript<CooperativeSound>(holder))
+        {
+            sound->playHealthOrbDrop();
+            break;
+        }
+    }
 
     return pickup;
 }
