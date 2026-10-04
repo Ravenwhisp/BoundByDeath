@@ -4,6 +4,7 @@
 #include "StateMachineScript.h"
 
 class AelorinBossController;
+class AelorinCinematics;
 class AnimationComponent;
 
 class AelorinIdleState : public StateMachineScript
@@ -19,6 +20,7 @@ public:
 
 private:
 	AelorinBossController* m_controller = nullptr;
+	AelorinCinematics* m_cinematics = nullptr;
 	AnimationComponent* m_animation = nullptr;
 
 	float m_decisionTimer = 0.0f;

@@ -201,6 +201,7 @@
     <ClInclude Include="CameraTransitionStep.h" />
     <ClInclude Include="CameraTransitionStepAction.h" />
     <ClInclude Include="ChargedAttackBase.h" />
+    <ClInclude Include="DustParticleEvent.h" />
     <ClInclude Include="GameplayHaptics.h" />
     <ClInclude Include="Checkpoint1_Level1_Event.h" />
     <ClInclude Include="Checkpoint1_Level2_Event.h" />
@@ -306,6 +307,13 @@
     <ClInclude Include="MoveObjectToTransformAction.h" />
     <ClInclude Include="MusicManager.h" />
     <ClInclude Include="MusicStates.h" />
+    <ClInclude Include="PlayParticlesAction.h" />
+    <ClInclude Include="ScreenFader.h" />
+    <ClInclude Include="FadeScreenAction.h" />
+    <ClInclude Include="AelorinCinematics.h" />
+    <ClInclude Include="AelorinParticles.h" />
+    <ClInclude Include="AelorinPhaseSwapAction.h" />
+    <ClInclude Include="AelorinEncounterEvent.h" />
     <ClInclude Include="MusicStateEvent.h" />
     <ClInclude Include="ObjectiveEvent.h" />
     <ClInclude Include="PaladinAttackConfig.h" />
@@ -377,6 +385,8 @@
     <ClInclude Include="SummonerEnemyController.h" />
     <ClInclude Include="SummonerIdleState.h" />
     <ClInclude Include="SummonerParticles.h" />
+    <ClInclude Include="SummonerTeleportVFX.h" />
+    <ClInclude Include="TeleportVFXTester.h" />
     <ClInclude Include="SummonerRecoverState.h" />
     <ClInclude Include="SummonerSummonState.h" />
     <ClInclude Include="SummonerTeleportState.h" />
@@ -450,6 +460,7 @@
     <ClCompile Include="Checkpoint8_Level1_Event.cpp" />
     <ClCompile Include="CheckpointEvent.cpp" />
     <ClCompile Include="CrystalVisuals.cpp" />
+    <ClCompile Include="DustParticleEvent.cpp" />
     <ClCompile Include="GameplayEventAction.cpp" />
     <ClCompile Include="MovingThingController.cpp" />
     <ClCompile Include="PersistingManager.cpp" />
@@ -535,6 +546,13 @@
     <ClCompile Include="MoveObjectAlongPathAction.cpp" />
     <ClCompile Include="MoveObjectToTransformAction.cpp" />
     <ClCompile Include="MusicManager.cpp" />
+    <ClCompile Include="PlayParticlesAction.cpp" />
+    <ClCompile Include="ScreenFader.cpp" />
+    <ClCompile Include="FadeScreenAction.cpp" />
+    <ClCompile Include="AelorinCinematics.cpp" />
+    <ClCompile Include="AelorinParticles.cpp" />
+    <ClCompile Include="AelorinPhaseSwapAction.cpp" />
+    <ClCompile Include="AelorinEncounterEvent.cpp" />
     <ClCompile Include="MusicStateEvent.cpp" />
     <ClCompile Include="ObjectiveEvent.cpp" />
     <ClCompile Include="PaladinAttackConfig.cpp" />
@@ -611,6 +629,8 @@
     <ClCompile Include="SummonerEnemyController.cpp" />
     <ClCompile Include="SummonerIdleState.cpp" />
     <ClCompile Include="SummonerParticles.cpp" />
+    <ClCompile Include="SummonerTeleportVFX.cpp" />
+    <ClCompile Include="TeleportVFXTester.cpp" />
     <ClCompile Include="SummonerRecoverState.cpp" />
     <ClCompile Include="SummonerSummonState.cpp" />
     <ClCompile Include="SummonerTeleportState.cpp" />
