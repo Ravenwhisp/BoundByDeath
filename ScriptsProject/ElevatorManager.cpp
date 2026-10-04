@@ -416,8 +416,6 @@ void ElevatorManager::updatePlatformSound()
         return;
     }
 
-    // Driven off the platform actually changing height rather than the internal flag:
-    // every path that moves it is covered, including the snap after a checkpoint reload.
     const float y = TransformAPI::getPosition(platformTransform).y;
     const bool movedThisFrame = m_lastPlatformYValid && std::fabs(y - m_lastPlatformY) > 0.0005f;
     m_lastPlatformY = y;
@@ -433,7 +431,10 @@ void ElevatorManager::updatePlatformSound()
         m_platformQuietTimer -= Time::getDeltaTime();
     }
 
-    const bool shouldSound = m_platformQuietTimer > 0.0f;
+    // The scrolling walls are what sells the descent, and they keep going through the
+    // fights, so the elevator is still going down while the platform itself sits still.
+    // The platform check stays as a fallback for paths that move it without the walls.
+    const bool shouldSound = m_wallsActive || m_platformQuietTimer > 0.0f;
     if (shouldSound == m_platformSoundActive)
     {
         return;
@@ -449,7 +450,8 @@ void ElevatorManager::updatePlatformSound()
         return;
     }
 
-    Debug::log("[ElevatorManager] platform %s at y=%.2f", shouldSound ? "moving" : "stopped", y);
+    Debug::log("[ElevatorManager] elevator %s (walls=%d, y=%.2f)",
+               shouldSound ? "descending" : "stopped", m_wallsActive ? 1 : 0, y);
     EnvironmentSound::play(emitter, shouldSound ? "Play_Environment_Elevator_Loop"
                                                 : "Stop_Environment_Elevator_Loop");
 }
