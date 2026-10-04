@@ -115,11 +115,16 @@ bool CrystalShadowMark::processAttack(PlayerAttackType attackType)
         return false;
     }
 
+    const ShadowMarkState previousState = getState();
     const bool markExploited = EnemyShadowMark::processAttack(attackType);
 
     if (markExploited)
     {
         activateCrystal();
+    }
+    else if (getState() != previousState)
+    {
+        EnvironmentSound::play(getOwner(), "Play_Environment_Crystal_Activate");
     }
 
     return markExploited;
