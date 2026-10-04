@@ -44,21 +44,23 @@ void PaladinSound::playChargeStart() { postEvent(k_chargeStart); }
 
 void PaladinSound::startChargeLoop()
 {
-    if (m_chargeLoopID != 0)
+    if (m_chargeLoopActive)
     {
         return;
     }
+    m_chargeLoopActive = true;
     m_chargeLoopID = postEvent(k_chargeLoop);
 }
 
 void PaladinSound::stopChargeLoop()
 {
-    if (m_chargeLoopID == 0)
+    if (!m_chargeLoopActive)
     {
         return;
     }
-    postEvent(k_chargeLoopStop);
+    m_chargeLoopActive = false;
     m_chargeLoopID = 0;
+    postEvent(k_chargeLoopStop);
 }
 
 void PaladinSound::playChargeImpact() { postEvent(k_chargeImpact); }

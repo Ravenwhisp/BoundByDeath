@@ -42,6 +42,7 @@ protected:
 private:
     void scheduleNextScream();
 
+    bool     m_chargeLoopActive = false;
     uint32_t m_chargeLoopID = 0;
 
     class MeleeEnemyController* m_controller = nullptr;

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "ScriptAPI.h"
 
@@ -68,6 +68,7 @@ private:
     float    m_chargeLoopArmTimer = -1.0f;
 
     // Hover loop
+    bool     m_hoverActive = false;
     uint32_t m_hoverLoopID = 0;
 
     // Hurt SFX debounce: a one-shot reaction sound must never re-fire every frame

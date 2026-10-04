@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "DeathSound.h"
 
 namespace
@@ -155,25 +155,30 @@ void DeathSound::stopChargeLoop()
 
 void DeathSound::startHoverLoop()
 {
-    if (m_hoverLoopID != 0)
+    // Tracked with a flag rather than the playingID: a post that comes back 0 because the
+    // bank was still loading would otherwise retrigger the loop every frame and leave
+    // nothing to stop, which stacks copies that never go away.
+    if (m_hoverActive)
     {
         return;
     }
 
     SCRIPT_PROFILE_SCOPE("Hover: start loop");
+    m_hoverActive = true;
     m_hoverLoopID = postEvent(k_hoverLoopStart);
 }
 
 void DeathSound::stopHoverLoop()
 {
-    if (m_hoverLoopID == 0)
+    if (!m_hoverActive)
     {
         return;
     }
 
     SCRIPT_PROFILE_SCOPE("Hover: stop loop");
-    postEvent(k_hoverLoopStop);
+    m_hoverActive = false;
     m_hoverLoopID = 0;
+    postEvent(k_hoverLoopStop);
 }
 
 void DeathSound::setHoverActive(bool active)
