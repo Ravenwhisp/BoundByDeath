@@ -56,6 +56,8 @@ void EnemySound::Update()
         m_hurtCooldownTimer -= dt;
     }
 
+    m_quietTimer += dt;
+
     if (m_movingTimer > 0.0f)
     {
         if (!m_wasMoving)
@@ -138,8 +140,8 @@ void EnemySound::postEventDelayed(const char* eventName, float delay)
     m_pendingEvents.push_back({ eventName, delay });
 }
 
-void EnemySound::playBasicTelegraph() { postEvent(evBasicTelegraph()); }
-void EnemySound::playBasicImpact()    { postEvent(evBasicImpact()); }
+void EnemySound::playBasicTelegraph() { m_quietTimer = 0.0f; postEvent(evBasicTelegraph()); }
+void EnemySound::playBasicImpact()    { m_quietTimer = 0.0f; postEvent(evBasicImpact()); }
 
 void EnemySound::playHurt()
 {
@@ -147,12 +149,15 @@ void EnemySound::playHurt()
     {
         return; // debounced: continuous/overlapping damage can't machine-gun the grunt
     }
+    m_quietTimer = 0.0f;
     postEvent(evHurt());
     m_hurtCooldownTimer = k_hurtRetriggerCooldown;
 }
 
-void EnemySound::playStun()  { postEvent(evStun()); }
-void EnemySound::playDeath() { postEvent(evDeath()); }
+void EnemySound::playStun()  {
+    m_quietTimer = 0.0f; postEvent(evStun()); }
+void EnemySound::playDeath() {
+    m_quietTimer = 0.0f; postEvent(evDeath()); }
 
 void EnemySound::notifyMoving()
 {
