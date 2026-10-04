@@ -7,6 +7,7 @@ class AelorinDamageable;
 class AelorinAttackConfig;
 class ProjectilePool;
 class AelorinAttackExecutor;
+class AelorinVFX;
 
 enum class Phase
 {
@@ -49,6 +50,8 @@ public:
 	Vector3 getLyrielPosition() const;
 	Vector3 getDeathPosition() const;
 	float getClosestPlayerDistance() const;
+
+	void facePositionInstant(const Vector3& worldPosition);
 
 	// Projectile Pool References
 	ComponentRef<Transform> m_seekerSigilsProjectilePool;
@@ -176,6 +179,7 @@ private:
 	AelorinDetectionAggro* m_aelorinDetectionAggro = nullptr;
 	AelorinDamageable* m_damageable = nullptr;
 	AelorinAttackExecutor* m_attackExecutor = nullptr;
+	AelorinVFX* m_vfx = nullptr;
 
 	ProjectilePool* m_seekerSigilsProjectilePoolScript = nullptr;
 	ProjectilePool* m_seekerSigilsLargeProjectilePoolScript = nullptr;

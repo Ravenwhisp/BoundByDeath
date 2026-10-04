@@ -6,6 +6,7 @@
 #include "AelorinAttackExecutor.h"
 #include "AelorinUI.h"
 #include "AelorinLavaController.h"
+#include "CameraShake.h"
 
 AelorinSoulCataclysmState::AelorinSoulCataclysmState(GameObject* owner)
 	: StateMachineScript(owner)
@@ -22,12 +23,14 @@ void AelorinSoulCataclysmState::OnStateEnter()
 	}
 
 	GameObject* parentGameObject = ComponentAPI::getOwner(parentTransform);
+	GameObject* cameraObject = SceneAPI::getDefaultCameraGameObject();
 
 	// get scripts
 	m_controller = GameObjectAPI::findScript<AelorinBossController>(parentGameObject);
 	m_animation = AnimationAPI::getAnimationComponent(getOwner());
 	m_aelorinUI = GameObjectAPI::findScript<AelorinUI>(parentGameObject);
 	m_lavaController = GameObjectAPI::findScript<AelorinLavaController>(parentGameObject);
+	m_cameraShake = GameObjectAPI::findScript<CameraShake>(cameraObject);
 
 	// reset members
 	m_stateTimer = 0.0f;
@@ -54,6 +57,11 @@ void AelorinSoulCataclysmState::OnStateEnter()
 	if (!m_lavaController)
 	{
 		Debug::error("[AelorinSoulCataclysmState] AelorinLavaController not found.");
+	}
+
+	if (!m_cameraShake)
+	{
+		Debug::warn("[AelorinSoulCataclysmState] CameraShake not found.");
 	}
 
 	m_attackExecutor = m_controller->getAttackExecutor();
@@ -91,8 +99,6 @@ void AelorinSoulCataclysmState::OnStateEnter()
 		const Vector3 center = TransformAPI::getGlobalPosition(cataclysmCenter);
 
 		m_aelorinUI->showSoulCataclysmUI(
-			center,
-			config->m_soulCataclysmRadius,
 			safeZonesRoot,
 			config->m_soulCataclysmSafeZoneRadius,
 			config->m_soulCataclysmChannelDuration
@@ -101,7 +107,12 @@ void AelorinSoulCataclysmState::OnStateEnter()
 
 	if (m_lavaController)
 	{
-		m_lavaController->StartLavaRise(10.736f, 10.0f);
+		m_lavaController->StartLavaRise(10.806f, config->m_soulCataclysmChannelDuration);
+	}
+
+	if (m_cameraShake)
+	{
+		m_cameraShake->shake(0.05f, config->m_soulCataclysmChannelDuration);
 	}
 
 	Debug::log("[AelorinSoulCataclysmState] ENTER");
@@ -243,7 +254,7 @@ void AelorinSoulCataclysmState::finishCataclysm()
 
 	if(m_lavaController)
 	{
-		m_lavaController->StartLavaFall(7.0f, 10.0f);
+		m_lavaController->StartLavaFall(7.0f, 5.0f);
 	}
 
 	const bool sent = AnimationAPI::sendTrigger(m_animation, "ToExhaustion");

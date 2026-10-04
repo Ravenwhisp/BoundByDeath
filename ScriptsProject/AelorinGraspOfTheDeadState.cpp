@@ -4,6 +4,7 @@
 #include "AelorinAttackConfig.h"
 #include "AelorinAttackExecutor.h"
 #include "AelorinUI.h"
+#include "AelorinVFX.h"
 
 #include "PlayerMovement.h"
 
@@ -29,6 +30,7 @@ void AelorinGraspOfTheDeadState::OnStateEnter()
 	m_controller = GameObjectAPI::findScript<AelorinBossController>(parentGameObject);
 	m_animation = AnimationAPI::getAnimationComponent(getOwner());
 	m_aelorinUI = GameObjectAPI::findScript<AelorinUI>(parentGameObject);
+	m_vfx = GameObjectAPI::findScript<AelorinVFX>(parentGameObject);
 
 	// reset members
 	m_lyrielMovement = nullptr;
@@ -54,6 +56,11 @@ void AelorinGraspOfTheDeadState::OnStateEnter()
 	{
 		Debug::error("[AelorinGraspOfTheDeadState] AelorinUI not found.");
 		return;
+	}
+
+	if (!m_vfx)
+	{
+		Debug::error("[AelorinGraspOfTheDeadState] AelorinVFX not found.");
 	}
 
 	m_attackExecutor = m_controller->getAttackExecutor();
@@ -109,6 +116,18 @@ void AelorinGraspOfTheDeadState::OnStateEnter()
 		Debug::warn("[AelorinGraspOfTheDeadState] Death PlayerMovement not found.");
 	}
 
+	if (m_vfx)
+	{
+		if (m_controller->isPhase2())
+		{
+			m_vfx->startPhase2Spell();
+		}
+		else
+		{
+			m_vfx->startPhase1Spell();
+		}
+	}
+
 	m_isFuryCast = m_controller->isFuryActive();
 	if (m_isFuryCast)
 	{
@@ -116,7 +135,7 @@ void AelorinGraspOfTheDeadState::OnStateEnter()
 	}
 
 	// UI
-	if (!m_isFuryCast && m_aelorinUI)
+	if (m_aelorinUI)
 	{
 		const AelorinAttackConfig* config = m_controller->getAelorinAttackConfig();
 		Transform* graspCenter = m_controller->getGraspCenter();
@@ -125,8 +144,16 @@ void AelorinGraspOfTheDeadState::OnStateEnter()
 		{
 			const Vector3 center = TransformAPI::getGlobalPosition(graspCenter);
 			m_aelorinUI->showGraspOfTheDeadUI(center, config->m_graspVisualRadius, config->m_graspPullDuration);
+			m_aelorinUI->showGraspChains(graspCenter, lyrielTransform, deathTransform);
 		}
 	}
+
+	const Vector3 lyrielPosition = m_controller->getLyrielPosition();
+	const Vector3 deathPosition = m_controller->getDeathPosition();
+
+	const Vector3 middlePosition = (lyrielPosition + deathPosition) * 0.5f;
+
+	m_controller->facePositionInstant(middlePosition);
 
 	Debug::log("[AelorinGraspOfTheDeadState] ENTER");
 }
@@ -160,6 +187,18 @@ void AelorinGraspOfTheDeadState::OnStateUpdate()
 		return;
 	}
 
+	if (m_vfx)
+	{
+		if (m_controller->isPhase2())
+		{
+			m_vfx->stopPhase2Spell();
+		}
+		else
+		{
+			m_vfx->stopPhase1Spell();
+		}
+	}
+
 	// transition into Nova
 	chainIntoNova();
 }
@@ -169,9 +208,18 @@ void AelorinGraspOfTheDeadState::OnStateExit()
 	if (m_aelorinUI)
 	{
 		m_aelorinUI->cancelGraspOfTheDead();
+		m_aelorinUI->cancelGraspChains();
+	}
+
+
+	if (m_vfx && m_controller)
+	{
+		m_vfx->stopPhase1Spell();
+		m_vfx->stopPhase2Spell();
 	}
 
 	m_aelorinUI = nullptr;
+	m_vfx = nullptr;
 	m_lyrielMovement = nullptr;
 	m_deathMovement = nullptr;
 	m_stateTimer = 0.0f;

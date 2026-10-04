@@ -42,6 +42,9 @@ public:
 	void beginPhase2();
 
 	bool hasActiveThresholdAt(float percent) const;
+	void setFuryHealthBarVisual(bool furyActive);
+
+	void showHealthBar();
 
 protected:
 	void onHpDepleted() override;
@@ -93,6 +96,8 @@ private:
 
 public:
 	ComponentRef<Transform2D> m_phase2HealthBarContainer;
+	ComponentRef<Transform2D> m_phase2HealthNormalBackground;
+	ComponentRef<Transform2D> m_phase2HealthFuryBackground;
 	ComponentRef<UISlider> m_phase2HealthSlider;
 	ComponentRef<UISlider> m_phase2HealthSlider2;
 };

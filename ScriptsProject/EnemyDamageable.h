@@ -63,6 +63,8 @@ protected:
 	Transform2D* getHealthBarContainerTransform() const { return m_healthBarContainerTransform; }
 	void bindHealthBarUI(Transform2D* container, UISlider* slider1, UISlider* slider2);
 
+	void showHealthBarImmediately();
+
 private: 
 	void resolveHealthBarReferences();
 	void updateHealthBarVisibility();

@@ -9,6 +9,7 @@ class AnimationComponent;
 class AelorinAttackExecutor;
 class PlayerMovement;
 class AelorinUI;
+class AelorinVFX;
 
 class AelorinGraspOfTheDeadState : public StateMachineScript
 {
@@ -31,6 +32,7 @@ private:
 	AelorinAttackExecutor* m_attackExecutor = nullptr;
 	AnimationComponent* m_animation = nullptr;
 	AelorinUI* m_aelorinUI = nullptr;
+	AelorinVFX* m_vfx = nullptr;
 
 	PlayerMovement* m_lyrielMovement = nullptr;
 	PlayerMovement* m_deathMovement = nullptr;

@@ -6,11 +6,10 @@
 #include "Damageable.h"
 #include "DeathSound.h"
 #include "LyrielSound.h"
-#include "EnemyDamageable.h"
 #include "EnemyBaseController.h"
-#include "BreakableDamageable.h"
 #include "BreakableObject.h"
 #include "CrystalShadowMark.h"
+#include "GameplayTargetRegistry.h"
 
 IMPLEMENT_SCRIPT_FIELDS(PlayerTargetController,
     SERIALIZED_FLOAT(m_targetRange, "Target Range", 0.0f, 20.0f, 0.05f),
@@ -94,7 +93,7 @@ void PlayerTargetController::drawGizmo()
 
     drawCircle(ownerPosition, Vector3(0.0f, 1.0f, 0.0f), green, m_targetRange, 32.0f, 0, true);
 
-    if (m_currentTarget != nullptr)
+    if (m_currentTarget != nullptr && SceneAPI::containsGameObject(m_currentTarget))
     {
         Transform* targetTransform = GameObjectAPI::getTransform(m_currentTarget);
         if (targetTransform != nullptr)
@@ -133,9 +132,6 @@ void PlayerTargetController::updateTargetsInRange()
     m_targetsInRange.clear();
     m_defaultEnemyTarget = nullptr;
 
-    const std::vector<GameObject*> enemies = SceneAPI::findAllGameObjectsByTag(Tag::ENEMY, true);
-    const std::vector<GameObject*> breakables = SceneAPI::findAllGameObjectsByTag(Tag::BREAKABLE, true);
-
     Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
     if (ownerTransform == nullptr)
     {
@@ -148,71 +144,82 @@ void PlayerTargetController::updateTargetsInRange()
     bool hasEnemyInRange = false;
     int bestEnemyPriority = -101;
     float bestEnemyDistanceSq = FLT_MAX;
+    bool hasRemovedTarget = false;
+    const auto& registeredTargets = GameplayTargetRegistry::getTargets();
 
-    for (GameObject* enemy : enemies)
     {
-        if (enemy == nullptr)
-        {
-            continue;
-        }
+        SCRIPT_PROFILE_SCOPE("Filter registered targets");
 
-        Transform* enemyTransform = GameObjectAPI::getTransform(enemy);
-        if (enemyTransform == nullptr)
+        for (const GameplayTargetRegistry::Target& enemy : registeredTargets)
         {
-            continue;
-        }
+            if (enemy.tag != Tag::ENEMY)
+            {
+                continue;
+            }
 
-        Vector3 difference = TransformAPI::getGlobalPosition(enemyTransform) - ownerPosition;
-        const float rangeDistanceSq = difference.LengthSquared();
-        difference.y = 0.0f;
-        const float distanceSq = difference.LengthSquared();
+            if (!GameplayTargetRegistry::isValid(enemy, hasRemovedTarget))
+            {
+                continue;
+            }
 
-        if (rangeDistanceSq <= targetRangeSq && isTargetAlive(enemy) && isTargetable(enemy))
-        {
-            EnemyBaseController* controller = GameObjectAPI::findScript<EnemyBaseController>(enemy);
-            m_targetsInRange.push_back({ enemy, controller, distanceSq });
+            Vector3 difference = TransformAPI::getGlobalPosition(enemy.transform) - ownerPosition;
+            const float rangeDistanceSq = difference.LengthSquared();
+            difference.y = 0.0f;
+            const float distanceSq = difference.LengthSquared();
+
+            if (rangeDistanceSq > targetRangeSq)
+            {
+                continue;
+            }
+
+            m_targetsInRange.push_back({ enemy.gameObject, enemy.enemyController, distanceSq });
             hasEnemyInRange = true;
 
-            const int priority = controller != nullptr ? controller->getTargetPriority() : 0;
+            const int priority = enemy.enemyController != nullptr ? enemy.enemyController->getTargetPriority() : 0;
             if (m_defaultEnemyTarget == nullptr || priority > bestEnemyPriority ||
                 (priority == bestEnemyPriority && distanceSq < bestEnemyDistanceSq))
             {
-                m_defaultEnemyTarget = enemy;
+                m_defaultEnemyTarget = enemy.gameObject;
                 bestEnemyPriority = priority;
                 bestEnemyDistanceSq = distanceSq;
             }
         }
+
+        for (const GameplayTargetRegistry::Target& breakable : registeredTargets)
+        {
+            if (breakable.tag != Tag::BREAKABLE)
+            {
+                continue;
+            }
+
+            if (!GameplayTargetRegistry::isValid(breakable, hasRemovedTarget))
+            {
+                continue;
+            }
+
+            Vector3 difference = TransformAPI::getGlobalPosition(breakable.transform) - ownerPosition;
+            const float rangeDistanceSq = difference.LengthSquared();
+            difference.y = 0.0f;
+            const float distanceSq = difference.LengthSquared();
+
+            if (rangeDistanceSq > targetRangeSq)
+            {
+                continue;
+            }
+
+            if (hasEnemyInRange &&
+                (breakable.breakableObject == nullptr || !breakable.breakableObject->canBeTargetedDuringCombat()))
+            {
+                continue;
+            }
+
+            m_targetsInRange.push_back({ breakable.gameObject, nullptr, distanceSq });
+        }
     }
 
-    for (GameObject* breakable : breakables)
+    if (hasRemovedTarget)
     {
-        if (breakable == nullptr)
-        {
-            continue;
-        }
-
-        Transform* breakableTransform = GameObjectAPI::getTransform(breakable);
-        if (breakableTransform == nullptr)
-        {
-            continue;
-        }
-
-        Vector3 difference = TransformAPI::getGlobalPosition(breakableTransform) - ownerPosition;
-        const float rangeDistanceSq = difference.LengthSquared();
-        difference.y = 0.0f;
-        const float distanceSq = difference.LengthSquared();
-
-        if (rangeDistanceSq > targetRangeSq || !isTargetAlive(breakable) || !isTargetable(breakable))
-        {
-            continue;
-        }
-
-        if (hasEnemyInRange && !canTargetBreakableDuringCombat(breakable))
-        {
-            continue;
-        }
-
-        m_targetsInRange.push_back({ breakable, nullptr, distanceSq });
+        GameplayTargetRegistry::pruneRemovedTargets();
     }
 }
 
@@ -302,7 +309,9 @@ void PlayerTargetController::clearInvalidCurrentTarget()
         return;
     }
 
-    if (!isTargetInRange(m_currentTarget) || !isTargetAlive(m_currentTarget) || !isTargetable(m_currentTarget))
+    if (!SceneAPI::containsGameObject(m_currentTarget) ||
+        !GameObjectAPI::isActiveInHierarchy(m_currentTarget) ||
+        !isTargetInRange(m_currentTarget) || !isTargetAlive(m_currentTarget) || !isTargetable(m_currentTarget))
     {
         setCurrentTarget(nullptr);
     }

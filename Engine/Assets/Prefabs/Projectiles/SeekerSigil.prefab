@@ -1,6 +1,6 @@
 {
     "Version": 2,
-    "sourcePath": "Assets\\Prefabs\\Projectiles\\SeekerSigil.prefab",
+    "sourcePath": "Assets/Prefabs/Projectiles/SeekerSigil.prefab",
     "Name": "SeekerSigil",
     "Active": true,
     "Static": false,
@@ -13,9 +13,9 @@
             0.0
         ],
         "Rotation": [
-            -0.0,
             0.0,
-            -0.0,
+            0.0,
+            0.0,
             1.0
         ],
         "Scale": [
@@ -26,30 +26,43 @@
     },
     "Components": [
         {
-            "UID": 15737123201012164288,
+            "UID": 15625631890781577863,
             "ComponentType": "MODEL",
             "Active": true,
             "MeshAssetId": {
-                "uid": 417769694041224885,
-                "libId": "cb8d087b631779c8aa344e2f4237905d",
+                "uid": 4375620361397214215,
+                "libId": "f9d837b9a07fae9540ce2467da516b85",
                 "type": "MESH"
             },
             "SkinAssetId": {
                 "uid": 0,
                 "libId": "",
-                "type": "DATA_CONTAINER"
+                "type": "UNKNOWN"
             },
             "Materials": [
                 {
-                    "uid": 9745508510718930572,
-                    "libId": "f896ab0fcd76f99a52e08ab405743443",
+                    "uid": 13173174203232523557,
+                    "libId": "9b8fd28e70b7862052bf7736d918f0c3",
                     "type": "MATERIAL"
                 }
             ],
-            "Render Mode": 0
+            "Render Mode": 0,
+            "BoundingBox": {
+                "Custom": false,
+                "Min": [
+                    -6.897454261779785,
+                    -12.643110275268555,
+                    -6.64703893661499
+                ],
+                "Max": [
+                    6.449307441711426,
+                    0.26100921630859375,
+                    6.642251491546631
+                ]
+            }
         },
         {
-            "UID": 11266561562058584506,
+            "UID": 14157618706977082158,
             "ComponentType": "SCRIPT",
             "Active": true,
             "ScriptName": "SeekerSigilProjectile",

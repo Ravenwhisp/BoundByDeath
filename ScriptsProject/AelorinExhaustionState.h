@@ -18,11 +18,21 @@ public:
 	void OnStateExit() override;
 
 private:
+	enum class ExhaustionPhase
+	{
+		Loop,
+		Transition
+	};
+
+	void changePhase(ExhaustionPhase phase);
+
 	void finishExhaustion();
 
 private:
 	AelorinBossController* m_controller = nullptr;
 	AnimationComponent* m_animation = nullptr;
+
+	ExhaustionPhase m_phase = ExhaustionPhase::Loop;
 
 	float m_stateTimer = 0.0f;
 	bool m_completed = false;
