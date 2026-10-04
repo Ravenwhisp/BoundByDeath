@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "ScriptAPI.h"
 
@@ -22,6 +22,10 @@ public:
     // One-shots.
     void playDefeated();    // both players downed → defeat feedback (before game over)
     void playHealthOrb();   // a player collected a health orb
+    void playHealthOrbDrop();   // an orb has just been dropped by a dying enemy
+    void playCheckpointReached();   // the run is saved at a checkpoint
+    void playTutorialAppear();      // a tutorial card comes up
+    void playTutorialConfirm();     // a player presses to say they read it
 
     // Bound separation-damage loop (bank exposes an explicit Stop event).
     // Replaces the per-hit hurt grunt while the players are pulled apart.

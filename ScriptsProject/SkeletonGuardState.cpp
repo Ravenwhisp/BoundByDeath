@@ -1,5 +1,6 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "SkeletonGuardState.h"
+#include "SkeletonSound.h"
 
 #include "SkeletonEnemyController.h"
 #include "SkeletonAttackConfig.h"
@@ -37,6 +38,12 @@ void SkeletonGuardState::OnStateEnter()
 	m_skeletonController->clearPath();
 	m_skeletonController->resetRepathTimer();
 	m_skeletonController->setGuarding(true);
+
+	if (SkeletonSound* sound = GameObjectAPI::findScript<SkeletonSound>(getOwner()))
+	{
+		sound->playGuardRaise();
+	}
+
 
 	m_stateTimer = 0.0f;
 
@@ -82,6 +89,11 @@ void SkeletonGuardState::OnStateUpdate()
 	// End GuardState
 	if (m_stateTimer >= m_skeletonController->m_attackConfig.get()->m_guardDuration)
 	{
+		if (SkeletonSound* sound = GameObjectAPI::findScript<SkeletonSound>(getOwner()))
+		{
+			sound->playGuardBreak();
+		}
+
 		m_skeletonController->consumeGuardCooldown();
 		AnimationAPI::sendTrigger(m_animation, "ToChase");
 		return;

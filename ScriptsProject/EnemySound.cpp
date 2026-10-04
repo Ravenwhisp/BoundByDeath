@@ -1,10 +1,21 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "EnemySound.h"
+
+#include <string>
+#include <unordered_set>
 
 namespace
 {
-    // Every Paladin/Archer event lives in the Level1 bank (lazy-loaded on level entry).
-    constexpr const char* k_bank = "Level1.bnk";
+    // The engine resolves events against one named bank, so an enemy that shows up in
+    // more than one level has to try each. Level1 first, which is where the enemies that
+    // use the default list live.
+    const char* const k_defaultBanks[] = { "Level1.bnk", "Level2.bnk", "BossLevel.bnk" };
+
+    bool isFirstReport(const char* eventName)
+    {
+        static std::unordered_set<std::string> reported;
+        return reported.insert(eventName).second;
+    }
 
     // Minimum gap between hurt one-shots so continuous/overlapping damage can't
     // machine-gun the grunt.
@@ -54,8 +65,16 @@ void EnemySound::Update()
         m_hurtCooldownTimer -= dt;
     }
 
+    m_quietTimer += dt;
+
     if (m_movingTimer > 0.0f)
     {
+        if (!m_wasMoving)
+        {
+            m_wasMoving = true;
+            onMovementStarted();
+        }
+
         m_movingTimer -= dt;
 
         m_footstepTimer -= dt;
@@ -67,9 +86,21 @@ void EnemySound::Update()
     }
     else
     {
+        if (m_wasMoving)
+        {
+            m_wasMoving = false;
+            onMovementStopped();
+        }
+
         // Reset so the first step right after starting to move plays immediately.
         m_footstepTimer = 0.0f;
     }
+}
+
+void EnemySound::getCandidateBanks(const char* const*& outBanks, int& outCount) const
+{
+    outBanks = k_defaultBanks;
+    outCount = static_cast<int>(sizeof(k_defaultBanks) / sizeof(k_defaultBanks[0]));
 }
 
 uint32_t EnemySound::postEvent(const char* eventName)
@@ -78,7 +109,35 @@ uint32_t EnemySound::postEvent(const char* eventName)
     {
         return 0;
     }
-    return AudioAPI::postEvent(m_source, k_bank, eventName);
+
+    if (m_resolvedBank != nullptr)
+    {
+        return AudioAPI::postEvent(m_source, m_resolvedBank, eventName);
+    }
+
+    const char* const* banks = nullptr;
+    int bankCount = 0;
+    getCandidateBanks(banks, bankCount);
+
+    for (int i = 0; i < bankCount; ++i)
+    {
+        const uint32_t playingID = AudioAPI::postEvent(m_source, banks[i], eventName);
+        if (playingID != 0)
+        {
+            m_resolvedBank = banks[i];
+            if (isFirstReport(eventName))
+            {
+                Debug::log("[EnemySound] '%s' posted from '%s' on '%s' (playingID=%u).",
+                           eventName, banks[i], GameObjectAPI::getName(getOwner()), playingID);
+            }
+            return playingID;
+        }
+    }
+
+    // Unresolved on purpose: the bank may still be loading, so the next post retries.
+    Debug::warn("[EnemySound] '%s' not found in any candidate bank for '%s'.",
+                eventName, GameObjectAPI::getName(getOwner()));
+    return 0;
 }
 
 void EnemySound::postEventDelayed(const char* eventName, float delay)
@@ -95,8 +154,8 @@ void EnemySound::postEventDelayed(const char* eventName, float delay)
     m_pendingEvents.push_back({ eventName, delay });
 }
 
-void EnemySound::playBasicTelegraph() { postEvent(evBasicTelegraph()); }
-void EnemySound::playBasicImpact()    { postEvent(evBasicImpact()); }
+void EnemySound::playBasicTelegraph() { m_quietTimer = 0.0f; postEvent(evBasicTelegraph()); }
+void EnemySound::playBasicImpact()    { m_quietTimer = 0.0f; postEvent(evBasicImpact()); }
 
 void EnemySound::playHurt()
 {
@@ -104,12 +163,15 @@ void EnemySound::playHurt()
     {
         return; // debounced: continuous/overlapping damage can't machine-gun the grunt
     }
+    m_quietTimer = 0.0f;
     postEvent(evHurt());
     m_hurtCooldownTimer = k_hurtRetriggerCooldown;
 }
 
-void EnemySound::playStun()  { postEvent(evStun()); }
-void EnemySound::playDeath() { postEvent(evDeath()); }
+void EnemySound::playStun()  {
+    m_quietTimer = 0.0f; postEvent(evStun()); }
+void EnemySound::playDeath() {
+    m_quietTimer = 0.0f; postEvent(evDeath()); }
 
 void EnemySound::notifyMoving()
 {
@@ -119,6 +181,40 @@ void EnemySound::notifyMoving()
 void EnemySound::stopAllLoops()
 {
     m_pendingEvents.clear();
+
+    if (m_wasMoving)
+    {
+        m_wasMoving = false;
+        onMovementStopped();
+    }
+
     m_movingTimer   = 0.0f;
     m_footstepTimer = 0.0f;
+}
+
+void EnemySound::postEventGrouped(const char* eventName, const char* groupName, uint32_t cooldownMs)
+{
+    if (m_source == nullptr || eventName == nullptr || groupName == nullptr)
+    {
+        return;
+    }
+
+    if (m_resolvedBank == nullptr)
+    {
+        // Grouping needs a bank name, so let a plain post resolve it first.
+        postEvent(eventName);
+        return;
+    }
+
+    float priority = 0.0f;
+    GameObject* camera = SceneAPI::getDefaultCameraGameObject();
+    Transform* emitterTransform = GameObjectAPI::getTransform(getOwner());
+    Transform* cameraTransform = camera != nullptr ? GameObjectAPI::getTransform(camera) : nullptr;
+    if (emitterTransform != nullptr && cameraTransform != nullptr)
+    {
+        priority = Vector3::DistanceSquared(TransformAPI::getGlobalPosition(emitterTransform),
+                                            TransformAPI::getGlobalPosition(cameraTransform));
+    }
+
+    AudioAPI::queueGroupedEvent(m_source, m_resolvedBank, eventName, groupName, priority, cooldownMs);
 }

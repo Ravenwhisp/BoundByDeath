@@ -1,5 +1,8 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "TriggerFire.h"
+
+#include "AmbientSoundLoop.h"
+#include "EnvironmentSound.h"
 
 IMPLEMENT_SCRIPT_FIELDS(TriggerFire,
 	SERIALIZED_COMPONENT_REF(m_fireEffectT, "Fire Effect", ComponentType::TRANSFORM),
@@ -57,6 +60,13 @@ void TriggerFire::triggerFire()
 	{
 		GameObject* fireEffectGO = ComponentAPI::getOwner(fireEffectTransform);
 		GameObjectAPI::setActive(fireEffectGO, true);
+
+		EnvironmentSound::play(fireEffectGO, "Play_Environment_Fire_Ignite");
+
+		if (AmbientSoundLoop* loop = GameObjectAPI::findScript<AmbientSoundLoop>(fireEffectGO))
+		{
+			loop->play();
+		}
 	}
 	Transform* lightTransform = m_lightT.getReferencedComponent();
 	if(lightTransform != nullptr)

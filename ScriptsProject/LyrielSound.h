@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "ScriptAPI.h"
 
@@ -31,6 +31,7 @@ public:
 
     // Shadow Mark — Lyriel exploits (Phase 3 burst). Once per cast/hit.
     void playMarkExploit();
+    void playShadowExecutionVoice();   // her shout as the execution goes off
 
     // Footsteps — Wwise Switch Container handles walk/run × surface; we only post.
     // Surface defaults to whatever the Wwise project defines as default (set to Stone).

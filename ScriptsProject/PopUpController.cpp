@@ -1,5 +1,6 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "PopUpController.h"
+#include "CooperativeSound.h"
 
 #include "PopUpEvent.h"
 #include "PlayerController.h"
@@ -52,6 +53,11 @@ void PopUpController::startEvent(PopUpEvent* event)
     if (!startPopUp(popUp, 0))
     {
         return;
+    }
+
+    if (CooperativeSound* sound = findCooperativeSound())
+    {
+        sound->playTutorialAppear();
     }
 
     m_activePopUps.push_back(popUp);
@@ -207,16 +213,24 @@ void PopUpController::updateWaiting(ActivePopUp& popUp)
     switch (popUp.event->getCloseMode())
     {
     case PopUpCloseMode::BothPlayersConfirm:
-        if (Input::isFaceButtonBottomJustPressed(0))
+        if (Input::isFaceButtonBottomJustPressed(0) && !popUp.player1Confirmed)
         {
             popUp.player1Confirmed = true;
             updateConfirmationIndicators(popUp);
+            if (CooperativeSound* sound = findCooperativeSound())
+            {
+                sound->playTutorialConfirm();
+            }
         }
 
-        if (Input::isFaceButtonBottomJustPressed(1))
+        if (Input::isFaceButtonBottomJustPressed(1) && !popUp.player2Confirmed)
         {
             popUp.player2Confirmed = true;
             updateConfirmationIndicators(popUp);
+            if (CooperativeSound* sound = findCooperativeSound())
+            {
+                sound->playTutorialConfirm();
+            }
         }
 
         if (popUp.player1Confirmed && popUp.player2Confirmed)
@@ -684,3 +698,22 @@ void PopUpController::setIndicatorAlpha(Transform2D* indicator, float alpha)
 }
 
 IMPLEMENT_SCRIPT(PopUpController)
+
+CooperativeSound* PopUpController::findCooperativeSound()
+{
+    if (m_cooperativeSound != nullptr)
+    {
+        return m_cooperativeSound;
+    }
+
+    for (GameObject* holder : SceneAPI::findAllGameObjectsWithScript<CooperativeSound>())
+    {
+        m_cooperativeSound = GameObjectAPI::findScript<CooperativeSound>(holder);
+        if (m_cooperativeSound != nullptr)
+        {
+            break;
+        }
+    }
+
+    return m_cooperativeSound;
+}

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "ProjectileBase.h"
 
@@ -21,6 +21,7 @@ public:
 
 private:
 	void applyImpactDamage();
+	void playImpactSound();
 	void ensureEnergyBallParticle();
 	void updateEnergyBallParticle();
 	void removeEnergyBallParticle();

@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "DeathSound.h"
 
 namespace
@@ -23,6 +23,7 @@ namespace
     constexpr const char* k_chargeLoopStart = "Play_Death_Charge_Loop";
     constexpr const char* k_chargeLoopStop = "Stop_Death_Charge_Loop";
     constexpr const char* k_hoverLoopStart = "Play_Death_Hover_Loop";
+    constexpr const char* k_executionVoice = "Play_Death_Shadow_Execution_Voice";
     constexpr const char* k_hoverLoopStop = "Stop_Death_Hover_Loop";
 
     // Tuned to match animation contact frame (swing windup → contact).
@@ -155,25 +156,30 @@ void DeathSound::stopChargeLoop()
 
 void DeathSound::startHoverLoop()
 {
-    if (m_hoverLoopID != 0)
+    // Tracked with a flag rather than the playingID: a post that comes back 0 because the
+    // bank was still loading would otherwise retrigger the loop every frame and leave
+    // nothing to stop, which stacks copies that never go away.
+    if (m_hoverActive)
     {
         return;
     }
 
     SCRIPT_PROFILE_SCOPE("Hover: start loop");
+    m_hoverActive = true;
     m_hoverLoopID = postEvent(k_hoverLoopStart);
 }
 
 void DeathSound::stopHoverLoop()
 {
-    if (m_hoverLoopID == 0)
+    if (!m_hoverActive)
     {
         return;
     }
 
     SCRIPT_PROFILE_SCOPE("Hover: stop loop");
-    postEvent(k_hoverLoopStop);
+    m_hoverActive = false;
     m_hoverLoopID = 0;
+    postEvent(k_hoverLoopStop);
 }
 
 void DeathSound::setHoverActive(bool active)
@@ -196,3 +202,8 @@ void DeathSound::stopAllLoops()
 }
 
 IMPLEMENT_SCRIPT(DeathSound)
+
+void DeathSound::playShadowExecutionVoice()
+{
+    postEvent(k_executionVoice);
+}

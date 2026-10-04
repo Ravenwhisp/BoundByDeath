@@ -1,5 +1,6 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "SummonerEnergyBallState.h"
+#include "SummonerSound.h"
 
 #include "SummonerEnemyController.h"
 #include "SummonerAttackConfig.h"
@@ -34,6 +35,11 @@ void SummonerEnergyBallState::OnStateEnter()
 	m_controller->updateCurrentTarget();
 	m_committedTarget = m_controller->getCurrentTarget();
 
+	if (SummonerSound* sound = GameObjectAPI::findScript<SummonerSound>(getOwner()))
+	{
+		sound->playChargeStart();
+	}
+
 	Debug::log("[SummonerEnergyBallState] ENTER");
 }
 
@@ -62,6 +68,11 @@ void SummonerEnergyBallState::OnStateUpdate()
 	{
 		spawnEnergyBall();
 		m_controller->consumeAttackCooldown();
+		if (SummonerSound* sound = GameObjectAPI::findScript<SummonerSound>(getOwner()))
+		{
+			sound->playRelease();
+		}
+
 		m_hasFiredEnergyBall = true;
 	}
 

@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CrystalShadowMark.h"
 #include "EnvironmentSound.h"
 #include "EnemyDamageable.h"
@@ -88,6 +88,12 @@ void CrystalShadowMark::Update()
 
     deactivateEffect();
 
+    if (m_activatedLoopStarted)
+    {
+        EnvironmentSound::play(getOwner(), "Stop_Environment_Crystal_Activated");
+        m_activatedLoopStarted = false;
+    }
+
     if (managerScript != nullptr)
     {
         managerScript->onCrystalsDeactivated(m_puzzleID);
@@ -109,11 +115,16 @@ bool CrystalShadowMark::processAttack(PlayerAttackType attackType)
         return false;
     }
 
+    const ShadowMarkState previousState = getState();
     const bool markExploited = EnemyShadowMark::processAttack(attackType);
 
     if (markExploited)
     {
         activateCrystal();
+    }
+    else if (getState() != previousState)
+    {
+        EnvironmentSound::play(getOwner(), "Play_Environment_Crystal_Activate");
     }
 
     return markExploited;

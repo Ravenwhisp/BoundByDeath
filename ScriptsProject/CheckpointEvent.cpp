@@ -1,7 +1,8 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CheckpointEvent.h"
 
 #include "PersistingPowerupState.h"
+#include "CooperativeSound.h"
 
 IMPLEMENT_SCRIPT_FIELDS(CheckpointEvent,
 	SERIALIZED_COMPONENT_REF(m_lyrielRespawn, "Lyriel respawn transform", ComponentType::TRANSFORM),
@@ -62,6 +63,15 @@ void CheckpointEvent::executeEvent(GameplayEventTrigger* trigger)
 		std::copy(currentPowerups,
 			currentPowerups + static_cast<int>(PowerupId::Count),
 			m_PersistingCheckpointState->m_savedUnlockedPowerups);
+
+		for (GameObject* holder : SceneAPI::findAllGameObjectsWithScript<CooperativeSound>())
+		{
+			if (CooperativeSound* sound = GameObjectAPI::findScript<CooperativeSound>(holder))
+			{
+				sound->playCheckpointReached();
+				break;
+			}
+		}
 
 		m_PersistingCheckpointState->SetCheckpoint(m_checkpointId);
 		Debug::log("CheckpointEvent: Checkpoint %d saved.", static_cast<int>(m_checkpointId));

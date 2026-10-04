@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "ScriptAPI.h"
 
@@ -94,6 +94,8 @@ private:
     void setPopUpPosition(ActivePopUp& popUp, const Vector2& position);
     Vector2 calculateHiddenPosition(const ActivePopUp& popUp) const;
 
+    class CooperativeSound* findCooperativeSound();
+
     bool shouldUseConfirmationIndicators(const ActivePopUp& popUp) const;
     void setUpConfirmationIndicators(ActivePopUp& popUp);
     void updateConfirmationIndicators(ActivePopUp& popUp, float alphaMultiplier = 1.0f);
@@ -112,4 +114,6 @@ private:
 
     float m_hudFadeOutDuration = 0.35f;
     float m_hudFadeInDuration = 0.35f;
+
+    class CooperativeSound* m_cooperativeSound = nullptr;
 };

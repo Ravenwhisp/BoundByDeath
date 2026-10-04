@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "EnergyBallProjectile.h"
 
 #include "Damageable.h"
@@ -114,6 +114,7 @@ void EnergyBallProjectile::Update()
 	if (distanceSquared <= hitRadiusSquared)
 	{
 		applyImpactDamage();
+		playImpactSound();
 		returnToPool();
 		return;
 	}
@@ -132,6 +133,26 @@ void EnergyBallProjectile::Update()
 	TransformAPI::lookAt(projectileTransform, updatedPosition + m_direction);
 
 	updateEnergyBallParticle();
+}
+
+void EnergyBallProjectile::playImpactSound()
+{
+	ComponentSoundSource* source = AudioAPI::getSoundSourceComponent(getOwner());
+	if (source == nullptr)
+	{
+		return;
+	}
+
+	// Pooled, so it does not know which Summoner fired it. Posting from its own emitter
+	// also puts the burst where it happens instead of back at the caster.
+	static const char* const banks[] = { "Level2.bnk", "Level1.bnk", "BossLevel.bnk" };
+	for (const char* bank : banks)
+	{
+		if (AudioAPI::postEvent(source, bank, "Play_Summoner_Impact") != 0)
+		{
+			return;
+		}
+	}
 }
 
 void EnergyBallProjectile::applyImpactDamage()
