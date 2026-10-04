@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Damageable.h"
+#include "GameplayTargetRegistry.h"
 
 #include "PersistingCheckpointState.h"
 
@@ -16,6 +17,11 @@ Damageable::Damageable(GameObject* owner)
 {
 }
 
+Damageable::~Damageable()
+{
+    GameplayTargetRegistry::unregisterTarget(this);
+}
+
 void Damageable::drawGizmo()
 {
 }
@@ -25,6 +31,7 @@ void Damageable::Start()
     m_currentHp = m_maxHp;
     clampHp();
     m_isDead = (m_currentHp <= 0.0f);
+    GameplayTargetRegistry::registerTarget(this);
     
     if(!&PersistingCheckpointState::Get())
     {
@@ -254,11 +261,13 @@ void Damageable::onHpDepleted()
 
 void Damageable::onDeath()
 {
+    GameplayTargetRegistry::unregisterTarget(this);
     Debug::log("%s died.", GameObjectAPI::getName(m_owner));
 }
 
 void Damageable::onRevive()
 {
+    GameplayTargetRegistry::registerTarget(this);
     Debug::log("%s revived. HP: %.2f / %.2f", GameObjectAPI::getName(m_owner), m_currentHp, m_maxHp);
 }
 
