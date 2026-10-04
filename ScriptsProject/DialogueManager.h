@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "ScriptAPI.h"
 
@@ -31,7 +31,7 @@ public:
     FieldList getExposedFields() const override;
 
     float m_lowHealthPercent     = 0.30f;
-    float m_takesDamageChance    = 0.20f;
+    float m_takesDamageChance    = 0.34f;
     float m_takesDamageCooldown  = 18.0f;
     float m_lowHealthCooldown    = 30.0f;
     float m_separationCooldown   = 35.0f;
@@ -48,6 +48,9 @@ private:
         float lastHp     = -1.0f;
         bool  wasLowHp   = false;
         bool  wasDowned  = false;
+
+        float damageCooldown    = 0.0f;
+        float lowHealthCooldown = 0.0f;
     };
 
     struct Line
@@ -72,8 +75,6 @@ private:
     std::vector<Line> m_queue;
     float m_lineTimer = 0.0f;
 
-    float m_damageCooldownTimer     = 0.0f;
-    float m_lowHealthCooldownTimer  = 0.0f;
     float m_separationCooldownTimer = 0.0f;
 
     bool m_wasSeparated      = false;

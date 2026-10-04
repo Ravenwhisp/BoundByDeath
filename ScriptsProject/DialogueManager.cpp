@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "DialogueManager.h"
 
 #include "Bound.h"
@@ -197,19 +197,19 @@ void DialogueManager::updateSpeaker(Speaker& self, Speaker& partner, bool isDeat
 
     // Crossing the threshold, not sitting under it, so it does not nag while low.
     const bool lowNow = percent <= m_lowHealthPercent;
-    if (lowNow && !self.wasLowHp && m_lowHealthCooldownTimer <= 0.0f && !busy())
+    if (lowNow && !self.wasLowHp && self.lowHealthCooldown <= 0.0f && !busy())
     {
-        m_lowHealthCooldownTimer = m_lowHealthCooldown;
+        self.lowHealthCooldown = m_lowHealthCooldown;
         say(self, isDeath ? k_deathLowHealth.event : k_lyrielLowHealth.event,
                   isDeath ? k_deathLowHealth.duration : k_lyrielLowHealth.duration);
     }
     self.wasLowHp = lowNow;
 
     // Taking a hit happens constantly, so it only speaks once in a while.
-    if (tookDamage && m_damageCooldownTimer <= 0.0f && !busy()
+    if (tookDamage && self.damageCooldown <= 0.0f && !busy()
         && randomUnit() <= m_takesDamageChance)
     {
-        m_damageCooldownTimer = m_takesDamageCooldown;
+        self.damageCooldown = m_takesDamageCooldown;
         say(self, isDeath ? k_deathTakesDamage.event : k_lyrielTakesDamage.event,
                   isDeath ? k_deathTakesDamage.duration : k_lyrielTakesDamage.duration);
     }
@@ -250,21 +250,25 @@ void DialogueManager::Update()
 {
     const float dt = Time::getDeltaTime();
 
-    if (m_damageCooldownTimer > 0.0f)
-    {
-        m_damageCooldownTimer -= dt;
-    }
-    if (m_lowHealthCooldownTimer > 0.0f)
-    {
-        m_lowHealthCooldownTimer -= dt;
-    }
-    if (m_separationCooldownTimer > 0.0f)
-    {
-        m_separationCooldownTimer -= dt;
-    }
+    if (m_death.damageCooldown > 0.0f)     m_death.damageCooldown -= dt;
+    if (m_death.lowHealthCooldown > 0.0f)  m_death.lowHealthCooldown -= dt;
+    if (m_lyriel.damageCooldown > 0.0f)    m_lyriel.damageCooldown -= dt;
+    if (m_lyriel.lowHealthCooldown > 0.0f) m_lyriel.lowHealthCooldown -= dt;
+    if (m_separationCooldownTimer > 0.0f)  m_separationCooldownTimer -= dt;
 
-    updateSpeaker(m_death,  m_lyriel, true,  dt);
-    updateSpeaker(m_lyriel, m_death,  false, dt);
+    // Order is drawn each frame. Evaluating one of them first every time meant that when
+    // both were hit at once, which the bound damage and any area attack do, the same one
+    // always claimed the line and the other was never heard.
+    if (randomUnit() < 0.5f)
+    {
+        updateSpeaker(m_death,  m_lyriel, true,  dt);
+        updateSpeaker(m_lyriel, m_death,  false, dt);
+    }
+    else
+    {
+        updateSpeaker(m_lyriel, m_death,  false, dt);
+        updateSpeaker(m_death,  m_lyriel, true,  dt);
+    }
     updateSeparation(dt);
     updateQueue(dt);
 }
