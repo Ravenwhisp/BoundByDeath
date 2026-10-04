@@ -216,10 +216,19 @@ void AelorinRisenSpiresState::executePattern(Transform* patternRoot, const char*
 		return;
 	}
 
-	m_spireNumber = config->m_risenSpiresNumber;
-
 	// pattern has child game objects and uses their transform to position the attack
 	const int childCount = TransformAPI::getChildCount(patternRoot);
+
+	for (int i = 0; i < childCount; i++) 
+	{
+		Transform* spirePoint = TransformAPI::getChild(patternRoot, i);
+		if (!spirePoint)
+		{
+			continue;
+		}
+
+		m_attackExecutor->applyDamageInRadius(TransformAPI::getGlobalPosition(spirePoint), config->m_risenSpiresRadius, config->m_risenSpiresDamage, sourceName);
+	}
 
 	std::vector<Vector2> spirePositions = generateSpirePositions(childCount, ARENA_RADIUS, config->m_risenSpiresRadius * 2.1f, config);
 
@@ -233,8 +242,6 @@ void AelorinRisenSpiresState::executePattern(Transform* patternRoot, const char*
 
 		Vector2 spirePosition = spirePositions.at(i);
 		TransformAPI::setGlobalPosition(spirePoint, Vector3(spirePosition.x, ARENA_CENTER_Y, spirePosition.y));
-
-		m_attackExecutor->applyDamageInRadius(TransformAPI::getGlobalPosition(spirePoint), config->m_risenSpiresRadius, config->m_risenSpiresDamage, sourceName);
 	}
 
 	Debug::log("[AelorinRisenSpiresState] Executed pattern with %d spires", childCount);
@@ -295,7 +302,7 @@ std::vector<Vector2> AelorinRisenSpiresState::generateSpirePositions(
 		}
 
 		if (!found)
-			break; // Couldn't fit another spire
+			positions.push_back(Vector2(200, 200));
 	}
 
 	return positions;
