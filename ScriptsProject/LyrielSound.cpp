@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "LyrielSound.h"
 
 namespace
@@ -13,6 +13,7 @@ namespace
     constexpr const char* k_dashWhoosh       = "Play_Lyriel_Dash_Whoosh";
     constexpr const char* k_volleyRelease    = "Play_Lyriel_Volley_Release";
     constexpr const char* k_markExploit      = "Play_Lyriel_Mark_Exploit";
+    constexpr const char* k_executionVoice   = "Play_Lyriel_Shadow_Execution_Voice";
     constexpr const char* k_footsteps        = "Play_Lyriel_Footsteps";
     constexpr const char* k_hurt             = "Play_Lyriel_Hurt";
     constexpr const char* k_down             = "Play_Lyriel_Down";
@@ -95,6 +96,7 @@ void LyrielSound::playChargedImpact()   { postEvent(k_chargedImpact); }
 void LyrielSound::playDashWhoosh()      { postEvent(k_dashWhoosh); }
 void LyrielSound::playVolleyRelease()   { postEvent(k_volleyRelease); }
 void LyrielSound::playMarkExploit()     { postEvent(k_markExploit); }
+void LyrielSound::playShadowExecutionVoice() { postEvent(k_executionVoice); }
 void LyrielSound::playHurt()
 {
     if (m_hurtCooldownTimer > 0.0f)

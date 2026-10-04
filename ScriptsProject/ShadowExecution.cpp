@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "ShadowExecution.h"
 
 #include "ParticleLifecycle.h"
@@ -6,6 +6,7 @@
 #include "DeathCharacter.h"
 #include "LyrielCharacter.h"
 #include "CooperativeSound.h"
+#include "LyrielSound.h"
 #include "PlayerState.h"
 #include "PlayerAnimationController.h"
 #include "CharacterAnimations.h"
@@ -274,6 +275,16 @@ void ShadowExecution::beginExecution()
     if (m_sound != nullptr)
     {
         m_sound->playShadowExecution();
+    }
+
+    // Her voice comes from her own emitter, not from the co-op one at the midpoint.
+    for (GameObject* holder : SceneAPI::findAllGameObjectsWithScript<LyrielSound>())
+    {
+        if (LyrielSound* lyrielSound = GameObjectAPI::findScript<LyrielSound>(holder))
+        {
+            lyrielSound->playShadowExecutionVoice();
+            break;
+        }
     }
 
     GameObject* fxCenter = GameObjectAPI::instantiatePrefab(m_particlePrefab.m_id, m_center, Vector3::Zero, ParticleLifecycle::getRuntimeVfxContainer());
