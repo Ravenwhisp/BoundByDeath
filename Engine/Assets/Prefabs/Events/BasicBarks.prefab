@@ -1,0 +1,594 @@
+{
+    "Version": 2,
+    "sourcePath": "Assets\\Prefabs\\Events\\BasicBarks.prefab",
+    "Name": "BasicBarks",
+    "Active": true,
+    "Static": false,
+    "Layer": "DEFAULT",
+    "Tag": "DEFAULT",
+    "Transform": {
+        "Position": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "Rotation": [
+            -0.0,
+            0.0,
+            -0.0,
+            1.0
+        ],
+        "Scale": [
+            1.0,
+            1.0,
+            1.0
+        ]
+    },
+    "Components": [],
+    "Children": [
+        {
+            "Name": "NotFirstSeparationBark",
+            "Active": true,
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0,
+                    1.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [
+                {
+                    "UID": 2627200252995175488,
+                    "ComponentType": "SCRIPT",
+                    "Active": true,
+                    "ScriptName": "BarkEventTrigger",
+                    "ScriptFields": {
+                        "Activation Type": 8,
+                        "Trigger Only Once": false,
+                        "Delay": 0.0,
+                        "Required Stay Time": 5.0,
+                        "Damage Target": 0,
+                        "Bound Object": 5103596312343383342,
+                        "Combat Area": 0
+                    }
+                },
+                {
+                    "UID": 2208146791116416278,
+                    "ComponentType": "SCRIPT",
+                    "Active": true,
+                    "ScriptName": "BarkEvent",
+                    "ScriptFields": {
+                        "Barks:\nSequence/Random One: Speaker|Duration|Text\nRandom Sequence: Group|Speaker|Duration|Text": [
+                            "1|Lyriel|2.5|Death, come back here!",
+                            "1|Death|3.0|You're wish, my command",
+                            "2|Death|3.0|Don't go to far, little one",
+                            "2|Lyriel|2.5|I know I know",
+                            "3|Lyriel|2.5|Not again! ",
+                            "3|Death|3.0|You know what distance does."
+                        ],
+                        "Play Mode": 2,
+                        "Priority": 2,
+                        "Default Duration": 3.0,
+                        "Cooldown": 0.0,
+                        "Trigger Chance": 1.0
+                    }
+                }
+            ],
+            "Children": []
+        },
+        {
+            "Name": "DeathDamageBark",
+            "Active": true,
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0,
+                    1.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [
+                {
+                    "UID": 17861007848130735437,
+                    "ComponentType": "SCRIPT",
+                    "Active": true,
+                    "ScriptName": "BarkEventTrigger",
+                    "ScriptFields": {
+                        "Activation Type": 4,
+                        "Trigger Only Once": false,
+                        "Delay": 0.0,
+                        "Required Stay Time": 5.0,
+                        "Damage Target": 16858939129400802547,
+                        "Bound Object": 0,
+                        "Combat Area": 0
+                    }
+                },
+                {
+                    "UID": 6576588591648390671,
+                    "ComponentType": "SCRIPT",
+                    "Active": true,
+                    "ScriptName": "BarkEvent",
+                    "ScriptFields": {
+                        "Barks:\nSequence/Random One: Speaker|Duration|Text\nRandom Sequence: Group|Speaker|Duration|Text": [
+                            "Death|2.0|You will regret that.",
+                            "Death|2.0|Still here.",
+                            "Death|2.0|Still standing.",
+                            "Death|2.0|Painful.",
+                            "Death|2.0|It is only pain.",
+                            "Death|2.0|Careless."
+                        ],
+                        "Play Mode": 1,
+                        "Priority": 0,
+                        "Default Duration": 3.0,
+                        "Cooldown": 5.0,
+                        "Trigger Chance": 1.0
+                    }
+                }
+            ],
+            "Children": []
+        },
+        {
+            "Name": "LyrielDamageBark",
+            "Active": true,
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0,
+                    1.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [
+                {
+                    "UID": 2075714827877564110,
+                    "ComponentType": "SCRIPT",
+                    "Active": true,
+                    "ScriptName": "BarkEventTrigger",
+                    "ScriptFields": {
+                        "Activation Type": 4,
+                        "Trigger Only Once": false,
+                        "Delay": 0.0,
+                        "Required Stay Time": 5.0,
+                        "Damage Target": 743245849143440901,
+                        "Bound Object": 0,
+                        "Combat Area": 0
+                    }
+                },
+                {
+                    "UID": 16104238296622268964,
+                    "ComponentType": "SCRIPT",
+                    "Active": true,
+                    "ScriptName": "BarkEvent",
+                    "ScriptFields": {
+                        "Barks:\nSequence/Random One: Speaker|Duration|Text\nRandom Sequence: Group|Speaker|Duration|Text": [
+                            "Lyriel|2.0|It hurts!",
+                            "Lyriel|2.0|I won't fall!",
+                            "Lyriel|2.0|I'm hit!",
+                            "Lyriel|2.0|Ouch!",
+                            "Lyriel|2.0|Stop it!",
+                            "Lyriel|2.0|Keep going! "
+                        ],
+                        "Play Mode": 1,
+                        "Priority": 0,
+                        "Default Duration": 3.0,
+                        "Cooldown": 5.0,
+                        "Trigger Chance": 1.0
+                    }
+                }
+            ],
+            "Children": []
+        },
+        {
+            "Name": "LyrielKOBarks",
+            "Active": true,
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0,
+                    1.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [
+                {
+                    "UID": 14658892739624634972,
+                    "ComponentType": "SCRIPT",
+                    "Active": true,
+                    "ScriptName": "BarkEventTrigger",
+                    "ScriptFields": {
+                        "Activation Type": 6,
+                        "Trigger Only Once": false,
+                        "Delay": 0.0,
+                        "Required Stay Time": 5.0,
+                        "Damage Target": 0,
+                        "Bound Object": 0,
+                        "Combat Area": 0
+                    }
+                },
+                {
+                    "UID": 488209769832050447,
+                    "ComponentType": "SCRIPT",
+                    "Active": true,
+                    "ScriptName": "BarkEvent",
+                    "ScriptFields": {
+                        "Barks:\nSequence/Random One: Speaker|Duration|Text\nRandom Sequence: Group|Speaker|Duration|Text": [
+                            "Lyriel|2.0|Death! Help me!",
+                            "Lyriel|2.0|A hand please?",
+                            "Death|3.0|Stay with me, little one.",
+                            "Lyriel|2.0|Damn it…",
+                            "Lyriel|2.0|I can't... move...",
+                            "Death|3.0|Your time has not come."
+                        ],
+                        "Play Mode": 1,
+                        "Priority": 2,
+                        "Default Duration": 3.0,
+                        "Cooldown": 0.0,
+                        "Trigger Chance": 1.0
+                    }
+                }
+            ],
+            "Children": []
+        },
+        {
+            "Name": "DeathKOBarks",
+            "Active": true,
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0,
+                    1.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [
+                {
+                    "UID": 17101295184452128892,
+                    "ComponentType": "SCRIPT",
+                    "Active": true,
+                    "ScriptName": "BarkEventTrigger",
+                    "ScriptFields": {
+                        "Activation Type": 5,
+                        "Trigger Only Once": false,
+                        "Delay": 0.0,
+                        "Required Stay Time": 5.0,
+                        "Damage Target": 0,
+                        "Bound Object": 0,
+                        "Combat Area": 0
+                    }
+                },
+                {
+                    "UID": 11737272564227033699,
+                    "ComponentType": "SCRIPT",
+                    "Active": true,
+                    "ScriptName": "BarkEvent",
+                    "ScriptFields": {
+                        "Barks:\nSequence/Random One: Speaker|Duration|Text\nRandom Sequence: Group|Speaker|Duration|Text": [
+                            "Death|3.0|Even I... can fall...",
+                            "Death|3.0|Forgive me, little one...",
+                            "Lyriel|3.0|Don't leave me alone!",
+                            "Death|2.0|Impossible...",
+                            "Death|3.0|Lyriel... run...",
+                            "Lyriel|2.0|Death!"
+                        ],
+                        "Play Mode": 1,
+                        "Priority": 2,
+                        "Default Duration": 3.0,
+                        "Cooldown": 0.0,
+                        "Trigger Chance": 1.0
+                    }
+                }
+            ],
+            "Children": []
+        },
+        {
+            "Name": "LyrielLowHPBarks",
+            "Active": true,
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0,
+                    1.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [
+                {
+                    "UID": 11750149423236268211,
+                    "ComponentType": "SCRIPT",
+                    "Active": true,
+                    "ScriptName": "BarkEventTrigger",
+                    "ScriptFields": {
+                        "Activation Type": 13,
+                        "Trigger Only Once": false,
+                        "Delay": 0.0,
+                        "Required Stay Time": 5.0,
+                        "Damage Target": 743245849143440901,
+                        "Bound Object": 0,
+                        "Combat Area": 0
+                    }
+                },
+                {
+                    "UID": 11302394800130035081,
+                    "ComponentType": "SCRIPT",
+                    "Active": true,
+                    "ScriptName": "BarkEvent",
+                    "ScriptFields": {
+                        "Barks:\nSequence/Random One: Speaker|Duration|Text\nRandom Sequence: Group|Speaker|Duration|Text": [
+                            "Lyriel|3.0|I'm feeling weak...",
+                            "Lyriel|3.0|I need to rest...",
+                            "Lyriel|3.0|I'm barely standing..."
+                        ],
+                        "Play Mode": 1,
+                        "Priority": 0,
+                        "Default Duration": 3.0,
+                        "Cooldown": 0.0,
+                        "Trigger Chance": 1.0
+                    }
+                }
+            ],
+            "Children": []
+        },
+        {
+            "Name": "DeathLowHPBarks",
+            "Active": true,
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0,
+                    1.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [
+                {
+                    "UID": 10976586813647658871,
+                    "ComponentType": "SCRIPT",
+                    "Active": true,
+                    "ScriptName": "BarkEventTrigger",
+                    "ScriptFields": {
+                        "Activation Type": 13,
+                        "Trigger Only Once": false,
+                        "Delay": 0.0,
+                        "Required Stay Time": 5.0,
+                        "Damage Target": 16858939129400802547,
+                        "Bound Object": 0,
+                        "Combat Area": 0
+                    }
+                },
+                {
+                    "UID": 15947799383041980909,
+                    "ComponentType": "SCRIPT",
+                    "Active": true,
+                    "ScriptName": "BarkEvent",
+                    "ScriptFields": {
+                        "Barks:\nSequence/Random One: Speaker|Duration|Text\nRandom Sequence: Group|Speaker|Duration|Text": [
+                            "Death|3.0|I am weakening.",
+                            "Death|3.0|My bones are feeling weak",
+                            "Death|3.0|I cannot take many more."
+                        ],
+                        "Play Mode": 1,
+                        "Priority": 0,
+                        "Default Duration": 3.0,
+                        "Cooldown": 0.0,
+                        "Trigger Chance": 1.0
+                    }
+                }
+            ],
+            "Children": []
+        },
+        {
+            "Name": "LyrielReviveBark",
+            "Active": true,
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0,
+                    1.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [
+                {
+                    "UID": 4149930125460400302,
+                    "ComponentType": "SCRIPT",
+                    "Active": true,
+                    "ScriptName": "BarkEventTrigger",
+                    "ScriptFields": {
+                        "Activation Type": 10,
+                        "Trigger Only Once": false,
+                        "Delay": 0.0,
+                        "Required Stay Time": 5.0,
+                        "Damage Target": 0,
+                        "Bound Object": 0,
+                        "Combat Area": 0
+                    }
+                },
+                {
+                    "UID": 506302467678548037,
+                    "ComponentType": "SCRIPT",
+                    "Active": true,
+                    "ScriptName": "BarkEvent",
+                    "ScriptFields": {
+                        "Barks:\nSequence/Random One: Speaker|Duration|Text\nRandom Sequence: Group|Speaker|Duration|Text": [
+                            "Lyriel|3.0|I won't waste this chance.",
+                            "Lyriel|3.0|I can't give up now…",
+                            "Lyriel|3.0|II can still fight."
+                        ],
+                        "Play Mode": 1,
+                        "Priority": 1,
+                        "Default Duration": 3.0,
+                        "Cooldown": 0.0,
+                        "Trigger Chance": 1.0
+                    }
+                }
+            ],
+            "Children": []
+        },
+        {
+            "Name": "DeathReviveBark",
+            "Active": true,
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0,
+                    1.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [
+                {
+                    "UID": 14584724294753370812,
+                    "ComponentType": "SCRIPT",
+                    "Active": true,
+                    "ScriptName": "BarkEventTrigger",
+                    "ScriptFields": {
+                        "Activation Type": 9,
+                        "Trigger Only Once": false,
+                        "Delay": 0.0,
+                        "Required Stay Time": 5.0,
+                        "Damage Target": 0,
+                        "Bound Object": 0,
+                        "Combat Area": 0
+                    }
+                },
+                {
+                    "UID": 14344007463539580533,
+                    "ComponentType": "SCRIPT",
+                    "Active": true,
+                    "ScriptName": "BarkEvent",
+                    "ScriptFields": {
+                        "Barks:\nSequence/Random One: Speaker|Duration|Text\nRandom Sequence: Group|Speaker|Duration|Text": [
+                            "Death|3.0|Ah... ironic.",
+                            "Death|3.0|Even fallen, I remain.",
+                            "Death|3.0|The grave rejects me."
+                        ],
+                        "Play Mode": 1,
+                        "Priority": 1,
+                        "Default Duration": 3.0,
+                        "Cooldown": 0.0,
+                        "Trigger Chance": 1.0
+                    }
+                }
+            ],
+            "Children": []
+        }
+    ]
+}
