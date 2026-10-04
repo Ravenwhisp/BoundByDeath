@@ -37,16 +37,19 @@ public:
 	void cancelRisenSpires();
 
 	// Spirit Cannon
-	void showSpiritCannonUI(Transform* originTransform, const Vector3& aimDirection, float beamLength, float beamWidth, float chargeDuration);
+	void showSpiritCannonWarning(Transform* originTransform, const Vector3& aimDirection, float beamLength, float warningWidth, bool phase2, float sideAngle, float sideWidth);
 	void setSpiritCannonAimDirection(const Vector3& aimDirection);
+	void fireSpiritCannonBeam(float fireWidth, float sideFireWidth, float fireDuration);
 	void cancelSpiritCannon();
 
 	// Grasp of the Dead
 	void showGraspOfTheDeadUI(const Vector3& center, float radius, float pullDuration);
+	void showGraspChains(Transform* graspCenter, Transform* lyrielTransform, Transform* deathTransform);
 	void cancelGraspOfTheDead();
+	void cancelGraspChains();
 
 	// Soul Cataclysm
-	void showSoulCataclysmUI(const Vector3& center, float radius, Transform* safeZonesRoot, float safeZoneRadius, float channelDuration);
+	void showSoulCataclysmUI(Transform* safeZonesRoot, float safeZoneRadius, float channelDuration);
 
 private:
 
@@ -100,7 +103,6 @@ private:
 
 	// Spirit Cannon
 	void updateSpiritCannonUI(float deltaTime);
-	void playSpiritCannonImpactUI();
 	void hideSpiritCannonUI();
 	void setSpiritCannonSize(float beamLength, float beamWidth);
 
@@ -108,6 +110,9 @@ private:
 	void setGraspOfTheDeadRadius(float radius);
 	void updateGraspOfTheDeadUI(float deltaTime);
 	void hideGraspOfTheDeadUI();
+	void updateGraspChains();
+	void updateGraspChain(Transform* canvasTransform, Transform2D* chainTransform2D, Transform* targetTransform);
+	void hideGraspChains();
 
 	// Soul Cataclysm
 	struct SoulCataclysmSafeZoneUISlot
@@ -124,7 +129,6 @@ private:
 	void setupSoulCataclysmSafeZonesUI();
 	void hideSoulCataclysmUI();
 	void hideAllSoulCataclysmSafeZonesUI();
-	void setSoulCataclysmArenaRadius(float radius);
 	void setSoulCataclysmSafeZoneRadius(SoulCataclysmSafeZoneUISlot& slot, float radius);
 	void updateSoulCataclysmUI(float deltaTime);
 	void hideSoulCataclysmSafeZoneUISlot(SoulCataclysmSafeZoneUISlot& slot);
@@ -224,60 +228,95 @@ private:
 	// Spirit Cannon
 	ComponentRef<Transform> m_spiritCannonUICanvas;
 	ComponentRef<Transform2D> m_spiritCannonUIContainer;
-	ComponentRef<Transform2D> m_spiritCannonUIBackground;
-	ComponentRef<Transform2D> m_spiritCannonUIBorder;
-	ComponentRef<Transform2D> m_spiritCannonUIGlow;
+	ComponentRef<Transform2D> m_spiritCannonUIWarning;
+	ComponentRef<Transform2D> m_spiritCannonUIBeam;
+
+	// Phase 2 Side Beams
+	ComponentRef<Transform2D> m_spiritCannonLeftContainer;
+	ComponentRef<Transform2D> m_spiritCannonLeftWarning;
+	ComponentRef<Transform2D> m_spiritCannonLeftBeam;
+	ComponentRef<Transform2D> m_spiritCannonRightContainer;
+	ComponentRef<Transform2D> m_spiritCannonRightWarning;
+	ComponentRef<Transform2D> m_spiritCannonRightBeam;
 
 	Transform* m_spiritCannonUICanvasTransform = nullptr;
 	Transform2D* m_spiritCannonUIContainerTransform2D = nullptr;
-	Transform2D* m_spiritCannonUIBackgroundTransform2D = nullptr;
-	Transform2D* m_spiritCannonUIBorderTransform2D = nullptr;
-	Transform2D* m_spiritCannonUIGlowTransform2D = nullptr;
+	Transform2D* m_spiritCannonUIWarningTransform2D = nullptr;
+	Transform2D* m_spiritCannonUIBeamTransform2D = nullptr;
+
+	// Phase 2 Side Beams
+	Transform2D* m_spiritCannonLeftContainerTransform2D = nullptr;
+	Transform2D* m_spiritCannonLeftWarningTransform2D = nullptr;
+	Transform2D* m_spiritCannonLeftBeamTransform2D = nullptr;
+	Transform2D* m_spiritCannonRightContainerTransform2D = nullptr;
+	Transform2D* m_spiritCannonRightWarningTransform2D = nullptr;
+	Transform2D* m_spiritCannonRightBeamTransform2D = nullptr;
 
 	Transform* m_spiritCannonOriginTransform = nullptr;
+	Transform* m_spiritCannonLeftContainerTransform = nullptr;
+	Transform* m_spiritCannonRightContainerTransform = nullptr;
 	Vector3 m_spiritCannonAimDirection = Vector3::Zero;
 
 	bool m_spiritCannonUIActive = false;
-	bool m_spiritCannonUICharging = false;
-	bool m_spiritCannonImpactUIPlaying = false;
-	float m_spiritCannonUITimer = 0.0f;
-	float m_spiritCannonUIChargeDuration = 0.0f;
-	float m_spiritCannonBeamLength = 0.0f;
-	float m_spiritCannonBeamWidth = 0.0f;
-	float m_spiritCannonImpactUITimer = 0.0f;
+	bool m_spiritCannonUIFiring = false;
+	bool m_spiritCannonPhase2 = false;
 
-	static constexpr float m_spiritCannonUIImpactFadeDuration = 0.15f;
+	float m_spiritCannonBeamLength = 0.0f;
+	float m_spiritCannonWarningWidth = 0.0f;
+	float m_spiritCannonFireBaseWidth = 0.0f;
+	float m_spiritCannonSideFireBaseWidth = 0.0f;
+	float m_spiritCannonFireTimer = 0.0f;
+	float m_spiritCannonFireDuration = 0.0f;
+	float m_spiritCannonSideAngle = 0.0f;
+	float m_spiritCannonSideWidth = 0.0f;
+
+	static constexpr float m_spiritCannonHeightOffset = 0.35f;
+	static constexpr float m_spiritCannonPulseSpeed = 22.0f;
+	static constexpr float m_spiritCannonPulseAmount = 0.12f;
 
 	// Grasp of the Dead
 	ComponentRef<Transform> m_graspOfTheDeadUICanvas;
 	ComponentRef<Transform2D> m_graspOfTheDeadUIContainer;
 	ComponentRef<Transform2D> m_graspOfTheDeadUIBackground;
-	ComponentRef<Transform2D> m_graspOfTheDeadUIBorder;
-	ComponentRef<Transform2D> m_graspOfTheDeadUIGlow;
+
+	ComponentRef<Transform> m_graspLyrielChainCanvas;
+	ComponentRef<Transform2D> m_graspLyrielChainImage;
+	ComponentRef<Transform> m_graspDeathChainCanvas;
+	ComponentRef<Transform2D> m_graspDeathChainImage;
 
 	Transform* m_graspOfTheDeadUICanvasTransform = nullptr;
 	Transform2D* m_graspOfTheDeadUIContainerTransform2D = nullptr;
 	Transform2D* m_graspOfTheDeadUIBackgroundTransform2D = nullptr;
-	Transform2D* m_graspOfTheDeadUIBorderTransform2D = nullptr;
-	Transform2D* m_graspOfTheDeadUIGlowTransform2D = nullptr;
+
+	Transform* m_graspLyrielChainCanvasTransform = nullptr;
+	Transform2D* m_graspLyrielChainImageTransform2D = nullptr;
+	Transform* m_graspDeathChainCanvasTransform = nullptr;
+	Transform2D* m_graspDeathChainImageTransform2D = nullptr;
+
+	Transform* m_graspChainCenterTransform = nullptr;
+	Transform* m_graspChainLyrielTransform = nullptr;
+	Transform* m_graspChainDeathTransform = nullptr;
 
 	bool m_graspOfTheDeadUIActive = false;
+	bool m_graspChainsActive = false;
 
 	float m_graspOfTheDeadUITimer = 0.0f;
 	float m_graspOfTheDeadUIDuration = 0.0f;
+	float m_graspPortalRotation = 0.0f;
 
-	// Soul Cataclysm - Arena
-	ComponentRef<Transform> m_soulCataclysmUICanvas;
-	ComponentRef<Transform2D> m_soulCataclysmUIContainer;
-	ComponentRef<Transform2D> m_soulCataclysmUIBackground;
-	ComponentRef<Transform2D> m_soulCataclysmUIBorder;
-	ComponentRef<Transform2D> m_soulCataclysmUIGlow;
+	static constexpr float m_graspChainHeightOffset = 0.35f;
+	static constexpr float m_graspChainWidth = 0.35f;
 
-	Transform* m_soulCataclysmUICanvasTransform = nullptr;
-	Transform2D* m_soulCataclysmUIContainerTransform2D = nullptr;
-	Transform2D* m_soulCataclysmUIBackgroundTransform2D = nullptr;
-	Transform2D* m_soulCataclysmUIBorderTransform2D = nullptr;
-	Transform2D* m_soulCataclysmUIGlowTransform2D = nullptr;
+	static constexpr float m_graspPortalRotationSpeed = 75.0f;
+	static constexpr float m_graspPortalPulseSpeed = 4.0f;
+	static constexpr float m_graspPortalPulseAmount = 0.04f;
+
+	// Soul Cataclysm - TEXT
+	ComponentRef<Transform> m_soulCataclysmWarningTextCanvas;
+	ComponentRef<Transform2D> m_soulCataclysmTextContent;
+
+	Transform* m_soulCataclysmWarningTextCanvasTransform = nullptr;
+	Transform2D* m_soulCataclysmTextContentTransform2D = nullptr;
 
 	// Soul Cataclysm - Safe Zone
 	ComponentRef<Transform> m_soulCataclysmSafeZoneUICanvas;
@@ -297,4 +336,6 @@ private:
 	bool m_soulCataclysmUIActive = false;
 	float m_soulCataclysmUITimer = 0.0f;
 	float m_soulCataclysmUIChannelDuration = 0.0f;
+
+	static constexpr float m_soulCataclysmWarningBlinkSpeed = 2.0f;
 };

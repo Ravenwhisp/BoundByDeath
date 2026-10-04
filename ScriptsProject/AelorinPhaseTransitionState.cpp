@@ -2,6 +2,7 @@
 #include "AelorinPhaseTransitionState.h"
 
 #include "AelorinBossController.h"
+#include "AelorinVFX.h"
 #include "AelorinCinematics.h"
 
 AelorinPhaseTransitionState::AelorinPhaseTransitionState(GameObject* owner)
@@ -22,6 +23,7 @@ void AelorinPhaseTransitionState::OnStateEnter()
 
 	m_controller = GameObjectAPI::findScript<AelorinBossController>(parentGameObject);
 	m_animation = AnimationAPI::getAnimationComponent(getOwner());
+	m_vfx = GameObjectAPI::findScript<AelorinVFX>(parentGameObject);
 
 	m_phase2Started = false;
 	m_cinematicDriven = false;
@@ -29,11 +31,18 @@ void AelorinPhaseTransitionState::OnStateEnter()
 	if (!m_controller)
 	{
 		Debug::error("[AelorinPhaseTransitionState] AelorinBossController not found.");
+		return;
 	}
 
 	if (!m_animation)
 	{
 		Debug::error("[AelorinPhaseTransitionState] AnimationComponent not found.");
+		return;
+	}
+
+	if (m_vfx)
+	{
+		m_vfx->playPhase2Transition();
 	}
 
 	// Con cinemática montada, ella lleva el reloj: mueve al boss al centro, lanza el hechizo y

@@ -44,28 +44,31 @@ IMPLEMENT_SCRIPT_FIELDS(AelorinUI,
 	),
 
 	FIELD_GROUP_COLLAPSE("Spirit Cannon",
-		SERIALIZED_COMPONENT_REF(m_spiritCannonUICanvas, "Spirit Cannon UI Canvas", ComponentType::TRANSFORM),
-		SERIALIZED_COMPONENT_REF(m_spiritCannonUIContainer, "Spirit Cannon UI Container", ComponentType::TRANSFORM2D),
-		SERIALIZED_COMPONENT_REF(m_spiritCannonUIBackground, "Spirit Cannon UI Background", ComponentType::TRANSFORM2D),
-		SERIALIZED_COMPONENT_REF(m_spiritCannonUIBorder, "Spirit Cannon UI Border", ComponentType::TRANSFORM2D),
-		SERIALIZED_COMPONENT_REF(m_spiritCannonUIGlow, "Spirit Cannon UI Glow", ComponentType::TRANSFORM2D)
+		SERIALIZED_COMPONENT_REF(m_spiritCannonUICanvas, "Spirit Cannon Canvas",ComponentType::TRANSFORM),
+		SERIALIZED_COMPONENT_REF(m_spiritCannonUIContainer, "Spirit Cannon Container", ComponentType::TRANSFORM2D),
+		SERIALIZED_COMPONENT_REF(m_spiritCannonUIWarning, "Spirit Cannon Warning", ComponentType::TRANSFORM2D),
+		SERIALIZED_COMPONENT_REF(m_spiritCannonUIBeam, "Spirit Cannon Beam", ComponentType::TRANSFORM2D),
+		SERIALIZED_COMPONENT_REF(m_spiritCannonLeftContainer, "Spirit Cannon Left Container", ComponentType::TRANSFORM2D),
+		SERIALIZED_COMPONENT_REF(m_spiritCannonLeftWarning,	"Spirit Cannon Left Warning", ComponentType::TRANSFORM2D),
+		SERIALIZED_COMPONENT_REF(m_spiritCannonLeftBeam, "Spirit Cannon Left Beam", ComponentType::TRANSFORM2D),
+		SERIALIZED_COMPONENT_REF(m_spiritCannonRightContainer, "Spirit Cannon Right Container",	ComponentType::TRANSFORM2D),
+		SERIALIZED_COMPONENT_REF(m_spiritCannonRightWarning, "Spirit Cannon Right Warning",	ComponentType::TRANSFORM2D),
+		SERIALIZED_COMPONENT_REF(m_spiritCannonRightBeam, "Spirit Cannon Right Beam", ComponentType::TRANSFORM2D)
 	),
 
 	FIELD_GROUP_COLLAPSE("Grasp of the Dead",
 		SERIALIZED_COMPONENT_REF(m_graspOfTheDeadUICanvas, "Grasp of the Dead UI Canvas", ComponentType::TRANSFORM),
 		SERIALIZED_COMPONENT_REF(m_graspOfTheDeadUIContainer, "Grasp of the Dead UI Container", ComponentType::TRANSFORM2D),
 		SERIALIZED_COMPONENT_REF(m_graspOfTheDeadUIBackground, "Grasp of the Dead UI Background", ComponentType::TRANSFORM2D),
-		SERIALIZED_COMPONENT_REF(m_graspOfTheDeadUIBorder, "Grasp of the Dead UI Border", ComponentType::TRANSFORM2D),
-		SERIALIZED_COMPONENT_REF(m_graspOfTheDeadUIGlow, "Grasp of the Dead UI Glow", ComponentType::TRANSFORM2D)
+		SERIALIZED_COMPONENT_REF(m_graspLyrielChainCanvas, "Lyriel Chain Canvas", ComponentType::TRANSFORM),
+		SERIALIZED_COMPONENT_REF(m_graspLyrielChainImage, "Lyriel Chain Image",	ComponentType::TRANSFORM2D),
+		SERIALIZED_COMPONENT_REF(m_graspDeathChainCanvas, "Death Chain Canvas",	ComponentType::TRANSFORM),
+		SERIALIZED_COMPONENT_REF(m_graspDeathChainImage, "Death Chain Image", ComponentType::TRANSFORM2D)
 	),
 
 	FIELD_GROUP_COLLAPSE("Soul Cataclysm",
-		SERIALIZED_COMPONENT_REF(m_soulCataclysmUICanvas, "Soul Cataclysm UI Canvas",	ComponentType::TRANSFORM),
-		SERIALIZED_COMPONENT_REF(m_soulCataclysmUIContainer, "Soul Cataclysm UI Container", ComponentType::TRANSFORM2D),
-		SERIALIZED_COMPONENT_REF(m_soulCataclysmUIBackground, "Soul Cataclysm UI Background", ComponentType::TRANSFORM2D),
-		SERIALIZED_COMPONENT_REF(m_soulCataclysmUIBorder, "Soul Cataclysm UI Border",	ComponentType::TRANSFORM2D),
-		SERIALIZED_COMPONENT_REF(m_soulCataclysmUIGlow, "Soul Cataclysm UI Glow", ComponentType::TRANSFORM2D),
-
+		SERIALIZED_COMPONENT_REF(m_soulCataclysmWarningTextCanvas, "Soul Cataclysm Warning Text", ComponentType::TRANSFORM),
+		SERIALIZED_COMPONENT_REF(m_soulCataclysmTextContent, "Soul Cataclysm Text Content", ComponentType::TRANSFORM2D),
 		SERIALIZED_COMPONENT_REF(m_soulCataclysmSafeZoneUICanvas, "Soul Cataclysm Safe Zone UI Canvas", ComponentType::TRANSFORM),
 		SERIALIZED_COMPONENT_REF(m_soulCataclysmSafeZoneUIContainer, "Soul Cataclysm Safe Zone UI Container", ComponentType::TRANSFORM2D),
 		SERIALIZED_COMPONENT_REF(m_soulCataclysmSafeZoneUIBackground, "Soul Cataclysm Safe Zone UI Background", ComponentType::TRANSFORM2D),
@@ -113,9 +116,35 @@ void AelorinUI::Start()
 	// Spirit Cannon
 	m_spiritCannonUICanvasTransform = m_spiritCannonUICanvas.getReferencedComponent();
 	m_spiritCannonUIContainerTransform2D = m_spiritCannonUIContainer.getReferencedComponent();
-	m_spiritCannonUIBackgroundTransform2D = m_spiritCannonUIBackground.getReferencedComponent();
-	m_spiritCannonUIBorderTransform2D = m_spiritCannonUIBorder.getReferencedComponent();
-	m_spiritCannonUIGlowTransform2D = m_spiritCannonUIGlow.getReferencedComponent();
+	m_spiritCannonUIWarningTransform2D = m_spiritCannonUIWarning.getReferencedComponent();
+	m_spiritCannonUIBeamTransform2D = m_spiritCannonUIBeam.getReferencedComponent();
+	// Phase 2
+	m_spiritCannonLeftContainerTransform2D = m_spiritCannonLeftContainer.getReferencedComponent();
+	m_spiritCannonLeftWarningTransform2D = m_spiritCannonLeftWarning.getReferencedComponent();
+	m_spiritCannonLeftBeamTransform2D =	m_spiritCannonLeftBeam.getReferencedComponent();
+	m_spiritCannonRightContainerTransform2D = m_spiritCannonRightContainer.getReferencedComponent();
+	m_spiritCannonRightWarningTransform2D = m_spiritCannonRightWarning.getReferencedComponent();
+	m_spiritCannonRightBeamTransform2D = m_spiritCannonRightBeam.getReferencedComponent();
+
+	if (m_spiritCannonLeftContainerTransform2D)
+	{
+		Transform2DAPI::setAlpha(m_spiritCannonLeftContainerTransform2D, 0.0f);
+		GameObject* leftContainerObject = ComponentAPI::getOwner(m_spiritCannonLeftContainerTransform2D);
+		if (leftContainerObject)
+		{
+			m_spiritCannonLeftContainerTransform = leftContainerObject->GetTransform();
+		}
+	}
+
+	if (m_spiritCannonRightContainerTransform2D)
+	{
+		Transform2DAPI::setAlpha(m_spiritCannonRightContainerTransform2D, 0.0f);
+		GameObject* rightContainerObject = ComponentAPI::getOwner(m_spiritCannonRightContainerTransform2D);
+		if (rightContainerObject)
+		{
+			m_spiritCannonRightContainerTransform = rightContainerObject->GetTransform();
+		}
+	}
 
 	hideSpiritCannonUI();
 
@@ -123,17 +152,18 @@ void AelorinUI::Start()
 	m_graspOfTheDeadUICanvasTransform =	m_graspOfTheDeadUICanvas.getReferencedComponent();
 	m_graspOfTheDeadUIContainerTransform2D = m_graspOfTheDeadUIContainer.getReferencedComponent();
 	m_graspOfTheDeadUIBackgroundTransform2D = m_graspOfTheDeadUIBackground.getReferencedComponent();
-	m_graspOfTheDeadUIBorderTransform2D = m_graspOfTheDeadUIBorder.getReferencedComponent();
-	m_graspOfTheDeadUIGlowTransform2D =	m_graspOfTheDeadUIGlow.getReferencedComponent();
+
+	m_graspLyrielChainCanvasTransform = m_graspLyrielChainCanvas.getReferencedComponent();
+	m_graspLyrielChainImageTransform2D = m_graspLyrielChainImage.getReferencedComponent();
+	m_graspDeathChainCanvasTransform = m_graspDeathChainCanvas.getReferencedComponent();
+	m_graspDeathChainImageTransform2D = m_graspDeathChainImage.getReferencedComponent();
 
 	hideGraspOfTheDeadUI();
+	hideGraspChains();
 
-	// Soul Cataclysm - Arena
-	m_soulCataclysmUICanvasTransform = m_soulCataclysmUICanvas.getReferencedComponent();
-	m_soulCataclysmUIContainerTransform2D =	m_soulCataclysmUIContainer.getReferencedComponent();
-	m_soulCataclysmUIBackgroundTransform2D = m_soulCataclysmUIBackground.getReferencedComponent();
-	m_soulCataclysmUIBorderTransform2D = m_soulCataclysmUIBorder.getReferencedComponent();
-	m_soulCataclysmUIGlowTransform2D = m_soulCataclysmUIGlow.getReferencedComponent();
+	// Soul Cataclysm - TEXT
+	m_soulCataclysmWarningTextCanvasTransform = m_soulCataclysmWarningTextCanvas.getReferencedComponent();
+	m_soulCataclysmTextContentTransform2D = m_soulCataclysmTextContent.getReferencedComponent();
 
 	// Soul Cataclysm - Safe Zone
 	m_soulCataclysmSafeZoneUICanvasTransform = m_soulCataclysmSafeZoneUICanvas.getReferencedComponent();
@@ -158,6 +188,7 @@ void AelorinUI::Update()
 	updateRisenSpiresUI(deltaTime);
 	updateSpiritCannonUI(deltaTime);
 	updateGraspOfTheDeadUI(deltaTime);
+	updateGraspChains();
 	updateSoulCataclysmUI(deltaTime);
 	updateHealthMarkers();
 }
@@ -392,44 +423,187 @@ void AelorinUI::cancelRisenSpires()
 	hideAllRisenSpiresUI();
 }
 
-void AelorinUI::showSpiritCannonUI(Transform* originTransform, const Vector3& aimDirection, float beamLength, float beamWidth, float chargeDuration)
+void AelorinUI::showSpiritCannonWarning(Transform* originTransform, const Vector3& aimDirection, float beamLength, float warningWidth, bool phase2, float sideAngle, float sideWidth)
 {
+	if (!m_spiritCannonUICanvasTransform ||
+		!m_spiritCannonUIContainerTransform2D ||
+		!m_spiritCannonUIWarningTransform2D ||
+		!m_spiritCannonUIBeamTransform2D)
+	{
+		return;
+	}
+
 	GameObject* canvasObject = ComponentAPI::getOwner(m_spiritCannonUICanvasTransform);
 	if (!canvasObject)
 	{
 		return;
 	}
 
-	m_spiritCannonOriginTransform = originTransform;
+	m_spiritCannonOriginTransform =	originTransform;
 	m_spiritCannonAimDirection = aimDirection;
-	m_spiritCannonBeamLength = beamLength;
-	m_spiritCannonBeamWidth = beamWidth;
-	m_spiritCannonUITimer = 0.0f;
-	m_spiritCannonUIChargeDuration = (std::max)(chargeDuration, 0.001f);
-	m_spiritCannonUIActive = true;
-	m_spiritCannonUICharging = true;
+	m_spiritCannonAimDirection.y = 0.0f;
 
+	if (m_spiritCannonAimDirection.LengthSquared() > 0.00001f)
+	{
+		m_spiritCannonAimDirection.Normalize();
+	}
+
+	m_spiritCannonBeamLength = beamLength;
+	m_spiritCannonUIActive = true;
+	m_spiritCannonUIFiring = false;
+	m_spiritCannonFireTimer = 0.0f;
+	m_spiritCannonFireDuration = 0.0f;
+	m_spiritCannonPhase2 = phase2;
+	m_spiritCannonSideAngle = sideAngle;
+	m_spiritCannonSideWidth = sideWidth;
+
+	updateSpiritCannonUI(0.0f);
 	GameObjectAPI::setActive(canvasObject, true);
 
-	setSpiritCannonSize(beamLength, beamWidth);
+	// Thin warning beam
+	setSpiritCannonSize(beamLength, warningWidth);
 
-	Transform2DAPI::setAlpha(m_spiritCannonUIContainerTransform2D, 1.0f);
-	Transform2DAPI::setAlpha(m_spiritCannonUIBorderTransform2D, 1.0f);
-	Transform2DAPI::setAlpha(m_spiritCannonUIBackgroundTransform2D, 0.0f);
-	Transform2DAPI::setAlpha(m_spiritCannonUIGlowTransform2D, 0.0f);
-	Transform2DAPI::setScale(m_spiritCannonUIBackgroundTransform2D,	Vector2(1.0f, 1.0f));
+	Transform2DAPI::setAlpha(m_spiritCannonUIWarningTransform2D, 1.0f);
+	Transform2DAPI::setAlpha(m_spiritCannonUIBeamTransform2D, 0.0f);
+	Transform2DAPI::setScale(m_spiritCannonUIWarningTransform2D, Vector2(1.0f, 1.0f));
+	Transform2DAPI::setScale(m_spiritCannonUIBeamTransform2D, Vector2(1.0f, 1.0f));
+
+	// Phase 2
+	if (m_spiritCannonPhase2)
+	{
+		if (m_spiritCannonLeftContainerTransform2D)
+		{
+			Transform2DAPI::setAlpha(m_spiritCannonLeftContainerTransform2D, 1.0f);
+			Transform2DAPI::setScale(m_spiritCannonLeftContainerTransform2D, Vector2(m_spiritCannonBeamLength, m_spiritCannonSideWidth));
+		}
+
+		if (m_spiritCannonRightContainerTransform2D)
+		{
+			Transform2DAPI::setAlpha(m_spiritCannonRightContainerTransform2D, 1.0f);
+			Transform2DAPI::setScale(m_spiritCannonRightContainerTransform2D, Vector2(m_spiritCannonBeamLength, m_spiritCannonSideWidth));
+		}
+
+		if (m_spiritCannonLeftWarningTransform2D)
+		{
+			Transform2DAPI::setAlpha(m_spiritCannonLeftWarningTransform2D, 1.0f);
+		}
+
+		if (m_spiritCannonLeftBeamTransform2D)
+		{
+			Transform2DAPI::setAlpha(m_spiritCannonLeftBeamTransform2D, 0.0f);
+		}
+
+		if (m_spiritCannonRightWarningTransform2D)
+		{
+			Transform2DAPI::setAlpha(m_spiritCannonRightWarningTransform2D, 1.0f);
+		}
+
+		if (m_spiritCannonRightBeamTransform2D)
+		{
+			Transform2DAPI::setAlpha(m_spiritCannonRightBeamTransform2D, 0.0f);
+		}
+
+		if (m_spiritCannonLeftContainerTransform)
+		{
+			Vector3 position = TransformAPI::getPosition(m_spiritCannonLeftContainerTransform);
+			position.x = -m_spiritCannonBeamLength * 0.5f;
+			TransformAPI::setPosition(m_spiritCannonLeftContainerTransform, position);
+			TransformAPI::setRotationEuler(m_spiritCannonLeftContainerTransform, Vector3(0.0f, 0.0f, -m_spiritCannonSideAngle));
+		}
+
+		if (m_spiritCannonRightContainerTransform)
+		{
+			Vector3 position = TransformAPI::getPosition(m_spiritCannonRightContainerTransform);
+			position.x = -m_spiritCannonBeamLength * 0.5f;
+			TransformAPI::setPosition(m_spiritCannonRightContainerTransform, position);
+			TransformAPI::setRotationEuler(m_spiritCannonRightContainerTransform, Vector3(0.0f, 0.0f, m_spiritCannonSideAngle));
+		}
+	}
+	else
+	{
+		if (m_spiritCannonLeftContainerTransform2D)
+		{
+			Transform2DAPI::setAlpha(m_spiritCannonLeftContainerTransform2D, 0.0f);
+		}
+
+		if (m_spiritCannonRightContainerTransform2D)
+		{
+			Transform2DAPI::setAlpha(m_spiritCannonRightContainerTransform2D, 0.0f);
+		}
+	}
 }
 
 void AelorinUI::setSpiritCannonAimDirection(const Vector3& aimDirection)
 {
-	if (aimDirection.LengthSquared() <= 0.00001f)
+	Vector3 direction = aimDirection;
+
+	// Spirit Cannon works on the XZ plane
+	direction.y = 0.0f;
+
+	if (direction.LengthSquared() <= 0.00001f)
 	{
 		return;
 	}
 
-	m_spiritCannonAimDirection = aimDirection;
-	m_spiritCannonAimDirection.y = 0.0f;
-	m_spiritCannonAimDirection.Normalize();
+	direction.Normalize();
+
+	m_spiritCannonAimDirection = direction;
+}
+
+void AelorinUI::fireSpiritCannonBeam(float fireWidth, float sideFireWidth, float fireDuration)
+{
+	if (!m_spiritCannonUIActive ||
+		!m_spiritCannonUICanvasTransform ||
+		!m_spiritCannonUIContainerTransform2D ||
+		!m_spiritCannonUIWarningTransform2D ||
+		!m_spiritCannonUIBeamTransform2D)
+	{
+		return;
+	}
+
+	GameObject* canvasObject = ComponentAPI::getOwner(m_spiritCannonUICanvasTransform);
+	if (!canvasObject)
+	{
+		return;
+	}
+
+	m_spiritCannonUIFiring = true;
+	m_spiritCannonFireBaseWidth = fireWidth;
+	m_spiritCannonSideFireBaseWidth = sideFireWidth;
+	m_spiritCannonFireTimer = 0.0f;
+	m_spiritCannonFireDuration = (std::max)(fireDuration, 0.001f);
+
+	GameObjectAPI::setActive(canvasObject, true);
+
+	// Switch from warning image to beam image
+	Transform2DAPI::setAlpha(m_spiritCannonUIWarningTransform2D, 0.0f);
+	Transform2DAPI::setAlpha(m_spiritCannonUIBeamTransform2D, 1.0f);
+
+	if (m_spiritCannonPhase2)
+	{
+		if (m_spiritCannonLeftWarningTransform2D)
+		{
+			Transform2DAPI::setAlpha(m_spiritCannonLeftWarningTransform2D, 0.0f);
+		}
+
+		if (m_spiritCannonLeftBeamTransform2D)
+		{
+			Transform2DAPI::setAlpha(m_spiritCannonLeftBeamTransform2D, 1.0f);
+			Transform2DAPI::setScale(m_spiritCannonLeftBeamTransform2D, Vector2(1.0f, 1.0f));
+		}
+
+		if (m_spiritCannonRightBeamTransform2D)
+		{
+			Transform2DAPI::setAlpha(m_spiritCannonRightBeamTransform2D, 1.0f);
+			Transform2DAPI::setScale(m_spiritCannonRightBeamTransform2D, Vector2(1.0f, 1.0f));
+		}
+	}
+
+	// Expand to firing width
+	setSpiritCannonSize(m_spiritCannonBeamLength, m_spiritCannonFireBaseWidth);
+
+	// Firing image - normal local scale
+	Transform2DAPI::setScale(m_spiritCannonUIBeamTransform2D, Vector2(1.0f, 1.0f));
 }
 
 void AelorinUI::cancelSpiritCannon()
@@ -441,9 +615,7 @@ void AelorinUI::showGraspOfTheDeadUI(const Vector3& center, float radius, float 
 {
 	if (!m_graspOfTheDeadUICanvasTransform ||
 		!m_graspOfTheDeadUIContainerTransform2D ||
-		!m_graspOfTheDeadUIBackgroundTransform2D ||
-		!m_graspOfTheDeadUIBorderTransform2D ||
-		!m_graspOfTheDeadUIGlowTransform2D)
+		!m_graspOfTheDeadUIBackgroundTransform2D)
 	{
 		return;
 	}
@@ -457,6 +629,7 @@ void AelorinUI::showGraspOfTheDeadUI(const Vector3& center, float radius, float 
 	m_graspOfTheDeadUIActive = true;
 	m_graspOfTheDeadUITimer = 0.0f;
 	m_graspOfTheDeadUIDuration = (std::max)(pullDuration, 0.001f);
+	m_graspPortalRotation = 0.0f;
 
 	GameObjectAPI::setActive(canvasObject, true);
 
@@ -471,14 +644,51 @@ void AelorinUI::showGraspOfTheDeadUI(const Vector3& center, float radius, float 
 	// reset visuals
 	Transform2DAPI::setAlpha(m_graspOfTheDeadUIContainerTransform2D, 1.0f);
 	Transform2DAPI::setAlpha(m_graspOfTheDeadUIBackgroundTransform2D, 1.0f);
-	Transform2DAPI::setAlpha(m_graspOfTheDeadUIBorderTransform2D, 1.0f);
-	Transform2DAPI::setAlpha(m_graspOfTheDeadUIGlowTransform2D, 0.0f);
 
 	// grasp starts at full radius
 	Transform2DAPI::setScale(m_graspOfTheDeadUIBackgroundTransform2D, Vector2(1.0f, 1.0f));
-	Transform2DAPI::setScale(m_graspOfTheDeadUIBorderTransform2D, Vector2(1.0f, 1.0f));
-	Transform2DAPI::setScale(m_graspOfTheDeadUIGlowTransform2D, Vector2(1.0f, 1.0f));
+}
 
+void AelorinUI::showGraspChains(Transform* graspCenter, Transform* lyrielTransform, Transform* deathTransform)
+{
+	if (!graspCenter)
+	{
+		return;
+	}
+
+	m_graspChainCenterTransform = graspCenter;
+	m_graspChainLyrielTransform = lyrielTransform;
+	m_graspChainDeathTransform = deathTransform;
+
+	m_graspChainsActive = true;
+
+	// Lyriel chain
+	if (m_graspLyrielChainCanvasTransform &&
+		m_graspLyrielChainImageTransform2D &&
+		m_graspChainLyrielTransform)
+	{
+		GameObject* canvasObject = ComponentAPI::getOwner(m_graspLyrielChainCanvasTransform);
+		if (canvasObject)
+		{
+			GameObjectAPI::setActive(canvasObject, true);
+		}
+
+		Transform2DAPI::setAlpha(m_graspLyrielChainImageTransform2D, 1.0f);
+	}
+
+	// Death chain
+	if (m_graspDeathChainCanvasTransform &&
+		m_graspDeathChainImageTransform2D &&
+		m_graspChainDeathTransform)
+	{
+		GameObject* canvasObject = ComponentAPI::getOwner(m_graspDeathChainCanvasTransform);
+		if (canvasObject)
+		{
+			GameObjectAPI::setActive(canvasObject, true);
+		}
+
+		Transform2DAPI::setAlpha(m_graspDeathChainImageTransform2D, 1.0f);
+	}
 }
 
 void AelorinUI::cancelGraspOfTheDead()
@@ -486,20 +696,14 @@ void AelorinUI::cancelGraspOfTheDead()
 	hideGraspOfTheDeadUI();
 }
 
-void AelorinUI::showSoulCataclysmUI(const Vector3& center, float radius, Transform* safeZonesRoot, float safeZoneRadius, float channelDuration)
+void AelorinUI::cancelGraspChains()
 {
-	if (!m_soulCataclysmUICanvasTransform ||
-		!m_soulCataclysmUIContainerTransform2D ||
-		!m_soulCataclysmUIBackgroundTransform2D ||
-		!m_soulCataclysmUIBorderTransform2D ||
-		!m_soulCataclysmUIGlowTransform2D ||
-		!safeZonesRoot)
-	{
-		return;
-	}
+	hideGraspChains();
+}
 
-	GameObject* arenaObject = ComponentAPI::getOwner(m_soulCataclysmUICanvasTransform);
-	if (!arenaObject)
+void AelorinUI::showSoulCataclysmUI(Transform* safeZonesRoot, float safeZoneRadius, float channelDuration)
+{
+	if (!safeZonesRoot)
 	{
 		return;
 	}
@@ -511,21 +715,15 @@ void AelorinUI::showSoulCataclysmUI(const Vector3& center, float radius, Transfo
 	m_soulCataclysmUITimer = 0.0f;
 	m_soulCataclysmUIChannelDuration = (std::max)(channelDuration, 0.001f);
 
-	// arena
-	GameObjectAPI::setActive(arenaObject, true);
-
-	Vector3 arenaPosition = center;
-	arenaPosition.y += 0.05f;
-
-	TransformAPI::setGlobalPosition(m_soulCataclysmUICanvasTransform, arenaPosition);
-	TransformAPI::setGlobalRotationEuler(m_soulCataclysmUICanvasTransform, Vector3(90.0f, 0.0f, 0.0f));
-
-	setSoulCataclysmArenaRadius(radius);
-
-	Transform2DAPI::setAlpha(m_soulCataclysmUIContainerTransform2D, 1.0f);
-	Transform2DAPI::setAlpha(m_soulCataclysmUIBackgroundTransform2D, 0.25f);
-	Transform2DAPI::setAlpha(m_soulCataclysmUIBorderTransform2D, 1.0f);
-	Transform2DAPI::setAlpha(m_soulCataclysmUIGlowTransform2D, 0.0f);
+	// warning text
+	if (m_soulCataclysmWarningTextCanvasTransform)
+	{
+		GameObject* canvasObject = ComponentAPI::getOwner(m_soulCataclysmWarningTextCanvasTransform);
+		if (canvasObject)
+		{
+			GameObjectAPI::setActive(canvasObject, true);
+		}
+	}
 
 	// safe zones
 	const int safeZoneCount = TransformAPI::getChildCount(safeZonesRoot);
@@ -1114,16 +1312,17 @@ void AelorinUI::updateSpiritCannonUI(float deltaTime)
 
 	if (!m_spiritCannonOriginTransform ||
 		!m_spiritCannonUICanvasTransform ||
-		!m_spiritCannonUIBackgroundTransform2D ||
-		!m_spiritCannonUIGlowTransform2D)
+		!m_spiritCannonUIContainerTransform2D ||
+		!m_spiritCannonUIWarningTransform2D ||
+		!m_spiritCannonUIBeamTransform2D)
 	{
 		hideSpiritCannonUI();
 		return;
 	}
 
-	const Vector3 origin = TransformAPI::getGlobalPosition(m_spiritCannonOriginTransform);
-	Vector3 direction = m_spiritCannonAimDirection;
-	
+	Vector3 direction =	m_spiritCannonAimDirection;
+	direction.y = 0.0f;
+
 	if (direction.LengthSquared() <= 0.00001f)
 	{
 		return;
@@ -1131,74 +1330,54 @@ void AelorinUI::updateSpiritCannonUI(float deltaTime)
 
 	direction.Normalize();
 
-	Vector3 uiPosition = origin + direction * (m_spiritCannonBeamLength * 0.5f);
-	uiPosition.y += 0.05f;
+	const Vector3 origin = TransformAPI::getGlobalPosition(m_spiritCannonOriginTransform);
 
-	TransformAPI::setGlobalPosition(m_spiritCannonUICanvasTransform, uiPosition);
+	// Position the beam in the middle of its total length
+	Vector3 beamPosition = origin +	direction * (m_spiritCannonBeamLength * 0.5f);
+	beamPosition.y += m_spiritCannonHeightOffset;
 
+	TransformAPI::setGlobalPosition(m_spiritCannonUICanvasTransform, beamPosition);
+
+	// Rotate the beam along the current aim direction
 	constexpr float radiansToDegrees = 180.0f / 3.14159265f;
+
 	const float angleDegrees = std::atan2(direction.z, direction.x) * radiansToDegrees;
 
-	TransformAPI::setGlobalRotationEuler(m_spiritCannonUICanvasTransform, Vector3(90.0f, 0.0f, angleDegrees));
+	TransformAPI::setGlobalRotationEuler(m_spiritCannonUICanvasTransform,Vector3(90.0f, 0.0f, angleDegrees));
 
-	// charge
-	if (m_spiritCannonUICharging)
-	{
-		m_spiritCannonUITimer += deltaTime;
-
-		const float t = std::clamp(m_spiritCannonUITimer / m_spiritCannonUIChargeDuration, 0.0f, 1.0f);
-		const float easedT = MathAPI::evaluateEasing(MathAPI::EasingType::EaseInQuad, t);
-
-		Transform2DAPI::setAlpha(m_spiritCannonUIBackgroundTransform2D, easedT);
-
-		if (t >= 1.0f)
-		{
-			m_spiritCannonUICharging = false;
-			playSpiritCannonImpactUI();
-		}
-	}
-
-	// impact
-	if (m_spiritCannonImpactUIPlaying)
-	{
-		m_spiritCannonImpactUITimer += deltaTime;
-
-		const float impactT = std::clamp(m_spiritCannonImpactUITimer / m_spiritCannonUIImpactFadeDuration, 0.0f, 1.0f);
-		const float fadeAlpha =	1.0f - MathAPI::evaluateEasing(MathAPI::EasingType::EaseOutQuad, impactT);
-
-		Transform2DAPI::setAlpha(m_spiritCannonUIGlowTransform2D, fadeAlpha);
-
-		if (impactT >= 1.0f)
-		{
-			m_spiritCannonImpactUIPlaying = false;
-			m_spiritCannonImpactUITimer = 0.0f;
-
-			Transform2DAPI::setAlpha(m_spiritCannonUIGlowTransform2D, 0.0f);
-
-			if (!m_spiritCannonUICharging)
-			{
-				hideSpiritCannonUI();
-				return;
-			}
-		}
-	}
-}
-
-void AelorinUI::playSpiritCannonImpactUI()
-{
-	if (!m_spiritCannonUIBackgroundTransform2D || !m_spiritCannonUIGlowTransform2D)
+	if (!m_spiritCannonUIFiring)
 	{
 		return;
 	}
 
-	// shot fired -> reset charge
-	Transform2DAPI::setAlpha(m_spiritCannonUIBackgroundTransform2D, 0.0f);
+	// Firing Beam
 
-	// flash
-	m_spiritCannonImpactUIPlaying = true;
-	m_spiritCannonImpactUITimer = 0.0f;
+	m_spiritCannonFireTimer += deltaTime;
 
-	Transform2DAPI::setAlpha(m_spiritCannonUIGlowTransform2D, 1.0f);
+	const float pulse =	1.0f + std::sin(m_spiritCannonFireTimer * m_spiritCannonPulseSpeed) * m_spiritCannonPulseAmount;
+	const float currentWidth = m_spiritCannonFireBaseWidth * pulse;
+
+	setSpiritCannonSize(m_spiritCannonBeamLength, currentWidth);
+
+	if (m_spiritCannonPhase2)
+	{
+		const float sideWidth = m_spiritCannonSideFireBaseWidth * pulse;
+
+		if (m_spiritCannonLeftContainerTransform2D)
+		{
+			Transform2DAPI::setScale(m_spiritCannonLeftContainerTransform2D, Vector2(m_spiritCannonBeamLength, sideWidth));
+		}
+
+		if (m_spiritCannonRightContainerTransform2D)
+		{
+			Transform2DAPI::setScale(m_spiritCannonRightContainerTransform2D, Vector2(m_spiritCannonBeamLength, sideWidth));
+		}
+	}
+
+	if (m_spiritCannonFireTimer >= m_spiritCannonFireDuration)
+	{
+		hideSpiritCannonUI();
+	}
 }
 
 void AelorinUI::hideSpiritCannonUI()
@@ -1212,16 +1391,66 @@ void AelorinUI::hideSpiritCannonUI()
 		}
 	}
 
+	if (m_spiritCannonUIWarningTransform2D)
+	{
+		Transform2DAPI::setAlpha(m_spiritCannonUIWarningTransform2D, 0.0f);
+		Transform2DAPI::setScale(m_spiritCannonUIWarningTransform2D, Vector2(1.0f, 1.0f));
+	}
+
+	if (m_spiritCannonUIBeamTransform2D)
+	{
+		Transform2DAPI::setAlpha(m_spiritCannonUIBeamTransform2D, 0.0f);
+		Transform2DAPI::setScale(m_spiritCannonUIBeamTransform2D, Vector2(1.0f, 1.0f));
+	}
+
+	if (m_spiritCannonLeftContainerTransform2D)
+	{
+		Transform2DAPI::setAlpha(m_spiritCannonLeftContainerTransform2D, 0.0f);
+	}
+
+	if (m_spiritCannonRightContainerTransform2D)
+	{
+		Transform2DAPI::setAlpha(m_spiritCannonRightContainerTransform2D, 0.0f);
+	}
+
+	if (m_spiritCannonLeftWarningTransform2D)
+	{
+		Transform2DAPI::setAlpha(m_spiritCannonLeftWarningTransform2D, 0.0f);
+		Transform2DAPI::setScale(m_spiritCannonLeftWarningTransform2D, Vector2(1.0f, 1.0f));
+	}
+
+	if (m_spiritCannonLeftBeamTransform2D)
+	{
+		Transform2DAPI::setAlpha(m_spiritCannonLeftBeamTransform2D, 0.0f);
+		Transform2DAPI::setScale(m_spiritCannonLeftBeamTransform2D, Vector2(1.0f, 1.0f));
+	}
+
+	if (m_spiritCannonRightWarningTransform2D)
+	{
+		Transform2DAPI::setAlpha(m_spiritCannonRightWarningTransform2D, 0.0f);
+		Transform2DAPI::setScale(m_spiritCannonRightWarningTransform2D, Vector2(1.0f, 1.0f));
+	}
+
+	if (m_spiritCannonRightBeamTransform2D)
+	{
+		Transform2DAPI::setAlpha(m_spiritCannonRightBeamTransform2D, 0.0f);
+		Transform2DAPI::setScale(m_spiritCannonRightBeamTransform2D, Vector2(1.0f, 1.0f));
+	}
+
 	m_spiritCannonOriginTransform = nullptr;
 	m_spiritCannonAimDirection = Vector3::Zero;
+
 	m_spiritCannonUIActive = false;
-	m_spiritCannonUICharging = false;
-	m_spiritCannonImpactUIPlaying = false;
-	m_spiritCannonUITimer = 0.0f;
-	m_spiritCannonUIChargeDuration = 0.0f;
+	m_spiritCannonUIFiring = false;
+	m_spiritCannonPhase2 = false;
+
 	m_spiritCannonBeamLength = 0.0f;
-	m_spiritCannonBeamWidth = 0.0f;
-	m_spiritCannonImpactUITimer = 0.0f;
+	m_spiritCannonFireBaseWidth = 0.0f;
+	m_spiritCannonSideFireBaseWidth = 0.0f;
+	m_spiritCannonFireTimer = 0.0f;
+	m_spiritCannonFireDuration = 0.0f;
+	m_spiritCannonSideAngle = 0.0f;
+	m_spiritCannonSideWidth = 0.0f;
 }
 
 void AelorinUI::setSpiritCannonSize(float beamLength, float beamWidth)
@@ -1261,7 +1490,8 @@ void AelorinUI::updateGraspOfTheDeadUI(float deltaTime)
 		return;
 	}
 
-	if (!m_graspOfTheDeadUIBackgroundTransform2D ||	!m_graspOfTheDeadUIGlowTransform2D)
+	if (!m_graspOfTheDeadUICanvasTransform ||
+		!m_graspOfTheDeadUIBackgroundTransform2D)
 	{
 		hideGraspOfTheDeadUI();
 		return;
@@ -1270,13 +1500,20 @@ void AelorinUI::updateGraspOfTheDeadUI(float deltaTime)
 	m_graspOfTheDeadUITimer += deltaTime;
 
 	const float t =	std::clamp(m_graspOfTheDeadUITimer / m_graspOfTheDeadUIDuration, 0.0f, 1.0f);
-	const float easedT = MathAPI::evaluateEasing(MathAPI::EasingType::EaseInQuad, t);
-	const float pullScale =	1.0f - 0.9f * easedT;
 
-	Transform2DAPI::setScale(m_graspOfTheDeadUIBackgroundTransform2D, Vector2(pullScale, pullScale));
-	Transform2DAPI::setScale(m_graspOfTheDeadUIBorderTransform2D, Vector2(pullScale, pullScale));
-	Transform2DAPI::setScale(m_graspOfTheDeadUIGlowTransform2D, Vector2(pullScale, pullScale));
-	Transform2DAPI::setAlpha(m_graspOfTheDeadUIGlowTransform2D,	easedT);
+	// Rotation
+	m_graspPortalRotation += m_graspPortalRotationSpeed * deltaTime;
+	if (m_graspPortalRotation >= 360.0f)
+	{
+		m_graspPortalRotation -= 360.0f;
+	}
+
+	TransformAPI::setGlobalRotationEuler(m_graspOfTheDeadUICanvasTransform, Vector3(90.0f, 0.0f, m_graspPortalRotation));
+
+	// Subtle pulse
+	const float pulse = 1.0f + std::sin(m_graspOfTheDeadUITimer * m_graspPortalPulseSpeed) * m_graspPortalPulseAmount;
+
+	Transform2DAPI::setScale(m_graspOfTheDeadUIBackgroundTransform2D, Vector2(pulse, pulse));
 
 	if (t >= 1.0f)
 	{
@@ -1299,10 +1536,124 @@ void AelorinUI::hideGraspOfTheDeadUI()
 	m_graspOfTheDeadUITimer = 0.0f;
 	m_graspOfTheDeadUIDuration = 0.0f;
 
-	if (m_graspOfTheDeadUIGlowTransform2D)
+}
+
+void AelorinUI::updateGraspChains()
+{
+	if (!m_graspChainsActive)
 	{
-		Transform2DAPI::setAlpha(m_graspOfTheDeadUIGlowTransform2D,	0.0f);
+		return;
 	}
+
+	if (!m_graspChainCenterTransform)
+	{
+		hideGraspChains();
+		return;
+	}
+
+	// Lyriel
+	updateGraspChain(
+		m_graspLyrielChainCanvasTransform,
+		m_graspLyrielChainImageTransform2D,
+		m_graspChainLyrielTransform
+	);
+
+	// Death
+	updateGraspChain(
+		m_graspDeathChainCanvasTransform,
+		m_graspDeathChainImageTransform2D,
+		m_graspChainDeathTransform
+	);
+}
+
+void AelorinUI::updateGraspChain(Transform* canvasTransform, Transform2D* chainTransform2D, Transform* targetTransform)
+{
+	if (!m_graspChainCenterTransform ||
+		!canvasTransform ||
+		!chainTransform2D ||
+		!targetTransform)
+	{
+		return;
+	}
+
+	const Vector3 centerPosition = TransformAPI::getGlobalPosition(m_graspChainCenterTransform);
+	const Vector3 targetPosition = TransformAPI::getGlobalPosition(targetTransform);
+	Vector3 direction = targetPosition - centerPosition;
+
+	// Chain is on the XZ plane
+	direction.y = 0.0f;
+
+	const float distance = direction.Length();
+	if (distance <= 0.0001f)
+	{
+		return;
+	}
+
+	direction.Normalize();
+
+	// Position
+	Vector3 chainPosition = centerPosition + direction * (distance * 0.5f);
+	chainPosition.y += m_graspChainHeightOffset;
+
+	TransformAPI::setGlobalPosition(canvasTransform, chainPosition);
+
+	// Rotation
+	constexpr float radiansToDegrees = 180.0f / 3.14159265f;
+	const float angleDegrees = std::atan2(direction.z, direction.x) * radiansToDegrees;
+
+	TransformAPI::setGlobalRotationEuler(canvasTransform, Vector3(90.0f, 0.0f, angleDegrees));
+
+	// Length
+	const Vector2 baseSize = Transform2DAPI::getBaseSize(chainTransform2D);
+	if (baseSize.x <= 0.001f ||
+		baseSize.y <= 0.001f)
+	{
+		return;
+	}
+
+	const float desiredLengthUI = distance * 100.0f;
+	const float desiredWidthUI = m_graspChainWidth * 100.0f;
+	const float lengthScale = desiredLengthUI / baseSize.x;
+	const float widthScale = desiredWidthUI / baseSize.y;
+
+	Transform2DAPI::setScale(chainTransform2D, Vector2(lengthScale, widthScale));
+}
+
+void AelorinUI::hideGraspChains()
+{
+	if (m_graspLyrielChainCanvasTransform)
+	{
+		GameObject* canvasObject = ComponentAPI::getOwner(m_graspLyrielChainCanvasTransform);
+		if (canvasObject)
+		{
+			GameObjectAPI::setActive(canvasObject, false);
+		}
+	}
+
+	if (m_graspDeathChainCanvasTransform)
+	{
+		GameObject* canvasObject = ComponentAPI::getOwner(m_graspDeathChainCanvasTransform);
+		if (canvasObject)
+		{
+			GameObjectAPI::setActive(canvasObject, false);
+		}
+	}
+
+	if (m_graspLyrielChainImageTransform2D)
+	{
+		Transform2DAPI::setScale(m_graspLyrielChainImageTransform2D, Vector2(1.0f, 1.0f));
+	}
+
+	if (m_graspDeathChainImageTransform2D)
+	{
+		Transform2DAPI::setScale(m_graspDeathChainImageTransform2D, Vector2(1.0f, 1.0f));
+	}
+
+	m_graspChainCenterTransform = nullptr;
+	m_graspChainLyrielTransform = nullptr;
+	m_graspChainDeathTransform = nullptr;
+
+	m_graspChainsActive = false;
 }
 
 IMPLEMENT_SCRIPT(AelorinUI)
@@ -1414,24 +1765,19 @@ void AelorinUI::setupSoulCataclysmSafeZonesUI()
 
 void AelorinUI::hideSoulCataclysmUI()
 {
-	if (m_soulCataclysmUICanvasTransform)
-	{
-		GameObject* arenaObject = ComponentAPI::getOwner(m_soulCataclysmUICanvasTransform);
-		if (arenaObject)
-		{
-			GameObjectAPI::setActive(arenaObject, false);
-		}
-	}
-
 	hideAllSoulCataclysmSafeZonesUI();
 
 	m_soulCataclysmUIActive = false;
 	m_soulCataclysmUITimer = 0.0f;
 	m_soulCataclysmUIChannelDuration = 0.0f;
 
-	if (m_soulCataclysmUIGlowTransform2D)
+	if (m_soulCataclysmWarningTextCanvasTransform)
 	{
-		Transform2DAPI::setAlpha(m_soulCataclysmUIGlowTransform2D, 0.0f);
+		GameObject* canvasObject = ComponentAPI::getOwner(m_soulCataclysmWarningTextCanvasTransform);
+		if (canvasObject)
+		{
+			GameObjectAPI::setActive(canvasObject, false);
+		}
 	}
 }
 
@@ -1441,25 +1787,6 @@ void AelorinUI::hideAllSoulCataclysmSafeZonesUI()
 	{
 		hideSoulCataclysmSafeZoneUISlot(slot);
 	}
-}
-
-void AelorinUI::setSoulCataclysmArenaRadius(float radius)
-{
-	if (!m_soulCataclysmUIContainerTransform2D)
-	{
-		return;
-	}
-
-	const float baseDiameterUI = Transform2DAPI::getBaseSize(m_soulCataclysmUIContainerTransform2D).x;
-	if (baseDiameterUI <= 0.001f)
-	{
-		return;
-	}
-
-	const float desiredDiameterUI = radius * 2.0f * 100.0f;
-	const float scale = desiredDiameterUI / baseDiameterUI;
-
-	Transform2DAPI::setScale(m_soulCataclysmUIContainerTransform2D, Vector2(scale, scale));
 }
 
 void AelorinUI::setSoulCataclysmSafeZoneRadius(SoulCataclysmSafeZoneUISlot& slot, float radius)
@@ -1488,24 +1815,20 @@ void AelorinUI::updateSoulCataclysmUI(float deltaTime)
 		return;
 	}
 
-	if (!m_soulCataclysmUIBackgroundTransform2D || !m_soulCataclysmUIGlowTransform2D)
-	{
-		hideSoulCataclysmUI();
-		return;
-	}
-
 	m_soulCataclysmUITimer += deltaTime;
 
+	if (m_soulCataclysmTextContentTransform2D)
+	{
+		const float blinkAlpha = 0.5f + 0.5f * cosf(
+				m_soulCataclysmUITimer *
+				m_soulCataclysmWarningBlinkSpeed *
+				MathAPI::TWO_PI
+			);
+
+		Transform2DAPI::setAlpha(m_soulCataclysmTextContentTransform2D,	blinkAlpha);
+	}
+
 	const float t = std::clamp(m_soulCataclysmUITimer / m_soulCataclysmUIChannelDuration, 0.0f, 1.0f);
-	const float easedT = MathAPI::evaluateEasing(MathAPI::EasingType::EaseInQuad, t);
-
-	// stronger danger area as cataclysm nears execution
-	const float backgroundAlpha = 0.25f + 0.55f * easedT;
-
-	Transform2DAPI::setAlpha(m_soulCataclysmUIBackgroundTransform2D, backgroundAlpha);
-
-	// impact
-	Transform2DAPI::setAlpha(m_soulCataclysmUIGlowTransform2D, easedT);
 
 	if (t >= 1.0f)
 	{

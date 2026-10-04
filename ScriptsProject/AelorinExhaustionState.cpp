@@ -40,6 +40,11 @@ void AelorinExhaustionState::OnStateEnter()
 		return;
 	}
 
+	if (m_controller && m_controller->isPhase2())
+	{
+		changePhase(ExhaustionPhase::Loop);
+	}
+
 	Debug::log("[AelorinExhaustionState] ENTER");
 }
 
@@ -63,12 +68,28 @@ void AelorinExhaustionState::OnStateUpdate()
 
 	m_stateTimer += Time::getDeltaTime();
 
-	if (m_stateTimer < config->m_furyExhaustionDuration)
+	if (m_phase == ExhaustionPhase::Loop)
 	{
+		if (m_stateTimer < config->m_furyExhaustionDuration)
+		{
+			return;
+		}
+
+		changePhase(ExhaustionPhase::Transition);
 		return;
 	}
 
-	finishExhaustion();
+	if (m_phase == ExhaustionPhase::Transition)
+	{
+		constexpr float transitionDuration = 1.33f;
+
+		if (m_stateTimer < transitionDuration)
+		{
+			return;
+		}
+
+		finishExhaustion();
+	}
 }
 
 void AelorinExhaustionState::OnStateExit()
@@ -77,6 +98,31 @@ void AelorinExhaustionState::OnStateExit()
 	m_completed = false;
 
 	Debug::log("[AelorinExhaustionState] EXIT");
+}
+
+void AelorinExhaustionState::changePhase(ExhaustionPhase phase)
+{
+	m_phase = phase;
+	m_stateTimer = 0.0f;
+
+	if (!m_animation)
+	{
+		return;
+	}
+
+	if (phase == ExhaustionPhase::Loop)
+	{
+		AnimationAPI::playOverrideClip(m_animation, "exhaustloop_phase2", 0.0f, true);
+		AnimationAPI::setPlaybackTime(m_animation, 0.0f);
+		return;
+	}
+
+	if (phase == ExhaustionPhase::Transition)
+	{
+		AnimationAPI::playOverrideClip(m_animation, "exhausttrans_phase2", 0.0f, false);
+		AnimationAPI::setPlaybackTime(m_animation, 0.0f);
+		return;
+	}
 }
 
 void AelorinExhaustionState::finishExhaustion()

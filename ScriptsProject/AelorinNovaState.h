@@ -7,6 +7,7 @@
 
 class AnimationComponent;
 class AelorinUI;
+class AelorinVFX;
 
 class AelorinNovaState : public StateMachineScript
 {
@@ -21,7 +22,7 @@ public:
 
 private:
 	void executeFirstNovaWave();
-	void executeSecondNovaWave();
+	//void executeSecondNovaWave();
 	void executeNovaWave(float radius, float damage);
 	void finishAbility();
 
@@ -29,6 +30,7 @@ private:
 	AelorinBossController* m_controller = nullptr;
 	AnimationComponent* m_animation = nullptr;
 	AelorinUI* m_aelorinUI = nullptr;
+	AelorinVFX* m_vfx = nullptr;
 
 	AelorinAbility m_activeAbility = AelorinAbility::None;
 
@@ -36,7 +38,7 @@ private:
 
 	Vector3 m_novaCenter = Vector3::Zero;
 	bool m_firstWaveApplied = false;
-	bool m_secondWaveApplied = false;
+	//bool m_secondWaveApplied = false;
 	bool m_completed = false;
 
 	bool m_isFuryCast = false;

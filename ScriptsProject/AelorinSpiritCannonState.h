@@ -8,6 +8,7 @@
 class AnimationComponent;
 class AelorinAttackExecutor;
 class AelorinUI;
+class AelorinVFX;
 
 class AelorinSpiritCannonState : public StateMachineScript
 {
@@ -21,15 +22,13 @@ public:
 	void OnStateExit() override;
 
 private:
-	void selectLockedTarget();
+	void selectTarget();
 	bool isValidTarget(Transform* targetTransform) const;
-	void ensureValidLockedTarget();
 
-	void initializeAimDirection();
-	void updateAimDirection(float trackingSpeed);
+	bool lockCurrentTargetPosition();
 
-	void fireBeamShot(float width, float damage, const char* sourceName);
-	
+	void beginShot();
+	void fireShot();
 	void finishAbility();
 
 private:
@@ -37,16 +36,20 @@ private:
 	AelorinAttackExecutor* m_attackExecutor = nullptr;
 	AnimationComponent* m_animation = nullptr;
 	AelorinUI* m_aelorinUI = nullptr;
-
-	Transform* m_aelorinTransform = nullptr;
-	Transform* m_lockedTarget = nullptr;
-	Vector3 m_currentAimDirection = Vector3::Zero;
-
+	AelorinVFX* m_vfx = nullptr;
 	AelorinAbility m_activeAbility = AelorinAbility::None;
 
-	float m_stateTimer = 0.0f;
-	int m_shotCount = 0;
-	bool m_completed = false;
+	Transform* m_aelorinTransform = nullptr;
+	Transform* m_target = nullptr;
 
+	Vector3 m_lockedTargetPosition = Vector3::Zero;
+	Vector3 m_lockedAimDirection = Vector3::Zero;
+
+	float m_stateTimer = 0.0f;
+
+	int m_shotCount = 0;
+
+	bool m_secondShotPrepared = false;
+	bool m_completed = false;
 	bool m_isFuryCast = false;
 };

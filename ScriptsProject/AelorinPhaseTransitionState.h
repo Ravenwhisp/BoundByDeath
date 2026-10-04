@@ -5,6 +5,7 @@
 
 class AelorinBossController;
 class AnimationComponent;
+class AelorinVFX;
 
 class AelorinPhaseTransitionState : public StateMachineScript
 {
@@ -20,6 +21,7 @@ public:
 private:
 	AelorinBossController* m_controller = nullptr;
 	AnimationComponent* m_animation = nullptr;
+	AelorinVFX* m_vfx = nullptr;
 
 	bool m_phase2Started = false;
 	bool m_cinematicDriven = false;

@@ -12,6 +12,7 @@
 
 #include "AelorinSummonSlot.h"
 #include "Transform2D.h"
+#include "AelorinVFX.h"
 
 #include <vector>
 #include <algorithm>
@@ -54,6 +55,7 @@ void AelorinBossController::Start()
 	m_aelorinDetectionAggro = GameObjectAPI::findScript<AelorinDetectionAggro>(getOwner());
 	m_damageable = GameObjectAPI::findScript<AelorinDamageable>(getOwner());
 	m_attackExecutor = GameObjectAPI::findScript<AelorinAttackExecutor>(getOwner());
+	m_vfx = GameObjectAPI::findScript<AelorinVFX>(getOwner());
 
 	Transform* phase1Model = TransformAPI::findChildByName(getOwner()->GetTransform(), "Phase1");
 	if (!phase1Model)
@@ -85,6 +87,11 @@ void AelorinBossController::Start()
 	if (!m_attackExecutor)
 	{
 		Debug::error("[AelorinBossController] AelorinAttackExecutor script not found!");
+	}
+
+	if (!m_attackExecutor)
+	{
+		Debug::error("[AelorinBossController] AelorinVFX script not found!");
 	}
 
 	if (!m_phase1GameObject)
@@ -193,6 +200,46 @@ float AelorinBossController::getClosestPlayerDistance() const
 	const float minDistance = (std::min)(m_aelorinDetectionAggro->getDistanceToLyriel(), m_aelorinDetectionAggro->getDistanceToDeath());
 	
 	return minDistance;
+}
+
+void AelorinBossController::facePositionInstant(const Vector3& worldPosition)
+{
+	Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
+
+	if (!ownerTransform)
+	{
+		return;
+	}
+
+	const Vector3 ownerPosition = TransformAPI::getGlobalPosition(ownerTransform);
+
+	Vector3 direction = worldPosition - ownerPosition;
+	direction.y = 0.0f;
+
+	if (direction.LengthSquared() <= 0.00001f)
+	{
+		return;
+	}
+
+	direction.Normalize();
+
+	constexpr float radiansToDegrees = 180.0f / 3.14159265f;
+
+	const float desiredYawRadians = std::atan2(direction.x, direction.z);
+	const float desiredYawDegrees = desiredYawRadians * radiansToDegrees;
+
+	Vector3 currentEuler = TransformAPI::getGlobalEulerDegrees(ownerTransform);
+	const float modelYawOffset = isPhase2() ? -90.0f : 90.0f;
+	float correctedYaw = desiredYawDegrees - modelYawOffset;
+
+	if (isPhase2())
+	{
+		correctedYaw += 180.0f;
+	}
+
+	currentEuler.y = correctedYaw;
+
+	TransformAPI::setGlobalRotationEuler(ownerTransform, currentEuler);
 }
 
 AelorinAbility AelorinBossController::chooseNextAbility()
@@ -313,6 +360,11 @@ void AelorinBossController::updateEncounter()
 		if (m_aelorinDetectionAggro->startEncounter())
 		{
 			m_hasStartedEncounter = true;
+
+			if (m_damageable)
+			{
+				m_damageable->showHealthBar();
+			}
 		}
 	}
 }
@@ -367,6 +419,11 @@ void AelorinBossController::beginPhase2()
 	GameObjectAPI::setActive(m_phase2GameObject, true);
 
 	setPhase(Phase::Phase2);
+
+	if (m_vfx)
+	{
+		m_vfx->startPhase2Aura();
+	}
 
 	applyShadowMarkPlacement();
 
@@ -593,6 +650,12 @@ void AelorinBossController::beginFury()
 
 	m_furyRequested = false;
 	m_furyActive = true;
+
+	if (m_damageable)
+	{
+		m_damageable->setFuryHealthBarVisual(true);
+	}
+
 	m_furyCastsCompleted = 0;
 	m_soulCataclysmTriggered = false;
 
@@ -618,6 +681,12 @@ void AelorinBossController::finishFury()
 
 	m_furyRequested = false;
 	m_furyActive = false;
+
+	if (m_damageable)
+	{
+		m_damageable->setFuryHealthBarVisual(false);
+	}
+
 	m_furyCastsCompleted = 0;
 	m_soulCataclysmTriggered = false;
 

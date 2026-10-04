@@ -7,6 +7,7 @@
 
 class AnimationComponent;
 class AelorinAttackExecutor;
+class AelorinVFX;
 
 class AelorinTeleportState : public StateMachineScript
 {
@@ -20,6 +21,13 @@ public:
 	void OnStateExit() override;
 
 private:
+	enum class TeleportPhase
+	{
+		TeleportIn,
+		TeleportOut
+	};
+
+	void changePhase(TeleportPhase phase);
 	void executeTeleport();
 	void finishAbility();
 
@@ -27,15 +35,15 @@ private:
 	AelorinBossController* m_controller = nullptr;
 	AelorinAttackExecutor* m_attackExecutor = nullptr;
 	AnimationComponent* m_animation = nullptr;
+	AelorinVFX* m_vfx = nullptr;
 
 	Transform* m_aelorinTransform = nullptr;
 	Transform* m_crowdingPlayer = nullptr;
 
 	AelorinAbility m_activeAbility = AelorinAbility::None;
 
-	float m_stateTimer = 0.0f;
-	float m_recoveryTimer = 0.0f;
+	TeleportPhase m_phase = TeleportPhase::TeleportIn;
 
-	bool m_teleportExecuted = false;
+	float m_phaseTimer = 0.0f;
 	bool m_completed = false;
 };

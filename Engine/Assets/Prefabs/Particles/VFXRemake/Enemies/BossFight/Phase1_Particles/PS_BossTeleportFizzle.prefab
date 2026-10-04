@@ -1,0 +1,155 @@
+{
+    "Version": 2,
+    "sourcePath": "Assets\\Prefabs\\Particles\\VFXRemake\\Enemies\\BossFight\\Phase1_Particles\\PS_BossTeleportFizzle.prefab",
+    "Name": "PS_BossTeleportFizzle",
+    "Active": true,
+    "Static": false,
+    "Layer": "DEFAULT",
+    "Tag": "DEFAULT",
+    "Transform": {
+        "Position": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "Rotation": [
+            1.0,
+            -1.1920930376163597e-7,
+            -1.1920930376163597e-7,
+            1.4210858103333793e-14
+        ],
+        "Scale": [
+            1.0,
+            1.0000677108764648,
+            1.0000677108764648
+        ]
+    },
+    "Components": [
+        {
+            "UID": 10552495810420717630,
+            "ComponentType": "PARTICLE_SYSTEM",
+            "Active": true,
+            "TextureAssetId": {
+                "uid": 1608378233883279278,
+                "libId": "16521b7b6f153fae76fb9c40b2e84c2b",
+                "type": "TEXTURE"
+            },
+            "ParticleEmitters": [
+                {
+                    "Modules": [
+                        {
+                            "ModuleType": 2,
+                            "Looping": false,
+                            "Duration": 0.009999999776482582,
+                            "RateOverTime": 840.0,
+                            "RateOverDistance": 0.0
+                        },
+                        {
+                            "ModuleType": 4,
+                            "LifeTimeType": "CONSTANT",
+                            "StartLifeTime": 0.5
+                        },
+                        {
+                            "ModuleType": 1,
+                            "ShapeType": "CONE",
+                            "Radius": 0.5,
+                            "RadiusThickness": 1.0,
+                            "RadiusScale": 1.0
+                        },
+                        {
+                            "ModuleType": 3,
+                            "ColorOverTime": [
+                                {
+                                    "IsAlphaMark": false,
+                                    "Position": 0.0,
+                                    "Color": [
+                                        1.0,
+                                        0.0,
+                                        1.0
+                                    ]
+                                },
+                                {
+                                    "IsAlphaMark": false,
+                                    "Position": 1.0,
+                                    "Color": [
+                                        1.0,
+                                        1.0,
+                                        0.0
+                                    ]
+                                }
+                            ],
+                            "ColorCurve": [
+                                0.0,
+                                0.0,
+                                1.0,
+                                1.0
+                            ],
+                            "HDRColor": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "HDRIntensity": 0.0
+                        },
+                        {
+                            "ModuleType": 5,
+                            "VelocityType": "RANDOM_BETWEEN_TWO",
+                            "InitialVelocity": 0.5,
+                            "InitialVelocity2": 0.699999988079071,
+                            "Gravity": -0.10000000149011612
+                        },
+                        {
+                            "ModuleType": 6,
+                            "StartScaleType": "RANDOM_BETWEEN_TWO",
+                            "StartScale": [
+                                0.05999999865889549,
+                                0.05999999865889549,
+                                0.0
+                            ],
+                            "StartScale2": [
+                                0.07999999821186066,
+                                0.07999999821186066,
+                                0.0
+                            ],
+                            "ChangeSizeOverTime": true,
+                            "EndScaleType": "RANDOM_BETWEEN_TWO",
+                            "EndScale": [
+                                0.014999999664723873,
+                                0.014999999664723873,
+                                0.0
+                            ],
+                            "EndScale2": [
+                                0.02500000037252903,
+                                0.02500000037252903,
+                                0.0
+                            ]
+                        },
+                        {
+                            "ModuleType": 7,
+                            "RotationType": "CONSTANT",
+                            "StartRotation": 0.0,
+                            "VelocityType": "CONSTANT",
+                            "AngularVelocity": 0.0,
+                            "FlipRotation": 0.0
+                        },
+                        {
+                            "ModuleType": 8,
+                            "TileRows": 1,
+                            "TileColumns": 1,
+                            "FPS": 0.0,
+                            "StartFrameType": "CONSTANT",
+                            "StartFrame": 0.0
+                        },
+                        {
+                            "ModuleType": 9,
+                            "RenderMode": "BILLBOARD",
+                            "RenderLayer": 0,
+                            "BlendMode": "ALPHA"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "Children": []
+}

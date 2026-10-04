@@ -33,6 +33,7 @@ public:
 
 	// Spirit Cannon
 	bool m_drawSpiritCannon = true;
+	bool m_drawSpiritCannonPhase2 = true;
 
 	// Grasp of the Dead
 	bool m_drawGraspCenter = true;

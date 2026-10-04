@@ -952,4 +952,12 @@ void EnemyDamageable::bindHealthBarUI(Transform2D* container, UISlider* slider1,
 	setHealthBarAlpha(m_healthBarVisible ? 1.0f : 0.0f);
 }
 
+void EnemyDamageable::showHealthBarImmediately()
+{
+	setHealthBarAlpha(1.0f);
+
+	m_healthBarFadeTimer = m_healthBarFadeTime;
+	m_healthBarFadeActive = false;
+}
+
 IMPLEMENT_SCRIPT(EnemyDamageable)
