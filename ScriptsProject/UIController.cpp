@@ -14,7 +14,11 @@ UIController::UIController(GameObject* owner): Script(owner) {}
 
 void UIController::Start()
 {
-	m_menuLightsGO = ComponentAPI::getOwner(m_menuLights.getReferencedComponent());
+	Transform* menuLightsTransform = m_menuLights.getReferencedComponent();
+	if (menuLightsTransform)
+	{
+		m_menuLightsGO = ComponentAPI::getOwner(menuLightsTransform);
+	}
 	m_blackBgTransform = m_blackBg.getReferencedComponent();
 }
 void UIController::Update()
