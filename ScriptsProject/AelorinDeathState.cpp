@@ -59,7 +59,10 @@ void AelorinDeathState::OnStateUpdate()
 		m_animationFinished = true;
 		Debug::log("[AelorinDeathState] Death animation finished.");
 
-		m_controller->onDefeat();
+		if (m_controller)
+		{
+			m_controller->onDefeat();
+		}
 	}
 }
 

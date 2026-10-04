@@ -3,6 +3,7 @@
 
 #include "AelorinBossController.h"
 #include "AelorinVFX.h"
+#include "AelorinCinematics.h"
 
 AelorinPhaseTransitionState::AelorinPhaseTransitionState(GameObject* owner)
 	: StateMachineScript(owner)
@@ -25,6 +26,7 @@ void AelorinPhaseTransitionState::OnStateEnter()
 	m_vfx = GameObjectAPI::findScript<AelorinVFX>(parentGameObject);
 
 	m_phase2Started = false;
+	m_cinematicDriven = false;
 
 	if (!m_controller)
 	{
@@ -43,6 +45,15 @@ void AelorinPhaseTransitionState::OnStateEnter()
 		m_vfx->playPhase2Transition();
 	}
 
+	// Con cinemática montada, ella lleva el reloj: mueve al boss al centro, lanza el hechizo y
+	// dispara el cambio de modelo tapado por el pilar de almas. Sin cinemática, se espera a que
+	// acabe la animación como siempre.
+	AelorinCinematics* cinematics = GameObjectAPI::findScript<AelorinCinematics>(parentGameObject);
+	if (cinematics)
+	{
+		m_cinematicDriven = cinematics->startPhaseTransition();
+	}
+
 	Debug::log("[AelorinPhaseTransitionState] ENTER");
 }
 
@@ -53,7 +64,7 @@ void AelorinPhaseTransitionState::OnStateUpdate()
 		return;
 	}
 
-	if (m_phase2Started)
+	if (m_phase2Started || m_cinematicDriven)
 	{
 		return;
 	}

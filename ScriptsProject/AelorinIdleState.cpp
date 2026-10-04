@@ -2,6 +2,7 @@
 #include "AelorinIdleState.h"
 
 #include "AelorinBossController.h"
+#include "AelorinCinematics.h"
 
 AelorinIdleState::AelorinIdleState(GameObject* owner)
 	: StateMachineScript(owner)
@@ -20,6 +21,7 @@ void AelorinIdleState::OnStateEnter()
 	GameObject* parentGameObject = ComponentAPI::getOwner(parentTransform);
 
 	m_controller = GameObjectAPI::findScript<AelorinBossController>(parentGameObject);
+	m_cinematics = GameObjectAPI::findScript<AelorinCinematics>(parentGameObject);
 	m_animation = AnimationAPI::getAnimationComponent(getOwner());
 
 	m_decisionTimer = 0.0f;
@@ -46,6 +48,13 @@ void AelorinIdleState::OnStateUpdate()
 	}
 
 	if (!m_controller->hasEncounterStarted())
+	{
+		return;
+	}
+
+	// Ninguna decisión a media cinemática: el golem recién salido no ataca hasta que la cámara
+	// vuelve al jugador.
+	if (m_cinematics && m_cinematics->isPlaying())
 	{
 		return;
 	}
