@@ -1,10 +1,12 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "EnemySound.h"
 
 namespace
 {
-    // Every Paladin/Archer event lives in the Level1 bank (lazy-loaded on level entry).
-    constexpr const char* k_bank = "Level1.bnk";
+    // The engine resolves events against one named bank, so an enemy that shows up in
+    // more than one level has to try each. Level1 first, which is where the enemies that
+    // use the default list live.
+    const char* const k_defaultBanks[] = { "Level1.bnk", "Level2.bnk", "BossLevel.bnk" };
 
     // Minimum gap between hurt one-shots so continuous/overlapping damage can't
     // machine-gun the grunt.
@@ -72,13 +74,42 @@ void EnemySound::Update()
     }
 }
 
+void EnemySound::getCandidateBanks(const char* const*& outBanks, int& outCount) const
+{
+    outBanks = k_defaultBanks;
+    outCount = static_cast<int>(sizeof(k_defaultBanks) / sizeof(k_defaultBanks[0]));
+}
+
 uint32_t EnemySound::postEvent(const char* eventName)
 {
     if (m_source == nullptr || eventName == nullptr)
     {
         return 0;
     }
-    return AudioAPI::postEvent(m_source, k_bank, eventName);
+
+    if (m_resolvedBank != nullptr)
+    {
+        return AudioAPI::postEvent(m_source, m_resolvedBank, eventName);
+    }
+
+    const char* const* banks = nullptr;
+    int bankCount = 0;
+    getCandidateBanks(banks, bankCount);
+
+    for (int i = 0; i < bankCount; ++i)
+    {
+        const uint32_t playingID = AudioAPI::postEvent(m_source, banks[i], eventName);
+        if (playingID != 0)
+        {
+            m_resolvedBank = banks[i];
+            return playingID;
+        }
+    }
+
+    // Unresolved on purpose: the bank may still be loading, so the next post retries.
+    Debug::warn("[EnemySound] '%s' not found in any candidate bank for '%s'.",
+                eventName, GameObjectAPI::getName(getOwner()));
+    return 0;
 }
 
 void EnemySound::postEventDelayed(const char* eventName, float delay)

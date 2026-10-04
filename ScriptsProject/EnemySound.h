@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "ScriptAPI.h"
 
@@ -37,6 +37,11 @@ public:
     virtual void stopAllLoops();
 
 protected:
+    // Banks this enemy's events can live in, tried in order on the first post and then
+    // remembered. An enemy that appears in several levels, or one summoned by the boss,
+    // finds its events wherever they were packed.
+    virtual void getCandidateBanks(const char* const*& outBanks, int& outCount) const;
+
     // Event-name table — subclasses return string literals (nullptr = no such event).
     virtual const char* evBasicTelegraph() const = 0;
     virtual const char* evBasicImpact()    const = 0;
@@ -49,6 +54,8 @@ protected:
     void     postEventDelayed(const char* eventName, float delay);
 
     ComponentSoundSource* m_source = nullptr;
+
+    const char* m_resolvedBank = nullptr;
 
 private:
     struct PendingEvent
