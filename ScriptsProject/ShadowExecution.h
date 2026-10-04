@@ -17,6 +17,13 @@ struct SpawnedPrefab {
     float lifetimeRemaining;
 };
 
+struct ShadowExecutionHitVfx
+{
+    Vector3 center = Vector3::Zero;
+    float elapsedTime = 0.0f;
+    std::vector<GameObject*> trails;
+};
+
 struct ShadowExecutionPreview
 {
     float damage = 0.0f;
@@ -47,6 +54,15 @@ public:
     AssetReference<ShadowExecutionConfig> m_config;
 
     PrefabRef m_particlePrefab;
+    PrefabRef m_hitTrailPrefab;
+    PrefabRef m_hitTrailConvergencePrefab;
+
+    float m_hitTrailStartRadius = 1.25f;
+    float m_hitTrailStartHeightOffset = 0.15f;
+    float m_hitTrailEndHeightOffset = 2.0f;
+    float m_hitTrailDuration = 0.6f;
+    float m_hitTrailRotationDegrees = 45.0f;
+    float m_hitTrailConvergenceLifetime = 2.0f;
 
 private:
     void setupUI();
@@ -56,6 +72,9 @@ private:
     void updateExecution(float dt);
     void endExecution();
     void applyAoEDamage();
+    void spawnHitTrailVfx(const Vector3& center);
+    void updateHitTrailVfx(float dt);
+    void clearHitTrailVfx();
     void lockPlayers(bool locked);
 
     ShadowExecutionConfig* m_shadowExecutionConfig = nullptr;
@@ -80,6 +99,7 @@ private:
 
     // Lista para trackear las partículas que deben morir tras 1 segundo
     std::vector<SpawnedPrefab> m_temporaryPrefabs;
+    std::vector<ShadowExecutionHitVfx> m_hitTrailEffects;
 
 public:
     ComponentRef<UISlider> m_reaperGaugeBar;

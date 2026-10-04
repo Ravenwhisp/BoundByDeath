@@ -1,43 +1,138 @@
 {
-    "sourcePath": "Assets/Prefabs/Projectiles/ArcherArrow.prefab",
+    "Version": 2,
+    "sourcePath": "Assets\\Prefabs\\Projectiles\\ArcherArrow.prefab",
     "Name": "ArcherArrow",
-    "Active": false,
+    "Active": true,
     "Static": false,
     "Layer": "DEFAULT",
     "Tag": "DEFAULT",
     "Transform": {
-        "Position": [0.0, 0.0, 0.0],
-        "Rotation": [0.0, 0.0, 0.0, 1.0],
-        "Scale": [2.0, 2.0, 1.0]
+        "Position": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "Rotation": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ],
+        "Scale": [
+            2.0,
+            2.0,
+            1.0
+        ]
     },
     "Components": [
         {
-            "UID": 3812047193847263901,
+            "UID": 10776107755895101854,
             "ComponentType": "MODEL",
             "Active": true,
             "MeshAssetId": {
                 "uid": 3818099652335832123,
-                "libId": "4566b749874ada313b34182fb9b34cd5",
+                "libId": "d27b3af32329d9da3d584f2ae8d03c93",
                 "type": "MESH"
             },
-            "SkinAssetId": { "uid": 0, "libId": "", "type": "SKIN" },
+            "SkinAssetId": {
+                "uid": 0,
+                "libId": "",
+                "type": "SKIN"
+            },
             "Materials": [
                 {
                     "uid": 371651012915832828,
-                    "libId": "2b551e2f8b9f3d842ae7273c86ade10d",
+                    "libId": "81655298a165108ddd564c27207e96eb",
                     "type": "MATERIAL"
                 }
-            ]
+            ],
+            "Render Mode": 0,
+            "BoundingBox": {
+                "Custom": false,
+                "Min": [
+                    -0.02195161022245884,
+                    -0.021588187664747238,
+                    -0.27105212211608887
+                ],
+                "Max": [
+                    0.024935999885201454,
+                    0.021600861102342606,
+                    0.281033456325531
+                ]
+            }
         },
         {
-            "UID": 9274618302847561234,
+            "UID": 12814111538927992099,
             "ComponentType": "SCRIPT",
             "Active": true,
             "ScriptName": "ArcherArrowProjectile",
             "ScriptFields": {}
+        },
+        {
+            "UID": 5604757914569620033,
+            "ComponentType": "TRAIL",
+            "Active": true,
+            "StartWidth": 0.5,
+            "EndWidth": 0.0,
+            "SpawnDistance": 0.10000000149011612,
+            "PointLifetime": 0.5,
+            "Bloom": true,
+            "TextureAssetId": {
+                "uid": 0,
+                "libId": "",
+                "type": "UNKNOWN"
+            },
+            "ColorOverTime": [
+                {
+                    "IsAlphaMark": false,
+                    "Position": 0.0,
+                    "Color": [
+                        1.0,
+                        0.9254902005195618,
+                        0.3607843220233917
+                    ]
+                },
+                {
+                    "IsAlphaMark": true,
+                    "Position": 0.0,
+                    "Alpha": 1.0
+                },
+                {
+                    "IsAlphaMark": false,
+                    "Position": 0.39429229497909546,
+                    "Color": [
+                        1.0,
+                        0.7647058963775635,
+                        0.0
+                    ]
+                },
+                {
+                    "IsAlphaMark": true,
+                    "Position": 0.7825897336006165,
+                    "Alpha": 1.0
+                },
+                {
+                    "IsAlphaMark": false,
+                    "Position": 0.792080283164978,
+                    "Color": [
+                        1.0,
+                        0.48235294222831726,
+                        0.0
+                    ]
+                },
+                {
+                    "IsAlphaMark": true,
+                    "Position": 1.0,
+                    "Alpha": 0.25
+                }
+            ],
+            "ColorCurve": [
+                0.4449999928474426,
+                0.05000000074505806,
+                0.550000011920929,
+                0.949999988079071
+            ]
         }
     ],
-    "Children": [],
-    "Version": 2,
-    "VariantOf": "Assets\\Models\\Weapons\\Arrow\\weapon_arrow_dungeon.gltf"
+    "Children": []
 }
