@@ -5,6 +5,8 @@ namespace
 {
     constexpr const char* k_bank = "BoundByDeath.bnk";
     constexpr const char* k_checkpointReached = "Play_Cooperative_Checkpoint_Reached";
+    constexpr const char* k_tutorialAppear   = "Play_Cooperative_Tutorial_Appear";
+    constexpr const char* k_tutorialConfirm  = "Play_Cooperative_Tutorial_Confirm";
 
     constexpr const char* k_shadowExecution  = "Play_Cooperative_Shadow_Execution";
     constexpr const char* k_reaperGaugeFull  = "Play_Cooperative_ReaperGauge_Full";
@@ -119,4 +121,14 @@ IMPLEMENT_SCRIPT(CooperativeSound)
 void CooperativeSound::playCheckpointReached()
 {
     postEvent(k_checkpointReached);
+}
+
+void CooperativeSound::playTutorialAppear()
+{
+    postEvent(k_tutorialAppear);
+}
+
+void CooperativeSound::playTutorialConfirm()
+{
+    postEvent(k_tutorialConfirm);
 }

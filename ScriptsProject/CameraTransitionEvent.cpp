@@ -1,10 +1,11 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CameraTransitionEvent.h"
 
 #include "GameplayEventTrigger.h"
 #include "CameraTransitionController.h"
 #include "CameraTransitionStep.h"
 #include "CameraFollow.h"
+#include "PaladinSound.h"
 
 static const char* cameraTransitionModeNames[] =
 {
@@ -25,7 +26,8 @@ IMPLEMENT_SCRIPT_FIELDS(CameraTransitionEvent,
     SERIALIZED_BOOL(m_lockGameplayInput, "Lock Gameplay Input"),
     SERIALIZED_BOOL(m_makePlayersInvulnerable, "Make Players Invulnerable"),
     SERIALIZED_BOOL(m_fadeHud, "Fade HUD"),
-    SERIALIZED_FLOAT(m_returnDuration, "Return Duration", 0.0f, 20.0f, 0.05f)
+    SERIALIZED_FLOAT(m_returnDuration, "Return Duration", 0.0f, 20.0f, 0.05f),
+    SERIALIZED_COMPONENT_REF_VECTOR(m_shoutingEnemies, "Shouting Enemies", ComponentType::TRANSFORM)
 )
 
 CameraTransitionEvent::CameraTransitionEvent(GameObject* owner)
@@ -52,6 +54,24 @@ void CameraTransitionEvent::executeEvent(GameplayEventTrigger* trigger)
     if (m_targetPoints.empty())
     {
         return;
+    }
+
+    // Staggered so a group reads as several enemies reacting, not one chord.
+    float shoutDelay = 0.0f;
+    for (ComponentRef<Transform>& enemyRef : m_shoutingEnemies)
+    {
+        Transform* enemyTransform = enemyRef.getReferencedComponent();
+        GameObject* enemy = enemyTransform != nullptr ? ComponentAPI::getOwner(enemyTransform) : nullptr;
+        if (enemy == nullptr)
+        {
+            continue;
+        }
+
+        if (PaladinSound* sound = GameObjectAPI::findScript<PaladinSound>(enemy))
+        {
+            sound->playScream(shoutDelay);
+            shoutDelay += 0.22f;
+        }
     }
 
     // VERTICAL FOLLOW

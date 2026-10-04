@@ -81,6 +81,10 @@ public:
 
     float m_returnDuration = 1.5f;
 
+    // Paladins that shout when this cinematic starts, so the gesture on screen has a
+    // voice. Leave empty on cinematics that present no enemy.
+    std::vector<ComponentRef<Transform>> m_shoutingEnemies;
+
     bool m_lockGameplayInput = true;
     bool m_makePlayersInvulnerable = true;
     bool m_fadeHud = true;
