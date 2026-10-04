@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CrystalShadowMark.h"
 #include "EnvironmentSound.h"
 #include "EnemyDamageable.h"
@@ -87,6 +87,12 @@ void CrystalShadowMark::Update()
     }
 
     deactivateEffect();
+
+    if (m_activatedLoopStarted)
+    {
+        EnvironmentSound::play(getOwner(), "Stop_Environment_Crystal_Activated");
+        m_activatedLoopStarted = false;
+    }
 
     if (managerScript != nullptr)
     {

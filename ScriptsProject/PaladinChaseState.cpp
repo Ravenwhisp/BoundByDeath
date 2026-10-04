@@ -1,5 +1,6 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "PaladinChaseState.h"
+#include "PaladinSound.h"
 
 #include "MeleeEnemyController.h"
 #include "PaladinVFX.h"
@@ -34,6 +35,15 @@ void PaladinChaseState::OnStateEnter()
 
 	m_paladinController->clearPath();
 	m_paladinController->resetRepathTimer();
+
+	if (!m_hasScreamed)
+	{
+		m_hasScreamed = true;
+		if (PaladinSound* sound = GameObjectAPI::findScript<PaladinSound>(getOwner()))
+		{
+			sound->playScream();
+		}
+	}
 
 	Debug::log("[PaladinChaseState] ENTER");
 }

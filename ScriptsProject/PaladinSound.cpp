@@ -1,8 +1,9 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "PaladinSound.h"
 
 namespace
 {
+    constexpr const char* k_scream = "Play_Paladin_Scream";
     constexpr const char* k_basicSwing    = "Play_Paladin_Basic_Swing";
     constexpr const char* k_basicImpact   = "Play_Paladin_Basic_Impact";
     constexpr const char* k_hurt          = "Play_Paladin_Hurt";
@@ -55,6 +56,11 @@ void PaladinSound::stopAllLoops()
 {
     EnemySound::stopAllLoops();
     stopChargeLoop();
+}
+
+void PaladinSound::playScream()
+{
+    postEvent(k_scream);
 }
 
 IMPLEMENT_SCRIPT(PaladinSound)

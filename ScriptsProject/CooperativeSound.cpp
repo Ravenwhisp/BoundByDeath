@@ -1,9 +1,10 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CooperativeSound.h"
 
 namespace
 {
     constexpr const char* k_bank = "BoundByDeath.bnk";
+    constexpr const char* k_checkpointReached = "Play_Cooperative_Checkpoint_Reached";
 
     constexpr const char* k_shadowExecution  = "Play_Cooperative_Shadow_Execution";
     constexpr const char* k_reaperGaugeFull  = "Play_Cooperative_ReaperGauge_Full";
@@ -114,3 +115,8 @@ void CooperativeSound::stopAllLoops()
 }
 
 IMPLEMENT_SCRIPT(CooperativeSound)
+
+void CooperativeSound::playCheckpointReached()
+{
+    postEvent(k_checkpointReached);
+}

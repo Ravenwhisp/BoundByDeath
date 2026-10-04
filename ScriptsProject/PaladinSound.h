@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "EnemySound.h"
 
@@ -11,6 +11,8 @@ public:
     explicit PaladinSound(GameObject* owner);
 
     // Charge ability (called by PaladinChargeState).
+    void playScream();   // warning shout the first time it picks up a target
+
     void playChargeStart();
     void startChargeLoop();
     void stopChargeLoop();
