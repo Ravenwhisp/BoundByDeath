@@ -23,6 +23,8 @@ public:
 
     FieldList getExposedFields() const override;
 
+    // Starts the loop on demand, for emitters that are lit during play instead of on load.
+    void play();
     void stop();
 
     std::string m_playEvent   = "Play_Ambient_Fire_Crack";
@@ -34,6 +36,7 @@ private:
 
     ComponentSoundSource* m_source     = nullptr;
     uint32_t              m_playingID  = 0;
+    bool                  m_wantsPlay  = false;
     float                 m_retryTimer = 0.0f;
     int                   m_retriesLeft = 20;
 };

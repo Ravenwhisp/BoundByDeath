@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "AmbientSoundLoop.h"
 
 namespace
@@ -31,6 +31,7 @@ void AmbientSoundLoop::Start()
 
     if (m_playOnStart && !m_playEvent.empty())
     {
+        m_wantsPlay = true;
         tryPlay();
     }
 }
@@ -40,7 +41,7 @@ void AmbientSoundLoop::Update()
     // The bank may still be loading when Start runs, in which case Wwise silently drops
     // the event. Keep retrying for a few seconds instead of staying quiet forever.
     if (m_playingID != 0 || m_retriesLeft <= 0) return;
-    if (m_source == nullptr || !m_playOnStart || m_playEvent.empty()) return;
+    if (m_source == nullptr || !m_wantsPlay || m_playEvent.empty()) return;
 
     m_retryTimer -= Time::getDeltaTime();
     if (m_retryTimer > 0.0f) return;
@@ -66,6 +67,19 @@ void AmbientSoundLoop::tryPlay()
     }
 }
 
+void AmbientSoundLoop::play()
+{
+    if (m_playingID != 0 || m_playEvent.empty())
+    {
+        return;
+    }
+
+    m_wantsPlay = true;
+    m_retriesLeft = 20;
+    m_retryTimer = 0.0f;
+    tryPlay();
+}
+
 void AmbientSoundLoop::stop()
 {
     if (m_source == nullptr || m_stopEvent.empty())
@@ -75,4 +89,5 @@ void AmbientSoundLoop::stop()
 
     AudioAPI::postEvent(m_source, k_bank, m_stopEvent.c_str());
     m_playingID = 0;
+    m_wantsPlay = false;
 }
