@@ -2,6 +2,8 @@
 #include "ElevatorManager.h"
 
 #include "EnvironmentSound.h"
+
+#include <cmath>
 #include "CombatAreaEvent.h"
 #include "CrystalShadowMark.h"
 #include "Damageable.h"
@@ -403,24 +405,46 @@ void ElevatorManager::updatePlatformMove()
 
 void ElevatorManager::updatePlatformSound()
 {
-    if (m_platformMoving == m_platformSoundActive)
+    Transform* platformTransform = m_platform.getReferencedComponent();
+    if (platformTransform == nullptr)
     {
         return;
     }
 
-    m_platformSoundActive = m_platformMoving;
+    // Driven off the platform actually changing height rather than the internal flag:
+    // every path that moves it is covered, including the snap after a checkpoint reload.
+    const float y = TransformAPI::getPosition(platformTransform).y;
+    const bool movedThisFrame = m_lastPlatformYValid && std::fabs(y - m_lastPlatformY) > 0.0005f;
+    m_lastPlatformY = y;
+    m_lastPlatformYValid = true;
 
-    Transform* platformTransform = m_platform.getReferencedComponent();
-    GameObject* emitter = platformTransform != nullptr ? ComponentAPI::getOwner(platformTransform) : nullptr;
+    // Short grace so a frame that happens to land on the same height does not stutter it.
+    if (movedThisFrame)
+    {
+        m_platformQuietTimer = 0.25f;
+    }
+    else if (m_platformQuietTimer > 0.0f)
+    {
+        m_platformQuietTimer -= Time::getDeltaTime();
+    }
+
+    const bool shouldSound = m_platformQuietTimer > 0.0f;
+    if (shouldSound == m_platformSoundActive)
+    {
+        return;
+    }
+
+    m_platformSoundActive = shouldSound;
+
+    GameObject* emitter = ComponentAPI::getOwner(platformTransform);
     if (emitter == nullptr)
     {
         return;
     }
 
-    // Driven off the moving flag so every path is covered: it starts when the platform
-    // sets off, stops when it settles, and starts again on the next leg.
-    EnvironmentSound::play(emitter, m_platformSoundActive ? "Play_Environment_Elevator_Loop"
-                                                          : "Stop_Environment_Elevator_Loop");
+    Debug::log("[ElevatorManager] platform %s at y=%.2f", shouldSound ? "moving" : "stopped", y);
+    EnvironmentSound::play(emitter, shouldSound ? "Play_Environment_Elevator_Loop"
+                                                : "Stop_Environment_Elevator_Loop");
 }
 
 void ElevatorManager::snapPlatformToTarget()
