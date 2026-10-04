@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "ScriptAPI.h"
 
@@ -33,6 +33,7 @@ private:
     void startPlatformMove(int targetIndex);
     void updatePlatformMove();
     void snapPlatformToTarget();
+    void updatePlatformSound();
 
     int getTotalWaves() const;
 
@@ -72,6 +73,7 @@ private:
     bool m_wallsActive = false;
 
     bool m_platformMoving = false;
+    bool m_platformSoundActive = false;
     bool m_movingToCombat = false;
     bool m_waitingForReset = false;
     float m_platformTimer = 0.0f;

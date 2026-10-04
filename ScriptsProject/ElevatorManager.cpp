@@ -1,5 +1,7 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "ElevatorManager.h"
+
+#include "EnvironmentSound.h"
 #include "CombatAreaEvent.h"
 #include "CrystalShadowMark.h"
 #include "Damageable.h"
@@ -184,6 +186,8 @@ void ElevatorManager::Update()
     case State::Done:
         break;
     }
+
+    updatePlatformSound();
 }
 
 void ElevatorManager::resolveCombatAreas()
@@ -395,6 +399,28 @@ void ElevatorManager::updatePlatformMove()
 
     if (m_platformTimer >= m_platformMoveDuration)
         m_platformMoving = false;
+}
+
+void ElevatorManager::updatePlatformSound()
+{
+    if (m_platformMoving == m_platformSoundActive)
+    {
+        return;
+    }
+
+    m_platformSoundActive = m_platformMoving;
+
+    Transform* platformTransform = m_platform.getReferencedComponent();
+    GameObject* emitter = platformTransform != nullptr ? ComponentAPI::getOwner(platformTransform) : nullptr;
+    if (emitter == nullptr)
+    {
+        return;
+    }
+
+    // Driven off the moving flag so every path is covered: it starts when the platform
+    // sets off, stops when it settles, and starts again on the next leg.
+    EnvironmentSound::play(emitter, m_platformSoundActive ? "Play_Environment_Elevator_Loop"
+                                                          : "Stop_Environment_Elevator_Loop");
 }
 
 void ElevatorManager::snapPlatformToTarget()
