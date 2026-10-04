@@ -72,6 +72,7 @@ protected:
 	Vector3 getFallbackFacingDirection() const;
 
     virtual void updateUI();
+    void updateHUDControlScale(Transform2D* hudControl, bool isPressed, float dt);
 
 protected:
     CharacterBase* m_character = nullptr;

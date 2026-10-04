@@ -95,6 +95,19 @@ void DeathTaunt::Update()
     }
 }
 
+void DeathTaunt::updateUI()
+{
+    AbilityBase::updateUI();
+
+    if (m_deathUI && m_deathUI->m_tauntHUDControlTransform2D)
+    {
+        const float dt = Time::getDeltaTime();
+        const bool isPressed = Input::isLeftTriggerPressed(getPlayerIndex());
+
+        updateHUDControlScale(m_deathUI->m_tauntHUDControlTransform2D, isPressed, dt);
+    }
+}
+
 bool DeathTaunt::canStartSpecificAbility() const
 {
     return m_tauntState == TauntState::Idle;
