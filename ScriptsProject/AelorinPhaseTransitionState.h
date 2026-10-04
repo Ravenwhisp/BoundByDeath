@@ -22,4 +22,5 @@ private:
 	AnimationComponent* m_animation = nullptr;
 
 	bool m_phase2Started = false;
+	bool m_cinematicDriven = false;
 };
