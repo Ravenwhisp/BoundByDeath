@@ -99,7 +99,10 @@ void AelorinRisenSpiresState::OnStateEnter()
 		const AelorinAttackConfig* config = m_controller->getAelorinAttackConfig();
 		if (config)
 		{
+			executePattern(m_controller->getRisenSpiresPatternARoot(), "Risen Spires Pass 1", false);
 			m_aelorinUI->showRisenSpiresUI(m_controller->getRisenSpiresPatternARoot(), config->m_risenSpiresRadius, config->m_risenSpiresWindupDuration);
+
+			executePattern(m_controller->getRisenSpiresPatternBRoot(), "Risen Spires Pass 2", false); // Execute pattern 2 without damage so their positions are set
 		}
 	}
 
@@ -140,7 +143,7 @@ void AelorinRisenSpiresState::OnStateUpdate()
 	// First pass after the 3 second windup
 	if (!m_firstPassExecuted && m_stateTimer >= windupDuration)
 	{
-		executePattern(m_controller->getRisenSpiresPatternARoot(), "Risen Spires Pass 1");
+		executePattern(m_controller->getRisenSpiresPatternARoot(), "Risen Spires Pass 1", true);
 		m_firstPassExecuted = true;
 
 		// UI Phase 2 reveal pattern B
@@ -153,7 +156,7 @@ void AelorinRisenSpiresState::OnStateUpdate()
 	// Phase 2 gets opposite pattern 2 seconds later
 	if (m_controller->isPhase2() && m_firstPassExecuted && !m_secondPassExecuted && m_stateTimer >= windupDuration + config->m_risenSpiresPhase2SecondPassDelay)
 	{
-		executePattern(m_controller->getRisenSpiresPatternBRoot(), "Risen Spires Pass 2");
+		executePattern(m_controller->getRisenSpiresPatternBRoot(), "Risen Spires Pass 2", true);
 		m_secondPassExecuted = true;
 	}
 
@@ -203,7 +206,7 @@ void AelorinRisenSpiresState::OnStateExit()
 	Debug::log("[AelorinRisenSpiresState] EXIT");
 }
 
-void AelorinRisenSpiresState::executePattern(Transform* patternRoot, const char* sourceName)
+void AelorinRisenSpiresState::executePattern(Transform* patternRoot, const char* sourceName, bool dealDamage)
 {
 	if (!patternRoot || !m_attackExecutor)
 	{
@@ -219,15 +222,18 @@ void AelorinRisenSpiresState::executePattern(Transform* patternRoot, const char*
 	// pattern has child game objects and uses their transform to position the attack
 	const int childCount = TransformAPI::getChildCount(patternRoot);
 
-	for (int i = 0; i < childCount; i++) 
+	if (dealDamage)
 	{
-		Transform* spirePoint = TransformAPI::getChild(patternRoot, i);
-		if (!spirePoint)
+		for (int i = 0; i < childCount; i++) 
 		{
-			continue;
-		}
+			Transform* spirePoint = TransformAPI::getChild(patternRoot, i);
+			if (!spirePoint)
+			{
+				continue;
+			}
 
-		m_attackExecutor->applyDamageInRadius(TransformAPI::getGlobalPosition(spirePoint), config->m_risenSpiresRadius, config->m_risenSpiresDamage, sourceName);
+			m_attackExecutor->applyDamageInRadius(TransformAPI::getGlobalPosition(spirePoint), config->m_risenSpiresRadius, config->m_risenSpiresDamage, sourceName);
+		}
 	}
 
 	std::vector<Vector2> spirePositions = generateSpirePositions(childCount, ARENA_RADIUS, config->m_risenSpiresRadius * 2.1f, config);

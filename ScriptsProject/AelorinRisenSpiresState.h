@@ -22,7 +22,7 @@ public:
 	void OnStateExit() override;
 
 private:
-	void executePattern(Transform* patternRoot, const char* sourceName);
+	void executePattern(Transform* patternRoot, const char* sourceName, bool dealDamage);
 	void finishAbility();
 
 private:
