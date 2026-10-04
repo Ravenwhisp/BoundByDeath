@@ -121,6 +121,18 @@ void AbilityBase::updateUI()
     m_characterUI->updateAbilityCooldown(slot, m_cooldownTimer / cooldown);
 }
 
+void AbilityBase::updateHUDControlScale(Transform2D* hudControl, bool isPressed, float dt)
+{
+    if (!hudControl)
+        return;
+
+    const float targetScale = isPressed ? 0.8f : 1.0f;
+    const float currentScale = Transform2DAPI::getScale(hudControl).x;
+    const float scale = MathAPI::moveTowards(currentScale, targetScale, dt);
+
+    Transform2DAPI::setScale(hudControl, Vector2(scale, scale));
+}
+
 void AbilityBase::reduceCooldown(float fraction)
 {
     const float cooldown = getCooldown();

@@ -378,7 +378,17 @@ void DeathChargedAttack::updateUI()
     AbilityBase::updateUI();
 
     if (m_deathUI)
+    {
         m_deathUI->updateChargedSlashUI(m_attackStateTimer, m_deathCharacter->getConfig()->m_chargedAttackLockDuration);
+
+        if (m_deathUI->m_chargedHUDControlTransform2D)
+        {
+            const float dt = Time::getDeltaTime();
+            const bool isPressed = Input::isRightTriggerPressed(getPlayerIndex());
+
+            updateHUDControlScale(m_deathUI->m_chargedHUDControlTransform2D, isPressed, dt);
+        }
+    }
 }
 
 IMPLEMENT_SCRIPT(DeathChargedAttack)
