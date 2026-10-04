@@ -23,6 +23,7 @@ namespace
     constexpr const char* k_chargeLoopStart = "Play_Death_Charge_Loop";
     constexpr const char* k_chargeLoopStop = "Stop_Death_Charge_Loop";
     constexpr const char* k_hoverLoopStart = "Play_Death_Hover_Loop";
+    constexpr const char* k_executionVoice = "Play_Death_Shadow_Execution_Voice";
     constexpr const char* k_hoverLoopStop = "Stop_Death_Hover_Loop";
 
     // Tuned to match animation contact frame (swing windup → contact).
@@ -201,3 +202,8 @@ void DeathSound::stopAllLoops()
 }
 
 IMPLEMENT_SCRIPT(DeathSound)
+
+void DeathSound::playShadowExecutionVoice()
+{
+    postEvent(k_executionVoice);
+}

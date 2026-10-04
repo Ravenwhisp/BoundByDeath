@@ -34,6 +34,7 @@ public:
 
     // L2 Taunt
     void playTauntShout();
+    void playShadowExecutionVoice();   // his shout as the execution goes off
 
     // Shadow Mark — delayed internally to match animation contact frame
     void playMarkApply();

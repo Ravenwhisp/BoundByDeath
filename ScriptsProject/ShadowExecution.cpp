@@ -7,6 +7,7 @@
 #include "LyrielCharacter.h"
 #include "CooperativeSound.h"
 #include "LyrielSound.h"
+#include "DeathSound.h"
 #include "PlayerState.h"
 #include "PlayerAnimationController.h"
 #include "CharacterAnimations.h"
@@ -277,12 +278,21 @@ void ShadowExecution::beginExecution()
         m_sound->playShadowExecution();
     }
 
-    // Her voice comes from her own emitter, not from the co-op one at the midpoint.
+    // Both voices come from their own emitters, not from the co-op one at the midpoint.
     for (GameObject* holder : SceneAPI::findAllGameObjectsWithScript<LyrielSound>())
     {
         if (LyrielSound* lyrielSound = GameObjectAPI::findScript<LyrielSound>(holder))
         {
             lyrielSound->playShadowExecutionVoice();
+            break;
+        }
+    }
+
+    for (GameObject* holder : SceneAPI::findAllGameObjectsWithScript<DeathSound>())
+    {
+        if (DeathSound* deathSound = GameObjectAPI::findScript<DeathSound>(holder))
+        {
+            deathSound->playShadowExecutionVoice();
             break;
         }
     }

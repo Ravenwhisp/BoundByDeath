@@ -74,6 +74,7 @@ private:
 
     bool m_platformMoving = false;
     bool  m_platformSoundActive = false;
+    bool  m_warnedNoPlatform = false;
     float m_lastPlatformY = 0.0f;
     bool  m_lastPlatformYValid = false;
     float m_platformQuietTimer = 0.0f;

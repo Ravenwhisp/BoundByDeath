@@ -408,6 +408,11 @@ void ElevatorManager::updatePlatformSound()
     Transform* platformTransform = m_platform.getReferencedComponent();
     if (platformTransform == nullptr)
     {
+        if (!m_warnedNoPlatform)
+        {
+            m_warnedNoPlatform = true;
+            Debug::warn("[ElevatorManager] no Platform referenced, the elevator loop cannot play.");
+        }
         return;
     }
 
@@ -436,7 +441,9 @@ void ElevatorManager::updatePlatformSound()
 
     m_platformSoundActive = shouldSound;
 
-    GameObject* emitter = ComponentAPI::getOwner(platformTransform);
+    // Posted from this manager, which also carries the listener, so the loop cannot be
+    // lost to attenuation while the platform drifts away from whoever is riding it.
+    GameObject* emitter = getOwner();
     if (emitter == nullptr)
     {
         return;
