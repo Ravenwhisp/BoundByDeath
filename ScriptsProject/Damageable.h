@@ -20,6 +20,7 @@ class Damageable : public Script
 
 public:
     explicit Damageable(GameObject* owner);
+    ~Damageable() override;
 
     void Start()     override;
 	void Update()	 override;
