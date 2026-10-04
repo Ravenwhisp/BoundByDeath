@@ -1,12 +1,21 @@
 ﻿#include "pch.h"
 #include "EnemySound.h"
 
+#include <string>
+#include <unordered_set>
+
 namespace
 {
     // The engine resolves events against one named bank, so an enemy that shows up in
     // more than one level has to try each. Level1 first, which is where the enemies that
     // use the default list live.
     const char* const k_defaultBanks[] = { "Level1.bnk", "Level2.bnk", "BossLevel.bnk" };
+
+    bool isFirstReport(const char* eventName)
+    {
+        static std::unordered_set<std::string> reported;
+        return reported.insert(eventName).second;
+    }
 
     // Minimum gap between hurt one-shots so continuous/overlapping damage can't
     // machine-gun the grunt.
@@ -116,6 +125,11 @@ uint32_t EnemySound::postEvent(const char* eventName)
         if (playingID != 0)
         {
             m_resolvedBank = banks[i];
+            if (isFirstReport(eventName))
+            {
+                Debug::log("[EnemySound] '%s' posted from '%s' on '%s' (playingID=%u).",
+                           eventName, banks[i], GameObjectAPI::getName(getOwner()), playingID);
+            }
             return playingID;
         }
     }
