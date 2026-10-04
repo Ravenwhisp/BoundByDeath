@@ -58,6 +58,12 @@ void EnemySound::Update()
 
     if (m_movingTimer > 0.0f)
     {
+        if (!m_wasMoving)
+        {
+            m_wasMoving = true;
+            onMovementStarted();
+        }
+
         m_movingTimer -= dt;
 
         m_footstepTimer -= dt;
@@ -69,6 +75,12 @@ void EnemySound::Update()
     }
     else
     {
+        if (m_wasMoving)
+        {
+            m_wasMoving = false;
+            onMovementStopped();
+        }
+
         // Reset so the first step right after starting to move plays immediately.
         m_footstepTimer = 0.0f;
     }
@@ -150,6 +162,40 @@ void EnemySound::notifyMoving()
 void EnemySound::stopAllLoops()
 {
     m_pendingEvents.clear();
+
+    if (m_wasMoving)
+    {
+        m_wasMoving = false;
+        onMovementStopped();
+    }
+
     m_movingTimer   = 0.0f;
     m_footstepTimer = 0.0f;
+}
+
+void EnemySound::postEventGrouped(const char* eventName, const char* groupName, uint32_t cooldownMs)
+{
+    if (m_source == nullptr || eventName == nullptr || groupName == nullptr)
+    {
+        return;
+    }
+
+    if (m_resolvedBank == nullptr)
+    {
+        // Grouping needs a bank name, so let a plain post resolve it first.
+        postEvent(eventName);
+        return;
+    }
+
+    float priority = 0.0f;
+    GameObject* camera = SceneAPI::getDefaultCameraGameObject();
+    Transform* emitterTransform = GameObjectAPI::getTransform(getOwner());
+    Transform* cameraTransform = camera != nullptr ? GameObjectAPI::getTransform(camera) : nullptr;
+    if (emitterTransform != nullptr && cameraTransform != nullptr)
+    {
+        priority = Vector3::DistanceSquared(TransformAPI::getGlobalPosition(emitterTransform),
+                                            TransformAPI::getGlobalPosition(cameraTransform));
+    }
+
+    AudioAPI::queueGroupedEvent(m_source, m_resolvedBank, eventName, groupName, priority, cooldownMs);
 }

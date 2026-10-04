@@ -37,6 +37,16 @@ public:
     virtual void stopAllLoops();
 
 protected:
+    // Edges of the movement watchdog. An enemy that crawls instead of stepping starts
+    // and stops a loop here and returns nullptr from evFootstep().
+    virtual void onMovementStarted() {}
+    virtual void onMovementStopped() {}
+
+    // Positional post that keeps only the nearest emitter of the same group during the
+    // cooldown window, so a room full of the same enemy does not pile up one-shots.
+    void postEventGrouped(const char* eventName, const char* groupName, uint32_t cooldownMs);
+
+protected:
     // Banks this enemy's events can live in, tried in order on the first post and then
     // remembered. An enemy that appears in several levels, or one summoned by the boss,
     // finds its events wherever they were packed.
@@ -67,6 +77,7 @@ private:
 
     float m_hurtCooldownTimer = 0.0f;
 
+    bool  m_wasMoving     = false;
     float m_movingTimer   = 0.0f;  // watchdog: > 0 while the enemy is locomoting
     float m_footstepTimer = 0.0f;  // cadence countdown
 };

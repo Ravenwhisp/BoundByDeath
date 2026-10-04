@@ -1,5 +1,6 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "SummonerRecoverState.h"
+#include "SummonerSound.h"
 
 #include "SummonerEnemyController.h"
 
@@ -28,6 +29,11 @@ void SummonerRecoverState::OnStateEnter()
 	m_controller->clearPath();
 	m_controller->resetRepathTimer();
 	m_stateTimer = 0.0f;
+
+	if (SummonerSound* sound = GameObjectAPI::findScript<SummonerSound>(getOwner()))
+	{
+		sound->playRecover();
+	}
 
 	Debug::log("[SummonerRecoverState] ENTER");
 }
