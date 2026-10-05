@@ -16,6 +16,8 @@
 #include "PlayerRotation.h"
 #include "CharacterAnimations.h"
 #include "PlayerAnimationController.h"
+#include "GameplayTargetRegistry.h"
+#include "Damageable.h"
 
 #include <cmath>
 
@@ -35,6 +37,7 @@ void LyrielChargedAttack::Start()
     m_config = m_lyrielCharacter->getConfig();
     m_lyrielUI = GameObjectAPI::findScript<LyrielUI>(getOwner());
     m_particles = GameObjectAPI::findScript<LyrielParticles>(getOwner());
+    m_targetScratch.reserve(64);
 
     if (m_lyrielCharacter == nullptr)
     {
@@ -336,17 +339,16 @@ void LyrielChargedAttack::releaseChargeAndShoot()
     m_attackFacingDirection = forward;
     faceDirection(forward);
 
-    std::vector<GameObject*> targets;
-    collectEnemiesInLine(origin, forward, targets);
+    collectTargetsInLine(origin, forward);
     const bool isMaxCharge = m_chargeTimer >= m_config->m_chargedMaxChargeTime;
-    applyChargedDamage(targets, damage, isMaxCharge);
+    applyChargedDamage(damage, isMaxCharge);
     spawnChargedArrow(origin, forward);
     notifyAbilitySuccessfullyStarted();
 
     if (sound != nullptr)
     {
         sound->playChargedRelease();
-        if (!targets.empty())
+        if (!m_targetScratch.empty())
         {
             sound->playChargedImpact();
         }
@@ -374,7 +376,7 @@ void LyrielChargedAttack::releaseChargeAndShoot()
     m_chargeTimer = 0.0f;
 
     Debug::log("[LyrielChargedAttack] Fired charged shot. Targets hit: %d Damage: %.2f",
-        static_cast<int>(targets.size()), damage);
+        static_cast<int>(m_targetScratch.size()), damage);
 }
 
 Vector3 LyrielChargedAttack::computeAimDirection() const
@@ -417,16 +419,9 @@ bool LyrielChargedAttack::isAimStickValid(const Vector3& direction) const
     return flatDirection.LengthSquared() > 0.0001f;
 }
 
-void LyrielChargedAttack::collectEnemiesInLine(const Vector3& origin, const Vector3& forward, std::vector<GameObject*>& outTargets)
+void LyrielChargedAttack::collectTargetsInLine(const Vector3& origin, const Vector3& forward)
 {
-    outTargets.clear();
-
-    std::vector<GameObject*> allEnemies = SceneAPI::findAllGameObjectsByTag(Tag::ENEMY, true);
-	std::vector<GameObject*> breakables = SceneAPI::findAllGameObjectsByTag(Tag::BREAKABLE, true);
-
-	std::vector<GameObject*> potentialTargets = allEnemies;
-	potentialTargets.insert(potentialTargets.end(), breakables.begin(), breakables.end());
-    //de momento la mejor "manera" que veo es esta, habra que hacer refactor o cambios o algo
+    m_targetScratch.clear();
 
     Vector3 flatForward = forward;
     flatForward.y = 0.0f;
@@ -441,20 +436,17 @@ void LyrielChargedAttack::collectEnemiesInLine(const Vector3& origin, const Vect
     const float currentRange = computeChargedRange();
     const float lineHalfWidthSq = m_lyrielCharacter->getConfig()->m_chargedLineHalfWidth * m_lyrielCharacter->getConfig()->m_chargedLineHalfWidth;
 
-    for (GameObject* target : potentialTargets)
+    bool hasRemovedTarget = false;
+    const auto& registeredTargets = GameplayTargetRegistry::getTargets();
+    for (const GameplayTargetRegistry::Target& target : registeredTargets)
     {
-        if (target == nullptr)
+        if ((target.tag != Tag::ENEMY && target.tag != Tag::BREAKABLE) ||
+            !GameplayTargetRegistry::isValid(target, hasRemovedTarget))
         {
             continue;
         }
 
-        Transform* enemyTransform = GameObjectAPI::getTransform(target);
-        if (enemyTransform == nullptr)
-        {
-            continue;
-        }
-
-        Vector3 enemyPosition = TransformAPI::getGlobalPosition(enemyTransform);
+        Vector3 enemyPosition = TransformAPI::getGlobalPosition(target.transform);
         enemyPosition.y = origin.y;
 
         Vector3 toEnemy = enemyPosition - origin;
@@ -477,23 +469,26 @@ void LyrielChargedAttack::collectEnemiesInLine(const Vector3& origin, const Vect
 
         if (lateralOffset.LengthSquared() <= lineHalfWidthSq)
         {
-            outTargets.push_back(target);
+            m_targetScratch.push_back(target.damageable);
         }
+    }
+
+    if (hasRemovedTarget)
+    {
+        GameplayTargetRegistry::pruneRemovedTargets();
     }
 }
 
-void LyrielChargedAttack::applyChargedDamage(const std::vector<GameObject*>& targets, float damage, bool isMaxCharge)
+void LyrielChargedAttack::applyChargedDamage(float damage, bool isMaxCharge)
 {
-    for (GameObject* target : targets)
+    for (Damageable* targetDamageable : m_targetScratch)
     {
-        if (target == nullptr)
+        if (targetDamageable == nullptr)
         {
             continue;
         }
 
-        EnemyDamageable* damageable = GameObjectAPI::findScript<EnemyDamageable>(target);
-
-        if (damageable != nullptr)
+        if (EnemyDamageable* damageable = dynamic_cast<EnemyDamageable*>(targetDamageable))
         {
             EnemyHitContext ctx;
             ctx.damage = damage;
@@ -507,13 +502,12 @@ void LyrielChargedAttack::applyChargedDamage(const std::vector<GameObject*>& tar
                 m_lyrielCharacter->onMarkExploited();
             }
 
-            tryStunTarget(target, isMaxCharge, m_config->m_chargedStunOnMaxCharge, m_config->m_chargedStunDuration);
+            tryStunTarget(damageable->getOwner(), isMaxCharge, m_config->m_chargedStunOnMaxCharge, m_config->m_chargedStunDuration);
 
             continue;
         }
 
-        BreakableDamageable* breakableDamageable = GameObjectAPI::findScript<BreakableDamageable>(target);
-        if (breakableDamageable != nullptr)
+        if (BreakableDamageable* breakableDamageable = dynamic_cast<BreakableDamageable*>(targetDamageable))
         {
             breakableDamageable->takeDamage(damage);
         }

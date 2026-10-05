@@ -5,12 +5,8 @@
 #include "LyrielCharacter.h"
 #include "LyrielSound.h"
 #include "ParticleLifecycle.h"
-#include "LyrielParticles.h"
 
 IMPLEMENT_SCRIPT_FIELDS(LyrielArrowProjectile,
-    SERIALIZED_STRING(m_legacyParticlePath, "Particle Prefab Path"),
-    SERIALIZED_ASSET_REF(m_particlePrefab, "Particle Prefab", AssetType::PREFAB),
-    SERIALIZED_ASSET_REF(m_visualBasicPrefab, "Visual Basic Prefab", AssetType::PREFAB),
     SERIALIZED_ASSET_REF(m_visualChargedPrefab, "Visual Charged Prefab", AssetType::PREFAB),
     SERIALIZED_ASSET_REF(m_visualVolleyPrefab, "Visual Volley Prefab", AssetType::PREFAB)
 )
@@ -29,13 +25,10 @@ void LyrielArrowProjectile::Update()
 
     m_lifeTimer += Time::getDeltaTime();
 
-    Transform* transform = GameObjectAPI::getTransform(getOwner());
-    if (transform != nullptr)
+    if (m_transform != nullptr)
     {
-        TransformAPI::translateGlobal(transform, m_direction * m_speed * Time::getDeltaTime());
+        TransformAPI::translateGlobal(m_transform, m_direction * m_speed * Time::getDeltaTime());
     }
-
-    syncParticleTransform();
 
     if (m_lifeTimer >= m_currentLifetime)
     {
@@ -54,96 +47,33 @@ void LyrielArrowProjectile::launch(const Vector3& startPosition, const Vector3& 
     m_target = target;
     m_damage = damage;
 
-    Transform* transform = GameObjectAPI::getTransform(getOwner());
+    prepareVisuals();
+    cacheShooterScripts();
 
-    if (transform != nullptr)
+    if (m_transform != nullptr)
     {
-        TransformAPI::setGlobalPosition(transform, startPosition);
-        TransformAPI::lookAt(transform, startPosition + m_direction);
-    }
+        TransformAPI::setGlobalPosition(m_transform, startPosition);
+        TransformAPI::lookAt(m_transform, startPosition + direction);
 
-    // Orient projectile to face the travel direction. Use lookAt then rotate 180 degrees
-    // if models are authored facing the opposite direction.
-    if (transform != nullptr)
-    {
-        // Use a target point in the direction the arrow will travel
-        TransformAPI::lookAt(transform, startPosition + direction);
-
-        // Many arrow visuals are modeled pointing towards -Z; flip 180 degrees around Y so
-        // the visual faces along the movement direction.
-        Vector3 euler = TransformAPI::getGlobalEulerDegrees(transform);
+        Vector3 euler = TransformAPI::getGlobalEulerDegrees(m_transform);
         euler.y += 180.0f;
-        // Normalize angle into [-180,180] range is optional but harmless
-        if (euler.y > 180.0f) euler.y -= 360.0f;
-        TransformAPI::setGlobalRotationEuler(transform, euler);
+        if (euler.y > 180.0f)
+        {
+            euler.y -= 360.0f;
+        }
+        TransformAPI::setGlobalRotationEuler(m_transform, euler);
     }
 
     m_inUse = true;
 
     GameObjectAPI::setActive(getOwner(), true);
-
-	//Instace model based on the visual model selected
-    PrefabRef* chosenPrefab = nullptr;
-    switch (visual)
-    {
-    case VisualModel::Basic:
-        chosenPrefab = &m_visualBasicPrefab;
-        break;
-    case VisualModel::Charged:
-        chosenPrefab = &m_visualChargedPrefab;
-        break;
-    case VisualModel::Volley:
-        chosenPrefab = &m_visualVolleyPrefab;
-        break;
-    }
-
-    if (chosenPrefab != nullptr && chosenPrefab->m_id.isValid())
-    {
-		// instance as child of GameObject Projectile, so it moves with it and we can destroy it when the projectile is returned to the pool
-        m_visualGO = GameObjectAPI::instantiatePrefab(chosenPrefab->m_id, Vector3::Zero, Vector3::Zero, getOwner());
-        if (m_visualGO != nullptr)
-        {
-			// making sure the visual model is at the same position and rotation as the projectile, so it doesn't appear offset
-            Transform* visTrans = GameObjectAPI::getTransform(m_visualGO);
-            Transform* projTrans = GameObjectAPI::getTransform(getOwner());
-                if (visTrans != nullptr && projTrans != nullptr)
-                {
-                    // Ensure visual model matches projectile world transform. Use global setters to avoid
-                    // incorrect local rotations when parent transforms have non-identity rotation/scale.
-                    TransformAPI::setGlobalPosition(visTrans, TransformAPI::getGlobalPosition(projTrans));
-                    TransformAPI::setGlobalRotationEuler(visTrans, TransformAPI::getGlobalEulerDegrees(projTrans));
-                    ParticleLifecycle::restart(m_visualGO); // if the prefab has particle systems, restart them to ensure they play from the beginning
-                }
-        }
-    }
-
-    activateEmbeddedParticles();
-
-    LyrielParticles* particles = getLyrielParticles();
-    if (particles != nullptr)
-    {
-        particles->SetArrowTrailActive(transform);
-    }
+    activateVisual(visual);
 }
 
 void LyrielArrowProjectile::resetProjectile()
 {
-    Transform* transform = GameObjectAPI::getTransform(getOwner());
-
-    LyrielParticles* particles = getLyrielParticles();
-    if (particles != nullptr)
-    {
-        particles->SetArrowTrailInactive(transform);
-    }
-
-    stopEmbeddedParticles();
-
-    // destruir visual si existe
-    if (m_visualGO != nullptr)
-    {
-        GameObjectAPI::removeGameObject(m_visualGO);
-        m_visualGO = nullptr;
-    }
+    prepareVisuals();
+    deactivateVisuals();
 
     GameObjectAPI::setActive(getOwner(), false);
 
@@ -167,20 +97,9 @@ void LyrielArrowProjectile::applyImpactDamage()
 
     Transform* projectileOwner = getProjectileOwnerTransform();
 
-    // Resolve LyrielSound on the shooter once for both impact + mark exploit feedback.
-    LyrielSound* sound = nullptr;
-    if (projectileOwner != nullptr)
+    if (m_sound != nullptr)
     {
-        GameObject* shooter = projectileOwner->getOwner();
-        if (shooter != nullptr)
-        {
-            sound = GameObjectAPI::findScript<LyrielSound>(shooter);
-        }
-    }
-
-    if (sound != nullptr)
-    {
-        sound->playArrowImpact();
+        m_sound->playArrowImpact();
     }
 
     EnemyDamageable* damageable = GameObjectAPI::findScript<EnemyDamageable>(m_target);
@@ -199,11 +118,9 @@ void LyrielArrowProjectile::applyImpactDamage()
 
             if (shooter != nullptr)
             {
-                LyrielCharacter* lyriel = GameObjectAPI::findScript<LyrielCharacter>(shooter);
-
-                if (lyriel != nullptr)
+                if (m_lyrielCharacter != nullptr)
                 {
-                    lyriel->onMarkExploited();
+                    m_lyrielCharacter->onMarkExploited();
                 }
             }
         }
@@ -219,49 +136,133 @@ void LyrielArrowProjectile::applyImpactDamage()
     }
 }
 
-void LyrielArrowProjectile::activateEmbeddedParticles()
+void LyrielArrowProjectile::prepareVisuals()
 {
-    ParticleLifecycle::restart(getOwner());
-}
-
-void LyrielArrowProjectile::stopEmbeddedParticles()
-{
-    ParticleLifecycle::stop(getOwner());
-}
-
-LyrielParticles* LyrielArrowProjectile::getLyrielParticles() const
-{
-    Transform* projectileOwner = getProjectileOwnerTransform();
-
-    if (projectileOwner == nullptr)
-    {
-        return nullptr;
-    }
-
-    GameObject* lyriel = projectileOwner->getOwner();
-
-    if (lyriel == nullptr)
-    {
-        return nullptr;
-    }
-
-    return GameObjectAPI::findScript<LyrielParticles>(lyriel);
-}
-
-void LyrielArrowProjectile::syncParticleTransform()
-{
-    if (m_particleGO == nullptr)
+    if (m_visualsPrepared)
     {
         return;
     }
 
-    Transform* arrowTransform = GameObjectAPI::getTransform(getOwner());
-    Transform* particleTransform = GameObjectAPI::getTransform(m_particleGO);
-
-    if (arrowTransform != nullptr && particleTransform != nullptr)
+    m_transform = GameObjectAPI::getTransform(getOwner());
+    m_basicModel = GameObjectAPI::getComponent(getOwner(), ComponentType::MODEL);
+    m_basicTrail = TrailAPI::getTrailComponent(getOwner());
+    if (m_transform != nullptr)
     {
-        TransformAPI::setGlobalPosition(particleTransform, TransformAPI::getGlobalPosition(arrowTransform));
-        TransformAPI::setGlobalRotationEuler(particleTransform, TransformAPI::getGlobalEulerDegrees(arrowTransform));
+        if (Transform* adornment = TransformAPI::findChildByName(m_transform, "ParticleLyrielArrow"))
+        {
+            m_basicAdornment = ComponentAPI::getOwner(adornment);
+        }
+    }
+
+    if (m_visualChargedPrefab.m_id.isValid())
+    {
+        m_chargedVisual = GameObjectAPI::instantiatePrefab(
+            m_visualChargedPrefab.m_id, Vector3::Zero, Vector3::Zero, getOwner());
+        m_chargedTrail = TrailAPI::getTrailComponent(m_chargedVisual);
+    }
+
+    if (m_visualVolleyPrefab.m_id.isValid())
+    {
+        m_volleyVisual = GameObjectAPI::instantiatePrefab(
+            m_visualVolleyPrefab.m_id, Vector3::Zero, Vector3::Zero, getOwner());
+        m_volleyTrail = TrailAPI::getTrailComponent(m_volleyVisual);
+    }
+
+    m_visualsPrepared = true;
+    deactivateVisuals();
+}
+
+void LyrielArrowProjectile::cacheShooterScripts()
+{
+    if (m_sound != nullptr && m_lyrielCharacter != nullptr)
+    {
+        return;
+    }
+
+    Transform* projectileOwner = getProjectileOwnerTransform();
+    GameObject* shooter = projectileOwner != nullptr ? projectileOwner->getOwner() : nullptr;
+    if (shooter != nullptr)
+    {
+        m_sound = GameObjectAPI::findScript<LyrielSound>(shooter);
+        m_lyrielCharacter = GameObjectAPI::findScript<LyrielCharacter>(shooter);
+    }
+}
+
+void LyrielArrowProjectile::setBasicVisualActive(bool active)
+{
+    if (m_basicModel != nullptr)
+    {
+        ComponentAPI::setActive(m_basicModel, active);
+    }
+    if (m_basicAdornment != nullptr)
+    {
+        GameObjectAPI::setActive(m_basicAdornment, active);
+    }
+    if (m_basicTrail != nullptr)
+    {
+        if (active)
+        {
+            TrailAPI::clearTrail(m_basicTrail);
+            TrailAPI::generateTrail(m_basicTrail, true);
+        }
+        else
+        {
+            TrailAPI::generateTrail(m_basicTrail, false);
+            TrailAPI::clearTrail(m_basicTrail);
+        }
+    }
+}
+
+void LyrielArrowProjectile::setExternalVisualActive(GameObject* visualObject, TrailComponent* trail, bool active)
+{
+    if (visualObject == nullptr)
+    {
+        return;
+    }
+
+    if (active)
+    {
+        GameObjectAPI::setActive(visualObject, true);
+        if (trail != nullptr)
+        {
+            TrailAPI::clearTrail(trail);
+            TrailAPI::generateTrail(trail, true);
+        }
+        ParticleLifecycle::restart(visualObject);
+    }
+    else
+    {
+        ParticleLifecycle::stop(visualObject);
+        if (trail != nullptr)
+        {
+            TrailAPI::generateTrail(trail, false);
+            TrailAPI::clearTrail(trail);
+        }
+        GameObjectAPI::setActive(visualObject, false);
+    }
+}
+
+void LyrielArrowProjectile::deactivateVisuals()
+{
+    setBasicVisualActive(false);
+    setExternalVisualActive(m_chargedVisual, m_chargedTrail, false);
+    setExternalVisualActive(m_volleyVisual, m_volleyTrail, false);
+}
+
+void LyrielArrowProjectile::activateVisual(VisualModel visual)
+{
+    deactivateVisuals();
+    switch (visual)
+    {
+    case VisualModel::Basic:
+        setBasicVisualActive(true);
+        break;
+    case VisualModel::Charged:
+        setExternalVisualActive(m_chargedVisual, m_chargedTrail, true);
+        break;
+    case VisualModel::Volley:
+        setExternalVisualActive(m_volleyVisual, m_volleyTrail, true);
+        break;
     }
 }
 

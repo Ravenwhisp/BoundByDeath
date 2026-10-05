@@ -20,17 +20,21 @@ public:
 
 	ProjectileBase* acquireProjectile();
 	void releaseProjectile(ProjectileBase* projectile);
+	void configurePrewarmToCapacity();
 
 private:
 	bool createProjectile();
+	void prewarm(int count);
 	int resolveMaxProjectiles() const;
 
 public:
 	int m_maxProjectiles = 5;
 	int m_legacyMaxArrows = 0;
+	int m_initialProjectiles = 0;
 	PrefabRef m_projectilePrefab;
 	std::string m_legacyPrefabPath;
 
 private:
 	std::vector<ProjectileBase*> m_projectiles;
+	bool m_started = false;
 };

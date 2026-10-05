@@ -53,4 +53,5 @@ private:
 
     Vector3 m_pendingOrigin = Vector3::Zero;
     Vector3 m_pendingForward = Vector3::Zero;
+    std::vector<Damageable*> m_targetScratch;
 };

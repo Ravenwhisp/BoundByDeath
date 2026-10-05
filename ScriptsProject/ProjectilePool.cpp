@@ -19,6 +19,7 @@ namespace
 IMPLEMENT_SCRIPT_FIELDS(ProjectilePool,
 	SERIALIZED_INT(m_maxProjectiles, "Max Projectiles"),
 	SERIALIZED_INT(m_legacyMaxArrows, "Max Arrows"),
+	SERIALIZED_INT(m_initialProjectiles, "Initial Projectiles"),
 	SERIALIZED_ASSET_REF(m_projectilePrefab, "Projectile Prefab", AssetType::PREFAB),
 	SERIALIZED_STRING(m_legacyPrefabPath, "Arrow Prefab path")
 )
@@ -31,6 +32,30 @@ ProjectilePool::ProjectilePool(GameObject* owner)
 void ProjectilePool::Start()
 {
 	m_projectiles.clear();
+	m_projectiles.reserve(resolveMaxProjectiles());
+	m_started = true;
+	prewarm(m_initialProjectiles);
+}
+
+void ProjectilePool::configurePrewarmToCapacity()
+{
+	m_initialProjectiles = resolveMaxProjectiles();
+	if (m_started)
+	{
+		prewarm(m_initialProjectiles);
+	}
+}
+
+void ProjectilePool::prewarm(int count)
+{
+	const int targetCount = (std::min)((std::max)(count, 0), resolveMaxProjectiles());
+	while (static_cast<int>(m_projectiles.size()) < targetCount)
+	{
+		if (!createProjectile())
+		{
+			break;
+		}
+	}
 }
 
 int ProjectilePool::resolveMaxProjectiles() const
