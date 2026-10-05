@@ -20,6 +20,18 @@ void TriggerArea::Start()
 
 void TriggerArea::Update()
 {
+    if (m_asyncTransitionPending && !SceneAPI::isAsyncSceneLoading() && !SceneAPI::isAsyncSceneLoadReady())
+    {
+        m_asyncTransitionPending = false;
+        Debug::log("Async scene load failed for %s; using synchronous fallback.", m_sceneToLoad.c_str());
+        SceneAPI::requestSceneChange(m_sceneToLoad.c_str());
+    }
+
+    if (m_transitionRequested)
+    {
+        return;
+    }
+
     GameObject* owner = getOwner();
     if (!owner)
     {
@@ -66,11 +78,19 @@ void TriggerArea::triggerSceneChange()
         return;
     }
 	Debug::log("Triggering scene change to: %s", m_sceneToLoad.c_str());
-	if ((m_sceneToLoad == "Level2" || m_sceneToLoad == "BossLevel") && SceneAPI::requestAsyncSceneChange())
+	m_transitionRequested = true;
+	if ((m_sceneToLoad == "Level2" || m_sceneToLoad == "BossLevel") &&
+		(SceneAPI::isAsyncSceneLoading() || SceneAPI::isAsyncSceneLoadReady()) &&
+		SceneAPI::requestAsyncSceneChange())
 	{
+		m_asyncTransitionPending = true;
 		return;
 	}
 
+    if (m_sceneToLoad == "Level2" || m_sceneToLoad == "BossLevel")
+    {
+        Debug::log("Async scene load unavailable for %s; using synchronous fallback.", m_sceneToLoad.c_str());
+    }
     SceneAPI::requestSceneChange(m_sceneToLoad.c_str());
 }
 

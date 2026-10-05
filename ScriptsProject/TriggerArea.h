@@ -30,4 +30,6 @@ public:
 private:
     bool containsPoint(const Vector3& triggerCenter, const Vector3& point) const;
     void triggerSceneChange();
+    bool m_transitionRequested = false;
+    bool m_asyncTransitionPending = false;
 };
