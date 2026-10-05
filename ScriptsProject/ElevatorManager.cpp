@@ -1,5 +1,9 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "ElevatorManager.h"
+
+#include "EnvironmentSound.h"
+
+#include <cmath>
 #include "CombatAreaEvent.h"
 #include "CrystalShadowMark.h"
 #include "Damageable.h"
@@ -32,6 +36,7 @@ ElevatorManager::ElevatorManager(GameObject* owner)
 
 void ElevatorManager::Start()
 {
+    m_bossLevelLoadStarted = false;
     resolveCombatAreas();
     resolveCrystals();
 
@@ -149,6 +154,12 @@ void ElevatorManager::Update()
                 m_wavesCompleted++;
                 m_wavesDoneInCycle++;
 
+                if (m_wavesCompleted == areaCount && !m_bossLevelLoadStarted)
+                {
+                    SceneAPI::beginAsyncSceneLoad("BossLevel");
+                    m_bossLevelLoadStarted = true;
+                }
+
                 if (m_wavesDoneInCycle <= m_wavesPerCycle && m_wavesCompleted < areaCount)
                 {
                     m_waveDelayTimer = 0.0f;
@@ -184,6 +195,8 @@ void ElevatorManager::Update()
     case State::Done:
         break;
     }
+
+    updatePlatformSound();
 }
 
 void ElevatorManager::resolveCombatAreas()
@@ -395,6 +408,59 @@ void ElevatorManager::updatePlatformMove()
 
     if (m_platformTimer >= m_platformMoveDuration)
         m_platformMoving = false;
+}
+
+void ElevatorManager::updatePlatformSound()
+{
+    Transform* platformTransform = m_platform.getReferencedComponent();
+    if (platformTransform == nullptr)
+    {
+        if (!m_warnedNoPlatform)
+        {
+            m_warnedNoPlatform = true;
+            Debug::warn("[ElevatorManager] no Platform referenced, the elevator loop cannot play.");
+        }
+        return;
+    }
+
+    const float y = TransformAPI::getPosition(platformTransform).y;
+    const bool movedThisFrame = m_lastPlatformYValid && std::fabs(y - m_lastPlatformY) > 0.0005f;
+    m_lastPlatformY = y;
+    m_lastPlatformYValid = true;
+
+    // Short grace so a frame that happens to land on the same height does not stutter it.
+    if (movedThisFrame)
+    {
+        m_platformQuietTimer = 0.25f;
+    }
+    else if (m_platformQuietTimer > 0.0f)
+    {
+        m_platformQuietTimer -= Time::getDeltaTime();
+    }
+
+    // The scrolling walls are what sells the descent, and they keep going through the
+    // fights, so the elevator is still going down while the platform itself sits still.
+    // The platform check stays as a fallback for paths that move it without the walls.
+    const bool shouldSound = m_wallsActive || m_platformQuietTimer > 0.0f;
+    if (shouldSound == m_platformSoundActive)
+    {
+        return;
+    }
+
+    m_platformSoundActive = shouldSound;
+
+    // Posted from this manager, which also carries the listener, so the loop cannot be
+    // lost to attenuation while the platform drifts away from whoever is riding it.
+    GameObject* emitter = getOwner();
+    if (emitter == nullptr)
+    {
+        return;
+    }
+
+    Debug::log("[ElevatorManager] elevator %s (walls=%d, y=%.2f)",
+               shouldSound ? "descending" : "stopped", m_wallsActive ? 1 : 0, y);
+    EnvironmentSound::play(emitter, shouldSound ? "Play_Environment_Elevator_Loop"
+                                                : "Stop_Environment_Elevator_Loop");
 }
 
 void ElevatorManager::snapPlatformToTarget()

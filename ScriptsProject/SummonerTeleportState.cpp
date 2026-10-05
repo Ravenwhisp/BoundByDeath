@@ -1,5 +1,6 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "SummonerTeleportState.h"
+#include "SummonerSound.h"
 
 #include "SummonerEnemyController.h"
 #include "SummonerParticles.h"
@@ -61,7 +62,18 @@ void SummonerTeleportState::OnStateEnter()
 			m_particles->playTeleportParticle(departPosition);
 		}
 
+		if (SummonerSound* sound = GameObjectAPI::findScript<SummonerSound>(getOwner()))
+		{
+			sound->playTeleportOut();
+		}
+
 		TransformAPI::setGlobalPosition(ownerTransform, teleportPosition);
+
+		if (SummonerSound* sound = GameObjectAPI::findScript<SummonerSound>(getOwner()))
+		{
+			sound->playTeleportIn();
+		}
+
 		m_controller->consumeTeleportCooldown();
 
 		if (m_particles)

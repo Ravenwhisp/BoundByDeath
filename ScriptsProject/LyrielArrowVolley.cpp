@@ -11,6 +11,7 @@
 #include "BreakableDamageable.h"
 #include "LyrielUI.h"
 #include "LyrielConfig.h"
+#include "GameplayTargetRegistry.h"
 
 #include <cmath>
 
@@ -24,6 +25,7 @@ void LyrielArrowVolley::Start()
     LyrielAbilityBase::Start();
 
     m_lyrielUI = GameObjectAPI::findScript<LyrielUI>(getOwner());
+    m_targetScratch.reserve(64);
 
     if (!m_lyrielUI)
     {
@@ -125,9 +127,8 @@ void LyrielArrowVolley::onHitFrame()
         ? TransformAPI::getGlobalPosition(spawnTransform)
         : m_pendingOrigin;
 
-    std::vector<Damageable*> targets;
-    collectEnemiesInCone(origin, m_pendingForward, targets);
-    applyVolleyDamage(targets);
+    collectEnemiesInCone(origin, m_pendingForward, m_targetScratch);
+    applyVolleyDamage(m_targetScratch);
     spawnVolleyArrows(origin, m_pendingForward);
 
     LyrielSound* sound = m_lyrielCharacter != nullptr ? m_lyrielCharacter->getSound() : nullptr;
@@ -136,7 +137,7 @@ void LyrielArrowVolley::onHitFrame()
         sound->playVolleyRelease();
     }
 
-    Debug::log("[LyrielArrowVolley] Volley released. Targets hit: %d", static_cast<int>(targets.size()));
+    Debug::log("[LyrielArrowVolley] Volley released. Targets hit: %d", static_cast<int>(m_targetScratch.size()));
 }
 
 void LyrielArrowVolley::onAttackWindowFinished()
@@ -264,28 +265,6 @@ void LyrielArrowVolley::collectEnemiesInCone(const Vector3& origin, const Vector
 {
     outTargets.clear();
 
-    //std::vector<GameObject*> allEnemies = SceneAPI::findAllGameObjectsByTag(Tag::ENEMY, true); //cambiar, esto no pilla los damageables
-
-    //detectar enemigos en cono
-
-	const std::vector<GameObject*> objectsInCircularRange = SceneAPI::getObjectsInCircularArea(Vector2(origin.x, origin.z), m_lyrielCharacter->getConfig()->m_volleyRange);
-
-    std::vector<Damageable*> damageables;
-
-    for(GameObject* obj : objectsInCircularRange)
-    {
-        if (obj->GetTag() == Tag::PLAYER)
-        {
-            continue;
-        }
-
-        Damageable* damageableScript = GameObjectAPI::findScript<Damageable>(obj);
-        if (damageableScript)
-        {
-            damageables.push_back(damageableScript);
-        }
-	}
-
     Vector3 flatForward = forward;
     flatForward.y = 0.0f;
 
@@ -299,21 +278,17 @@ void LyrielArrowVolley::collectEnemiesInCone(const Vector3& origin, const Vector
     const float halfAngleRadians = DirectX::XMConvertToRadians(m_lyrielCharacter->getConfig()->m_volleyConeAngleDegrees * 0.5f);
     const float minDot = std::cos(halfAngleRadians);
 
-    for (Damageable* damageable : damageables)
+    bool hasRemovedTarget = false;
+    const auto& registeredTargets = GameplayTargetRegistry::getTargets();
+    for (const GameplayTargetRegistry::Target& target : registeredTargets)
     {
-        if (damageable == nullptr)
+        if ((target.tag != Tag::ENEMY && target.tag != Tag::BREAKABLE) ||
+            !GameplayTargetRegistry::isValid(target, hasRemovedTarget))
         {
             continue;
         }
 
-        const Transform* enemyTransform = GameObjectAPI::getTransform(damageable->getOwner());
-
-        if (enemyTransform == nullptr)
-        {
-            continue;
-        }
-
-        const Vector3 enemyPosition = TransformAPI::getGlobalPosition(enemyTransform);
+        const Vector3 enemyPosition = TransformAPI::getGlobalPosition(target.transform);
         Vector3 toEnemy = enemyPosition - origin;
         toEnemy.y = 0.0f;
 
@@ -333,8 +308,13 @@ void LyrielArrowVolley::collectEnemiesInCone(const Vector3& origin, const Vector
         const float dot = flatForward.Dot(toEnemy);
         if (dot >= minDot)
         {
-            outTargets.push_back(damageable);
+            outTargets.push_back(target.damageable);
         }
+    }
+
+    if (hasRemovedTarget)
+    {
+        GameplayTargetRegistry::pruneRemovedTargets();
     }
 }
 

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "ScriptAPI.h"
 
@@ -34,6 +34,7 @@ public:
 
     // L2 Taunt
     void playTauntShout();
+    void playShadowExecutionVoice();   // his shout as the execution goes off
 
     // Shadow Mark — delayed internally to match animation contact frame
     void playMarkApply();
@@ -68,6 +69,7 @@ private:
     float    m_chargeLoopArmTimer = -1.0f;
 
     // Hover loop
+    bool     m_hoverActive = false;
     uint32_t m_hoverLoopID = 0;
 
     // Hurt SFX debounce: a one-shot reaction sound must never re-fire every frame

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "ScriptAPI.h"
 #include "StateMachineScript.h"
@@ -19,6 +19,8 @@ public:
 	void OnStateExit() override;
 
 private:
+	bool m_hasScreamed = false;
+
 	MeleeEnemyController* m_paladinController = nullptr;
 	AnimationComponent* m_animation = nullptr;
 	PaladinVFX* m_paladinVFX = nullptr;

@@ -4,6 +4,7 @@
 #include "ProjectilePool.h"
 #include "SeekerSigilProjectile.h"
 #include "AelorinUI.h"
+#include "AelorinVFX.h"
 
 AelorinSeekerSigilsState::AelorinSeekerSigilsState(GameObject* owner)
 	: StateMachineScript(owner)
@@ -27,6 +28,7 @@ void AelorinSeekerSigilsState::OnStateEnter()
 	m_normalProjectilePool = m_controller->getSeekerSigilsProjectilePool();
 	m_largeProjectilePool = m_controller->getSeekerSigilsLargeProjectilePool();
 	m_aelorinUI = GameObjectAPI::findScript<AelorinUI>(parentGameObject);
+	m_vfx = GameObjectAPI::findScript<AelorinVFX>(parentGameObject);
 
 	// reset members
 	m_activeAbility = AelorinAbility::None;
@@ -73,11 +75,30 @@ void AelorinSeekerSigilsState::OnStateEnter()
 		return;
 	}
 
+	if (m_vfx)
+	{
+		if (m_controller->isPhase2())
+		{
+			m_vfx->startPhase2Spell();
+		}
+		else
+		{
+			m_vfx->startPhase1Spell();
+		}
+	}
+
 	m_isFuryCast = m_controller->isFuryActive();
 	if (m_isFuryCast)
 	{
 		m_controller->recordFuryCast();
 	}
+
+	const Vector3 lyrielPosition = m_controller->getLyrielPosition();
+	const Vector3 deathPosition = m_controller->getDeathPosition();
+
+	const Vector3 middlePosition = (lyrielPosition + deathPosition) * 0.5f;
+
+	m_controller->facePositionInstant(middlePosition);
 
 	Debug::log("[AelorinSeekerSigilsState] ENTER");
 }
@@ -118,6 +139,15 @@ void AelorinSeekerSigilsState::OnStateUpdate()
 		++m_currentWave;
 		m_waveTimer = 0.0f;
 
+		if (!m_controller->isPhase2() && m_currentWave >= config->m_seekerSigilsWaveCount)
+		{
+			if (m_vfx && m_controller)
+			{
+				m_vfx->stopPhase1Spell();
+				m_vfx->stopPhase2Spell();
+			}
+		}
+
 		return;
 	}
 
@@ -154,7 +184,14 @@ void AelorinSeekerSigilsState::OnStateExit()
 		m_aelorinUI->cancelSeekerSigils();
 	}
 
+	if (m_vfx && m_controller)
+	{
+		m_vfx->stopPhase1Spell();
+		m_vfx->stopPhase2Spell();
+	}
+
 	m_aelorinUI = nullptr;
+	m_vfx = nullptr;
 	m_waveTimer = 0.0f;
 	m_currentWave = 0;
 	m_finalProjectileLaunched = false;
@@ -224,7 +261,7 @@ void AelorinSeekerSigilsState::launchProjectileAt(ProjectilePool* projectilePool
 	spawnPosition.y += config->m_seekerSigilsSpawnHeight;
 
 	// UI
-	if (!m_isFuryCast && m_aelorinUI && config->m_seekerSigilsFallSpeed > 0.0f)
+	if (m_aelorinUI && config->m_seekerSigilsFallSpeed > 0.0f)
 	{
 		const float telegraphDuration = config->m_seekerSigilsSpawnHeight / config->m_seekerSigilsFallSpeed;
 		m_aelorinUI->showSeekerSigilsUI(impactPosition, impactRadius, telegraphDuration);

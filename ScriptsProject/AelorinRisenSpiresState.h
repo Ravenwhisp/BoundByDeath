@@ -8,6 +8,7 @@
 class AnimationComponent;
 class AelorinAttackExecutor;
 class AelorinUI;
+class AelorinVFX;
 
 class AelorinRisenSpiresState : public StateMachineScript
 {
@@ -21,7 +22,7 @@ public:
 	void OnStateExit() override;
 
 private:
-	void executePattern(Transform* patternRoot, const char* sourceName);
+	void executePattern(Transform* patternRoot, const char* sourceName, bool dealDamage);
 	void finishAbility();
 
 private:
@@ -29,6 +30,7 @@ private:
 	AelorinAttackExecutor* m_attackExecutor = nullptr;
 	AnimationComponent* m_animation = nullptr;
 	AelorinUI* m_aelorinUI = nullptr;
+	AelorinVFX* m_vfx = nullptr;
 
 	AelorinAbility m_activeAbility = AelorinAbility::None;
 
@@ -39,4 +41,9 @@ private:
 	bool m_completed = false;
 
 	bool m_isFuryCast = false;
+
+	uint64_t m_spireNumber = 0;
+
+	std::vector<Vector2> generateSpirePositions(int count, float arenaRadius, float minDistance, const AelorinAttackConfig* config);
+	Vector2 randomPointInArena(const AelorinAttackConfig* config);
 };

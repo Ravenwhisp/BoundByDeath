@@ -3,6 +3,21 @@
 #include "AssetId.h"
 #include "PersistingCheckpointState.h"
 #include "PersistingPowerupState.h"
+#include <cstring>
+
+namespace
+{
+const char* getPersistedLevelName(SceneId sceneId)
+{
+	switch (sceneId)
+	{
+	case SceneId::LEVEL1: return "Level1";
+	case SceneId::LEVEL2: return "Level2";
+	case SceneId::LEVEL3: return "BossLevel";
+	default: return nullptr;
+	}
+}
+}
 
 IMPLEMENT_SCRIPT_FIELDS(UIController,
 	SERIALIZED_COMPONENT_REF(m_menuLights, "Main Menu Lights", ComponentType::TRANSFORM),
@@ -14,15 +29,33 @@ UIController::UIController(GameObject* owner): Script(owner) {}
 
 void UIController::Start()
 {
+	m_preloadedLevelName.clear();
 	Transform* menuLightsTransform = m_menuLights.getReferencedComponent();
 	if (menuLightsTransform)
 	{
 		m_menuLightsGO = ComponentAPI::getOwner(menuLightsTransform);
 	}
 	m_blackBgTransform = m_blackBg.getReferencedComponent();
+
+	const char* ownerName = GameObjectAPI::getName(getOwner());
+	if (ownerName != nullptr && std::strcmp(ownerName, "Lose") == 0)
+	{
+		if (const char* levelName = getPersistedLevelName(PersistingCheckpointState::Get().m_lastSceneId))
+		{
+			m_preloadedLevelName = levelName;
+			SceneAPI::beginAsyncSceneLoad(levelName);
+		}
+	}
 }
 void UIController::Update()
 {
+	if (m_asyncLevelTransitionPending && !SceneAPI::isAsyncSceneLoading() && !SceneAPI::isAsyncSceneLoadReady())
+	{
+		m_asyncLevelTransitionPending = false;
+		Debug::log("Async scene load failed for %s; using synchronous fallback.", m_preloadedLevelName.c_str());
+		SceneAPI::requestSceneChange(m_preloadedLevelName.c_str());
+	}
+
 	if (!m_isFading) return;
 
 	m_blackBgFadeTimer -= Time::getDeltaTime();
@@ -76,21 +109,28 @@ void UIController::ChangeScene2(const AssetId& sceneID)
 
 void UIController::ChangeLevel()
 {
-	switch (PersistingCheckpointState::Get().m_lastSceneId)
+	if (m_asyncLevelTransitionPending)
 	{
-	case SceneId::LEVEL1:
-		SceneAPI::requestSceneChange("Level1");
-		break;
-	case SceneId::LEVEL2:
-		SceneAPI::requestSceneChange("Level2");
-		break;
-	case SceneId::LEVEL3:
-		SceneAPI::requestSceneChange("BossLevel");
-		break;
-	default:
-		SceneAPI::requestSceneChange("Main_Menu");
-		break;
+		return;
 	}
+
+	const char* levelName = getPersistedLevelName(PersistingCheckpointState::Get().m_lastSceneId);
+	if (levelName == nullptr)
+	{
+		SceneAPI::requestSceneChange("Main_Menu");
+		return;
+	}
+
+	if (m_preloadedLevelName == levelName &&
+		(SceneAPI::isAsyncSceneLoading() || SceneAPI::isAsyncSceneLoadReady()) &&
+		SceneAPI::requestAsyncSceneChange())
+	{
+		m_asyncLevelTransitionPending = true;
+		return;
+	}
+
+	Debug::log("Async scene load unavailable for %s; using synchronous fallback.", levelName);
+	SceneAPI::requestSceneChange(levelName);
 }
 
 void UIController::ExitApplication()

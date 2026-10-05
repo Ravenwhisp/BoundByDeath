@@ -1,5 +1,6 @@
 ﻿#include "pch.h"
 #include "CombatAreaEvent.h"
+#include "PaladinSound.h"
 
 #include "GameplayEventTrigger.h"
 #include "Damageable.h"
@@ -47,6 +48,24 @@ void CombatAreaEvent::executeEvent(GameplayEventTrigger* trigger)
     }
 
     m_remainingEnemies = m_enemies;
+
+    // Staggered so a room of paladins reads as a group reacting, not a chorus.
+    float screamDelay = 0.0f;
+    for (ComponentRef<Transform>& enemyRef : m_enemies)
+    {
+        Transform* enemyTransform = enemyRef.getReferencedComponent();
+        GameObject* enemy = enemyTransform != nullptr ? ComponentAPI::getOwner(enemyTransform) : nullptr;
+        if (enemy == nullptr)
+        {
+            continue;
+        }
+
+        if (PaladinSound* sound = GameObjectAPI::findScript<PaladinSound>(enemy))
+        {
+            sound->playScream(screamDelay);
+            screamDelay += 0.22f;
+        }
+    }
 
     closeArea();
 

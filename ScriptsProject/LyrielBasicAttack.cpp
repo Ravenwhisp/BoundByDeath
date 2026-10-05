@@ -11,6 +11,7 @@
 #include "LyrielArrowProjectile.h"
 #include "LyrielUI.h"
 #include "LyrielConfig.h"
+#include "GameplayTargetRegistry.h"
 #include "PlayerRotation.h"
 
 #include <vector>
@@ -273,16 +274,17 @@ GameObject* LyrielBasicAttack::findBreakableInAimLine(const Vector3& origin, con
     GameObject* closestBreakable = nullptr;
     float closestDistance = range;
 
-    const std::vector<GameObject*> breakables = SceneAPI::findAllGameObjectsByTag(Tag::BREAKABLE, true);
-    for (GameObject* breakable : breakables)
+    bool hasRemovedTarget = false;
+    const auto& registeredTargets = GameplayTargetRegistry::getTargets();
+    for (const GameplayTargetRegistry::Target& candidate : registeredTargets)
     {
-        Transform* breakableTransform = breakable != nullptr ? GameObjectAPI::getTransform(breakable) : nullptr;
-        if (breakableTransform == nullptr)
+        if (candidate.tag != Tag::BREAKABLE ||
+            !GameplayTargetRegistry::isValid(candidate, hasRemovedTarget))
         {
             continue;
         }
 
-        Vector3 toBreakable = TransformAPI::getGlobalPosition(breakableTransform) - origin;
+        Vector3 toBreakable = TransformAPI::getGlobalPosition(candidate.transform) - origin;
         toBreakable.y = 0.0f;
 
         const float forwardDistance = toBreakable.Dot(flatDirection);
@@ -297,8 +299,13 @@ GameObject* LyrielBasicAttack::findBreakableInAimLine(const Vector3& origin, con
             continue;
         }
 
-        closestBreakable = breakable;
+        closestBreakable = candidate.gameObject;
         closestDistance = forwardDistance;
+    }
+
+    if (hasRemovedTarget)
+    {
+        GameplayTargetRegistry::pruneRemovedTargets();
     }
 
     return closestBreakable;

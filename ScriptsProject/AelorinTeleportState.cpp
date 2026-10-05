@@ -3,6 +3,7 @@
 
 #include "AelorinAttackConfig.h"
 #include "AelorinAttackExecutor.h"
+#include "AelorinVFX.h"
 
 AelorinTeleportState::AelorinTeleportState(GameObject* owner)
 	: StateMachineScript(owner)
@@ -23,13 +24,11 @@ void AelorinTeleportState::OnStateEnter()
 	// get scripts
 	m_controller = GameObjectAPI::findScript<AelorinBossController>(parentGameObject);
 	m_animation = AnimationAPI::getAnimationComponent(getOwner());
+	m_vfx = GameObjectAPI::findScript<AelorinVFX>(parentGameObject);
 
 	// reset members
 	m_crowdingPlayer = nullptr;
 	m_activeAbility = AelorinAbility::None;
-	m_stateTimer = 0.0f;
-	m_recoveryTimer = 0.0f;
-	m_teleportExecuted = false;
 	m_completed = false;
 
 	if (!m_controller)
@@ -65,7 +64,28 @@ void AelorinTeleportState::OnStateEnter()
 	if (!m_crowdingPlayer)
 	{
 		Debug::warn("[AelorinTeleportState] No crowding player found.");
-	}	
+	}
+
+	changePhase(TeleportPhase::TeleportIn);
+
+	if (m_vfx)
+	{
+		if (m_controller->isPhase2())
+		{
+			m_vfx->startPhase2Teleport();
+		}
+		else
+		{
+			m_vfx->startPhase1Teleport();
+		}
+	}
+
+	const Vector3 lyrielPosition = m_controller->getLyrielPosition();
+	const Vector3 deathPosition = m_controller->getDeathPosition();
+
+	const Vector3 middlePosition = (lyrielPosition + deathPosition) * 0.5f;
+
+	m_controller->facePositionInstant(middlePosition);
 
 	Debug::log("[AelorinTeleportState] ENTER");
 }
@@ -88,40 +108,98 @@ void AelorinTeleportState::OnStateUpdate()
 		return;
 	}
 
-	if (!m_teleportExecuted)
+	if (m_phase == TeleportPhase::TeleportIn)
 	{
-		m_stateTimer += Time::getDeltaTime();
+		m_phaseTimer += Time::getDeltaTime();
 
-		if (m_stateTimer < config->m_teleportCastDuration)
+		if (m_phaseTimer < config->m_teleportCastDuration)
 		{
 			return;
 		}
 
 		executeTeleport();
-		m_teleportExecuted = true;
+
+		changePhase(TeleportPhase::TeleportOut);
+
 		return;
 	}
 
-	m_recoveryTimer += Time::getDeltaTime();
-	
-	if (m_recoveryTimer < config->m_teleportRecoveryDuration)
+	if (m_phase == TeleportPhase::TeleportOut)
 	{
+		m_phaseTimer += Time::getDeltaTime();
+
+		if (m_phaseTimer < config->m_teleportRecoveryDuration)
+		{
+			return;
+		}
+
+		finishAbility();
 		return;
 	}
-
-	finishAbility();
 }
 
 void AelorinTeleportState::OnStateExit()
 {
+	if (m_animation)
+	{
+		AnimationAPI::clearOverrideClip(m_animation, 0.0f);
+	}
+
+	if (m_vfx && m_controller)
+	{
+		m_vfx->stopPhase1Teleport();
+		m_vfx->stopPhase2Teleport();
+	}
+
 	m_crowdingPlayer = nullptr;
 	m_aelorinTransform = nullptr;
-	m_stateTimer = 0.0f;
-	m_recoveryTimer = 0.0f;
-	m_teleportExecuted = false;
+	m_phase = TeleportPhase::TeleportIn;
+	m_phaseTimer = 0.0f;
 	m_completed = false;
 
 	Debug::log("[AelorinTeleportState] EXIT");
+}
+
+void AelorinTeleportState::changePhase(TeleportPhase phase)
+{
+	m_phase = phase;
+	m_phaseTimer = 0.0f;
+
+	if (!m_animation)
+	{
+		return;
+	}
+
+	if (phase == TeleportPhase::TeleportIn)
+	{
+		AnimationAPI::setSpeedMultiplier(m_animation, 0.65f);
+
+		if (m_controller && m_controller->isPhase2())
+		{
+			AnimationAPI::playOverrideClip(m_animation, "teleportin_phase2", 0.0f, false);
+		}
+		else
+		{
+			AnimationAPI::playOverrideClip(m_animation, "boss_teleportin", 0.0f, false);
+		}
+		AnimationAPI::setPlaybackTime(m_animation, 0.0f);
+		return;
+	}
+
+	if (phase == TeleportPhase::TeleportOut)
+	{
+		AnimationAPI::setSpeedMultiplier(m_animation, 0.75f);
+		if (m_controller && m_controller->isPhase2())
+		{
+			AnimationAPI::playOverrideClip(m_animation, "teleportout_phase2", 0.0f, false);
+		}
+		else
+		{
+			AnimationAPI::playOverrideClip(m_animation, "boss_teleportout", 0.0f, false);
+		}
+		AnimationAPI::setPlaybackTime(m_animation, 0.0f);
+		return;
+	}
 }
 
 void AelorinTeleportState::executeTeleport()
@@ -152,6 +230,7 @@ void AelorinTeleportState::executeTeleport()
 	}
 
 	const Vector3 departurePosition = TransformAPI::getGlobalPosition(m_aelorinTransform);
+	m_controller->facePositionInstant(departurePosition);
 
 	// Phase 2 damage burst
 	if (m_controller->isPhase2() && m_attackExecutor)
@@ -159,8 +238,27 @@ void AelorinTeleportState::executeTeleport()
 		m_attackExecutor->applyDamageInRadius(departurePosition, config->m_teleportPhase2BurstRadius, config->m_teleportPhase2BurstDamage, "Aelorin Teleport - Departure Burst");
 	}
 
+	if (m_vfx)
+	{
+		if (m_controller->isPhase2())
+		{
+			m_vfx->stopPhase2Teleport();
+		}
+		else
+		{
+			m_vfx->stopPhase1Teleport();
+		}
+	}
+
 	const Vector3 destinationPosition = TransformAPI::getGlobalPosition(destinationAnchor);
 	TransformAPI::setGlobalPosition(m_aelorinTransform, destinationPosition);
+
+	const Vector3 lyrielPosition = m_controller->getLyrielPosition();
+	const Vector3 deathPosition = m_controller->getDeathPosition();
+
+	const Vector3 middlePosition = (lyrielPosition + deathPosition) * 0.5f;
+
+	m_controller->facePositionInstant(middlePosition);
 
 	// start cooldown
 	m_controller->startTeleportCooldown();
@@ -174,6 +272,8 @@ void AelorinTeleportState::finishAbility()
 	}
 
 	m_completed = true;
+
+	AnimationAPI::clearOverrideClip(m_animation, 0.0f);
 
 	const bool sent = AnimationAPI::sendTrigger(m_animation, "ToIdle");
 	if (!sent)

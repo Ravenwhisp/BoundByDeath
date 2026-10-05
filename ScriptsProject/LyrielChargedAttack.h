@@ -7,6 +7,7 @@ class LyrielCharacter;
 class LyrielConfig;
 class LyrielUI;
 class LyrielParticles;
+class Damageable;
 
 class LyrielChargedAttack : public ChargedAttackBase
 {
@@ -40,8 +41,8 @@ private:
     float computeChargedDamage() const;
     float computeChargedRange() const;
 
-    void collectEnemiesInLine(const Vector3& origin, const Vector3& forward, std::vector<GameObject*>& outTargets);
-    void applyChargedDamage(const std::vector<GameObject*>& targets, float damage, bool isMaxCharge);
+    void collectTargetsInLine(const Vector3& origin, const Vector3& forward);
+    void applyChargedDamage(float damage, bool isMaxCharge);
 
     void spawnChargedArrow(const Vector3& origin, const Vector3& forward);
     void drawChargePreview(const Vector3& origin, const Vector3& forward) const;
@@ -62,4 +63,5 @@ private:
     float m_maxHoldTimer = 0.0f;
     Vector3 m_currentAimDirection = Vector3::Zero;
     Vector3 m_attackFacingDirection = Vector3::Zero;
+    std::vector<Damageable*> m_targetScratch;
 };

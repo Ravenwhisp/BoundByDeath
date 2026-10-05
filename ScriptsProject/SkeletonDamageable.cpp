@@ -1,5 +1,6 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "SkeletonDamageable.h"
+#include "SkeletonSound.h"
 
 #include "SkeletonEnemyController.h"
 #include "SkeletonAttackConfig.h"
@@ -45,6 +46,11 @@ void SkeletonDamageable::takeDamage(const HitContext& ctx)
 
 	if (shouldBlockDamage(enemyCtx))
 	{
+		if (SkeletonSound* sound = GameObjectAPI::findScript<SkeletonSound>(getOwner()))
+		{
+			sound->playGuardBlock();
+		}
+
 		Debug::log("[SkeletonDamageable] Damage blocked by Guard.");
 		return;
 	}

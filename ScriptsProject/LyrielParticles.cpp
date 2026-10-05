@@ -10,7 +10,8 @@ IMPLEMENT_SCRIPT_FIELDS(LyrielParticles,
     SERIALIZED_ASSET_REF(m_dashParticlePrefab, "Dash Particle Prefab", AssetType::PREFAB),
     SERIALIZED_STRING(m_hitFlashPath, "Hit Flash Prefab Path"),
     SERIALIZED_ASSET_REF(m_hitFlashPrefab, "Hit Flash Prefab", AssetType::PREFAB),
-    SERIALIZED_STRING(m_bowAnchorName, "Bow Anchor Name")
+    SERIALIZED_STRING(m_bowAnchorName, "Bow Anchor Name"),
+    SERIALIZED_INT(m_hitFlashPoolSize, "Hit Flash Pool Size")
 )
 
 LyrielParticles::LyrielParticles(GameObject* owner)
@@ -21,20 +22,32 @@ LyrielParticles::LyrielParticles(GameObject* owner)
 void LyrielParticles::Start()
 {
     SetDashInactive();
+
+    Transform* bowTransform = findBowTransform();
+    const Vector3 position = bowTransform != nullptr ? TransformAPI::getGlobalPosition(bowTransform) : Vector3::Zero;
+    const Vector3 rotation = bowTransform != nullptr ? TransformAPI::getGlobalEulerDegrees(bowTransform) : Vector3::Zero;
+    ParticleLifecycle::ensurePersistent(m_chargeGlowInstance, m_chargeGlowPrefab.m_id, position, rotation, getOwner());
+    ParticleLifecycle::deactivate(m_chargeGlowInstance);
+
+    prewarmHitFlashes();
 }
 
 void LyrielParticles::OnGameStop()
 {
     ParticleLifecycle::destroy(m_chargeGlowInstance);
     ParticleLifecycle::destroy(m_dashParticleInstance);
-    m_timedOneShots.clear();
+    for (HitFlashSlot& slot : m_hitFlashPool)
+    {
+        ParticleLifecycle::destroy(slot.instance);
+    }
+    m_hitFlashPool.clear();
     m_chargeGlowActive = false;
     m_dashParticleActive = false;
 }
 
 void LyrielParticles::Update()
 {
-    m_timedOneShots.update(Time::getDeltaTime());
+    updateHitFlashes(Time::getDeltaTime());
     syncActiveParticles();
 }
 
@@ -147,52 +160,100 @@ void LyrielParticles::SetChargeInactive()
 
 void LyrielParticles::playHitFlash(const Vector3& position, GameObject* target)
 {
-    ParticleLifecycle::spawnOneShotTimed(m_timedOneShots, m_hitFlashPrefab.m_id, position, Vector3::Zero, ParticleLifecycle::kDefaultOneShotLifetime, target);
+    HitFlashSlot* selected = nullptr;
+    for (HitFlashSlot& slot : m_hitFlashPool)
+    {
+        if (slot.remainingSeconds <= 0.0f)
+        {
+            selected = &slot;
+            break;
+        }
+
+        if (selected == nullptr || slot.remainingSeconds < selected->remainingSeconds)
+        {
+            selected = &slot;
+        }
+    }
+
+    if (selected == nullptr || selected->instance == nullptr)
+    {
+        return;
+    }
+
+    Transform* effectTransform = GameObjectAPI::getTransform(selected->instance);
+    if (effectTransform != nullptr)
+    {
+        TransformAPI::setGlobalPosition(effectTransform, position);
+        TransformAPI::setGlobalRotationEuler(effectTransform, Vector3::Zero);
+    }
+
+    ParticleLifecycle::activate(selected->instance);
+    selected->target = target;
+    selected->targetOffset = Vector3::Zero;
+    if (target != nullptr)
+    {
+        Transform* targetTransform = GameObjectAPI::getTransform(target);
+        if (targetTransform != nullptr)
+        {
+            selected->targetOffset = position - TransformAPI::getGlobalPosition(targetTransform);
+        }
+    }
+    selected->remainingSeconds = ParticleLifecycle::kDefaultOneShotLifetime;
 }
 
-void LyrielParticles::SetArrowTrailActive(Transform* arrowTransform)
+void LyrielParticles::prewarmHitFlashes()
 {
-    if (arrowTransform == nullptr)
+    const int poolSize = (std::max)(m_hitFlashPoolSize, 0);
+    m_hitFlashPool.clear();
+    m_hitFlashPool.reserve(poolSize);
+
+    for (int i = 0; i < poolSize; ++i)
     {
-        return;
-    }
-
-    GameObject* arrowObject = ComponentAPI::getOwner(arrowTransform);
-
-    if (arrowObject == nullptr)
-    {
-        return;
-    }
-
-    TrailComponent* trailComponent = TrailAPI::getTrailComponent(arrowObject);
-
-    if (trailComponent != nullptr)
-    {
-        TrailAPI::clearTrail(trailComponent);
-        TrailAPI::generateTrail(trailComponent, true);
+        HitFlashSlot slot;
+        slot.instance = ParticleLifecycle::instantiatePersistent(
+            m_hitFlashPrefab.m_id,
+            Vector3::Zero,
+            Vector3::Zero,
+            ParticleLifecycle::getRuntimeVfxContainer());
+        if (slot.instance != nullptr)
+        {
+            m_hitFlashPool.push_back(slot);
+        }
     }
 }
 
-void LyrielParticles::SetArrowTrailInactive(Transform* arrowTransform)
+void LyrielParticles::updateHitFlashes(float deltaTime)
 {
-    if (arrowTransform == nullptr)
+    for (HitFlashSlot& slot : m_hitFlashPool)
     {
-        return;
-    }
+        if (slot.remainingSeconds <= 0.0f)
+        {
+            continue;
+        }
 
-    GameObject* arrowObject = ComponentAPI::getOwner(arrowTransform);
+        if (slot.target != nullptr && SceneAPI::containsGameObject(slot.target))
+        {
+            Transform* effectTransform = GameObjectAPI::getTransform(slot.instance);
+            Transform* targetTransform = GameObjectAPI::getTransform(slot.target);
+            if (effectTransform != nullptr && targetTransform != nullptr)
+            {
+                TransformAPI::setGlobalPosition(
+                    effectTransform,
+                    TransformAPI::getGlobalPosition(targetTransform) + slot.targetOffset);
+            }
+        }
+        else
+        {
+            slot.target = nullptr;
+        }
 
-    if (arrowObject == nullptr)
-    {
-        return;
-    }
-
-    TrailComponent* trailComponent = TrailAPI::getTrailComponent(arrowObject);
-
-    if (trailComponent != nullptr)
-    {
-        TrailAPI::generateTrail(trailComponent, false);
-        TrailAPI::clearTrail(trailComponent);
+        slot.remainingSeconds -= deltaTime;
+        if (slot.remainingSeconds <= 0.0f)
+        {
+            slot.remainingSeconds = 0.0f;
+            slot.target = nullptr;
+            ParticleLifecycle::deactivate(slot.instance);
+        }
     }
 }
 

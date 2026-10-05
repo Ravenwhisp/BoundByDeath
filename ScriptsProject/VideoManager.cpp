@@ -12,13 +12,17 @@ IMPLEMENT_SCRIPT_FIELDS(VideoManager,
     SERIALIZED_STRING(m_sceneToLoad, "Next Scene")
 )
 
-VideoManager::VideoManager(GameObject* owner)
-    : Script(owner)
+VideoManager::VideoManager(GameObject* owner) : Script(owner)
 {
 }
 
 void VideoManager::Start()
 {
+    if (!m_sceneToLoad.empty())
+    {
+        m_asyncLoadStarted = SceneAPI::beginAsyncSceneLoad(m_sceneToLoad.c_str());
+    }
+
     if (Transform* loadingImageTransform = m_loadingImage.getReferencedComponent())
     {
         GameObject* loadingImageOwner = ComponentAPI::getOwner(loadingImageTransform);
@@ -27,8 +31,9 @@ void VideoManager::Start()
 
     if (Transform* skipContainerTransform = m_skipContainer.getReferencedComponent())
     {
-        GameObject* skipContainerOwner = ComponentAPI::getOwner(skipContainerTransform);
-        m_skipContainerTransform = static_cast<Transform2D*>(GameObjectAPI::getComponent(skipContainerOwner, ComponentType::TRANSFORM2D));
+        m_skipContainerOwner = ComponentAPI::getOwner(skipContainerTransform);
+        m_skipContainerTransform = static_cast<Transform2D*>(GameObjectAPI::getComponent(m_skipContainerOwner, ComponentType::TRANSFORM2D));
+        GameObjectAPI::setActive(m_skipContainerOwner, false);
     }
 
     if (Transform* sliderTransform = m_skipSlider.getReferencedComponent())
@@ -50,16 +55,38 @@ void VideoManager::Start()
         VideoAPI::play(m_videoComponent);
         m_started = true;
     }
+
 }
 
 void VideoManager::Update()
 {
+    const bool asyncReady = m_asyncLoadStarted && SceneAPI::isAsyncSceneLoadReady();
+    const bool asyncLoading = m_asyncLoadStarted && SceneAPI::isAsyncSceneLoading();
+    const bool asyncFailed = !asyncReady && !asyncLoading;
+
+    if (asyncFailed && !m_asyncFailureLogged && !m_sceneToLoad.empty())
+    {
+        Debug::log("Async scene load unavailable for %s; using synchronous fallback.", m_sceneToLoad.c_str());
+        m_asyncFailureLogged = true;
+    }
+
+    if (m_asyncTransitionPending && asyncFailed)
+    {
+        m_asyncTransitionPending = false;
+        SceneAPI::requestSceneChange(m_sceneToLoad.c_str());
+    }
+
+    if (m_transitionRequested)
+    {
+        return;
+    }
+
     if (!m_videoComponent)
     {
         return;
     }
 
-    if (Input::isFaceButtonBottomPressed(0))
+    if (Input::isFaceButtonBottomPressed(0) && (asyncReady || asyncFailed))
     {
         m_gamepadSkipHoldTime += Time::getDeltaTime();
     }
@@ -74,11 +101,21 @@ void VideoManager::Update()
         SliderAPI::setFillAmount(m_skipSliderComponent, holdProgress);
     }
 
-    const bool skipRequested = Input::isKeyDown(KeyCode::Escape) || m_gamepadSkipHoldTime >= 3.0f;
+    if (!m_skipAvailable && (asyncReady || asyncFailed))
+    {
+        m_skipAvailable = true;
+        if (m_skipContainerOwner)
+        {
+            GameObjectAPI::setActive(m_skipContainerOwner, true);
+        }
+    }
+
+    const bool skipRequested = m_skipAvailable && (Input::isKeyDown(KeyCode::Escape) || m_gamepadSkipHoldTime >= 3.0f);
     const bool finished = m_started && !VideoAPI::isPlaying(m_videoComponent);
 
     if (skipRequested || finished)
     {
+        m_transitionRequested = true;
         VideoAPI::stop(m_videoComponent);
 
         if (m_loadingImageTransform)
@@ -93,7 +130,14 @@ void VideoManager::Update()
 
         if (!m_sceneToLoad.empty())
         {
-            SceneAPI::requestSceneChange(m_sceneToLoad.c_str());
+            if ((asyncReady || asyncLoading) && SceneAPI::requestAsyncSceneChange())
+            {
+                m_asyncTransitionPending = true;
+            }
+            else
+            {
+                SceneAPI::requestSceneChange(m_sceneToLoad.c_str());
+            }
         }
     }
 }

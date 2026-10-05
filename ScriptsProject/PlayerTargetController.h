@@ -74,7 +74,6 @@ private:
     GameObject* m_currentTarget = nullptr;
     GameObject* m_defaultEnemyTarget = nullptr;
     std::vector<TargetCandidate> m_targetsInRange;
-
     DeathSound*  m_deathSound  = nullptr;
     LyrielSound* m_lyrielSound = nullptr;
 

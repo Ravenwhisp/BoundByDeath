@@ -25,10 +25,16 @@ public:
     std::string m_sceneToLoad;
 
 private:
+    GameObject* m_skipContainerOwner = nullptr;
     ComponentVideo* m_videoComponent = nullptr;
     UISlider* m_skipSliderComponent = nullptr;
     Transform2D* m_loadingImageTransform = nullptr;
     Transform2D* m_skipContainerTransform = nullptr;
     bool m_started = false;
+    bool m_asyncLoadStarted = false;
+    bool m_skipAvailable = false;
+    bool m_transitionRequested = false;
+    bool m_asyncTransitionPending = false;
+    bool m_asyncFailureLogged = false;
     float m_gamepadSkipHoldTime = 0.0f;
 };

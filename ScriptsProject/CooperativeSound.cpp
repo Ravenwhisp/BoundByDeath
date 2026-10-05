@@ -1,15 +1,19 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CooperativeSound.h"
 
 namespace
 {
     constexpr const char* k_bank = "BoundByDeath.bnk";
+    constexpr const char* k_checkpointReached = "Play_Cooperative_Checkpoint_Reached";
+    constexpr const char* k_tutorialAppear   = "Play_Cooperative_Tutorial_Appear";
+    constexpr const char* k_tutorialConfirm  = "Play_Cooperative_Tutorial_Confirm";
 
     constexpr const char* k_shadowExecution  = "Play_Cooperative_Shadow_Execution";
     constexpr const char* k_reaperGaugeFull  = "Play_Cooperative_ReaperGauge_Full";
 
     constexpr const char* k_defeated         = "Play_Cooperative_Defeated";
     constexpr const char* k_healthOrb        = "Play_Cooperative_Health_Orb";
+    constexpr const char* k_healthOrbDrop     = "Play_Cooperative_Drop_Health_Orb";
 
     constexpr const char* k_boundDamageStart = "Play_Cooperative_Bound_Damage";
     constexpr const char* k_boundDamageStop  = "Stop_Cooperative_Bound_Damage";
@@ -48,6 +52,7 @@ void CooperativeSound::playReaperGaugeFull() { postEvent(k_reaperGaugeFull); }
 
 void CooperativeSound::playDefeated()  { postEvent(k_defeated); }
 void CooperativeSound::playHealthOrb() { postEvent(k_healthOrb); }
+void CooperativeSound::playHealthOrbDrop() { postEvent(k_healthOrbDrop); }
 
 void CooperativeSound::startBoundDamageLoop()
 {
@@ -114,3 +119,18 @@ void CooperativeSound::stopAllLoops()
 }
 
 IMPLEMENT_SCRIPT(CooperativeSound)
+
+void CooperativeSound::playCheckpointReached()
+{
+    postEvent(k_checkpointReached);
+}
+
+void CooperativeSound::playTutorialAppear()
+{
+    postEvent(k_tutorialAppear);
+}
+
+void CooperativeSound::playTutorialConfirm()
+{
+    postEvent(k_tutorialConfirm);
+}

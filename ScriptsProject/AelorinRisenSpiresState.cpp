@@ -4,6 +4,14 @@
 #include "AelorinAttackConfig.h"
 #include "AelorinAttackExecutor.h"
 #include "AelorinUI.h"
+#include "AelorinVFX.h"
+
+#include <cstdlib> // for random
+
+#define ARENA_RADIUS 11.6f
+#define ARENA_CENTER_X -0.471f
+#define ARENA_CENTER_Y 3.7f
+#define ARENA_CENTER_Z -4.945f
 
 AelorinRisenSpiresState::AelorinRisenSpiresState(GameObject* owner)
 	: StateMachineScript(owner)
@@ -25,6 +33,7 @@ void AelorinRisenSpiresState::OnStateEnter()
 	m_controller = GameObjectAPI::findScript<AelorinBossController>(parentGameObject);
 	m_animation = AnimationAPI::getAnimationComponent(getOwner());
 	m_aelorinUI = GameObjectAPI::findScript<AelorinUI>(parentGameObject);
+	m_vfx = GameObjectAPI::findScript<AelorinVFX>(parentGameObject);
 
 	// reset members
 	m_activeAbility = AelorinAbility::None;
@@ -67,20 +76,42 @@ void AelorinRisenSpiresState::OnStateEnter()
 		return;
 	}
 
+	if (m_vfx)
+	{
+		if (m_controller->isPhase2())
+		{
+			m_vfx->startPhase2Spell();
+		}
+		else
+		{
+			m_vfx->startPhase1Spell();
+		}
+	}
+
 	m_isFuryCast = m_controller->isFuryActive();
 	if (m_isFuryCast)
 	{
 		m_controller->recordFuryCast();
 	}
 
-	if (!m_isFuryCast && m_aelorinUI)
+	if (m_aelorinUI)
 	{
 		const AelorinAttackConfig* config = m_controller->getAelorinAttackConfig();
 		if (config)
 		{
+			executePattern(m_controller->getRisenSpiresPatternARoot(), "Risen Spires Pass 1", false);
 			m_aelorinUI->showRisenSpiresUI(m_controller->getRisenSpiresPatternARoot(), config->m_risenSpiresRadius, config->m_risenSpiresWindupDuration);
+
+			executePattern(m_controller->getRisenSpiresPatternBRoot(), "Risen Spires Pass 2", false); // Execute pattern 2 without damage so their positions are set
 		}
 	}
+
+	const Vector3 lyrielPosition = m_controller->getLyrielPosition();
+	const Vector3 deathPosition = m_controller->getDeathPosition();
+
+	const Vector3 middlePosition = (lyrielPosition + deathPosition) * 0.5f;
+
+	m_controller->facePositionInstant(middlePosition);
 
 	Debug::log("[AelorinRisenSpiresState] ENTER");
 }
@@ -112,11 +143,11 @@ void AelorinRisenSpiresState::OnStateUpdate()
 	// First pass after the 3 second windup
 	if (!m_firstPassExecuted && m_stateTimer >= windupDuration)
 	{
-		executePattern(m_controller->getRisenSpiresPatternARoot(), "Risen Spires Pass 1");
+		executePattern(m_controller->getRisenSpiresPatternARoot(), "Risen Spires Pass 1", true);
 		m_firstPassExecuted = true;
 
 		// UI Phase 2 reveal pattern B
-		if (!m_isFuryCast && m_controller->isPhase2() && m_aelorinUI)
+		if (m_controller->isPhase2() && m_aelorinUI)
 		{
 			m_aelorinUI->showRisenSpiresUI(m_controller->getRisenSpiresPatternBRoot(), config->m_risenSpiresRadius, config->m_risenSpiresPhase2SecondPassDelay);
 		}
@@ -125,7 +156,7 @@ void AelorinRisenSpiresState::OnStateUpdate()
 	// Phase 2 gets opposite pattern 2 seconds later
 	if (m_controller->isPhase2() && m_firstPassExecuted && !m_secondPassExecuted && m_stateTimer >= windupDuration + config->m_risenSpiresPhase2SecondPassDelay)
 	{
-		executePattern(m_controller->getRisenSpiresPatternBRoot(), "Risen Spires Pass 2");
+		executePattern(m_controller->getRisenSpiresPatternBRoot(), "Risen Spires Pass 2", true);
 		m_secondPassExecuted = true;
 	}
 
@@ -134,6 +165,18 @@ void AelorinRisenSpiresState::OnStateUpdate()
 	if (m_stateTimer < lastPassTime + recoveryDuration)
 	{
 		return;
+	}
+
+	if (m_vfx)
+	{
+		if (m_controller->isPhase2())
+		{
+			m_vfx->stopPhase2Spell();
+		}
+		else
+		{
+			m_vfx->stopPhase1Spell();
+		}
 	}
 
 	finishAbility();
@@ -146,7 +189,14 @@ void AelorinRisenSpiresState::OnStateExit()
 		m_aelorinUI->cancelRisenSpires();
 	}
 
+	if (m_vfx && m_controller)
+	{
+		m_vfx->stopPhase1Spell();
+		m_vfx->stopPhase2Spell();
+	}
+
 	m_aelorinUI = nullptr;
+	m_vfx = nullptr;
 	m_stateTimer = 0.0f;
 	m_firstPassExecuted = false;
 	m_secondPassExecuted = false;
@@ -156,7 +206,7 @@ void AelorinRisenSpiresState::OnStateExit()
 	Debug::log("[AelorinRisenSpiresState] EXIT");
 }
 
-void AelorinRisenSpiresState::executePattern(Transform* patternRoot, const char* sourceName)
+void AelorinRisenSpiresState::executePattern(Transform* patternRoot, const char* sourceName, bool dealDamage)
 {
 	if (!patternRoot || !m_attackExecutor)
 	{
@@ -172,6 +222,22 @@ void AelorinRisenSpiresState::executePattern(Transform* patternRoot, const char*
 	// pattern has child game objects and uses their transform to position the attack
 	const int childCount = TransformAPI::getChildCount(patternRoot);
 
+	if (dealDamage)
+	{
+		for (int i = 0; i < childCount; i++) 
+		{
+			Transform* spirePoint = TransformAPI::getChild(patternRoot, i);
+			if (!spirePoint)
+			{
+				continue;
+			}
+
+			m_attackExecutor->applyDamageInRadius(TransformAPI::getGlobalPosition(spirePoint), config->m_risenSpiresRadius, config->m_risenSpiresDamage, sourceName);
+		}
+	}
+
+	std::vector<Vector2> spirePositions = generateSpirePositions(childCount, ARENA_RADIUS, config->m_risenSpiresRadius * 2.1f, config);
+
 	for (int i = 0; i < childCount; ++i)
 	{
 		Transform* spirePoint = TransformAPI::getChild(patternRoot, i);
@@ -180,9 +246,8 @@ void AelorinRisenSpiresState::executePattern(Transform* patternRoot, const char*
 			continue;
 		}
 
-		const Vector3 position = TransformAPI::getGlobalPosition(spirePoint);
-
-		m_attackExecutor->applyDamageInRadius(position, config->m_risenSpiresRadius, config->m_risenSpiresDamage, sourceName);
+		Vector2 spirePosition = spirePositions.at(i);
+		TransformAPI::setGlobalPosition(spirePoint, Vector3(spirePosition.x, ARENA_CENTER_Y, spirePosition.y));
 	}
 
 	Debug::log("[AelorinRisenSpiresState] Executed pattern with %d spires", childCount);
@@ -202,6 +267,58 @@ void AelorinRisenSpiresState::finishAbility()
 	{
 		Debug::warn("[AelorinRisenSpiresState] Failed to send ToIdle trigger");
 	}
+}
+
+std::vector<Vector2> AelorinRisenSpiresState::generateSpirePositions(
+	int count,
+	float arenaRadius,
+	float minDistance,
+	const AelorinAttackConfig* config)
+{
+	std::vector<Vector2> positions;
+
+	constexpr int MAX_ATTEMPTS = 100;
+
+	while (positions.size() < count)
+	{
+		bool found = false;
+
+		for (int attempt = 0; attempt < MAX_ATTEMPTS; ++attempt)
+		{
+			Vector2 candidate = randomPointInArena(config);
+
+			bool valid = true;
+
+			for (const Vector2& p : positions)
+			{
+				if (Vector2::DistanceSquared(candidate, p) <
+					minDistance * minDistance)
+				{
+					valid = false;
+					break;
+				}
+			}
+
+			if (valid)
+			{
+				positions.push_back(candidate);
+				found = true;
+				break;
+			}
+		}
+
+		if (!found)
+			positions.push_back(Vector2(200, 200));
+	}
+
+	return positions;
+}
+
+Vector2 AelorinRisenSpiresState::randomPointInArena(const AelorinAttackConfig* config) {
+	float eligibleSpawnRadius = ARENA_RADIUS - config->m_risenSpiresRadius;
+	float xRandDisplacement = (static_cast<float>(rand()) / static_cast<float>(RAND_MAX)) * eligibleSpawnRadius * 2 - eligibleSpawnRadius;
+	float zRandDisplacement = (static_cast<float>(rand()) / static_cast<float>(RAND_MAX)) * eligibleSpawnRadius * 2 - eligibleSpawnRadius;
+	return std::move(Vector2(ARENA_CENTER_X + xRandDisplacement, ARENA_CENTER_Z + zRandDisplacement));
 }
 
 IMPLEMENT_SCRIPT(AelorinRisenSpiresState)

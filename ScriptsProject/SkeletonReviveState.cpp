@@ -1,5 +1,6 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "SkeletonReviveState.h"
+#include "SkeletonSound.h"
 
 #include "SkeletonEnemyController.h"
 #include "SkeletonDamageable.h"
@@ -52,6 +53,11 @@ void SkeletonReviveState::OnStateEnter()
 	m_reviveTimer = 0.0f;
 
 	changePhase(Phase::ReviveStart);
+
+	if (SkeletonSound* sound = GameObjectAPI::findScript<SkeletonSound>(getOwner()))
+	{
+		sound->playRevive();
+	}
 
 	Debug::log("[SkeletonReviveState] ENTER");
 }

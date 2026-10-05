@@ -1,5 +1,6 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "SummonerSummonState.h"
+#include "SummonerSound.h"
 
 #include "SummonerEnemyController.h"
 #include "SummonerAttackConfig.h"
@@ -36,6 +37,11 @@ void SummonerSummonState::OnStateEnter()
 	if (m_controller)
 	{
 		m_controller->computeSummonSpawnPositions(m_plannedSummonPositions);
+	}
+
+	if (SummonerSound* sound = GameObjectAPI::findScript<SummonerSound>(getOwner()))
+	{
+		sound->playSummoning();
 	}
 
 	Debug::log("[SummonerSummonState] ENTER");
@@ -82,6 +88,11 @@ void SummonerSummonState::OnStateUpdate()
 	{
 		m_controller->summonSpidersAtPositions(m_plannedSummonPositions);
 		m_controller->consumeSummonCooldown();
+		if (SummonerSound* sound = GameObjectAPI::findScript<SummonerSound>(getOwner()))
+		{
+			sound->playSpawn();
+		}
+
 		m_hasSummoned = true;
 	}
 
