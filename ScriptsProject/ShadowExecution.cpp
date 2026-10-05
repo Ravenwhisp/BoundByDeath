@@ -622,7 +622,7 @@ void ShadowExecution::drawGizmo()
 
 void ShadowExecution::updateUI()
 {
-    if (!m_executionTransform || !m_executionTransform2D || !m_reaperGaugeSlider)
+    if (!m_reaperGaugeSlider)
     {
         return;
     }
