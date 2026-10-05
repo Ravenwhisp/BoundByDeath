@@ -37,6 +37,12 @@ void LyrielCharacter::Start()
     {
         Debug::log("[LyrielCharacter] ArrowPool not found on owner '%s'.", GameObjectAPI::getName(getOwner()));
     }
+	else
+	{
+		// Lyriel can release five volley arrows in one frame. Build the complete
+		// pool, including each arrow's reusable visual variants, before combat.
+		m_arrowPool->configurePrewarmToCapacity();
+	}
 
     if (m_basicAttack == nullptr)
     {

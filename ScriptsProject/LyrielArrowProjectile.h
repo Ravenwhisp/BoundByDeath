@@ -3,7 +3,8 @@
 #include "ScriptAPI.h"
 #include "ProjectileBase.h"
 
-class LyrielParticles;
+class LyrielCharacter;
+class LyrielSound;
 
 class LyrielArrowProjectile : public ProjectileBase
 {
@@ -28,18 +29,14 @@ public:
 
 private:
     void applyImpactDamage();
-    void syncParticleTransform();
-    void activateEmbeddedParticles();
-    void stopEmbeddedParticles();
-
-    LyrielParticles* getLyrielParticles() const;
+    void prepareVisuals();
+    void cacheShooterScripts();
+    void activateVisual(VisualModel visual);
+    void deactivateVisuals();
+    void setExternalVisualActive(GameObject* visualObject, TrailComponent* trail, bool active);
+    void setBasicVisualActive(bool active);
 
 public:
-    std::string m_legacyParticlePath;
-    PrefabRef m_particlePrefab;
-
-	// visual prefabs for different arrow types
-    PrefabRef m_visualBasicPrefab;
     PrefabRef m_visualChargedPrefab;
     PrefabRef m_visualVolleyPrefab;
 
@@ -53,6 +50,15 @@ private:
     GameObject* m_target = nullptr;
     float m_damage = 0.0f;
 
-    GameObject* m_particleGO = nullptr;
-    GameObject* m_visualGO = nullptr; 
+    Transform* m_transform = nullptr;
+    Component* m_basicModel = nullptr;
+    TrailComponent* m_basicTrail = nullptr;
+    GameObject* m_basicAdornment = nullptr;
+    GameObject* m_chargedVisual = nullptr;
+    TrailComponent* m_chargedTrail = nullptr;
+    GameObject* m_volleyVisual = nullptr;
+    TrailComponent* m_volleyTrail = nullptr;
+    LyrielCharacter* m_lyrielCharacter = nullptr;
+    LyrielSound* m_sound = nullptr;
+    bool m_visualsPrepared = false;
 };
