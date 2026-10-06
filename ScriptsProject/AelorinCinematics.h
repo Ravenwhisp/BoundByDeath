@@ -40,7 +40,8 @@ public:
     // comportamiento de siempre.
     bool startPhaseTransition();
 
-    void performPhaseTransformation();
+    void performPhaseTeleportToCenter();
+    bool isPhaseTeleportFinished() const { return m_phaseTeleportFinished; }
 
     bool isPlaying() const { return m_encounterPlaying || m_phasePlaying || m_defeatPlaying; }
 
@@ -124,6 +125,7 @@ private:
     float m_phaseTimer = 0.0f;
     bool m_phaseSwapPending = false;
     float m_phaseSwapTimer = 0.0f;
+    bool m_phaseTeleportFinished = false;
 
     bool m_defeatHandled = false;
     bool m_defeatPlaying = false;

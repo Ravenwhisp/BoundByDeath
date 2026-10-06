@@ -192,6 +192,8 @@ bool AelorinCinematics::startPhaseTransition()
         return true;
     }
 
+    m_phaseTeleportFinished = false;
+
     // Los planos se recolocan ANTES de lanzar la cinematica: el controller lee la posicion del
     // primer punto en el mismo frame en que arranca.
     const Vector3 bossPosition = getBossPosition();
@@ -239,20 +241,12 @@ bool AelorinCinematics::startPhaseTransition()
     return true;
 }
 
-void AelorinCinematics::performPhaseTransformation()
+void AelorinCinematics::performPhaseTeleportToCenter()
 {
-    if (m_particles)
-    {
-        m_particles->playPhaseTransformation();
-    }
-
-    if (m_cameraShake)
-    {
-        m_cameraShake->shakeRoar();
-    }
-
-    m_phaseSwapPending = true;
-    m_phaseSwapTimer = m_phaseSwapDelay;
+    m_phaseTeleportFinished = true;
+    Debug::log(
+        "[AelorinCinematics] Phase teleport center point reached."
+    );
 }
 
 void AelorinCinematics::updatePhaseTransition(float dt)

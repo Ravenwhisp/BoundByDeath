@@ -34,7 +34,7 @@ void AelorinPhaseSwapAction::executeAction(CameraTransitionController* controlle
         return;
     }
 
-    cinematics->performPhaseTransformation();
+    cinematics->performPhaseTeleportToCenter();
 }
 
 IMPLEMENT_SCRIPT(AelorinPhaseSwapAction)
