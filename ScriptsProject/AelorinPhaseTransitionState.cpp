@@ -27,6 +27,7 @@ void AelorinPhaseTransitionState::OnStateEnter()
 
 	m_phase2Started = false;
 	m_cinematicDriven = false;
+	m_fallbackTimer = 0.0f;
 
 	if (!m_controller)
 	{
@@ -40,18 +41,20 @@ void AelorinPhaseTransitionState::OnStateEnter()
 		return;
 	}
 
-	if (m_vfx)
-	{
-		m_vfx->playPhase2Transition();
-	}
-
 	// Con cinemática montada, ella lleva el reloj: mueve al boss al centro, lanza el hechizo y
-	// dispara el cambio de modelo tapado por el pilar de almas. Sin cinemática, se espera a que
-	// acabe la animación como siempre.
+	// dispara el cambio de modelo tapado por el VFX. Sin cinemática, se espera a que acabe la
+	// animación como siempre.
 	AelorinCinematics* cinematics = GameObjectAPI::findScript<AelorinCinematics>(parentGameObject);
 	if (cinematics)
 	{
 		m_cinematicDriven = cinematics->startPhaseTransition();
+	}
+
+	// Con cinemática el VFX lo lanza ella en el instante del cambio de modelo, no aquí: si no,
+	// saltaría al entrar al estado y se habría apagado mucho antes de que el golem aparezca.
+	if (m_vfx && !m_cinematicDriven)
+	{
+		m_vfx->playPhase2Transition();
 	}
 
 	Debug::log("[AelorinPhaseTransitionState] ENTER");
@@ -69,9 +72,14 @@ void AelorinPhaseTransitionState::OnStateUpdate()
 		return;
 	}
 
-	if (!AnimationAPI::isPlaying(m_animation))
+	// Sin cinemática: el clip base de este estado es un idle en bucle, asi que no se puede
+	// esperar a que termine. Se pasa a fase 2 por tiempo.
+	constexpr float fallbackDuration = 2.0f;
+
+	m_fallbackTimer += Time::getDeltaTime();
+
+	if (m_fallbackTimer >= fallbackDuration)
 	{
-		Debug::log("[AelorinPhaseTransitionState] stopped playing animation");
 		m_phase2Started = true;
 		m_controller->beginPhase2();
 	}
