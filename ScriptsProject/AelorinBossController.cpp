@@ -438,6 +438,19 @@ void AelorinBossController::beginPhase2()
 	Debug::log("[AelorinBossController] Phase 2 started.");
 }
 
+void AelorinBossController::showPhase2TransitionModel()
+{
+	if (!m_phase2GameObject)
+	{
+		Debug::warn("[AelorinBossController] Cannot show Phase2 transition model.");
+		return;
+	}
+
+	GameObjectAPI::setActive(m_phase2GameObject, true);
+
+	Debug::log("[AelorinBossController] Phase2 transition model activated.");
+}
+
 bool AelorinBossController::trySendPhaseTransitionTrigger(AnimationComponent* animation)
 {
 	if (!m_phaseTransitionRequested)

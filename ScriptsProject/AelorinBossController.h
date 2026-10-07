@@ -92,6 +92,7 @@ public:
 	void requestPhaseTransition();
 	void markPhaseTransitionTriggered();
 	void beginPhase2();
+	void showPhase2TransitionModel();
 	bool isPhaseTransitionRequested() const { return m_phaseTransitionRequested; }
 	bool canTriggerPhaseTransition() const { return m_phaseTransitionRequested && !m_phaseTransitionTriggered; }
 

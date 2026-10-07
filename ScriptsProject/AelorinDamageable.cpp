@@ -313,6 +313,40 @@ void AelorinDamageable::requestPhaseTransition()
     }
 }
 
+void AelorinDamageable::startPhase1Dissolve()
+{
+    Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
+    if (!ownerTransform)
+    {
+        return;
+    }
+
+    Transform* phase1Transform = TransformAPI::findChildByName(ownerTransform, "Phase1");
+    if (!phase1Transform)
+    {
+        Debug::warn("[AelorinDamageable] Phase1 transform not found for dissolve.");
+        return;
+    }
+
+    Transform* mageTransform = TransformAPI::findChildByName(phase1Transform, "Mage");
+    if (!mageTransform)
+    {
+        Debug::warn("[AelorinDamageable] Mage transform not found for dissolve.");
+        return;
+    }
+
+    m_dissolve = findDissolveInHierarchy(mageTransform);
+    if (!m_dissolve)
+    {
+        Debug::warn("[AelorinDamageable] DissolveComponent not found under Phase1");
+        return;
+    }
+
+    startDissolve();
+
+    Debug::log("[AelorinDamageable] Phase1 dissolve started.");
+}
+
 void AelorinDamageable::beginPhase2()
 {
     // Controller must set its phase to Phase2 before calling this function

@@ -46,7 +46,7 @@ void AelorinPhase2TransformState::OnStateEnter()
 	}
 
 	m_targetScale = TransformAPI::getScale(m_modelTransform);
-	constexpr float startScaleFactor = 0.5f;
+	constexpr float startScaleFactor = 0.4f;
 
 	m_startScale = Vector3(
 		m_targetScale.x * startScaleFactor,
@@ -66,11 +66,17 @@ void AelorinPhase2TransformState::OnStateUpdate()
 		return;
 	}
 
-	constexpr float transformDuration = 1.5f;
+	constexpr float transformDuration = 2.5f;
+	constexpr float delay = 1.0f;
 
 	m_stateTimer += Time::getDeltaTime();
 
-	float t = m_stateTimer / transformDuration;
+	if (m_stateTimer <= delay)
+	{
+		return;
+	}
+
+	float t = (m_stateTimer - delay) / transformDuration;
 
 	if (t > 1.0f)
 	{

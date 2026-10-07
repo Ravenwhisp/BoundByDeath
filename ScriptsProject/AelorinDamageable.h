@@ -39,6 +39,7 @@ public:
 	bool isThresholdLocked() const { return m_thresholdLocked; }
 	bool isPhaseTransitionPending() const { return m_phaseTransitionPending; }
 
+	void startPhase1Dissolve();
 	void beginPhase2();
 
 	bool hasActiveThresholdAt(float percent) const;
@@ -81,10 +82,10 @@ private:
 
 	std::vector<AelorinThreshold> m_phase2Thresholds
 	{
-		{ 0.70f, AelorinThresholdType::Standard },
-		{ 0.45f, AelorinThresholdType::Fury },
-		{ 0.25f, AelorinThresholdType::Standard },
-		{ 0.10f, AelorinThresholdType::Fury },
+		{ 0.80f, AelorinThresholdType::Standard },
+		{ 0.60f, AelorinThresholdType::Fury },
+		{ 0.40f, AelorinThresholdType::Standard },
+		{ 0.20f, AelorinThresholdType::Fury },
 		{ 0.00f, AelorinThresholdType::FinalDeath }
 	};
 

@@ -3,7 +3,7 @@
 
 #include "AelorinBossController.h"
 #include "AelorinVFX.h"
-#include "AelorinCinematics.h"
+#include "AelorinDamageable.h"
 
 AelorinPhaseTransitionState::AelorinPhaseTransitionState(GameObject* owner)
 	: StateMachineScript(owner)
@@ -24,9 +24,13 @@ void AelorinPhaseTransitionState::OnStateEnter()
 	m_controller = GameObjectAPI::findScript<AelorinBossController>(parentGameObject);
 	m_animation = AnimationAPI::getAnimationComponent(getOwner());
 	m_vfx = GameObjectAPI::findScript<AelorinVFX>(parentGameObject);
-	m_cinematics = GameObjectAPI::findScript<AelorinCinematics>(parentGameObject);
+	m_damageable = GameObjectAPI::findScript<AelorinDamageable>(parentGameObject);
 
-	m_transformationStarted = false;
+	m_dissolveStarted = false;
+	m_phase2RevealStarted = false;
+
+	m_phase2RevealTimer = 0.0f;
+
 	m_phase2Started = false;
 
 	if (!m_controller)
@@ -51,19 +55,46 @@ void AelorinPhaseTransitionState::OnStateEnter()
 
 void AelorinPhaseTransitionState::OnStateUpdate()
 {
-	if (!m_controller || !m_animation)
+	if (!m_controller || !m_animation || !m_damageable || m_phase2Started)
 	{
 		return;
 	}
 
-	if (m_phase2Started)
+	const float playbackTime = AnimationAPI::getPlaybackTime(m_animation);
+	const float playbackDuration = AnimationAPI::getPlaybackDuration(m_animation);
+
+	if (playbackDuration <= 0.001f)
 	{
 		return;
 	}
 
-	if (!AnimationAPI::isPlaying(m_animation))
+	const float animationProgress = playbackTime / playbackDuration;
+
+	// Start Phase 1 dissolve
+	if (!m_dissolveStarted && animationProgress >= 0.5f)
 	{
-		Debug::log("[AelorinPhaseTransitionState] stopped playing animation");
+		m_dissolveStarted = true;
+		m_phase2RevealTimer = 0.0f;
+
+		m_damageable->startPhase1Dissolve();
+	}
+
+	// Wait so Phase 2 appears underneath
+	if (m_dissolveStarted && !m_phase2RevealStarted)
+	{
+		m_phase2RevealTimer += Time::getDeltaTime();
+
+		constexpr float phase2RevealDelay = 0.2f;
+		if (m_phase2RevealTimer >= phase2RevealDelay)
+		{
+			m_phase2RevealStarted = true;
+			m_controller->showPhase2TransitionModel();
+		}
+	}
+
+	// Phase 1 now gone
+	if (m_phase2RevealStarted && m_damageable->isDissolveFinished())
+	{
 		m_phase2Started = true;
 		m_controller->beginPhase2();
 	}
@@ -71,6 +102,11 @@ void AelorinPhaseTransitionState::OnStateUpdate()
 
 void AelorinPhaseTransitionState::OnStateExit()
 {
+	m_dissolveStarted = false;
+	m_phase2RevealStarted = false;
+	m_phase2RevealTimer = 0.0f;
+	m_phase2Started = false;
+
 	Debug::log("[AelorinPhaseTransitionState] EXIT");
 }
 

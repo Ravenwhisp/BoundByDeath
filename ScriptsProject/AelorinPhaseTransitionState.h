@@ -6,7 +6,7 @@
 class AelorinBossController;
 class AnimationComponent;
 class AelorinVFX;
-class AelorinCinematics;
+class AelorinDamageable;
 
 class AelorinPhaseTransitionState : public StateMachineScript
 {
@@ -23,8 +23,12 @@ private:
 	AelorinBossController* m_controller = nullptr;
 	AnimationComponent* m_animation = nullptr;
 	AelorinVFX* m_vfx = nullptr;
-	AelorinCinematics* m_cinematics = nullptr;
+	AelorinDamageable* m_damageable = nullptr;
 
-	bool m_transformationStarted = false;
+	bool m_dissolveStarted = false;
+	bool m_phase2RevealStarted = false;
+
+	float m_phase2RevealTimer = 0.0f;
+
 	bool m_phase2Started = false;
 };
