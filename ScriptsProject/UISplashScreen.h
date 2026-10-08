@@ -23,6 +23,10 @@ public:
     std::string nextSceneName;
 
 private:
+    bool m_asyncLoadStarted = false;
+    bool m_transitionRequested = false;
+    bool m_asyncTransitionPending = false;
+
 	float time = 0.0f;
 	Transform2D* m_buttonGlow = nullptr;
 	Transform2D* m_logoGlow = nullptr;

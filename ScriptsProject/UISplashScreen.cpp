@@ -19,6 +19,11 @@ UISplashScreen::UISplashScreen(GameObject* owner)
 
 void UISplashScreen::Start()
 {
+    if (!nextSceneName.empty())
+    {
+        m_asyncLoadStarted = SceneAPI::beginAsyncSceneLoad(nextSceneName.c_str());
+    }
+
 	m_buttonGlow = buttonGlow.getReferencedComponent();
 	m_logoGlow = logoGlow.getReferencedComponent();
 	m_lyrielDeath = lyrielDeath.getReferencedComponent();
@@ -28,7 +33,15 @@ void UISplashScreen::Start()
 
 void UISplashScreen::Update()
 {
-    if (Input::isFaceButtonLeftJustPressed() ||
+    const bool asyncAvailable = m_asyncLoadStarted && (SceneAPI::isAsyncSceneLoading() || SceneAPI::isAsyncSceneLoadReady());
+    if (m_asyncTransitionPending && !asyncAvailable)
+    {
+        m_asyncTransitionPending = false;
+        Debug::log("Async scene load failed for %s; using synchronous fallback.", nextSceneName.c_str());
+        SceneAPI::requestSceneChange(nextSceneName.c_str());
+    }
+
+    if (!m_transitionRequested && (Input::isFaceButtonLeftJustPressed() ||
         Input::isFaceButtonRightJustPressed() ||
         Input::isFaceButtonTopJustPressed() ||
         Input::isFaceButtonBottomJustPressed() ||
@@ -46,11 +59,20 @@ void UISplashScreen::Update()
         Input::isRightShoulderJustPressed(1) ||
         Input::isLeftTriggerJustPressed(1) ||
         Input::isRightTriggerJustPressed(1)
-        )
+        ))
     {
         if (!nextSceneName.empty())
         {
-            SceneAPI::requestSceneChange(nextSceneName.c_str());
+            m_transitionRequested = true;
+            if (asyncAvailable && SceneAPI::requestAsyncSceneChange())
+            {
+                m_asyncTransitionPending = true;
+            }
+            else
+            {
+                Debug::log("Async scene load unavailable for %s; using synchronous fallback.", nextSceneName.c_str());
+                SceneAPI::requestSceneChange(nextSceneName.c_str());
+            }
         }
     }
 
