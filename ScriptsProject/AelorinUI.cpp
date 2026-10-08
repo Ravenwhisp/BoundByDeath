@@ -222,10 +222,10 @@ void AelorinUI::updateHealthMarkers()
 	setHealthMarkerVisible(m_healthPhase1Marker50Transform2D, !phase2 && m_aelorinDamageable->hasActiveThresholdAt(0.50f));
 	setHealthMarkerVisible(m_healthPhase1Marker0Transform2D, !phase2 && m_aelorinDamageable->hasActiveThresholdAt(0.0f));
 
-	setHealthMarkerVisible(m_healthPhase2Marker70Transform2D, phase2 && m_aelorinDamageable->hasActiveThresholdAt(0.70f));
-	setHealthMarkerVisible(m_healthPhase2Marker45Transform2D, phase2 && m_aelorinDamageable->hasActiveThresholdAt(0.45f));
-	setHealthMarkerVisible(m_healthPhase2Marker25Transform2D, phase2 && m_aelorinDamageable->hasActiveThresholdAt(0.25f));
-	setHealthMarkerVisible(m_healthPhase2Marker10Transform2D, phase2 && m_aelorinDamageable->hasActiveThresholdAt(0.10f));
+	setHealthMarkerVisible(m_healthPhase2Marker70Transform2D, phase2 && m_aelorinDamageable->hasActiveThresholdAt(0.80f));
+	setHealthMarkerVisible(m_healthPhase2Marker45Transform2D, phase2 && m_aelorinDamageable->hasActiveThresholdAt(0.60f));
+	setHealthMarkerVisible(m_healthPhase2Marker25Transform2D, phase2 && m_aelorinDamageable->hasActiveThresholdAt(0.40f));
+	setHealthMarkerVisible(m_healthPhase2Marker10Transform2D, phase2 && m_aelorinDamageable->hasActiveThresholdAt(0.20f));
 	setHealthMarkerVisible(m_healthPhase2Marker0Transform2D, phase2 && m_aelorinDamageable->hasActiveThresholdAt(0.0f));
 }
 

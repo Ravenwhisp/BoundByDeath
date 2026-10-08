@@ -81,6 +81,24 @@ public:
     float m_phaseWideDistancePerUnit = 1.5f;
     float m_phaseWideMaxDistance = 40.0f;
 
+    Vector3 m_combatCameraOffset = Vector3(35.0f, 54.0f, -35.0f);
+    Vector3 m_combatCameraCloseOffset =
+        Vector3(12.0f, 18.0f, -12.0f);
+
+    Vector3 m_combatCameraFarOffset =
+        Vector3(20.0f, 30.0f, -20.0f);
+
+    float m_combatCameraZoomStartDistance = 8.0f;
+    float m_combatCameraZoomMaxDistance = 22.0f;
+
+    Vector3 m_combatCurrentFocus = Vector3::Zero;
+    Vector3 m_combatCurrentOffset = Vector3(12.0f, 18.0f, -12.0f);
+
+    float m_combatFocusSmoothSpeed = 3.0f;
+    float m_combatZoomSmoothSpeed = 2.0f;
+
+    bool m_combatCameraInitialized = false;
+
     ComponentRef<Transform> m_defeatCinematic;
     float m_defeatDelay = 0.0f;
     Vector3 m_defeatCamOffset = Vector3(7.0f, 10.0f, -7.0f);
@@ -95,6 +113,8 @@ private:
     bool isTransitionRunning() const;
 
     void onEncounterFinished();
+
+    void updateCombatCamera();
 
     // Mueve CameraPoints/<pointName> de una cinematica a target + offset, en global.
     void positionShot(const ComponentRef<Transform>& cinematicRef, const char* pointName,

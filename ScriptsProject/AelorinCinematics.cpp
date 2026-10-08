@@ -12,6 +12,12 @@
 
 IMPLEMENT_SCRIPT_FIELDS(AelorinCinematics,
     FIELD_GROUP_COLLAPSE("Encounter",
+        SERIALIZED_VEC3(m_combatCameraCloseOffset, "Combat Camera Close Offset"),
+        SERIALIZED_VEC3(m_combatCameraFarOffset, "Combat Camera Far Offset"),
+        SERIALIZED_FLOAT(m_combatCameraZoomStartDistance, "Combat Camera Zoom Start Distance", 0.0f, 50.0f, 0.5f),
+        SERIALIZED_FLOAT(m_combatCameraZoomMaxDistance,"Combat Camera Zoom Max Distance", 0.0f, 100.0f, 0.5f),
+        SERIALIZED_FLOAT(m_combatFocusSmoothSpeed, "Combat Focus Smooth Speed", 0.1f, 20.0f, 0.1f),
+        SERIALIZED_FLOAT(m_combatZoomSmoothSpeed, "Combat Zoom Smooth Speed", 0.1f, 20.0f, 0.1f),
         SERIALIZED_COMPONENT_REF(m_encounterCinematic, "Encounter Cinematic", ComponentType::TRANSFORM),
         SERIALIZED_COMPONENT_REF(m_healthBarRoot, "Health Bar Root", ComponentType::TRANSFORM),
         SERIALIZED_COMPONENT_REF(m_arenaCameraAnchor, "Arena Camera Anchor", ComponentType::TRANSFORM),
@@ -82,6 +88,11 @@ void AelorinCinematics::Update()
     updateEncounter(dt);
     updatePhaseTransition(dt);
     updateDefeat(dt);
+
+    if (m_encounterFinished)
+    {
+        updateCombatCamera();
+    }
 }
 
 void AelorinCinematics::requestEncounterStart()
@@ -111,7 +122,7 @@ void AelorinCinematics::updateEncounter(float dt)
     {
         // La cámara deja de seguir a los jugadores justo al empezar el encuentro, para que la
         // transición vuelva ya a la vista fija de la arena.
-        applyArenaCamera();
+        //applyArenaCamera();
         setCinematicUIHidden(true);
 
         if (m_controller)
@@ -172,7 +183,9 @@ void AelorinCinematics::onEncounterFinished()
 {
     m_encounterFinished = true;
 
-    applyArenaCamera();
+    m_combatCameraInitialized = false;
+
+    //applyArenaCamera();
     setCinematicUIHidden(false);
     showHealthBar(true);
 
@@ -183,6 +196,123 @@ void AelorinCinematics::onEncounterFinished()
             music->SetState_FinalBoss();
         }
     }
+}
+
+void AelorinCinematics::updateCombatCamera()
+{
+    if (!m_cameraFollow ||
+        !m_controller ||
+        m_phasePlaying ||
+        m_defeatPlaying ||
+        isTransitionRunning())
+    {
+        return;
+    }
+
+    Transform* anchor = m_arenaCameraAnchor.getReferencedComponent();
+
+    if (!anchor)
+    {
+        return;
+    }
+
+    const Vector3 lyrielPosition = m_controller->getLyrielPosition();
+    const Vector3 deathPosition = m_controller->getDeathPosition();
+    const Vector3 bossPosition = getBossPosition();
+
+    // Center point between both players and Aelorin
+    const Vector3 desiredFocus = (lyrielPosition + deathPosition + bossPosition) / 3.0f;
+
+    // Calculate how spread out the fight is
+
+    const float lyrielDistance = (lyrielPosition - desiredFocus).Length();
+    const float deathDistance = (deathPosition - desiredFocus).Length();
+    const float bossDistance = (bossPosition - desiredFocus).Length();
+    float maxDistance = lyrielDistance;
+
+    if (deathDistance > maxDistance)
+    {
+        maxDistance = deathDistance;
+    }
+
+    if (bossDistance > maxDistance)
+    {
+        maxDistance = bossDistance;
+    }
+
+    // Calculate zoom
+
+    const float zoomRange = m_combatCameraZoomMaxDistance - m_combatCameraZoomStartDistance;
+    float zoomT = 0.0f;
+
+    if (zoomRange > 0.001f)
+    {
+        zoomT = (maxDistance - m_combatCameraZoomStartDistance) / zoomRange;
+    }
+
+    zoomT = std::clamp(zoomT, 0.0f, 1.0f);
+
+    // Smoothstep
+    zoomT = zoomT * zoomT * (3.0f - 2.0f * zoomT);
+
+    const Vector3 desiredOffset(
+        m_combatCameraCloseOffset.x + (m_combatCameraFarOffset.x - m_combatCameraCloseOffset.x) * zoomT,
+        m_combatCameraCloseOffset.y + (m_combatCameraFarOffset.y - m_combatCameraCloseOffset.y) * zoomT,
+        m_combatCameraCloseOffset.z + (m_combatCameraFarOffset.z - m_combatCameraCloseOffset.z) * zoomT
+    );
+
+    // First frame after cinematic
+
+    if (!m_combatCameraInitialized)
+    {
+        GameObject* cameraObject = SceneAPI::getDefaultCameraGameObject();
+        Transform* cameraTransform = cameraObject ? GameObjectAPI::getTransform(cameraObject) : nullptr;
+        if (!cameraTransform)
+        {
+            return;
+        }
+
+        const Vector3 currentCameraPosition = TransformAPI::getGlobalPosition(cameraTransform);
+
+        m_combatCurrentFocus = desiredFocus;
+
+        // Focus + Offset = current camera position.
+
+        m_combatCurrentOffset = currentCameraPosition - desiredFocus;
+
+        TransformAPI::setGlobalPosition(anchor, m_combatCurrentFocus);
+
+        m_cameraFollow->m_firstTarget.uid = anchor->getID();
+        m_cameraFollow->m_firstTarget.component = anchor;
+        m_cameraFollow->m_secondTarget.uid = anchor->getID();
+        m_cameraFollow->m_secondTarget.component = anchor;
+        m_cameraFollow->m_transformOffset = m_combatCurrentOffset;
+        m_combatCameraInitialized = true;
+
+        return;
+    }
+
+    // Smooth dynamic follow
+
+    const float dt = Time::getDeltaTime();
+    const float focusT = std::clamp(m_combatFocusSmoothSpeed * dt, 0.0f, 1.0f);
+    const float zoomSmoothT = std::clamp(m_combatZoomSmoothSpeed * dt, 0.0f, 1.0f);
+
+    // Smoothly move the focus toward players + Aelorin center
+
+    m_combatCurrentFocus = m_combatCurrentFocus + (desiredFocus - m_combatCurrentFocus) * focusT;
+
+    // Smoothly zoom toward the desired distance
+    m_combatCurrentOffset = m_combatCurrentOffset + (desiredOffset - m_combatCurrentOffset) * zoomSmoothT;
+
+    // Apply camera
+    TransformAPI::setGlobalPosition(anchor, m_combatCurrentFocus);
+
+    m_cameraFollow->m_firstTarget.uid = anchor->getID();
+    m_cameraFollow->m_firstTarget.component = anchor;
+    m_cameraFollow->m_secondTarget.uid = anchor->getID();
+    m_cameraFollow->m_secondTarget.component = anchor;
+    m_cameraFollow->m_transformOffset = m_combatCurrentOffset;
 }
 
 bool AelorinCinematics::startPhaseTransition()
@@ -419,7 +549,7 @@ bool AelorinCinematics::isTransitionRunning() const
 
 void AelorinCinematics::applyArenaCamera()
 {
-    Transform* anchor = m_arenaCameraAnchor.getReferencedComponent();
+    /*Transform* anchor = m_arenaCameraAnchor.getReferencedComponent();
     if (m_cameraFollow == nullptr || anchor == nullptr)
     {
         return;
@@ -429,7 +559,37 @@ void AelorinCinematics::applyArenaCamera()
     m_cameraFollow->m_firstTarget.component = anchor;
     m_cameraFollow->m_secondTarget.uid = anchor->getID();
     m_cameraFollow->m_secondTarget.component = anchor;
-    m_cameraFollow->m_transformOffset = m_arenaCameraOffset;
+    m_cameraFollow->m_transformOffset = m_arenaCameraOffset;*/
+    if (!m_cameraFollow || !m_controller)
+    {
+        return;
+    }
+
+    Transform* lyriel =
+        m_controller->getLyrielTransform();
+
+    Transform* death =
+        m_controller->getDeathTransform();
+
+    if (!lyriel || !death)
+    {
+        return;
+    }
+
+    m_cameraFollow->m_firstTarget.uid =
+        lyriel->getID();
+
+    m_cameraFollow->m_firstTarget.component =
+        lyriel;
+
+    m_cameraFollow->m_secondTarget.uid =
+        death->getID();
+
+    m_cameraFollow->m_secondTarget.component =
+        death;
+
+    m_cameraFollow->m_transformOffset =
+        m_combatCameraOffset;
 }
 
 void AelorinCinematics::setCinematicUIHidden(bool hidden)

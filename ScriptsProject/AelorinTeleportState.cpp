@@ -253,12 +253,7 @@ void AelorinTeleportState::executeTeleport()
 	const Vector3 destinationPosition = TransformAPI::getGlobalPosition(destinationAnchor);
 	TransformAPI::setGlobalPosition(m_aelorinTransform, destinationPosition);
 
-	const Vector3 lyrielPosition = m_controller->getLyrielPosition();
-	const Vector3 deathPosition = m_controller->getDeathPosition();
-
-	const Vector3 middlePosition = (lyrielPosition + deathPosition) * 0.5f;
-
-	m_controller->facePositionInstant(middlePosition);
+	m_controller->facePositionInstant(destinationPosition);
 
 	// start cooldown
 	m_controller->startTeleportCooldown();
