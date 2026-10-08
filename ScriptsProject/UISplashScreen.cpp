@@ -5,10 +5,12 @@
 
 IMPLEMENT_SCRIPT_FIELDS(UISplashScreen,
     SERIALIZED_COMPONENT_REF(buttonGlow, "Button Glow", ComponentType::TRANSFORM2D),
+	SERIALIZED_COMPONENT_REF(button, "Button", ComponentType::TRANSFORM2D),
 	SERIALIZED_COMPONENT_REF(logoGlow, "Logo Glow", ComponentType::TRANSFORM2D),
     SERIALIZED_COMPONENT_REF(lyrielDeath, "Lyriel Death", ComponentType::TRANSFORM2D),
     SERIALIZED_COMPONENT_REF(particles1, "Particles 1", ComponentType::TRANSFORM2D),
     SERIALIZED_COMPONENT_REF(particles2, "Particles 2", ComponentType::TRANSFORM2D),
+	SERIALIZED_COMPONENT_REF(particles3, "Particles 3", ComponentType::TRANSFORM2D),
 	SERIALIZED_STRING(nextSceneName, "Next Scene Name")
 )
 
@@ -25,10 +27,17 @@ void UISplashScreen::Start()
     }
 
 	m_buttonGlow = buttonGlow.getReferencedComponent();
+	m_button = button.getReferencedComponent();
 	m_logoGlow = logoGlow.getReferencedComponent();
 	m_lyrielDeath = lyrielDeath.getReferencedComponent();
 	m_particles1 = particles1.getReferencedComponent();
 	m_particles2 = particles2.getReferencedComponent();
+	m_particles3 = particles3.getReferencedComponent();
+
+    if (m_particles3)
+    {
+		Transform2DAPI::setAlpha(m_particles3, 0.0f);
+    }
 }
 
 void UISplashScreen::Update()
@@ -61,26 +70,42 @@ void UISplashScreen::Update()
         Input::isRightTriggerJustPressed(1)
         ))
     {
-        if (!nextSceneName.empty())
+		isStarted = true;
+		startTimer = startTime;
+    }
+
+    if (!nextSceneName.empty() && isStarted && startTimer <= 0.0f)
+    {
+        m_transitionRequested = true;
+        if (asyncAvailable && SceneAPI::requestAsyncSceneChange())
         {
-            m_transitionRequested = true;
-            if (asyncAvailable && SceneAPI::requestAsyncSceneChange())
-            {
-                m_asyncTransitionPending = true;
-            }
-            else
-            {
-                Debug::log("Async scene load unavailable for %s; using synchronous fallback.", nextSceneName.c_str());
-                SceneAPI::requestSceneChange(nextSceneName.c_str());
-            }
+            m_asyncTransitionPending = true;
         }
+        else
+        {
+            Debug::log("Async scene load unavailable for %s; using synchronous fallback.", nextSceneName.c_str());
+            SceneAPI::requestSceneChange(nextSceneName.c_str());
+        }
+    }
+    
+    if (isStarted && startTimer > 0.0f)
+    {
+        startTimer -= Time::getDeltaTime();
+		const float t = startTimer / startTime;
+		Transform2DAPI::setAlpha(m_particles3, 1.0f - t);
+		Transform2DAPI::setAlpha(m_button, t * 2.0f - 1.0f);
     }
 
 	time += Time::getDeltaTime();
 
-    if (m_buttonGlow)
+    if (m_buttonGlow && !isStarted)
     {
 		Transform2DAPI::setAlpha(m_buttonGlow, std::abs(std::sin(time * 2.0f)));
+    }
+    else
+    {
+		const float alpha = MathAPI::moveTowards(Transform2DAPI::getAlpha(m_buttonGlow), 0.0f, Time::getDeltaTime() * 2.0f);
+		Transform2DAPI::setAlpha(m_buttonGlow, alpha);
     }
     if (m_logoGlow)
     {
