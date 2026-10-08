@@ -69,9 +69,189 @@ const EnemyBaseAttackConfig* SummonerEnemyController::getAttackConfig() const
 	return m_attackConfig.get();
 }
 
+SummonerTeleportMode SummonerEnemyController::getTeleportMode() const
+{
+	if (shouldEscapeTeleport())
+	{
+		return SummonerTeleportMode::Escape;
+	}
+
+	if (shouldApproachTeleport())
+	{
+		return SummonerTeleportMode::Approach;
+	}
+
+	return SummonerTeleportMode::None;
+}
+
 bool SummonerEnemyController::isTeleportReady() const
 {
 	return m_teleportCooldownTimer <= 0.0f;
+}
+
+bool SummonerEnemyController::shouldEscapeTeleport() const
+{
+	if (!m_attackConfig || !m_enemyDetectionAggro || !hasValidTarget())
+	{
+		return false;
+	}
+
+	Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
+	if (!ownerTransform)
+	{
+		return false;
+	}
+
+	const Vector3 ownerPosition = TransformAPI::getGlobalPosition(ownerTransform);
+	const float closestDistance = getClosestActivePlayerDistance(ownerPosition);
+
+	return closestDistance < m_attackConfig.get()->m_teleportEscapeDistance;
+}
+
+bool SummonerEnemyController::shouldApproachTeleport() const
+{
+	if (!m_attackConfig || !hasValidTarget())
+	{
+		return false;
+	}
+
+	return !isCurrentTargetInRange(m_attackConfig.get()->m_basicAttackRange);
+}
+
+bool SummonerEnemyController::tryGetTeleportPosition(SummonerTeleportMode mode, Vector3& outPosition)
+{
+	constexpr int MaxTeleportAttempts = 20;
+	constexpr float MinEscapeImprovement = 0.5f;
+	constexpr float MinTeleportDisplacement = 1.0f;
+
+	if (!m_attackConfig || !hasValidTarget() || !m_enemyDetectionAggro || mode == SummonerTeleportMode::None)
+	{
+		return false;
+	}
+
+	Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
+	Transform* targetTransform = getCurrentTarget();
+
+	if (!ownerTransform || !targetTransform)
+	{
+		return false;
+	}
+
+	const auto* config = m_attackConfig.get();
+
+	const Vector3 ownerPosition = TransformAPI::getGlobalPosition(ownerTransform);
+	const Vector3 targetPosition = TransformAPI::getGlobalPosition(targetTransform);
+	
+	const float currentClosestDistance = getClosestActivePlayerDistance(ownerPosition);
+	if (currentClosestDistance == FLT_MAX)
+	{
+		return false;
+	}
+
+	const bool isEscape = mode == SummonerTeleportMode::Escape;
+
+	const float attackRange = config->m_basicAttackRange;
+	const float minPlayerDistance = config->m_teleportMinPlayerDistance;
+
+	// Aim for the preferred combat distance
+	const float preferredDistance = std::clamp(config->m_teleportPreferredDistance, minPlayerDistance, attackRange);
+
+	// Escape searches around the Summoner / Approach searches around the current target
+	const Vector3 searchCenter = isEscape ? ownerPosition : targetPosition;
+
+	const Vector3 searchExtents(5.0f, 5.0f, 5.0f);
+
+	float bestScore = -FLT_MAX;
+	bool foundPosition = false;
+	Vector3 bestPosition;
+
+	for (int i = 0; i < MaxTeleportAttempts; ++i)
+	{
+		Vector3 candidatePosition;
+		
+		const bool found = NavigationAPI::findRandomReachablePointAround(
+			searchCenter,
+			config->m_teleportRadius,
+			candidatePosition,
+			searchExtents,
+			1
+		);
+
+		if (!found)
+		{
+			continue;
+		}
+
+		// Avoid teleporting almost to the same location
+		Vector3 displacement = candidatePosition - ownerPosition;
+		displacement.y = 0.0f;
+
+		if (displacement.LengthSquared() < MinTeleportDisplacement * MinTeleportDisplacement)
+		{
+			continue;
+		}
+
+		// Check distance to every active player
+		const float closestPlayerDistance = getClosestActivePlayerDistance(candidatePosition);
+		if (closestPlayerDistance == FLT_MAX)
+		{
+			continue;
+		}
+
+		// Don't select position too close to a player
+		if (closestPlayerDistance < minPlayerDistance)
+		{
+			continue;
+		}
+
+		Vector3 toTarget = candidatePosition - targetPosition;
+		toTarget.y = 0.0f;
+
+		const float targetDistance = toTarget.Length();
+		float score = 0.0f;
+
+		if (isEscape)
+		{
+			// New position must improve safety
+			if (closestPlayerDistance < currentClosestDistance + MinEscapeImprovement)
+			{
+				continue;
+			}
+
+			const float desiredEscapeDistance =	(std::max)(config->m_teleportPreferredDistance,	config->m_teleportEscapeDistance);
+
+			score = -std::abs(closestPlayerDistance - desiredEscapeDistance);
+		}
+		else
+		{
+			// Approach must place it inside projectile range
+			if (targetDistance > attackRange)
+			{
+				continue;
+			}
+
+			// Prefer the desired ranged combat distance
+			score = -std::abs(targetDistance - preferredDistance);
+
+			// Small preference for keeping other player away
+			score += closestPlayerDistance * 0.01f;
+		}
+
+		if (score > bestScore)
+		{
+			bestScore = score;
+			bestPosition = candidatePosition;
+			foundPosition = true;
+		}
+	}
+
+	if (!foundPosition)
+	{
+		return false;
+	}
+
+	outPosition = bestPosition;
+	return true;
 }
 
 void SummonerEnemyController::consumeTeleportCooldown()
@@ -92,138 +272,6 @@ void SummonerEnemyController::delayTeleportRetry()
 	}
 
 	m_teleportCooldownTimer = m_attackConfig.get()->m_teleportRetryDelay;
-}
-
-bool SummonerEnemyController::tryGetTeleportPosition(Vector3& outPosition) const
-{
-	constexpr int MaxTeleportAttempts = 20;
-
-	if (!m_attackConfig || !hasValidTarget())
-	{
-		return false;
-	}
-
-	Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
-	Transform* targetTransform = getCurrentTarget();
-
-	if (!ownerTransform || !targetTransform || !m_enemyDetectionAggro)
-	{
-		return false;
-	}
-
-	const Vector3 ownerPosition = TransformAPI::getGlobalPosition(ownerTransform);
-	const Vector3 targetPosition = TransformAPI::getGlobalPosition(targetTransform);
-
-	const bool targetInAttackRange =
-		isCurrentTargetInRange(m_attackConfig.get()->m_basicAttackRange);
-
-	const Vector3 searchCenter =
-		targetInAttackRange ? ownerPosition : targetPosition;
-
-	Transform* lyrielTransform = m_enemyDetectionAggro->getLyrielTransform();
-	Transform* deathTransform = m_enemyDetectionAggro->getDeathTransform();
-
-	const Vector3 searchExtents = Vector3(5.0f, 5.0f, 5.0f);
-	const float attackRangeSquared =
-		m_attackConfig.get()->m_basicAttackRange * m_attackConfig.get()->m_basicAttackRange;
-
-	float bestScore = -FLT_MAX;
-	bool foundPosition = false;
-	Vector3 bestPosition;
-
-	for (int i = 0; i < MaxTeleportAttempts; ++i)
-	{
-		Vector3 candidatePosition;
-
-		const bool found = NavigationAPI::findRandomReachablePointAround(
-			searchCenter,
-			m_attackConfig.get()->m_teleportRadius,
-			candidatePosition,
-			searchExtents,
-			1);
-
-		if (!found)
-		{
-			continue;
-		}
-
-		Vector3 toTarget = candidatePosition - targetPosition;
-		toTarget.y = 0.0f;
-
-		const float targetDistance = toTarget.Length();
-
-		if (targetDistance * targetDistance > attackRangeSquared)
-		{
-			continue;
-		}
-
-		float closestPlayerDistance = FLT_MAX;
-
-		if (lyrielTransform)
-		{
-			Vector3 toLyriel =
-				candidatePosition - TransformAPI::getGlobalPosition(lyrielTransform);
-
-			toLyriel.y = 0.0f;
-
-			const float distanceToLyriel = toLyriel.Length();
-			if (distanceToLyriel < closestPlayerDistance)
-			{
-				closestPlayerDistance = distanceToLyriel;
-			}
-		}
-
-		if (deathTransform)
-		{
-			Vector3 toDeath =
-				candidatePosition - TransformAPI::getGlobalPosition(deathTransform);
-
-			toDeath.y = 0.0f;
-
-			const float distanceToDeath = toDeath.Length();
-			if (distanceToDeath < closestPlayerDistance)
-			{
-				closestPlayerDistance = distanceToDeath;
-			}
-		}
-
-		if (closestPlayerDistance == FLT_MAX)
-		{
-			continue;
-		}
-
-		if (!targetInAttackRange &&
-			closestPlayerDistance < m_attackConfig.get()->m_teleportMinPlayerDistance)
-		{
-			continue;
-		}
-
-		float score = 0.0f;
-
-		if (targetInAttackRange)
-		{
-			score = closestPlayerDistance;
-		}
-		else
-		{
-			score = -targetDistance;
-		}
-
-		if (score > bestScore)
-		{
-			bestScore = score;
-			bestPosition = candidatePosition;
-			foundPosition = true;
-		}
-	}
-
-	if (foundPosition)
-	{
-		outPosition = bestPosition;
-		return true;
-	}
-
-	return false;
 }
 
 void SummonerEnemyController::updateTeleportCooldown(float dt)
@@ -374,6 +422,41 @@ void SummonerEnemyController::updateAttackCooldown(float dt)
 	{
 		m_attackCooldownTimer = 0.0f;
 	}
+}
+
+float SummonerEnemyController::getClosestActivePlayerDistance(const Vector3& position) const
+{
+	if (!m_enemyDetectionAggro)
+	{
+		return FLT_MAX;
+	}
+
+	float closestDistance = FLT_MAX;
+
+	Transform* players[] =
+	{
+		m_enemyDetectionAggro->getLyrielTransform(),
+		m_enemyDetectionAggro->getDeathTransform()
+	};
+
+	for (Transform* player : players)
+	{
+		if (!player || m_enemyDetectionAggro->isDowned(player))
+		{
+			continue;
+		}
+
+		Vector3 difference = TransformAPI::getGlobalPosition(player) - position;
+		difference.y = 0.0f;
+
+		const float distance = difference.Length();
+		if (distance < closestDistance)
+		{
+			closestDistance = distance;
+		}
+	}
+
+	return closestDistance;
 }
 
 IMPLEMENT_SCRIPT_FIELDS_INHERITED(SummonerEnemyController, EnemyBaseController,

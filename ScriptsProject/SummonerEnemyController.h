@@ -8,6 +8,13 @@ class EnemyDetectionAggro;
 class SummonerAttackConfig;
 class Transform;
 
+enum class SummonerTeleportMode
+{
+	None,
+	Escape,
+	Approach
+};
+
 class SummonerEnemyController : public EnemyBaseController
 {
 	DECLARE_SCRIPT(SummonerEnemyController)
@@ -21,11 +28,18 @@ public:
 
 	const EnemyBaseAttackConfig* getAttackConfig() const override;
 
+	// Teleport
+	SummonerTeleportMode getTeleportMode() const;
+
 	bool isTeleportReady() const;
+	bool shouldEscapeTeleport() const;
+	bool shouldApproachTeleport() const;
+	bool tryGetTeleportPosition(SummonerTeleportMode mode, Vector3& outPosition);
+
 	void consumeTeleportCooldown();
 	void delayTeleportRetry();
-	bool tryGetTeleportPosition(Vector3& outPosition) const;
 
+	// Summon
 	bool isSummonReady() const;
 	void consumeSummonCooldown();
 	void summonSpidersAroundSelf();
@@ -45,6 +59,8 @@ private:
 	void updateTeleportCooldown(float dt);
 	void updateSummonCooldown(float dt);
 	void updateAttackCooldown(float dt);
+
+	float getClosestActivePlayerDistance(const Vector3& position) const;
 
 private:
 	EnemyDetectionAggro* m_enemyDetectionAggro = nullptr;
