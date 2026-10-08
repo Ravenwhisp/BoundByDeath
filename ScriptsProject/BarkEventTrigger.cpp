@@ -971,12 +971,37 @@ void BarkEventTrigger::updateCombat()
 			)
 		{
 			/*
-			 * Only consume the transition if the
-			 * BarkEvent was actually accepted.
+			 * Start the delay when combat finishes.
+			 */
+			if (!m_isWaitingForDelay)
+			{
+				m_isWaitingForDelay = true;
+				m_timer = m_delay;
+			}
+
+			if (m_timer > 0.0f)
+			{
+				m_timer -=
+					Time::getDeltaTime();
+
+				if (m_timer > 0.0f)
+				{
+					return;
+				}
+			}
+
+			/*
+			 * Only consume the combat-end transition
+			 * when the BarkEvent is actually accepted.
+			 *
+			 * If BarkManager rejects it temporarily,
+			 * it will retry without restarting the delay.
 			 */
 			if (triggerBark())
 			{
 				m_wasCombatActive = false;
+				m_isWaitingForDelay = false;
+				m_timer = 0.0f;
 			}
 
 			return;
