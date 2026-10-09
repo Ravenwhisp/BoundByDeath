@@ -239,7 +239,7 @@ bool AelorinCinematics::startPhaseTransition()
     return true;
 }
 
-void AelorinCinematics::performPhaseTransformation()
+void AelorinCinematics::performPhaseTeleportToCenter()
 {
     if (m_vfx)
     {
