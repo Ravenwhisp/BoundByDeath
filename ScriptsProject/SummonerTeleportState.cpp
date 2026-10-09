@@ -52,10 +52,12 @@ void SummonerTeleportState::OnStateEnter()
 
 	const Vector3 departPosition = TransformAPI::getGlobalPosition(ownerTransform);
 
+	const SummonerTeleportMode teleportMode = m_controller->getTeleportMode();
 	Vector3 teleportPosition;
-	if (m_controller->tryGetTeleportPosition(teleportPosition))
+
+	if (m_controller->tryGetTeleportPosition(teleportMode, teleportPosition))
 	{
-		teleportPosition.y = departPosition.y;
+		//teleportPosition.y = departPosition.y;
 
 		if (m_particles)
 		{
