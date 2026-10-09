@@ -26,6 +26,7 @@ void AelorinPhase2TransformState::OnStateEnter()
 	// reset members
 	m_stateTimer = 0.0f;
 	m_completed = false;
+	m_dissolve = nullptr;
 
 	if (!m_controller)
 	{
@@ -55,6 +56,28 @@ void AelorinPhase2TransformState::OnStateEnter()
 	);
 
 	TransformAPI::setScale(m_modelTransform, m_startScale);
+
+	Transform* golemTransform = TransformAPI::findChildByName(m_modelTransform, "Golem");
+	if (!golemTransform)
+	{
+		Debug::warn("[AelorinPhase2TransformState] Golem not found under Phase2.");
+	}
+	else
+	{
+		GameObject* golemObject = ComponentAPI::getOwner(golemTransform);
+		m_dissolve = ShadersAPI::getDissolveComponent(golemObject);
+
+		if (!m_dissolve)
+		{
+			Debug::warn("[AelorinPhase2TransformState] DissolveComponent not found on Golem.");
+		}
+		else
+		{
+			// Completely dissolved/invisible at the start.
+			ShadersAPI::setDissolveAmount(m_dissolve, 1.0f);
+		}
+	}
+
 
 	Debug::log("[AelorinPhase2TransformState] ENTER");
 }
@@ -94,6 +117,13 @@ void AelorinPhase2TransformState::OnStateUpdate()
 
 	TransformAPI::setScale(m_modelTransform, currentScale);
 
+	if (m_dissolve)
+	{
+		const float dissolveAmount = 1.0f - smoothT;
+
+		ShadersAPI::setDissolveAmount(m_dissolve, dissolveAmount);
+	}
+
 	if (t < 1.0f)
 	{
 		return;
@@ -101,6 +131,10 @@ void AelorinPhase2TransformState::OnStateUpdate()
 
 	// Set final scale
 	TransformAPI::setScale(m_modelTransform, m_targetScale);
+	if (m_dissolve)
+	{
+		ShadersAPI::setDissolveAmount(m_dissolve, 0.0f);
+	}
 
 	m_completed = true;
 
@@ -118,7 +152,13 @@ void AelorinPhase2TransformState::OnStateExit()
 		TransformAPI::setScale(m_modelTransform, m_targetScale);
 	}
 
+	if (m_dissolve)
+	{
+		ShadersAPI::setDissolveAmount(m_dissolve, 0.0f);
+	}
+
 	m_modelTransform = nullptr;
+	m_dissolve = nullptr;
 
 	m_stateTimer = 0.0f;
 	m_completed = false;
