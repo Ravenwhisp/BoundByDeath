@@ -52,7 +52,11 @@ void LyrielBasicAttack::Update()
 
 void LyrielBasicAttack::onAttackWindowUpdate()
 {
-    if (m_attackFacingTarget != nullptr)
+    if (m_pendingIsAimed)
+    {
+        faceDirection(m_pendingDirection);
+    }
+    else if (m_attackFacingTarget != nullptr)
     {
         faceTarget(m_attackFacingTarget);
     }
@@ -365,8 +369,6 @@ void LyrielBasicAttack::beginAim()
     Vector3 aimDirection = computeAimDirection();
     m_currentAimDirection = isAimStickValid(aimDirection) ? aimDirection : getFallbackFacingDirection();
 
-    faceDirection(m_currentAimDirection);
-
     if (m_lyrielUI)
     {
         m_lyrielUI->showBasicAttackUI();
@@ -380,7 +382,11 @@ void LyrielBasicAttack::updateAim()
     if (isAimStickValid(aimDirection))
     {
         m_currentAimDirection = aimDirection;
-        faceDirection(m_currentAimDirection);
+    }
+    else
+    {
+        // Movement can turn Lyriel while the aim stick is neutral.
+        m_currentAimDirection = getFallbackFacingDirection();
     }
 
     updateAimUI();
@@ -401,19 +407,13 @@ void LyrielBasicAttack::updateAimUI()
 
     const Vector3 origin = TransformAPI::getGlobalPosition(ownerTransform);
 
-    Vector3 facing = TransformAPI::getForward(ownerTransform);
-    facing.y = 0.0f;
-
-    if (facing.LengthSquared() <= 0.0001f)
-    {
-        facing = m_currentAimDirection;
-    }
-
-    m_lyrielUI->updateBasicAttackUI(origin, facing);
+    m_lyrielUI->updateBasicAttackUI(origin, m_currentAimDirection);
 }
 
 void LyrielBasicAttack::releaseAimAndCast()
 {
+    // Sample again on release so a quick tap or last-frame turn uses the current aim.
+    updateAim();
     m_isAiming = false;
 
     if (m_lyrielUI)
