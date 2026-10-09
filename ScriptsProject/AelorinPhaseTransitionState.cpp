@@ -3,7 +3,7 @@
 
 #include "AelorinBossController.h"
 #include "AelorinVFX.h"
-#include "AelorinDamageable.h"
+#include "AelorinCinematics.h"
 
 AelorinPhaseTransitionState::AelorinPhaseTransitionState(GameObject* owner)
 	: StateMachineScript(owner)
@@ -24,14 +24,10 @@ void AelorinPhaseTransitionState::OnStateEnter()
 	m_controller = GameObjectAPI::findScript<AelorinBossController>(parentGameObject);
 	m_animation = AnimationAPI::getAnimationComponent(getOwner());
 	m_vfx = GameObjectAPI::findScript<AelorinVFX>(parentGameObject);
-	m_damageable = GameObjectAPI::findScript<AelorinDamageable>(parentGameObject);
-
-	m_dissolveStarted = false;
-	m_phase2RevealStarted = false;
-
-	m_phase2RevealTimer = 0.0f;
 
 	m_phase2Started = false;
+	m_cinematicDriven = false;
+	m_fallbackTimer = 0.0f;
 
 	if (!m_controller)
 	{
@@ -45,7 +41,18 @@ void AelorinPhaseTransitionState::OnStateEnter()
 		return;
 	}
 
-	if (m_vfx)
+	// Con cinemática montada, ella lleva el reloj: mueve al boss al centro, lanza el hechizo y
+	// dispara el cambio de modelo tapado por el VFX. Sin cinemática, se espera a que acabe la
+	// animación como siempre.
+	AelorinCinematics* cinematics = GameObjectAPI::findScript<AelorinCinematics>(parentGameObject);
+	if (cinematics)
+	{
+		m_cinematicDriven = cinematics->startPhaseTransition();
+	}
+
+	// Con cinemática el VFX lo lanza ella en el instante del cambio de modelo, no aquí: si no,
+	// saltaría al entrar al estado y se habría apagado mucho antes de que el golem aparezca.
+	if (m_vfx && !m_cinematicDriven)
 	{
 		m_vfx->playPhase2Transition();
 	}
@@ -55,45 +62,23 @@ void AelorinPhaseTransitionState::OnStateEnter()
 
 void AelorinPhaseTransitionState::OnStateUpdate()
 {
-	if (!m_controller || !m_animation || !m_damageable || m_phase2Started)
+	if (!m_controller || !m_animation)
 	{
 		return;
 	}
 
-	const float playbackTime = AnimationAPI::getPlaybackTime(m_animation);
-	const float playbackDuration = AnimationAPI::getPlaybackDuration(m_animation);
-
-	if (playbackDuration <= 0.001f)
+	if (m_phase2Started || m_cinematicDriven)
 	{
 		return;
 	}
 
-	const float animationProgress = playbackTime / playbackDuration;
+	// Sin cinemática: el clip base de este estado es un idle en bucle, asi que no se puede
+	// esperar a que termine. Se pasa a fase 2 por tiempo.
+	constexpr float fallbackDuration = 2.0f;
 
-	// Start Phase 1 dissolve
-	if (!m_dissolveStarted && animationProgress >= 0.5f)
-	{
-		m_dissolveStarted = true;
-		m_phase2RevealTimer = 0.0f;
+	m_fallbackTimer += Time::getDeltaTime();
 
-		m_damageable->startPhase1Dissolve();
-	}
-
-	// Wait so Phase 2 appears underneath
-	if (m_dissolveStarted && !m_phase2RevealStarted)
-	{
-		m_phase2RevealTimer += Time::getDeltaTime();
-
-		constexpr float phase2RevealDelay = 0.2f;
-		if (m_phase2RevealTimer >= phase2RevealDelay)
-		{
-			m_phase2RevealStarted = true;
-			m_controller->showPhase2TransitionModel();
-		}
-	}
-
-	// Phase 1 now gone
-	if (m_phase2RevealStarted && m_damageable->isDissolveFinished())
+	if (m_fallbackTimer >= fallbackDuration)
 	{
 		m_phase2Started = true;
 		m_controller->beginPhase2();
@@ -102,11 +87,6 @@ void AelorinPhaseTransitionState::OnStateUpdate()
 
 void AelorinPhaseTransitionState::OnStateExit()
 {
-	m_dissolveStarted = false;
-	m_phase2RevealStarted = false;
-	m_phase2RevealTimer = 0.0f;
-	m_phase2Started = false;
-
 	Debug::log("[AelorinPhaseTransitionState] EXIT");
 }
 
