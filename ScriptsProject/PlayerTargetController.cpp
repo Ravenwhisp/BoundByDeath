@@ -10,6 +10,7 @@
 #include "BreakableObject.h"
 #include "CrystalShadowMark.h"
 #include "GameplayTargetRegistry.h"
+#include <algorithm>
 
 IMPLEMENT_SCRIPT_FIELDS(PlayerTargetController,
     SERIALIZED_FLOAT(m_targetRange, "Target Range", 0.0f, 20.0f, 0.05f),
@@ -371,7 +372,9 @@ Vector3 PlayerTargetController::computeAimDirection() const
 
     const Vector3 ownerPosition = TransformAPI::getGlobalPosition(ownerTransform);
 
-    return Input::getAimDirection(ownerPosition, m_character->getPlayerIndex());
+    // The engine already applies the stick deadzone before filtering its output.
+    // Avoid rejecting fresh stick pushes with a second 30% magnitude threshold.
+    return Input::getAimDirection(ownerPosition, m_character->getPlayerIndex(), 0.0001f);
 }
 
 bool PlayerTargetController::isAimStickValid(const Vector3& direction) const
@@ -454,7 +457,9 @@ bool PlayerTargetController::tryComputeTargetScore(GameObject* target, const Vec
     // angleScore, the closer to 0 the more aligned with the aim direction
     // distanceScore: the closer to 0 the closer to the player
 
-    float angleScore = 1.0f - dot;
+    // Normalize across the cone so angle and distance weights use comparable scales.
+    const float angleRange = (std::max)(1.0f - minDot, 0.000001f);
+    const float angleScore = std::clamp((1.0f - dot) / angleRange, 0.0f, 1.0f);
 
     float distanceScore = 0.0f;
     if (m_targetRange > 0.0001f)
@@ -535,16 +540,17 @@ bool PlayerTargetController::shouldSwitchTarget(GameObject* candidate, const Vec
         return false;
     }
 
-    if (m_switchCooldownTimer > 0.0f)
-    {
-        return false;
-    }
-
     // If the current target can no longer be scored then replace it
     float currentScore = FLT_MAX;
     if (!tryComputeTargetScore(m_currentTarget, aimDirection, currentScore))
     {
         return true;
+    }
+
+    // Only delay switches while the current target remains inside the aim cone.
+    if (m_switchCooldownTimer > 0.0f)
+    {
+        return false;
     }
 
     if (GameObjectAPI::getTag(candidate) == Tag::ENEMY && GameObjectAPI::getTag(m_currentTarget) == Tag::ENEMY)
