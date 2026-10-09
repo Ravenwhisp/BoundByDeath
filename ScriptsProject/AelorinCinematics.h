@@ -81,12 +81,11 @@ public:
     float m_phaseWideDistancePerUnit = 1.5f;
     float m_phaseWideMaxDistance = 40.0f;
 
+    ComponentRef<Transform> m_combatCameraAnchor;
     Vector3 m_combatCameraOffset = Vector3(35.0f, 54.0f, -35.0f);
-    Vector3 m_combatCameraCloseOffset =
-        Vector3(12.0f, 18.0f, -12.0f);
+    Vector3 m_combatCameraCloseOffset = Vector3(12.0f, 18.0f, -12.0f);
 
-    Vector3 m_combatCameraFarOffset =
-        Vector3(20.0f, 30.0f, -20.0f);
+    Vector3 m_combatCameraFarOffset = Vector3(20.0f, 30.0f, -20.0f);
 
     float m_combatCameraZoomStartDistance = 8.0f;
     float m_combatCameraZoomMaxDistance = 22.0f;

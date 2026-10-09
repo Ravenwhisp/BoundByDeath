@@ -10,6 +10,8 @@
 #include "CameraFollow.h"
 #include "MusicManager.h"
 
+#include <algorithm>
+
 IMPLEMENT_SCRIPT_FIELDS(AelorinCinematics,
     FIELD_GROUP_COLLAPSE("Encounter",
         SERIALIZED_COMPONENT_REF(m_encounterCinematic, "Encounter Cinematic", ComponentType::TRANSFORM),
@@ -17,6 +19,13 @@ IMPLEMENT_SCRIPT_FIELDS(AelorinCinematics,
         SERIALIZED_COMPONENT_REF(m_arenaCameraAnchor, "Arena Camera Anchor", ComponentType::TRANSFORM),
         SERIALIZED_COMPONENT_REF_VECTOR(m_hideDuringCinematics, "Hide During Cinematics", ComponentType::TRANSFORM),
         SERIALIZED_VEC3(m_arenaCameraOffset, "Arena Camera Offset"),
+        SERIALIZED_COMPONENT_REF(m_combatCameraAnchor, "Combat Camera Anchor", ComponentType::TRANSFORM),
+        SERIALIZED_VEC3(m_combatCameraCloseOffset, "Combat Camera Close Offset"),
+        SERIALIZED_VEC3(m_combatCameraFarOffset, "Combat Camera Far Offset"),
+        SERIALIZED_FLOAT(m_combatCameraZoomStartDistance, "Combat Zoom Start Distance", 0.0f, 100.0f, 0.5f),
+        SERIALIZED_FLOAT(m_combatCameraZoomMaxDistance, "Combat Zoom Max Distance", 0.0f, 100.0f, 0.5f),
+        SERIALIZED_FLOAT(m_combatFocusSmoothSpeed, "Combat Focus Smooth Speed", 0.1f, 20.0f, 0.1f),
+        SERIALIZED_FLOAT(m_combatZoomSmoothSpeed, "Combat Zoom Smooth Speed", 0.1f, 20.0f, 0.1f),
         SERIALIZED_VEC3(m_playersShotOffset, "Players Shot Offset"),
         SERIALIZED_FLOAT(m_encounterRoarDelay, "Encounter Roar Delay", 0.0f, 30.0f, 0.05f),
         SERIALIZED_BOOL(m_setMusicOnEncounter, "Set Boss Music On Encounter"),
@@ -82,6 +91,11 @@ void AelorinCinematics::Update()
     updateEncounter(dt);
     updatePhaseTransition(dt);
     updateDefeat(dt);
+
+    if (m_encounterFinished && !isPlaying() && !isTransitionRunning())
+    {
+        updateCombatCamera();
+    }
 }
 
 void AelorinCinematics::requestEncounterStart()
@@ -183,6 +197,124 @@ void AelorinCinematics::onEncounterFinished()
             music->SetState_FinalBoss();
         }
     }
+}
+
+void AelorinCinematics::updateCombatCamera()
+{
+    if (!m_cameraFollow || !m_controller)
+    {
+        return;
+    }
+
+    Transform* anchor = m_combatCameraAnchor.getReferencedComponent();
+    if (!anchor)
+    {
+        return;
+    }
+
+    Transform* lyriel = m_controller->getLyrielTransform();
+    Transform* death = m_controller->getDeathTransform();
+    Transform* boss = GameObjectAPI::getTransform(getOwner());
+
+    if (!lyriel || !death || !boss)
+    {
+        return;
+    }
+
+    const Vector3 lyrielPosition = TransformAPI::getGlobalPosition(lyriel);
+    const Vector3 deathPosition = TransformAPI::getGlobalPosition(death);
+    const Vector3 bossPosition = TransformAPI::getGlobalPosition(boss);
+
+    // Center between both players and Aelorin
+    const Vector3 desiredFocus = (lyrielPosition + deathPosition + bossPosition) / 3.0f;
+
+    // Calculate how spread out the fight is
+
+    const float lyrielDistance = (lyrielPosition - desiredFocus).Length();
+    const float deathDistance = (deathPosition - desiredFocus).Length();
+    const float bossDistance = (bossPosition - desiredFocus).Length();
+
+    float maxDistance = lyrielDistance;
+
+    if (deathDistance > maxDistance)
+    {
+        maxDistance = deathDistance;
+    }
+
+    if (bossDistance > maxDistance)
+    {
+        maxDistance = bossDistance;
+    }
+
+    // Calculate zoom
+
+    const float zoomRange = m_combatCameraZoomMaxDistance - m_combatCameraZoomStartDistance;
+    float zoomT = 0.0f;
+
+    if (zoomRange > 0.001f)
+    {
+        zoomT = (maxDistance - m_combatCameraZoomStartDistance) / zoomRange;
+    }
+
+    zoomT = std::clamp(zoomT, 0.0f, 1.0f);
+
+    // Smoothstep zoom
+    zoomT = zoomT * zoomT * (3.0f - 2.0f * zoomT);
+
+    const Vector3 desiredOffset(
+        m_combatCameraCloseOffset.x + (m_combatCameraFarOffset.x - m_combatCameraCloseOffset.x) * zoomT,
+        m_combatCameraCloseOffset.y + (m_combatCameraFarOffset.y - m_combatCameraCloseOffset.y) * zoomT,
+        m_combatCameraCloseOffset.z + (m_combatCameraFarOffset.z - m_combatCameraCloseOffset.z) * zoomT
+    );
+
+    // First frame after a cinematic
+
+    if (!m_combatCameraInitialized)
+    {
+        GameObject* cameraObject = SceneAPI::getDefaultCameraGameObject();
+
+        Transform* cameraTransform = cameraObject ? GameObjectAPI::getTransform(cameraObject) : nullptr;
+        if (!cameraTransform)
+        {
+            return;
+        }
+
+        const Vector3 currentCameraPosition = TransformAPI::getGlobalPosition(cameraTransform);
+
+        m_combatCurrentFocus = desiredFocus;
+
+        // focus + offset = current camera position
+        m_combatCurrentOffset = currentCameraPosition - desiredFocus;
+
+        TransformAPI::setGlobalPosition(anchor, m_combatCurrentFocus);
+
+        m_cameraFollow->m_firstTarget.uid = anchor->getID();
+        m_cameraFollow->m_firstTarget.component = anchor;
+        m_cameraFollow->m_secondTarget.uid = anchor->getID();
+        m_cameraFollow->m_secondTarget.component = anchor;
+        m_cameraFollow->m_transformOffset = m_combatCurrentOffset;
+
+        m_combatCameraInitialized = true;
+
+        return;
+    }
+
+    // Smooth combat
+
+    const float dt = Time::getDeltaTime();
+    const float focusT = std::clamp(m_combatFocusSmoothSpeed * dt, 0.0f, 1.0f);
+    const float offsetT = std::clamp(m_combatZoomSmoothSpeed * dt, 0.0f, 1.0f);
+
+    m_combatCurrentFocus = m_combatCurrentFocus + (desiredFocus - m_combatCurrentFocus) * focusT;
+    m_combatCurrentOffset = m_combatCurrentOffset + (desiredOffset - m_combatCurrentOffset) * offsetT;
+
+    TransformAPI::setGlobalPosition(anchor, m_combatCurrentFocus);
+
+    m_cameraFollow->m_firstTarget.uid = anchor->getID();
+    m_cameraFollow->m_firstTarget.component = anchor;
+    m_cameraFollow->m_secondTarget.uid = anchor->getID();
+    m_cameraFollow->m_secondTarget.component = anchor;
+    m_cameraFollow->m_transformOffset = m_combatCurrentOffset;
 }
 
 bool AelorinCinematics::startPhaseTransition()
@@ -403,6 +535,8 @@ bool AelorinCinematics::playCinematic(const ComponentRef<Transform>& cinematicRe
     {
         return false;
     }
+
+    m_combatCameraInitialized = false;
 
     cinematic->play();
     return true;
