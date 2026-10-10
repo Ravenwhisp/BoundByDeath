@@ -41,6 +41,10 @@ public:
 	void startPhase2Spell();
 	void stopPhase2Spell();
 
+	// Seeker Sigils
+	void playSeekerSigilImpactDust(const Vector3& position);
+	void playSeekerSigilImpactDustBig(const Vector3& position);
+
 public:
 	// Phase 2 Aura
 	PrefabRef m_phase2AuraPrefab;
@@ -62,6 +66,10 @@ public:
 
 	// Phase 2 Spellcasting
 	PrefabRef m_phase2SpellPrefab;
+
+	// Seeker Sigils
+	PrefabRef m_seekerSigilImpactDustPrefab;
+	PrefabRef m_seekerSigilImpactDustBigPrefab;
 
 	// Component References
 	ComponentRef<Transform> m_phase1RightHand;

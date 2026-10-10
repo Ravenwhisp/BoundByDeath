@@ -5,6 +5,7 @@
 #include "SeekerSigilProjectile.h"
 #include "AelorinUI.h"
 #include "AelorinVFX.h"
+#include "CameraShake.h"
 
 AelorinSeekerSigilsState::AelorinSeekerSigilsState(GameObject* owner)
 	: StateMachineScript(owner)
@@ -21,6 +22,7 @@ void AelorinSeekerSigilsState::OnStateEnter()
 	}
 
 	GameObject* parentGameObject = ComponentAPI::getOwner(parentTransform);
+	GameObject* cameraObject = SceneAPI::getDefaultCameraGameObject();
 
 	// get scripts
 	m_controller = GameObjectAPI::findScript<AelorinBossController>(parentGameObject);
@@ -29,6 +31,7 @@ void AelorinSeekerSigilsState::OnStateEnter()
 	m_largeProjectilePool = m_controller->getSeekerSigilsLargeProjectilePool();
 	m_aelorinUI = GameObjectAPI::findScript<AelorinUI>(parentGameObject);
 	m_vfx = GameObjectAPI::findScript<AelorinVFX>(parentGameObject);
+	m_cameraShake = cameraObject ? GameObjectAPI::findScript<CameraShake>(cameraObject) : nullptr;
 
 	// reset members
 	m_activeAbility = AelorinAbility::None;
@@ -218,13 +221,13 @@ void AelorinSeekerSigilsState::launchCurrentWave()
 	const Vector3 lyrielPosition = m_controller->getLyrielPosition();
 	const Vector3 deathPosition = m_controller->getDeathPosition();
 
-	launchProjectileAt(m_normalProjectilePool, lyrielPosition, config->m_seekerSigilsRadius, config->m_seekerSigilsDamage);
-	launchProjectileAt(m_normalProjectilePool, deathPosition, config->m_seekerSigilsRadius, config->m_seekerSigilsDamage);
+	launchProjectileAt(m_normalProjectilePool, lyrielPosition, config->m_seekerSigilsRadius, config->m_seekerSigilsDamage, false);
+	launchProjectileAt(m_normalProjectilePool, deathPosition, config->m_seekerSigilsRadius, config->m_seekerSigilsDamage, false);
 
 	Debug::log("[AelorinSeekerSigilsState] Launched wave %d.", m_currentWave + 1);
 }
 
-void AelorinSeekerSigilsState::launchProjectileAt(ProjectilePool* projectilePool, const Vector3& targetPosition, float impactRadius, float damage)
+void AelorinSeekerSigilsState::launchProjectileAt(ProjectilePool* projectilePool, const Vector3& targetPosition, float impactRadius, float damage, bool heavyImpact)
 {
 	if (!projectilePool || !m_controller)
 	{
@@ -268,7 +271,7 @@ void AelorinSeekerSigilsState::launchProjectileAt(ProjectilePool* projectilePool
 	}
 
 	// Gameplay
-	projectile->launch(spawnPosition, impactPosition, config->m_seekerSigilsFallSpeed, config->m_seekerSigilsProjectileLifetime, impactRadius, damage, executor);
+	projectile->launch(spawnPosition, impactPosition, config->m_seekerSigilsFallSpeed, config->m_seekerSigilsProjectileLifetime, impactRadius, damage, executor, m_cameraShake, m_vfx, heavyImpact);
 }
 
 void AelorinSeekerSigilsState::launchPhase2FinalProjectile()
@@ -289,7 +292,7 @@ void AelorinSeekerSigilsState::launchPhase2FinalProjectile()
 	const Vector3 deathPosition = m_controller->getDeathPosition();
 	const Vector3 midpoint = (lyrielPosition + deathPosition) * 0.5f;
 
-	launchProjectileAt(m_largeProjectilePool, midpoint, config->m_seekerSigilsPhase2FinalRadius, config->m_seekerSigilsPhase2FinalDamage);
+	launchProjectileAt(m_largeProjectilePool, midpoint, config->m_seekerSigilsPhase2FinalRadius, config->m_seekerSigilsPhase2FinalDamage, true);
 
 	Debug::log("[AelorinSeekerSigilsState] Launched Phase 2 final projectile.");
 }

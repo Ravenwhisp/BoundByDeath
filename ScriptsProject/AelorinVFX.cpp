@@ -9,6 +9,8 @@ IMPLEMENT_SCRIPT_FIELDS(AelorinVFX,
 	SERIALIZED_ASSET_REF(m_summonEnemyPrefab, "Summon Enemy Prefab", AssetType::PREFAB),
 	SERIALIZED_ASSET_REF(m_phase1SpellPrefab, "Phase 1 Spell Prefab", AssetType::PREFAB),
 	SERIALIZED_ASSET_REF(m_phase2SpellPrefab, "Phase 2 Spell Prefab", AssetType::PREFAB),
+	SERIALIZED_ASSET_REF(m_seekerSigilImpactDustPrefab, "Seeker Sigil Impact Dust Prefab", AssetType::PREFAB),
+	SERIALIZED_ASSET_REF(m_seekerSigilImpactDustBigPrefab,	"Seeker Sigil Impact Dust Big Prefab", AssetType::PREFAB),
 	SERIALIZED_COMPONENT_REF(m_phase1RightHand, "Phase 1 Right Hand", ComponentType::TRANSFORM),
 	SERIALIZED_COMPONENT_REF(m_phase1LeftHand, "Phase 1 Left Hand", ComponentType::TRANSFORM),
 	SERIALIZED_COMPONENT_REF(m_phase2RightHand, "Phase 2 Right Hand", ComponentType::TRANSFORM),
@@ -360,6 +362,40 @@ void AelorinVFX::stopPhase2Spell()
 
 	ParticleLifecycle::deactivate(m_phase2RightSpellEffect);
 	ParticleLifecycle::deactivate(m_phase2LeftSpellEffect);
+}
+
+void AelorinVFX::playSeekerSigilImpactDust(const Vector3& position)
+{
+	if (!m_seekerSigilImpactDustPrefab.m_id.isValid())
+	{
+		return;
+	}
+
+	ParticleLifecycle::spawnOneShotTimed(
+		m_oneShotVFX,
+		m_seekerSigilImpactDustPrefab.m_id,
+		position,
+		Vector3::Zero,
+		ParticleLifecycle::kDefaultOneShotLifetime,
+		ParticleLifecycle::getRuntimeVfxContainer()
+	);
+}
+
+void AelorinVFX::playSeekerSigilImpactDustBig(const Vector3& position)
+{
+	if (!m_seekerSigilImpactDustBigPrefab.m_id.isValid())
+	{
+		return;
+	}
+
+	ParticleLifecycle::spawnOneShotTimed(
+		m_oneShotVFX,
+		m_seekerSigilImpactDustBigPrefab.m_id,
+		position,
+		Vector3::Zero,
+		ParticleLifecycle::kDefaultOneShotLifetime,
+		ParticleLifecycle::getRuntimeVfxContainer()
+	);
 }
 
 IMPLEMENT_SCRIPT(AelorinVFX)
