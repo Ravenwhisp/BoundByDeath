@@ -3,6 +3,7 @@
 #include "AelorinAttackExecutor.h"
 #include "AelorinUI.h"
 #include "AelorinVFX.h"
+#include "CameraShake.h"
 
 #include "AelorinAttackConfig.h"
 
@@ -21,18 +22,19 @@ void AelorinNovaState::OnStateEnter()
 	}
 
 	GameObject* parentGameObject = ComponentAPI::getOwner(parentTransform);
+	GameObject* cameraObject = SceneAPI::getDefaultCameraGameObject();
 
 	// get scripts
 	m_controller = GameObjectAPI::findScript<AelorinBossController>(parentGameObject);
 	m_animation = AnimationAPI::getAnimationComponent(getOwner());
 	m_aelorinUI = GameObjectAPI::findScript<AelorinUI>(parentGameObject);
 	m_vfx = GameObjectAPI::findScript<AelorinVFX>(parentGameObject);
+	m_cameraShake = GameObjectAPI::findScript<CameraShake>(cameraObject);
 
 	// reset members
 	m_activeAbility = AelorinAbility::None;
 	m_stateTimer = 0.0f;
 	m_firstWaveApplied = false;
-	//m_secondWaveApplied = false;
 	m_completed = false;
 	m_isFuryCast = false;
 
@@ -140,22 +142,6 @@ void AelorinNovaState::OnStateUpdate()
 		m_firstWaveApplied = true;
 	}
 
-	//if (m_controller->isPhase2() &&
-	//	m_firstWaveApplied &&
-	//	!m_secondWaveApplied &&
-	//	m_stateTimer >= chargeTime + config->m_novaPhase2SecondWaveDelay)
-	//{
-	//	executeSecondNovaWave();
-	//	m_secondWaveApplied = true;
-	//}
-
-	//const float lastWaveTime = m_controller->isPhase2() ? chargeTime + config->m_novaPhase2SecondWaveDelay : chargeTime;
-
-	//if (m_stateTimer < lastWaveTime + recoveryDuration)
-	//{
-	//	return;
-	//}
-
 	if (m_stateTimer < chargeTime + recoveryDuration)
 	{
 		return;
@@ -194,7 +180,6 @@ void AelorinNovaState::OnStateExit()
 	m_stateTimer = 0.0f;
 	m_novaCenter = Vector3::Zero;
 	m_firstWaveApplied = false;
-	//m_secondWaveApplied = false;
 	m_completed = false;
 	m_isFuryCast = false;
 
@@ -219,24 +204,6 @@ void AelorinNovaState::executeFirstNovaWave()
 	Debug::log("[AelorinNovaState] First Nova wave.");
 }
 
-//void AelorinNovaState::executeSecondNovaWave()
-//{
-//	if (!m_controller)
-//	{
-//		return;
-//	}
-//
-//	const AelorinAttackConfig* config = m_controller->getAelorinAttackConfig();
-//	if (!config)
-//	{
-//		return;
-//	}
-//
-//	executeNovaWave(config->m_novaPhase2SecondRadius, config->m_novaPhase2SecondDamage);
-//
-//	Debug::log("[AelorinNovaState] Second Nova wave.");
-//}
-
 void AelorinNovaState::executeNovaWave(float radius, float damage)
 {
 	AelorinAttackExecutor* executor = m_controller->getAttackExecutor();
@@ -246,6 +213,7 @@ void AelorinNovaState::executeNovaWave(float radius, float damage)
 		return;
 	}
 
+	m_cameraShake->shake(0.04f, 0.25f);
 	executor->applyDamageInRadius(m_novaCenter, radius, damage, "Aelorin Nova");
 }
 

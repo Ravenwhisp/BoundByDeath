@@ -129,7 +129,7 @@ void SeekerSigilProjectile::playImpactFeedback()
 		}
 		else
 		{
-			m_cameraShake->shake(0.01f, 0.25f);
+			m_cameraShake->shake(0.02f, 0.25f);
 		}
 	}
 
