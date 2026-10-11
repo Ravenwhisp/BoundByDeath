@@ -401,6 +401,7 @@ void AelorinBossController::requestPhaseTransition()
 void AelorinBossController::markPhaseTransitionTriggered()
 {
 	m_phaseTransitionTriggered = true;
+	clearSummonsInFormation(getPhase1SummonFormation());
 }
 
 void AelorinBossController::beginPhase2()
@@ -1129,6 +1130,39 @@ AelorinAbility AelorinBossController::chooseRandomAbility(const std::vector<Aelo
 bool AelorinBossController::isPlayerWithinDistance(float distance) const
 {
 	return getClosestPlayerDistance() <= distance;
+}
+
+void AelorinBossController::clearSummonsInFormation(Transform* formationRoot)
+{
+	if (!formationRoot)
+	{
+		return;
+	}
+
+	const int slotCount = TransformAPI::getChildCount(formationRoot);
+
+	for (int i = 0; i < slotCount; ++i)
+	{
+		Transform* slotTransform = TransformAPI::getChild(formationRoot, i);
+		if (!slotTransform)
+		{
+			continue;
+		}
+
+		GameObject* slotObject = ComponentAPI::getOwner(slotTransform);
+		if (!slotObject)
+		{
+			continue;
+		}
+
+		AelorinSummonSlot* slot = GameObjectAPI::findScript<AelorinSummonSlot>(slotObject);
+		if (!slot)
+		{
+			continue;
+		}
+
+		slot->clearEnemy();
+	}
 }
 
 void AelorinBossController::onDefeat()

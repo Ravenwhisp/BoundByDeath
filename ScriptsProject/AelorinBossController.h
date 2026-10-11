@@ -272,4 +272,6 @@ private:
 	AelorinAbility chooseRandomAbility(const std::vector<AelorinAbility>& pool) const;
 
 	bool isPlayerWithinDistance(float distance) const;
+
+	void clearSummonsInFormation(Transform* formationRoot);
 };
