@@ -64,6 +64,8 @@ void AelorinSoulCataclysmState::OnStateEnter()
 		Debug::warn("[AelorinSoulCataclysmState] CameraShake not found.");
 	}
 
+	AnimationAPI::setSpeedMultiplier(m_animation, 1.0f);
+
 	m_attackExecutor = m_controller->getAttackExecutor();
 
 	if (!m_attackExecutor)
@@ -143,6 +145,11 @@ void AelorinSoulCataclysmState::OnStateUpdate()
 
 void AelorinSoulCataclysmState::OnStateExit()
 {
+	if (m_animation)
+	{
+		AnimationAPI::setSpeedMultiplier(m_animation, 1.0f);
+	}
+
 	m_aelorinUI = nullptr;
 	m_stateTimer = 0.0f;
 	m_cataclysmExecuted = false;

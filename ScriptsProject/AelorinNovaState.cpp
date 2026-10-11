@@ -55,6 +55,15 @@ void AelorinNovaState::OnStateEnter()
 		Debug::error("[AelorinNovaState] AelorinUI not found.");
 	}
 
+	if (m_controller->isPhase2())
+	{
+		AnimationAPI::setSpeedMultiplier(m_animation, 1.1f);
+	}
+	else
+	{
+		AnimationAPI::setSpeedMultiplier(m_animation, 1.2f);
+	}
+
 	// consume ability
 	m_activeAbility = m_controller->consumeRequestedAbility();
 	if (m_activeAbility != AelorinAbility::Nova)
@@ -175,6 +184,11 @@ void AelorinNovaState::OnStateExit()
 		m_vfx->stopPhase2Spell();
 	}
 
+	if (m_animation)
+	{
+		AnimationAPI::setSpeedMultiplier(m_animation, 1.0f);
+	}
+
 	m_aelorinUI = nullptr;
 	m_vfx = nullptr;
 	m_stateTimer = 0.0f;
@@ -197,6 +211,11 @@ void AelorinNovaState::executeFirstNovaWave()
 	if (!config)
 	{
 		return;
+	}
+
+	if (m_vfx)
+	{
+		m_vfx->playNovaImpactShockwave(m_novaCenter);
 	}
 
 	executeNovaWave(config->m_novaRadius, config->m_novaDamage);

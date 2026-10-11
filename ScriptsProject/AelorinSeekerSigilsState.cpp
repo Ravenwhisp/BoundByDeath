@@ -90,6 +90,8 @@ void AelorinSeekerSigilsState::OnStateEnter()
 		}
 	}
 
+	AnimationAPI::setSpeedMultiplier(m_animation, 1.0f);
+
 	m_isFuryCast = m_controller->isFuryActive();
 	if (m_isFuryCast)
 	{
@@ -191,6 +193,11 @@ void AelorinSeekerSigilsState::OnStateExit()
 	{
 		m_vfx->stopPhase1Spell();
 		m_vfx->stopPhase2Spell();
+	}
+
+	if (m_animation)
+	{
+		AnimationAPI::setSpeedMultiplier(m_animation, 1.0f);
 	}
 
 	m_aelorinUI = nullptr;

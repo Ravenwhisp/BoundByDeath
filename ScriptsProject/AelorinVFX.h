@@ -45,6 +45,9 @@ public:
 	void playSeekerSigilImpactDust(const Vector3& position);
 	void playSeekerSigilImpactDustBig(const Vector3& position);
 
+	// Nova
+	void playNovaImpactShockwave(const Vector3& position);
+
 public:
 	// Phase 2 Aura
 	PrefabRef m_phase2AuraPrefab;
@@ -70,6 +73,9 @@ public:
 	// Seeker Sigils
 	PrefabRef m_seekerSigilImpactDustPrefab;
 	PrefabRef m_seekerSigilImpactDustBigPrefab;
+
+	// Nova
+	PrefabRef m_novaImpactShockwavePrefab;
 
 	// Component References
 	ComponentRef<Transform> m_phase1RightHand;

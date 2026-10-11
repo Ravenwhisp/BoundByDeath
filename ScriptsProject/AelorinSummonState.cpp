@@ -53,6 +53,15 @@ void AelorinSummonState::OnStateEnter()
 		Debug::error("[AelorinSummonState] AelorinVFX not found.");
 	}
 
+	if (m_controller->isPhase2())
+	{
+		AnimationAPI::setSpeedMultiplier(m_animation, 0.3f);
+	}
+	else
+	{
+		AnimationAPI::setSpeedMultiplier(m_animation, 1.0f);
+	}
+
 	// consume ability
 	m_activeAbility = m_controller->consumeRequestedAbility();
 	if (m_activeAbility != AelorinAbility::Summon)
@@ -262,6 +271,11 @@ void AelorinSummonState::finishAbility()
 	if (m_completed)
 	{
 		return;
+	}
+
+	if (m_animation)
+	{
+		AnimationAPI::setSpeedMultiplier(m_animation, 1.0f);
 	}
 
 	m_completed = true;

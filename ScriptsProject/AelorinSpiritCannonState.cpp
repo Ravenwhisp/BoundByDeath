@@ -69,6 +69,15 @@ void AelorinSpiritCannonState::OnStateEnter()
 		return;
 	}
 
+	if (m_controller->isPhase2())
+	{
+		AnimationAPI::setSpeedMultiplier(m_animation, 1.0f);
+	}
+	else
+	{
+		AnimationAPI::setSpeedMultiplier(m_animation, 2.0f);
+	}
+
 	// consume ability
 	m_activeAbility = m_controller->consumeRequestedAbility();
 	if (m_activeAbility != AelorinAbility::SpiritCannon)
@@ -182,6 +191,11 @@ void AelorinSpiritCannonState::OnStateExit()
 	{
 		m_vfx->stopPhase1Spell();
 		m_vfx->stopPhase2Spell();
+	}
+
+	if (m_animation)
+	{
+		AnimationAPI::setSpeedMultiplier(m_animation, 1.0f);
 	}
 
 	m_controller = nullptr;

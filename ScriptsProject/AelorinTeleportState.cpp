@@ -143,6 +143,7 @@ void AelorinTeleportState::OnStateExit()
 	if (m_animation)
 	{
 		AnimationAPI::clearOverrideClip(m_animation, 0.0f);
+		AnimationAPI::setSpeedMultiplier(m_animation, 1.0f);
 	}
 
 	if (m_vfx && m_controller)
@@ -269,6 +270,7 @@ void AelorinTeleportState::finishAbility()
 	m_completed = true;
 
 	AnimationAPI::clearOverrideClip(m_animation, 0.0f);
+	AnimationAPI::setSpeedMultiplier(m_animation, 1.0f);
 
 	const bool sent = AnimationAPI::sendTrigger(m_animation, "ToIdle");
 	if (!sent)

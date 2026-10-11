@@ -45,6 +45,11 @@ void AelorinExhaustionState::OnStateEnter()
 		changePhase(ExhaustionPhase::Loop);
 	}
 
+	if (m_controller->isPhase2())
+	{
+		AnimationAPI::setSpeedMultiplier(m_animation, 1.0f);
+	}
+
 	Debug::log("[AelorinExhaustionState] ENTER");
 }
 
@@ -94,6 +99,11 @@ void AelorinExhaustionState::OnStateUpdate()
 
 void AelorinExhaustionState::OnStateExit()
 {
+	if (m_animation)
+	{
+		AnimationAPI::setSpeedMultiplier(m_animation, 1.0f);
+	}
+
 	m_stateTimer = 0.0f;
 	m_completed = false;
 

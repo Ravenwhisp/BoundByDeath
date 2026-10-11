@@ -41,6 +41,8 @@ void AelorinThresholdStaggerState::OnStateEnter()
 		changePhase(StaggerPhase::Stagger);
 	}
 
+	AnimationAPI::setSpeedMultiplier(m_animation, 1.0f);
+
 	Debug::log("[AelorinThresholdStaggerState] ENTER");
 }
 
@@ -91,9 +93,14 @@ void AelorinThresholdStaggerState::OnStateUpdate()
 
 void AelorinThresholdStaggerState::OnStateExit()
 {
-	if (m_animation && m_controller && m_controller->isPhase2())
+	if (m_animation)
 	{
-		AnimationAPI::clearOverrideClip(m_animation, 0.0f);
+		if (m_controller && m_controller->isPhase2())
+		{
+			AnimationAPI::clearOverrideClip(m_animation, 0.0f);
+		}
+
+		AnimationAPI::setSpeedMultiplier(m_animation, 1.0f);
 	}
 
 	m_staggerTimer = 0.0f;

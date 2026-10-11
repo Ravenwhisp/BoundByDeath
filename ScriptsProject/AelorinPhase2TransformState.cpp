@@ -46,6 +46,15 @@ void AelorinPhase2TransformState::OnStateEnter()
 		return;
 	}
 
+	if (m_controller->isPhase2())
+	{
+		AnimationAPI::setSpeedMultiplier(m_animation, 0.5f);
+	}
+	else
+	{
+		AnimationAPI::setSpeedMultiplier(m_animation, 1.0f);
+	}
+
 	m_targetScale = TransformAPI::getScale(m_modelTransform);
 	constexpr float startScaleFactor = 0.4f;
 
@@ -155,6 +164,11 @@ void AelorinPhase2TransformState::OnStateExit()
 	if (m_dissolve)
 	{
 		ShadersAPI::setDissolveAmount(m_dissolve, 0.0f);
+	}
+
+	if (m_animation)
+	{
+		AnimationAPI::setSpeedMultiplier(m_animation, 1.0f);
 	}
 
 	m_modelTransform = nullptr;

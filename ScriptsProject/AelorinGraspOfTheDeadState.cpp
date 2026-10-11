@@ -63,6 +63,11 @@ void AelorinGraspOfTheDeadState::OnStateEnter()
 		Debug::error("[AelorinGraspOfTheDeadState] AelorinVFX not found.");
 	}
 
+	if (m_animation)
+	{
+		AnimationAPI::setSpeedMultiplier(m_animation, 1.0f);
+	}
+
 	m_attackExecutor = m_controller->getAttackExecutor();
 
 	if (!m_attackExecutor)
@@ -216,6 +221,11 @@ void AelorinGraspOfTheDeadState::OnStateExit()
 	{
 		m_vfx->stopPhase1Spell();
 		m_vfx->stopPhase2Spell();
+	}
+
+	if (m_animation)
+	{
+		AnimationAPI::setSpeedMultiplier(m_animation, 1.0f);
 	}
 
 	m_aelorinUI = nullptr;
