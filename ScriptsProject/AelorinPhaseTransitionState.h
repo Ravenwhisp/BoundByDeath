@@ -24,5 +24,6 @@ private:
 	AelorinVFX* m_vfx = nullptr;
 
 	bool m_phase2Started = false;
+	float m_fallbackTimer = 0.0f;
 	bool m_cinematicDriven = false;
 };

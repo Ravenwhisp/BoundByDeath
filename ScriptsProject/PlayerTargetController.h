@@ -64,8 +64,8 @@ public:
     float m_angleWeight = 0.85f;
     float m_distanceWeight = 0.15f;
 
-    float m_switchMargin = 0.15f;
-    float m_switchCooldown = 0.25f;
+    float m_switchMargin = 0.05f;
+    float m_switchCooldown = 0.08f;
 
 private:
     PlayerController* m_playerController = nullptr;
