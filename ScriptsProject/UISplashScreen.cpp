@@ -50,7 +50,7 @@ void UISplashScreen::Update()
         SceneAPI::requestSceneChange(nextSceneName.c_str());
     }
 
-    if (!m_transitionRequested && (Input::isFaceButtonLeftJustPressed() ||
+    if (!isStarted && (Input::isFaceButtonLeftJustPressed() ||
         Input::isFaceButtonRightJustPressed() ||
         Input::isFaceButtonTopJustPressed() ||
         Input::isFaceButtonBottomJustPressed() ||
@@ -76,7 +76,6 @@ void UISplashScreen::Update()
 
     if (!nextSceneName.empty() && isStarted && startTimer <= 0.0f)
     {
-        m_transitionRequested = true;
         if (asyncAvailable && SceneAPI::requestAsyncSceneChange())
         {
             m_asyncTransitionPending = true;

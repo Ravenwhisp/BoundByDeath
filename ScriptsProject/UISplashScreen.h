@@ -26,7 +26,6 @@ public:
 
 private:
     bool m_asyncLoadStarted = false;
-    bool m_transitionRequested = false;
     bool m_asyncTransitionPending = false;
 
 	float time = 0.0f;
