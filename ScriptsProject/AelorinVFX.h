@@ -48,6 +48,9 @@ public:
 	// Nova
 	void playNovaImpactShockwave(const Vector3& position);
 
+	// Risen Spires
+	void playRisenSpiresImpact(const Vector3& position);
+
 public:
 	// Phase 2 Aura
 	PrefabRef m_phase2AuraPrefab;
@@ -76,6 +79,9 @@ public:
 
 	// Nova
 	PrefabRef m_novaImpactShockwavePrefab;
+
+	// Risen Spires
+	PrefabRef m_risenSpiresImpactPrefab;
 
 	// Component References
 	ComponentRef<Transform> m_phase1RightHand;

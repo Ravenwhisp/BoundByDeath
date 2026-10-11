@@ -227,29 +227,38 @@ void AelorinRisenSpiresState::executePattern(Transform* patternRoot, const char*
 		return;
 	}
 
-	const AelorinAttackConfig* config = m_controller->getAelorinAttackConfig();
+	const AelorinAttackConfig* config =	m_controller->getAelorinAttackConfig();
 	if (!config)
 	{
 		return;
 	}
 
-	// pattern has child game objects and uses their transform to position the attack
 	const int childCount = TransformAPI::getChildCount(patternRoot);
 
+	// EXECUTE
 	if (dealDamage)
 	{
-		for (int i = 0; i < childCount; i++) 
+		for (int i = 0; i < childCount; ++i)
 		{
-			Transform* spirePoint = TransformAPI::getChild(patternRoot, i);
+			Transform* spirePoint = TransformAPI::getChild(patternRoot,	i);
 			if (!spirePoint)
 			{
 				continue;
 			}
 
-			m_attackExecutor->applyDamageInRadius(TransformAPI::getGlobalPosition(spirePoint), config->m_risenSpiresRadius, config->m_risenSpiresDamage, sourceName);
+			const Vector3 position = TransformAPI::getGlobalPosition(spirePoint);
+
+			m_vfx->playRisenSpiresImpact(position);
+			m_attackExecutor->applyDamageInRadius(position, config->m_risenSpiresRadius, config->m_risenSpiresDamage, sourceName);
+
 		}
+
+		Debug::log("[AelorinRisenSpiresState] Executed pattern with %d spires", childCount);
+
+		return;
 	}
 
+	// Generate the positions before the telegraph appears
 	std::vector<Vector2> spirePositions = generateSpirePositions(childCount, ARENA_RADIUS, config->m_risenSpiresRadius * 2.1f, config);
 
 	for (int i = 0; i < childCount; ++i)
@@ -260,11 +269,12 @@ void AelorinRisenSpiresState::executePattern(Transform* patternRoot, const char*
 			continue;
 		}
 
-		Vector2 spirePosition = spirePositions.at(i);
+		const Vector2& spirePosition = spirePositions.at(i);
+
 		TransformAPI::setGlobalPosition(spirePoint, Vector3(spirePosition.x, ARENA_CENTER_Y, spirePosition.y));
 	}
 
-	Debug::log("[AelorinRisenSpiresState] Executed pattern with %d spires", childCount);
+	Debug::log("[AelorinRisenSpiresState] Prepared pattern with %d spires", childCount);
 }
 
 void AelorinRisenSpiresState::finishAbility()
