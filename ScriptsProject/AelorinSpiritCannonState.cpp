@@ -71,11 +71,11 @@ void AelorinSpiritCannonState::OnStateEnter()
 
 	if (m_controller->isPhase2())
 	{
-		AnimationAPI::setSpeedMultiplier(m_animation, 1.0f);
+		AnimationAPI::setSpeedMultiplier(m_animation, 0.8f);
 	}
 	else
 	{
-		AnimationAPI::setSpeedMultiplier(m_animation, 2.0f);
+		AnimationAPI::setSpeedMultiplier(m_animation, 1.0f);
 	}
 
 	// consume ability

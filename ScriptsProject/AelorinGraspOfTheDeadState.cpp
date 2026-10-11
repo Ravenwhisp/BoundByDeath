@@ -153,12 +153,12 @@ void AelorinGraspOfTheDeadState::OnStateEnter()
 		}
 	}
 
-	const Vector3 lyrielPosition = m_controller->getLyrielPosition();
-	const Vector3 deathPosition = m_controller->getDeathPosition();
-
-	const Vector3 middlePosition = (lyrielPosition + deathPosition) * 0.5f;
-
-	m_controller->facePositionInstant(middlePosition);
+	Transform* graspCenter = m_controller->getGraspCenter();
+	if (graspCenter)
+	{
+		const Vector3 graspPosition = TransformAPI::getGlobalPosition(graspCenter);
+		m_controller->facePositionInstant(graspPosition);
+	}
 
 	Debug::log("[AelorinGraspOfTheDeadState] ENTER");
 }

@@ -62,11 +62,11 @@ void AelorinRisenSpiresState::OnStateEnter()
 
 	if (m_controller->isPhase2())
 	{
-		AnimationAPI::setSpeedMultiplier(m_animation, 0.2f);
+		AnimationAPI::setSpeedMultiplier(m_animation, 1.5f);
 	}
 	else
 	{
-		AnimationAPI::setSpeedMultiplier(m_animation, 1.0f);
+		AnimationAPI::setSpeedMultiplier(m_animation, 0.4f);
 	}
 
 	m_attackExecutor = m_controller->getAttackExecutor();

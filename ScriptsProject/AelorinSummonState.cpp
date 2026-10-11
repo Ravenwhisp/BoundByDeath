@@ -55,7 +55,7 @@ void AelorinSummonState::OnStateEnter()
 
 	if (m_controller->isPhase2())
 	{
-		AnimationAPI::setSpeedMultiplier(m_animation, 0.3f);
+		AnimationAPI::setSpeedMultiplier(m_animation, 1.3f);
 	}
 	else
 	{
