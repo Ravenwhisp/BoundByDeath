@@ -21,6 +21,8 @@ public:
 	void updateUI() override;
     void drawGizmo() override;
 
+    bool isCharging() const { return m_isCharging; }
+
 protected:
     void startAbility() override;
 
@@ -28,8 +30,6 @@ protected:
     void onAttackWindowFinished() override;
 
     float getCooldown() const override;
-
-    bool isCharging() const { return m_isCharging; }
 
 private:
     void cancelAbility() override;
