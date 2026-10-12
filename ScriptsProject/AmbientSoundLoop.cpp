@@ -22,12 +22,6 @@ AmbientSoundLoop::AmbientSoundLoop(GameObject* owner)
 void AmbientSoundLoop::Start()
 {
     m_source = AudioAPI::getSoundSourceComponent(getOwner());
-    if (m_source == nullptr)
-    {
-        Debug::error("[AmbientSoundLoop] No SOUND_SOURCE component on '%s'.",
-                     GameObjectAPI::getName(getOwner()));
-        return;
-    }
 
     if (m_playOnStart && !m_playEvent.empty())
     {
@@ -41,7 +35,7 @@ void AmbientSoundLoop::Update()
     // The bank may still be loading when Start runs, in which case Wwise silently drops
     // the event. Keep retrying for a few seconds instead of staying quiet forever.
     if (m_playingID != 0 || m_retriesLeft <= 0) return;
-    if (m_source == nullptr || !m_wantsPlay || m_playEvent.empty()) return;
+    if (!m_wantsPlay || m_playEvent.empty()) return;
 
     m_retryTimer -= Time::getDeltaTime();
     if (m_retryTimer > 0.0f) return;
@@ -51,9 +45,27 @@ void AmbientSoundLoop::Update()
 
 void AmbientSoundLoop::tryPlay()
 {
-    m_playingID  = AudioAPI::postEvent(m_source, k_bank, m_playEvent.c_str());
     m_retryTimer = 0.5f;
     --m_retriesLeft;
+
+    // The emitter is resolved here and not only in Start, because a torch that is lit
+    // during play starts the scene disabled, so its Start never runs.
+    if (m_source == nullptr)
+    {
+        m_source = AudioAPI::getSoundSourceComponent(getOwner());
+    }
+
+    if (m_source == nullptr)
+    {
+        if (m_retriesLeft <= 0)
+        {
+            Debug::warn("[AmbientSoundLoop] No SOUND_SOURCE component on '%s'.",
+                        GameObjectAPI::getName(getOwner()));
+        }
+        return;
+    }
+
+    m_playingID = AudioAPI::postEvent(m_source, k_bank, m_playEvent.c_str());
 
     if (m_playingID != 0)
     {

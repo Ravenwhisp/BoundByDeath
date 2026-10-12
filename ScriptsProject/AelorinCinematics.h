@@ -6,7 +6,7 @@
 #include <vector>
 
 class AelorinBossController;
-class AelorinParticles;
+class AelorinVFX;
 class CameraShake;
 class CameraTransitionController;
 class CameraFollow;
@@ -107,7 +107,7 @@ private:
 
 private:
     AelorinBossController* m_controller = nullptr;
-    AelorinParticles* m_particles = nullptr;
+    AelorinVFX* m_vfx = nullptr;
     CameraShake* m_cameraShake = nullptr;
     CameraTransitionController* m_cameraTransition = nullptr;
     CameraFollow* m_cameraFollow = nullptr;

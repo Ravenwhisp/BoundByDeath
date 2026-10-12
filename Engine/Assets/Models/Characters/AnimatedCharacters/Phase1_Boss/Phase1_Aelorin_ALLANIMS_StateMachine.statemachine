@@ -1,1 +1,363 @@
-{"name":"Phase1_Aelorin_ALLANIMS_StateMachine","defaultState":"Idle","clips":[{"name":"boss_transform","uid":5438749650540270728,"libId":"f4d7a75a0f8fa0c720dfbbeca8a2bb79","type":"ANIMATION","loop":true},{"name":"boss_teleportout","uid":15409474728776423051,"libId":"fa5f31c3567f68d2a5636f71a488ffef","type":"ANIMATION","loop":false},{"name":"boss_teleportin","uid":8002788278369415290,"libId":"1df1592c37fe65aaf395419f8202a292","type":"ANIMATION","loop":false},{"name":"boss_summon","uid":3786422288833736929,"libId":"8f8673a817a2d2095803ee79b62fff71","type":"ANIMATION","loop":true},{"name":"boss_spiritcannon","uid":15602175230460168389,"libId":"07f5b8f9581b9ce25e24754c98e27f02","type":"ANIMATION","loop":true},{"name":"boss_sigilseek","uid":199852608833746822,"libId":"4d22cc16fcd0f2718f91bc0fcc2f1a13","type":"ANIMATION","loop":true},{"name":"boss_risenspires","uid":10816578678938851984,"libId":"4184d5b274df1624abea831dfbd8f3cb","type":"ANIMATION","loop":true},{"name":"boss_nova","uid":3044672063371377879,"libId":"dd2d239f0f83828c0b8f07759694f73f","type":"ANIMATION","loop":true},{"name":"boss_idle","uid":13233046882649191820,"libId":"98059f8ae7e5aad2649e67f2665de866","type":"ANIMATION","loop":true},{"name":"boss_harm2","uid":221956423761489957,"libId":"c4f03db617281c44473ff0f2ab3e7087","type":"ANIMATION","loop":true},{"name":"boss_harm1","uid":15152634148159637292,"libId":"9b169e04c07cc19f2d858f95453d330b","type":"ANIMATION","loop":true}],"states":[{"name":"PhaseTransition","clipName":"boss_transform","speed":1.0,"behaviourScriptName":"AelorinPhaseTransitionState","behaviourFieldsJson":"","overrideLoop":true,"loop":false},{"name":"Summon","clipName":"boss_summon","speed":1.0,"behaviourScriptName":"AelorinSummonState","behaviourFieldsJson":"","overrideLoop":true,"loop":false},{"name":"SpiritCannon","clipName":"boss_spiritcannon","speed":2.0,"behaviourScriptName":"AelorinSpiritCannonState","behaviourFieldsJson":"","overrideLoop":true,"loop":false},{"name":"SeekerSigils","clipName":"boss_sigilseek","speed":1.0,"behaviourScriptName":"AelorinSeekerSigilsState","behaviourFieldsJson":"","overrideLoop":true,"loop":false},{"name":"RisenSpires","clipName":"boss_risenspires","speed":1.0,"behaviourScriptName":"AelorinRisenSpiresState","behaviourFieldsJson":"","overrideLoop":true,"loop":false},{"name":"Nova","clipName":"boss_nova","speed":1.2000000476837158,"behaviourScriptName":"AelorinNovaState","behaviourFieldsJson":"","overrideLoop":true,"loop":false},{"name":"Idle","clipName":"boss_idle","speed":1.0,"behaviourScriptName":"AelorinIdleState","behaviourFieldsJson":"","overrideLoop":false,"loop":true},{"name":"GraspOfTheDead","clipName":"boss_harm2","speed":1.0,"behaviourScriptName":"AelorinGraspOfTheDeadState","behaviourFieldsJson":"","overrideLoop":true,"loop":false},{"name":"ThresholdStagger","clipName":"boss_harm1","speed":1.0,"behaviourScriptName":"AelorinThresholdStaggerState","behaviourFieldsJson":"","overrideLoop":true,"loop":true},{"name":"Teleport","clipName":"boss_teleportin","speed":1.0,"behaviourScriptName":"AelorinTeleportState","behaviourFieldsJson":"","overrideLoop":true,"loop":false}],"transitions":[{"sourceStateName":"Idle","targetStateName":"RisenSpires","triggerName":"ToRisenSpires","blendTimeSeconds":0.25},{"sourceStateName":"Idle","targetStateName":"PhaseTransition","triggerName":"ToPhaseTransition","blendTimeSeconds":0.25},{"sourceStateName":"Idle","targetStateName":"Summon","triggerName":"ToSummon","blendTimeSeconds":0.25},{"sourceStateName":"Idle","targetStateName":"SpiritCannon","triggerName":"ToSpiritCannon","blendTimeSeconds":0.25},{"sourceStateName":"Idle","targetStateName":"Nova","triggerName":"ToNova","blendTimeSeconds":0.25},{"sourceStateName":"Idle","targetStateName":"GraspOfTheDead","triggerName":"ToGraspOfTheDead","blendTimeSeconds":0.25},{"sourceStateName":"Idle","targetStateName":"ThresholdStagger","triggerName":"ToThresholdStagger","blendTimeSeconds":0.25},{"sourceStateName":"Idle","targetStateName":"Teleport","triggerName":"ToTeleport","blendTimeSeconds":0.25},{"sourceStateName":"Idle","targetStateName":"SeekerSigils","triggerName":"ToSeekerSigils","blendTimeSeconds":0.25},{"sourceStateName":"SeekerSigils","targetStateName":"Idle","triggerName":"ToIdle","blendTimeSeconds":0.25},{"sourceStateName":"SeekerSigils","targetStateName":"PhaseTransition","triggerName":"ToPhaseTransition","blendTimeSeconds":0.25},{"sourceStateName":"SeekerSigils","targetStateName":"ThresholdStagger","triggerName":"ToThresholdStagger","blendTimeSeconds":0.25},{"sourceStateName":"RisenSpires","targetStateName":"Idle","triggerName":"ToIdle","blendTimeSeconds":0.25},{"sourceStateName":"RisenSpires","targetStateName":"PhaseTransition","triggerName":"ToPhaseTransition","blendTimeSeconds":0.25},{"sourceStateName":"RisenSpires","targetStateName":"ThresholdStagger","triggerName":"ToThresholdStagger","blendTimeSeconds":0.25},{"sourceStateName":"Nova","targetStateName":"Idle","triggerName":"ToIdle","blendTimeSeconds":0.25},{"sourceStateName":"Nova","targetStateName":"PhaseTransition","triggerName":"ToPhaseTransition","blendTimeSeconds":0.25},{"sourceStateName":"Nova","targetStateName":"ThresholdStagger","triggerName":"ToThresholdStagger","blendTimeSeconds":0.25},{"sourceStateName":"Teleport","targetStateName":"Idle","triggerName":"ToIdle","blendTimeSeconds":0.25},{"sourceStateName":"Teleport","targetStateName":"PhaseTransition","triggerName":"ToPhaseTransition","blendTimeSeconds":0.25},{"sourceStateName":"Teleport","targetStateName":"ThresholdStagger","triggerName":"ToThresholdStagger","blendTimeSeconds":0.25},{"sourceStateName":"SpiritCannon","targetStateName":"Idle","triggerName":"ToIdle","blendTimeSeconds":0.25},{"sourceStateName":"SpiritCannon","targetStateName":"PhaseTransition","triggerName":"ToPhaseTransition","blendTimeSeconds":0.25},{"sourceStateName":"SpiritCannon","targetStateName":"ThresholdStagger","triggerName":"ToThresholdStagger","blendTimeSeconds":0.25},{"sourceStateName":"GraspOfTheDead","targetStateName":"Nova","triggerName":"ToNova","blendTimeSeconds":0.25},{"sourceStateName":"GraspOfTheDead","targetStateName":"PhaseTransition","triggerName":"ToPhaseTransition","blendTimeSeconds":0.25},{"sourceStateName":"GraspOfTheDead","targetStateName":"ThresholdStagger","triggerName":"ToThresholdStagger","blendTimeSeconds":0.25},{"sourceStateName":"Summon","targetStateName":"Idle","triggerName":"ToIdle","blendTimeSeconds":0.25},{"sourceStateName":"Summon","targetStateName":"PhaseTransition","triggerName":"ToPhaseTransition","blendTimeSeconds":0.25},{"sourceStateName":"Summon","targetStateName":"ThresholdStagger","triggerName":"ToThresholdStagger","blendTimeSeconds":0.25},{"sourceStateName":"ThresholdStagger","targetStateName":"Idle","triggerName":"ToIdle","blendTimeSeconds":0.25}]}
+{
+ "name": "Phase1_Aelorin_ALLANIMS_StateMachine",
+ "defaultState": "Idle",
+ "clips": [
+  {
+   "name": "boss_transform",
+   "uid": 5438749650540270728,
+   "libId": "f4d7a75a0f8fa0c720dfbbeca8a2bb79",
+   "type": "ANIMATION",
+   "loop": true
+  },
+  {
+   "name": "boss_teleportout",
+   "uid": 15409474728776423051,
+   "libId": "fa5f31c3567f68d2a5636f71a488ffef",
+   "type": "ANIMATION",
+   "loop": false
+  },
+  {
+   "name": "boss_teleportin",
+   "uid": 8002788278369415290,
+   "libId": "1df1592c37fe65aaf395419f8202a292",
+   "type": "ANIMATION",
+   "loop": false
+  },
+  {
+   "name": "boss_summon",
+   "uid": 3786422288833736929,
+   "libId": "8f8673a817a2d2095803ee79b62fff71",
+   "type": "ANIMATION",
+   "loop": true
+  },
+  {
+   "name": "boss_spiritcannon",
+   "uid": 15602175230460168389,
+   "libId": "07f5b8f9581b9ce25e24754c98e27f02",
+   "type": "ANIMATION",
+   "loop": true
+  },
+  {
+   "name": "boss_sigilseek",
+   "uid": 199852608833746822,
+   "libId": "4d22cc16fcd0f2718f91bc0fcc2f1a13",
+   "type": "ANIMATION",
+   "loop": true
+  },
+  {
+   "name": "boss_risenspires",
+   "uid": 10816578678938851984,
+   "libId": "4184d5b274df1624abea831dfbd8f3cb",
+   "type": "ANIMATION",
+   "loop": true
+  },
+  {
+   "name": "boss_nova",
+   "uid": 3044672063371377879,
+   "libId": "dd2d239f0f83828c0b8f07759694f73f",
+   "type": "ANIMATION",
+   "loop": true
+  },
+  {
+   "name": "boss_idle",
+   "uid": 13233046882649191820,
+   "libId": "98059f8ae7e5aad2649e67f2665de866",
+   "type": "ANIMATION",
+   "loop": true
+  },
+  {
+   "name": "boss_harm2",
+   "uid": 221956423761489957,
+   "libId": "c4f03db617281c44473ff0f2ab3e7087",
+   "type": "ANIMATION",
+   "loop": true
+  },
+  {
+   "name": "boss_harm1",
+   "uid": 15152634148159637292,
+   "libId": "9b169e04c07cc19f2d858f95453d330b",
+   "type": "ANIMATION",
+   "loop": true
+  }
+ ],
+ "states": [
+  {
+   "name": "PhaseTransition",
+   "clipName": "boss_idle",
+   "speed": 1.0,
+   "behaviourScriptName": "AelorinPhaseTransitionState",
+   "behaviourFieldsJson": "",
+   "overrideLoop": true,
+   "loop": true
+  },
+  {
+   "name": "Summon",
+   "clipName": "boss_summon",
+   "speed": 1.0,
+   "behaviourScriptName": "AelorinSummonState",
+   "behaviourFieldsJson": "",
+   "overrideLoop": true,
+   "loop": false
+  },
+  {
+   "name": "SpiritCannon",
+   "clipName": "boss_spiritcannon",
+   "speed": 2.0,
+   "behaviourScriptName": "AelorinSpiritCannonState",
+   "behaviourFieldsJson": "",
+   "overrideLoop": true,
+   "loop": false
+  },
+  {
+   "name": "SeekerSigils",
+   "clipName": "boss_sigilseek",
+   "speed": 1.0,
+   "behaviourScriptName": "AelorinSeekerSigilsState",
+   "behaviourFieldsJson": "",
+   "overrideLoop": true,
+   "loop": false
+  },
+  {
+   "name": "RisenSpires",
+   "clipName": "boss_risenspires",
+   "speed": 1.0,
+   "behaviourScriptName": "AelorinRisenSpiresState",
+   "behaviourFieldsJson": "",
+   "overrideLoop": true,
+   "loop": false
+  },
+  {
+   "name": "Nova",
+   "clipName": "boss_nova",
+   "speed": 1.2000000476837158,
+   "behaviourScriptName": "AelorinNovaState",
+   "behaviourFieldsJson": "",
+   "overrideLoop": true,
+   "loop": false
+  },
+  {
+   "name": "Idle",
+   "clipName": "boss_idle",
+   "speed": 1.0,
+   "behaviourScriptName": "AelorinIdleState",
+   "behaviourFieldsJson": "",
+   "overrideLoop": false,
+   "loop": true
+  },
+  {
+   "name": "GraspOfTheDead",
+   "clipName": "boss_harm2",
+   "speed": 1.0,
+   "behaviourScriptName": "AelorinGraspOfTheDeadState",
+   "behaviourFieldsJson": "",
+   "overrideLoop": true,
+   "loop": false
+  },
+  {
+   "name": "ThresholdStagger",
+   "clipName": "boss_harm1",
+   "speed": 1.0,
+   "behaviourScriptName": "AelorinThresholdStaggerState",
+   "behaviourFieldsJson": "",
+   "overrideLoop": true,
+   "loop": true
+  },
+  {
+   "name": "Teleport",
+   "clipName": "boss_teleportin",
+   "speed": 1.0,
+   "behaviourScriptName": "AelorinTeleportState",
+   "behaviourFieldsJson": "",
+   "overrideLoop": true,
+   "loop": false
+  }
+ ],
+ "transitions": [
+  {
+   "sourceStateName": "Idle",
+   "targetStateName": "RisenSpires",
+   "triggerName": "ToRisenSpires",
+   "blendTimeSeconds": 0.25
+  },
+  {
+   "sourceStateName": "Idle",
+   "targetStateName": "PhaseTransition",
+   "triggerName": "ToPhaseTransition",
+   "blendTimeSeconds": 0.25
+  },
+  {
+   "sourceStateName": "Idle",
+   "targetStateName": "Summon",
+   "triggerName": "ToSummon",
+   "blendTimeSeconds": 0.25
+  },
+  {
+   "sourceStateName": "Idle",
+   "targetStateName": "SpiritCannon",
+   "triggerName": "ToSpiritCannon",
+   "blendTimeSeconds": 0.25
+  },
+  {
+   "sourceStateName": "Idle",
+   "targetStateName": "Nova",
+   "triggerName": "ToNova",
+   "blendTimeSeconds": 0.25
+  },
+  {
+   "sourceStateName": "Idle",
+   "targetStateName": "GraspOfTheDead",
+   "triggerName": "ToGraspOfTheDead",
+   "blendTimeSeconds": 0.25
+  },
+  {
+   "sourceStateName": "Idle",
+   "targetStateName": "ThresholdStagger",
+   "triggerName": "ToThresholdStagger",
+   "blendTimeSeconds": 0.25
+  },
+  {
+   "sourceStateName": "Idle",
+   "targetStateName": "Teleport",
+   "triggerName": "ToTeleport",
+   "blendTimeSeconds": 0.25
+  },
+  {
+   "sourceStateName": "Idle",
+   "targetStateName": "SeekerSigils",
+   "triggerName": "ToSeekerSigils",
+   "blendTimeSeconds": 0.25
+  },
+  {
+   "sourceStateName": "SeekerSigils",
+   "targetStateName": "Idle",
+   "triggerName": "ToIdle",
+   "blendTimeSeconds": 0.25
+  },
+  {
+   "sourceStateName": "SeekerSigils",
+   "targetStateName": "PhaseTransition",
+   "triggerName": "ToPhaseTransition",
+   "blendTimeSeconds": 0.25
+  },
+  {
+   "sourceStateName": "SeekerSigils",
+   "targetStateName": "ThresholdStagger",
+   "triggerName": "ToThresholdStagger",
+   "blendTimeSeconds": 0.25
+  },
+  {
+   "sourceStateName": "RisenSpires",
+   "targetStateName": "Idle",
+   "triggerName": "ToIdle",
+   "blendTimeSeconds": 0.25
+  },
+  {
+   "sourceStateName": "RisenSpires",
+   "targetStateName": "PhaseTransition",
+   "triggerName": "ToPhaseTransition",
+   "blendTimeSeconds": 0.25
+  },
+  {
+   "sourceStateName": "RisenSpires",
+   "targetStateName": "ThresholdStagger",
+   "triggerName": "ToThresholdStagger",
+   "blendTimeSeconds": 0.25
+  },
+  {
+   "sourceStateName": "Nova",
+   "targetStateName": "Idle",
+   "triggerName": "ToIdle",
+   "blendTimeSeconds": 0.25
+  },
+  {
+   "sourceStateName": "Nova",
+   "targetStateName": "PhaseTransition",
+   "triggerName": "ToPhaseTransition",
+   "blendTimeSeconds": 0.25
+  },
+  {
+   "sourceStateName": "Nova",
+   "targetStateName": "ThresholdStagger",
+   "triggerName": "ToThresholdStagger",
+   "blendTimeSeconds": 0.25
+  },
+  {
+   "sourceStateName": "Teleport",
+   "targetStateName": "Idle",
+   "triggerName": "ToIdle",
+   "blendTimeSeconds": 0.25
+  },
+  {
+   "sourceStateName": "Teleport",
+   "targetStateName": "PhaseTransition",
+   "triggerName": "ToPhaseTransition",
+   "blendTimeSeconds": 0.25
+  },
+  {
+   "sourceStateName": "Teleport",
+   "targetStateName": "ThresholdStagger",
+   "triggerName": "ToThresholdStagger",
+   "blendTimeSeconds": 0.25
+  },
+  {
+   "sourceStateName": "SpiritCannon",
+   "targetStateName": "Idle",
+   "triggerName": "ToIdle",
+   "blendTimeSeconds": 0.25
+  },
+  {
+   "sourceStateName": "SpiritCannon",
+   "targetStateName": "PhaseTransition",
+   "triggerName": "ToPhaseTransition",
+   "blendTimeSeconds": 0.25
+  },
+  {
+   "sourceStateName": "SpiritCannon",
+   "targetStateName": "ThresholdStagger",
+   "triggerName": "ToThresholdStagger",
+   "blendTimeSeconds": 0.25
+  },
+  {
+   "sourceStateName": "GraspOfTheDead",
+   "targetStateName": "Nova",
+   "triggerName": "ToNova",
+   "blendTimeSeconds": 0.25
+  },
+  {
+   "sourceStateName": "GraspOfTheDead",
+   "targetStateName": "PhaseTransition",
+   "triggerName": "ToPhaseTransition",
+   "blendTimeSeconds": 0.25
+  },
+  {
+   "sourceStateName": "GraspOfTheDead",
+   "targetStateName": "ThresholdStagger",
+   "triggerName": "ToThresholdStagger",
+   "blendTimeSeconds": 0.25
+  },
+  {
+   "sourceStateName": "Summon",
+   "targetStateName": "Idle",
+   "triggerName": "ToIdle",
+   "blendTimeSeconds": 0.25
+  },
+  {
+   "sourceStateName": "Summon",
+   "targetStateName": "PhaseTransition",
+   "triggerName": "ToPhaseTransition",
+   "blendTimeSeconds": 0.25
+  },
+  {
+   "sourceStateName": "Summon",
+   "targetStateName": "ThresholdStagger",
+   "triggerName": "ToThresholdStagger",
+   "blendTimeSeconds": 0.25
+  },
+  {
+   "sourceStateName": "ThresholdStagger",
+   "targetStateName": "Idle",
+   "triggerName": "ToIdle",
+   "blendTimeSeconds": 0.25
+  }
+ ]
+}

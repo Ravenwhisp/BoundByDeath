@@ -51,6 +51,44 @@ void TriggerFire::OnTriggerEnter(GameObject* gameObject)
 	}
 }
 
+void TriggerFire::Update()
+{
+	if (!m_soundPending)
+	{
+		return;
+	}
+
+	m_soundDelay -= Time::getDeltaTime();
+	if (m_soundDelay > 0.0f)
+	{
+		return;
+	}
+
+	Transform* fireEffectTransform = m_fireEffectT.getReferencedComponent();
+	GameObject* fireEffectGO = fireEffectTransform != nullptr ? ComponentAPI::getOwner(fireEffectTransform) : nullptr;
+	if (fireEffectGO == nullptr)
+	{
+		m_soundPending = false;
+		return;
+	}
+
+	m_soundDelay = 0.5f;
+	--m_soundRetries;
+
+	const uint32_t playingID = EnvironmentSound::play(fireEffectGO, "Play_Environment_Fire_Ignite");
+	if (playingID == 0 && m_soundRetries > 0)
+	{
+		return;
+	}
+
+	m_soundPending = false;
+
+	if (AmbientSoundLoop* loop = GameObjectAPI::findScript<AmbientSoundLoop>(fireEffectGO))
+	{
+		loop->play();
+	}
+}
+
 void TriggerFire::triggerFire()
 {
 	m_fireTriggered = true;
@@ -61,12 +99,11 @@ void TriggerFire::triggerFire()
 		GameObject* fireEffectGO = ComponentAPI::getOwner(fireEffectTransform);
 		GameObjectAPI::setActive(fireEffectGO, true);
 
-		EnvironmentSound::play(fireEffectGO, "Play_Environment_Fire_Ignite");
-
-		if (AmbientSoundLoop* loop = GameObjectAPI::findScript<AmbientSoundLoop>(fireEffectGO))
-		{
-			loop->play();
-		}
+		// The emitter is only known to Wwise once the object has been active for a frame,
+		// so the ignite cannot be posted here, in the frame the torch lights up.
+		m_soundPending = true;
+		m_soundDelay = 0.1f;
+		m_soundRetries = 10;
 	}
 	Transform* lightTransform = m_lightT.getReferencedComponent();
 	if(lightTransform != nullptr)

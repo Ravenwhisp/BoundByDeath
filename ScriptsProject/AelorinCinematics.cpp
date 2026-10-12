@@ -2,7 +2,7 @@
 #include "AelorinCinematics.h"
 
 #include "AelorinBossController.h"
-#include "AelorinParticles.h"
+#include "AelorinVFX.h"
 
 #include "CameraShake.h"
 #include "CameraTransitionEvent.h"
@@ -49,7 +49,7 @@ AelorinCinematics::AelorinCinematics(GameObject* owner)
 void AelorinCinematics::Start()
 {
     m_controller = GameObjectAPI::findScript<AelorinBossController>(getOwner());
-    m_particles = GameObjectAPI::findScript<AelorinParticles>(getOwner());
+    m_vfx = GameObjectAPI::findScript<AelorinVFX>(getOwner());
 
     GameObject* cameraObject = SceneAPI::getDefaultCameraGameObject();
     m_cameraShake = cameraObject ? GameObjectAPI::findScript<CameraShake>(cameraObject) : nullptr;
@@ -241,9 +241,9 @@ bool AelorinCinematics::startPhaseTransition()
 
 void AelorinCinematics::performPhaseTransformation()
 {
-    if (m_particles)
+    if (m_vfx)
     {
-        m_particles->playPhaseTransformation();
+        m_vfx->playPhase2Transition();
     }
 
     if (m_cameraShake)
@@ -268,11 +268,6 @@ void AelorinCinematics::updatePhaseTransition(float dt)
             if (m_controller)
             {
                 m_controller->beginPhase2();
-            }
-
-            if (m_particles)
-            {
-                m_particles->startPhase2Aura();
             }
         }
     }
@@ -299,11 +294,6 @@ void AelorinCinematics::updatePhaseTransition(float dt)
         {
             m_phaseSwapPending = false;
             m_controller->beginPhase2();
-
-            if (m_particles)
-            {
-                m_particles->startPhase2Aura();
-            }
         }
     }
 }
