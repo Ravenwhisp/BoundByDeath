@@ -31,6 +31,7 @@ IMPLEMENT_SCRIPT_FIELDS(PlayerAnimationController,
     SERIALIZED_FLOAT(m_deathBlendTime, "Death blend time", 0.0f, 2.0f, 0.01f),
     SERIALIZED_FLOAT(m_dashAnimDuration, "Dash anim duration", 0.0f, 3.0f, 0.01f),
     SERIALIZED_FLOAT(m_dashAnimStartPct, "Dash anim start %", 0.0f, 0.9f, 0.01f),
+    SERIALIZED_FLOAT(m_dashAnimEndPct, "Dash anim end %", 0.0f, 1.0f, 0.01f),
     SERIALIZED_FLOAT(m_moveAnimSpeed, "Move anim speed", 0.0f, 5.0f, 0.05f)
 )
 
@@ -160,7 +161,9 @@ void PlayerAnimationController::Update()
                 const float target = m_dashAnimDuration > 0.01f ? m_dashAnimDuration : 0.5f;
                 const float dur = AnimationAPI::getPlaybackDuration(m_animationComponent);
                 const float startPct = m_dashAnimStartPct < 0.0f ? 0.0f : (m_dashAnimStartPct > 0.9f ? 0.9f : m_dashAnimStartPct);
-                const float span = dur * (1.0f - startPct);
+                // Trailing hold frames are dead weight inside the dash window, so the clip can be cut short.
+                const float endPct = m_dashAnimEndPct > startPct && m_dashAnimEndPct <= 1.0f ? m_dashAnimEndPct : 1.0f;
+                const float span = dur * (endPct - startPct);
 
                 // Skip the clip's anticipation so the dash motion reads from the first frame.
                 if (dur > 0.0001f && startPct > 0.0f)

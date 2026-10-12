@@ -76,6 +76,7 @@ public:
 
     float m_dashAnimDuration = 0.5f;
     float m_dashAnimStartPct = 0.2f;
+    float m_dashAnimEndPct = 1.0f;
 
     // 0 or less keeps the clip at its authored rate, so characters without the field set are unaffected.
     float m_moveAnimSpeed = 1.0f;
