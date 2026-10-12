@@ -44,6 +44,7 @@ public:
     void clearAttackOverride();
 
     void playRecovery(const std::string& stateName, float blendTime, float speed);
+    void playRevive();
 
     void beginChargeHold(const std::string& stateName, float blendTime, float speed, float pausePct);
     void setChargeProgress(float progress01);
@@ -57,6 +58,8 @@ private:
 
 public:
     std::string m_idleStateName = "";
+    std::string m_idleLongStateName = "";
+    std::string m_reviveStateName = "";
 	std::string m_moveStateName = "";
 	std::string m_dashStateName = "";
 	std::string m_attackStateName = "";
@@ -73,6 +76,10 @@ public:
 
     float m_dashAnimDuration = 0.5f;
     float m_dashAnimStartPct = 0.2f;
+
+    // 0 or less keeps the clip at its authored rate, so characters without the field set are unaffected.
+    float m_moveAnimSpeed = 1.0f;
+    float m_idleLongAfter = 0.0f;
 
 private:
     AnimationComponent* m_animationComponent = nullptr;
@@ -109,6 +116,11 @@ private:
     float m_chargeHoldPausePct = 0.5f;
     float m_chargeProgress = 0.0f;
     float m_chargeReleaseTimer = 0.0f;
+
+    float m_idleTimer = 0.0f;
+    float m_idleLongHoldTimer = 0.0f;
+    bool  m_playingIdleLong = false;
+    bool  m_idleVariantDirty = false;
 
     float m_dashMoveDuration = 0.4f;
     float m_dashHoldTimer = 0.0f;

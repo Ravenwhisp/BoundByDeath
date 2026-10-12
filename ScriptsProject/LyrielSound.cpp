@@ -27,8 +27,8 @@ namespace
     constexpr float k_tenseLoopMinHold = 0.20f;
 
     // One footfall per half of the run cycle: lyriel.run_loop is 1.125s long and
-    // plays at speed 1, so the two contacts land 0.5625s apart.
-    constexpr float k_footstepInterval = 0.5625f;
+    // plays at "Move anim speed" 2.2, so the two contacts land 0.256s apart.
+    constexpr float k_footstepInterval = 0.256f;
 
     // Minimum time between consecutive hurt one-shots. Guarantees the hurt SFX can
     // never machine-gun under continuous damage, regardless of how often it's called.

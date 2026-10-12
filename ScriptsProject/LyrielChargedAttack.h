@@ -29,6 +29,8 @@ protected:
 
     float getCooldown() const override;
 
+    bool isCharging() const { return m_isCharging; }
+
 private:
     void cancelAbility() override;
     void beginCharge();
