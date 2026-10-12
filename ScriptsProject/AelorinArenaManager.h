@@ -29,8 +29,8 @@ private:
 	ComponentRef<Transform> m_deathRoot;
 
 	// Camera
-	ComponentRef<Transform> m_cinematics;
-	ComponentRef<Transform> m_arenaCamera;
+	//ComponentRef<Transform> m_cinematics;
+	//ComponentRef<Transform> m_arenaCamera;
 	ComponentRef<Transform> m_combatCamera;
 
 	Transform* m_phase1OriginTransform = nullptr;
@@ -40,8 +40,8 @@ private:
 	Transform* m_lyrielRootTransform = nullptr;
 	Transform* m_deathRootTransform = nullptr;
 
-	Transform* m_cinematicsTransform = nullptr;
-	Transform* m_arenaCameraTransform = nullptr;
+	//Transform* m_cinematicsTransform = nullptr;
+	//Transform* m_arenaCameraTransform = nullptr;
 	Transform* m_combatCameraTransform = nullptr;
 
 	bool m_phase2Active = false;

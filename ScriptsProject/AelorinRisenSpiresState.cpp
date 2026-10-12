@@ -10,9 +10,6 @@
 #include <cstdlib> // for random
 
 #define ARENA_RADIUS 11.6f
-#define ARENA_CENTER_X -0.471f
-#define ARENA_CENTER_Y 3.7f
-#define ARENA_CENTER_Z -4.945f
 
 AelorinRisenSpiresState::AelorinRisenSpiresState(GameObject* owner)
 	: StateMachineScript(owner)
@@ -300,6 +297,13 @@ void AelorinRisenSpiresState::executePattern(Transform* patternRoot, const char*
 	// Generate the positions before the telegraph appears
 	std::vector<Vector2> spirePositions = generateSpirePositions(childCount, ARENA_RADIUS, config->m_risenSpiresRadius * 2.1f, config);
 
+	Vector3 arenaCenter = Vector3::Zero;
+	Transform* centerTransform = m_controller->getGraspCenter();
+	if (centerTransform)
+	{
+		arenaCenter = TransformAPI::getGlobalPosition(centerTransform);
+	}
+
 	for (int i = 0; i < childCount; ++i)
 	{
 		Transform* spirePoint = TransformAPI::getChild(patternRoot, i);
@@ -310,7 +314,7 @@ void AelorinRisenSpiresState::executePattern(Transform* patternRoot, const char*
 
 		const Vector2& spirePosition = spirePositions.at(i);
 
-		TransformAPI::setGlobalPosition(spirePoint, Vector3(spirePosition.x, ARENA_CENTER_Y, spirePosition.y));
+		TransformAPI::setGlobalPosition(spirePoint, Vector3(spirePosition.x, arenaCenter.y, spirePosition.y));
 	}
 
 	Debug::log("[AelorinRisenSpiresState] Prepared pattern with %d spires", childCount);
@@ -401,10 +405,16 @@ std::vector<Vector2> AelorinRisenSpiresState::generateSpirePositions(
 }
 
 Vector2 AelorinRisenSpiresState::randomPointInArena(const AelorinAttackConfig* config) {
+	Vector3 arenaCenter = Vector3::Zero;
+	Transform* centerTransform = m_controller->getGraspCenter();
+	if (centerTransform)
+	{
+		arenaCenter = TransformAPI::getGlobalPosition(centerTransform);
+	}
 	float eligibleSpawnRadius = ARENA_RADIUS - config->m_risenSpiresRadius;
 	float xRandDisplacement = (static_cast<float>(rand()) / static_cast<float>(RAND_MAX)) * eligibleSpawnRadius * 2 - eligibleSpawnRadius;
 	float zRandDisplacement = (static_cast<float>(rand()) / static_cast<float>(RAND_MAX)) * eligibleSpawnRadius * 2 - eligibleSpawnRadius;
-	return std::move(Vector2(ARENA_CENTER_X + xRandDisplacement, ARENA_CENTER_Z + zRandDisplacement));
+	return std::move(Vector2(arenaCenter.x + xRandDisplacement, arenaCenter.z + zRandDisplacement));
 }
 
 IMPLEMENT_SCRIPT(AelorinRisenSpiresState)

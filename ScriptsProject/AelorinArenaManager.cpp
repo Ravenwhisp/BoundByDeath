@@ -14,8 +14,8 @@ IMPLEMENT_SCRIPT_FIELDS(AelorinArenaManager,
 	),
 
 	FIELD_GROUP_COLLAPSE("Camera",
-		SERIALIZED_COMPONENT_REF(m_cinematics, "Cinematics Root", ComponentType::TRANSFORM),
-		SERIALIZED_COMPONENT_REF(m_arenaCamera, "Arena Camera Root", ComponentType::TRANSFORM),
+		//SERIALIZED_COMPONENT_REF(m_cinematics, "Cinematics Root", ComponentType::TRANSFORM),
+		//SERIALIZED_COMPONENT_REF(m_arenaCamera, "Arena Camera Root", ComponentType::TRANSFORM),
 		SERIALIZED_COMPONENT_REF(m_combatCamera, "Combat Camera Root", ComponentType::TRANSFORM)
 	)
 )
@@ -32,8 +32,8 @@ void AelorinArenaManager::Start()
 	m_aelorinRootTransform = m_aelorinRoot.getReferencedComponent();
 	m_lyrielRootTransform = m_lyrielRoot.getReferencedComponent();
 	m_deathRootTransform = m_deathRoot.getReferencedComponent();
-	m_cinematicsTransform = m_cinematics.getReferencedComponent();
-	m_arenaCameraTransform = m_arenaCamera.getReferencedComponent();
+	//m_cinematicsTransform = m_cinematics.getReferencedComponent();
+	//m_arenaCameraTransform = m_arenaCamera.getReferencedComponent();
 	m_combatCameraTransform = m_combatCamera.getReferencedComponent();
 }
 
@@ -53,8 +53,8 @@ void AelorinArenaManager::switchToPhase2()
 	moveToPhase2(m_aelorinRootTransform);
 	moveToPhase2(m_lyrielRootTransform);
 	moveToPhase2(m_deathRootTransform);
-	moveToPhase2(m_cinematicsTransform);
-	moveToPhase2(m_arenaCameraTransform);
+	//moveToPhase2(m_cinematicsTransform);
+	//moveToPhase2(m_arenaCameraTransform);
 	moveToPhase2(m_combatCameraTransform);
 
 	m_phase2Active = true;
