@@ -76,6 +76,10 @@ IMPLEMENT_SCRIPT_FIELDS(AelorinUI,
 		SERIALIZED_COMPONENT_REF(m_soulCataclysmSafeZoneUIBackground, "Soul Cataclysm Safe Zone UI Background", ComponentType::TRANSFORM2D),
 		SERIALIZED_COMPONENT_REF(m_soulCataclysmSafeZoneUIBorder, "Soul Cataclysm Safe Zone UI Border", ComponentType::TRANSFORM2D),
 		SERIALIZED_COMPONENT_REF(m_soulCataclysmSafeZoneUIGlow, "Soul Cataclysm Safe Zone UI Glow",	ComponentType::TRANSFORM2D)
+	),
+
+	FIELD_GROUP_COLLAPSE("Flash",
+		SERIALIZED_COMPONENT_REF(m_phaseTransitionFlash, "Phase Transition Flash", ComponentType::TRANSFORM2D)
 	)
 )
 
@@ -181,6 +185,13 @@ void AelorinUI::Start()
 
 	// Health
 	setupHealthUI();
+
+	// Flash
+	m_phaseTransitionFlashTransform2D = m_phaseTransitionFlash.getReferencedComponent();
+	if (m_phaseTransitionFlashTransform2D)
+	{
+		Transform2DAPI::setAlpha(m_phaseTransitionFlashTransform2D,	0.0f);
+	}
 }
 
 void AelorinUI::Update()
@@ -195,6 +206,7 @@ void AelorinUI::Update()
 	updateGraspChains();
 	updateSoulCataclysmUI(deltaTime);
 	updateHealthMarkers();
+	updatePhaseTransitionFlash(deltaTime);
 }
 
 void AelorinUI::setupHealthUI()
@@ -822,6 +834,101 @@ void AelorinUI::showSoulCataclysmUI(Transform* safeZonesRoot, float safeZoneRadi
 		Transform2DAPI::setAlpha(slot->glow, 0.35f);
 
 		slot->active = true;
+	}
+}
+
+void AelorinUI::startPhaseTransitionFlash(float fadeInDuration, float fadeOutDuration)
+{
+	if (!m_phaseTransitionFlashTransform2D)
+	{
+		return;
+	}
+
+	m_phaseTransitionFlashFadeInDuration = (std::max)(fadeInDuration, 0.001f);
+	m_phaseTransitionFlashFadeOutDuration =	(std::max)(fadeOutDuration, 0.001f);
+	m_phaseTransitionFlashTimer = 0.0f;
+	m_phaseTransitionFlashState = PhaseTransitionFlashState::FadeIn;
+	Transform2DAPI::setAlpha(m_phaseTransitionFlashTransform2D, 0.0f);
+}
+
+void AelorinUI::releasePhaseTransitionFlash()
+{
+	if (m_phaseTransitionFlashState !=
+		PhaseTransitionFlashState::Covered)
+	{
+		return;
+	}
+
+	m_phaseTransitionFlashTimer = 0.0f;
+
+	m_phaseTransitionFlashState = PhaseTransitionFlashState::FadeOut;
+}
+
+bool AelorinUI::isPhaseTransitionFlashOpaque() const
+{
+	return m_phaseTransitionFlashState == PhaseTransitionFlashState::Covered;
+}
+
+bool AelorinUI::isPhaseTransitionFlashFinished() const
+{
+	return m_phaseTransitionFlashState == PhaseTransitionFlashState::Idle;
+}
+
+void AelorinUI::updatePhaseTransitionFlash(float deltaTime)
+{
+	if (!m_phaseTransitionFlashTransform2D)
+	{
+		return;
+	}
+
+	if (m_phaseTransitionFlashState == PhaseTransitionFlashState::Idle)
+	{
+		return;
+	}
+
+	m_phaseTransitionFlashTimer += deltaTime;
+
+	switch (m_phaseTransitionFlashState)
+	{
+	case PhaseTransitionFlashState::FadeIn:
+	{
+		const float t =	std::clamp(m_phaseTransitionFlashTimer / m_phaseTransitionFlashFadeInDuration, 0.0f, 1.0f);
+		Transform2DAPI::setAlpha(m_phaseTransitionFlashTransform2D, t);
+
+		if (t >= 1.0f)
+		{
+			m_phaseTransitionFlashTimer = 0.0f;
+			m_phaseTransitionFlashState = PhaseTransitionFlashState::Covered;
+			Transform2DAPI::setAlpha(m_phaseTransitionFlashTransform2D, 1.0f);
+		}
+
+		break;
+	}
+
+	case PhaseTransitionFlashState::Covered:
+	{
+		Transform2DAPI::setAlpha(m_phaseTransitionFlashTransform2D,	1.0f);
+
+		break;
+	}
+
+	case PhaseTransitionFlashState::FadeOut:
+	{
+		const float t =	std::clamp(m_phaseTransitionFlashTimer / m_phaseTransitionFlashFadeOutDuration,	0.0f, 1.0f);
+		Transform2DAPI::setAlpha(m_phaseTransitionFlashTransform2D,	1.0f - t);
+
+		if (t >= 1.0f)
+		{
+			m_phaseTransitionFlashTimer = 0.0f;
+			m_phaseTransitionFlashState = PhaseTransitionFlashState::Idle;
+			Transform2DAPI::setAlpha(m_phaseTransitionFlashTransform2D,	0.0f);
+		}
+
+		break;
+	}
+
+	default:
+		break;
 	}
 }
 

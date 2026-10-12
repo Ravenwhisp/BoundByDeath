@@ -18,6 +18,7 @@ void AelorinPhase2TransformState::OnStateEnter()
 	}
 
 	GameObject* parentGameObject = ComponentAPI::getOwner(parentTransform);
+	GameObject* cameraObject = SceneAPI::getDefaultCameraGameObject();
 
 	m_controller = GameObjectAPI::findScript<AelorinBossController>(parentGameObject);
 	m_animation = AnimationAPI::getAnimationComponent(getOwner());
@@ -128,15 +129,9 @@ void AelorinPhase2TransformState::OnStateUpdate()
 
 	if (m_dissolve)
 	{
-		const float dissolveAmount = 1.0f - smoothT;
+		const float dissolveAmount = 0.2f - smoothT;
 
 		ShadersAPI::setDissolveAmount(m_dissolve, dissolveAmount);
-	}
-
-	if (!m_arenaChangeStarted)
-	{
-		m_arenaChangeStarted = true;
-		m_controller->switchToPhase2Arena();
 	}
 
 	if (t < 1.0f)

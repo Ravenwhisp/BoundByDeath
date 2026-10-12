@@ -12,7 +12,7 @@ enum class PhaseTransitionFlashState
 {
 	Idle,
 	FadeIn,
-	Hold,
+	Covered,
 	FadeOut
 };
 
@@ -59,6 +59,12 @@ public:
 
 	// Soul Cataclysm
 	void showSoulCataclysmUI(Transform* safeZonesRoot, float safeZoneRadius, float channelDuration);
+
+	// Flash
+	void startPhaseTransitionFlash(float fadeInDuration, float fadeOutDuration);
+	void releasePhaseTransitionFlash();
+	bool isPhaseTransitionFlashOpaque() const;
+	bool isPhaseTransitionFlashFinished() const;
 
 private:
 
@@ -156,6 +162,9 @@ private:
 	void updateSoulCataclysmUI(float deltaTime);
 	void hideSoulCataclysmSafeZoneUISlot(SoulCataclysmSafeZoneUISlot& slot);
 	SoulCataclysmSafeZoneUISlot* acquireSoulCataclysmSafeZoneUISlot();
+
+	// Flash
+	void updatePhaseTransitionFlash(float deltaTime);
 
 private:
 
@@ -369,4 +378,15 @@ private:
 	float m_soulCataclysmUIChannelDuration = 0.0f;
 
 	static constexpr float m_soulCataclysmWarningBlinkSpeed = 2.0f;
+
+	// Flash
+	ComponentRef<Transform2D> m_phaseTransitionFlash;
+
+	Transform2D* m_phaseTransitionFlashTransform2D = nullptr;
+
+	PhaseTransitionFlashState m_phaseTransitionFlashState =	PhaseTransitionFlashState::Idle;
+
+	float m_phaseTransitionFlashTimer = 0.0f;
+	float m_phaseTransitionFlashFadeInDuration = 0.1f;
+	float m_phaseTransitionFlashFadeOutDuration = 0.2f;
 };
