@@ -9,6 +9,7 @@ class AnimationComponent;
 class AelorinAttackExecutor;
 class AelorinUI;
 class AelorinVFX;
+class CameraShake;
 
 class AelorinRisenSpiresState : public StateMachineScript
 {
@@ -23,6 +24,7 @@ public:
 
 private:
 	void executePattern(Transform* patternRoot, const char* sourceName, bool dealDamage);
+	void playCenterVFXForPattern(Transform* patternRoot);
 	void finishAbility();
 
 private:
@@ -31,6 +33,7 @@ private:
 	AnimationComponent* m_animation = nullptr;
 	AelorinUI* m_aelorinUI = nullptr;
 	AelorinVFX* m_vfx = nullptr;
+	CameraShake* m_cameraShake = nullptr;
 
 	AelorinAbility m_activeAbility = AelorinAbility::None;
 
@@ -38,6 +41,7 @@ private:
 
 	bool m_firstPassExecuted = false;
 	bool m_secondPassExecuted = false;
+	bool m_secondPassUIShown = false;
 	bool m_completed = false;
 
 	bool m_isFuryCast = false;

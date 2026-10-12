@@ -40,7 +40,9 @@ IMPLEMENT_SCRIPT_FIELDS(AelorinUI,
 		SERIALIZED_COMPONENT_REF(m_risenSpiresUIContainer, "Risen Spires UI Container", ComponentType::TRANSFORM2D),
 		SERIALIZED_COMPONENT_REF(m_risenSpiresUIBackground, "Risen Spires UI Background", ComponentType::TRANSFORM2D),
 		SERIALIZED_COMPONENT_REF(m_risenSpiresUIBorder, "Risen Spires UI Border", ComponentType::TRANSFORM2D),
-		SERIALIZED_COMPONENT_REF(m_risenSpiresUIGlow, "Risen Spires UI Glow", ComponentType::TRANSFORM2D)
+		SERIALIZED_COMPONENT_REF(m_risenSpiresUIGlow, "Risen Spires UI Glow", ComponentType::TRANSFORM2D),
+		SERIALIZED_COMPONENT_REF(m_risenSpiresUIWarning, "Risen Spires UI Warning", ComponentType::TRANSFORM2D),
+		SERIALIZED_COMPONENT_REF(m_risenSpiresUIBeam, "Risen Spires UI Beam", ComponentType::TRANSFORM2D)
 	),
 
 	FIELD_GROUP_COLLAPSE("Spirit Cannon",
@@ -109,6 +111,8 @@ void AelorinUI::Start()
 	m_risenSpiresUIBackgroundTransform2D = m_risenSpiresUIBackground.getReferencedComponent();
 	m_risenSpiresUIBorderTransform2D = m_risenSpiresUIBorder.getReferencedComponent();
 	m_risenSpiresUIGlowTransform2D = m_risenSpiresUIGlow.getReferencedComponent();
+	m_risenSpiresUIWarningTransform2D =	m_risenSpiresUIWarning.getReferencedComponent();
+	m_risenSpiresUIBeamTransform2D = m_risenSpiresUIBeam.getReferencedComponent();
 
 	setupRisenSpiresUI();
 	hideAllRisenSpiresUI();
@@ -357,7 +361,7 @@ void AelorinUI::showRisenSpiresUI(Transform* patternRoot, float radius, float ch
 		return;
 	}
 
-	hideAllRisenSpiresUI();
+	//hideAllRisenSpiresUI();
 
 	m_risenSpiresUIActive = true;
 	m_risenSpiresUITimer = 0.0f;
@@ -414,7 +418,59 @@ void AelorinUI::showRisenSpiresUI(Transform* patternRoot, float radius, float ch
 		Transform2DAPI::setScale(slot->background, Vector2(0.1f, 0.1f));
 		Transform2DAPI::setScale(slot->glow, Vector2(1.0f, 1.0f));
 
+		// Warning/beam
+		if (slot->verticalContainerTransform &&
+			slot->verticalContainer &&
+			slot->warning &&
+			slot->beam)
+		{
+			Vector3 beamPosition = TransformAPI::getGlobalPosition(spirePoint);
+
+			// Center the vertical beam above the ground
+			beamPosition.y += m_risenSpiresBeamHeight * 0.5f;
+
+			TransformAPI::setGlobalPosition(slot->verticalContainerTransform, beamPosition);
+			Transform2DAPI::setScale(slot->verticalContainer, Vector2(m_risenSpiresWarningWidth, m_risenSpiresBeamHeight));
+			Transform2DAPI::setAlpha(slot->warning,	0.0f);
+			Transform2DAPI::setAlpha(slot->beam, 0.0f);
+
+			slot->firing = false;
+			slot->warningTimer = 0.0f;
+			slot->chargeDuration = (std::max)(chargeDuration, 0.001f);
+			slot->fireTimer = 0.0f;
+			slot->fireDuration = 0.0f;
+		}
+
 		slot->active = true;
+	}
+}
+
+void AelorinUI::fireRisenSpiresBeams(float fireDuration)
+{
+	for (RisenSpiresUISlot& slot : m_risenSpiresUISlots)
+	{
+		if (!slot.active ||
+			slot.firing ||
+			!slot.verticalContainer ||
+			!slot.warning ||
+			!slot.beam)
+		{
+			continue;
+		}
+
+		slot.firing = true;
+		slot.fireTimer = 0.0f;
+
+		slot.fireDuration =	(std::max)(fireDuration, 0.001f);
+
+		// Warning OFF
+		Transform2DAPI::setAlpha(slot.warning, 0.0f);
+
+		// Beam ON
+		Transform2DAPI::setAlpha(slot.beam, 1.0f);
+
+		// Make it wider for the impact
+		Transform2DAPI::setScale(slot.verticalContainer, Vector2(m_risenSpiresFireWidth, m_risenSpiresBeamHeight));
 	}
 }
 
@@ -1110,6 +1166,22 @@ void AelorinUI::setupRisenSpiresUI()
 		return;
 	}
 
+	Transform* firstVerticalContainerTransform = TransformAPI::findChildByName(m_risenSpiresUICanvasTransform, "VerticalContainer");
+	if (!firstVerticalContainerTransform)
+	{
+		Debug::warn("[AelorinUI] Risen Spires VerticalContainer not found in first slot");
+
+		return;
+	}
+
+	GameObject* firstVerticalContainerObject = ComponentAPI::getOwner(firstVerticalContainerTransform);
+	Transform2D* firstVerticalContainer = firstVerticalContainerObject ? static_cast<Transform2D*>(GameObjectAPI::getComponent(firstVerticalContainerObject, ComponentType::TRANSFORM2D)) : nullptr;
+	if (!firstVerticalContainer)
+	{
+		Debug::warn("[AelorinUI] Risen Spires VerticalContainer has no Transform2D");
+		return;
+	}
+
 	// add the first slot
 	RisenSpiresUISlot firstSlot;
 	firstSlot.canvas = m_risenSpiresUICanvasTransform;
@@ -1117,7 +1189,12 @@ void AelorinUI::setupRisenSpiresUI()
 	firstSlot.background = m_risenSpiresUIBackgroundTransform2D;
 	firstSlot.border = m_risenSpiresUIBorderTransform2D;
 	firstSlot.glow = m_risenSpiresUIGlowTransform2D;
+	firstSlot.verticalContainerTransform = firstVerticalContainerTransform;
+	firstSlot.verticalContainer = firstVerticalContainer;
+	firstSlot.warning = m_risenSpiresUIWarningTransform2D;
+	firstSlot.beam = m_risenSpiresUIBeamTransform2D;
 	firstSlot.active = false;
+	firstSlot.firing = false;
 
 	m_risenSpiresUISlots.push_back(firstSlot);
 
@@ -1180,13 +1257,47 @@ void AelorinUI::setupRisenSpiresUI()
 			continue;
 		}
 
+		// Warning/Beam
+
+		Transform* verticalContainerTransform =	TransformAPI::findChildByName(canvas, "VerticalContainer");
+		if (!verticalContainerTransform)
+		{
+			continue;
+		}
+
+		Transform* warningTransform = TransformAPI::findChildByName(verticalContainerTransform,	"Warning");
+		Transform* beamTransform = TransformAPI::findChildByName(verticalContainerTransform, "Beam");
+
+		if (!warningTransform || !beamTransform)
+		{
+			continue;
+		}
+
+		GameObject* verticalContainerObject = ComponentAPI::getOwner(verticalContainerTransform);
+		GameObject* warningObject = ComponentAPI::getOwner(warningTransform);
+		GameObject* beamObject = ComponentAPI::getOwner(beamTransform);
+
+		if (!verticalContainerObject || !warningObject || !beamObject)
+		{
+			continue;
+		}
+
+		Transform2D* verticalContainer = static_cast<Transform2D*>(GameObjectAPI::getComponent(verticalContainerObject,	ComponentType::TRANSFORM2D));
+		Transform2D* warning = static_cast<Transform2D*>(GameObjectAPI::getComponent(warningObject,	ComponentType::TRANSFORM2D));
+		Transform2D* beam =	static_cast<Transform2D*>(GameObjectAPI::getComponent(beamObject, ComponentType::TRANSFORM2D));
+
 		RisenSpiresUISlot slot;
 		slot.canvas = canvas;
 		slot.container = container;
 		slot.background = background;
 		slot.border = border;
 		slot.glow = glow;
+		slot.verticalContainerTransform = verticalContainerTransform;
+		slot.verticalContainer = verticalContainer;
+		slot.warning = warning;
+		slot.beam = beam;
 		slot.active = false;
+		slot.firing = false;
 
 		m_risenSpiresUISlots.push_back(slot);
 	}
@@ -1220,32 +1331,7 @@ void AelorinUI::updateRisenSpiresUI(float deltaTime)
 		return;
 	}
 
-	m_risenSpiresUITimer += deltaTime;
-
-	// charge
-	if (m_risenSpiresUITimer < m_risenSpiresUIChargeDuration)
-	{
-		const float t = std::clamp(m_risenSpiresUITimer / m_risenSpiresUIChargeDuration, 0.0f, 1.0f);
-		const float easedT = MathAPI::evaluateEasing(MathAPI::EasingType::EaseInQuad, t);
-		const float chargeScale = 0.1f + 0.9 * easedT;
-
-		for (RisenSpiresUISlot& slot : m_risenSpiresUISlots)
-		{
-			if (!slot.active || !slot.background)
-			{
-				continue;
-			}
-
-			Transform2DAPI::setScale(slot.background, Vector2(chargeScale, chargeScale));
-		}
-
-		return;
-	}
-
-	// impact
-	const float impactTimer = m_risenSpiresUITimer - m_risenSpiresUIChargeDuration;
-	const float impactT = std::clamp(impactTimer / m_risenSpiresUIImpactFadeDuration, 0.0f, 1.0f);
-	const float fadeAlpha = 1.0f - impactT;
+	bool anyActive = false;
 
 	for (RisenSpiresUISlot& slot : m_risenSpiresUISlots)
 	{
@@ -1254,26 +1340,45 @@ void AelorinUI::updateRisenSpiresUI(float deltaTime)
 			continue;
 		}
 
-		if (slot.background)
+		// TELEGRAPH / WARNING
+		if (!slot.firing)
 		{
-			Transform2DAPI::setScale(slot.background, Vector2(1.0f, 1.0f));
+			slot.warningTimer += deltaTime;
+
+			// Warning fades in over 0.2 seconds
+			if (slot.warning)
+			{
+				const float warningT = std::clamp(slot.warningTimer / m_risenSpiresWarningFadeDuration, 0.0f, 1.0f);
+				Transform2DAPI::setAlpha(slot.warning, warningT);
+			}
+
+			// Background grows from 0.1 -> 1.0
+			if (slot.background)
+			{
+				const float chargeT = std::clamp(slot.warningTimer / slot.chargeDuration, 0.0f,	1.0f);
+				const float easedT = MathAPI::evaluateEasing(MathAPI::EasingType::EaseInQuad, chargeT);
+				const float chargeScale = 0.1f + 0.9f * easedT;
+
+				Transform2DAPI::setScale(slot.background, Vector2(chargeScale, chargeScale));
+			}
+
+			anyActive = true;
+			continue;
 		}
 
-		if (slot.glow)
+		// FIRE
+		slot.fireTimer += deltaTime;
+
+		if (slot.fireTimer >= slot.fireDuration)
 		{
-			Transform2DAPI::setAlpha(slot.glow, fadeAlpha);
+			hideRisenSpiresUISlot(slot);
+			continue;
 		}
 
-		if (slot.container)
-		{
-			Transform2DAPI::setAlpha(slot.container, fadeAlpha);
-		}
+		anyActive = true;
 	}
 
-	if (impactT >= 1.0f)
-	{
-		hideAllRisenSpiresUI();
-	}
+	m_risenSpiresUIActive = anyActive;
 }
 
 void AelorinUI::hideRisenSpiresUISlot(RisenSpiresUISlot& slot)
@@ -1288,6 +1393,19 @@ void AelorinUI::hideRisenSpiresUISlot(RisenSpiresUISlot& slot)
 	}
 
 	slot.active = false;
+	slot.firing = false;
+	slot.fireTimer = 0.0f;
+	slot.fireDuration = 0.0f;
+
+	if (slot.warning)
+	{
+		Transform2DAPI::setAlpha(slot.warning, 0.0f);
+	}
+
+	if (slot.beam)
+	{
+		Transform2DAPI::setAlpha(slot.beam, 0.0f);
+	}
 }
 
 AelorinUI::RisenSpiresUISlot* AelorinUI::acquireRisenSpiresUISlot()

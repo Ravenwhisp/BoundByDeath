@@ -13,6 +13,7 @@ IMPLEMENT_SCRIPT_FIELDS(AelorinVFX,
 	SERIALIZED_ASSET_REF(m_seekerSigilImpactDustBigPrefab,	"Seeker Sigil Impact Dust Big Prefab", AssetType::PREFAB),
 	SERIALIZED_ASSET_REF(m_novaImpactShockwavePrefab, "Nova Impact Shockwave Prefab", AssetType::PREFAB),
 	SERIALIZED_ASSET_REF(m_risenSpiresImpactPrefab, "Risen Spires Impact Prefab", AssetType::PREFAB),
+	SERIALIZED_ASSET_REF(m_risenSpiresImpactCenterPrefab, "Risen Spires Impact Center Prefab", AssetType::PREFAB),
 	SERIALIZED_COMPONENT_REF(m_phase1RightHand, "Phase 1 Right Hand", ComponentType::TRANSFORM),
 	SERIALIZED_COMPONENT_REF(m_phase1LeftHand, "Phase 1 Left Hand", ComponentType::TRANSFORM),
 	SERIALIZED_COMPONENT_REF(m_phase2RightHand, "Phase 2 Right Hand", ComponentType::TRANSFORM),
@@ -436,6 +437,23 @@ void AelorinVFX::playRisenSpiresImpact(const Vector3& position)
 		m_oneShotVFX,
 		m_risenSpiresImpactPrefab.m_id,
 		newPos,
+		Vector3::Zero,
+		ParticleLifecycle::kDefaultOneShotLifetime,
+		ParticleLifecycle::getRuntimeVfxContainer()
+	);
+}
+
+void AelorinVFX::playRisenSpiresImpactCenter(const Vector3& position)
+{
+	if (!m_risenSpiresImpactCenterPrefab.m_id.isValid())
+	{
+		return;
+	}
+
+	ParticleLifecycle::spawnOneShotTimed(
+		m_oneShotVFX,
+		m_risenSpiresImpactCenterPrefab.m_id,
+		position,
 		Vector3::Zero,
 		ParticleLifecycle::kDefaultOneShotLifetime,
 		ParticleLifecycle::getRuntimeVfxContainer()

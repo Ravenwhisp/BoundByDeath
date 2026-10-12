@@ -50,6 +50,7 @@ public:
 
 	// Risen Spires
 	void playRisenSpiresImpact(const Vector3& position);
+	void playRisenSpiresImpactCenter(const Vector3& position);
 
 public:
 	// Phase 2 Aura
@@ -82,6 +83,7 @@ public:
 
 	// Risen Spires
 	PrefabRef m_risenSpiresImpactPrefab;
+	PrefabRef m_risenSpiresImpactCenterPrefab;
 
 	// Component References
 	ComponentRef<Transform> m_phase1RightHand;

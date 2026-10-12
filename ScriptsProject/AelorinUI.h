@@ -34,6 +34,7 @@ public:
 
 	// Risen Spires
 	void showRisenSpiresUI(Transform* patternRoot, float radius, float chargeDuration);
+	void fireRisenSpiresBeams(float fireDuration);
 	void cancelRisenSpires();
 
 	// Spirit Cannon
@@ -85,13 +86,27 @@ private:
 	// Risen Spires
 	struct RisenSpiresUISlot
 	{
+		// Ground telegraph
 		Transform* canvas = nullptr;
 		Transform2D* container = nullptr;
 		Transform2D* background = nullptr;
 		Transform2D* border = nullptr;
 		Transform2D* glow = nullptr;
 
+		// Vertical warning/beam
+		Transform* verticalContainerTransform = nullptr;
+		Transform2D* verticalContainer = nullptr;
+		Transform2D* warning = nullptr;
+		Transform2D* beam = nullptr;
+
 		bool active = false;
+		bool firing = false;
+
+		float warningTimer = 0.0f;
+		float chargeDuration = 0.0f;
+
+		float fireTimer = 0.0f;
+		float fireDuration = 0.0f;
 	};
 
 	void hideAllRisenSpiresUI();
@@ -209,12 +224,16 @@ private:
 	ComponentRef<Transform2D> m_risenSpiresUIBackground;
 	ComponentRef<Transform2D> m_risenSpiresUIBorder;
 	ComponentRef<Transform2D> m_risenSpiresUIGlow;
+	ComponentRef<Transform2D> m_risenSpiresUIWarning;
+	ComponentRef<Transform2D> m_risenSpiresUIBeam;
 
 	Transform* m_risenSpiresUICanvasTransform = nullptr;
 	Transform2D* m_risenSpiresUIContainerTransform2D = nullptr;
 	Transform2D* m_risenSpiresUIBackgroundTransform2D = nullptr;
 	Transform2D* m_risenSpiresUIBorderTransform2D = nullptr;
 	Transform2D* m_risenSpiresUIGlowTransform2D = nullptr;
+	Transform2D* m_risenSpiresUIWarningTransform2D = nullptr;
+	Transform2D* m_risenSpiresUIBeamTransform2D = nullptr;
 
 	std::vector<RisenSpiresUISlot> m_risenSpiresUISlots;
 
@@ -223,7 +242,11 @@ private:
 	float m_risenSpiresUIChargeDuration = 0.0f;
 	int m_risenSpiresUIActiveSlotCount = 0;
 
-	static constexpr float m_risenSpiresUIImpactFadeDuration = 0.15f;
+	static constexpr float m_risenSpiresUIImpactFadeDuration = 0.05f;
+	static constexpr float m_risenSpiresBeamHeight = 4.0f;
+	static constexpr float m_risenSpiresWarningWidth = 1.0f;
+	static constexpr float m_risenSpiresFireWidth = 0.8f;
+	static constexpr float m_risenSpiresWarningFadeDuration = 0.2f;
 
 	// Spirit Cannon
 	ComponentRef<Transform> m_spiritCannonUICanvas;
