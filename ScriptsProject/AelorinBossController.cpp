@@ -13,6 +13,7 @@
 #include "AelorinSummonSlot.h"
 #include "Transform2D.h"
 #include "AelorinVFX.h"
+#include "AelorinArenaManager.h"
 
 #include <vector>
 #include <algorithm>
@@ -41,7 +42,11 @@ IMPLEMENT_SCRIPT_FIELDS_INHERITED(AelorinBossController, EnemyBaseController,
 	FIELD_GROUP_COLLAPSE("Win Object",
 		SERIALIZED_COMPONENT_REF(m_winTransform, "Win Transform", ComponentType::TRANSFORM))
 
-	)
+	),
+
+	FIELD_GROUP_COLLAPSE("Arena Manager",
+		SERIALIZED_COMPONENT_REF(m_arenaManagerRef, "Arena Manager", ComponentType::TRANSFORM))
+
 )
 
 AelorinBossController::AelorinBossController(GameObject* owner) : EnemyBaseController(owner)
@@ -124,6 +129,22 @@ void AelorinBossController::Start()
 	if (!m_seekerSigilsLargeProjectilePoolScript)
 	{
 		Debug::error("[AelorinBossController] Large Seeker Sigils ProjectilePool not found.");
+	}
+
+	// Arena Manager
+	Transform* arenaManagerTransform = m_arenaManagerRef.getReferencedComponent();
+	if (arenaManagerTransform)
+	{
+		GameObject* arenaManagerObject = ComponentAPI::getOwner(arenaManagerTransform);
+		if (arenaManagerObject)
+		{
+			m_arenaManager = GameObjectAPI::findScript<AelorinArenaManager>(arenaManagerObject);
+		}
+	}
+
+	if (!m_arenaManager)
+	{
+		Debug::warn("[AelorinBossController] AelorinArenaManager not found.");
 	}
 
 	applyShadowMarkPlacement();
@@ -481,6 +502,17 @@ bool AelorinBossController::trySendPhaseTransitionTrigger(AnimationComponent* an
 	Debug::log("[AelorinBossController] ToPhaseTransition trigger sent.");
 
 	return true;
+}
+
+void AelorinBossController::switchToPhase2Arena()
+{
+	if (!m_arenaManager)
+	{
+		Debug::warn("[AelorinBossController] Cannot switch arena: ArenaManager is missing.");
+		return;
+	}
+
+	m_arenaManager->switchToPhase2();
 }
 
 void AelorinBossController::requestThresholdStagger()

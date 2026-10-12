@@ -8,6 +8,14 @@ class Transform2D;
 class AelorinDamageable;
 class AelorinBossController;
 
+enum class PhaseTransitionFlashState
+{
+	Idle,
+	FadeIn,
+	Hold,
+	FadeOut
+};
+
 class AelorinUI : public Script
 {
 	DECLARE_SCRIPT(AelorinUI)

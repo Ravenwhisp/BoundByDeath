@@ -8,6 +8,7 @@ class AelorinAttackConfig;
 class ProjectilePool;
 class AelorinAttackExecutor;
 class AelorinVFX;
+class AelorinArenaManager;
 
 enum class Phase
 {
@@ -98,6 +99,8 @@ public:
 
 	bool trySendPhaseTransitionTrigger(AnimationComponent* animation);
 
+	void switchToPhase2Arena();
+
 	// Threshold Stagger helpers
 	void requestThresholdStagger();
 	bool trySendThresholdStaggerTrigger(AnimationComponent* animation);
@@ -181,6 +184,7 @@ private:
 	AelorinDamageable* m_damageable = nullptr;
 	AelorinAttackExecutor* m_attackExecutor = nullptr;
 	AelorinVFX* m_vfx = nullptr;
+	AelorinArenaManager* m_arenaManager = nullptr;
 
 	ProjectilePool* m_seekerSigilsProjectilePoolScript = nullptr;
 	ProjectilePool* m_seekerSigilsLargeProjectilePoolScript = nullptr;
@@ -258,6 +262,9 @@ private:
 	//Win object
 	ComponentRef<Transform> m_winTransform;
 	GameObject* m_winGameObject = nullptr;
+
+	// Arena Manager Ref
+	ComponentRef<Transform> m_arenaManagerRef;
 
 private:
 	// Abilities

@@ -83,7 +83,7 @@ void AelorinPhase2TransformState::OnStateEnter()
 		else
 		{
 			// Completely dissolved/invisible at the start.
-			ShadersAPI::setDissolveAmount(m_dissolve, 1.0f);
+			ShadersAPI::setDissolveAmount(m_dissolve, 0.2f);
 		}
 	}
 
@@ -131,6 +131,12 @@ void AelorinPhase2TransformState::OnStateUpdate()
 		const float dissolveAmount = 1.0f - smoothT;
 
 		ShadersAPI::setDissolveAmount(m_dissolve, dissolveAmount);
+	}
+
+	if (!m_arenaChangeStarted)
+	{
+		m_arenaChangeStarted = true;
+		m_controller->switchToPhase2Arena();
 	}
 
 	if (t < 1.0f)
