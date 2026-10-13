@@ -1,6 +1,18 @@
 #include "pch.h"
 #include "AelorinArenaManager.h"
 
+static const Vector3 LYRIEL_PHASE2_POSITION(
+	9.297f,
+	3.438f,
+	-73.259f
+);
+
+static const Vector3 DEATH_PHASE2_POSITION(
+	10.109f,
+	3.459f,
+	-71.017f
+);
+
 IMPLEMENT_SCRIPT_FIELDS(AelorinArenaManager,
 	FIELD_GROUP_COLLAPSE("Arena",
 		SERIALIZED_COMPONENT_REF(m_phase1Origin, "Phase 1 Origin", ComponentType::TRANSFORM),
@@ -51,11 +63,28 @@ void AelorinArenaManager::switchToPhase2()
 	}
 
 	moveToPhase2(m_aelorinRootTransform);
-	moveToPhase2(m_lyrielRootTransform);
-	moveToPhase2(m_deathRootTransform);
+	//moveToPhase2(m_lyrielRootTransform);
+	//moveToPhase2(m_deathRootTransform);
 	//moveToPhase2(m_cinematicsTransform);
 	//moveToPhase2(m_arenaCameraTransform);
 	moveToPhase2(m_combatCameraTransform);
+
+	// Fixed Phase 2 player positions
+	if (m_lyrielRootTransform)
+	{
+		TransformAPI::setGlobalPosition(
+			m_lyrielRootTransform,
+			LYRIEL_PHASE2_POSITION
+		);
+	}
+
+	if (m_deathRootTransform)
+	{
+		TransformAPI::setGlobalPosition(
+			m_deathRootTransform,
+			DEATH_PHASE2_POSITION
+		);
+	}
 
 	m_phase2Active = true;
 
