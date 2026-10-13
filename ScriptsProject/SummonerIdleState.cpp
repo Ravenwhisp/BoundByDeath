@@ -56,21 +56,28 @@ void SummonerIdleState::OnStateUpdate()
 
 	m_controller->faceCurrentTarget();
 
-	// Summon State
-	if (m_controller->isSummonReady())
-	{
-		AnimationAPI::sendTrigger(m_animation, "ToSummon");
-		return;
-	}
-	
-	// Teleport State
-	if (m_controller->isTeleportReady())
+	// Escape teleport has highest priority
+	if (m_controller->isTeleportReady() && m_controller->shouldEscapeTeleport())
 	{
 		AnimationAPI::sendTrigger(m_animation, "ToTeleport");
 		return;
 	}
 
-	// Attack/Energy Ball State
+	// Summon state
+	if (m_controller->isSummonReady())
+	{
+		AnimationAPI::sendTrigger(m_animation, "ToSummon");
+		return;
+	}
+
+	// Approach teleport when target is out of range
+	if (m_controller->isTeleportReady() && m_controller->shouldApproachTeleport())
+	{
+		AnimationAPI::sendTrigger(m_animation, "ToTeleport");
+		return;
+	}
+
+	// Attack State
 	if (m_controller->isTargetInAttackRange() && m_controller->isAttackReady())
 	{
 		AnimationAPI::sendTrigger(m_animation, "ToEnergyBall");
