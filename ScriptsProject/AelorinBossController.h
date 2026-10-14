@@ -8,6 +8,8 @@ class AelorinAttackConfig;
 class ProjectilePool;
 class AelorinAttackExecutor;
 class AelorinVFX;
+class AelorinArenaManager;
+class AelorinUI;
 
 enum class Phase
 {
@@ -92,10 +94,16 @@ public:
 	void requestPhaseTransition();
 	void markPhaseTransitionTriggered();
 	void beginPhase2();
+	void showPhase2TransitionModel();
 	bool isPhaseTransitionRequested() const { return m_phaseTransitionRequested; }
 	bool canTriggerPhaseTransition() const { return m_phaseTransitionRequested && !m_phaseTransitionTriggered; }
 
+	void updatePhase2Swap();
+	void performPhase2Swap();
+
 	bool trySendPhaseTransitionTrigger(AnimationComponent* animation);
+
+	void switchToPhase2Arena();
 
 	// Threshold Stagger helpers
 	void requestThresholdStagger();
@@ -168,6 +176,12 @@ public:
 	//After defeat
 	void onDefeat();
 
+	// Flash
+	void startPhaseTransitionFlash();
+	void releasePhaseTransitionFlash();
+	bool isPhaseTransitionFlashOpaque() const;
+	bool isPhaseTransitionFlashFinished() const;
+
 protected:
 	Transform* acquireCurrentTarget() override;
 	bool isTargetDowned(Transform* target) const override;
@@ -180,6 +194,8 @@ private:
 	AelorinDamageable* m_damageable = nullptr;
 	AelorinAttackExecutor* m_attackExecutor = nullptr;
 	AelorinVFX* m_vfx = nullptr;
+	AelorinArenaManager* m_arenaManager = nullptr;
+	AelorinUI* m_aelorinUI = nullptr;
 
 	ProjectilePool* m_seekerSigilsProjectilePoolScript = nullptr;
 	ProjectilePool* m_seekerSigilsLargeProjectilePoolScript = nullptr;
@@ -188,6 +204,7 @@ private:
 	Phase m_phase = Phase::Phase1;
 	bool m_phaseTransitionRequested = false;
 	bool m_phaseTransitionTriggered = false;
+	bool m_phase2SwapPending = false;
 
 	bool m_debugForcePhaseTransition = false; // Debug
 
@@ -258,6 +275,9 @@ private:
 	ComponentRef<Transform> m_winTransform;
 	GameObject* m_winGameObject = nullptr;
 
+	// Arena Manager Ref
+	ComponentRef<Transform> m_arenaManagerRef;
+
 private:
 	// Abilities
 	std::vector<AelorinAbility> buildAbilityPool() const; // Normal ability pool
@@ -271,4 +291,6 @@ private:
 	AelorinAbility chooseRandomAbility(const std::vector<AelorinAbility>& pool) const;
 
 	bool isPlayerWithinDistance(float distance) const;
+
+	void clearSummonsInFormation(Transform* formationRoot);
 };

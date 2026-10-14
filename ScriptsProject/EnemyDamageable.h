@@ -34,6 +34,7 @@ public:
 	void takeDamage(float amount) override;
 	void takeDamage(const HitContext& ctx) override;
 	void kill() override;
+	void forceKill();
 	bool lastHitExploitShadowMark() const { return m_lastHitExploitedShadowMark; }
 	float getShadowExecutionThresholdMultiplier() const;
 

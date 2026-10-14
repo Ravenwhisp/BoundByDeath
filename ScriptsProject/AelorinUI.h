@@ -8,6 +8,14 @@ class Transform2D;
 class AelorinDamageable;
 class AelorinBossController;
 
+enum class PhaseTransitionFlashState
+{
+	Idle,
+	FadeIn,
+	Covered,
+	FadeOut
+};
+
 class AelorinUI : public Script
 {
 	DECLARE_SCRIPT(AelorinUI)
@@ -34,6 +42,7 @@ public:
 
 	// Risen Spires
 	void showRisenSpiresUI(Transform* patternRoot, float radius, float chargeDuration);
+	void fireRisenSpiresBeams(float fireDuration);
 	void cancelRisenSpires();
 
 	// Spirit Cannon
@@ -50,6 +59,12 @@ public:
 
 	// Soul Cataclysm
 	void showSoulCataclysmUI(Transform* safeZonesRoot, float safeZoneRadius, float channelDuration);
+
+	// Flash
+	void startPhaseTransitionFlash(float fadeInDuration, float fadeOutDuration);
+	void releasePhaseTransitionFlash();
+	bool isPhaseTransitionFlashOpaque() const;
+	bool isPhaseTransitionFlashFinished() const;
 
 private:
 
@@ -85,13 +100,27 @@ private:
 	// Risen Spires
 	struct RisenSpiresUISlot
 	{
+		// Ground telegraph
 		Transform* canvas = nullptr;
 		Transform2D* container = nullptr;
 		Transform2D* background = nullptr;
 		Transform2D* border = nullptr;
 		Transform2D* glow = nullptr;
 
+		// Vertical warning/beam
+		Transform* verticalContainerTransform = nullptr;
+		Transform2D* verticalContainer = nullptr;
+		Transform2D* warning = nullptr;
+		Transform2D* beam = nullptr;
+
 		bool active = false;
+		bool firing = false;
+
+		float warningTimer = 0.0f;
+		float chargeDuration = 0.0f;
+
+		float fireTimer = 0.0f;
+		float fireDuration = 0.0f;
 	};
 
 	void hideAllRisenSpiresUI();
@@ -133,6 +162,9 @@ private:
 	void updateSoulCataclysmUI(float deltaTime);
 	void hideSoulCataclysmSafeZoneUISlot(SoulCataclysmSafeZoneUISlot& slot);
 	SoulCataclysmSafeZoneUISlot* acquireSoulCataclysmSafeZoneUISlot();
+
+	// Flash
+	void updatePhaseTransitionFlash(float deltaTime);
 
 private:
 
@@ -209,12 +241,16 @@ private:
 	ComponentRef<Transform2D> m_risenSpiresUIBackground;
 	ComponentRef<Transform2D> m_risenSpiresUIBorder;
 	ComponentRef<Transform2D> m_risenSpiresUIGlow;
+	ComponentRef<Transform2D> m_risenSpiresUIWarning;
+	ComponentRef<Transform2D> m_risenSpiresUIBeam;
 
 	Transform* m_risenSpiresUICanvasTransform = nullptr;
 	Transform2D* m_risenSpiresUIContainerTransform2D = nullptr;
 	Transform2D* m_risenSpiresUIBackgroundTransform2D = nullptr;
 	Transform2D* m_risenSpiresUIBorderTransform2D = nullptr;
 	Transform2D* m_risenSpiresUIGlowTransform2D = nullptr;
+	Transform2D* m_risenSpiresUIWarningTransform2D = nullptr;
+	Transform2D* m_risenSpiresUIBeamTransform2D = nullptr;
 
 	std::vector<RisenSpiresUISlot> m_risenSpiresUISlots;
 
@@ -223,7 +259,11 @@ private:
 	float m_risenSpiresUIChargeDuration = 0.0f;
 	int m_risenSpiresUIActiveSlotCount = 0;
 
-	static constexpr float m_risenSpiresUIImpactFadeDuration = 0.15f;
+	static constexpr float m_risenSpiresUIImpactFadeDuration = 0.05f;
+	static constexpr float m_risenSpiresBeamHeight = 4.0f;
+	static constexpr float m_risenSpiresWarningWidth = 1.0f;
+	static constexpr float m_risenSpiresFireWidth = 0.8f;
+	static constexpr float m_risenSpiresWarningFadeDuration = 0.2f;
 
 	// Spirit Cannon
 	ComponentRef<Transform> m_spiritCannonUICanvas;
@@ -338,4 +378,15 @@ private:
 	float m_soulCataclysmUIChannelDuration = 0.0f;
 
 	static constexpr float m_soulCataclysmWarningBlinkSpeed = 2.0f;
+
+	// Flash
+	ComponentRef<Transform2D> m_phaseTransitionFlash;
+
+	Transform2D* m_phaseTransitionFlashTransform2D = nullptr;
+
+	PhaseTransitionFlashState m_phaseTransitionFlashState =	PhaseTransitionFlashState::Idle;
+
+	float m_phaseTransitionFlashTimer = 0.0f;
+	float m_phaseTransitionFlashFadeInDuration = 0.1f;
+	float m_phaseTransitionFlashFadeOutDuration = 0.2f;
 };

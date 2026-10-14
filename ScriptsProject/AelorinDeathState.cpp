@@ -44,6 +44,8 @@ void AelorinDeathState::OnStateEnter()
 		m_controller->setForcedMovementBlocked(true);
 	}
 
+	AnimationAPI::setSpeedMultiplier(m_animation, 1.0f);
+
 	Debug::log("[AelorinDeathState] ENTER");
 }
 
@@ -68,6 +70,10 @@ void AelorinDeathState::OnStateUpdate()
 
 void AelorinDeathState::OnStateExit()
 {
+	if (m_animation)
+	{
+		AnimationAPI::setSpeedMultiplier(m_animation, 1.0f);
+	}
 	// this should normally never happen.
 	Debug::log("[AelorinDeathState] EXIT");
 }

@@ -72,4 +72,42 @@ GameObject* AelorinSummonSlot::spawnEnemy()
 	return enemy;
 }
 
+void AelorinSummonSlot::clearEnemy()
+{
+	Transform* slotTransform = GameObjectAPI::getTransform(getOwner());
+	if (!slotTransform)
+	{
+		return;
+	}
+
+	const int childCount = TransformAPI::getChildCount(slotTransform);
+
+	for (int i = 0; i < childCount; ++i)
+	{
+		Transform* childTransform = TransformAPI::getChild(slotTransform, i);
+		if (!childTransform)
+		{
+			continue;
+		}
+
+		GameObject* enemyObject = ComponentAPI::getOwner(childTransform);
+		if (!enemyObject)
+		{
+			continue;
+		}
+
+		EnemyDamageable* damageable = GameObjectAPI::findScript<EnemyDamageable>(enemyObject);
+		if (!damageable || damageable->isDead())
+		{
+			continue;
+		}
+
+		Debug::log("[AelorinSummonSlot] Clearing enemy from slot '%s'", GameObjectAPI::getName(getOwner()));
+
+		damageable->forceKill();
+
+		return;
+	}
+}
+
 IMPLEMENT_SCRIPT(AelorinSummonSlot)
