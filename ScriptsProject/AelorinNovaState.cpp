@@ -3,6 +3,7 @@
 #include "AelorinAttackExecutor.h"
 #include "AelorinUI.h"
 #include "AelorinVFX.h"
+#include "CameraShake.h"
 
 #include "AelorinAttackConfig.h"
 
@@ -21,18 +22,19 @@ void AelorinNovaState::OnStateEnter()
 	}
 
 	GameObject* parentGameObject = ComponentAPI::getOwner(parentTransform);
+	GameObject* cameraObject = SceneAPI::getDefaultCameraGameObject();
 
 	// get scripts
 	m_controller = GameObjectAPI::findScript<AelorinBossController>(parentGameObject);
 	m_animation = AnimationAPI::getAnimationComponent(getOwner());
 	m_aelorinUI = GameObjectAPI::findScript<AelorinUI>(parentGameObject);
 	m_vfx = GameObjectAPI::findScript<AelorinVFX>(parentGameObject);
+	m_cameraShake = GameObjectAPI::findScript<CameraShake>(cameraObject);
 
 	// reset members
 	m_activeAbility = AelorinAbility::None;
 	m_stateTimer = 0.0f;
 	m_firstWaveApplied = false;
-	//m_secondWaveApplied = false;
 	m_completed = false;
 	m_isFuryCast = false;
 
@@ -51,6 +53,15 @@ void AelorinNovaState::OnStateEnter()
 	if (!m_aelorinUI)
 	{
 		Debug::error("[AelorinNovaState] AelorinUI not found.");
+	}
+
+	if (m_controller->isPhase2())
+	{
+		AnimationAPI::setSpeedMultiplier(m_animation, 1.1f);
+	}
+	else
+	{
+		AnimationAPI::setSpeedMultiplier(m_animation, 1.2f);
 	}
 
 	// consume ability
@@ -100,12 +111,24 @@ void AelorinNovaState::OnStateEnter()
 		}
 	}
 
-	const Vector3 lyrielPosition = m_controller->getLyrielPosition();
-	const Vector3 deathPosition = m_controller->getDeathPosition();
+	
+	if (m_controller->isPhase2())
+	{
+		Transform* graspCenter = m_controller->getGraspCenter();
+		if (graspCenter)
+		{
+			const Vector3 graspPosition = TransformAPI::getGlobalPosition(graspCenter);
+			m_controller->facePositionInstant(graspPosition);
+		}
+	}
+	else
+	{
+		const Vector3 lyrielPosition = m_controller->getLyrielPosition();
+		const Vector3 deathPosition = m_controller->getDeathPosition();
+		const Vector3 middlePosition = (lyrielPosition + deathPosition) * 0.5f;
 
-	const Vector3 middlePosition = (lyrielPosition + deathPosition) * 0.5f;
-
-	m_controller->facePositionInstant(middlePosition);
+		m_controller->facePositionInstant(middlePosition);
+	}
 
 	Debug::log("[AelorinNovaState] ENTER");
 }
@@ -140,22 +163,6 @@ void AelorinNovaState::OnStateUpdate()
 		m_firstWaveApplied = true;
 	}
 
-	//if (m_controller->isPhase2() &&
-	//	m_firstWaveApplied &&
-	//	!m_secondWaveApplied &&
-	//	m_stateTimer >= chargeTime + config->m_novaPhase2SecondWaveDelay)
-	//{
-	//	executeSecondNovaWave();
-	//	m_secondWaveApplied = true;
-	//}
-
-	//const float lastWaveTime = m_controller->isPhase2() ? chargeTime + config->m_novaPhase2SecondWaveDelay : chargeTime;
-
-	//if (m_stateTimer < lastWaveTime + recoveryDuration)
-	//{
-	//	return;
-	//}
-
 	if (m_stateTimer < chargeTime + recoveryDuration)
 	{
 		return;
@@ -189,12 +196,16 @@ void AelorinNovaState::OnStateExit()
 		m_vfx->stopPhase2Spell();
 	}
 
+	if (m_animation)
+	{
+		AnimationAPI::setSpeedMultiplier(m_animation, 1.0f);
+	}
+
 	m_aelorinUI = nullptr;
 	m_vfx = nullptr;
 	m_stateTimer = 0.0f;
 	m_novaCenter = Vector3::Zero;
 	m_firstWaveApplied = false;
-	//m_secondWaveApplied = false;
 	m_completed = false;
 	m_isFuryCast = false;
 
@@ -214,28 +225,15 @@ void AelorinNovaState::executeFirstNovaWave()
 		return;
 	}
 
+	if (m_vfx)
+	{
+		m_vfx->playNovaImpactShockwave(m_novaCenter);
+	}
+
 	executeNovaWave(config->m_novaRadius, config->m_novaDamage);
 
 	Debug::log("[AelorinNovaState] First Nova wave.");
 }
-
-//void AelorinNovaState::executeSecondNovaWave()
-//{
-//	if (!m_controller)
-//	{
-//		return;
-//	}
-//
-//	const AelorinAttackConfig* config = m_controller->getAelorinAttackConfig();
-//	if (!config)
-//	{
-//		return;
-//	}
-//
-//	executeNovaWave(config->m_novaPhase2SecondRadius, config->m_novaPhase2SecondDamage);
-//
-//	Debug::log("[AelorinNovaState] Second Nova wave.");
-//}
 
 void AelorinNovaState::executeNovaWave(float radius, float damage)
 {
@@ -246,6 +244,7 @@ void AelorinNovaState::executeNovaWave(float radius, float damage)
 		return;
 	}
 
+	m_cameraShake->shake(0.04f, 0.25f);
 	executor->applyDamageInRadius(m_novaCenter, radius, damage, "Aelorin Nova");
 }
 

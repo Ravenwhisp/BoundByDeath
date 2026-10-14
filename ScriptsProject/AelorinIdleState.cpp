@@ -37,6 +37,8 @@ void AelorinIdleState::OnStateEnter()
 		Debug::error("[AelorinIdleState] AnimationComponent not found.");
 	}
 
+	AnimationAPI::setSpeedMultiplier(m_animation, 1.0f);
+
 	Debug::log("[AelorinIdleState] ENTER");
 }
 
@@ -151,6 +153,11 @@ void AelorinIdleState::OnStateUpdate()
 
 void AelorinIdleState::OnStateExit()
 {
+	if (m_animation)
+	{
+		AnimationAPI::setSpeedMultiplier(m_animation, 1.0f);
+	}
+
 	Debug::log("[AelorinIdleState] EXIT");
 }
 

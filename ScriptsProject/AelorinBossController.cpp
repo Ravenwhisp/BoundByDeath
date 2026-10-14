@@ -13,6 +13,8 @@
 #include "AelorinSummonSlot.h"
 #include "Transform2D.h"
 #include "AelorinVFX.h"
+#include "AelorinArenaManager.h"
+#include "AelorinUI.h"
 
 #include <vector>
 #include <algorithm>
@@ -41,7 +43,11 @@ IMPLEMENT_SCRIPT_FIELDS_INHERITED(AelorinBossController, EnemyBaseController,
 	FIELD_GROUP_COLLAPSE("Win Object",
 		SERIALIZED_COMPONENT_REF(m_winTransform, "Win Transform", ComponentType::TRANSFORM))
 
-	)
+	),
+
+	FIELD_GROUP_COLLAPSE("Arena Manager",
+		SERIALIZED_COMPONENT_REF(m_arenaManagerRef, "Arena Manager", ComponentType::TRANSFORM))
+
 )
 
 AelorinBossController::AelorinBossController(GameObject* owner) : EnemyBaseController(owner)
@@ -56,6 +62,7 @@ void AelorinBossController::Start()
 	m_damageable = GameObjectAPI::findScript<AelorinDamageable>(getOwner());
 	m_attackExecutor = GameObjectAPI::findScript<AelorinAttackExecutor>(getOwner());
 	m_vfx = GameObjectAPI::findScript<AelorinVFX>(getOwner());
+	m_aelorinUI = GameObjectAPI::findScript<AelorinUI>(getOwner());
 
 	Transform* phase1Model = TransformAPI::findChildByName(getOwner()->GetTransform(), "Phase1");
 	if (!phase1Model)
@@ -126,6 +133,22 @@ void AelorinBossController::Start()
 		Debug::error("[AelorinBossController] Large Seeker Sigils ProjectilePool not found.");
 	}
 
+	// Arena Manager
+	Transform* arenaManagerTransform = m_arenaManagerRef.getReferencedComponent();
+	if (arenaManagerTransform)
+	{
+		GameObject* arenaManagerObject = ComponentAPI::getOwner(arenaManagerTransform);
+		if (arenaManagerObject)
+		{
+			m_arenaManager = GameObjectAPI::findScript<AelorinArenaManager>(arenaManagerObject);
+		}
+	}
+
+	if (!m_arenaManager)
+	{
+		Debug::warn("[AelorinBossController] AelorinArenaManager not found.");
+	}
+
 	applyShadowMarkPlacement();
 }
 
@@ -146,6 +169,7 @@ void AelorinBossController::Update()
 	}
 
 	updateEncounter();
+	updatePhase2Swap();
 	updateTeleportCooldown();
 	updateSummonTimer();	
 }
@@ -401,19 +425,85 @@ void AelorinBossController::requestPhaseTransition()
 void AelorinBossController::markPhaseTransitionTriggered()
 {
 	m_phaseTransitionTriggered = true;
+	clearSummonsInFormation(getPhase1SummonFormation());
 }
 
 void AelorinBossController::beginPhase2()
 {
+	if (isPhase2() || m_phase2SwapPending)
+	{
+		return;
+	}
+
+	m_phase2SwapPending = true;
+
+	if (m_aelorinUI)
+	{
+		m_aelorinUI->startPhaseTransitionFlash(
+			0.40f, // fade in
+			0.80f  // fade out
+		);
+
+		return;
+	}
+
+	// Fallback
+	performPhase2Swap();
+}
+
+void AelorinBossController::showPhase2TransitionModel()
+{
+	if (!m_phase2GameObject)
+	{
+		Debug::warn("[AelorinBossController] Cannot show Phase2 transition model.");
+		return;
+	}
+
+	GameObjectAPI::setActive(m_phase2GameObject, true);
+
+	Debug::log("[AelorinBossController] Phase2 transition model activated.");
+}
+
+void AelorinBossController::updatePhase2Swap()
+{
+	if (!m_phase2SwapPending)
+	{
+		return;
+	}
+
+	if (!m_aelorinUI)
+	{
+		performPhase2Swap();
+		return;
+	}
+
+	// Wait until screen is completely covered
+	if (!m_aelorinUI->isPhaseTransitionFlashOpaque())
+	{
+		return;
+	}
+
+	performPhase2Swap();
+
+	// Now it is safe to reveal the new arena
+	m_aelorinUI->releasePhaseTransitionFlash();
+}
+
+void AelorinBossController::performPhase2Swap()
+{
 	if (isPhase2())
 	{
+		m_phase2SwapPending = false;
 		return;
 	}
 
 	if (!m_phase1GameObject || !m_phase2GameObject)
 	{
+		m_phase2SwapPending = false;
 		return;
 	}
+
+	switchToPhase2Arena();
 
 	GameObjectAPI::setActive(m_phase1GameObject, false);
 	GameObjectAPI::setActive(m_phase2GameObject, true);
@@ -429,6 +519,7 @@ void AelorinBossController::beginPhase2()
 
 	m_phaseTransitionRequested = false;
 	m_phaseTransitionTriggered = false;
+	m_phase2SwapPending = false;
 
 	if (m_damageable)
 	{
@@ -467,6 +558,17 @@ bool AelorinBossController::trySendPhaseTransitionTrigger(AnimationComponent* an
 	Debug::log("[AelorinBossController] ToPhaseTransition trigger sent.");
 
 	return true;
+}
+
+void AelorinBossController::switchToPhase2Arena()
+{
+	if (!m_arenaManager)
+	{
+		Debug::warn("[AelorinBossController] Cannot switch arena: ArenaManager is missing.");
+		return;
+	}
+
+	m_arenaManager->switchToPhase2();
 }
 
 void AelorinBossController::requestThresholdStagger()
@@ -1118,10 +1220,76 @@ bool AelorinBossController::isPlayerWithinDistance(float distance) const
 	return getClosestPlayerDistance() <= distance;
 }
 
+void AelorinBossController::clearSummonsInFormation(Transform* formationRoot)
+{
+	if (!formationRoot)
+	{
+		return;
+	}
+
+	const int slotCount = TransformAPI::getChildCount(formationRoot);
+
+	for (int i = 0; i < slotCount; ++i)
+	{
+		Transform* slotTransform = TransformAPI::getChild(formationRoot, i);
+		if (!slotTransform)
+		{
+			continue;
+		}
+
+		GameObject* slotObject = ComponentAPI::getOwner(slotTransform);
+		if (!slotObject)
+		{
+			continue;
+		}
+
+		AelorinSummonSlot* slot = GameObjectAPI::findScript<AelorinSummonSlot>(slotObject);
+		if (!slot)
+		{
+			continue;
+		}
+
+		slot->clearEnemy();
+	}
+}
+
 void AelorinBossController::onDefeat()
 {
 	m_winGameObject = ComponentAPI::getOwner(m_winTransform.getReferencedComponent());
 	GameObjectAPI::setActive(m_winGameObject, true);
+}
+
+void AelorinBossController::startPhaseTransitionFlash()
+{
+	if (!m_aelorinUI)
+	{
+		return;
+	}
+
+	m_aelorinUI->startPhaseTransitionFlash(
+		0.30f, // fade in
+		1.20f  // fade out
+	);
+}
+
+void AelorinBossController::releasePhaseTransitionFlash()
+{
+	if (!m_aelorinUI)
+	{
+		return;
+	}
+
+	m_aelorinUI->releasePhaseTransitionFlash();
+}
+
+bool AelorinBossController::isPhaseTransitionFlashOpaque() const
+{
+	return m_aelorinUI && m_aelorinUI->isPhaseTransitionFlashOpaque();
+}
+
+bool AelorinBossController::isPhaseTransitionFlashFinished() const
+{
+	return !m_aelorinUI || m_aelorinUI->isPhaseTransitionFlashFinished();
 }
 
 IMPLEMENT_SCRIPT(AelorinBossController)

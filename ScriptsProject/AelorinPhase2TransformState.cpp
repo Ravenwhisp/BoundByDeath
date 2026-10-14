@@ -18,6 +18,7 @@ void AelorinPhase2TransformState::OnStateEnter()
 	}
 
 	GameObject* parentGameObject = ComponentAPI::getOwner(parentTransform);
+	GameObject* cameraObject = SceneAPI::getDefaultCameraGameObject();
 
 	m_controller = GameObjectAPI::findScript<AelorinBossController>(parentGameObject);
 	m_animation = AnimationAPI::getAnimationComponent(getOwner());
@@ -26,6 +27,7 @@ void AelorinPhase2TransformState::OnStateEnter()
 	// reset members
 	m_stateTimer = 0.0f;
 	m_completed = false;
+	m_dissolve = nullptr;
 
 	if (!m_controller)
 	{
@@ -45,8 +47,17 @@ void AelorinPhase2TransformState::OnStateEnter()
 		return;
 	}
 
+	if (m_controller->isPhase2())
+	{
+		AnimationAPI::setSpeedMultiplier(m_animation, 0.5f);
+	}
+	else
+	{
+		AnimationAPI::setSpeedMultiplier(m_animation, 1.0f);
+	}
+
 	m_targetScale = TransformAPI::getScale(m_modelTransform);
-	constexpr float startScaleFactor = 0.5f;
+	constexpr float startScaleFactor = 0.4f;
 
 	m_startScale = Vector3(
 		m_targetScale.x * startScaleFactor,
@@ -55,6 +66,28 @@ void AelorinPhase2TransformState::OnStateEnter()
 	);
 
 	TransformAPI::setScale(m_modelTransform, m_startScale);
+
+	Transform* golemTransform = TransformAPI::findChildByName(m_modelTransform, "Golem");
+	if (!golemTransform)
+	{
+		Debug::warn("[AelorinPhase2TransformState] Golem not found under Phase2.");
+	}
+	else
+	{
+		GameObject* golemObject = ComponentAPI::getOwner(golemTransform);
+		m_dissolve = ShadersAPI::getDissolveComponent(golemObject);
+
+		if (!m_dissolve)
+		{
+			Debug::warn("[AelorinPhase2TransformState] DissolveComponent not found on Golem.");
+		}
+		else
+		{
+			// Completely dissolved/invisible at the start.
+			ShadersAPI::setDissolveAmount(m_dissolve, 0.2f);
+		}
+	}
+
 
 	Debug::log("[AelorinPhase2TransformState] ENTER");
 }
@@ -66,11 +99,17 @@ void AelorinPhase2TransformState::OnStateUpdate()
 		return;
 	}
 
-	constexpr float transformDuration = 1.5f;
+	constexpr float transformDuration = 2.5f;
+	constexpr float delay = 1.0f;
 
 	m_stateTimer += Time::getDeltaTime();
 
-	float t = m_stateTimer / transformDuration;
+	if (m_stateTimer <= delay)
+	{
+		return;
+	}
+
+	float t = (m_stateTimer - delay) / transformDuration;
 
 	if (t > 1.0f)
 	{
@@ -88,6 +127,13 @@ void AelorinPhase2TransformState::OnStateUpdate()
 
 	TransformAPI::setScale(m_modelTransform, currentScale);
 
+	if (m_dissolve)
+	{
+		const float dissolveAmount = 0.2f - smoothT;
+
+		ShadersAPI::setDissolveAmount(m_dissolve, dissolveAmount);
+	}
+
 	if (t < 1.0f)
 	{
 		return;
@@ -95,6 +141,10 @@ void AelorinPhase2TransformState::OnStateUpdate()
 
 	// Set final scale
 	TransformAPI::setScale(m_modelTransform, m_targetScale);
+	if (m_dissolve)
+	{
+		ShadersAPI::setDissolveAmount(m_dissolve, 0.0f);
+	}
 
 	m_completed = true;
 
@@ -112,7 +162,18 @@ void AelorinPhase2TransformState::OnStateExit()
 		TransformAPI::setScale(m_modelTransform, m_targetScale);
 	}
 
+	if (m_dissolve)
+	{
+		ShadersAPI::setDissolveAmount(m_dissolve, 0.0f);
+	}
+
+	if (m_animation)
+	{
+		AnimationAPI::setSpeedMultiplier(m_animation, 1.0f);
+	}
+
 	m_modelTransform = nullptr;
+	m_dissolve = nullptr;
 
 	m_stateTimer = 0.0f;
 	m_completed = false;

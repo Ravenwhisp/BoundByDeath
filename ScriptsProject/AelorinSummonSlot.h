@@ -13,6 +13,7 @@ public:
 
 	bool hasLivingEnemy() const;
 	GameObject* spawnEnemy();
+	void clearEnemy();
 
 public:
 	PrefabRef m_enemyPrefab;

@@ -228,6 +228,11 @@ void EnemyDamageable::kill()
 	Damageable::kill();
 }
 
+void EnemyDamageable::forceKill()
+{
+	Damageable::kill();
+}
+
 void EnemyDamageable::onDamaged(float amount)
 {
 	Damageable::onDamaged(amount);

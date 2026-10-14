@@ -69,6 +69,15 @@ void AelorinSpiritCannonState::OnStateEnter()
 		return;
 	}
 
+	if (m_controller->isPhase2())
+	{
+		AnimationAPI::setSpeedMultiplier(m_animation, 0.8f);
+	}
+	else
+	{
+		AnimationAPI::setSpeedMultiplier(m_animation, 1.0f);
+	}
+
 	// consume ability
 	m_activeAbility = m_controller->consumeRequestedAbility();
 	if (m_activeAbility != AelorinAbility::SpiritCannon)
@@ -182,6 +191,11 @@ void AelorinSpiritCannonState::OnStateExit()
 	{
 		m_vfx->stopPhase1Spell();
 		m_vfx->stopPhase2Spell();
+	}
+
+	if (m_animation)
+	{
+		AnimationAPI::setSpeedMultiplier(m_animation, 1.0f);
 	}
 
 	m_controller = nullptr;
@@ -332,8 +346,10 @@ void AelorinSpiritCannonState::fireShot()
 
 	const Vector3 origin = TransformAPI::getGlobalPosition(m_aelorinTransform);
 	const bool phase2 = m_controller->isPhase2();
-	const float mainFireWidth = phase2 ? config->m_spiritCannonFireWidth * 1.20f : config->m_spiritCannonFireWidth;
-	const float sideFireWidth = config->m_spiritCannonFireWidth * 0.70f;
+
+	const float fireWidth = config->m_spiritCannonFireWidth - 0.5f;
+	const float mainFireWidth = phase2 ? fireWidth * 1.20f : fireWidth;
+	const float sideFireWidth = fireWidth * 0.70f;
 
 	if (m_aelorinUI)
 	{
