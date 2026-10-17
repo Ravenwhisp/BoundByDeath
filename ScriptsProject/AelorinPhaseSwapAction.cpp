@@ -2,6 +2,7 @@
 #include "AelorinPhaseSwapAction.h"
 
 #include "AelorinCinematics.h"
+#include "AelorinDamageable.h"
 
 IMPLEMENT_SCRIPT_FIELDS_INHERITED(AelorinPhaseSwapAction, CameraTransitionStepAction,
     SERIALIZED_COMPONENT_REF(m_bossTransform, "Boss Transform", ComponentType::TRANSFORM)
@@ -27,6 +28,12 @@ void AelorinPhaseSwapAction::executeAction(CameraTransitionController* controlle
         return;
     }
 
+    AelorinDamageable* damageable = GameObjectAPI::findScript<AelorinDamageable>(bossObject);
+    if (damageable)
+    {
+        damageable->startPhase1Dissolve();
+    }
+
     AelorinCinematics* cinematics = GameObjectAPI::findScript<AelorinCinematics>(bossObject);
     if (!cinematics)
     {
@@ -34,7 +41,7 @@ void AelorinPhaseSwapAction::executeAction(CameraTransitionController* controlle
         return;
     }
 
-    cinematics->performPhaseTransformation();
+    cinematics->performPhaseTeleportToCenter();
 }
 
 IMPLEMENT_SCRIPT(AelorinPhaseSwapAction)
