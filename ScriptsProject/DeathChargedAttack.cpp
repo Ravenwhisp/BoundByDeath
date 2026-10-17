@@ -132,6 +132,8 @@ void DeathChargedAttack::cancelAbility()
         }
     }
 
+    m_particles->SetChargeInactive();
+
     AbilityBase::cancelAbility();
 }
 

@@ -186,6 +186,8 @@ void LyrielChargedAttack::cancelAbility()
         }
     }
 
+    m_particles->SetChargeInactive();
+
     AbilityBase::cancelAbility();
 }
 
