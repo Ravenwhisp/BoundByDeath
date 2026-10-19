@@ -36,6 +36,8 @@ public:
     // Footsteps — Wwise Switch Container handles walk/run × surface; we only post.
     // Surface defaults to whatever the Wwise project defines as default (set to Stone).
     void setFootstepsActive(bool active);
+    // Cadence follows the run clip's playback speed and any movement slowdown (drawing the bow).
+    void setFootstepRate(float animSpeed, float movementMultiplier);
 
     // Damage
     void playHurt();
@@ -53,6 +55,7 @@ private:
     uint32_t postEvent(const char* eventName);
 
     ComponentSoundSource* m_source = nullptr;
+    float m_footstepInterval = 0.30f;
 
     // Charged tense loop with minimum-hold arm. Stopped via stopEvent(playingID)
     // because the bank exposes no Stop event for this loop.

@@ -17,6 +17,7 @@ IMPLEMENT_SCRIPT_FIELDS(PlayerAnimationController,
     SERIALIZED_STRING(m_idleLongStateName, "Idle long state name"),
     SERIALIZED_FLOAT(m_idleLongAfter, "Idle long after (s)", 0.0f, 60.0f, 0.5f),
     SERIALIZED_STRING(m_reviveStateName, "Revive state name"),
+    SERIALIZED_STRING(m_chargeHoldMoveStateName, "Charge hold move state name"),
     SERIALIZED_STRING(m_moveStateName, "Move state name"),
     SERIALIZED_STRING(m_dashStateName, "Dash state name"),
     SERIALIZED_STRING(m_attackStateName, "Attack state name"),
@@ -111,6 +112,17 @@ void PlayerAnimationController::Update()
         desiredState = AnimState::Idle;
     }
 
+    if (desiredState == AnimState::ChargeHold)
+    {
+        // Walking with the bow drawn is a separate clip when the character has one.
+        const bool moving = m_isMoving && m_chargeHoldActive && !trimmed(m_chargeHoldMoveStateName).empty();
+        if (moving != m_chargeHoldMoving)
+        {
+            m_chargeHoldMoving = moving;
+            m_chargeVariantDirty = true;
+        }
+    }
+
     if (desiredState == AnimState::Idle)
     {
         if (m_playingIdleLong)
@@ -143,7 +155,8 @@ void PlayerAnimationController::Update()
     const bool forceReplay = (freshDamage && desiredState == AnimState::Damaged)
                           || (m_dashJustStarted && desiredState == AnimState::Dash)
                           || (m_attackOverrideDirty && desiredState == AnimState::Attack)
-                          || (m_idleVariantDirty && desiredState == AnimState::Idle);
+                          || (m_idleVariantDirty && desiredState == AnimState::Idle)
+                          || (m_chargeVariantDirty && desiredState == AnimState::ChargeHold);
     if (desiredState != m_currentState || forceReplay)
     {
         if (m_chargeHoldPaused && desiredState != AnimState::ChargeHold)
@@ -196,8 +209,16 @@ void PlayerAnimationController::Update()
         }
     }
 
-    // While charging, scrub the windup to the charge progress (playback frozen, driven manually)
-    if (m_currentState == AnimState::ChargeHold && m_chargeHoldActive)
+    // While charging on the spot, scrub the windup to the charge progress (playback frozen, driven manually)
+    if (m_currentState == AnimState::ChargeHold && m_chargeHoldActive && m_chargeHoldMoving)
+    {
+        if (m_chargeHoldPaused)
+        {
+            AnimationAPI::play(m_animationComponent);
+            m_chargeHoldPaused = false;
+        }
+    }
+    else if (m_currentState == AnimState::ChargeHold && m_chargeHoldActive)
     {
         if (!m_chargeHoldPaused)
         {
@@ -216,6 +237,7 @@ void PlayerAnimationController::Update()
     m_dashJustStarted = false;
     m_attackOverrideDirty = false;
     m_idleVariantDirty = false;
+    m_chargeVariantDirty = false;
 }
 
 void PlayerAnimationController::setMoving(bool moving)
@@ -307,6 +329,7 @@ void PlayerAnimationController::beginChargeHold(const std::string& stateName, fl
     m_chargeHoldPausePct = pausePct;
     m_chargeHoldActive = true;
     m_chargeHoldPaused = false;
+    m_chargeHoldMoving = false;
     m_chargeProgress = 0.0f;
     m_hasAttackOverride = false;
 }
@@ -323,6 +346,16 @@ void PlayerAnimationController::endChargeHold(float releaseFraction)
     if (!m_animationComponent)
     {
         return;
+    }
+
+    // The release lives in the windup clip, so come back to it before firing.
+    if (m_chargeHoldMoving)
+    {
+        m_chargeHoldMoving = false;
+        if (!m_chargeHoldState.empty())
+        {
+            AnimationAPI::playState(m_animationComponent, m_chargeHoldState.c_str(), 0.0f);
+        }
     }
 
     const float dur = AnimationAPI::getPlaybackDuration(m_animationComponent);
@@ -351,6 +384,7 @@ void PlayerAnimationController::endChargeHold(float releaseFraction)
 void PlayerAnimationController::abortChargeHold()
 {
     m_chargeHoldActive = false;
+    m_chargeHoldMoving = false;
     m_chargeReleaseTimer = 0.0f;
 
     if (m_chargeHoldPaused && m_animationComponent != nullptr)
@@ -394,7 +428,7 @@ bool PlayerAnimationController::playAnimState(AnimState state, float blendTime)
     case AnimState::Move:    stateName = m_moveStateName; break;
     case AnimState::Dash:    stateName = m_dashStateName; break;
     case AnimState::Attack:  stateName = m_attackStateName; break;
-    case AnimState::ChargeHold: stateName = m_chargeHoldState; break;
+    case AnimState::ChargeHold: stateName = m_chargeHoldMoving ? m_chargeHoldMoveStateName : m_chargeHoldState; break;
     case AnimState::Damaged: stateName = m_currentDamagedState; break;
     case AnimState::Recovery: stateName = m_recoveryState; break;
     case AnimState::Downed: stateName = m_downedStateName; break;
@@ -415,7 +449,7 @@ bool PlayerAnimationController::playAnimState(AnimState state, float blendTime)
     }
     else if (state == AnimState::ChargeHold)
     {
-        speed = m_chargeHoldSpeed;
+        speed = m_chargeHoldMoving ? 1.0f : m_chargeHoldSpeed;
     }
     else if (state == AnimState::Move && m_moveAnimSpeed > 0.0f)
     {

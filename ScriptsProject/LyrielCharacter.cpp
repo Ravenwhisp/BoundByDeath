@@ -5,6 +5,7 @@
 #include "LyrielArrowVolley.h"
 #include "LyrielSound.h"
 #include "PlayerMovement.h"
+#include "PlayerAnimationController.h"
 #include "LyrielConfig.h"
 #include "LyrielBasicAttack.h"
 #include "LyrielChargedAttack.h"
@@ -33,6 +34,7 @@ void LyrielCharacter::Start()
     m_specialAbility   = GameObjectAPI::findScript<LyrielArrowVolley>(getOwner());
     m_sound         = GameObjectAPI::findScript<LyrielSound>(getOwner());
     m_movement      = GameObjectAPI::findScript<PlayerMovement>(getOwner());
+    m_animation     = GameObjectAPI::findScript<PlayerAnimationController>(getOwner());
 
     if (m_arrowPool == nullptr)
     {
@@ -97,9 +99,10 @@ void LyrielCharacter::Update()
 
     if (m_movement != nullptr)
     {
-        // She drags her feet while drawing the bow, so no footsteps during the charge.
-        const bool charging = m_charged != nullptr && m_charged->isCharging();
-        m_sound->setFootstepsActive(m_movement->isMoving() && !charging);
+        // Footsteps keep pace with the run clip and stretch out while the bow slows her down.
+        const float animSpeed = m_animation != nullptr ? m_animation->getMoveAnimSpeed() : 1.0f;
+        m_sound->setFootstepRate(animSpeed, m_movement->getMovementMultiplier());
+        m_sound->setFootstepsActive(m_movement->isMoving());
     }
 }
 
