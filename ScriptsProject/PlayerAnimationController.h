@@ -65,6 +65,7 @@ public:
     std::string m_idleLongStateName = "";
     std::string m_reviveStateName = "";
     std::string m_chargeHoldMoveStateName = "";
+    std::string m_chargeHoldFullStateName = "";
 	std::string m_moveStateName = "";
 	std::string m_dashStateName = "";
 	std::string m_attackStateName = "";
@@ -116,7 +117,10 @@ private:
 
     bool m_chargeHoldActive = false;
     bool m_chargeHoldPaused = false;
-    bool m_chargeHoldMoving = false;
+    // Which clip the charge is showing: the scrubbed windup, the walking variant, or the
+    // looping fully drawn hold once the charge is topped up.
+    enum class ChargeVariant { Windup, Moving, FullHold };
+    ChargeVariant m_chargeVariant = ChargeVariant::Windup;
     float m_moveSpeedScale = 1.0f;
     bool m_chargeVariantDirty = false;
     std::string m_chargeHoldState = "";

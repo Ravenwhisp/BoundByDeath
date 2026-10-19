@@ -18,6 +18,7 @@ IMPLEMENT_SCRIPT_FIELDS(PlayerAnimationController,
     SERIALIZED_FLOAT(m_idleLongAfter, "Idle long after (s)", 0.0f, 60.0f, 0.5f),
     SERIALIZED_STRING(m_reviveStateName, "Revive state name"),
     SERIALIZED_STRING(m_chargeHoldMoveStateName, "Charge hold move state name"),
+    SERIALIZED_STRING(m_chargeHoldFullStateName, "Charge hold full state name"),
     SERIALIZED_STRING(m_moveStateName, "Move state name"),
     SERIALIZED_STRING(m_dashStateName, "Dash state name"),
     SERIALIZED_STRING(m_attackStateName, "Attack state name"),
@@ -114,11 +115,23 @@ void PlayerAnimationController::Update()
 
     if (desiredState == AnimState::ChargeHold)
     {
-        // Walking with the bow drawn is a separate clip when the character has one.
-        const bool moving = m_isMoving && m_chargeHoldActive && !trimmed(m_chargeHoldMoveStateName).empty();
-        if (moving != m_chargeHoldMoving)
+        ChargeVariant want = ChargeVariant::Windup;
+        if (m_chargeHoldActive)
         {
-            m_chargeHoldMoving = moving;
+            if (m_isMoving && !trimmed(m_chargeHoldMoveStateName).empty())
+            {
+                want = ChargeVariant::Moving;
+            }
+            else if (!m_isMoving && m_chargeProgress >= 0.999f && !trimmed(m_chargeHoldFullStateName).empty())
+            {
+                // Topped up and standing: the windup's last frame is mid-step, so hold on a
+                // clip that keeps the draw with both feet down instead of freezing.
+                want = ChargeVariant::FullHold;
+            }
+        }
+        if (want != m_chargeVariant)
+        {
+            m_chargeVariant = want;
             m_chargeVariantDirty = true;
         }
     }
@@ -210,7 +223,7 @@ void PlayerAnimationController::Update()
     }
 
     // While charging on the spot, scrub the windup to the charge progress (playback frozen, driven manually)
-    if (m_currentState == AnimState::ChargeHold && m_chargeHoldActive && m_chargeHoldMoving)
+    if (m_currentState == AnimState::ChargeHold && m_chargeHoldActive && m_chargeVariant != ChargeVariant::Windup)
     {
         if (m_chargeHoldPaused)
         {
@@ -329,7 +342,7 @@ void PlayerAnimationController::beginChargeHold(const std::string& stateName, fl
     m_chargeHoldPausePct = pausePct;
     m_chargeHoldActive = true;
     m_chargeHoldPaused = false;
-    m_chargeHoldMoving = false;
+    m_chargeVariant = ChargeVariant::Windup;
     m_chargeProgress = 0.0f;
     m_hasAttackOverride = false;
 }
@@ -349,9 +362,9 @@ void PlayerAnimationController::endChargeHold(float releaseFraction)
     }
 
     // The release lives in the windup clip, so come back to it before firing.
-    if (m_chargeHoldMoving)
+    if (m_chargeVariant != ChargeVariant::Windup)
     {
-        m_chargeHoldMoving = false;
+        m_chargeVariant = ChargeVariant::Windup;
         if (!m_chargeHoldState.empty())
         {
             // Short blend so coming back from the walk to the drawn pose does not pop.
@@ -385,7 +398,7 @@ void PlayerAnimationController::endChargeHold(float releaseFraction)
 void PlayerAnimationController::abortChargeHold()
 {
     m_chargeHoldActive = false;
-    m_chargeHoldMoving = false;
+    m_chargeVariant = ChargeVariant::Windup;
     m_chargeReleaseTimer = 0.0f;
 
     if (m_chargeHoldPaused && m_animationComponent != nullptr)
@@ -429,7 +442,11 @@ bool PlayerAnimationController::playAnimState(AnimState state, float blendTime)
     case AnimState::Move:    stateName = m_moveStateName; break;
     case AnimState::Dash:    stateName = m_dashStateName; break;
     case AnimState::Attack:  stateName = m_attackStateName; break;
-    case AnimState::ChargeHold: stateName = m_chargeHoldMoving ? m_chargeHoldMoveStateName : m_chargeHoldState; break;
+    case AnimState::ChargeHold:
+        stateName = m_chargeVariant == ChargeVariant::Moving   ? m_chargeHoldMoveStateName
+                  : m_chargeVariant == ChargeVariant::FullHold ? m_chargeHoldFullStateName
+                  : m_chargeHoldState;
+        break;
     case AnimState::Damaged: stateName = m_currentDamagedState; break;
     case AnimState::Recovery: stateName = m_recoveryState; break;
     case AnimState::Downed: stateName = m_downedStateName; break;
@@ -451,7 +468,9 @@ bool PlayerAnimationController::playAnimState(AnimState state, float blendTime)
     else if (state == AnimState::ChargeHold)
     {
         // The walking variant is a locomotion clip, so it follows the run's rate and slowdown.
-        speed = m_chargeHoldMoving ? getMoveAnimSpeed() * m_moveSpeedScale : m_chargeHoldSpeed;
+        speed = m_chargeVariant == ChargeVariant::Moving   ? getMoveAnimSpeed() * m_moveSpeedScale
+              : m_chargeVariant == ChargeVariant::FullHold ? 1.0f
+              : m_chargeHoldSpeed;
     }
     else if (state == AnimState::Move && m_moveAnimSpeed > 0.0f)
     {
