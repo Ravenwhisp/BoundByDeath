@@ -153,7 +153,7 @@ void LyrielSound::setFootstepsActive(bool active)
     }
     m_footstepsActive = active;
     // Reset timer so the first step after starting to move plays almost immediately.
-    m_footstepTimer = active ? 0.0f : 0.0f;
+    m_footstepTimer = 0.0f;
 }
 
 void LyrielSound::stopAllLoops()

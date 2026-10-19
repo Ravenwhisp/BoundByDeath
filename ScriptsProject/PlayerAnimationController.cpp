@@ -178,7 +178,15 @@ void PlayerAnimationController::Update()
             m_chargeHoldPaused = false;
         }
 
-        if (playAnimState(desiredState, blendTime))
+        const bool played = playAnimState(desiredState, blendTime);
+        if (!played && desiredState == AnimState::ChargeHold && m_chargeVariant != ChargeVariant::Windup)
+        {
+            // The walking or full-draw clip is missing from the state machine. Go back to the
+            // scrubbed windup rather than leaving playback free-running on the charge clip.
+            m_chargeVariant = ChargeVariant::Windup;
+            m_chargeVariantDirty = true;
+        }
+        if (played)
         {
             m_currentState = desiredState;
 
@@ -222,7 +230,7 @@ void PlayerAnimationController::Update()
         }
     }
 
-    // While charging on the spot, scrub the windup to the charge progress (playback frozen, driven manually)
+    // The walking and full-draw clips play normally, so undo any pause the scrub left behind
     if (m_currentState == AnimState::ChargeHold && m_chargeHoldActive && m_chargeVariant != ChargeVariant::Windup)
     {
         if (m_chargeHoldPaused)
@@ -231,6 +239,7 @@ void PlayerAnimationController::Update()
             m_chargeHoldPaused = false;
         }
     }
+    // Charging on the spot: scrub the windup to the charge progress, playback frozen
     else if (m_currentState == AnimState::ChargeHold && m_chargeHoldActive)
     {
         if (!m_chargeHoldPaused)
@@ -242,6 +251,19 @@ void PlayerAnimationController::Update()
         if (dur > 0.0001f)
         {
             AnimationAPI::setPlaybackTime(m_animationComponent, m_chargeProgress * m_chargeHoldPausePct * dur);
+        }
+    }
+
+    const bool locomotion = m_currentState == AnimState::Move
+        || (m_currentState == AnimState::ChargeHold && m_chargeVariant == ChargeVariant::Moving);
+    if (locomotion)
+    {
+        // The slowdown can change without a state change (starting a charge while already running).
+        const float wanted = getMoveAnimSpeed() * m_moveSpeedScale;
+        if (wanted < m_appliedSpeed - 0.001f || wanted > m_appliedSpeed + 0.001f)
+        {
+            AnimationAPI::setSpeedMultiplier(m_animationComponent, wanted);
+            m_appliedSpeed = wanted;
         }
     }
 
@@ -325,6 +347,7 @@ void PlayerAnimationController::playRecovery(const std::string& stateName, float
     m_recoverySpeed = speed;
 
     AnimationAPI::setSpeedMultiplier(m_animationComponent, speed);
+    m_appliedSpeed = speed;
     if (AnimationAPI::playState(m_animationComponent, state.c_str(), blendTime))
     {
         m_currentState = AnimState::Recovery;
@@ -341,6 +364,10 @@ void PlayerAnimationController::beginChargeHold(const std::string& stateName, fl
     m_chargeHoldSpeed = speed;
     m_chargeHoldPausePct = pausePct;
     m_chargeHoldActive = true;
+    if (m_chargeHoldPaused && m_animationComponent != nullptr)
+    {
+        AnimationAPI::play(m_animationComponent);
+    }
     m_chargeHoldPaused = false;
     m_chargeVariant = ChargeVariant::Windup;
     m_chargeProgress = 0.0f;
@@ -486,6 +513,7 @@ bool PlayerAnimationController::playAnimState(AnimState state, float blendTime)
     }
 
     AnimationAPI::setSpeedMultiplier(m_animationComponent, speed);
+    m_appliedSpeed = speed;
 
     const bool played = AnimationAPI::playState(m_animationComponent, stateName.c_str(), blendTime);
 

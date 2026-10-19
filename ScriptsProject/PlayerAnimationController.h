@@ -122,6 +122,7 @@ private:
     enum class ChargeVariant { Windup, Moving, FullHold };
     ChargeVariant m_chargeVariant = ChargeVariant::Windup;
     float m_moveSpeedScale = 1.0f;
+    float m_appliedSpeed = 1.0f;
     bool m_chargeVariantDirty = false;
     std::string m_chargeHoldState = "";
     float m_chargeHoldBlend = 0.15f;
