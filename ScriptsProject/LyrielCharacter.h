@@ -8,6 +8,7 @@ class LyrielChargedAttack;
 class LyrielArrowVolley;
 class LyrielSound;
 class PlayerMovement;
+class PlayerAnimationController;
 class LyrielConfig;
 
 class LyrielCharacter : public CharacterBase
@@ -39,5 +40,6 @@ private:
     LyrielChargedAttack* m_charged   = nullptr;
     LyrielSound*       m_sound       = nullptr;
     PlayerMovement*    m_movement    = nullptr;
+    PlayerAnimationController* m_animation = nullptr;
     AssetReference<LyrielConfig> m_config;
 };
