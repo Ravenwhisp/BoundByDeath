@@ -47,6 +47,8 @@ public:
     void playRevive();
 
     float getMoveAnimSpeed() const { return m_moveAnimSpeed > 0.0f ? m_moveAnimSpeed : 1.0f; }
+    // Anything that slows the character down (drawing the bow) slows her legs by the same factor.
+    void setMoveSpeedScale(float scale) { m_moveSpeedScale = scale > 0.01f ? scale : 1.0f; }
 
     void beginChargeHold(const std::string& stateName, float blendTime, float speed, float pausePct);
     void setChargeProgress(float progress01);
@@ -115,6 +117,7 @@ private:
     bool m_chargeHoldActive = false;
     bool m_chargeHoldPaused = false;
     bool m_chargeHoldMoving = false;
+    float m_moveSpeedScale = 1.0f;
     bool m_chargeVariantDirty = false;
     std::string m_chargeHoldState = "";
     float m_chargeHoldBlend = 0.15f;

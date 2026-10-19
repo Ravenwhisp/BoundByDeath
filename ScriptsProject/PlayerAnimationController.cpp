@@ -354,7 +354,8 @@ void PlayerAnimationController::endChargeHold(float releaseFraction)
         m_chargeHoldMoving = false;
         if (!m_chargeHoldState.empty())
         {
-            AnimationAPI::playState(m_animationComponent, m_chargeHoldState.c_str(), 0.0f);
+            // Short blend so coming back from the walk to the drawn pose does not pop.
+            AnimationAPI::playState(m_animationComponent, m_chargeHoldState.c_str(), 0.10f);
         }
     }
 
@@ -449,11 +450,12 @@ bool PlayerAnimationController::playAnimState(AnimState state, float blendTime)
     }
     else if (state == AnimState::ChargeHold)
     {
-        speed = m_chargeHoldMoving ? 1.0f : m_chargeHoldSpeed;
+        // The walking variant is a locomotion clip, so it follows the run's rate and slowdown.
+        speed = m_chargeHoldMoving ? getMoveAnimSpeed() * m_moveSpeedScale : m_chargeHoldSpeed;
     }
     else if (state == AnimState::Move && m_moveAnimSpeed > 0.0f)
     {
-        speed = m_moveAnimSpeed;
+        speed = m_moveAnimSpeed * m_moveSpeedScale;
     }
 
     stateName = trimmed(stateName);

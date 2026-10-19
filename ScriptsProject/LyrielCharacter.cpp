@@ -101,7 +101,12 @@ void LyrielCharacter::Update()
     {
         // Footsteps keep pace with the run clip and stretch out while the bow slows her down.
         const float animSpeed = m_animation != nullptr ? m_animation->getMoveAnimSpeed() : 1.0f;
-        m_sound->setFootstepRate(animSpeed, m_movement->getMovementMultiplier());
+        const float moveScale = m_movement->getMovementMultiplier();
+        if (m_animation != nullptr)
+        {
+            m_animation->setMoveSpeedScale(moveScale);
+        }
+        m_sound->setFootstepRate(animSpeed, moveScale);
         m_sound->setFootstepsActive(m_movement->isMoving());
     }
 }
