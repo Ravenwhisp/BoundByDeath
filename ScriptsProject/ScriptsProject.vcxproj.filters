@@ -127,6 +127,9 @@
     <Filter Include="Interaction/Gameplay\Events\PopUp">
       <UniqueIdentifier>{f5133925-52af-42ef-9418-8a5323556ee6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Interaction/Gameplay\Events\Barks">
+      <UniqueIdentifier>{0074d9d0-8f9f-47ea-84a6-9ee90176182b}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Interaction/Gameplay\Events\PlayerObjectives">
       <UniqueIdentifier>{7a51092b-902d-4bdd-9711-bbb01813d5fd}</UniqueIdentifier>
     </Filter>
@@ -553,6 +556,15 @@
     </ClInclude>
     <ClInclude Include="GameplayEventTrigger.h">
       <Filter>Interaction/Gameplay\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="BarkManager.h">
+      <Filter>Interaction/Gameplay\Events\Barks</Filter>
+    </ClInclude>
+    <ClInclude Include="BarkEvent.h">
+      <Filter>Interaction/Gameplay\Events\Barks</Filter>
+    </ClInclude>
+    <ClInclude Include="BarkEventTrigger.h">
+      <Filter>Interaction/Gameplay\Events\Barks</Filter>
     </ClInclude>
     <ClInclude Include="GameplayTargetRegistry.h">
       <Filter>Player\Targeting</Filter>
@@ -1262,6 +1274,15 @@
     </ClCompile>
     <ClCompile Include="GameplayEventTrigger.cpp">
       <Filter>Interaction/Gameplay\Events</Filter>
+    </ClCompile>
+    <ClCompile Include="BarkManager.cpp">
+      <Filter>Interaction/Gameplay\Events\Barks</Filter>
+    </ClCompile>
+    <ClCompile Include="BarkEvent.cpp">
+      <Filter>Interaction/Gameplay\Events\Barks</Filter>
+    </ClCompile>
+    <ClCompile Include="BarkEventTrigger.cpp">
+      <Filter>Interaction/Gameplay\Events\Barks</Filter>
     </ClCompile>
     <ClCompile Include="GameplayTargetRegistry.cpp">
       <Filter>Player\Targeting</Filter>
