@@ -2,14 +2,31 @@
 #include "SeekerSigilProjectile.h"
 
 #include "AelorinAttackExecutor.h"
+#include "CameraShake.h"
+#include "AelorinVFX.h"
 
 SeekerSigilProjectile::SeekerSigilProjectile(GameObject* owner)
 	: ProjectileBase(owner)
 {
 }
 
-void SeekerSigilProjectile::launch(const Vector3& startPosition, const Vector3& targetPosition,	float fallSpeed, float lifetime, float impactRadius, float damage, AelorinAttackExecutor* attackExecutor)
+void SeekerSigilProjectile::launch(
+	const Vector3& startPosition,
+	const Vector3& targetPosition,
+	float fallSpeed,
+	float lifetime,
+	float impactRadius,
+	float damage,
+	AelorinAttackExecutor* attackExecutor,
+	CameraShake* cameraShake,
+	AelorinVFX* vfx,
+	bool heavyImpact
+)
 {
+	m_cameraShake = cameraShake;
+	m_vfx = vfx;
+	m_heavyImpact = heavyImpact;
+
 	m_targetPosition = targetPosition;
 
 	m_fallSpeed = fallSpeed;
@@ -72,6 +89,7 @@ void SeekerSigilProjectile::Update()
 	{
 		TransformAPI::setGlobalPosition(projectileTransform, m_targetPosition);
 
+		playImpactFeedback();
 		applyImpactDamage();
 		returnToPool();
 		return;
@@ -79,6 +97,7 @@ void SeekerSigilProjectile::Update()
 
 	if (distanceSquared <= 0.00001f)
 	{
+		playImpactFeedback();
 		applyImpactDamage();
 		returnToPool();
 		return;
@@ -100,8 +119,39 @@ void SeekerSigilProjectile::applyImpactDamage()
 	m_attackExecutor->applyDamageInRadius(m_targetPosition, m_impactRadius, m_damage, "Aelorin Seeker Sigils");
 }
 
+void SeekerSigilProjectile::playImpactFeedback()
+{
+	if (m_cameraShake)
+	{
+		if (m_heavyImpact)
+		{
+			m_cameraShake->shake(0.04f, 0.25f);
+		}
+		else
+		{
+			m_cameraShake->shake(0.02f, 0.25f);
+		}
+	}
+
+	if (m_vfx)
+	{
+		if (m_heavyImpact)
+		{
+			m_vfx->playSeekerSigilImpactDustBig(m_targetPosition);
+		}
+		else
+		{
+			m_vfx->playSeekerSigilImpactDust(m_targetPosition);
+		}
+	}
+}
+
 void SeekerSigilProjectile::resetProjectile()
 {
+	m_cameraShake = nullptr;
+	m_vfx = nullptr;
+	m_heavyImpact = false;
+
 	m_targetPosition = Vector3::Zero;
 
 	m_fallSpeed = 0.0f;

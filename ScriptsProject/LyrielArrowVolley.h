@@ -42,6 +42,11 @@ private:
     void applyVolleyDamage(const std::vector<Damageable*>& targets);
     void spawnVolleyArrows(const Vector3& origin, const Vector3& forward);
 
+    // One Arrow_Impact one-shot per enemy the cone caught, fired when the volley
+    // reaches it rather than all at once on release.
+    void scheduleArrowImpactSfx(const Vector3& origin, const std::vector<Damageable*>& targets);
+    void updateArrowImpactSfx(float deltaTime);
+
     void drawAimPreview(const Vector3& origin, const Vector3& forward) const;
 
 private:
@@ -54,4 +59,5 @@ private:
     Vector3 m_pendingOrigin = Vector3::Zero;
     Vector3 m_pendingForward = Vector3::Zero;
     std::vector<Damageable*> m_targetScratch;
+    std::vector<float> m_pendingImpactSfx;
 };

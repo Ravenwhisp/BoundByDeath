@@ -8,6 +8,6 @@ void GameplayEventAction::saveTriggeredEvent(GameplayEventTrigger* trigger)
 {
 	if(m_isPersistent && trigger->m_triggerOnlyOnce)
 	{ 
-		PersistingCheckpointState::Get().m_triggeredEventsPersistent.push_back(m_owner->GetID());
+		PersistingCheckpointState::Get().m_triggeredEvents.push_back(m_owner->GetID());
 	}
 }

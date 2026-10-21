@@ -9,6 +9,7 @@ class AnimationComponent;
 class ProjectilePool;
 class AelorinUI;
 class AelorinVFX;
+class CameraShake;
 
 class AelorinSeekerSigilsState : public StateMachineScript
 {
@@ -28,6 +29,7 @@ private:
 	ProjectilePool* m_largeProjectilePool = nullptr;
 	AelorinUI* m_aelorinUI = nullptr;
 	AelorinVFX* m_vfx = nullptr;
+	CameraShake* m_cameraShake = nullptr;
 
 	AelorinAbility m_activeAbility = AelorinAbility::None;
 
@@ -41,7 +43,7 @@ private:
 
 private:
 	void launchCurrentWave();
-	void launchProjectileAt(ProjectilePool* projectilePool, const Vector3& targetPosition, float impactRadius, float damage);
+	void launchProjectileAt(ProjectilePool* projectilePool, const Vector3& targetPosition, float impactRadius, float damage, bool heavyImpact);
 
 	void launchPhase2FinalProjectile();
 	void finishAbility();

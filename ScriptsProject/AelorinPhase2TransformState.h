@@ -5,6 +5,7 @@
 
 class AelorinBossController;
 class AnimationComponent;
+class DissolveComponent;
 
 class AelorinPhase2TransformState : public StateMachineScript
 {
@@ -22,6 +23,7 @@ private:
 	AnimationComponent* m_animation = nullptr;
 
 	Transform* m_modelTransform = nullptr;
+	DissolveComponent* m_dissolve = nullptr;
 
 	Vector3 m_startScale = Vector3::One;
 	Vector3 m_targetScale = Vector3::One;

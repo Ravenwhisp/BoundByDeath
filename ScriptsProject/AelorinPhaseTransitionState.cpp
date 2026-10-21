@@ -41,6 +41,15 @@ void AelorinPhaseTransitionState::OnStateEnter()
 		return;
 	}
 
+	if (m_controller->isPhase2())
+	{
+		AnimationAPI::setSpeedMultiplier(m_animation, 0.5f);
+	}
+	else
+	{
+		AnimationAPI::setSpeedMultiplier(m_animation, 1.0f);
+	}
+
 	// Con cinemática montada, ella lleva el reloj: mueve al boss al centro, lanza el hechizo y
 	// dispara el cambio de modelo tapado por el VFX. Sin cinemática, se espera a que acabe la
 	// animación como siempre.
@@ -87,6 +96,11 @@ void AelorinPhaseTransitionState::OnStateUpdate()
 
 void AelorinPhaseTransitionState::OnStateExit()
 {
+	if (m_animation)
+	{
+		AnimationAPI::setSpeedMultiplier(m_animation, 1.0f);
+	}
+
 	Debug::log("[AelorinPhaseTransitionState] EXIT");
 }
 

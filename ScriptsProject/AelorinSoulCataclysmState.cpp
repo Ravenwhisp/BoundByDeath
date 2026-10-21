@@ -64,6 +64,8 @@ void AelorinSoulCataclysmState::OnStateEnter()
 		Debug::warn("[AelorinSoulCataclysmState] CameraShake not found.");
 	}
 
+	AnimationAPI::setSpeedMultiplier(m_animation, 1.0f);
+
 	m_attackExecutor = m_controller->getAttackExecutor();
 
 	if (!m_attackExecutor)
@@ -107,7 +109,7 @@ void AelorinSoulCataclysmState::OnStateEnter()
 
 	if (m_lavaController)
 	{
-		m_lavaController->StartLavaRise(10.806f, config->m_soulCataclysmChannelDuration);
+		m_lavaController->StartLavaRise(3.036f, config->m_soulCataclysmChannelDuration);
 	}
 
 	if (m_cameraShake)
@@ -143,6 +145,11 @@ void AelorinSoulCataclysmState::OnStateUpdate()
 
 void AelorinSoulCataclysmState::OnStateExit()
 {
+	if (m_animation)
+	{
+		AnimationAPI::setSpeedMultiplier(m_animation, 1.0f);
+	}
+
 	m_aelorinUI = nullptr;
 	m_stateTimer = 0.0f;
 	m_cataclysmExecuted = false;
@@ -254,7 +261,7 @@ void AelorinSoulCataclysmState::finishCataclysm()
 
 	if(m_lavaController)
 	{
-		m_lavaController->StartLavaFall(7.0f, 5.0f);
+		m_lavaController->StartLavaFall(1.456f, 5.0f);
 	}
 
 	const bool sent = AnimationAPI::sendTrigger(m_animation, "ToExhaustion");
