@@ -86,7 +86,7 @@ void AelorinExhaustionState::OnStateUpdate()
 
 	if (m_phase == ExhaustionPhase::Transition)
 	{
-		constexpr float transitionDuration = 1.33f;
+		constexpr float transitionDuration = 1.73f;
 
 		if (m_stateTimer < transitionDuration)
 		{
@@ -101,6 +101,7 @@ void AelorinExhaustionState::OnStateExit()
 {
 	if (m_animation)
 	{
+		AnimationAPI::clearOverrideClip(m_animation, 0.0f);
 		AnimationAPI::setSpeedMultiplier(m_animation, 1.0f);
 	}
 
