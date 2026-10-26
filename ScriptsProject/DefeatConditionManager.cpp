@@ -3,6 +3,7 @@
 #include "PlayerState.h"
 #include "PlayerDownState.h"
 #include "CooperativeSound.h"
+#include "BarkManager.h"
 
 #include "PersistingCheckpointState.h"
 
@@ -31,6 +32,12 @@ void DefeatConditionManager::Start()
     if (!coopGOs.empty())
     {
         m_cooperativeSound = GameObjectAPI::findScript<CooperativeSound>(coopGOs.front());
+    }
+
+    const auto barkGOs = SceneAPI::findAllGameObjectsWithScript<BarkManager>();
+    if (!barkGOs.empty())
+    {
+        m_barkManager = GameObjectAPI::findScript<BarkManager>(barkGOs.front());
     }
 
     if (!m_player1State)
@@ -70,7 +77,12 @@ void DefeatConditionManager::Update()
     {
         m_defeatTimer += Time::getDeltaTime();
 
-        if (m_defeatTimer >= m_defeatDelay)
+        const bool hablando =
+            m_barkManager != nullptr
+            && m_barkManager->isPlaying()
+            && m_defeatTimer < m_maxWaitForVoice;
+
+        if (m_defeatTimer >= m_defeatDelay && !hablando)
         {
             triggerDefeat();
         }

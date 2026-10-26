@@ -32,6 +32,9 @@ public:
 
 	bool play();
 
+	// Para quien necesite esperar su turno en vez de encolarse detras de otro bloque.
+	bool isBarkLineBusy() const;
+
 private:
 	BarkManager* findBarkManager() const;
 
@@ -47,6 +50,8 @@ private:
 	) const;
 
 	bool passesTriggerChance();
+
+	std::string voiceBankName() const;
 
 	BarkLine buildBarkLine(
 		const std::string& speakerText,
@@ -70,6 +75,11 @@ private:
 			);
 
 	float m_defaultDuration = 3.0f;
+
+	// Codigo del bloque al que pertenece esta zona: L1, L2, L3 o SIT. De el y del
+	// nombre del GameObject sale el nombre del evento de voz, que es la convencion
+	// con la que se generaron los audios.
+	std::string m_voiceLevel;
 
 	float m_cooldown = 0.0f;
 	float m_triggerChance = 1.0f;

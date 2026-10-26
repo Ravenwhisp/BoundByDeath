@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "BarkEvent.h"
 
+#include <cstdio>
 #include <random>
 #include <string>
 #include <vector>
@@ -59,6 +60,11 @@ IMPLEMENT_SCRIPT_FIELDS(
 		barkPriorityCount
 	),
 
+	SERIALIZED_STRING(
+		m_voiceLevel,
+		"VO Level"
+	),
+
 	SERIALIZED_FLOAT(
 		m_defaultDuration,
 		"Default Duration",
@@ -111,6 +117,15 @@ void BarkEvent::executeEvent(
 )
 {
 	play();
+}
+
+bool BarkEvent::isBarkLineBusy() const
+{
+	const BarkManager* barkManager =
+		findBarkManager();
+
+	return barkManager != nullptr
+		&& barkManager->isBusy();
 }
 
 bool BarkEvent::play()
@@ -591,6 +606,18 @@ BarkEvent::buildValidRandomSequences() const
 	return sequences;
 }
 
+std::string BarkEvent::voiceBankName() const
+{
+	// Los situacionales viven en el bank comun, que siempre esta cargado; cada nivel
+	// lleva los suyos en el suyo.
+	// Con extension, igual que DeathSound y los demas scripts de audio.
+	if (m_voiceLevel == "L1") return "Level1.bnk";
+	if (m_voiceLevel == "L2") return "Level2.bnk";
+	if (m_voiceLevel == "L3") return "LevelBoss.bnk";
+
+	return "BoundByDeath.bnk";
+}
+
 BarkLine BarkEvent::buildBarkLine(
 	const std::string& speakerText,
 	const std::string& durationText,
@@ -657,6 +684,41 @@ BarkLine BarkEvent::buildBarkLine(
 
 	bark.text = text;
 	bark.duration = duration;
+
+	if (!m_voiceLevel.empty())
+	{
+		// La zona es el nombre del GameObject sin el sufijo Bark o Barks, que es la
+		// convencion con la que se generaron y nombraron los 235 audios.
+		std::string zone =
+			GameObjectAPI::getName(getOwner());
+
+		const size_t barks = zone.rfind("Barks");
+
+		if (barks != std::string::npos
+			&& barks + 5 == zone.size())
+		{
+			zone.erase(barks);
+		}
+		else
+		{
+			const size_t bark = zone.rfind("Bark");
+
+			if (bark != std::string::npos
+				&& bark + 4 == zone.size())
+			{
+				zone.erase(bark);
+			}
+		}
+
+		char line[8];
+		std::snprintf(line, sizeof(line), "%02d", sourceIndex + 1);
+
+		bark.voiceEvent =
+			"Play_VO_" + m_voiceLevel + "_" + zone
+			+ "_" + line + "_" + speakerText;
+
+		bark.voiceBank = voiceBankName();
+	}
 
 	bark.priority =
 		static_cast<BarkPriority>(
