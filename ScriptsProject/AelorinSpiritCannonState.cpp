@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "AelorinSpiritCannonState.h"
 
+#include "AelorinSound.h"
+
 #include "AelorinAttackConfig.h"
 #include "AelorinAttackExecutor.h"
 #include "AelorinUI.h"
@@ -9,6 +11,24 @@
 #include <cmath>
 #include <cstdlib>
 
+namespace
+{
+    // Los estados cuelgan de los hijos Phase1 y Phase2; el script de sonido vive en el
+    // GameObject padre, igual que el controller.
+    AelorinSound* aelorinSound(GameObject* stateOwner)
+    {
+        Transform* parentTransform = TransformAPI::getParent(stateOwner->GetTransform());
+
+        if (!parentTransform)
+        {
+            return nullptr;
+        }
+
+        return GameObjectAPI::findScript<AelorinSound>(
+            ComponentAPI::getOwner(parentTransform));
+    }
+}
+
 AelorinSpiritCannonState::AelorinSpiritCannonState(GameObject* owner)
 	: StateMachineScript(owner)
 {
@@ -16,6 +36,11 @@ AelorinSpiritCannonState::AelorinSpiritCannonState(GameObject* owner)
 
 void AelorinSpiritCannonState::OnStateEnter()
 {
+	if (AelorinSound* sound = aelorinSound(getOwner()))
+	{
+		sound->playSpiritCannonCharge();
+	}
+
 	m_aelorinTransform = TransformAPI::getParent(getOwner()->GetTransform());
 	if (!m_aelorinTransform)
 	{

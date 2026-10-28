@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "ThingFleeState.h"
 
+#include "RatSound.h"
+
 #include "MovingThingController.h"
 
 ThingFleeState::ThingFleeState(GameObject* owner)
@@ -10,6 +12,12 @@ ThingFleeState::ThingFleeState(GameObject* owner)
 
 void ThingFleeState::OnStateEnter()
 {
+	if (RatSound* sound = GameObjectAPI::findScript<RatSound>(getOwner()))
+	{
+		sound->playSqueak();
+		sound->playScurry();
+	}
+
     m_controller = GameObjectAPI::findScript<MovingThingController>(getOwner());
     m_animation = AnimationAPI::getAnimationComponent(getOwner());
 
@@ -63,6 +71,11 @@ void ThingFleeState::OnStateExit()
 {
 	GameObject* owner = getOwner();
 	Transform* ownerTransform = GameObjectAPI::getTransform(owner);
+
+    if (RatSound* sound = GameObjectAPI::findScript<RatSound>(owner))
+    {
+        sound->stop();
+    }
 
     GameObjectAPI::instantiatePrefab(m_controller->getDisappearParticlesId(), TransformAPI::getGlobalPosition(ownerTransform), Vector3(0.f, 0.f, 0.f));
 	GameObjectAPI::removeGameObject(owner); // Will need to be extended to add particles and sound effects for the death of the thing.

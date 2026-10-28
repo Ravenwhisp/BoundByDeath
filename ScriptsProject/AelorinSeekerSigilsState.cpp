@@ -1,11 +1,31 @@
 #include "pch.h"
 #include "AelorinSeekerSigilsState.h"
+
+#include "AelorinSound.h"
 #include "AelorinAttackConfig.h"
 #include "ProjectilePool.h"
 #include "SeekerSigilProjectile.h"
 #include "AelorinUI.h"
 #include "AelorinVFX.h"
 #include "CameraShake.h"
+
+namespace
+{
+    // Los estados cuelgan de los hijos Phase1 y Phase2; el script de sonido vive en el
+    // GameObject padre, igual que el controller.
+    AelorinSound* aelorinSound(GameObject* stateOwner)
+    {
+        Transform* parentTransform = TransformAPI::getParent(stateOwner->GetTransform());
+
+        if (!parentTransform)
+        {
+            return nullptr;
+        }
+
+        return GameObjectAPI::findScript<AelorinSound>(
+            ComponentAPI::getOwner(parentTransform));
+    }
+}
 
 AelorinSeekerSigilsState::AelorinSeekerSigilsState(GameObject* owner)
 	: StateMachineScript(owner)
@@ -14,6 +34,11 @@ AelorinSeekerSigilsState::AelorinSeekerSigilsState(GameObject* owner)
 
 void AelorinSeekerSigilsState::OnStateEnter()
 {
+	if (AelorinSound* sound = aelorinSound(getOwner()))
+	{
+		sound->playSeekerSigilsCast();
+	}
+
 	Transform* parentTransform = TransformAPI::getParent(getOwner()->GetTransform());
 	if (!parentTransform)
 	{

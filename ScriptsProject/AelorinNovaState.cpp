@@ -1,11 +1,31 @@
 #include "pch.h"
 #include "AelorinNovaState.h"
+
+#include "AelorinSound.h"
 #include "AelorinAttackExecutor.h"
 #include "AelorinUI.h"
 #include "AelorinVFX.h"
 #include "CameraShake.h"
 
 #include "AelorinAttackConfig.h"
+
+namespace
+{
+    // Los estados cuelgan de los hijos Phase1 y Phase2; el script de sonido vive en el
+    // GameObject padre, igual que el controller.
+    AelorinSound* aelorinSound(GameObject* stateOwner)
+    {
+        Transform* parentTransform = TransformAPI::getParent(stateOwner->GetTransform());
+
+        if (!parentTransform)
+        {
+            return nullptr;
+        }
+
+        return GameObjectAPI::findScript<AelorinSound>(
+            ComponentAPI::getOwner(parentTransform));
+    }
+}
 
 AelorinNovaState::AelorinNovaState(GameObject* owner)
 	: StateMachineScript(owner)
@@ -14,6 +34,11 @@ AelorinNovaState::AelorinNovaState(GameObject* owner)
 
 void AelorinNovaState::OnStateEnter()
 {
+	if (AelorinSound* sound = aelorinSound(getOwner()))
+	{
+		sound->playNovaCharge();
+	}
+
 	Transform* parentTransform = TransformAPI::getParent(getOwner()->GetTransform());
 	if (!parentTransform)
 	{
@@ -214,6 +239,11 @@ void AelorinNovaState::OnStateExit()
 
 void AelorinNovaState::executeFirstNovaWave()
 {
+	if (AelorinSound* sound = aelorinSound(getOwner()))
+	{
+		sound->playNovaBlast();
+	}
+
 	if (!m_controller)
 	{
 		return;

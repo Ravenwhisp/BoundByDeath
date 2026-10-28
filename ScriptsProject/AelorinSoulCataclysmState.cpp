@@ -1,12 +1,32 @@
 #include "pch.h"
 #include "AelorinSoulCataclysmState.h"
 
+#include "AelorinSound.h"
+
 #include "AelorinBossController.h"
 #include "AelorinAttackConfig.h"
 #include "AelorinAttackExecutor.h"
 #include "AelorinUI.h"
 #include "AelorinLavaController.h"
 #include "CameraShake.h"
+
+namespace
+{
+    // Los estados cuelgan de los hijos Phase1 y Phase2; el script de sonido vive en el
+    // GameObject padre, igual que el controller.
+    AelorinSound* aelorinSound(GameObject* stateOwner)
+    {
+        Transform* parentTransform = TransformAPI::getParent(stateOwner->GetTransform());
+
+        if (!parentTransform)
+        {
+            return nullptr;
+        }
+
+        return GameObjectAPI::findScript<AelorinSound>(
+            ComponentAPI::getOwner(parentTransform));
+    }
+}
 
 AelorinSoulCataclysmState::AelorinSoulCataclysmState(GameObject* owner)
 	: StateMachineScript(owner)
@@ -15,6 +35,11 @@ AelorinSoulCataclysmState::AelorinSoulCataclysmState(GameObject* owner)
 
 void AelorinSoulCataclysmState::OnStateEnter()
 {
+	if (AelorinSound* sound = aelorinSound(getOwner()))
+	{
+		sound->startCataclysmChannel();
+	}
+
 	Transform* parentTransform = TransformAPI::getParent(getOwner()->GetTransform());
 	if (!parentTransform)
 	{
@@ -145,6 +170,11 @@ void AelorinSoulCataclysmState::OnStateUpdate()
 
 void AelorinSoulCataclysmState::OnStateExit()
 {
+	if (AelorinSound* sound = aelorinSound(getOwner()))
+	{
+		sound->stopCataclysmChannel();
+	}
+
 	if (m_animation)
 	{
 		AnimationAPI::setSpeedMultiplier(m_animation, 1.0f);
@@ -160,6 +190,11 @@ void AelorinSoulCataclysmState::OnStateExit()
 
 void AelorinSoulCataclysmState::executeCataclysm()
 {
+	if (AelorinSound* sound = aelorinSound(getOwner()))
+	{
+		sound->playCataclysmDetonate();
+	}
+
 	if (!m_controller)
 	{
 		return;

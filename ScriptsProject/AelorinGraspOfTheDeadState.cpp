@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "AelorinGraspOfTheDeadState.h"
 
+#include "AelorinSound.h"
+
 #include "AelorinAttackConfig.h"
 #include "AelorinAttackExecutor.h"
 #include "AelorinUI.h"
@@ -10,6 +12,24 @@
 
 #include <algorithm>
 
+namespace
+{
+    // Los estados cuelgan de los hijos Phase1 y Phase2; el script de sonido vive en el
+    // GameObject padre, igual que el controller.
+    AelorinSound* aelorinSound(GameObject* stateOwner)
+    {
+        Transform* parentTransform = TransformAPI::getParent(stateOwner->GetTransform());
+
+        if (!parentTransform)
+        {
+            return nullptr;
+        }
+
+        return GameObjectAPI::findScript<AelorinSound>(
+            ComponentAPI::getOwner(parentTransform));
+    }
+}
+
 AelorinGraspOfTheDeadState::AelorinGraspOfTheDeadState(GameObject* owner)
 	: StateMachineScript(owner)
 {
@@ -17,6 +37,11 @@ AelorinGraspOfTheDeadState::AelorinGraspOfTheDeadState(GameObject* owner)
 
 void AelorinGraspOfTheDeadState::OnStateEnter()
 {
+	if (AelorinSound* sound = aelorinSound(getOwner()))
+	{
+		sound->playGraspCast();
+	}
+
 	Transform* parentTransform = TransformAPI::getParent(getOwner()->GetTransform());
 	if (!parentTransform)
 	{
@@ -210,6 +235,11 @@ void AelorinGraspOfTheDeadState::OnStateUpdate()
 
 void AelorinGraspOfTheDeadState::OnStateExit()
 {
+	if (AelorinSound* sound = aelorinSound(getOwner()))
+	{
+		sound->stopGraspLoop();
+	}
+
 	if (m_aelorinUI)
 	{
 		m_aelorinUI->cancelGraspOfTheDead();

@@ -1,9 +1,29 @@
 #include "pch.h"
 #include "AelorinTeleportState.h"
 
+#include "AelorinSound.h"
+
 #include "AelorinAttackConfig.h"
 #include "AelorinAttackExecutor.h"
 #include "AelorinVFX.h"
+
+namespace
+{
+    // Los estados cuelgan de los hijos Phase1 y Phase2; el script de sonido vive en el
+    // GameObject padre, igual que el controller.
+    AelorinSound* aelorinSound(GameObject* stateOwner)
+    {
+        Transform* parentTransform = TransformAPI::getParent(stateOwner->GetTransform());
+
+        if (!parentTransform)
+        {
+            return nullptr;
+        }
+
+        return GameObjectAPI::findScript<AelorinSound>(
+            ComponentAPI::getOwner(parentTransform));
+    }
+}
 
 AelorinTeleportState::AelorinTeleportState(GameObject* owner)
 	: StateMachineScript(owner)
@@ -12,6 +32,11 @@ AelorinTeleportState::AelorinTeleportState(GameObject* owner)
 
 void AelorinTeleportState::OnStateEnter()
 {
+	if (AelorinSound* sound = aelorinSound(getOwner()))
+	{
+		sound->playTeleportOut();
+	}
+
 	m_aelorinTransform = TransformAPI::getParent(getOwner()->GetTransform());
 	if (!m_aelorinTransform)
 	{
@@ -205,6 +230,11 @@ void AelorinTeleportState::changePhase(TeleportPhase phase)
 
 void AelorinTeleportState::executeTeleport()
 {
+	if (AelorinSound* sound = aelorinSound(getOwner()))
+	{
+		sound->playTeleportIn();
+	}
+
 	if (!m_controller || !m_aelorinTransform)
 	{
 		return;
