@@ -132,6 +132,11 @@ void DeathChargedAttack::cancelAbility()
         }
     }
 
+    if (m_particles != nullptr) 
+    {
+        m_particles->SetChargeInactive();
+    }
+
     AbilityBase::cancelAbility();
 }
 
