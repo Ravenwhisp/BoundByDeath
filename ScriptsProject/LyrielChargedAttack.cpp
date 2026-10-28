@@ -309,20 +309,20 @@ void LyrielChargedAttack::releaseChargeAndShoot()
         m_lyrielUI->hideChargedAttackUI();
     }
 
-    if (!canShoot())
+    if (!canShoot() || findArrowSpawnTransform() == nullptr)
     {
+        // Downed or no spawn point: tear the hold down too, or the controller stays in
+        // ChargeHold for good and outranks every other animation after the revive.
+        if (PlayerAnimationController* anim = m_character != nullptr ? m_character->getAnimationController() : nullptr)
+        {
+            anim->abortChargeHold();
+        }
         setAbilityLocked(false);
         m_chargeTimer = 0.0f;
         return;
     }
 
     Transform* spawnTransform = findArrowSpawnTransform();
-    if (spawnTransform == nullptr)
-    {
-        setAbilityLocked(false);
-        m_chargeTimer = 0.0f;
-        return;
-    }
 
     const Vector3 origin = TransformAPI::getGlobalPosition(spawnTransform);
 

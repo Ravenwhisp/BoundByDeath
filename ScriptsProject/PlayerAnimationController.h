@@ -46,6 +46,10 @@ public:
     void playRecovery(const std::string& stateName, float blendTime, float speed);
     void playRevive();
 
+    float getMoveAnimSpeed() const { return m_moveAnimSpeed > 0.0f ? m_moveAnimSpeed : 1.0f; }
+    // Anything that slows the character down (drawing the bow) slows her legs by the same factor.
+    void setMoveSpeedScale(float scale) { m_moveSpeedScale = scale > 0.01f ? scale : 1.0f; }
+
     void beginChargeHold(const std::string& stateName, float blendTime, float speed, float pausePct);
     void setChargeProgress(float progress01);
     void endChargeHold(float releaseFraction = 1.0f);
@@ -60,6 +64,8 @@ public:
     std::string m_idleStateName = "";
     std::string m_idleLongStateName = "";
     std::string m_reviveStateName = "";
+    std::string m_chargeHoldMoveStateName = "";
+    std::string m_chargeHoldFullStateName = "";
 	std::string m_moveStateName = "";
 	std::string m_dashStateName = "";
 	std::string m_attackStateName = "";
@@ -111,6 +117,13 @@ private:
 
     bool m_chargeHoldActive = false;
     bool m_chargeHoldPaused = false;
+    // Which clip the charge is showing: the scrubbed windup, the walking variant, or the
+    // looping fully drawn hold once the charge is topped up.
+    enum class ChargeVariant { Windup, Moving, FullHold };
+    ChargeVariant m_chargeVariant = ChargeVariant::Windup;
+    float m_moveSpeedScale = 1.0f;
+    float m_appliedSpeed = 1.0f;
+    bool m_chargeVariantDirty = false;
     std::string m_chargeHoldState = "";
     float m_chargeHoldBlend = 0.15f;
     float m_chargeHoldSpeed = 1.0f;
