@@ -446,6 +446,50 @@ void BarkEventTrigger::setupBoundTrigger()
 			boundObject
 		);
 
+	if (
+		static_cast<BarkTriggerActivationType>(
+			m_activationType
+			) !=
+		BarkTriggerActivationType::
+		RepeatedBoundSeparation
+		)
+	{
+		return;
+	}
+
+	/*
+	 * Localiza al disparador de la primera separacion para no adelantarsele. Si su linea
+	 * se descarto por estar sonando otra cosa, le toca a ella en la siguiente separacion,
+	 * no a las de separacion repetida.
+	 */
+	for (
+		GameObject* candidate :
+		SceneAPI::findAllGameObjectsWithScript<BarkEventTrigger>()
+		)
+	{
+		BarkEventTrigger* other =
+			GameObjectAPI::findScript<BarkEventTrigger>(
+				candidate
+			);
+
+		if (other == nullptr || other == this)
+		{
+			continue;
+		}
+
+		if (
+			static_cast<BarkTriggerActivationType>(
+				other->m_activationType
+				) ==
+			BarkTriggerActivationType::
+			FirstBoundSeparation
+			)
+		{
+			m_firstSeparationTrigger = other;
+			break;
+		}
+	}
+
 	if (m_bound == nullptr)
 	{
 		Debug::warn(
@@ -864,10 +908,15 @@ void BarkEventTrigger::updateBound()
 		}
 		else
 		{
+			const bool firstLinePending =
+				m_firstSeparationTrigger != nullptr
+				&& !m_firstSeparationTrigger->hasDeliveredFirstSeparationLine();
+
 			if (
 				activationType ==
 				BarkTriggerActivationType::
 				RepeatedBoundSeparation
+				&& !firstLinePending
 				)
 			{
 				triggerBark();

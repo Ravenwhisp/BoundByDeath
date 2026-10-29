@@ -42,6 +42,14 @@ public:
 
 	FieldList getExposedFields() const override;
 
+	// Solo significa algo en un disparador de primera separacion: dice si su linea, la que
+	// ensena la mecanica, ha llegado a sonar. El de separacion repetida lo consulta para no
+	// robarle el turno.
+	bool hasDeliveredFirstSeparationLine() const
+	{
+		return m_hasSeenFirstSeparation;
+	}
+
 private:
 	void setupZoneTrigger();
 	void setupDamageTrigger();
@@ -129,6 +137,9 @@ private:
 	bool m_boundStateInitialized = false;
 	bool m_wasSeparated = false;
 	bool m_hasSeenFirstSeparation = false;
+
+	// El disparador de primera separacion de la escena, si lo hay. Se busca solo.
+	BarkEventTrigger* m_firstSeparationTrigger = nullptr;
 
 	// Combat condition.
 	CombatAreaEvent* m_combatArea = nullptr;
