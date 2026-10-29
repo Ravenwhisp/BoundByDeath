@@ -34,6 +34,7 @@ void AelorinExhaustionState::OnStateEnter()
 	if (AelorinSound* sound = aelorinSound(getOwner()))
 	{
 		sound->playExhaustionEnter();
+		sound->startExhaustionLoop();
 	}
 
 	Transform* parentTransform = TransformAPI::getParent(getOwner()->GetTransform());

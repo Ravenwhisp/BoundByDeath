@@ -230,11 +230,6 @@ void AelorinTeleportState::changePhase(TeleportPhase phase)
 
 void AelorinTeleportState::executeTeleport()
 {
-	if (AelorinSound* sound = aelorinSound(getOwner()))
-	{
-		sound->playTeleportIn();
-	}
-
 	if (!m_controller || !m_aelorinTransform)
 	{
 		return;
@@ -267,6 +262,11 @@ void AelorinTeleportState::executeTeleport()
 	if (m_controller->isPhase2() && m_attackExecutor)
 	{
 		m_attackExecutor->applyDamageInRadius(departurePosition, config->m_teleportPhase2BurstRadius, config->m_teleportPhase2BurstDamage, "Aelorin Teleport - Departure Burst");
+
+		if (AelorinSound* sound = aelorinSound(getOwner()))
+		{
+			sound->playTeleportBurst();
+		}
 	}
 
 	if (m_vfx)

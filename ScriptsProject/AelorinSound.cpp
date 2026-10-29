@@ -1,11 +1,14 @@
 #include "pch.h"
 #include "AelorinSound.h"
 
+#include "AelorinBossController.h"
+
 namespace
 {
     const char* const k_banks[] = { "LevelBoss.bnk" };
 
     constexpr const char* k_event_hurt = "Play_Aelorin_Hurt";
+    constexpr const char* k_event_hurt_phase2 = "Play_Aelorin_Hurt_2";
 
     constexpr const char* k_event_idle_loop = "Play_Aelorin_Idle_Loop";
     constexpr const char* k_event_idle_loop_stop = "Stop_Aelorin_Idle_Loop";
@@ -71,6 +74,14 @@ void AelorinSound::getCandidateBanks(const char* const*& outBanks, int& outCount
 
 const char* AelorinSound::evHurt() const
 {
+    const AelorinBossController* controller =
+        GameObjectAPI::findScript<AelorinBossController>(getOwner());
+
+    if (controller != nullptr && controller->isPhase2())
+    {
+        return k_event_hurt_phase2;
+    }
+
     return k_event_hurt;
 }
 

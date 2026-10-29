@@ -40,6 +40,7 @@ void AelorinGraspOfTheDeadState::OnStateEnter()
 	if (AelorinSound* sound = aelorinSound(getOwner()))
 	{
 		sound->playGraspCast();
+		sound->startGraspLoop();
 	}
 
 	Transform* parentTransform = TransformAPI::getParent(getOwner()->GetTransform());
@@ -339,6 +340,11 @@ void AelorinGraspOfTheDeadState::chainIntoNova()
 	m_controller->prepareForcedNovaAt(center);
 
 	m_completed = true;
+
+	if (AelorinSound* sound = aelorinSound(getOwner()))
+	{
+		sound->playGraspRelease();
+	}
 
 	const bool sent = AnimationAPI::sendTrigger(m_animation, "ToNova");
 	if (!sent)

@@ -309,6 +309,11 @@ void AelorinRisenSpiresState::executePattern(Transform* patternRoot, const char*
 
 		}
 
+		if (AelorinSound* sound = aelorinSound(getOwner()))
+		{
+			sound->playRisenSpiresErupt(m_controller->isPhase2());
+		}
+
 		if (m_cameraShake)
 		{
 			m_cameraShake->shake(0.04f, 0.25f);

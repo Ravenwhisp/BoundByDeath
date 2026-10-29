@@ -372,6 +372,11 @@ void AelorinSpiritCannonState::fireShot()
 	const Vector3 origin = TransformAPI::getGlobalPosition(m_aelorinTransform);
 	const bool phase2 = m_controller->isPhase2();
 
+	if (AelorinSound* sound = aelorinSound(getOwner()))
+	{
+		sound->playSpiritCannonFire(phase2);
+	}
+
 	const float fireWidth = config->m_spiritCannonFireWidth - 0.5f;
 	const float mainFireWidth = phase2 ? fireWidth * 1.20f : fireWidth;
 	const float sideFireWidth = fireWidth * 0.70f;

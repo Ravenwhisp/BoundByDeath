@@ -304,6 +304,11 @@ void AelorinSeekerSigilsState::launchProjectileAt(ProjectilePool* projectilePool
 
 	// Gameplay
 	projectile->launch(spawnPosition, impactPosition, config->m_seekerSigilsFallSpeed, config->m_seekerSigilsProjectileLifetime, impactRadius, damage, executor, m_cameraShake, m_vfx, heavyImpact);
+
+	if (AelorinSound* sound = aelorinSound(getOwner()))
+	{
+		sound->playSeekerSigilsFall();
+	}
 }
 
 void AelorinSeekerSigilsState::launchPhase2FinalProjectile()
