@@ -842,15 +842,24 @@ void BarkEventTrigger::updateBound()
 
 		if (!m_hasSeenFirstSeparation)
 		{
-			m_hasSeenFirstSeparation = true;
-
 			if (
 				activationType ==
 				BarkTriggerActivationType::
 				FirstBoundSeparation
 				)
 			{
-				triggerBark();
+				/*
+				 * La linea que ensena la mecanica no se da por vista si no ha llegado a
+				 * sonar. Si se descarta, esta en cooldown o no hay nada valido, se vuelve
+				 * a intentar en la siguiente separacion, en vez de pasar directamente a
+				 * las de separacion repetida y perderla para siempre.
+				 */
+				m_hasSeenFirstSeparation = triggerBark();
+			}
+			else
+			{
+				// Este disparador solo observa: no tiene linea que entregar.
+				m_hasSeenFirstSeparation = true;
 			}
 		}
 		else
