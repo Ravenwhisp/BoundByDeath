@@ -26,9 +26,10 @@ namespace
     // release plays no tense at all (just the release one-shot).
     constexpr float k_tenseLoopMinHold = 0.20f;
 
-    // One footfall per half of the run cycle: lyriel.run_loop is 1.125s long and
-    // plays at "Move anim speed" 2.2, so the two contacts land 0.256s apart.
-    constexpr float k_footstepInterval = 0.256f;
+    // lyriel.run_loop is one full cycle, so two footfalls. The cadence is derived from
+    // the speed the clip is actually played at and from how slowed down she is, which is
+    // why it is pushed in every frame instead of being a fixed number.
+    constexpr float k_runCycleSeconds = 1.125f;
 
     // Minimum time between consecutive hurt one-shots. Guarantees the hurt SFX can
     // never machine-gun under continuous damage, regardless of how often it's called.
@@ -71,7 +72,7 @@ void LyrielSound::Update()
         {
             const uint32_t playingID = postEvent(k_footsteps);
             Debug::log("[LyrielSound] Footstep posted (playingID=%u)", playingID);
-            m_footstepTimer = k_footstepInterval;
+            m_footstepTimer = m_footstepInterval;
         }
     }
 
@@ -137,6 +138,13 @@ void LyrielSound::stopChargedTenseLoop()
     postEvent(k_chargedTenseStop);
 }
 
+void LyrielSound::setFootstepRate(float animSpeed, float movementMultiplier)
+{
+    const float speed = animSpeed > 0.01f ? animSpeed : 1.0f;
+    const float slow  = movementMultiplier > 0.01f ? movementMultiplier : 1.0f;
+    m_footstepInterval = (k_runCycleSeconds / (2.0f * speed)) / slow;
+}
+
 void LyrielSound::setFootstepsActive(bool active)
 {
     if (m_footstepsActive == active)
@@ -145,7 +153,7 @@ void LyrielSound::setFootstepsActive(bool active)
     }
     m_footstepsActive = active;
     // Reset timer so the first step after starting to move plays almost immediately.
-    m_footstepTimer = active ? 0.0f : 0.0f;
+    m_footstepTimer = 0.0f;
 }
 
 void LyrielSound::stopAllLoops()
