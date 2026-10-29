@@ -62,11 +62,13 @@ public:
 	Vector3 m_aelorinColor{ 0.000f, 0.550f, 1.000f };
 	Vector3 m_unnamedColor{ 1.000f, 1.000f, 1.000f };
 
+	// El texto se lee sobre la escena en movimiento, asi que el contorno hace casi todo el
+	// trabajo. El componente venia autorizado con 1.0 y el script lo estaba bajando a 0.4.
 	bool m_outlineEnabled = true;
-	float m_outlineSize = 0.4f;
+	float m_outlineSize = 1.0f;
 
 	bool m_shadowEnabled = true;
-	float m_shadowOffset = 2.0f;
+	float m_shadowOffset = 3.0f;
 
 	// Respiro entre linea y linea. Sin el, las frases salen pegadas y se solapa el
 	// final de una voz con el principio de la siguiente.

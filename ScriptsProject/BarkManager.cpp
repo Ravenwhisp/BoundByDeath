@@ -373,7 +373,7 @@ void BarkManager::applyTextStyle()
 		0.0f,
 		0.0f,
 		0.0f,
-		0.6f
+		0.9f
 	);
 }
 
