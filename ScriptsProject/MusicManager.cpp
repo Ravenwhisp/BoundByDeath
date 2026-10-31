@@ -100,3 +100,4 @@ void MusicManager::SetState_Level1Boss()     { SetMusicState("Level1_Boss"); }
 void MusicManager::SetState_Level2Upper()    { SetMusicState("Level2_Upper"); }
 void MusicManager::SetState_Level2Elevator() { SetMusicState("Level2_Elevator"); }
 void MusicManager::SetState_FinalBoss()      { SetMusicState("FinalBoss"); }
+void MusicManager::SetState_FinalBossPhase2(){ SetMusicState("FinalBoss_Phase2"); }

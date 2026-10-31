@@ -16,7 +16,8 @@ static const char* kMusicStateNames[] =
     "Level1_Boss",     // 4 - Arthur
     "Level2_Upper",    // 5
     "Level2_Elevator", // 6
-    "FinalBoss"        // 7 - Nivel 3 (escena aún no existe)
+    "FinalBoss",       // 7 - Aelorin, fase 1
+    "FinalBoss_Phase2" // 8 - Aelorin, fase 2
 };
 
-constexpr int kMusicStateCount = 8;
+constexpr int kMusicStateCount = 9;

@@ -1,0 +1,154 @@
+{
+    "Version": 2,
+    "sourcePath": "Assets\\Prefabs\\Events\\Barks\\BarkManager.prefab",
+    "Name": "BarkManager",
+    "Active": true,
+    "Static": false,
+    "Layer": "DEFAULT",
+    "Tag": "DEFAULT",
+    "Transform": {
+        "Position": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "Rotation": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ],
+        "Scale": [
+            1.0,
+            1.0,
+            1.0
+        ]
+    },
+    "Components": [
+        {
+            "UID": 8968195452715976672,
+            "ComponentType": "CANVAS",
+            "Active": true,
+            "RenderMode": "SCREEN_SPACE",
+            "ZTest": false
+        }
+    ],
+    "Children": [
+        {
+            "Name": "BarkManagerTextModel",
+            "Active": true,
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0,
+                    1.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [
+                {
+                    "UID": 3086439828472670110,
+                    "ComponentType": "TRANSFORM2D",
+                    "Active": true,
+                    "Position": [
+                        0.0,
+                        -80.0,
+                        0.0
+                    ],
+                    "Scale": [
+                        1.0,
+                        1.0,
+                        0.0
+                    ],
+                    "Pivot": [
+                        0.5,
+                        1.0,
+                        0.0
+                    ],
+                    "AnchorMin": [
+                        0.5,
+                        1.0,
+                        0.0
+                    ],
+                    "AnchorMax": [
+                        0.5,
+                        1.0,
+                        0.0
+                    ],
+                    "BaseSize": [
+                        100.0,
+                        100.0,
+                        0.0
+                    ],
+                    "StretchMode": "NONE",
+                    "SizingMode": "KEEP_ASPECT_RATIO",
+                    "AspectRatio": 1.0,
+                    "Alpha": 1.0
+                },
+                {
+                    "UID": 5795871529554391709,
+                    "ComponentType": "UITEXT",
+                    "Active": true,
+                    "Text": "",
+                    "Scale": 1.0,
+                    "Color": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "HorizontalAlignment": "Center",
+                    "VerticalAlignment": "Top",
+                    "Font": "arial",
+                    "EffectFlags": 0,
+                    "OutlineColor": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "ShadowColor": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.6000000238418579
+                    ],
+                    "GlowColor": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        0.5
+                    ],
+                    "OutlineSize": 1.0,
+                    "ShadowOffsetX": 2.0,
+                    "ShadowOffsetY": 2.0,
+                    "GlowSize": 3.0,
+                    "WaveAmplitude": 2.0,
+                    "WaveFrequency": 0.05000000074505806,
+                    "WaveSpeed": 4.0
+                },
+                {
+                    "UID": 10369799477253180788,
+                    "ComponentType": "SCRIPT",
+                    "Active": true,
+                    "ScriptName": "BarkManager",
+                    "ScriptFields": {}
+                }
+            ],
+            "Children": []
+        }
+    ]
+}
