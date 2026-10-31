@@ -1,11 +1,31 @@
 #include "pch.h"
 #include "AelorinSummonState.h"
 
+#include "AelorinSound.h"
+
 #include "AelorinAttackConfig.h"
 #include "AelorinSummonSlot.h"
 #include "AelorinVFX.h"
 
 #include <algorithm>
+
+namespace
+{
+    // Los estados cuelgan de los hijos Phase1 y Phase2; el script de sonido vive en el
+    // GameObject padre, igual que el controller.
+    AelorinSound* aelorinSound(GameObject* stateOwner)
+    {
+        Transform* parentTransform = TransformAPI::getParent(stateOwner->GetTransform());
+
+        if (!parentTransform)
+        {
+            return nullptr;
+        }
+
+        return GameObjectAPI::findScript<AelorinSound>(
+            ComponentAPI::getOwner(parentTransform));
+    }
+}
 
 AelorinSummonState::AelorinSummonState(GameObject* owner)
 	: StateMachineScript(owner)
@@ -14,6 +34,11 @@ AelorinSummonState::AelorinSummonState(GameObject* owner)
 
 void AelorinSummonState::OnStateEnter()
 {
+	if (AelorinSound* sound = aelorinSound(getOwner()))
+	{
+		sound->playSummonCast();
+	}
+
 	Transform* parentTransform = TransformAPI::getParent(getOwner()->GetTransform());
 	if (!parentTransform)
 	{
@@ -168,6 +193,11 @@ void AelorinSummonState::OnStateExit()
 
 void AelorinSummonState::executeSummon()
 {
+	if (AelorinSound* sound = aelorinSound(getOwner()))
+	{
+		sound->playSummonSpawn();
+	}
+
 	if (!m_controller)
 	{
 		return;

@@ -1,8 +1,28 @@
 #include "pch.h"
 #include "AelorinExhaustionState.h"
 
+#include "AelorinSound.h"
+
 #include "AelorinBossController.h"
 #include "AelorinAttackConfig.h"
+
+namespace
+{
+    // Los estados cuelgan de los hijos Phase1 y Phase2; el script de sonido vive en el
+    // GameObject padre, igual que el controller.
+    AelorinSound* aelorinSound(GameObject* stateOwner)
+    {
+        Transform* parentTransform = TransformAPI::getParent(stateOwner->GetTransform());
+
+        if (!parentTransform)
+        {
+            return nullptr;
+        }
+
+        return GameObjectAPI::findScript<AelorinSound>(
+            ComponentAPI::getOwner(parentTransform));
+    }
+}
 
 AelorinExhaustionState::AelorinExhaustionState(GameObject* owner)
 	: StateMachineScript(owner)
@@ -11,6 +31,12 @@ AelorinExhaustionState::AelorinExhaustionState(GameObject* owner)
 
 void AelorinExhaustionState::OnStateEnter()
 {
+	if (AelorinSound* sound = aelorinSound(getOwner()))
+	{
+		sound->playExhaustionEnter();
+		sound->startExhaustionLoop();
+	}
+
 	Transform* parentTransform = TransformAPI::getParent(getOwner()->GetTransform());
 	if (!parentTransform)
 	{
@@ -99,6 +125,11 @@ void AelorinExhaustionState::OnStateUpdate()
 
 void AelorinExhaustionState::OnStateExit()
 {
+	if (AelorinSound* sound = aelorinSound(getOwner()))
+	{
+		sound->stopExhaustionLoop();
+	}
+
 	if (m_animation)
 	{
 		AnimationAPI::clearOverrideClip(m_animation, 0.0f);

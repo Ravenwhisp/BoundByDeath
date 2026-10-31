@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "AelorinRisenSpiresState.h"
 
+#include "AelorinSound.h"
+
 #include "AelorinAttackConfig.h"
 #include "AelorinAttackExecutor.h"
 #include "AelorinUI.h"
@@ -8,6 +10,24 @@
 #include "CameraShake.h"
 
 #include <cstdlib> // for random
+
+namespace
+{
+    // Los estados cuelgan de los hijos Phase1 y Phase2; el script de sonido vive en el
+    // GameObject padre, igual que el controller.
+    AelorinSound* aelorinSound(GameObject* stateOwner)
+    {
+        Transform* parentTransform = TransformAPI::getParent(stateOwner->GetTransform());
+
+        if (!parentTransform)
+        {
+            return nullptr;
+        }
+
+        return GameObjectAPI::findScript<AelorinSound>(
+            ComponentAPI::getOwner(parentTransform));
+    }
+}
 
 #define ARENA_RADIUS 11.6f
 
@@ -18,6 +38,11 @@ AelorinRisenSpiresState::AelorinRisenSpiresState(GameObject* owner)
 
 void AelorinRisenSpiresState::OnStateEnter()
 {
+	if (AelorinSound* sound = aelorinSound(getOwner()))
+	{
+		sound->playRisenSpiresWindup();
+	}
+
 	Transform* parentTransform = TransformAPI::getParent(getOwner()->GetTransform());
 	if (!parentTransform)
 	{
@@ -282,6 +307,11 @@ void AelorinRisenSpiresState::executePattern(Transform* patternRoot, const char*
 			m_vfx->playRisenSpiresImpact(position);
 			m_attackExecutor->applyDamageInRadius(position, config->m_risenSpiresRadius, config->m_risenSpiresDamage, sourceName);
 
+		}
+
+		if (AelorinSound* sound = aelorinSound(getOwner()))
+		{
+			sound->playRisenSpiresErupt(m_controller->isPhase2());
 		}
 
 		if (m_cameraShake)

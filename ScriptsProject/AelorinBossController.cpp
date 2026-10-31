@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "AelorinBossController.h"
 
+#include "AelorinSound.h"
+
 #include "AelorinDetectionAggro.h"
 #include "AelorinDamageable.h"
 #include "AelorinAttackConfig.h"
@@ -384,6 +386,10 @@ void AelorinBossController::updateEncounter()
 		if (m_aelorinDetectionAggro->startEncounter())
 		{
 			m_hasStartedEncounter = true;
+			if (AelorinSound* sound = GameObjectAPI::findScript<AelorinSound>(getOwner()))
+			{
+				sound->startIdleLoop();
+			}
 
 			if (m_damageable)
 			{
@@ -491,6 +497,11 @@ void AelorinBossController::updatePhase2Swap()
 
 void AelorinBossController::performPhase2Swap()
 {
+	if (AelorinSound* sound = GameObjectAPI::findScript<AelorinSound>(getOwner()))
+	{
+		sound->playPhaseTransition();
+	}
+
 	if (isPhase2())
 	{
 		m_phase2SwapPending = false;
@@ -745,6 +756,16 @@ void AelorinBossController::requestFury()
 
 void AelorinBossController::beginFury()
 {
+	if (AelorinSound* sound = GameObjectAPI::findScript<AelorinSound>(getOwner()))
+	{
+		sound->startFuryLoop();
+	}
+
+	if (AelorinSound* sound = GameObjectAPI::findScript<AelorinSound>(getOwner()))
+	{
+		sound->playFuryEnter();
+	}
+
 	if (!m_furyRequested || m_furyActive)
 	{
 		return;
@@ -776,6 +797,11 @@ void AelorinBossController::recordFuryCast()
 
 void AelorinBossController::finishFury()
 {
+	if (AelorinSound* sound = GameObjectAPI::findScript<AelorinSound>(getOwner()))
+	{
+		sound->stopFuryLoop();
+	}
+
 	if (!m_furyActive)
 	{
 		return;

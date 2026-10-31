@@ -5,6 +5,25 @@
 #include "CameraShake.h"
 #include "AelorinVFX.h"
 
+namespace
+{
+	// El sigilo sale del pool sin padre, asi que no puede subir a buscar el AelorinSound
+	// del jefe. Postea desde su propio emisor, que ademas deja la explosion donde cae y no
+	// en el centro de la arena. Mismo patron que EnergyBallProjectile.
+	void postSigilImpact(GameObject* owner, bool heavy)
+	{
+		ComponentSoundSource* source = AudioAPI::getSoundSourceComponent(owner);
+		if (source == nullptr)
+		{
+			return;
+		}
+
+		AudioAPI::postEvent(source, "LevelBoss.bnk", heavy
+			? "Play_Aelorin_SeekerSigils_Impact_Large"
+			: "Play_Aelorin_SeekerSigils_Impact");
+	}
+}
+
 SeekerSigilProjectile::SeekerSigilProjectile(GameObject* owner)
 	: ProjectileBase(owner)
 {
@@ -121,6 +140,8 @@ void SeekerSigilProjectile::applyImpactDamage()
 
 void SeekerSigilProjectile::playImpactFeedback()
 {
+	postSigilImpact(getOwner(), m_heavyImpact);
+
 	if (m_cameraShake)
 	{
 		if (m_heavyImpact)
