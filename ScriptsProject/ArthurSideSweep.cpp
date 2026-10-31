@@ -16,6 +16,10 @@ ArthurSideSweep::ArthurSideSweep(GameObject* owner)
 void ArthurSideSweep::OnStateEnter()
 {
     m_arthurController = GameObjectAPI::findScript<ArthurBossController>(getOwner());
+    if (m_arthurController)
+    {
+        m_arthurController->setAttackInProgress(true);
+    }
     m_attackExecutor = GameObjectAPI::findScript<EnemyAttackExecutor>(getOwner());
     m_animation = AnimationAPI::getAnimationComponent(getOwner());
     m_arthurUI = GameObjectAPI::findScript<ArthurUI>(getOwner());
@@ -80,11 +84,6 @@ void ArthurSideSweep::OnStateUpdate()
         return;
     }
 
-    if (m_arthurController->trySendStunTrigger(m_animation))
-    {
-        return;
-    }
-
     m_stateTimer += Time::getDeltaTime();
 
     float hitTime = m_arthurController->m_attackConfig.get()->m_sideSweepHitTime;
@@ -116,6 +115,11 @@ void ArthurSideSweep::OnStateUpdate()
 
 void ArthurSideSweep::OnStateExit()
 {
+    if (m_arthurController)
+    {
+        m_arthurController->setAttackInProgress(false);
+    }
+
     if (m_arthurUI)
     {
         m_arthurUI->hideSideSweepUI();

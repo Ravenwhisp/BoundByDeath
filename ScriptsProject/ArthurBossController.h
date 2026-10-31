@@ -32,6 +32,9 @@ public:
 
 	bool isSeparationEnabled() const override { return false; }
 
+	void useStun(float duration) override;
+	void setAttackInProgress(bool attacking);
+
 	// Phase helpers
 	void setPhase(ArthurBossPhase phase);
 	ArthurBossPhase getPhase() const { return m_phase; }
@@ -130,4 +133,5 @@ private:
 	float m_chargingSlamCooldownTimer = 0.0f;
 	float m_sideSweepCooldownTimer = 0.0f;
 	float m_earthHammerCooldownTimer = 0.0f;
+	bool m_attackInProgress = false;
 };

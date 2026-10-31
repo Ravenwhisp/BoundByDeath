@@ -17,6 +17,10 @@ ArthurHeavySwipe::ArthurHeavySwipe(GameObject* owner)
 void ArthurHeavySwipe::OnStateEnter()
 {
     m_arthurController = GameObjectAPI::findScript<ArthurBossController>(getOwner());
+    if (m_arthurController)
+    {
+        m_arthurController->setAttackInProgress(true);
+    }
     m_attackExecutor = GameObjectAPI::findScript<EnemyAttackExecutor>(getOwner());
     m_animation = AnimationAPI::getAnimationComponent(getOwner());
     m_arthurUI = GameObjectAPI::findScript<ArthurUI>(getOwner());
@@ -97,11 +101,6 @@ void ArthurHeavySwipe::OnStateUpdate()
         return;
     }
 
-    if (m_arthurController->trySendStunTrigger(m_animation))
-    {
-        return;
-    }
-
     m_stateTimer += Time::getDeltaTime();
 
     const bool isPhase2 = m_arthurController->isPhase2();
@@ -156,6 +155,11 @@ void ArthurHeavySwipe::OnStateUpdate()
 
 void ArthurHeavySwipe::OnStateExit()
 {
+    if (m_arthurController)
+    {
+        m_arthurController->setAttackInProgress(false);
+    }
+
     AnimationComponent* animation = AnimationAPI::getAnimationComponent(getOwner());
     if (animation)
     {
