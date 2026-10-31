@@ -127,6 +127,9 @@
     <Filter Include="Interaction/Gameplay\Events\PopUp">
       <UniqueIdentifier>{f5133925-52af-42ef-9418-8a5323556ee6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Interaction/Gameplay\Events\Barks">
+      <UniqueIdentifier>{0074d9d0-8f9f-47ea-84a6-9ee90176182b}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Interaction/Gameplay\Events\PlayerObjectives">
       <UniqueIdentifier>{7a51092b-902d-4bdd-9711-bbb01813d5fd}</UniqueIdentifier>
     </Filter>
@@ -392,6 +395,9 @@
     <ClInclude Include="MusicStateEvent.h">
       <Filter>Interaction/Gameplay\Events</Filter>
     </ClInclude>
+    <ClInclude Include="MusicStateStepAction.h">
+      <Filter>Interaction/Gameplay\Events</Filter>
+    </ClInclude>
     <ClInclude Include="Pickup.h">
       <Filter>Interaction/Gameplay</Filter>
     </ClInclude>
@@ -500,9 +506,6 @@
     <ClInclude Include="HobbitSound.h">
       <Filter>Enemies\Variants</Filter>
     </ClInclude>
-    <ClInclude Include="DialogueManager.h">
-      <Filter>Systems</Filter>
-    </ClInclude>
     <ClInclude Include="ArcherSound.h">
       <Filter>Enemies\Archer</Filter>
     </ClInclude>
@@ -553,6 +556,21 @@
     </ClInclude>
     <ClInclude Include="GameplayEventTrigger.h">
       <Filter>Interaction/Gameplay\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="BarkManager.h">
+      <Filter>Interaction/Gameplay\Events\Barks</Filter>
+    </ClInclude>
+    <ClInclude Include="BarkStepAction.h">
+      <Filter>Interaction/Gameplay\Events\Barks</Filter>
+    </ClInclude>
+    <ClInclude Include="BossBarkTrigger.h">
+      <Filter>Interaction/Gameplay\Events\Barks</Filter>
+    </ClInclude>
+    <ClInclude Include="BarkEvent.h">
+      <Filter>Interaction/Gameplay\Events\Barks</Filter>
+    </ClInclude>
+    <ClInclude Include="BarkEventTrigger.h">
+      <Filter>Interaction/Gameplay\Events\Barks</Filter>
     </ClInclude>
     <ClInclude Include="GameplayTargetRegistry.h">
       <Filter>Player\Targeting</Filter>
@@ -969,9 +987,6 @@
     <ClCompile Include="HobbitSound.cpp">
       <Filter>Enemies\Variants</Filter>
     </ClCompile>
-    <ClCompile Include="DialogueManager.cpp">
-      <Filter>Systems</Filter>
-    </ClCompile>
     <ClCompile Include="ArcherSound.cpp">
       <Filter>Enemies\Archer</Filter>
     </ClCompile>
@@ -1105,6 +1120,9 @@
       <Filter>Enemies\Aelorin</Filter>
     </ClCompile>
     <ClCompile Include="MusicStateEvent.cpp">
+      <Filter>Interaction/Gameplay\Events</Filter>
+    </ClCompile>
+    <ClCompile Include="MusicStateStepAction.cpp">
       <Filter>Interaction/Gameplay\Events</Filter>
     </ClCompile>
     <ClCompile Include="Pickup.cpp">
@@ -1262,6 +1280,21 @@
     </ClCompile>
     <ClCompile Include="GameplayEventTrigger.cpp">
       <Filter>Interaction/Gameplay\Events</Filter>
+    </ClCompile>
+    <ClCompile Include="BarkManager.cpp">
+      <Filter>Interaction/Gameplay\Events\Barks</Filter>
+    </ClCompile>
+    <ClCompile Include="BarkStepAction.cpp">
+      <Filter>Interaction/Gameplay\Events\Barks</Filter>
+    </ClCompile>
+    <ClCompile Include="BossBarkTrigger.cpp">
+      <Filter>Interaction/Gameplay\Events\Barks</Filter>
+    </ClCompile>
+    <ClCompile Include="BarkEvent.cpp">
+      <Filter>Interaction/Gameplay\Events\Barks</Filter>
+    </ClCompile>
+    <ClCompile Include="BarkEventTrigger.cpp">
+      <Filter>Interaction/Gameplay\Events\Barks</Filter>
     </ClCompile>
     <ClCompile Include="GameplayTargetRegistry.cpp">
       <Filter>Player\Targeting</Filter>

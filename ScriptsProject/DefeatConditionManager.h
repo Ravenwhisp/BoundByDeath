@@ -5,6 +5,7 @@
 class Transform;
 class PlayerState;
 class PlayerDownState;
+class BarkManager;
 class CooperativeSound;
 
 class DefeatConditionManager : public Script
@@ -42,7 +43,14 @@ private:
     bool m_hasTriggeredDefeat = false;
 
     bool m_defeatCountdownStarted = false;
+    BarkManager* m_barkManager = nullptr;
+
     float m_defeatTimer = 0.0f;
     float m_defeatDelay = 3.0f;
+
+    // Tras la cuenta atras se espera a que acabe la frase de caida: la pantalla de
+    // derrota cortaba a media palabra el "Forgive me, little one". El tope evita que
+    // una cola larga deje la partida colgada.
+    float m_maxWaitForVoice = 8.0f;
 
 };

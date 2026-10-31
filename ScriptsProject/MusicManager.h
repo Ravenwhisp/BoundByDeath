@@ -44,6 +44,7 @@ public:
     void SetState_Level2Upper();
     void SetState_Level2Elevator();
     void SetState_FinalBoss();
+    void SetState_FinalBossPhase2();
 
     // Acceso global: cualquier script hace MusicManager::Get()->SetState_...()
     // sin necesidad de cachear una referencia. Puede ser nullptr si la escena
