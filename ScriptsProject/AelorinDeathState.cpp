@@ -1,7 +1,27 @@
 #include "pch.h"
 #include "AelorinDeathState.h"
 
+#include "AelorinSound.h"
+
 #include "AelorinBossController.h"
+
+namespace
+{
+    // Los estados cuelgan de los hijos Phase1 y Phase2; el script de sonido vive en el
+    // GameObject padre, igual que el controller.
+    AelorinSound* aelorinSound(GameObject* stateOwner)
+    {
+        Transform* parentTransform = TransformAPI::getParent(stateOwner->GetTransform());
+
+        if (!parentTransform)
+        {
+            return nullptr;
+        }
+
+        return GameObjectAPI::findScript<AelorinSound>(
+            ComponentAPI::getOwner(parentTransform));
+    }
+}
 
 AelorinDeathState::AelorinDeathState(GameObject* owner)
 	: StateMachineScript(owner)
@@ -10,6 +30,16 @@ AelorinDeathState::AelorinDeathState(GameObject* owner)
 
 void AelorinDeathState::OnStateEnter()
 {
+	if (AelorinSound* sound = aelorinSound(getOwner()))
+	{
+		sound->stopAllLoops();
+	}
+
+	if (AelorinSound* sound = aelorinSound(getOwner()))
+	{
+		sound->playDeathRoar();
+	}
+
 	Transform* parentTransform = TransformAPI::getParent(getOwner()->GetTransform());
 	if (!parentTransform)
 	{

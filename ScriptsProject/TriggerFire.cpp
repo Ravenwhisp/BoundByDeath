@@ -6,7 +6,8 @@
 
 IMPLEMENT_SCRIPT_FIELDS(TriggerFire,
 	SERIALIZED_COMPONENT_REF(m_fireEffectT, "Fire Effect", ComponentType::TRANSFORM),
-	SERIALIZED_COMPONENT_REF(m_lightT, "Light", ComponentType::TRANSFORM)
+	SERIALIZED_COMPONENT_REF(m_lightT, "Light", ComponentType::TRANSFORM),
+	SERIALIZED_COMPONENT_REF_VECTOR(m_soundEmitters, "Sound Emitters", ComponentType::TRANSFORM)
 )
 
 TriggerFire::TriggerFire(GameObject* owner)
@@ -64,9 +65,27 @@ void TriggerFire::Update()
 		return;
 	}
 
-	Transform* fireEffectTransform = m_fireEffectT.getReferencedComponent();
-	GameObject* fireEffectGO = fireEffectTransform != nullptr ? ComponentAPI::getOwner(fireEffectTransform) : nullptr;
-	if (fireEffectGO == nullptr)
+	std::vector<GameObject*> emitters;
+
+	for (const ComponentRef<Transform>& ref : m_soundEmitters)
+	{
+		Transform* emitterTransform = ref.getReferencedComponent();
+		if (emitterTransform != nullptr)
+		{
+			emitters.push_back(ComponentAPI::getOwner(emitterTransform));
+		}
+	}
+
+	if (emitters.empty())
+	{
+		Transform* fireEffectTransform = m_fireEffectT.getReferencedComponent();
+		if (fireEffectTransform != nullptr)
+		{
+			emitters.push_back(ComponentAPI::getOwner(fireEffectTransform));
+		}
+	}
+
+	if (emitters.empty())
 	{
 		m_soundPending = false;
 		return;
@@ -75,17 +94,24 @@ void TriggerFire::Update()
 	m_soundDelay = 0.5f;
 	--m_soundRetries;
 
-	const uint32_t playingID = EnvironmentSound::play(fireEffectGO, "Play_Environment_Fire_Ignite");
-	if (playingID == 0 && m_soundRetries > 0)
+	if (EnvironmentSound::play(emitters[0], "Play_Environment_Fire_Ignite") == 0 && m_soundRetries > 0)
 	{
 		return;
 	}
 
 	m_soundPending = false;
 
-	if (AmbientSoundLoop* loop = GameObjectAPI::findScript<AmbientSoundLoop>(fireEffectGO))
+	for (size_t i = 1; i < emitters.size(); ++i)
 	{
-		loop->play();
+		EnvironmentSound::play(emitters[i], "Play_Environment_Fire_Ignite");
+	}
+
+	for (GameObject* emitter : emitters)
+	{
+		if (AmbientSoundLoop* loop = GameObjectAPI::findScript<AmbientSoundLoop>(emitter))
+		{
+			loop->play();
+		}
 	}
 }
 
