@@ -9,7 +9,8 @@ IMPLEMENT_SCRIPT_FIELDS(VideoManager,
     SERIALIZED_COMPONENT_REF(m_skipSlider, "Skip Hold Slider", ComponentType::TRANSFORM),
     SERIALIZED_COMPONENT_REF(m_loadingImage, "Loading Image", ComponentType::TRANSFORM),
     SERIALIZED_COMPONENT_REF(m_skipContainer, "Skip Container", ComponentType::TRANSFORM),
-    SERIALIZED_STRING(m_sceneToLoad, "Next Scene")
+    SERIALIZED_STRING(m_sceneToLoad, "Next Scene"),
+    SERIALIZED_BOOL(m_allowSkip, "Allow Skip")
 )
 
 VideoManager::VideoManager(GameObject* owner) : Script(owner)
@@ -86,7 +87,7 @@ void VideoManager::Update()
         return;
     }
 
-    if (Input::isFaceButtonBottomPressed(0) && (asyncReady || asyncFailed))
+    if (m_allowSkip && Input::isFaceButtonBottomPressed(0) && (asyncReady || asyncFailed))
     {
         m_gamepadSkipHoldTime += Time::getDeltaTime();
     }
@@ -101,7 +102,7 @@ void VideoManager::Update()
         SliderAPI::setFillAmount(m_skipSliderComponent, holdProgress);
     }
 
-    if (!m_skipAvailable && (asyncReady || asyncFailed))
+    if (m_allowSkip && !m_skipAvailable && (asyncReady || asyncFailed))
     {
         m_skipAvailable = true;
         if (m_skipContainerOwner)
@@ -110,7 +111,7 @@ void VideoManager::Update()
         }
     }
 
-    const bool skipRequested = m_skipAvailable && (Input::isKeyDown(KeyCode::Escape) || m_gamepadSkipHoldTime >= 3.0f);
+    const bool skipRequested = m_allowSkip && m_skipAvailable && (Input::isKeyDown(KeyCode::Escape) || m_gamepadSkipHoldTime >= 3.0f);
     const bool finished = m_started && !VideoAPI::isPlaying(m_videoComponent);
 
     if (skipRequested || finished)

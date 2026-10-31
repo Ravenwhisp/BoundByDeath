@@ -9,6 +9,7 @@
 #include "CameraTransitionController.h"
 #include "CameraFollow.h"
 #include "MusicManager.h"
+#include "ScreenFader.h"
 
 #include <algorithm>
 
@@ -46,7 +47,8 @@ IMPLEMENT_SCRIPT_FIELDS(AelorinCinematics,
         SERIALIZED_COMPONENT_REF(m_defeatCinematic, "Defeat Cinematic", ComponentType::TRANSFORM),
         SERIALIZED_FLOAT(m_defeatDelay, "Defeat Shot Delay", 0.0f, 10.0f, 0.05f),
         SERIALIZED_VEC3(m_defeatCamOffset, "Defeat Cam Offset"),
-        SERIALIZED_STRING(m_sceneAfterDefeat, "Scene After Defeat")
+        SERIALIZED_STRING(m_sceneAfterDefeat, "Scene After Defeat"),
+        SERIALIZED_COMPONENT_REF(m_defeatScreenFader, "Defeat Screen Fader", ComponentType::TRANSFORM)
     )
 )
 
@@ -91,6 +93,7 @@ void AelorinCinematics::Update()
     updateEncounter(dt);
     updatePhaseTransition(dt);
     updateDefeat(dt);
+    updateDefeatSceneTransition();
 
     if (m_encounterFinished && !isPlaying() && !isTransitionRunning())
     {
@@ -508,11 +511,30 @@ Vector3 AelorinCinematics::getBossPosition() const
 
 void AelorinCinematics::onDefeatFinished()
 {
-    if (m_sceneAfterDefeat.empty())
+    m_defeatScenePending = !m_sceneAfterDefeat.empty();
+}
+
+void AelorinCinematics::updateDefeatSceneTransition()
+{
+    if (!m_defeatScenePending)
     {
         return;
     }
 
+    Transform* faderTransform = m_defeatScreenFader.getReferencedComponent();
+    GameObject* faderObject = faderTransform ? ComponentAPI::getOwner(faderTransform) : nullptr;
+    ScreenFader* fader = faderObject ? GameObjectAPI::findScript<ScreenFader>(faderObject) : nullptr;
+    if (fader && (fader->isFading() || fader->getAlpha() < 0.999f))
+    {
+        return;
+    }
+
+    if (!fader)
+    {
+        Debug::warn("AelorinCinematics: defeat ScreenFader is missing; changing scene after the camera transition.");
+    }
+
+    m_defeatScenePending = false;
     SceneAPI::requestSceneChange(m_sceneAfterDefeat.c_str());
 }
 

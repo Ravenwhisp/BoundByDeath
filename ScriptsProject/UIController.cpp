@@ -90,6 +90,8 @@ ScriptMethodList UIController::getExposedMethods() const
 
 void UIController::StartScene(const std::string& sceneName)
 {
+	PersistingCheckpointState::Get().Reset();
+	PersistingPowerupState::reset();
 	GameObjectAPI::setActive(m_menuLightsGO, true);
 
 	m_pendingSceneName = sceneName;

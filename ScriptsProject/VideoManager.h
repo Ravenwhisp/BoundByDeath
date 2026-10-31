@@ -23,6 +23,7 @@ public:
     ComponentRef<Transform> m_loadingImage;
     ComponentRef<Transform> m_skipContainer;
     std::string m_sceneToLoad;
+    bool m_allowSkip = true;
 
 private:
     GameObject* m_skipContainerOwner = nullptr;
