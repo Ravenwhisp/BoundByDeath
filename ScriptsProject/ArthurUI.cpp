@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "ArthurUI.h"
+#include "ArthurBossController.h"
 #include "BarrierComponent.h"
 
 IMPLEMENT_SCRIPT_FIELDS(ArthurUI,
@@ -62,6 +63,7 @@ ArthurUI::ArthurUI(GameObject* owner)
 
 void ArthurUI::Start()
 {
+	m_arthurController = GameObjectAPI::findScript<ArthurBossController>(getOwner());
 	setupHealthUI();
 
 	m_barrierComponent = GameObjectAPI::findScript<BarrierComponent>(getOwner());
@@ -118,6 +120,19 @@ void ArthurUI::Update()
 {
 	updateHealthUI();
 	updateHealthMarkers();
+}
+
+void ArthurUI::positionGroundAttackCanvas(Transform* canvas)
+{
+	Transform* ownerTransform = GameObjectAPI::getTransform(getOwner());
+	if (canvas == nullptr || ownerTransform == nullptr)
+	{
+		return;
+	}
+
+	const Vector3 ownerPosition = TransformAPI::getGlobalPosition(ownerTransform);
+	const float heightOffset = m_arthurController ? m_arthurController->m_attackVisualHeightOffset : 0.0f;
+	TransformAPI::setGlobalPosition(canvas, ownerPosition + Vector3(0.0f, heightOffset, 0.0f));
 }
 
 void ArthurUI::setupHealthUI()
@@ -289,6 +304,7 @@ void ArthurUI::setupHeavySwipeUI()
 		return;
 	}
 
+	positionGroundAttackCanvas(m_heavySwipeUICanvasTransform);
 	GameObjectAPI::setActive(m_heavySwipeUICanvasTransform->getOwner(), true);
 
 	Transform2DAPI::setAlpha(m_heavySwipeUIContainerTransform2D, 0.0f);
@@ -382,6 +398,7 @@ void ArthurUI::setupSideSweepUI(const Vector3& sweepDirection)
 		return;
 	}
 
+	positionGroundAttackCanvas(m_sideSweepUICanvasTransform);
 	GameObjectAPI::setActive(m_sideSweepUICanvasTransform->getOwner(), true);
 
 	const float radiansToDegrees = 180.0f / 3.14159265f;
@@ -445,6 +462,7 @@ void ArthurUI::setupChargingSlamUI(const Vector3& startPosition, const Vector3& 
 	m_isChargingSlamUIFading = false;
 	m_chargingSlamUIFadeOutTimer = 0.0f;
 
+	positionGroundAttackCanvas(m_chargingSlamUICanvasTransform);
 	GameObjectAPI::setActive(m_chargingSlamUICanvasTransform->getOwner(), true);
 
 	SliderAPI::setFillAmount(m_chargingSlamUIBordersSliderComponent, 0.0f);
@@ -471,7 +489,8 @@ void ArthurUI::setupChargingSlamUI(const Vector3& startPosition, const Vector3& 
 	}
 
 	GameObjectAPI::setActive(m_chargingSlamImpactUICanvasTransform->getOwner(), true);
-	TransformAPI::setGlobalPosition(m_chargingSlamImpactUICanvasTransform, lockedTargetPosition);
+	const float heightOffset = m_arthurController ? m_arthurController->m_attackVisualHeightOffset : 0.0f;
+	TransformAPI::setGlobalPosition(m_chargingSlamImpactUICanvasTransform, lockedTargetPosition + Vector3(0.0f, heightOffset, 0.0f));
 	TransformAPI::setGlobalRotationEuler(m_chargingSlamImpactUICanvasTransform, Vector3(90.0f, 0.0f, atan2(dashDirection.z, dashDirection.x) * 180.0f / 3.14159265f - 90.0f));
 
 	Transform2DAPI::setAlpha(m_chargingSlamImpactUIContainerTransform2D, 0.0f);
@@ -637,6 +656,7 @@ void ArthurUI::setupEarthHammerUI()
 	m_earthHammerImpactUITimer = 0.0f;
 	m_earthHammerInnerScale = 0.1f;
 
+	positionGroundAttackCanvas(m_earthHammerUICanvasTransform);
 	GameObjectAPI::setActive(m_earthHammerUICanvasTransform->getOwner(), true);
 
 	Transform2DAPI::setAlpha(m_earthHammerUIRingTransform2D, 1.0f);

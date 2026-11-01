@@ -5,6 +5,7 @@
 #include "UISlider.h"
 
 class BarrierComponent;
+class ArthurBossController;
 
 class ArthurUI : public Script
 {
@@ -47,6 +48,7 @@ public:
 	void hideEarthHammerUI();
 
 private:
+	void positionGroundAttackCanvas(Transform* canvas);
 	void applyHeavySwipeHitEffects(float t, Transform2D* glow, Transform2D* border, Transform2D* claw, float heavySwipeRange);
 
 	void updateHealthMarkers();
@@ -58,6 +60,7 @@ public:
 private:
 	// Health
 	BarrierComponent* m_barrierComponent = nullptr;
+	ArthurBossController* m_arthurController = nullptr;
 	ComponentRef<Transform> m_healthBarCanvas;
 	ComponentRef<Transform2D> m_healthBarContainer;
 	ComponentRef<Transform2D> m_healthBarPhase2;

@@ -7,6 +7,7 @@
 #include <vector>
 
 class EnemyDetectionAggro;
+class ArthurBossController;
 
 class ArthurParticles final : public Script
 {
@@ -49,12 +50,14 @@ private:
     };
 
     void scheduleEffect(TimedEffect::Type type, const Vector3& position, float delay);
+    Vector3 raisedVisualPosition(const Vector3& position) const;
     void processTimedEffects(float deltaTime);
     void spawnGroundDust(const Vector3& position);
     void spawnChargingSlam(const Vector3& position);
     void spawnHeavySwipeHit(const Vector3& position);
     void spawnAmbientColumnBurst(const Vector3& position);
     void activateEarthHammerShockwave();
+    void syncEarthHammerShockwave();
     void deactivateEarthHammerShockwave();
 
     bool isTargetInCone(
@@ -93,6 +96,7 @@ private:
     bool m_earthHammerShockwaveActive = false;
 
     EnemyDetectionAggro* m_detectionAggro = nullptr;
+    ArthurBossController* m_arthurController = nullptr;
     Transform* m_ownerTransform = nullptr;
 
     std::vector<TimedEffect> m_timedEffects;

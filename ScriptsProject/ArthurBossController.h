@@ -90,6 +90,7 @@ private:
 
 public:
 	float m_combatRange = 3.0f;
+	float m_attackVisualHeightOffset = 0.2f;
 	AssetReference<ArthurAttackConfig> m_attackConfig;
 
 	// Cinematics fired by the boss (no trigger zone). Each ref points at the Transform of the
