@@ -16,6 +16,7 @@
 
 IMPLEMENT_SCRIPT_FIELDS_INHERITED(ArthurBossController, EnemyBaseController,
 	SERIALIZED_FLOAT(m_combatRange, "Combat Range", 0.0f, 50.0f, 0.1f),
+	SERIALIZED_FLOAT(m_attackVisualHeightOffset, "Attack Visual Height Offset", 0.0f, 2.0f, 0.05f),
 	SERIALIZED_ASSET_REF(m_attackConfig, "Attack Config", AssetType::DATA_CONTAINER),
 	SERIALIZED_COMPONENT_REF(m_encounterCinematic, "Encounter Cinematic", ComponentType::TRANSFORM),
 	SERIALIZED_COMPONENT_REF(m_defeatCinematic, "Defeat Cinematic", ComponentType::TRANSFORM),

@@ -81,6 +81,7 @@ public:
 
 	// Encounter
 	void updateEncounter();
+	void startEncounter();
 	bool hasEncounterStarted() const { return m_hasStartedEncounter; }
 
 	// Decision Timing helpers

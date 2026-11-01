@@ -1,0 +1,312 @@
+{
+    "Version": 2,
+    "sourcePath": "Assets\\Prefabs\\Pickups\\SpiderHealthOrb.prefab",
+    "Name": "SpiderHealthOrb",
+    "Active": true,
+    "Static": false,
+    "Layer": "DEFAULT",
+    "Tag": "DEFAULT",
+    "Transform": {
+        "Position": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "Rotation": [
+            -0.0,
+            0.0,
+            -0.0,
+            1.0
+        ],
+        "Scale": [
+            0.175,
+            0.175,
+            0.175
+        ]
+    },
+    "Components": [
+        {
+            "UID": 12856470465562735439,
+            "ComponentType": "SCRIPT",
+            "Active": true,
+            "ScriptName": "HealthPickup",
+            "ScriptFields": {
+                "Heal Amount": 5.0,
+                "Collect Particle Prefab": {
+                    "uid": 13243464306730921611,
+                    "libId": "324f83d53e6944e5b0b9dab2e9257ecf",
+                    "type": "PREFAB"
+                },
+                "Collect Particle Prefab Path": "Assets/Prefabs/Health_1.prefab",
+                "Spawn Height": 2.5,
+                "Fall Gravity": 8.0,
+                "Pickup Enable Delay": 1.0,
+                "Idle Speed": 0.20000000298023224,
+                "Horizontal Amplitude": 0.10000000149011612,
+                "Vertical Amplitude": 0.20000000298023224,
+                "Dissolve Duration": 0.5
+            }
+        },
+        {
+            "UID": 3559700777254096562,
+            "ComponentType": "TRIGGER",
+            "Active": true,
+            "Shape": "Box",
+            "Center": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Size": [
+                1.2999999523162842,
+                1.2999999523162842,
+                1.2999999523162842
+            ]
+        }
+    ],
+    "Children": [
+        {
+            "Name": "spirit smoke",
+            "Active": true,
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [
+                {
+                    "UID": 4598268266203083592,
+                    "ComponentType": "MODEL",
+                    "Active": true,
+                    "MeshAssetId": {
+                        "uid": 8932442827935410038,
+                        "libId": "1b1b40fe4b325ec990a1e9bb5b7ffcf7",
+                        "type": "MESH"
+                    },
+                    "SkinAssetId": {
+                        "uid": 0,
+                        "libId": "",
+                        "type": "UNKNOWN"
+                    },
+                    "Materials": [
+                        {
+                            "uid": 17481603862598985862,
+                            "libId": "5d50ea9f500c38d870e9ef27cb968c8c",
+                            "type": "MATERIAL"
+                        }
+                    ],
+                    "Render Mode": 0,
+                    "BoundingBox": {
+                        "Custom": false,
+                        "Min": [
+                            -1.0598700046539307,
+                            -1.1196014881134033,
+                            -1.1371116638183594
+                        ],
+                        "Max": [
+                            1.103001594543457,
+                            1.0906286239624023,
+                            1.0905377864837646
+                        ]
+                    }
+                },
+                {
+                    "UID": 17650471880668859375,
+                    "ComponentType": "DISSOLVE",
+                    "Active": true,
+                    "DissolveAmount": 0.0,
+                    "DissolveColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "DissolveTickness": 1.0,
+                    "TextureAssetId": {
+                        "uid": 4209550263506267985,
+                        "libId": "4217249d2f0755347f0a3bbba7af5291",
+                        "type": "TEXTURE"
+                    }
+                }
+            ],
+            "Children": []
+        },
+        {
+            "Name": "outer orb",
+            "Active": true,
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0,
+                    1.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [
+                {
+                    "UID": 18348065692455240573,
+                    "ComponentType": "MODEL",
+                    "Active": true,
+                    "MeshAssetId": {
+                        "uid": 9838865459293910330,
+                        "libId": "cfa731d038be880e1b230a1b3489efef",
+                        "type": "MESH"
+                    },
+                    "SkinAssetId": {
+                        "uid": 0,
+                        "libId": "",
+                        "type": "UNKNOWN"
+                    },
+                    "Materials": [
+                        {
+                            "uid": 17333716385840839233,
+                            "libId": "915fba3a3e3914f50fd0ca3be2259dde",
+                            "type": "MATERIAL"
+                        }
+                    ],
+                    "Render Mode": 0,
+                    "BoundingBox": {
+                        "Custom": false,
+                        "Min": [
+                            -0.7819416522979736,
+                            -0.7819425463676453,
+                            -0.78194260597229
+                        ],
+                        "Max": [
+                            0.7819421291351318,
+                            0.7819425463676453,
+                            0.7819421291351318
+                        ]
+                    }
+                },
+                {
+                    "UID": 15814087699256412611,
+                    "ComponentType": "DISSOLVE",
+                    "Active": true,
+                    "DissolveAmount": 0.0,
+                    "DissolveColor": [
+                        0.15026609599590302,
+                        0.4054054021835327,
+                        0.39653947949409485
+                    ],
+                    "DissolveTickness": 3.0,
+                    "TextureAssetId": {
+                        "uid": 4209550263506267985,
+                        "libId": "4217249d2f0755347f0a3bbba7af5291",
+                        "type": "TEXTURE"
+                    }
+                }
+            ],
+            "Children": []
+        },
+        {
+            "Name": "inner orb",
+            "Active": true,
+            "Static": false,
+            "Layer": "DEFAULT",
+            "Tag": "DEFAULT",
+            "Transform": {
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [
+                {
+                    "UID": 16158784159301138024,
+                    "ComponentType": "MODEL",
+                    "Active": true,
+                    "MeshAssetId": {
+                        "uid": 4674353068748063608,
+                        "libId": "2f689fae761b59f6946e7b293613d703",
+                        "type": "MESH"
+                    },
+                    "SkinAssetId": {
+                        "uid": 0,
+                        "libId": "",
+                        "type": "UNKNOWN"
+                    },
+                    "Materials": [
+                        {
+                            "uid": 4774687755739455797,
+                            "libId": "a629364a38ad1ea8946b2da376686399",
+                            "type": "MATERIAL"
+                        }
+                    ],
+                    "Render Mode": 0,
+                    "BoundingBox": {
+                        "Custom": false,
+                        "Min": [
+                            -0.42752116918563843,
+                            -0.42752164602279663,
+                            -0.4275217354297638
+                        ],
+                        "Max": [
+                            0.42752164602279663,
+                            0.4275217056274414,
+                            0.4275214374065399
+                        ]
+                    }
+                },
+                {
+                    "UID": 8977328170811148782,
+                    "ComponentType": "DISSOLVE",
+                    "Active": true,
+                    "DissolveAmount": 0.0,
+                    "DissolveColor": [
+                        0.6525096893310547,
+                        0.20910540223121643,
+                        0.20910540223121643
+                    ],
+                    "DissolveTickness": 1.0,
+                    "TextureAssetId": {
+                        "uid": 4209550263506267985,
+                        "libId": "4217249d2f0755347f0a3bbba7af5291",
+                        "type": "TEXTURE"
+                    }
+                }
+            ],
+            "Children": []
+        }
+    ]
+}

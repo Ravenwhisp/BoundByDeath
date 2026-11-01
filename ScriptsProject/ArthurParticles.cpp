@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "ArthurParticles.h"
+#include "ArthurBossController.h"
 #include "ParticleLifecycle.h"
 #include "EnemyDetectionAggro.h"
 
@@ -30,7 +31,14 @@ ArthurParticles::ArthurParticles(GameObject* owner)
 void ArthurParticles::Start()
 {
     m_ownerTransform = GameObjectAPI::getTransform(getOwner());
+    m_arthurController = GameObjectAPI::findScript<ArthurBossController>(getOwner());
     m_detectionAggro = GameObjectAPI::findScript<EnemyDetectionAggro>(getOwner());
+}
+
+Vector3 ArthurParticles::raisedVisualPosition(const Vector3& position) const
+{
+    const float heightOffset = m_arthurController ? m_arthurController->m_attackVisualHeightOffset : 0.0f;
+    return position + Vector3(0.0f, heightOffset, 0.0f);
 }
 
 void ArthurParticles::OnGameStop()
@@ -53,7 +61,7 @@ void ArthurParticles::Update()
 
     if (m_earthHammerShockwaveActive && m_earthHammerShockwaveInstance != nullptr)
     {
-        ParticleLifecycle::syncToTransform(m_earthHammerShockwaveInstance, m_ownerTransform);
+        syncEarthHammerShockwave();
     }
 }
 
@@ -110,7 +118,7 @@ void ArthurParticles::spawnGroundDust(const Vector3& position)
     ParticleLifecycle::spawnOneShotTimed(
         m_timedOneShots,
         m_groundDustPrefab.m_id,
-        position,
+        raisedVisualPosition(position),
         Vector3::Zero,
         ParticleLifecycle::kDefaultOneShotLifetime
     );
@@ -121,7 +129,7 @@ void ArthurParticles::spawnChargingSlam(const Vector3& position)
     ParticleLifecycle::spawnOneShotTimed(
         m_timedOneShots,
         m_chargingSlamPrefab.m_id,
-        position,
+        raisedVisualPosition(position),
         Vector3::Zero,
         ParticleLifecycle::kDefaultOneShotLifetime
     );
@@ -132,7 +140,7 @@ void ArthurParticles::spawnHeavySwipeHit(const Vector3& position)
     ParticleLifecycle::spawnOneShotTimed(
         m_timedOneShots,
         m_heavySwipePrefab.m_id,
-        position,
+        raisedVisualPosition(position),
         Vector3::Zero,
         ParticleLifecycle::kDefaultOneShotLifetime
     );
@@ -148,7 +156,7 @@ void ArthurParticles::spawnAmbientColumnBurst(const Vector3& position)
     ParticleLifecycle::spawnOneShotTimed(
         m_timedOneShots,
         m_ambientColumnBurstPrefab.m_id,
-        position,
+        raisedVisualPosition(position),
         Vector3::Zero,
         ParticleLifecycle::kDefaultOneShotLifetime
     );
@@ -172,18 +180,34 @@ void ArthurParticles::activateEarthHammerShockwave()
     ParticleLifecycle::ensurePersistent(
         m_earthHammerShockwaveInstance,
         m_earthHammerShockwavePrefab.m_id,
-        position,
+        raisedVisualPosition(position),
         rotation,
         getOwner()
     );
 
-    ParticleLifecycle::syncToTransform(
-        m_earthHammerShockwaveInstance,
-        m_ownerTransform
-    );
+    syncEarthHammerShockwave();
 
     ParticleLifecycle::activate(m_earthHammerShockwaveInstance);
     m_earthHammerShockwaveActive = m_earthHammerShockwaveInstance != nullptr;
+}
+
+void ArthurParticles::syncEarthHammerShockwave()
+{
+    if (m_earthHammerShockwaveInstance == nullptr || m_ownerTransform == nullptr)
+    {
+        return;
+    }
+
+    Transform* effectTransform = GameObjectAPI::getTransform(m_earthHammerShockwaveInstance);
+    if (effectTransform == nullptr)
+    {
+        return;
+    }
+
+    TransformAPI::setGlobalPosition(effectTransform,
+        raisedVisualPosition(TransformAPI::getGlobalPosition(m_ownerTransform)));
+    TransformAPI::setGlobalRotationEuler(effectTransform,
+        TransformAPI::getGlobalEulerDegrees(m_ownerTransform));
 }
 
 void ArthurParticles::deactivateEarthHammerShockwave()

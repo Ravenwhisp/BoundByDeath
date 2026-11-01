@@ -65,6 +65,7 @@ protected:
 	void bindHealthBarUI(Transform2D* container, UISlider* slider1, UISlider* slider2);
 
 	void showHealthBarImmediately();
+	void updateShadowExecutionPreview();
 
 private: 
 	void resolveHealthBarReferences();
@@ -83,7 +84,6 @@ private:
 	void setShadowExecutionPreviewActive(bool active);
 
 	void resolveShadowExecution();
-	void updateShadowExecutionPreview();
 
 	void updateShadowExecutionPreviewAnimation(float dt);
 	void resetShadowExecutionPreviewVisual();
