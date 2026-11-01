@@ -59,6 +59,24 @@ void ArthurBossController::Start()
 	clearPath();
 }
 
+void ArthurBossController::useStun(float duration)
+{
+    if (!m_attackInProgress)
+    {
+        EnemyBaseController::useStun(duration);
+    }
+}
+
+void ArthurBossController::setAttackInProgress(bool attacking)
+{
+    m_attackInProgress = attacking;
+    if (attacking)
+    {
+        // A stun received just before the state transition must not survive the cast.
+        clearStun();
+    }
+}
+
 void ArthurBossController::drawGizmo()
 {
 	if (m_path.size() < 2)

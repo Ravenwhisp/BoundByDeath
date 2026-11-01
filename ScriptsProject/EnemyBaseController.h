@@ -66,7 +66,7 @@ public:
 
     // Stunned helpers
     // Duration is supplied by the attack that applies stun.
-    void useStun(float duration);
+    virtual void useStun(float duration);
     bool trySendStunTrigger(AnimationComponent* animation);
     bool isStunned() const { return m_isStunned; }
     void clearStun();

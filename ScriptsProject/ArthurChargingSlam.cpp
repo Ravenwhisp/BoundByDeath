@@ -26,6 +26,10 @@ ArthurChargingSlam::ArthurChargingSlam(GameObject* owner)
 void ArthurChargingSlam::OnStateEnter()
 {
     m_arthurController = GameObjectAPI::findScript<ArthurBossController>(getOwner());
+    if (m_arthurController)
+    {
+        m_arthurController->setAttackInProgress(true);
+    }
     m_attackExecutor = GameObjectAPI::findScript<EnemyAttackExecutor>(getOwner());
     m_animation = AnimationAPI::getAnimationComponent(getOwner());
     m_arthurUI = GameObjectAPI::findScript<ArthurUI>(getOwner());
@@ -112,11 +116,6 @@ void ArthurChargingSlam::OnStateUpdate()
         return;
     }
 
-    if (m_arthurController->trySendStunTrigger(m_animation))
-    {
-        return;
-    }
-
     m_stateTimer += Time::getDeltaTime();
 
     float chargingDuration = m_arthurController->m_attackConfig.get()->m_chargingSlamHitTime;
@@ -163,6 +162,7 @@ void ArthurChargingSlam::OnStateExit()
 {
     if (m_arthurController)
     {
+        m_arthurController->setAttackInProgress(false);
         m_arthurController->setForcedMovementBlocked(false);
     }
 

@@ -102,6 +102,7 @@ public:
     float m_defeatDelay = 0.0f;
     Vector3 m_defeatCamOffset = Vector3(7.0f, 10.0f, -7.0f);
     std::string m_sceneAfterDefeat = "";
+    ComponentRef<Transform> m_defeatScreenFader;
 
 private:
     void updateEncounter(float dt);
@@ -120,6 +121,7 @@ private:
                       const Vector3& target, const Vector3& offset);
     Vector3 getBossPosition() const;
     void onDefeatFinished();
+    void updateDefeatSceneTransition();
 
     void showHealthBar(bool show);
     void setCinematicUIHidden(bool hidden);
@@ -149,6 +151,7 @@ private:
     bool m_defeatHandled = false;
     bool m_defeatPlaying = false;
     float m_defeatTimer = 0.0f;
+    bool m_defeatScenePending = false;
     bool m_defeatPending = false;
     float m_defeatPendingTimer = 0.0f;
 };
