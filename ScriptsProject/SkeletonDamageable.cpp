@@ -88,6 +88,7 @@ void SkeletonDamageable::startDowned()
 	m_isDead = false;
 
 	applyHealthBarScaleForState();
+	updateShadowExecutionPreview();
 
 	Debug::log("[SkeletonDamageable] Skeleton downed.");
 }
@@ -110,6 +111,7 @@ void SkeletonDamageable::completeRevive()
 	revive(m_previousMaxHp * 0.5f);
 
 	applyHealthBarScaleForState();
+	updateShadowExecutionPreview();
 
 	Debug::log("[SkeletonDamageable] Skeleton revived at 50% HP.");
 }

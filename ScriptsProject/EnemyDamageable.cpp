@@ -812,6 +812,7 @@ void EnemyDamageable::updateShadowExecutionPreviewAnimation(float dt)
 			SliderAPI::setFillAmountVec(m_shadowExecutionPreviewSlider, Vector2(0.0f, 0.0f));
 			Transform2DAPI::setScale(m_shadowExecutionPreviewTransform, m_shadowExecutionPreviewBaseScale);
 			Transform2DAPI::setAlpha(m_shadowExecutionPreviewTransform, 0.0f);
+			updateShadowExecutionPreview();
 		}
 
 		return;
