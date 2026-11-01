@@ -28,6 +28,11 @@ void SummonerTeleportState::OnStateEnter()
 		return;
 	}
 
+	if (m_controller->trySendDeathTrigger(m_animation))
+	{
+		return;
+	}
+
 	if (m_controller->trySendStunTrigger(m_animation))
 	{
 		return;
@@ -97,6 +102,11 @@ void SummonerTeleportState::OnStateEnter()
 void SummonerTeleportState::OnStateUpdate()
 {
 	if (!m_controller || !m_animation)
+	{
+		return;
+	}
+
+	if (m_controller->trySendDeathTrigger(m_animation))
 	{
 		return;
 	}
