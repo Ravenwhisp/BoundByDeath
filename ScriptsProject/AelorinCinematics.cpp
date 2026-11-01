@@ -189,6 +189,11 @@ void AelorinCinematics::onEncounterFinished()
 {
     m_encounterFinished = true;
 
+    if (m_controller)
+    {
+        m_controller->startEncounter();
+    }
+
     applyArenaCamera();
     setCinematicUIHidden(false);
     showHealthBar(true);

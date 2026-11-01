@@ -385,17 +385,27 @@ void AelorinBossController::updateEncounter()
 	{
 		if (m_aelorinDetectionAggro->startEncounter())
 		{
-			m_hasStartedEncounter = true;
-			if (AelorinSound* sound = GameObjectAPI::findScript<AelorinSound>(getOwner()))
-			{
-				sound->startIdleLoop();
-			}
-
-			if (m_damageable)
-			{
-				m_damageable->showHealthBar();
-			}
+			startEncounter();
 		}
+	}
+}
+
+void AelorinBossController::startEncounter()
+{
+	if (m_hasStartedEncounter)
+	{
+		return;
+	}
+
+	m_hasStartedEncounter = true;
+	if (AelorinSound* sound = GameObjectAPI::findScript<AelorinSound>(getOwner()))
+	{
+		sound->startIdleLoop();
+	}
+
+	if (m_damageable)
+	{
+		m_damageable->showHealthBar();
 	}
 }
 
