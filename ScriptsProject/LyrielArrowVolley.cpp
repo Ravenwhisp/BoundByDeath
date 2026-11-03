@@ -37,6 +37,8 @@ void LyrielArrowVolley::Update()
 {
     LyrielAbilityBase::Update();
 
+    updateArrowImpactSfx(Time::getDeltaTime());
+
     if(m_isAiming)
     {
         if (Input::isLeftTriggerPressed(getPlayerIndex()))
@@ -130,6 +132,7 @@ void LyrielArrowVolley::onHitFrame()
     collectEnemiesInCone(origin, m_pendingForward, m_targetScratch);
     applyVolleyDamage(m_targetScratch);
     spawnVolleyArrows(origin, m_pendingForward);
+    scheduleArrowImpactSfx(origin, m_targetScratch);
 
     LyrielSound* sound = m_lyrielCharacter != nullptr ? m_lyrielCharacter->getSound() : nullptr;
     if (sound != nullptr)
@@ -420,6 +423,63 @@ void LyrielArrowVolley::spawnVolleyArrows(const Vector3& origin, const Vector3& 
         }
 
         arrow->launch(origin, dir, m_lyrielCharacter->getConfig()->m_volleyArrowSpeed, lifetime, nullptr, 0.0f, LyrielArrowProjectile::VisualModel::Volley);
+    }
+}
+
+void LyrielArrowVolley::scheduleArrowImpactSfx(const Vector3& origin, const std::vector<Damageable*>& targets)
+{
+    m_pendingImpactSfx.clear();
+
+    if (m_lyrielCharacter == nullptr)
+    {
+        return;
+    }
+
+    const float arrowSpeed = m_lyrielCharacter->getConfig()->m_volleyArrowSpeed;
+
+    for (Damageable* target : targets)
+    {
+        if (target == nullptr)
+        {
+            continue;
+        }
+
+        Transform* targetTransform = GameObjectAPI::getTransform(target->getOwner());
+        if (targetTransform == nullptr)
+        {
+            continue;
+        }
+
+        const float distance = Vector3::Distance(origin, TransformAPI::getGlobalPosition(targetTransform));
+        m_pendingImpactSfx.push_back(arrowSpeed > 0.0001f ? distance / arrowSpeed : 0.0f);
+    }
+}
+
+void LyrielArrowVolley::updateArrowImpactSfx(float deltaTime)
+{
+    if (m_pendingImpactSfx.empty())
+    {
+        return;
+    }
+
+    LyrielSound* sound = m_lyrielCharacter != nullptr ? m_lyrielCharacter->getSound() : nullptr;
+
+    for (size_t i = 0; i < m_pendingImpactSfx.size(); )
+    {
+        m_pendingImpactSfx[i] -= deltaTime;
+        if (m_pendingImpactSfx[i] > 0.0f)
+        {
+            ++i;
+            continue;
+        }
+
+        if (sound != nullptr)
+        {
+            sound->playArrowImpact();
+        }
+
+        m_pendingImpactSfx[i] = m_pendingImpactSfx.back();
+        m_pendingImpactSfx.pop_back();
     }
 }
 

@@ -109,7 +109,7 @@ void AelorinSoulCataclysmState::OnStateEnter()
 
 	if (m_lavaController)
 	{
-		m_lavaController->StartLavaRise(3.036f, config->m_soulCataclysmChannelDuration);
+		m_lavaController->StartLavaRise(3.116f, config->m_soulCataclysmChannelDuration);
 	}
 
 	if (m_cameraShake)

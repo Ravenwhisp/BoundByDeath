@@ -21,6 +21,8 @@ public:
 	void updateUI() override;
     void drawGizmo() override;
 
+    bool isCharging() const { return m_isCharging; }
+
 protected:
     void startAbility() override;
 

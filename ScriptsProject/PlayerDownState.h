@@ -6,6 +6,7 @@ class Damageable;
 class Transform;
 class PlayerState;
 class CooperativeSound;
+class PlayerAnimationController;
 
 class PlayerDownState : public Script
 {
@@ -48,6 +49,8 @@ private:
     PlayerState* m_playerState = nullptr;
     Damageable* m_damageable = nullptr;
     CooperativeSound* m_cooperativeSound = nullptr;
+
+    PlayerAnimationController* m_animation = nullptr;
 
     float m_reviveProgress = 0.0f;
 

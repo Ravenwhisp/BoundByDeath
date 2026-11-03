@@ -27,7 +27,8 @@ void LyrielCharacter::Start()
 
     m_arrowPool     = GameObjectAPI::findScript<ProjectilePool>(getOwner());
     m_basicAttack = GameObjectAPI::findScript<LyrielBasicAttack>(getOwner());
-    m_chargedAttack = GameObjectAPI::findScript<LyrielChargedAttack>(getOwner());
+    m_charged       = GameObjectAPI::findScript<LyrielChargedAttack>(getOwner());
+    m_chargedAttack = m_charged;
     m_dash          = GameObjectAPI::findScript<LyrielDash>(getOwner());
     m_specialAbility   = GameObjectAPI::findScript<LyrielArrowVolley>(getOwner());
     m_sound         = GameObjectAPI::findScript<LyrielSound>(getOwner());
@@ -96,7 +97,9 @@ void LyrielCharacter::Update()
 
     if (m_movement != nullptr)
     {
-        m_sound->setFootstepsActive(m_movement->isMoving());
+        // She drags her feet while drawing the bow, so no footsteps during the charge.
+        const bool charging = m_charged != nullptr && m_charged->isCharging();
+        m_sound->setFootstepsActive(m_movement->isMoving() && !charging);
     }
 }
 

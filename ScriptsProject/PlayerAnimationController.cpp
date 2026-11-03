@@ -14,6 +14,9 @@ namespace
 
 IMPLEMENT_SCRIPT_FIELDS(PlayerAnimationController,
     SERIALIZED_STRING(m_idleStateName, "Idle state name"),
+    SERIALIZED_STRING(m_idleLongStateName, "Idle long state name"),
+    SERIALIZED_FLOAT(m_idleLongAfter, "Idle long after (s)", 0.0f, 60.0f, 0.5f),
+    SERIALIZED_STRING(m_reviveStateName, "Revive state name"),
     SERIALIZED_STRING(m_moveStateName, "Move state name"),
     SERIALIZED_STRING(m_dashStateName, "Dash state name"),
     SERIALIZED_STRING(m_attackStateName, "Attack state name"),
@@ -27,7 +30,9 @@ IMPLEMENT_SCRIPT_FIELDS(PlayerAnimationController,
     SERIALIZED_FLOAT(m_downedBlendTime, "Downed blend time", 0.0f, 2.0f, 0.01f),
     SERIALIZED_FLOAT(m_deathBlendTime, "Death blend time", 0.0f, 2.0f, 0.01f),
     SERIALIZED_FLOAT(m_dashAnimDuration, "Dash anim duration", 0.0f, 3.0f, 0.01f),
-    SERIALIZED_FLOAT(m_dashAnimStartPct, "Dash anim start %", 0.0f, 0.9f, 0.01f)
+    SERIALIZED_FLOAT(m_dashAnimStartPct, "Dash anim start %", 0.0f, 0.9f, 0.01f),
+    SERIALIZED_FLOAT(m_dashAnimEndPct, "Dash anim end %", 0.0f, 1.0f, 0.01f),
+    SERIALIZED_FLOAT(m_moveAnimSpeed, "Move anim speed", 0.0f, 5.0f, 0.05f)
 )
 
 PlayerAnimationController::PlayerAnimationController(GameObject* owner)
@@ -106,9 +111,39 @@ void PlayerAnimationController::Update()
         desiredState = AnimState::Idle;
     }
 
+    if (desiredState == AnimState::Idle)
+    {
+        if (m_playingIdleLong)
+        {
+            m_idleLongHoldTimer -= dt;
+            if (m_idleLongHoldTimer <= 0.0f)
+            {
+                m_playingIdleLong = false;
+                m_idleVariantDirty = true;
+                m_idleTimer = 0.0f;
+            }
+        }
+        else
+        {
+            m_idleTimer += dt;
+            if (m_idleLongAfter > 0.0f && m_idleTimer >= m_idleLongAfter && !trimmed(m_idleLongStateName).empty())
+            {
+                m_playingIdleLong = true;
+                m_idleVariantDirty = true;
+            }
+        }
+    }
+    else
+    {
+        m_idleTimer = 0.0f;
+        m_idleLongHoldTimer = 0.0f;
+        m_playingIdleLong = false;
+    }
+
     const bool forceReplay = (freshDamage && desiredState == AnimState::Damaged)
                           || (m_dashJustStarted && desiredState == AnimState::Dash)
-                          || (m_attackOverrideDirty && desiredState == AnimState::Attack);
+                          || (m_attackOverrideDirty && desiredState == AnimState::Attack)
+                          || (m_idleVariantDirty && desiredState == AnimState::Idle);
     if (desiredState != m_currentState || forceReplay)
     {
         if (m_chargeHoldPaused && desiredState != AnimState::ChargeHold)
@@ -126,7 +161,9 @@ void PlayerAnimationController::Update()
                 const float target = m_dashAnimDuration > 0.01f ? m_dashAnimDuration : 0.5f;
                 const float dur = AnimationAPI::getPlaybackDuration(m_animationComponent);
                 const float startPct = m_dashAnimStartPct < 0.0f ? 0.0f : (m_dashAnimStartPct > 0.9f ? 0.9f : m_dashAnimStartPct);
-                const float span = dur * (1.0f - startPct);
+                // Trailing hold frames are dead weight inside the dash window, so the clip can be cut short.
+                const float endPct = m_dashAnimEndPct > startPct && m_dashAnimEndPct <= 1.0f ? m_dashAnimEndPct : 1.0f;
+                const float span = dur * (endPct - startPct);
 
                 // Skip the clip's anticipation so the dash motion reads from the first frame.
                 if (dur > 0.0001f && startPct > 0.0f)
@@ -144,6 +181,12 @@ void PlayerAnimationController::Update()
             {
                 const float dur = AnimationAPI::getPlaybackDuration(m_animationComponent);
                 m_damagedHoldTimer = dur > 0.0f ? dur : 0.3f;
+            }
+
+            if (desiredState == AnimState::Idle && m_playingIdleLong)
+            {
+                const float dur = AnimationAPI::getPlaybackDuration(m_animationComponent);
+                m_idleLongHoldTimer = dur > 0.0f ? dur : 1.0f;
             }
 
             if (desiredState != AnimState::Recovery)
@@ -172,6 +215,7 @@ void PlayerAnimationController::Update()
     m_damagedRequested = false;
     m_dashJustStarted = false;
     m_attackOverrideDirty = false;
+    m_idleVariantDirty = false;
 }
 
 void PlayerAnimationController::setMoving(bool moving)
@@ -224,6 +268,11 @@ void PlayerAnimationController::setAttackOverride(const std::string& stateName, 
 void PlayerAnimationController::clearAttackOverride()
 {
     m_hasAttackOverride = false;
+}
+
+void PlayerAnimationController::playRevive()
+{
+    playRecovery(m_reviveStateName, m_defaultBlendTime, 1.0f);
 }
 
 void PlayerAnimationController::playRecovery(const std::string& stateName, float blendTime, float speed)
@@ -341,7 +390,7 @@ bool PlayerAnimationController::playAnimState(AnimState state, float blendTime)
 
     switch (state)
     {
-    case AnimState::Idle:    stateName = m_idleStateName; break;
+    case AnimState::Idle:    stateName = m_playingIdleLong ? m_idleLongStateName : m_idleStateName; break;
     case AnimState::Move:    stateName = m_moveStateName; break;
     case AnimState::Dash:    stateName = m_dashStateName; break;
     case AnimState::Attack:  stateName = m_attackStateName; break;
@@ -367,6 +416,10 @@ bool PlayerAnimationController::playAnimState(AnimState state, float blendTime)
     else if (state == AnimState::ChargeHold)
     {
         speed = m_chargeHoldSpeed;
+    }
+    else if (state == AnimState::Move && m_moveAnimSpeed > 0.0f)
+    {
+        speed = m_moveAnimSpeed;
     }
 
     stateName = trimmed(stateName);

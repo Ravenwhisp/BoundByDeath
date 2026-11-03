@@ -4,6 +4,7 @@
 
 class ProjectilePool;
 class LyrielDash;
+class LyrielChargedAttack;
 class LyrielArrowVolley;
 class LyrielSound;
 class PlayerMovement;
@@ -35,6 +36,7 @@ public:
 private:
     ProjectilePool*    m_arrowPool   = nullptr;
     LyrielDash*        m_dash        = nullptr;
+    LyrielChargedAttack* m_charged   = nullptr;
     LyrielSound*       m_sound       = nullptr;
     PlayerMovement*    m_movement    = nullptr;
     AssetReference<LyrielConfig> m_config;

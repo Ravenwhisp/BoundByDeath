@@ -3,6 +3,7 @@
 #include "Damageable.h"
 #include "PlayerState.h"
 #include "CooperativeSound.h"
+#include "PlayerAnimationController.h"
 
 IMPLEMENT_SCRIPT_FIELDS(PlayerDownState,
     SERIALIZED_FLOAT(m_selfReviveTime, "Self Revive Time", 0.1f, 999999.0f, 0.1f),
@@ -33,6 +34,8 @@ void PlayerDownState::Start()
     {
         Debug::warn("PlayerDownState on '%s' could not find PlayerState on the same GameObject.", GameObjectAPI::getName(m_owner));
     }
+
+    m_animation = GameObjectAPI::findScript<PlayerAnimationController>(getOwner());
 
     const auto coopGOs = SceneAPI::findAllGameObjectsWithScript<CooperativeSound>();
     if (!coopGOs.empty())
@@ -265,6 +268,11 @@ void PlayerDownState::completeRevive()
     if (m_reviveIconCanvas)
     {
 		GameObjectAPI::setActive(m_reviveIconCanvas->getOwner(), false);
+    }
+
+    if (m_animation)
+    {
+        m_animation->playRevive();
     }
 
     Debug::log("%s completed revive from down state.", GameObjectAPI::getName(m_owner));
