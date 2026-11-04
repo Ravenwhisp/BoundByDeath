@@ -8,8 +8,12 @@
 #include "EnemyDetectionAggro.h"
 #include "CameraFollow.h"
 #include "HUDFader.h"
+#include "ShadowExecution.h"
+#include "ReaperGauge.h"
+#include "HealthPickup.h"
 
 #include <cmath>
+#include <algorithm>
 #include <cstdlib>
 #include <string>
 
@@ -41,6 +45,7 @@ IMPLEMENT_SCRIPT_FIELDS(TrailerEnemyShowcase,
     SERIALIZED_FLOAT(m_stunDuration, "Stun Duration", 0.1f, 20.0f, 0.1f),
     SERIALIZED_FLOAT(m_slowMotionScale, "Slow Motion Scale", 0.05f, 1.0f, 0.01f),
     SERIALIZED_BOOL(m_logControlsOnStart, "Log Controls On Start"),
+    SERIALIZED_BOOL(m_removeHealthDrops, "Remove Health Drops"),
     SERIALIZED_BOOL(m_closeUpMode, "Close-up Mode"),
     SERIALIZED_FLOAT(m_closeUpDistance, "Close-up Distance", 1.0f, 15.0f, 0.05f),
     SERIALIZED_FLOAT(m_closeUpHeight, "Close-up Camera Height", -1.0f, 10.0f, 0.05f),
@@ -62,7 +67,24 @@ IMPLEMENT_SCRIPT_FIELDS(TrailerEnemyShowcase,
     SERIALIZED_FLOAT(m_closeUpLightForward, "Close-up Light Forward", -10.0f, 10.0f, 0.05f),
     SERIALIZED_BOOL(m_closeUpUseStage, "Close-up Use Stage (this object)"),
     SERIALIZED_BOOL(m_closeUpParkPlayers, "Close-up Park Players Out Of Shot"),
-    SERIALIZED_FLOAT(m_closeUpParkDistance, "Close-up Park Distance", 2.0f, 40.0f, 0.5f)
+    SERIALIZED_FLOAT(m_closeUpParkDistance, "Close-up Park Distance", 2.0f, 40.0f, 0.5f),
+    SERIALIZED_BOOL(m_executionMode, "Shadow Execution Mode"),
+    SERIALIZED_INT(m_executionEnemyCount, "Execution Enemy Count"),
+    SERIALIZED_FLOAT(m_executionRingRadius, "Execution Ring Radius", 1.0f, 20.0f, 0.1f),
+    SERIALIZED_FLOAT(m_executionRingGap, "Execution Ring Gap (camera side)", 0.0f, 300.0f, 5.0f),
+    SERIALIZED_BOOL(m_executionLethal, "Execution Kills Enemies"),
+    SERIALIZED_BOOL(m_executionHoldEnemies, "Execution Hold Enemies In Place"),
+    SERIALIZED_BOOL(m_executionAutoLoop, "Execution Auto Loop"),
+    SERIALIZED_FLOAT(m_executionTriggerDelay, "Execution Trigger Delay", 0.0f, 20.0f, 0.1f),
+    SERIALIZED_FLOAT(m_executionLoopDelay, "Execution Loop Delay", 0.0f, 20.0f, 0.1f),
+    SERIALIZED_FLOAT(m_executionSlowMotion, "Execution Slow Motion (1 = off)", 0.05f, 1.0f, 0.01f),
+    SERIALIZED_FLOAT(m_executionSlowTail, "Execution Slow Motion Tail", 0.0f, 5.0f, 0.05f),
+    SERIALIZED_FLOAT(m_executionCamDistance, "Execution Camera Distance", 2.0f, 40.0f, 0.1f),
+    SERIALIZED_FLOAT(m_executionCamHeight, "Execution Camera Height", 0.0f, 30.0f, 0.1f),
+    SERIALIZED_FLOAT(m_executionLookHeight, "Execution Look Height", 0.0f, 5.0f, 0.05f),
+    SERIALIZED_FLOAT(m_executionPushIn, "Execution Camera Push-in", 0.2f, 2.0f, 0.01f),
+    SERIALIZED_FLOAT(m_executionOrbitSpeed, "Execution Camera Drift Speed", -60.0f, 60.0f, 0.5f),
+    SERIALIZED_BOOL(m_executionDrift, "Execution Camera Drift")
 )
 
 namespace
@@ -104,9 +126,15 @@ void TrailerEnemyShowcase::Start()
     m_closeUpCameraActive = false;
     m_cameraFollow = nullptr;
 
-    if (m_closeUpMode)
+    m_ringEnemies.clear();
+    m_executionPhase = ExecutionPhase::Idle;
+    m_executionSlowApplied = false;
+    m_executionPick = -1;
+    m_shadowExecution = nullptr;
+
+    if (m_closeUpMode || m_executionMode)
     {
-        // Close-up recording is one enemy at a time, so the crowd features stay off.
+        // Close-up and Shadow Execution recording drive their own spawns, so the crowd features stay off.
         m_spawnAllOnStart = false;
         m_autoWaves = false;
     }
@@ -134,6 +162,9 @@ void TrailerEnemyShowcase::OnGameStop()
     setCloseUpCamera(false);
     m_pending.clear();
     m_effectTracker.clear();
+    m_ringEnemies.clear();
+    m_executionSlowApplied = false;
+    m_executionPhase = ExecutionPhase::Idle;
 }
 
 void TrailerEnemyShowcase::Update()
@@ -145,6 +176,34 @@ void TrailerEnemyShowcase::Update()
     {
         setPlayersInvulnerable(m_playersInvulnerable);
         m_invulnerabilityApplied = true;
+    }
+
+    if (m_removeHealthDrops)
+    {
+        removeHealthDrops();
+    }
+
+    if (m_executionMode)
+    {
+        handleExecutionInput(deltaTime);
+
+        // First take sets itself up after the start delay.
+        if (!m_startSpawnDone)
+        {
+            m_startTimer += deltaTime;
+            if (m_startTimer >= m_startDelay)
+            {
+                m_startSpawnDone = true;
+                setCloseUpCamera(true);
+                setupExecution();
+            }
+        }
+
+        m_effectTracker.update(deltaTime);
+        updatePendingSpawns(deltaTime);
+        updateExecution(deltaTime);
+        updateExecutionCamera(deltaTime);
+        return;
     }
 
     if (m_closeUpMode)
@@ -367,6 +426,14 @@ void TrailerEnemyShowcase::updatePendingSpawns(float deltaTime)
             m_focusTaunted = false;
         }
 
+        if (enemy && spawn.isRing)
+        {
+            RingEnemy ringEnemy;
+            ringEnemy.object = enemy;
+            ringEnemy.anchor = spawn.position;
+            m_ringEnemies.push_back(ringEnemy);
+        }
+
         if (enemy)
         {
             Debug::log("[TrailerEnemyShowcase] Spawned %s at (%.1f, %.1f, %.1f)", GameObjectAPI::getName(enemy),
@@ -421,6 +488,7 @@ void TrailerEnemyShowcase::removeAllEnemies()
 
     // The focus enemy (if it was in the scene) went with the sweep above; never remove it twice.
     m_focusEnemy = nullptr;
+    m_ringEnemies.clear();
 
     Debug::log("[TrailerEnemyShowcase] Removed %d enemies", removed);
 }
@@ -467,6 +535,19 @@ void TrailerEnemyShowcase::setPlayersInvulnerable(bool invulnerable)
     }
 
     Debug::log("[TrailerEnemyShowcase] Players invulnerable: %s", invulnerable ? "ON" : "OFF");
+}
+
+void TrailerEnemyShowcase::removeHealthDrops()
+{
+    // Dying enemies drop health orbs (EnemyDeathState); they'd pile up over repeated takes.
+    const std::vector<GameObject*> drops = SceneAPI::findAllGameObjectsWithScript<HealthPickup>();
+    for (GameObject* drop : drops)
+    {
+        if (drop != nullptr)
+        {
+            GameObjectAPI::removeGameObject(drop);
+        }
+    }
 }
 
 void TrailerEnemyShowcase::updateAutoWaves(float deltaTime)
@@ -610,6 +691,19 @@ const char* TrailerEnemyShowcase::rosterName(int index) const
 
 void TrailerEnemyShowcase::logControls() const
 {
+    if (m_executionMode)
+    {
+        Debug::log("[TrailerEnemyShowcase] SHADOW EXECUTION MODE. Hold RIGHT SHIFT and press:");
+        Debug::log("  J  Shadow Execution now              |  L  new take (players + ring of enemies)");
+        Debug::log("  Left / Right  enemy type (or a mix)  |  3  auto loop on/off");
+        Debug::log("  Up / Down (hold)  zoom in / out      |  1 / 2 (hold)  orbit left / right");
+        Debug::log("  I  hold enemies in place on/off      |  Tab  trailer camera on/off");
+        Debug::log("  Space  camera drift on/off (still shot)");
+        Debug::log("  K  kill all   O  slow motion   R  remove all   U  invulnerability");
+        Debug::log("[TrailerEnemyShowcase] Auto loop is %s.", m_executionAutoLoop ? "ON (no keys needed)" : "OFF");
+        return;
+    }
+
     if (m_closeUpMode)
     {
         Debug::log("[TrailerEnemyShowcase] CLOSE-UP MODE. Hold RIGHT SHIFT and press:");
@@ -1190,23 +1284,53 @@ void TrailerEnemyShowcase::placePlayersAround(const Vector3& point, float yawDeg
 void TrailerEnemyShowcase::tauntFocusEnemy()
 {
     m_focusTaunted = true;
+    tauntEnemy(m_focusEnemy, false);
+}
 
-    EnemyDetectionAggro* aggro = GameObjectAPI::findScript<EnemyDetectionAggro>(m_focusEnemy);
+void TrailerEnemyShowcase::tauntEnemy(GameObject* enemy, bool nearestPlayer)
+{
+    EnemyDetectionAggro* aggro = enemy ? GameObjectAPI::findScript<EnemyDetectionAggro>(enemy) : nullptr;
     if (aggro == nullptr)
     {
         return;
     }
 
-    // Prefer Death (the taunt character), fall back to any player.
     Transform* target = nullptr;
     const std::vector<GameObject*> players = SceneAPI::findAllGameObjectsByTag(Tag::PLAYER);
-    for (GameObject* player : players)
+
+    if (nearestPlayer)
     {
-        const char* name = GameObjectAPI::getName(player);
-        if (name && std::string(name) == "Death")
+        // Split the ring between Death and Lyriel so both are being threatened in the shot.
+        Transform* enemyTransform = GameObjectAPI::getTransform(enemy);
+        const Vector3 enemyPosition = enemyTransform ? TransformAPI::getGlobalPosition(enemyTransform) : Vector3::Zero;
+        float bestDistance = 1.0e9f;
+        for (GameObject* player : players)
         {
-            target = GameObjectAPI::getTransform(player);
-            break;
+            Transform* playerTransform = GameObjectAPI::getTransform(player);
+            if (playerTransform == nullptr)
+            {
+                continue;
+            }
+
+            const float distance = Vector3::Distance(enemyPosition, TransformAPI::getGlobalPosition(playerTransform));
+            if (distance < bestDistance)
+            {
+                bestDistance = distance;
+                target = playerTransform;
+            }
+        }
+    }
+    else
+    {
+        // Prefer Death (the taunt character), fall back to any player.
+        for (GameObject* player : players)
+        {
+            const char* name = GameObjectAPI::getName(player);
+            if (name && std::string(name) == "Death")
+            {
+                target = GameObjectAPI::getTransform(player);
+                break;
+            }
         }
     }
     if (target == nullptr && !players.empty())
@@ -1220,6 +1344,488 @@ void TrailerEnemyShowcase::tauntFocusEnemy()
     {
         aggro->applyTaunt(target, 100000.0f);
     }
+}
+
+// ---------------------------------------------------------------------------
+// Shadow Execution mode
+// ---------------------------------------------------------------------------
+
+ShadowExecution* TrailerEnemyShowcase::findShadowExecution()
+{
+    if (m_shadowExecution == nullptr)
+    {
+        const std::vector<GameObject*> holders = SceneAPI::findAllGameObjectsWithScript<ShadowExecution>();
+        if (!holders.empty())
+        {
+            m_shadowExecution = GameObjectAPI::findScript<ShadowExecution>(holders[0]);
+        }
+    }
+
+    return m_shadowExecution;
+}
+
+void TrailerEnemyShowcase::fillReaperGauge()
+{
+    const std::vector<GameObject*> holders = SceneAPI::findAllGameObjectsWithScript<ReaperGauge>();
+    if (holders.empty())
+    {
+        return;
+    }
+
+    ReaperGauge* gauge = GameObjectAPI::findScript<ReaperGauge>(holders[0]);
+    if (gauge == nullptr)
+    {
+        return;
+    }
+
+    // Same as the Level2Cheats fill, with a cap in case a config change makes a mark worth nothing.
+    for (int i = 0; i < 200 && !gauge->isFull(); ++i)
+    {
+        gauge->onMarkExploited();
+    }
+
+    gauge->updateUI();
+}
+
+const char* TrailerEnemyShowcase::executionPickName() const
+{
+    if (m_executionPick < 0)
+    {
+        return "a mix of every type";
+    }
+
+    return rosterName(m_executionPick);
+}
+
+void TrailerEnemyShowcase::handleExecutionInput(float deltaTime)
+{
+    if (comboPressed(KeyCode::J)) triggerExecution();
+    if (comboPressed(KeyCode::L)) setupExecution();
+
+    const int typeCount = static_cast<int>(m_roster.size());
+    if (typeCount > 0)
+    {
+        // -1 is "mix", then every roster slot in order.
+        if (comboPressed(KeyCode::Right))
+        {
+            m_executionPick = ((m_executionPick + 1 + 1) % (typeCount + 1)) - 1;
+            Debug::log("[TrailerEnemyShowcase] Execution enemies: %s", executionPickName());
+            setupExecution();
+        }
+        if (comboPressed(KeyCode::Left))
+        {
+            m_executionPick = ((m_executionPick + 1 - 1 + typeCount + 1) % (typeCount + 1)) - 1;
+            Debug::log("[TrailerEnemyShowcase] Execution enemies: %s", executionPickName());
+            setupExecution();
+        }
+    }
+
+    if (comboPressed(KeyCode::Num3))
+    {
+        m_executionAutoLoop = !m_executionAutoLoop;
+        m_executionTimer = 0.0f;
+        Debug::log("[TrailerEnemyShowcase] Execution auto loop %s", m_executionAutoLoop ? "ON" : "OFF");
+    }
+
+    if (comboPressed(KeyCode::I))
+    {
+        m_executionHoldEnemies = !m_executionHoldEnemies;
+        Debug::log("[TrailerEnemyShowcase] Hold enemies in place %s", m_executionHoldEnemies ? "ON" : "OFF");
+    }
+
+    if (comboPressed(KeyCode::Tab)) setCloseUpCamera(!m_closeUpCameraActive);
+    if (comboPressed(KeyCode::K))   killAllEnemies();
+    if (comboPressed(KeyCode::O))   toggleSlowMotion();
+
+    if (comboPressed(KeyCode::Space))
+    {
+        m_executionDrift = !m_executionDrift;
+        Debug::log("[TrailerEnemyShowcase] Camera drift %s", m_executionDrift ? "ON" : "OFF (camera holds still)");
+    }
+
+    if (comboPressed(KeyCode::R))
+    {
+        removeAllEnemies();
+        m_executionPhase = ExecutionPhase::Idle;
+    }
+
+    if (comboPressed(KeyCode::U))
+    {
+        m_playersInvulnerable = !m_playersInvulnerable;
+        setPlayersInvulnerable(m_playersInvulnerable);
+    }
+
+    const float zoomRate = 0.6f;
+    if (comboHeld(KeyCode::Up))   m_zoomScale -= zoomRate * deltaTime;
+    if (comboHeld(KeyCode::Down)) m_zoomScale += zoomRate * deltaTime;
+    if (m_zoomScale < 0.3f) m_zoomScale = 0.3f;
+    if (m_zoomScale > 3.0f) m_zoomScale = 3.0f;
+
+    if (comboHeld(KeyCode::Num1)) m_orbitYaw -= m_closeUpOrbitSpeed * deltaTime;
+    if (comboHeld(KeyCode::Num2)) m_orbitYaw += m_closeUpOrbitSpeed * deltaTime;
+}
+
+void TrailerEnemyShowcase::setupExecution()
+{
+    if (m_roster.empty())
+    {
+        Debug::warn("[TrailerEnemyShowcase] Nothing to spawn: no enemy prefabs assigned.");
+        return;
+    }
+
+    ShadowExecution* shadowExecution = findShadowExecution();
+    if (shadowExecution != nullptr && shadowExecution->isActive())
+    {
+        return; // let the current move finish
+    }
+
+    // Clean slate: previous ring, corpses, summoned spiders and anything still waiting to spawn.
+    removeAllEnemies();
+
+    if (m_executionSlowApplied)
+    {
+        Time::setTimeScale(m_slowMotionActive ? m_slowMotionScale : 1.0f);
+        m_executionSlowApplied = false;
+    }
+
+    Vector3 center;
+    float cameraYaw = 0.0f;
+    if (!getStage(center, cameraYaw))
+    {
+        if (!getPlayersCenter(center))
+        {
+            return;
+        }
+    }
+
+    m_orbitYaw = cameraYaw;
+    m_executionCenter = center;
+    m_lastFocusPosition = center; // the key light follows this
+    m_focusMeasured = false;
+
+    // Death and Lyriel side by side in the middle, facing the camera. The move is centred between them.
+    placePlayersAround(center, m_orbitYaw);
+    const std::vector<GameObject*> players = SceneAPI::findAllGameObjectsByTag(Tag::PLAYER);
+    for (GameObject* player : players)
+    {
+        if (Transform* playerTransform = GameObjectAPI::getTransform(player))
+        {
+            TransformAPI::setGlobalRotationEuler(playerTransform, Vector3(0.0f, m_orbitYaw, 0.0f));
+        }
+    }
+
+    // Keep the ring inside the move's reach, or the outer enemies never get hit.
+    float radius = m_executionRingRadius;
+    if (shadowExecution != nullptr)
+    {
+        const float maxRadius = shadowExecution->getMaxRadius();
+        if (maxRadius > 0.5f && radius > maxRadius * 0.85f)
+        {
+            radius = maxRadius * 0.85f;
+            Debug::warn("[TrailerEnemyShowcase] Ring radius reduced to %.1f m to stay inside Shadow Execution's reach (%.1f m).", radius, maxRadius);
+        }
+    }
+    else
+    {
+        Debug::warn("[TrailerEnemyShowcase] No ShadowExecution script in this scene (it lives on GameManager). The ring will spawn but J won't fire.");
+    }
+
+    int count = m_executionEnemyCount;
+    if (count < 1) count = 1;
+    if (count > kMaxSpawnsPerPress) count = kMaxSpawnsPerPress;
+
+    float gap = m_executionRingGap;
+    if (gap < 0.0f) gap = 0.0f;
+    if (gap > 300.0f) gap = 300.0f;
+    const float arc = 360.0f - gap;
+
+    const int typeCount = static_cast<int>(m_roster.size());
+    const int mixOffset = std::rand() % typeCount;
+    const Vector3 searchExtents(2.0f, 5.0f, 2.0f);
+
+    for (int i = 0; i < count; ++i)
+    {
+        // Angles use the same convention as the camera, so the open part of the ring faces the lens.
+        const float angleDegrees = (gap < 1.0f)
+            ? m_orbitYaw + 180.0f + 360.0f * static_cast<float>(i) / static_cast<float>(count)
+            : m_orbitYaw + gap * 0.5f + arc * (static_cast<float>(i) + 0.5f) / static_cast<float>(count);
+        const float angle = angleDegrees * (kPi / 180.0f);
+
+        // Alternate the depth a little so the ring reads as a crowd, not a clock face.
+        const float distance = radius + ((i % 2) == 0 ? 0.0f : 0.6f);
+        Vector3 position = center + Vector3(std::sin(angle) * distance, 0.0f, std::cos(angle) * distance);
+
+        Vector3 sampled;
+        if (NavigationAPI::hasNavMesh() && NavigationAPI::samplePosition(position, sampled, searchExtents, kEnemyNavProfile))
+        {
+            position = sampled;
+        }
+
+        const int pick = m_executionPick >= 0 ? m_executionPick : (mixOffset + i) % typeCount;
+
+        PendingSpawn spawn;
+        spawn.isRing = true;
+        spawn.prefab = m_roster[pick]->m_id;
+        spawn.position = position;
+        const Vector3 toCenter = center - position;
+        spawn.yawDegrees = std::atan2(toCenter.x, toCenter.z) * (180.0f / kPi);
+        spawn.timer = -m_groupStagger * static_cast<float>(i);
+        m_pending.push_back(spawn);
+    }
+
+    // Full gauge straight away, so the "ready" glow and colour grade are already on when the take starts.
+    fillReaperGauge();
+
+    m_executionPhase = ExecutionPhase::Gathering;
+    m_executionTimer = 0.0f;
+    m_executionPush = 0.0f;
+    m_zoomScale = 1.0f;
+    m_cameraSnapNext = true;
+
+    Debug::log("[TrailerEnemyShowcase] Shadow Execution take: %d enemies (%s), ring %.1f m.", count, executionPickName(), radius);
+}
+
+void TrailerEnemyShowcase::triggerExecution()
+{
+    ShadowExecution* shadowExecution = findShadowExecution();
+    if (shadowExecution == nullptr)
+    {
+        Debug::warn("[TrailerEnemyShowcase] Can't fire: no ShadowExecution script in this scene.");
+        return;
+    }
+
+    if (shadowExecution->isActive())
+    {
+        return;
+    }
+
+    // The move spends the gauge, so top it up first (it also decays if a take runs long).
+    fillReaperGauge();
+
+    if (!shadowExecution->triggerNow())
+    {
+        Debug::warn("[TrailerEnemyShowcase] Shadow Execution didn't start (check Death and Lyriel are in the scene).");
+        return;
+    }
+
+    if (m_executionSlowMotion < 0.999f)
+    {
+        Time::setTimeScale(m_executionSlowMotion);
+        m_executionSlowApplied = true;
+    }
+
+    m_executionPhase = ExecutionPhase::Executing;
+    m_executionTimer = 0.0f;
+    m_executionPush = 0.0f;
+
+    Debug::log("[TrailerEnemyShowcase] Shadow Execution!");
+}
+
+void TrailerEnemyShowcase::updateExecution(float deltaTime)
+{
+    updateRingEnemies();
+
+    ShadowExecution* shadowExecution = findShadowExecution();
+
+    switch (m_executionPhase)
+    {
+    case ExecutionPhase::Gathering:
+        // Count from the moment the last enemy has arrived, so every take gets the same build-up.
+        if (!m_pending.empty())
+        {
+            m_executionTimer = 0.0f;
+            break;
+        }
+
+        m_executionTimer += deltaTime;
+        if (m_executionAutoLoop && m_executionTimer >= m_executionTriggerDelay)
+        {
+            triggerExecution();
+        }
+        break;
+
+    case ExecutionPhase::Executing:
+    {
+        m_executionTimer += deltaTime;
+        const float duration = shadowExecution ? shadowExecution->getExecutionDuration() : 1.0f;
+        m_executionPush = duration > 0.0f ? (m_executionTimer / duration) : 1.0f;
+        if (m_executionPush > 1.0f) m_executionPush = 1.0f;
+
+        if (shadowExecution == nullptr || !shadowExecution->isActive())
+        {
+            m_executionPhase = ExecutionPhase::Aftermath;
+            m_executionTimer = 0.0f;
+            m_executionPush = 1.0f;
+        }
+        break;
+    }
+
+    case ExecutionPhase::Aftermath:
+        m_executionTimer += deltaTime;
+
+        if (m_executionSlowApplied && m_executionTimer >= m_executionSlowTail)
+        {
+            Time::setTimeScale(m_slowMotionActive ? m_slowMotionScale : 1.0f);
+            m_executionSlowApplied = false;
+        }
+
+        if (m_executionAutoLoop && m_executionTimer >= m_executionLoopDelay)
+        {
+            setupExecution();
+        }
+        break;
+
+    case ExecutionPhase::Idle:
+    default:
+        break;
+    }
+}
+
+void TrailerEnemyShowcase::updateRingEnemies()
+{
+    for (size_t i = m_ringEnemies.size(); i-- > 0;)
+    {
+        RingEnemy& ringEnemy = m_ringEnemies[i];
+        ++ringEnemy.frames;
+
+        // New objects only join the scene list a frame later; after that, gone means it died and was cleaned up.
+        if (!SceneAPI::containsGameObject(ringEnemy.object))
+        {
+            if (ringEnemy.seenInScene || ringEnemy.frames > 10)
+            {
+                m_ringEnemies.erase(m_ringEnemies.begin() + static_cast<std::ptrdiff_t>(i));
+            }
+            continue;
+        }
+        ringEnemy.seenInScene = true;
+
+        if (!ringEnemy.prepared && ringEnemy.frames > 2)
+        {
+            prepareRingEnemy(ringEnemy);
+        }
+
+        if (!ringEnemy.prepared)
+        {
+            continue;
+        }
+
+        EnemyBaseController* controller = GameObjectAPI::findScript<EnemyBaseController>(ringEnemy.object);
+        const Damageable* damageable = GameObjectAPI::findScript<Damageable>(ringEnemy.object);
+        const bool dead = damageable != nullptr && damageable->isDead();
+        if (controller == nullptr || dead)
+        {
+            continue;
+        }
+
+        if (m_executionHoldEnemies)
+        {
+            // Walk cycle and attacks play, but nobody leaves the ring or walks in front of the players.
+            if (!ringEnemy.speedLocked)
+            {
+                ringEnemy.originalSpeed = controller->m_moveSpeed;
+                controller->m_moveSpeed = 0.0f;
+                ringEnemy.speedLocked = true;
+            }
+
+            if (Transform* enemyTransform = GameObjectAPI::getTransform(ringEnemy.object))
+            {
+                TransformAPI::setGlobalPosition(enemyTransform, ringEnemy.anchor);
+            }
+        }
+        else if (ringEnemy.speedLocked)
+        {
+            controller->m_moveSpeed = ringEnemy.originalSpeed;
+            ringEnemy.speedLocked = false;
+        }
+    }
+}
+
+void TrailerEnemyShowcase::prepareRingEnemy(RingEnemy& ringEnemy)
+{
+    ringEnemy.prepared = true;
+
+    // Always has a target (whatever its detection radius), so it menaces the players during the build-up.
+    tauntEnemy(ringEnemy.object, true);
+
+    if (!m_executionLethal)
+    {
+        return;
+    }
+
+    EnemyDamageable* damageable = GameObjectAPI::findScript<EnemyDamageable>(ringEnemy.object);
+    if (damageable == nullptr || damageable->isDead() || damageable->getMaxHp() <= 0.0f)
+    {
+        return;
+    }
+
+    // Below its own execution threshold (some enemies have a multiplier), so the move finishes it.
+    float threshold = 0.4f;
+    if (ShadowExecution* shadowExecution = findShadowExecution())
+    {
+        threshold = shadowExecution->getExecutionThresholdPercent(damageable);
+    }
+    if (threshold <= 0.0f)
+    {
+        return;
+    }
+
+    const float targetHp = damageable->getMaxHp() * threshold * 0.75f;
+    const float currentHp = damageable->getCurrentHp();
+    if (currentHp > targetHp)
+    {
+        damageable->takeDamage(currentHp - targetHp);
+    }
+}
+
+void TrailerEnemyShowcase::updateExecutionCamera(float deltaTime)
+{
+    updateCloseUpLight();
+
+    if (!m_closeUpCameraActive)
+    {
+        return;
+    }
+
+    GameObject* camera = SceneAPI::getDefaultCameraGameObject();
+    Transform* cameraTransform = camera ? GameObjectAPI::getTransform(camera) : nullptr;
+    if (cameraTransform == nullptr)
+    {
+        return;
+    }
+
+    // Slow drift keeps the wide shot alive; it slows down with the slow motion too.
+    if (m_executionDrift)
+    {
+        m_orbitYaw += m_executionOrbitSpeed * deltaTime;
+    }
+
+    // Smoothstep push-in over the move, held afterwards for the aftermath.
+    const float push = m_executionPush;
+    const float eased = push * push * (3.0f - 2.0f * push);
+    const float scale = m_zoomScale * (1.0f + (m_executionPushIn - 1.0f) * eased);
+
+    const float distance = m_executionCamDistance * scale;
+    const float height = m_executionCamHeight * scale;
+
+    const float yawRadians = m_orbitYaw * (kPi / 180.0f);
+    const Vector3 lookTarget = m_executionCenter + Vector3(0.0f, m_executionLookHeight, 0.0f);
+    const Vector3 desiredPosition = m_executionCenter + Vector3(
+        std::sin(yawRadians) * distance,
+        height,
+        std::cos(yawRadians) * distance);
+
+    Vector3 newPosition = desiredPosition;
+    if (!m_cameraSnapNext)
+    {
+        const float dt = deltaTime > 0.05f ? 0.05f : deltaTime;
+        const float blend = 1.0f - std::exp(-m_closeUpSharpness * dt);
+        const Vector3 current = TransformAPI::getGlobalPosition(cameraTransform);
+        newPosition = current + (desiredPosition - current) * blend;
+    }
+    m_cameraSnapNext = false;
+
+    TransformAPI::setGlobalPosition(cameraTransform, newPosition);
+    TransformAPI::lookAt(cameraTransform, lookTarget);
 }
 
 IMPLEMENT_SCRIPT(TrailerEnemyShowcase)

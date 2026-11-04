@@ -22,6 +22,10 @@ public:
     void setGameplayInputLocked(bool locked) { m_gameplayInputLocked = locked; }
     bool isGameplayInputLocked() const { return m_gameplayInputLocked; }
 
+    // Walks the character in this world direction instead of reading the stick (trailer/cutscene tools).
+    // Pass Vector3::Zero to hand control back to the player's input.
+    void setScriptedMoveDirection(const Vector3& direction) { m_scriptedMoveDirection = direction; }
+
     bool getGodMode() const { return m_godMode; }
     int getPlayerIndex() const { return m_playerIndex; }
     Vector3 getMoveDirection() const;
@@ -43,6 +47,7 @@ private:
     Transform* m_cameraTransform = nullptr;
 
     bool m_gameplayInputLocked = false;
+    Vector3 m_scriptedMoveDirection = Vector3(0.0f, 0.0f, 0.0f);
 
 private:
     Vector3 readMoveDirection(const Vector2& moveAxis) const;

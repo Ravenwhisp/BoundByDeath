@@ -109,6 +109,10 @@ void PlayerController::Update()
             const Vector2 moveAxis = Input::getMoveAxis(m_playerIndex);
 
             Vector3 moveDirection = readMoveDirection(moveAxis);
+            if (m_scriptedMoveDirection.x != 0.0f || m_scriptedMoveDirection.z != 0.0f)
+            {
+                moveDirection = m_scriptedMoveDirection;
+            }
             const bool isMoving = (moveDirection.x != 0.0f || moveDirection.y != 0.0f || moveDirection.z != 0.0f) && m_playerMovement->canMoveFromMultiplier();
             m_playerMovement->setMoving(isMoving);
 

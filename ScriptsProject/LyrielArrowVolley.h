@@ -18,6 +18,9 @@ public:
 	void updateUI() override;
     void drawGizmo() override;
 
+    // Finishes the aim and fires, as if the trigger came up (used by trailer/debug tools).
+    void releaseFromScript() { if (m_isAiming) releaseAimAndCast(); }
+
 protected:
 	void startAbility() override;
 

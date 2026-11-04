@@ -20,6 +20,9 @@ public:
 
     void drawGizmo() override;
 
+    // Finishes the aim and casts, as if the trigger came up (used by trailer/debug tools).
+    void releaseFromScript() { if (m_tauntState == TauntState::Aiming) releaseAimAndCast(); }
+
 protected:
 	void startAbility() override;
 

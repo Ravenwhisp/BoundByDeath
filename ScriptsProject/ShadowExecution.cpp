@@ -261,6 +261,29 @@ void ShadowExecution::tryTrigger()
     beginExecution();
 }
 
+bool ShadowExecution::triggerNow()
+{
+    if (m_isActive || m_shadowExecutionConfig == nullptr || m_reaperGauge == nullptr)
+    {
+        return false;
+    }
+
+    cachePlayers();
+    if (m_deathCharacter == nullptr || m_lyrielCharacter == nullptr)
+    {
+        Debug::warn("[ShadowExecution] Cannot trigger: Death or Lyriel not found in scene.");
+        return false;
+    }
+
+    beginExecution();
+    return m_isActive;
+}
+
+float ShadowExecution::getExecutionDuration() const
+{
+    return m_shadowExecutionConfig ? m_shadowExecutionConfig->m_executionDuration : 0.0f;
+}
+
 void ShadowExecution::beginExecution()
 {
     Transform* deathTransform = GameObjectAPI::getTransform(m_deathCharacter->getOwner());

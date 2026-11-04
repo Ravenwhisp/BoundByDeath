@@ -50,6 +50,12 @@ public:
     ShadowExecutionPreview calculatePreview(const EnemyDamageable* damageable) const;
     float getExecutionThresholdPercent(const EnemyDamageable* damageable) const;
 
+    // Starts the move straight away, skipping the two-player Triangle window.
+    // Used by trailer/debug tools; returns false if it can't run right now.
+    bool triggerNow();
+    float getMaxRadius() const { return m_maxRadius; }
+    float getExecutionDuration() const;
+
 public:
     AssetReference<ShadowExecutionConfig> m_config;
 

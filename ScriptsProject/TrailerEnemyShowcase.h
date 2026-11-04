@@ -13,6 +13,7 @@
 // Every key is a combo with RIGHT SHIFT held, so it never clashes with play.
 class CameraFollow;
 class HUDFader;
+class ShadowExecution;
 
 class TrailerEnemyShowcase final : public Script
 {
@@ -64,6 +65,7 @@ public:
     float m_stunDuration = 3.0f;
     float m_slowMotionScale = 0.35f;
     bool m_logControlsOnStart = true;
+    bool m_removeHealthDrops = true;    // delete the health orbs enemies drop, so takes stay clean
 
     // Close-up mode: one selected enemy at a time, framed by a cinematic camera
     bool m_closeUpMode = false;
@@ -89,10 +91,31 @@ public:
     bool m_closeUpParkPlayers = true;   // move Death and Lyriel behind the camera on every spawn
     float m_closeUpParkDistance = 9.0f; // how far from the enemy (towards/behind the camera) they are parked
 
+    // Shadow Execution mode: Death and Lyriel at the stage, a ring of enemies around them, then the move.
+    // Takes priority over close-up mode. The stage is this object; its Y rotation sets the camera side.
+    bool m_executionMode = false;
+    int m_executionEnemyCount = 6;
+    float m_executionRingRadius = 4.0f;     // metres from the players (kept inside the move's reach)
+    float m_executionRingGap = 100.0f;      // degrees left open on the camera side so nobody blocks the players
+    bool m_executionLethal = true;          // drop enemies under their execution threshold so the move kills them
+    bool m_executionHoldEnemies = true;     // enemies animate and attack but stay on their ring spot
+    bool m_executionAutoLoop = true;        // hands-free: set up, execute, wait, repeat
+    float m_executionTriggerDelay = 3.0f;   // seconds after the ring appears before the move fires (auto loop)
+    float m_executionLoopDelay = 4.0f;      // seconds after the move before the next take (auto loop)
+    float m_executionSlowMotion = 0.5f;     // time scale while the move plays (1 = real time)
+    float m_executionSlowTail = 0.6f;       // keep the slow motion this long after the move ends (game seconds)
+    float m_executionCamDistance = 10.0f;
+    float m_executionCamHeight = 5.0f;
+    float m_executionLookHeight = 1.0f;
+    float m_executionPushIn = 0.7f;         // camera distance multiplier reached by the end of the move (1 = none)
+    float m_executionOrbitSpeed = 6.0f;     // slow automatic drift around the players, degrees per second
+    bool m_executionDrift = true;           // RShift+Space toggles; off = locked-off camera
+
 private:
     struct PendingSpawn
     {
         bool isFocus = false;
+        bool isRing = false;
         AssetId prefab;
         Vector3 position = Vector3::Zero;
         float yawDegrees = 0.0f;
@@ -118,6 +141,7 @@ private:
     void toggleSlowMotion();
     void toggleAutoWaves();
     void setPlayersInvulnerable(bool invulnerable);
+    void removeHealthDrops();
     void updateAutoWaves(float realDeltaTime);
 
     std::vector<GameObject*> findLiveEnemies() const;
@@ -142,6 +166,32 @@ private:
     void parkPlayers(const Vector3& stagePosition);
     void placePlayersAround(const Vector3& point, float yawDegrees);
     void tauntFocusEnemy();
+    void tauntEnemy(GameObject* enemy, bool nearestPlayer);
+
+    // Shadow Execution mode
+    struct RingEnemy
+    {
+        GameObject* object = nullptr;
+        Vector3 anchor = Vector3::Zero;
+        int frames = 0;
+        bool seenInScene = false;
+        bool prepared = false;
+        bool speedLocked = false;
+        float originalSpeed = 0.0f;
+    };
+
+    enum class ExecutionPhase { Idle, Gathering, Executing, Aftermath };
+
+    void handleExecutionInput(float deltaTime);
+    void setupExecution();
+    void triggerExecution();
+    void updateExecution(float deltaTime);
+    void updateRingEnemies();
+    void prepareRingEnemy(RingEnemy& ringEnemy);
+    void updateExecutionCamera(float deltaTime);
+    void fillReaperGauge();
+    ShadowExecution* findShadowExecution();
+    const char* executionPickName() const;
 
     std::vector<const PrefabRef*> m_roster;
     std::vector<PendingSpawn> m_pending;
@@ -178,4 +228,14 @@ private:
     Vector3 m_lastFocusPosition = Vector3::Zero;
     float m_savedFov = 0.0f;
     CameraFollow* m_cameraFollow = nullptr;
+
+    // Shadow Execution state
+    std::vector<RingEnemy> m_ringEnemies;
+    ExecutionPhase m_executionPhase = ExecutionPhase::Idle;
+    float m_executionTimer = 0.0f;
+    float m_executionPush = 0.0f;          // 0..1 progress of the camera push-in
+    bool m_executionSlowApplied = false;
+    int m_executionPick = -1;              // roster index, or -1 for a mix of every type
+    Vector3 m_executionCenter = Vector3::Zero;
+    ShadowExecution* m_shadowExecution = nullptr;
 };
