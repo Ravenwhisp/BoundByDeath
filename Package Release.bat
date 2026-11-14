@@ -5,7 +5,10 @@ cd /d "%~dp0" || exit /b 1
 set "game=%CD%\Game"
 for %%I in ("%CD%\dist") do set "dist=%%~fI"
 for %%I in ("%dist%\BoundByDeath") do set "release=%%~fI"
+for %%I in ("%dist%\.building") do set "stagingRoot=%%~fI"
+for %%I in ("%stagingRoot%\BoundByDeath") do set "staging=%%~fI"
 if /I not "%release%"=="%dist%\BoundByDeath" goto failed
+if /I not "%staging%"=="%dist%\.building\BoundByDeath" goto failed
 
 if not exist "%game%\BoundByDeath.exe" goto missing
 if not exist "%game%\build.cfg" goto missing
@@ -20,26 +23,35 @@ if /I "%~1"=="--validate" (
     exit /b 0
 )
 
-if exist "%release%\" rmdir /s /q "%release%" || goto failed
-mkdir "%release%\Shaders" || goto failed
-mkdir "%release%\Assets\Haptics" || goto failed
+echo Copying the existing Game files into a temporary release folder.
+echo No Library assets are being generated or rebuilt.
+echo The previous release stays available during the copy.
+echo Wait for "Release ready" before opening the new release.
+if exist "%stagingRoot%\" rmdir /s /q "%stagingRoot%" || goto failed
+mkdir "%staging%\Shaders" || goto failed
+mkdir "%staging%\Assets\Haptics" || goto failed
 
-copy /y "%game%\BoundByDeath.exe" "%release%\" >nul || goto failed
-copy /y "%game%\build.cfg" "%release%\" >nul || goto failed
+copy /y "%game%\BoundByDeath.exe" "%staging%\" >nul || goto failed
+copy /y "%game%\build.cfg" "%staging%\" >nul || goto failed
 for /f "delims=" %%F in ('dir /b /a-d "%game%\*.dll" ^| findstr /V /B /I /C:"GameScripts_runtime_"') do (
-    copy /y "%game%\%%F" "%release%\" >nul || goto failed
+    copy /y "%game%\%%F" "%staging%\" >nul || goto failed
 )
-copy /y "%game%\*.cso" "%release%\Shaders\" >nul || goto failed
+copy /y "%game%\*.cso" "%staging%\Shaders\" >nul || goto failed
 
-robocopy "%game%\Library" "%release%\Library" /E /NFL /NDL /NJH /NJS /NP >nul
+echo Copying Library. This can take several minutes.
+robocopy "%game%\Library" "%staging%\Library" /E /R:2 /W:2 /NFL /NDL /NJH /NP
 if errorlevel 8 goto failed
-robocopy "%game%\Assets\Haptics" "%release%\Assets\Haptics" /E /NFL /NDL /NJH /NJS /NP >nul
+robocopy "%game%\Assets\Haptics" "%staging%\Assets\Haptics" /E /R:2 /W:2 /NFL /NDL /NJH /NP
 if errorlevel 8 goto failed
 
 set "temporaryZip=%dist%\BoundByDeath.new.zip"
 if exist "%temporaryZip%" del /q "%temporaryZip%" || goto failed
-tar.exe -a -cf "%temporaryZip%" -C "%dist%" BoundByDeath
+echo Compressing the release. This can take several minutes.
+tar.exe -a -cf "%temporaryZip%" -C "%stagingRoot%" BoundByDeath
 if errorlevel 1 goto failed
+if exist "%release%\" rmdir /s /q "%release%" || goto failed
+move "%staging%" "%release%" >nul || goto failed
+rd "%stagingRoot%" >nul 2>&1
 move /y "%temporaryZip%" "%dist%\BoundByDeath.zip" >nul || goto failed
 
 echo.
@@ -50,6 +62,6 @@ exit /b 0
 :missing
 echo Missing release input in "%game%" or tar.exe is unavailable.
 :failed
-echo Packaging failed. See the message above.
+echo Packaging failed. See the message above. The new release was not completed.
 pause
 exit /b 1
