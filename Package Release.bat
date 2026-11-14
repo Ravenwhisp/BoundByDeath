@@ -26,7 +26,9 @@ mkdir "%release%\Assets\Haptics" || goto failed
 
 copy /y "%game%\BoundByDeath.exe" "%release%\" >nul || goto failed
 copy /y "%game%\build.cfg" "%release%\" >nul || goto failed
-copy /y "%game%\*.dll" "%release%\" >nul || goto failed
+for /f "delims=" %%F in ('dir /b /a-d "%game%\*.dll" ^| findstr /V /B /I /C:"GameScripts_runtime_"') do (
+    copy /y "%game%\%%F" "%release%\" >nul || goto failed
+)
 copy /y "%game%\*.cso" "%release%\Shaders\" >nul || goto failed
 
 robocopy "%game%\Library" "%release%\Library" /E /NFL /NDL /NJH /NJS /NP >nul
