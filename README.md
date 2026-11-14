@@ -259,8 +259,8 @@ For available playable versions, consult the repository's GitHub Releases page o
 Steps:
 1. Download .zip file
 2. Extract the files
-3. Find Engine.exe and execute
-4. A pop up will apear, click "ACCEPT"
+3. Run BoundByDeath.exe
+
 
 ## 9. Gameplay and Controls
 
