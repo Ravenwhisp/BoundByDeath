@@ -33,12 +33,11 @@ private:
     int m_spawnIndex = 0;
 
     std::vector<Vector3> spawnPoints = {
-    Vector3(20.494f, 1.274f, 10.265f),
-    Vector3(20.64f, 1.274f, 32.483f),
-    Vector3(38.555f, -4.882f, 10.795f),
-    Vector3(47.647f, 1.274, 46.589f),
-    Vector3(43.675f, -25.063f, 41.305f),
-    Vector3(2.349, -24.935f, 40.736f),
+    Vector3(21.136f, 1.141f, 9.808f),
+    Vector3(23.071f, 1.141f, 32.073f),
+    Vector3(41.595f, 1.304f, 40.324f),
+    Vector3(64.629f, -25.313, 47.059f),
+    Vector3(17.207f, -25.313f, 40.831f)
     };
 
     bool KeyComboPressed(KeyCode mainKey);
